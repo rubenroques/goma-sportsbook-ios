@@ -109,10 +109,6 @@ class DropDownSelectionView: UIView {
 
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
     // MARK: - Date Picker
     //
     func setDatePickerMode() {
@@ -401,4 +397,3 @@ extension DropDownSelectionView: UIPickerViewDelegate, UIPickerViewDataSource {
         self.textLabel.text = selectedItem
     }
 }
-

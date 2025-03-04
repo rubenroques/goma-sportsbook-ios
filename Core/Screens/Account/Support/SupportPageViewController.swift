@@ -155,11 +155,6 @@ class SupportPageViewController: UIViewController {
         }
     }
 
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -410,10 +405,11 @@ class SupportPageViewController: UIViewController {
                 }
             """
 
-        self.webView.evaluateJavaScript(javascript) { (result, error) in
+        self.webView.evaluateJavaScript(javascript) { _, error in
             if let error = error {
                 print("Error triggering click event: \(error)")
-            } else {
+            }
+            else {
                 print("Click event triggered successfully")
                 self.showWebView = true
             }
@@ -753,7 +749,7 @@ extension SupportPageViewController {
         self.baseView.addSubview(self.sendButton)
 
         self.view.addSubview(self.topSafeAreaView)
-        //self.view.addSubview(self.baseView)
+        // self.view.addSubview(self.baseView)
         self.view.addSubview(self.navigationBaseView)
         self.view.addSubview(self.contentScrollView)
 
@@ -988,10 +984,11 @@ extension SupportPageViewController: WKScriptMessageHandler {
                         })();
                     """
 
-                    self.webView.evaluateJavaScript(javascript) { (result, error) in
+                    self.webView.evaluateJavaScript(javascript) { _, error in
                         if let error = error {
                             print("Error pushing data: \(error)")
-                        } else {
+                        }
+                        else {
                             print("Data pushed successfully!")
                         }
                     }

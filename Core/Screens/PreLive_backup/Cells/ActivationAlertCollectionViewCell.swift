@@ -57,7 +57,8 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
             buttonConfig.imagePadding = 10
             buttonConfig.baseBackgroundColor = UIColor.App.highlightTertiary
             self.actionButton.configuration = buttonConfig
-        } else {
+        }
+        else {
             self.actionButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
             self.actionButton.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
             self.actionButton.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
@@ -180,10 +181,12 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
             if hoursDifference < 24 {
                 // Today
                 timeLeft = "\(localized("expires")) \(localized("today")) \(localized("at_")) \(expirationDate.format("HH:mm"))"
-            } else if hoursDifference < 48 {
+            }
+            else if hoursDifference < 48 {
                 // Tomorrow
                 timeLeft = "\(localized("expires")) \(localized("tomorrow")) \(localized("at_")) \(expirationDate.format("HH:mm"))"
-            } else {
+            }
+            else {
                 // After tomorrow
                 timeLeft = "\(localized("expire_in_days").replacingFirstOccurrence(of: "{numberOfDays}", with: "\(daysDifference)"))"
             }

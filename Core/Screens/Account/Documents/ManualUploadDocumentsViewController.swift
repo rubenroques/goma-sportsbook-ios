@@ -86,11 +86,6 @@ class ManualUploadDocumentsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -631,12 +626,12 @@ class ManualUploadDocumentsViewController: UIViewController {
                 if selectedDocs.isNotEmpty && self.ribNumberHeaderTextFieldView.text == "" {
                     self.ribNumberHeaderTextFieldView.showBorderState(state: .error)
                     self.showInvalidIban = true
-                    //self.isIbanValid.send(false)
+                    // self.isIbanValid.send(false)
                 }
                 else if selectedDocs.isEmpty && self.ribNumberHeaderTextFieldView.text == "" {
                     self.ribNumberHeaderTextFieldView.showBorderState(state: .hidden)
                     self.showInvalidIban = false
-                    //self.isIbanValid.send(false)
+                    // self.isIbanValid.send(false)
                 }
             }
             else {

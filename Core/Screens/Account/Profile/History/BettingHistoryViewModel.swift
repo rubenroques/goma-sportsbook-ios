@@ -143,7 +143,7 @@ class BettingHistoryViewModel {
             if let startDate = Calendar.current.date(byAdding: .day, value: -30, to: Date()) {
                 self.startDatePublisher.send(startDate)
             }
-        default :
+        default: 
             if let startDate = Calendar.current.date(byAdding: .day, value: -90, to: Date()) {
                 self.startDatePublisher.send(startDate)
             }
@@ -487,7 +487,8 @@ class BettingHistoryViewModel {
             if let resetDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date) {
                 finalDate = resetDate
 
-            } else {
+            }
+            else {
                 print("Failed to reset to start date.")
             }
         }
@@ -495,7 +496,8 @@ class BettingHistoryViewModel {
             if let resetDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date) {
                 finalDate = resetDate
 
-            } else {
+            }
+            else {
                 print("Failed to reset to end date.")
             }
         }

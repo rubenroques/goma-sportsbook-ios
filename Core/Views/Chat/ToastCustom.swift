@@ -24,7 +24,7 @@ public class ToastCustom {
         return CGAffineTransform(scaleX: 0.9, y: 0.9).translatedBy(x: 0, y: -100)
     }
 
-    //Initiate toast with custom text and config
+    // Initiate toast with custom text and config
     public static func text(
         title: String,
         config: ToastCustomConfiguration = ToastCustomConfiguration()
@@ -33,7 +33,7 @@ public class ToastCustom {
         return self.init(view: view, config: config)
     }
 
-    //Show toast
+    // Show toast
     public func show(after delay: TimeInterval = 0) {
         self.config.view?.addSubview(view) ?? topController()?.view.addSubview(view)
         self.view.createView(for: self)
@@ -47,7 +47,7 @@ public class ToastCustom {
         }
     }
 
-    //Close toast
+    // Close toast
     @objc public func close(after time: TimeInterval = 0, completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: config.animationTime, delay: time, options: [.curveEaseIn, .allowUserInteraction], animations: {
             self.view.transform = self.initialTransform
@@ -57,7 +57,7 @@ public class ToastCustom {
         })
     }
 
-    //Return the appropriate view controller to display toast
+    // Return the appropriate view controller to display toast
     private func topController() -> UIViewController? {
         let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
 

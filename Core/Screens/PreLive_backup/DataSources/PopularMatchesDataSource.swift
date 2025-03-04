@@ -142,7 +142,6 @@ extension PopularMatchesDataSource {
 
     private func fetchPopularMatches() {
 
-
         self.isLoadingCurrentValueSubject.send(true)
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
@@ -408,8 +407,6 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             self.fetchPopularMatchesNextPage()
         }
     }
-    
-    
 
 }
 

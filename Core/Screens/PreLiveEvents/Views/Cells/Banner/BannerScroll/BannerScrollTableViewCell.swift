@@ -58,11 +58,6 @@ class BannerScrollTableViewCell: UITableViewCell {
 
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 

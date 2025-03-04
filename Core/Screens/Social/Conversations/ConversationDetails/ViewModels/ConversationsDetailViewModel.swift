@@ -58,7 +58,6 @@ class ConversationDetailViewModel: NSObject {
         
         super.init()
 
-
         self.setupConversationInfo()
         self.startSocketListening()
 
@@ -188,7 +187,7 @@ class ConversationDetailViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] chatMessage in
 
-                if let conversationId = self?.conversationId ,
+                if let conversationId = self?.conversationId,
                    let updatedMessage = chatMessage {
                     guard let self = self else {return}
 

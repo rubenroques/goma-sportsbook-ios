@@ -56,15 +56,6 @@ class UserTrackingViewController: UIViewController {
         self.commonInit()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -191,7 +182,6 @@ extension UserTrackingViewController {
         stackView.spacing = 28
         return stackView
     }
-
 
     private static func createContinueButton() -> UIButton {
         let sendButton = UIButton()

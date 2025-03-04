@@ -119,7 +119,8 @@ extension MatchLineTableCellViewModel {
                 if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
                     oldMatch.markets = finalMarkets
                     self?.match = oldMatch
-                } else {
+                }
+                else {
                     newMatch.markets = finalMarkets
                     self?.match = newMatch
                 }
@@ -280,7 +281,7 @@ extension Match: VisuallySimilar {
         equalValue = equalValue && lhs.matchTime == rhs.matchTime
         if !equalValue { return (false, "Match detailedScores") }
         
-        let arrayEqualValue = Array<Market>.visuallySimilar(lhs: lhs.markets, rhs: rhs.markets)
+        let arrayEqualValue = [Market].visuallySimilar(lhs: lhs.markets, rhs: rhs.markets)
         equalValue = equalValue && arrayEqualValue.0
         if !equalValue { return (false, arrayEqualValue.1) }
             
@@ -336,7 +337,7 @@ extension BettingOffer: VisuallySimilar {
 }
 
 extension Array: VisuallySimilar where Element: VisuallySimilar {
-    public static func visuallySimilar(lhs: Array<Element>, rhs: Array<Element>) -> (Bool, String?) {
+    public static func visuallySimilar(lhs: [Element], rhs: [Element]) -> (Bool, String?) {
         guard lhs.count == rhs.count else { return (false, "array count diff") }
         for (left, right) in zip(lhs, rhs) {
             let equalValue = Element.visuallySimilar(lhs: left, rhs: right)

@@ -28,7 +28,7 @@ class ContactSettingsViewModel {
 
     // MARK: Setup and functions
     private func getUserSettings() {
-        //self.notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
+        // self.notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
         self.isLoadingPublisher.send(true)
 
         Env.servicesProvider.getUserConsents()
@@ -157,7 +157,7 @@ class ContactSettingsViewModel {
 
                 self?.isLoadingPublisher.send(false)
 
-            }, receiveValue: { [weak self] basicResponse in
+            }, receiveValue: { [weak self] _ in
                 if let notificationUserSettings = self?.notificationsUserSettings {
                     UserDefaults.standard.notificationsUserSettings = notificationUserSettings
                 }

@@ -173,7 +173,6 @@ class HomeViewController: UIViewController {
             }
         }
 
-
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.showLoading()
@@ -1150,7 +1149,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 self?.openMatchDetails(matchId: match.id)
             }
 
-            cell.selectedOutcome = { [weak self] match, market, outcome in
+            cell.selectedOutcome = { [weak self] match, _, outcome in
                 if let matchTrackableReference = match.trackableReference,
                    let outcomeTrackableReference = outcome.externalReference {
                     self?.trackOutcomeClick(matchId: matchTrackableReference, outcomeId: outcomeTrackableReference)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-//enum MainMarketType: String {
+// enum MainMarketType: String {
 //
 //    case homeDrawAway = "69"
 //    case doubleChance = "9"
@@ -49,8 +49,8 @@ import Foundation
 //        }
 //    }
 //
-//}
-//enum MainMarketType: String {
+// }
+// enum MainMarketType: String {
 //
 //    case homeDrawAway = "1"
 //    case handicap = "20"
@@ -89,7 +89,7 @@ import Foundation
 //        }
 //    }
 //
-//}
+// }
 
 struct MainMarketType: Equatable {
     var id: String

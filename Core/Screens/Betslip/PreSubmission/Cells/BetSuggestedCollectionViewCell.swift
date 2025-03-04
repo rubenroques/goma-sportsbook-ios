@@ -58,7 +58,6 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
     }
 
-
     func setupWithViewModel(viewModel: SuggestedBetViewModel) {
         self.viewModel = viewModel
 

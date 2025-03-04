@@ -5,7 +5,6 @@
 //  Created by Ruben Roques on 19/11/2024.
 //
 
-
 import UIKit
 
 // known-good: Xcode 8.2.1
@@ -44,28 +43,28 @@ import UIKit
  initializers, so it is a drop-in substitute.
  
  */
-public class ScaleAspectFitImageView : UIImageView
+public class ScaleAspectFitImageView: UIImageView
 {
     /// constraint to maintain same aspect ratio as the image
-    private var aspectRatioConstraint:NSLayoutConstraint? = nil
+    private var aspectRatioConstraint: NSLayoutConstraint?
     
     required public init?(coder aDecoder: NSCoder) {
-        super.init(coder:aDecoder)
+        super.init(coder: aDecoder)
         self.setup()
     }
     
-    public override init(frame:CGRect) {
-        super.init(frame:frame)
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
         self.setup()
     }
     
     public override init(image: UIImage!) {
-        super.init(image:image)
+        super.init(image: image)
         self.setup()
     }
     
     public override init(image: UIImage!, highlightedImage: UIImage?) {
-        super.init(image:image,highlightedImage:highlightedImage)
+        super.init(image: image, highlightedImage: highlightedImage)
         self.setup()
     }
     

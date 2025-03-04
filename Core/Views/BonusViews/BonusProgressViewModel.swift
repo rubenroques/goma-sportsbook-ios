@@ -66,10 +66,10 @@ class BonusProgressViewModel: NSObject {
 
         progressBarAmount = Float(remainingAmount/totalAmount)
 
-        //self.progressBarView.progress = progressBarAmount
+        // self.progressBarView.progress = progressBarAmount
 
         progressAmountString = "\(remainingAmount) / \(totalAmount) \(amountCurrency)"
-        //self.setupColoredLabel(label: self.progressAmountLabel, text: progressAmountString, color: bonusColor)
+        // self.setupColoredLabel(label: self.progressAmountLabel, text: progressAmountString, color: bonusColor)
 
     }
 }

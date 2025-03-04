@@ -45,7 +45,6 @@ class ChipsTypeView: UIView {
         }
     }
 
-
     // MARK: - Properties
     private let viewModel: ChipsTypeViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -148,7 +147,7 @@ extension ChipsTypeView: UICollectionViewDelegate, UICollectionViewDataSource {
             fatalError()
         }
         
-        if case .backgroungImage(_, _, _) = tab {
+        if case .backgroungImage = tab {
             cell.isCustomDesign = true
         }
         

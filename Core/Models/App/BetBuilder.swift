@@ -155,7 +155,7 @@ class BetBuilderTransformer {
                 print("DebugTransformer: requestCompatibles: \(betBuilderCalculateResponse)")
                
                 self.validateTickets(validTickets)
-                self.computeState(tickets, odd: betBuilderCalculateResponse.totalOdd,  potentialReturn: betBuilderCalculateResponse.potentialReturn)
+                self.computeState(tickets, odd: betBuilderCalculateResponse.totalOdd, potentialReturn: betBuilderCalculateResponse.potentialReturn)
             }
             .store(in: &self.cancellables)
     }
@@ -198,7 +198,6 @@ class BetBuilderTransformer {
             self.invalidTicketsIds.remove(bettingTicket.id)
         }
     }
-    
         
     private func computeState(_ tickets: [BettingTicket], odd: Double?, potentialReturn: Double?) {
         let messageForTickets = self.messageForTickets(tickets)
@@ -219,7 +218,6 @@ class BetBuilderTransformer {
                                                isBetAllowed: (odd != nil && potentialReturn != nil)) )
     }
     
-    
     private func messageForTickets(_ tickets: [BettingTicket]) -> BetBuilderState.MessageKey? {
         // Check if there are any tickets that are not compatible
         // let someSelectionsNotCompatible = tickets.first { !($0.compatibleForBetBuilderGroup ?? false) } != nil
@@ -230,7 +228,6 @@ class BetBuilderTransformer {
         let someSelectionsNotCompatible = tickets.contains { invalidTicketsIds.contains($0.id) }
         // Count tickets that are bettable (not in invalidTicketsIds)
         let countBettableSelections = tickets.filter { !invalidTicketsIds.contains($0.id) }.count
-
         
         let someSelectionsNotAvailable = tickets.filter { !$0.isAvailable }.count > 1
         
@@ -370,7 +367,6 @@ class BetBuilderProcessor: Codable {
     var hasValidTickets: Bool {
         return self.validTickets.isNotEmpty
     }
-    
     
     enum CodingKeys: String, CodingKey {
         case calculatedOddForValidTickets

@@ -118,10 +118,6 @@ class HeaderDropDownSelectionView: UIView {
 
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
     // MARK: - Slide Up and Down
     //
     func slideUp(animated: Bool = true) {

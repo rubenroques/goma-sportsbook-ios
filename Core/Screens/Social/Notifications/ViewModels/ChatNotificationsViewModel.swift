@@ -118,7 +118,7 @@ class ChatNotificationsViewModel {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] response in
+            }, receiveValue: { [weak self] _ in
                 self?.updateFriendRequests(friendRequestId: friendRequestId)
                 Env.gomaSocialClient.forceRefresh()
 
@@ -138,7 +138,7 @@ class ChatNotificationsViewModel {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] response in
+            }, receiveValue: { [weak self] _ in
                 self?.updateFriendRequests(friendRequestId: friendRequestId)
             })
             .store(in: &cancellables)

@@ -38,7 +38,7 @@ class RibDocsViewModel {
 
         self.getKYCStatus()
 
-        //self.getDocumentTypes()
+        // self.getDocumentTypes()
         
         self.getPaymentInfo()
     }
@@ -174,7 +174,7 @@ class RibDocsViewModel {
 
                 let uploadedFiles = userDocuments.filter({
                     $0.documentType == documentType.documentType
-                }).enumerated().map({ (index, userDocument) -> DocumentFileInfo in
+                }).enumerated().map({ index, userDocument -> DocumentFileInfo in
 
                     let userDocumentStatus = FileState(code: userDocument.status)
 

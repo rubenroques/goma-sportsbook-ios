@@ -82,11 +82,10 @@ class SupportPageViewModel {
                         ()
                     }
                 }
-            }, receiveValue: { [weak self] supportResponse in
+            }, receiveValue: { [weak self] _ in
                 self?.supportResponseAction?(true, nil)
             })
             .store(in: &cancellables)
-
         
 //        Env.gomaNetworkClient.sendSupportTicket(deviceId: Env.deviceId, title: title, message: message)
 //            .receive(on: DispatchQueue.main)

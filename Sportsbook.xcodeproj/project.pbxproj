@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -8743,7 +8743,6 @@
 		CEA569C12D5A59C500696793 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CEA569A22D5A59C500696793 /* avatar3-dark.json */; };
 		CEA569C22D5A59C500696793 /* ATP-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA569AC2D5A59C500696793 /* ATP-Assets.xcassets */; };
 		CEA569C32D5A59C500696793 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CEA569A62D5A59C500696793 /* avatar5-dark.json */; };
-		CEA569C42D5A59C500696793 /* ATP-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEA569B62D5A59C500696793 /* ATP-Info.plist */; };
 		CEA569C52D5A59C500696793 /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = CEA569AA2D5A59C500696793 /* replay_sucess.json */; };
 		CEA569C62D5A59C500696793 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA569AE2D5A59C500696793 /* Media.xcassets */; };
 		CEA569C72D5A59C500696793 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CEA569A52D5A59C500696793 /* avatar4-light.json */; };
@@ -10438,10 +10437,6 @@
 		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		6550BFAF2D67706800270C58 /* RegisterFlowUnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RegisterFlowUnitTests; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		450B7A8F28F58574009229E3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -11226,7 +11221,6 @@
 				455A0C5226BD902C00EC572D /* Core */,
 				455A0C9226BD906700EC572D /* Clients */,
 				655E1FFC2B21E8A500C95337 /* NotificationsService */,
-				6550BFAF2D67706800270C58 /* RegisterFlowUnitTests */,
 				455A0C5126BD902C00EC572D /* Products */,
 				455A0D2F26BDF61200EC572D /* Frameworks */,
 			);
@@ -15147,9 +15141,6 @@
 			dependencies = (
 				6550BFB32D67706800270C58 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				6550BFAF2D67706800270C58 /* RegisterFlowUnitTests */,
-			);
 			name = RegisterFlowUnitTests;
 			packageProductDependencies = (
 			);
@@ -15351,7 +15342,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					455A0C6526BD902F00EC572D = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -16941,7 +16932,6 @@
 				CEA569C12D5A59C500696793 /* avatar3-dark.json in Resources */,
 				CEA569C22D5A59C500696793 /* ATP-Assets.xcassets in Resources */,
 				CEA569C32D5A59C500696793 /* avatar5-dark.json in Resources */,
-				CEA569C42D5A59C500696793 /* ATP-Info.plist in Resources */,
 				CEA569C52D5A59C500696793 /* replay_sucess.json in Resources */,
 				CEA569C62D5A59C500696793 /* Media.xcassets in Resources */,
 				CEA569C72D5A59C500696793 /* avatar4-light.json in Resources */,
@@ -24864,7 +24854,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-UAT/SportRadar-UAT-Info.plist";
@@ -24896,7 +24886,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-UAT/SportRadar-UAT-Info.plist";
@@ -25092,7 +25082,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -25121,7 +25111,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -25150,7 +25140,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "./Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -25179,7 +25169,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "./Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -25208,7 +25198,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -25237,7 +25227,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -25267,7 +25257,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103601;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -25299,7 +25289,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103601;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -25331,7 +25321,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103457;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/DAZN/Misc/DAZN-Info.plist";
@@ -25363,7 +25353,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103457;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/DAZN/Misc/DAZN-Info.plist";
@@ -25395,7 +25385,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = " 103601";
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -25427,7 +25417,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = " 103601";
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -25457,7 +25447,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -25487,7 +25477,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -25513,7 +25503,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -25540,7 +25530,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Betsson Notif Ext - Development";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Betsson Notif Ext - Development";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc fr.betsson.ios.app.betssonNotificationsService";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -25558,7 +25548,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -25596,7 +25586,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -25626,7 +25616,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -25656,7 +25646,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-PROD/SportRadar-PROD-Info.plist";
@@ -25688,7 +25678,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103454;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-PROD/SportRadar-PROD-Info.plist";
@@ -25720,7 +25710,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103457;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/ATP/Misc/ATP-Info.plist";
@@ -25752,7 +25742,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103457;
+				CURRENT_PROJECT_VERSION = 103602;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/ATP/Misc/ATP-Info.plist";

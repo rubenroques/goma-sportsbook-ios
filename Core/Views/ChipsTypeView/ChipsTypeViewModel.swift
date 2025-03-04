@@ -43,7 +43,8 @@ class ChipsTypeViewModel {
         if index >= 0 && index < tabs.count {
             selectedIndex = index
             pendingSelectionIndex = nil
-        } else {
+        }
+        else {
             // Store the selection request for when tabs are updated
             pendingSelectionIndex = index
         }

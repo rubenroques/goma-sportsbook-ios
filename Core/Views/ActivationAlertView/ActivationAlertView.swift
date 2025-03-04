@@ -16,7 +16,7 @@ class ActivationAlertView: NibView {
     @IBOutlet private var linkLabel: UILabel!
 
     // Variables
-    var onClose:(() -> Void)?
+    var onClose: (() -> Void)?
     var linkLabelAction: (() -> Void)?
 
     var hasCloseAction: Bool = false {

@@ -311,7 +311,7 @@ extension SharedTicketCardView {
     private static func createTotalOddTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold , size: 10)
+        label.font = AppFont.with(type: .bold, size: 10)
         label.text = localized("total_odd")
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -321,7 +321,7 @@ extension SharedTicketCardView {
     private static func createTotalOddSubtitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold , size: 12)
+        label.font = AppFont.with(type: .bold, size: 12)
         label.text = "-.--"
         label.textAlignment = .center
         return label
@@ -330,7 +330,7 @@ extension SharedTicketCardView {
     private static func createBetAmountTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold , size: 10)
+        label.font = AppFont.with(type: .bold, size: 10)
         label.text = localized("bet_amount")
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -340,7 +340,7 @@ extension SharedTicketCardView {
     private static func createBetAmountSubtitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold , size: 12)
+        label.font = AppFont.with(type: .bold, size: 12)
         label.text = "-.--"
         label.textAlignment = .center
         return label
@@ -349,7 +349,7 @@ extension SharedTicketCardView {
     private static func createWinningsTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold , size: 10)
+        label.font = AppFont.with(type: .bold, size: 10)
         label.text = localized("winnings")
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -359,7 +359,7 @@ extension SharedTicketCardView {
     private static func createWinningsSubtitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold , size: 14)
+        label.font = AppFont.with(type: .bold, size: 14)
         label.text = "-.--"
         label.textAlignment = .center
         return label

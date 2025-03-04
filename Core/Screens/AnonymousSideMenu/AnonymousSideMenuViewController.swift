@@ -323,7 +323,7 @@ extension AnonymousSideMenuViewController {
         }
         
         betSelectorViewConroller.addToBetslip = { [weak self] betSwipeData in
-            //self?.addBetToBetslip(withBetSwipeData: betSwipeData)
+            // self?.addBetToBetslip(withBetSwipeData: betSwipeData)
             self?.addBetToBetslipAction?(betSwipeData)
         }
         
@@ -563,4 +563,3 @@ extension AnonymousSideMenuViewController {
     }
 
 }
-

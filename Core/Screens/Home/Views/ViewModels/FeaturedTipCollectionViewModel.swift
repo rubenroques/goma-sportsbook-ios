@@ -219,7 +219,6 @@ class FeaturedTipCollectionViewModel {
 
 }
 
-
 class FeaturedTipSelectionViewModel {
     
     var outcomeName: String {
@@ -327,7 +326,6 @@ class FeaturedTipSelectionViewModel {
         return self.marketNameSubject.removeDuplicates().eraseToAnyPublisher()
     }
     private var marketNameSubject: CurrentValueSubject<String, Never> = .init("-")
-
     
     var outcomeNamePublisher: AnyPublisher<String, Never> {
         return self.outcomeNameSubject.removeDuplicates().eraseToAnyPublisher()
@@ -362,7 +360,7 @@ class FeaturedTipSelectionViewModel {
                 
         Env.servicesProvider.getMarketInfo(marketId: marketId)
             .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
-            .sink { completion in
+            .sink { _ in
                 
             } receiveValue: { [weak self] market in
                 for outcome in market.outcomes {

@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 extension EveryMatrix {
 
     struct EventPartScore: Codable {

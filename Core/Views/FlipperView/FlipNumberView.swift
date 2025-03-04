@@ -141,7 +141,6 @@ class FlipNumberView: UIView {
             
             if let number = numberAsIntsArray[safe: key] {
                 
-                
                 stripView.scrollToNumber(number, animated: animated, multiplier: reversedMultiplier, slideUp: slideUp)
                 
                 if stripView.isHidden {
@@ -258,7 +257,6 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
         
 //        self.tableView.setNeedsLayout()
 //        self.tableView.layoutIfNeeded()
-
         
 //        self.tableView.scrollToRow(at: IndexPath(row: infiniteSize/2, section: 0),
 //                                   at: .middle,
@@ -292,7 +290,6 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
 
         let numberShowing = values[centerRow % values.count]
         
-        
         // let topDifference = number - numberShowing
         // let bottomDifference = number - numberShowing
         
@@ -320,9 +317,6 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
             }
             newIndex = (centerRow - difference) - (multiplier * 10)
         }
-        
-        
-        
         
 //        self.tableView.contentOffset = CGPoint(x: 0, y: 10)
         

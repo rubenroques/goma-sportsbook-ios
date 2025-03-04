@@ -33,7 +33,7 @@ class BettingHistoryViewController: UIViewController {
     private let rightGradientMaskLayer = CAGradientLayer()
     private var locationsCodesDictionary: [String: String] = [:]
     
-    //var redrawTableViewAction: ((Bool) -> Void)?
+    // var redrawTableViewAction: ((Bool) -> Void)?
     var tappedMatchDetail: ((String) -> Void)?
     var requestShareActivityView: ((UIImage, String, String) -> Void)?
 

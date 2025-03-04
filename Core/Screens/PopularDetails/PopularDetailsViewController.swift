@@ -506,7 +506,6 @@ extension PopularDetailsViewController {
         return activityIndicatorView
     }
 
-
     private static func createAccountValueView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false

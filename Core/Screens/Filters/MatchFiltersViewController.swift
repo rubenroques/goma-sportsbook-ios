@@ -36,8 +36,6 @@ class MatchFiltersViewController: UIViewController {
         self.commonInit()
     }
 
-    
-
     func commonInit() {
         self.navigationLabel.text = localized("choose_sport")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 16)

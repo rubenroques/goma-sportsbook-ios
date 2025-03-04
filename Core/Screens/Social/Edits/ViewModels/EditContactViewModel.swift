@@ -85,7 +85,7 @@ class EditContactViewModel {
                     ()
                 }
 
-            }, receiveValue: { [weak self] response in
+            }, receiveValue: { [weak self] _ in
                 self?.shouldCloseChat.send(true)
             })
             .store(in: &cancellables)

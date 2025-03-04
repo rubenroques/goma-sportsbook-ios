@@ -45,7 +45,6 @@ class BettingHistoryRootViewModel {
             return ""
         }
         
-        
     }
 
 }
@@ -195,7 +194,6 @@ class BettingHistoryRootViewController: UIViewController {
         self.filterBaseView.layer.masksToBounds = true
 
         self.filtersCountLabel.layer.cornerRadius = self.filtersCountLabel.frame.width/2
-
 
     }
     // MARK: - Bindings

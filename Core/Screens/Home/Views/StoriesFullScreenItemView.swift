@@ -103,12 +103,10 @@ class StoriesFullScreenItemView: UIView {
     private var playerItemStatusObserver: NSKeyValueObservation?
     private lazy var videoLoadingView: UIActivityIndicatorView = Self.createVideoLoadingView()
 
-
     //
     
     private lazy var soundImageBaseView: UIView = Self.createSoundImageBaseView()
     private lazy var soundImageView: UIImageView = Self.createSoundImageView()
-    
     
     private lazy var closeImageBaseView: UIView = Self.createCloseImageBaseView()
     private lazy var closeImageView: UIImageView = Self.createCloseImageView()

@@ -58,7 +58,7 @@ class CompetitionsFiltersView: UIView {
             if self.loadedExpandedCells.isEmpty {
                 self.expandedCellsDictionary = [:]
                 self.competitions.forEach({ competition in
-                    //self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
+                    // self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
                     self.expandedCellsDictionary[competition.id] = (competition.id == self.competitions.first?.id)
 
                     if self.expandedCellsDictionary[competition.id] == true {
@@ -548,7 +548,8 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
                     self.selectedIds.send(selectedIdsCopy)
 
                     self.insertCompetition(withId: competitionId, countryGroupId: locationId)
-                } else {
+                }
+                else {
                     var selectedIdsCopy = self.selectedIds.value
                     selectedIdsCopy.remove(competitionId)
                     self.selectedIds.send(selectedIdsCopy)
@@ -558,7 +559,8 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
 
                 self.reloadTableView()
             }
-        } else if mode == .navigate {
+        }
+        else if mode == .navigate {
             cell.didTapNavigationAction = { [weak self] competitionId in
                 self?.didTapCompetitionNavigationAction(competitionId)
             }
@@ -618,7 +620,7 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         headerView.sectionIdentifier = viewModelForSection.id
 //        headerView.titleLabel.text = viewModelForSection.name
 //
-        //headerView.viewModel = viewModelForSection
+        // headerView.viewModel = viewModelForSection
 
         headerView.configure(viewModel: viewModelForSection)
 

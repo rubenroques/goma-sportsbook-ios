@@ -110,7 +110,7 @@ extension TitleView {
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             self.containerView.heightAnchor.constraint(equalToConstant: 50),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant:16),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 

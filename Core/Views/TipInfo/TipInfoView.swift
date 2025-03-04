@@ -35,11 +35,6 @@ class TipInfoView: UIView {
 
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-    }
-
     func setupWithTheme() {
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 

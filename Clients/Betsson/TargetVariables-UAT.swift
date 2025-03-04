@@ -116,4 +116,3 @@ struct TargetVariables: SportsbookTarget {
         return .betsson
     }
 }
-

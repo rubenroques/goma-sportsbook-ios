@@ -51,15 +51,6 @@ class UpdatedTermsConditionsViewController: UIViewController {
         self.commonInit()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -83,7 +74,7 @@ class UpdatedTermsConditionsViewController: UIViewController {
         
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
         self.introTextLabel.textColor = UIColor.App.textPrimary
-        //self.descriptionTextLabel.textColor = UIColor.App.textPrimary
+        // self.descriptionTextLabel.textColor = UIColor.App.textPrimary
         
         StyleHelper.styleButton(button: self.continueButton)
     }

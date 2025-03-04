@@ -45,7 +45,7 @@ class RealtimeSocketClient {
 
     func connectAfterAuth() {
         // We can only connect to the ea
-        Auth.auth().addStateDidChangeListener { [weak self] auth, user in 
+        Auth.auth().addStateDidChangeListener { [weak self] _, user in 
             if user != nil {
                 self?.connect()
             }

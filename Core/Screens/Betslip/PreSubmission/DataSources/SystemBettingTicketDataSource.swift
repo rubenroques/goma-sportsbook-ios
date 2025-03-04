@@ -39,4 +39,3 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
     }
     
 }
-

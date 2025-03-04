@@ -399,12 +399,6 @@ struct ExtraSelectionInfo: Decodable {
     var bettingOfferId: String
     var marketName: String
     var outcomeEntity: OutcomeEntity
-
-    init(bettingOfferId: String, marketName: String, outcomeEntity: OutcomeEntity) {
-        self.bettingOfferId = bettingOfferId
-        self.marketName = marketName
-        self.outcomeEntity = outcomeEntity
-    }
     
     enum CodingKeys: String, CodingKey {
         case bettingOfferId = "bettingOfferId"
@@ -417,11 +411,6 @@ struct OutcomeEntity: Decodable {
 
     var id: String
     var statusId: Int
-    
-    init(id: String, statusId: Int) {
-        self.id = id
-        self.statusId = statusId
-    }
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -445,17 +434,17 @@ struct RankingTip: Decodable {
 
 struct Follower: Decodable {
     var id: Int
-    //var userId: Int
+    // var userId: Int
     var name: String
-    //var userFollowerId: Int
-    //var nameFollower: String
+    // var userFollowerId: Int
+    // var nameFollower: String
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
-        //case userId = "user_id"
+        // case userId = "user_id"
         case name = "name"
-        //case userFollowerId = "user_follower_id"
-        //case nameFollower = "name_follower"
+        // case userFollowerId = "user_follower_id"
+        // case nameFollower = "name_follower"
     }
 
 }

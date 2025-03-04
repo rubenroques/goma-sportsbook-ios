@@ -131,7 +131,7 @@ class AppSettingsViewController: UIViewController {
         if #available(iOS 11, *) {
 
             let authContext = LAContext()
-            let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+            _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
             switch authContext.biometryType {
             case .touchID:
                 let fingerprintView = SettingsRowView()

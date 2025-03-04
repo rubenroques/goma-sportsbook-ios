@@ -352,7 +352,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     private var cashbackResultValuePublisher: CurrentValueSubject<Double?, Never> = .init(nil)
 
-
     private var isKeyboardShowingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     private var isLoading = false {
@@ -1064,7 +1063,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return listTypePublisher == .betBuilder
             })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
+            .sink(receiveValue: { [weak self] bettingValue, _, bettingTickets in
                 
                 let ticketsMatches = bettingTickets.map(\.matchId)
                 let allBetsSameMatch = Set(ticketsMatches).count == 1
@@ -1094,7 +1093,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return listTypePublisher == .betBuilder
             })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
+            .sink(receiveValue: { [weak self] bettingValue, _, bettingTickets in
                 let ticketsMatches = bettingTickets.map(\.matchId)
                 let allBetsSameMatch = Set(ticketsMatches).count == 1
                 let hasValidBettingValue = bettingValue > 0.0 && allBetsSameMatch
@@ -1425,10 +1424,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryMaxButtonView.clipsToBounds = true
 
         self.secondaryAmountBaseView.layer.cornerRadius = CornerRadius.view
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -1811,7 +1806,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.flipNumberView.bottomAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.bottomAnchor, constant: -3)
 
         ])
-
 
         self.isCashbackToggleOn
             .receive(on: DispatchQueue.main)
@@ -2616,7 +2610,7 @@ extension PreSubmissionBetslipViewController {
             self?.rejectBet(betDetails: betDetails)
             backgroundView.removeFromSuperview()
         }
-        boostedBetConfirmationView.didDisappearAction = { [weak self] betDetails in
+        boostedBetConfirmationView.didDisappearAction = { [weak self] _ in
             backgroundView.removeFromSuperview()
         }
         //
@@ -2820,7 +2814,6 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         // Append the new digit to the end of the string
         internalValueString = internalValueString + newValue // swiftlint:disable:this shorthand_operator
 
-
         //
         // internalValue = (internalValue * 10) + newValue
 
@@ -2829,7 +2822,6 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         }
 
         guard let doubleValue = Double(internalValueString) else { return }
-
 
         // let calculatedAmount = Double(internalValue/100) + Double(internalValue%100)/100
         self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: doubleValue))
@@ -2953,4 +2945,3 @@ struct BonusMultipleBetslip {
     var freeBet: BetslipFreebet?
     var oddsBoost: BetslipOddsBoost?
 }
-

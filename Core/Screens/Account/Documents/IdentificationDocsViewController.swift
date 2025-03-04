@@ -251,7 +251,7 @@ class IdentificationDocsViewController: UIViewController {
 
         viewModel.sumsubAccessTokenPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue:  { [weak self] accessToken in
+            .sink(receiveValue: { [weak self] accessToken in
                 if accessToken != "" {
                     self?.showSumsub(accessToken: accessToken)
                 }
@@ -390,18 +390,18 @@ class IdentificationDocsViewController: UIViewController {
 //        }
 
         // Verification handler
-        sdk.verificationHandler { (isApproved) in
+        sdk.verificationHandler { isApproved in
             print("verificationHandler: Applicant is " + (isApproved ? "approved" : "finally rejected"))
         }
 
         // Dismiss handler
-        sdk.dismissHandler { (sdk, mainVC) in
-            mainVC.dismiss(animated: true, completion: nil)
+        sdk.dismissHandler { _, mainViewController in
+            mainViewController.dismiss(animated: true, completion: nil)
 
             self.viewModel.checkDocumentationData()
         }
 
-        sdk.onEvent { (sdk, event) in
+        sdk.onEvent { sdk, event in
 
             switch event.eventType {
 
@@ -440,7 +440,7 @@ class IdentificationDocsViewController: UIViewController {
 
         }
 
-        sdk.onStatusDidChange { (sdk, prevStatus) in
+        sdk.onStatusDidChange { sdk, prevStatus in
 
             print("onStatusDidChange: [\(sdk.description(for: prevStatus))] -> [\(sdk.description(for: sdk.status))]")
 

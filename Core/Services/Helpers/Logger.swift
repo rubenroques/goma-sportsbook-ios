@@ -111,7 +111,7 @@ private extension LoggerService {
 //            })
 //            .store(in: &cancellables)
 
-        //"ht tps://sportsbook-api.gomagaming.com" + logs
+        // "ht tps://sportsbook-api.gomagaming.com" + logs
 
 //        let urlString = TargetVariables.gomaGamingHost + "/logs/api/v1"
 //        var request = URLRequest(url: URL(string: urlString)! )

@@ -46,7 +46,6 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
     static var localizationOverrides: [String: String] { get }
 }
 
-
 enum SportsbookTargetFeatures: CaseIterable {
     case homeBanners
     case homePopUps

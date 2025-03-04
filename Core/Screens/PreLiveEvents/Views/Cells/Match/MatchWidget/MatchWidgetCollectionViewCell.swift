@@ -480,7 +480,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
 
-
     // Mix match bottom bar
     lazy var mixMatchContainerView: UIView = {
         let view = UIView()
@@ -920,7 +919,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.bottomSeeAllMarketsBaseView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.leadingAnchor, constant: 12),
             self.bottomSeeAllMarketsBaseView.trailingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.trailingAnchor, constant: -12),
             self.bottomSeeAllMarketsBaseView.topAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.topAnchor),
-
 
             self.bottomSeeAllMarketsLabel.centerXAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerXAnchor),
             self.bottomSeeAllMarketsLabel.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerYAnchor),
@@ -1708,7 +1706,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-
     func drawForMatchWidgetType(_ matchWidgetType: MatchWidgetType) {
         switch matchWidgetType {
         case .normal:
@@ -2232,7 +2229,7 @@ extension MatchWidgetCollectionViewCell {
                 })
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { [weak self] bettingOffer in
 
@@ -2304,7 +2301,7 @@ extension MatchWidgetCollectionViewCell {
                 })
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
                 }, receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
@@ -2373,7 +2370,7 @@ extension MatchWidgetCollectionViewCell {
                 })
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
                 }, receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
@@ -2849,24 +2846,24 @@ extension MatchWidgetCollectionViewCell {
             let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
             if Env.favoritesManager.isEventFavorite(eventId: match.id) {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ in
                     Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
                 }
                 actionSheetController.addAction(favoriteAction)
             }
             else {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ in
                     Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
                 }
                 actionSheetController.addAction(favoriteAction)
             }
 
-            let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in
+            let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ in
                 self?.didTapShareButton()
             }
             actionSheetController.addAction(shareAction)
 
-            let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+            let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
             actionSheetController.addAction(cancelAction)
 
             if let popoverController = actionSheetController.popoverPresentationController {
@@ -3071,7 +3068,6 @@ extension MatchWidgetCollectionViewCell {
 
         self.contentRedesignBaseView.addSubview(homeElementsStackView)
 
-
         let awayElementsStackView = UIStackView()
         awayElementsStackView.translatesAutoresizingMaskIntoConstraints = false
         awayElementsStackView.axis = .horizontal
@@ -3117,7 +3113,6 @@ extension MatchWidgetCollectionViewCell {
             self.detailedScoreView.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
             self.detailedScoreView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13),
 
-
             self.detailedScoreView.leadingAnchor.constraint(greaterThanOrEqualTo: homeElementsStackView.trailingAnchor, constant: 5),
             // self.homeNameLabel.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
             // self.homeNameLabel.trailingAnchor.constraint(equalTo: self.detailedScoreView.leadingAnchor, constant: -5),
@@ -3143,7 +3138,6 @@ extension MatchWidgetCollectionViewCell {
 
             self.awayServingIndicatorView.widthAnchor.constraint(equalTo: self.awayServingIndicatorView.heightAnchor),
             self.awayServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
-
 
             //
             self.dateNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),

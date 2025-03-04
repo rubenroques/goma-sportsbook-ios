@@ -174,7 +174,6 @@ class FullRegisterAddressCountryViewController: UIViewController {
          self.navigationController?.popToRootViewController(animated: true)
     }
 
-
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
@@ -191,7 +190,6 @@ class FullRegisterAddressCountryViewController: UIViewController {
         else {
             return
         }
-
 
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 

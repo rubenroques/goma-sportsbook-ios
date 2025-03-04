@@ -327,7 +327,7 @@ extension BonusAvailableTableViewCell {
 
             self.bannerImageView.leadingAnchor.constraint(equalTo: self.topStackView.leadingAnchor),
             self.bannerImageView.trailingAnchor.constraint(equalTo: self.topStackView.trailingAnchor),
-            //self.bannerImageView.heightAnchor.constraint(equalToConstant: 150),
+            // self.bannerImageView.heightAnchor.constraint(equalToConstant: 150),
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.topStackView.leadingAnchor),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.topStackView.trailingAnchor),

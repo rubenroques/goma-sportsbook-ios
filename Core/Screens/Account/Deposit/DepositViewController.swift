@@ -134,11 +134,6 @@ class DepositViewController: UIViewController {
 
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -1087,7 +1082,6 @@ class DepositViewController: UIViewController {
     private func backButtonDefaultAction() {
         self.navigationController?.popViewController(animated: true)
     }
-    
     
     private func closeButtonDefaultAction() {
         

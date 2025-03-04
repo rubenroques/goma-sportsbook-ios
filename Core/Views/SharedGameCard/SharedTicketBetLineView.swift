@@ -348,7 +348,6 @@ extension SharedTicketBetLineView {
             self.marketTitleLabel.trailingAnchor.constraint(equalTo: self.baseView.centerXAnchor, constant: -2),
             self.marketTitleLabel.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 8),
 
-
             self.marketValueLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
             self.marketValueLabel.leadingAnchor.constraint(equalTo: self.baseView.centerXAnchor, constant: 2),
             self.marketValueLabel.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 8),

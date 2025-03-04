@@ -43,11 +43,6 @@ class TextSectionView: UIView {
         self.commonInit()
         self.setupWithTheme()
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-    }
     
     func commonInit() {
 
@@ -107,7 +102,6 @@ extension TextSectionView {
         label.numberOfLines = 0
         return label
     }
-
     
     private static func createArrowIconImageView() -> UIImageView {
         let imageView = UIImageView()

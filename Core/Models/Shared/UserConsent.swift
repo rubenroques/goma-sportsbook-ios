@@ -15,13 +15,4 @@ struct UserConsent {
     var consentStatus: UserConsentStatus
     var consentType: UserConsentType
 
-    init(id: Int, consentVersionId: Int, name: String, key: String, consentStatus: UserConsentStatus, consentType: UserConsentType) {
-        self.id = id
-        self.consentVersionId = consentVersionId
-        self.name = name
-        self.key = key
-        self.consentStatus = consentStatus
-        self.consentType = consentType
-    }
-
 }

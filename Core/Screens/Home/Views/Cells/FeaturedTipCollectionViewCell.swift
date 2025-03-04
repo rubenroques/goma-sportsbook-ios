@@ -183,7 +183,6 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.selectionsLabel.textColor = UIColor.App.textPrimary
         self.selectionsValueLabel.textColor = UIColor.App.textPrimary
-
         
         StyleHelper.styleButton(button: self.betButton)
         
@@ -231,7 +230,6 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
             self.followButton.isHidden = true
             self.unfollowButton.isHidden = true
         }
-        
         
         self.totalOddsValueLabel.text = "-"
         self.selectionsValueLabel.text = viewModel.getNumberSelections()
@@ -329,7 +327,6 @@ extension FeaturedTipCollectionViewCell {
     
         return view
     }
-    
     
     private static func createContainerBackgroundImageView() -> UIImageView {
         let view = UIImageView()

@@ -62,7 +62,7 @@ struct TargetVariables: SportsbookTarget {
             .highlightedLiveMatches, // LiveGamesHome
             // .makeOwnBetCallToAction, // MakeYourOwnBet
             .highlightedMatches, // Highlights image cards
-            //.videoNewsLine, // Video news cards
+            // .videoNewsLine, // Video news cards
             // .highlightedMarketProChoices, // Pro Choices Markets
             .highlightedBoostedOddsMatches, // Boosted Odds
             .topCompetitionsShortcuts, // TopCompetitionsMobile

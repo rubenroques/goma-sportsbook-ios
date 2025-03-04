@@ -87,11 +87,6 @@ class ChatTicketInMessageView: UIView {
         }
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-    }
-
     // MARK: Layout and Theme
     func setupWithTheme() {
 

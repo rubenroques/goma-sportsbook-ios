@@ -43,7 +43,6 @@ class UserProfileViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
-
     // MARK: Public properties
     var hasFollowOption: Bool = true {
         didSet {
@@ -343,23 +342,23 @@ class UserProfileViewController: UIViewController {
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         if self.viewModel.isFriendUser.value {
-            let unfriendUserAction: UIAlertAction = UIAlertAction(title: localized("unfriend"), style: .default) { [weak self] _ -> Void in
+            let unfriendUserAction: UIAlertAction = UIAlertAction(title: localized("unfriend"), style: .default) { [weak self] _ in
                 self?.viewModel.unfriendUser()
             }
             actionSheetController.addAction(unfriendUserAction)
         }
 
-        let blockUserAction: UIAlertAction = UIAlertAction(title: localized("block_user"), style: .default) { _ -> Void in
+        let blockUserAction: UIAlertAction = UIAlertAction(title: localized("block_user"), style: .default) { _ in
             // NOT YET AVAILABLE
         }
         actionSheetController.addAction(blockUserAction)
 
-        let reportUserAction: UIAlertAction = UIAlertAction(title: localized("report"), style: .default) { _ -> Void in
+        let reportUserAction: UIAlertAction = UIAlertAction(title: localized("report"), style: .default) { _ in
             // NOT YET AVAILABLE
         }
         actionSheetController.addAction(reportUserAction)
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {

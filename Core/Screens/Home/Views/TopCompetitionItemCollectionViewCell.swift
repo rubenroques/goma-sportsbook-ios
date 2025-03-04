@@ -15,13 +15,6 @@ struct TopCompetitionItemCellViewModel {
     var sport: Sport
     var country: Country?
 
-    init(id: String, name: String, sport: Sport, country: Country?) {
-        self.id = id
-        self.name = name
-        self.sport = sport
-        self.country = country
-    }
-
 }
 
 class TopCompetitionItemCollectionViewCell: UICollectionViewCell {

@@ -56,13 +56,11 @@ class CasinoGameDetailViewController: UIViewController {
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
         
-        
         self.viewModel.userBalancePublisher.receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] balance in
                 self?.accountValueLabel.text = balance
             })
             .store(in: &self.cancellables)
-
         
         self.viewModel.userBonusBalancePublisher.receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] balance in
@@ -96,11 +94,6 @@ class CasinoGameDetailViewController: UIViewController {
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
     }
 
     @objc func didTapBackButton() {

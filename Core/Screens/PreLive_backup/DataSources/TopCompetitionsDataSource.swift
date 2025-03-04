@@ -380,7 +380,6 @@ extension TopCompetitionsDataSource {
 
 }
 
-
 extension TopCompetitionsDataSource {
 
     func clearFilters() {

@@ -46,7 +46,8 @@ class ReferralQRCodeViewController: UIViewController {
             if let qrCodeImage = generateQRCodeImageFromURL(for: url, size: CGSize(width: 200, height: 200)) {
 
                 self.qrCodeImageView.image = qrCodeImage
-            } else {
+            }
+            else {
                 print("Failed to generate QR code image from URL")
             }
         }

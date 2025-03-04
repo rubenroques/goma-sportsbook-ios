@@ -59,7 +59,6 @@ class OutrightCompetitionLargeLineTableViewCell: UITableViewCell {
         self.collectionView.register(UICollectionViewCell.self,
                                      forCellWithReuseIdentifier: UICollectionViewCell.identifier)
 
-
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAll))
         self.linesStackView.addGestureRecognizer(tapGestureRecognizer)
    }
@@ -294,5 +293,3 @@ extension OutrightCompetitionLargeLineTableViewCell {
      ])
     }
 }
-
-

@@ -155,7 +155,7 @@ class BonusViewController: UIViewController {
         self.bonusAvailableDataSource.requestApplyBonus = { [weak self] bonusIndex in
             if let bonus = self?.bonusAvailableDataSource.bonusAvailable[safe: bonusIndex] {
                 let bonusCode = bonus.bonus.code
-                //self?.applyBonus(bonusCode: bonusCode)
+                // self?.applyBonus(bonusCode: bonusCode)
                 self?.applyAvailableBonus(bonusCode: bonusCode)
             }
         }
@@ -700,7 +700,7 @@ extension BonusViewController {
         NSLayoutConstraint.activate([
             self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            //self.emptyStateView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8),
+            // self.emptyStateView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8),
             self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 80),

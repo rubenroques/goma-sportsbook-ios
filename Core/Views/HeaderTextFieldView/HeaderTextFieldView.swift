@@ -351,7 +351,7 @@ class HeaderTextFieldView: NibView {
     func setRemoveTextField(size: CGFloat = 30) {
         self.showRemoveImageView.image = UIImage(named: "trash_icon")
         self.showRemoveImageView.isHidden = false
-        //self.imageWidthConstraint.constant = size
+        // self.imageWidthConstraint.constant = size
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapRemoveImageView(_:)))
 
@@ -423,7 +423,7 @@ class HeaderTextFieldView: NibView {
         selectionArray = array
 
         pickerView.delegate = self
-        //pickerView.selectRow(defaultValue, inComponent: 0, animated: true)
+        // pickerView.selectRow(defaultValue, inComponent: 0, animated: true)
 
         if !headerVisible {
             headerLabel.isHidden = true
@@ -434,7 +434,6 @@ class HeaderTextFieldView: NibView {
 
         textField.inputView = pickerView
         textField.text = selectionArray[defaultValue]
-        
 
         // Set arrow image
         let arrowDropdownImageView = UIImageView()

@@ -114,17 +114,6 @@ class SocialViewController: UIViewController {
         self.settingsButton.isHidden = true
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        // self.showWorkInProgressAlert()
-    }
-
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 

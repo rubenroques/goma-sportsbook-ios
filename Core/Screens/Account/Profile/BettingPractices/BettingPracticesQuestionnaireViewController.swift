@@ -92,13 +92,6 @@ class BettingPracticesQuestionnaireViewController: UIViewController {
             .store(in: &self.cancellables)
     }
     
-    // MARK: Theme and layout
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-
-    }
-    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -181,7 +174,7 @@ class BettingPracticesQuestionnaireViewController: UIViewController {
 
         let questionnairePerStepPublisher = self.questionFormStepViews.map(\.isFormComplete).combineLatest()
         self.questionnaireCompletionPublisher = Publishers.CombineLatest(self.viewModel.currentStep, questionnairePerStepPublisher)
-            .map { (currentPage, completionPerStepArray) -> Bool in
+            .map { currentPage, completionPerStepArray -> Bool in
                 let isStepCompleted = completionPerStepArray[safe: currentPage] ?? false
                 return isStepCompleted
             }

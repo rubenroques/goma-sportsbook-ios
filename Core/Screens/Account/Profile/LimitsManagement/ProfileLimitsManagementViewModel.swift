@@ -306,7 +306,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 
                         self?.isLoadingPublisher.send(false)
                     }
-                }, receiveValue: { [weak self] updateLimitResponse in
+                }, receiveValue: { [weak self] _ in
 
                     self?.limitOptionsCheckPublisher.value.append("deposit")
 
@@ -340,7 +340,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 
                         self?.isLoadingPublisher.send(false)
                     }
-                }, receiveValue: { [weak self] updateLimitResponse in
+                }, receiveValue: { [weak self] _ in
 
                     self?.limitOptionsCheckPublisher.value.append("wagering")
 
@@ -374,7 +374,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 
                         self?.isLoadingPublisher.send(false)
                     }
-                }, receiveValue: { [weak self] updateLimitResponse in
+                }, receiveValue: { [weak self] _ in
 
                     self?.limitOptionsCheckPublisher.value.append("loss")
 
@@ -432,7 +432,7 @@ class ProfileLimitsManagementViewModel: NSObject {
         }
 
         if let limitCurrentAmount = limitCurrentObject?.amount {
-            //let normalizedCurrentAmount = self.normalizeAmounts(amount: "\(limitCurrentAmount)")
+            // let normalizedCurrentAmount = self.normalizeAmounts(amount: "\(limitCurrentAmount)")
             limitCurrentAmountString = "\(limitCurrentAmount)"
         }
 
@@ -466,7 +466,8 @@ class ProfileLimitsManagementViewModel: NSObject {
         if let formattedNumber = numberFormatter.number(from: amount) {
             let numericValueString = "\(formattedNumber.doubleValue)"
             return numericValueString
-        } else {
+        }
+        else {
             print("Error formatting number")
         }
         

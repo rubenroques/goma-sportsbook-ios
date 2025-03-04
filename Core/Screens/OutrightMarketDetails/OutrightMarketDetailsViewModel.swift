@@ -113,7 +113,7 @@ class OutrightMarketDetailsViewModel {
                         print("COMPETITION INFO ERROR: \(error)")
                         self?.isLoadingPublisher.send(false)
                     }
-                }, receiveValue: { [weak self] competitionInfo in
+                }, receiveValue: { [weak self] _ in
                     self?.subscribeOutrightMarkets(competition: competition)
                 })
                 .store(in: &self.cancellables)

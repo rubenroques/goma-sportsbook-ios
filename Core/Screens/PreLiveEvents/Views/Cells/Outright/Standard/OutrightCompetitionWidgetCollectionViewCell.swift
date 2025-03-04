@@ -128,7 +128,6 @@ extension OutrightCompetitionWidgetCollectionViewCell {
         return titleLabel
     }
 
-
     private static func createBottomView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false

@@ -102,7 +102,7 @@ class PasswordUpdateViewModel: NSObject {
 
         Env.servicesProvider.getPasswordPolicy()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { [weak self] _ in
 
                 self?.isLoadingPublisher.send(false)
 
@@ -110,8 +110,6 @@ class PasswordUpdateViewModel: NSObject {
                 self?.policyPublisher.send(passwordPolicy)
             })
             .store(in: &cancellables)
-
-
 
     }
 

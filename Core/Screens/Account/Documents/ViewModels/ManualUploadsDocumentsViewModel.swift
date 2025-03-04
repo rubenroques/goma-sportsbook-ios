@@ -67,7 +67,7 @@ class ManualUploadsDocumentsViewModel {
                     self?.shouldShowAlert?(.error, localized("upload_iban_error_message"))
                     self?.isLoadingPublisher.send(false)
                 }
-            }, receiveValue: { [weak self] addPaymentResponse in
+            }, receiveValue: { [weak self] _ in
 
                 self?.shouldShowAlert?(.success, localized("upload_complete_message"))
                 self?.isLoadingPublisher.send(false)

@@ -77,7 +77,7 @@ class BetslipManager: NSObject {
             .removeDuplicates(by: { left, right in
                 left.map(\.id) == right.map(\.id)
             })
-            .sink { [weak self] tickets in
+            .sink { [weak self] _ in
                 self?.refreshBetBuilderPotentialReturn()
             }
             .store(in: &cancellables)
@@ -783,7 +783,7 @@ extension BetslipManager {
                                           numberOfBets: betslipPotentialReturn.numberOfBets,
                                           totalOdd: 1)
             })
-            .mapError({ error in
+            .mapError({ _ in
                 return BetslipErrorType.potentialReturn
             })
             .eraseToAnyPublisher()
@@ -885,9 +885,9 @@ extension BetslipManager {
         }
         else {
             self.requestBetBuilderPotentialReturn(withSkateAmount: 0.0)
-                .sink { completion in
+                .sink { _ in
                     print("refreshBetBuilderPotentialReturn completed")
-                } receiveValue: { [weak self] betBuilderCalculateResponse in
+                } receiveValue: { [weak self] _ in
                     print("refreshBetBuilderPotentialReturn value")
                     if let self = self {
                         // Cache bet builder
@@ -1075,6 +1075,5 @@ extension BetslipManager {
         
         return publisher
     }
-    
     
 }

@@ -271,7 +271,6 @@ extension StoriesFullScreenViewController: UIAdaptivePresentationControllerDeleg
         }
     }
     
-    
 }
 
 extension StoriesFullScreenViewController: CubicScrollViewDelegate {

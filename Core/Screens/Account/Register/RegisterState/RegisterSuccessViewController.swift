@@ -173,7 +173,7 @@ extension RegisterSuccessViewController {
             self.avatarImageView.bottomAnchor.constraint(equalTo: self.continueButton.topAnchor),
             self.avatarImageView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor, constant: 15),
             self.avatarImageView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor, constant: -15),
-            //self.avatarImageView.centerXAnchor.constraint(equalTo: self.containerGradientView.centerXAnchor),
+            // self.avatarImageView.centerXAnchor.constraint(equalTo: self.containerGradientView.centerXAnchor),
 
             self.continueButton.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor, constant: 30),
             self.continueButton.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor, constant: -30),

@@ -287,7 +287,6 @@ enum CardsStyle: Codable, CaseIterable {
     case normal
 }
 
-
 enum CompetitionListStyle: Codable, CaseIterable {
     case toggle
     case navigateToDetails

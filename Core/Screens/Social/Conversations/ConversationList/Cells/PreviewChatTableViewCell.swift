@@ -17,7 +17,7 @@ class PreviewChatTableViewCell: UITableViewCell {
     private lazy var initialLabel: UILabel = Self.createInitialLabel()
     private lazy var nameLineStackView: UIStackView = Self.createNameLineStackView()
     private lazy var nameLabel: UILabel = Self.createNameLabel()
-    //private lazy var numberMessagesLabel: UILabel = Self.createNumberMessagesLabel()
+    // private lazy var numberMessagesLabel: UILabel = Self.createNumberMessagesLabel()
     private lazy var userStateBaseView: UIView = Self.createUserStateBaseView()
     private lazy var userStateView: UIView = Self.createUserStateView()
     private lazy var messageLineStackView: UIStackView = Self.createMessageLineStackView()
@@ -196,13 +196,13 @@ class PreviewChatTableViewCell: UITableViewCell {
         // TEST
         if chatroomType == .group {
 
-            let removeChatroomAction: UIAlertAction = UIAlertAction(title: "Remove chatroom", style: .default) { [weak self] _ -> Void in
+            let removeChatroomAction: UIAlertAction = UIAlertAction(title: "Remove chatroom", style: .default) { [weak self] _ in
                 self?.removeChatroomAction?(chatroomId)
             }
             actionSheetController.addAction(removeChatroomAction)
         }
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {

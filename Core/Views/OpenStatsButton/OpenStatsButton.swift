@@ -8,7 +8,7 @@ import UIKit
 
 class OpenStatsButton: UIView {
     
-    var openStatsWidgetFullscreenAction: () -> () = { }
+    var openStatsWidgetFullscreenAction: () -> Void = { }
     
     private let shadowBackgroundView = UIView()
     private let button = UIButton()
@@ -33,7 +33,6 @@ class OpenStatsButton: UIView {
     
     func setupSubviews() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        
         
         self.button.addTarget(self, action: #selector(self.openStatsWidgetFullscreen), for: .primaryActionTriggered)
         self.button.translatesAutoresizingMaskIntoConstraints = false

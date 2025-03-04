@@ -15,7 +15,6 @@ class TestsViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
-
     init() {
         super.init(nibName: "TestsViewController", bundle: nil)
     }
@@ -48,15 +47,15 @@ class TestsViewController: UIViewController {
 
     }
 
-    @IBAction private func testEveryMatrixAPI() {
+    @IBAction func testEveryMatrixAPI() {
 
     }
 
-    @IBAction private func testSubscription() {
+    @IBAction func testSubscription() {
 
     }
 
-    @IBAction private func testSubscriptionInitialDump() {
+    @IBAction func testSubscriptionInitialDump() {
 
     }
 

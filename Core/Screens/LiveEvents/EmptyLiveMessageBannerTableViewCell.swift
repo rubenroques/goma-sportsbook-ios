@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-
 class EmptyLiveMessageBannerTableViewCell: UITableViewCell {
 
     private lazy var baseView: UIView = Self.createBaseView()
@@ -30,18 +29,10 @@ class EmptyLiveMessageBannerTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
         self.setupWithTheme()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
 
     private func setupWithTheme() {

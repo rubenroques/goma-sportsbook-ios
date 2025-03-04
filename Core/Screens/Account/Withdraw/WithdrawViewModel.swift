@@ -171,7 +171,7 @@ class WithdrawViewModel: NSObject {
                     }
                     self?.isLoadingPublisher.send(false)
                 }
-            }, receiveValue: { [weak self] processWithdrawalResponse in
+            }, receiveValue: { [weak self] _ in
                 self?.sendWithdrawProcessedEvent(amount: withdrawalAmount)
                 self?.showWithdrawalStatus?()
                 self?.isLoadingPublisher.send(false)

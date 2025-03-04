@@ -57,7 +57,6 @@ class MessagesViewModel {
             })
             .store(in: &cancellables)
 
-
     }
 
     func setCellReadStatus(inAppMessageId: Int) {

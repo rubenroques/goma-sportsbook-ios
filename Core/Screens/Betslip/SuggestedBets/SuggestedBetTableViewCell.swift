@@ -154,7 +154,6 @@ class SuggestedBetTableViewCell: UITableViewCell {
 
 }
 
-
 // MARK: - Subviews initialization and setup
 extension SuggestedBetTableViewCell {
 

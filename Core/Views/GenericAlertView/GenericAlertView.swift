@@ -55,11 +55,6 @@ class GenericAlertView: UIView {
 
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-    }
-
     func setupWithTheme() {
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -74,7 +69,7 @@ class GenericAlertView: UIView {
     }
 
     // MARK: Functions
-    func configure(alertType: AlertType , text: String) {
+    func configure(alertType: AlertType, text: String) {
 
         self.alertType = alertType
 

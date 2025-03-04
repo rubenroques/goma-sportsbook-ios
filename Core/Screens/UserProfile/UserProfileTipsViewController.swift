@@ -78,12 +78,6 @@ class UserProfileTipsViewController: UIViewController {
 
     }
 
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -177,7 +171,7 @@ extension UserProfileTipsViewController: UITableViewDelegate, UITableViewDataSou
             cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
 
             cell.shouldShowBetslip = { [weak self] in
-                //self?.shouldShowBetslip?()
+                // self?.shouldShowBetslip?()
                 self?.showBetslip()
             }
 

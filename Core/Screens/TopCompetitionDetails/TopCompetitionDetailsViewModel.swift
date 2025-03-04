@@ -243,7 +243,6 @@ class TopCompetitionDetailsViewModel {
 
     }
 
-
 }
 
 extension TopCompetitionDetailsViewModel {

@@ -40,11 +40,4 @@ struct Ranking {
     var ranking: Int
     var username: String
     var score: Double
-
-    init(id: Int, ranking: Int, username: String, score: Double) {
-        self.id = id
-        self.ranking = ranking
-        self.username = username
-        self.score = score
-    }
 }

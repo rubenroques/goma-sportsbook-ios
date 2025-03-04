@@ -379,7 +379,6 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 self?.awayParticipantNameLabel.text = awayTeamName
             }
             .store(in: &self.cancellables)
-        
     
         viewModel.startDateStringPublisher
             .sink { [weak self] startDateString in
@@ -489,13 +488,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
-            .sink{ [weak self] bettingTicket in
+            .sink{ [weak self] _ in
 
-                self?.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe:0]?.outcomes[safe: 0]?.bettingOffer.id ?? "")
+                self?.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe: 0]?.outcomes[safe: 0]?.bettingOffer.id ?? "")
 
-                self?.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe:0]?.outcomes[safe: 1]?.bettingOffer.id ?? "")
+                self?.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe: 0]?.outcomes[safe: 1]?.bettingOffer.id ?? "")
 
-                self?.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe:0]?.outcomes[safe: 2]?.bettingOffer.id ?? "")
+                self?.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe: 0]?.outcomes[safe: 2]?.bettingOffer.id ?? "")
 
             }
             .store(in: &cancellables)

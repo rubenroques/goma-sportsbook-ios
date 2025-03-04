@@ -442,7 +442,6 @@ extension PaymentsDropIn: DropInComponentDelegate {
             castedAdyenSession.didComplete(from: component, in: dropInComponent)
         }
     }
-
     
     func didOpenExternalApplication(component: ActionComponent, in dropInComponent: AnyDropInComponent) {
         if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {

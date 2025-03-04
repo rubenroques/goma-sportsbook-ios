@@ -116,7 +116,7 @@ enum URLEndpoint {
                 timeManagementApp: "",
                 gamblingAddictionSupport: "",
                 gamblingAuthority: "",
-                gamblingAuthorityTerms:"",
+                gamblingAuthorityTerms: "",
                 parentalControl: "",
                 addictionTreatmentCenter: "",
                 selfExclusionService: "",

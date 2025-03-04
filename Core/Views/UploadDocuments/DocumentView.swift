@@ -235,7 +235,7 @@ class DocumentView: UIView {
     }
 
     // MARK: Functions
-    func configure(documentInfo: DocumentInfo, fileUploaded: DocumentFileInfo? = nil , isOptionalUpload: Bool = false) {
+    func configure(documentInfo: DocumentInfo, fileUploaded: DocumentFileInfo? = nil, isOptionalUpload: Bool = false) {
         self.documentInfo = documentInfo
 
         if !isOptionalUpload {

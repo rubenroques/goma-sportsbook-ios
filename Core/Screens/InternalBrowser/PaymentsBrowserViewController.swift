@@ -29,7 +29,6 @@ class PaymentsBrowserViewController: UIViewController {
         return webView
     }()
 
-
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -138,7 +137,6 @@ extension PaymentsBrowserViewController: WKNavigationDelegate {
     }
     
 }
-
 
 extension PaymentsBrowserViewController {
 

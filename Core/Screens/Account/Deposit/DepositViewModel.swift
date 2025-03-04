@@ -36,7 +36,6 @@ class DepositViewModel: NSObject {
 //    var isFirstDeposit: Bool = true
     var isFirstDeposit: CurrentValueSubject<Bool, Never> = .init(true)
 
-
     // MARK: Lifetime and Cycle
     override init() {
         self.paymentsDropIn = PaymentsDropIn()

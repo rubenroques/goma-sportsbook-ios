@@ -37,23 +37,6 @@ struct MatchLiveData: Equatable {
         case detailedScores
     }
     
-    init(id: String,
-         homeScore: Int?,
-         awayScore: Int?,
-         matchTime: String?,
-         status: Match.Status?,
-         detailedScores: [String: Score]?,
-         activePlayerServing: Match.ActivePlayerServe?)
-    {
-        self.id = id
-        self.homeScore = homeScore
-        self.awayScore = awayScore
-        self.matchTime = matchTime
-        self.status = status
-        self.detailedScores = detailedScores
-        self.activePlayerServing = activePlayerServing
-    }
-    
 }
 
 struct Match: Hashable {
@@ -162,7 +145,6 @@ struct Match: Hashable {
         case home
         case away
     }
-    
 
     init(id: String,
          competitionId: String,
@@ -218,8 +200,6 @@ struct Match: Hashable {
 }
 
 extension Match {
-
-    
     
     private func convertStatus(_ sport: String, _ statusCode: String) -> String {
         switch (sport, statusCode) {
@@ -510,7 +490,6 @@ extension Match {
                   status: .notStarted,
                   activePlayerServe: nil,
                   detailedScores: [:])
-            
 
         ]
 

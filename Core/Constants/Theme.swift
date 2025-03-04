@@ -40,7 +40,8 @@ extension Theme {
     var isDarkMode: Bool {
         if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
             return true
-        } else {
+        }
+        else {
             return false
         }
     }

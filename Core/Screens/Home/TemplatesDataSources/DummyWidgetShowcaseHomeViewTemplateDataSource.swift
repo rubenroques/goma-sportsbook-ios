@@ -168,7 +168,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     private var highlightsBoostedMatches: [Match] = []
 
     //
-    //Hero card
+    // Hero card
     private var heroMatches: [Match]  = []
 
     // Make your own bet call to action
@@ -191,7 +191,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
     var heroCardWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
 
-    var highlightedLiveMatchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
+    var highlightedLiveMatchLineViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
     var marketWidgetContainerTableViewModelCache: [String: MarketWidgetContainerTableViewModel] = [:]
 
@@ -240,7 +240,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
         self.cachedFeaturedTipLineViewModel = nil
 
-        self.highlightedLiveMatchLineTableCellViewModelCache = [:]
+        self.highlightedLiveMatchLineViewModelCache = [:]
 
         self.fetchQuickSwipeMatches()
         self.fetchHighlightMatches()
@@ -254,7 +254,6 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
         self.fetchHeroMatches()
     }
-
 
     // User alerts
     func fetchAlerts() {
@@ -292,7 +291,8 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
                 if Env.userSessionStore.isUserLogged() {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDIN" }
-                } else {
+                }
+                else {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDOFF" }
                 }
                 self.banners = displayBanners.map { promotionalBanner in
@@ -442,7 +442,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     func fetchHighlightMarkets() {
         let cancellable = Env.servicesProvider.getProChoiceMarketCards()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { _ in
 
             } receiveValue: { [weak self] highlightMarkets in
                 let markets = highlightMarkets.map(\.content)
@@ -601,7 +601,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
         self.highlightedLiveMatches = []
 
-        var userId: String? = nil
+        var userId: String?
 
         if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
             userId = loggedUserId
@@ -746,7 +746,8 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
         case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
-            } else {
+            }
+            else {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
             }
         case .videoNewsLine:
@@ -793,7 +794,6 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return nil
         }
     }
-
 
     func iconName(forSection section: Int) -> String? {
         guard let contentType = contentType(forSection: section) else {
@@ -882,7 +882,6 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
 
         return nil
     }
-
 
     // Content type ViewModels methods
     func alertsArrayViewModel() -> [ActivationAlert] {
@@ -995,7 +994,11 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
                     return matchWidgetContainerTableViewModel
                 }
                 else {
-                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: type))
+                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel(
+                        singleCardsViewModel: MatchWidgetCellViewModel(
+                            match: match, matchWidgetType: type
+                        )
+                    )
                     self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
                     return matchWidgetContainerTableViewModel
                 }
@@ -1006,7 +1009,11 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
                     return matchWidgetContainerTableViewModel
                 }
                 else {
-                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: .topImageOutright))
+                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel(
+                        singleCardsViewModel: MatchWidgetCellViewModel(
+                            match: match, matchWidgetType: .topImageOutright
+                        )
+                    )
                     self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
                     return matchWidgetContainerTableViewModel
                 }
@@ -1019,7 +1026,11 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
                     return matchWidgetContainerTableViewModel
                 }
                 else {
-                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted))
+                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel(
+                        singleCardsViewModel: MatchWidgetCellViewModel(
+                            match: match, matchWidgetType: .boosted
+                        )
+                    )
                     self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
                     return matchWidgetContainerTableViewModel
                 }
@@ -1134,12 +1145,12 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return nil
         }
 
-        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineTableCellViewModelCache[match.id] {
+        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineViewModelCache[match.id] {
             return matchLineTableCellViewModel
         }
         else {
             let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match, status: .live)
-            self.highlightedLiveMatchLineTableCellViewModelCache[match.id] = matchLineTableCellViewModel
+            self.highlightedLiveMatchLineViewModelCache[match.id] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }
 

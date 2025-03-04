@@ -30,11 +30,6 @@ class FooterResponsibleGamingViewCell: UITableViewCell {
         self.footerResponsibleGamingView.hideSocialView()
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 

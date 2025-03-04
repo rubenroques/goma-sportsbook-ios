@@ -14,7 +14,7 @@ class OddsViewController: UIViewController {
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
-    //private lazy var topStackView: UIStackView = Self.createTopStackView()
+    // private lazy var topStackView: UIStackView = Self.createTopStackView()
     private lazy var bottomStackView: UIStackView = Self.createBottomStackView()
 
     // MARK: Public Properties
@@ -38,7 +38,7 @@ class OddsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        //self.setupTopStackView()
+        // self.setupTopStackView()
         self.setupBottomStackView()
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)

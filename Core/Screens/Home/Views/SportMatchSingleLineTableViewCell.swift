@@ -274,7 +274,8 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                             self?.didSelectSeeAllCompetitionAction?(competition)
                         }
                     }
-                } else if let match = viewModel.match() {
+                }
+                else if let match = viewModel.match() {
                     cell.tappedAction = { [weak self] in
                         self?.tappedMatchLineAction?(match)
                     }

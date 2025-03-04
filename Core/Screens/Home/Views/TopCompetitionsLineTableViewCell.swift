@@ -64,10 +64,6 @@ class TopCompetitionsLineTableViewCell: UITableViewCell, UICollectionViewDataSou
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.setupWithTheme()

@@ -263,7 +263,7 @@ extension BannerTournamentTableViewHeader {
         NSLayoutConstraint.activate([
             
             self.bannerImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 14),
-            self.bannerImageView.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor, constant: -14),
+            self.bannerImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -14),
             self.bannerImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20),
             
             self.countryFlagImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 14),

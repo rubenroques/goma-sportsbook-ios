@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         #endif
 
         do {
-            try Phrase.shared.updateTranslation { updatedResult in
+            try Phrase.shared.updateTranslation { _ in
                 print("PhraseSDK updateTranslation")
                 let translation = localized("phrase.test")
                 print("PhraseSDK NSLocalizedString via bundle proxy: ", translation)
@@ -102,8 +102,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
         // Optimove
         let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredentials)
-            .setPushOpenedHandler(pushOpenedHandlerBlock: { (notification: PushNotification) -> Void in
-                //- Inspect notification data and do work.
+            .setPushOpenedHandler(pushOpenedHandlerBlock: { (notification: PushNotification) in
+                // - Inspect notification data and do work.
 
                 var route: Route?
                 let application = UIApplication.shared

@@ -148,7 +148,6 @@ class MatchWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
     
-    
     var matchScorePublisher: AnyPublisher<String, Never> {
         return self.$match
             .map { match in
@@ -189,7 +188,6 @@ class MatchWidgetCellViewModel {
             }
             .eraseToAnyPublisher()
     }
-    
     
     var matchTimeDetailsPublisher: AnyPublisher<String?, Never> {
         return self.$match.map { match in
@@ -290,7 +288,6 @@ class MatchWidgetCellViewModel {
     
     var currentCollectionPage: CurrentValueSubject<Int, Never> = .init(0)
     
-    
     //
     struct BoostedOutcome {
         var type: String
@@ -310,7 +307,7 @@ class MatchWidgetCellViewModel {
         }
     }
     
-    @Published private(set) var oldBoostedOddOutcome: BoostedOutcome? = nil
+    @Published private(set) var oldBoostedOddOutcome: BoostedOutcome?
     
     @Published private(set) var matchWidgetStatus: MatchWidgetStatus = .unknown
     @Published private(set) var matchWidgetType: MatchWidgetType = .normal

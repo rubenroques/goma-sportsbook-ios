@@ -88,9 +88,8 @@ class SportTypeStore {
                 })
                 print("[SERVICEPROVIDER][STORE] Filtered to \(filteredSports.count) active sports")
                 self?.activeSportsCurrentValueSubject.send(.loaded(filteredSports))
-            case .disconnected:
+                case .disconnected:
                 print("[SERVICEPROVIDER][STORE] Sports subscription disconnected")
-                break
             }
         })
         .store(in: &self.cancellables)

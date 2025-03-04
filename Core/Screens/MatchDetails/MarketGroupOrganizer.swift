@@ -358,7 +358,7 @@ struct UndefinedGroupMarketGroupOrganizer: MarketGroupOrganizer {
     private var maxColumnValue: Int
     private var maxLineValue: Double
 
-    init(id: String, name: String, outcomes:  OrderedDictionary<String, [Outcome]>) {
+    init(id: String, name: String, outcomes: OrderedDictionary<String, [Outcome]>) {
 
         self.id = id
         self.name = name
@@ -462,7 +462,6 @@ struct UnorderedGroupMarketGroupOrganizer: MarketGroupOrganizer {
         return nil
     }
 }
-
 
 struct SimpleListGroupMarketGroupOrganizer: MarketGroupOrganizer {
 

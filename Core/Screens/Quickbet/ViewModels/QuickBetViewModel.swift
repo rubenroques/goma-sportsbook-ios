@@ -41,7 +41,6 @@ class QuickBetViewModel {
         self.setupPublishers()
     }
 
-
     private func setupPublishers() {
         // TODO: Watch odd updates on quick bet view
     }

@@ -551,7 +551,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                 .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
                     
                 }, receiveValue: { [weak self] bettingOffer in
 
@@ -607,7 +607,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                 .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
                     
                 }, receiveValue: { [weak self] bettingOffer in
 
@@ -623,7 +623,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                         weakSelf.middleBaseView.alpha = 1.0
 
                         let newOddValue = bettingOffer.decimalOdd
-
 
                         if let currentOddValue = weakSelf.currentMiddleOddValue {
                             if newOddValue > currentOddValue {

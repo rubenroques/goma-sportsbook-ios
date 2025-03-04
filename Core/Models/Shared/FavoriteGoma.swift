@@ -12,9 +12,4 @@ struct FavoriteGoma: Codable {
     let favoriteId: String
     let type: String
 
-    init(favoriteId: String, type: String) {
-        self.favoriteId = favoriteId
-        self.type = type
-    }
-
 }

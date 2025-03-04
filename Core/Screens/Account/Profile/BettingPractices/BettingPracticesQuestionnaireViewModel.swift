@@ -167,7 +167,6 @@ struct QuestionnaireStep {
     }
 }
 
-
 struct QuestionnaireResult {
     var partyId: String
     var email: String

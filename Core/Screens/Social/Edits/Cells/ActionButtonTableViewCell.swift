@@ -32,14 +32,6 @@ class ActionButtonTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
     func setupWithTheme() {
 
         self.contentView.backgroundColor = UIColor.App.backgroundPrimary

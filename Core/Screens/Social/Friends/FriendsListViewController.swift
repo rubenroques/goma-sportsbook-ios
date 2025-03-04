@@ -101,7 +101,7 @@ class FriendsListViewController: UIViewController {
 
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isLoading in
+            .sink(receiveValue: { [weak self] _ in
                 // Spinner if needed
             })
             .store(in: &cancellables)
@@ -295,7 +295,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         let muteAction = UIContextualAction(style: .normal,
-                                        title: "Mute") { [weak self] action, view, completionHandler in
+                                        title: "Mute") { [weak self] _, _, completionHandler in
             self?.handleMuteAction()
             completionHandler(true)
         }
@@ -316,7 +316,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
         muteAction.backgroundColor = UIColor.App.backgroundTertiary
 
         let deleteAction = UIContextualAction(style: .normal,
-                                        title: "Delete") { [weak self] action, view, completionHandler in
+                                        title: "Delete") { [weak self] _, _, completionHandler in
             if let friendData = self?.viewModel.friendsPublisher.value[safe: indexPath.row] {
                 self?.handleDeleteAction(friendId: friendData.id)
                 completionHandler(true)
@@ -327,7 +327,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
         deleteAction.backgroundColor = UIColor.App.backgroundSecondary
 
         let profileAction = UIContextualAction(style: .normal,
-                                        title: "Profile") { [weak self] action, view, completionHandler in
+                                        title: "Profile") { [weak self] _, _, completionHandler in
             if let friendData = self?.viewModel.friendsPublisher.value[safe: indexPath.row] {
                 self?.handleProfileAction(friendData: friendData)
                 completionHandler(true)

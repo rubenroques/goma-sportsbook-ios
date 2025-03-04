@@ -219,12 +219,14 @@ class HeroCardTableViewCell: UITableViewCell {
                 if velocity.x > 0 {
                     // Swiped right
                     self.getCollectionViewPage(isPrevious: true)
-                } else {
+                }
+                else {
                     // Swiped left
                     self.getCollectionViewPage()
                 }
             }
-        } else {
+        }
+        else {
             return
         }
     }
@@ -245,7 +247,6 @@ class HeroCardTableViewCell: UITableViewCell {
     func reloadData() {
         self.collectionView.reloadData()
     }
-
 
     func startCollectionViewTimer() {
         self.resetTime()
@@ -275,7 +276,8 @@ class HeroCardTableViewCell: UITableViewCell {
         if desiredItem < bannersCount {
             let nextIndexPath = IndexPath(item: desiredItem, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: nextIndexPath, at: .centeredHorizontally, animated: true)
-        } else {
+        }
+        else {
             let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
@@ -311,7 +313,8 @@ class HeroCardTableViewCell: UITableViewCell {
         if nextItem < bannersCount {
             let nextIndexPath = IndexPath(item: nextItem, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: nextIndexPath, at: .centeredHorizontally, animated: true)
-        } else {
+        }
+        else {
             let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }

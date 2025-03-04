@@ -141,7 +141,7 @@ class MatchDetailsViewModel: NSObject {
 
     func forceRefreshData() {
         self.serviceProviderStateCancellable = Env.servicesProvider.eventsConnectionStatePublisher
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { _ in
 
             }, receiveValue: { state in
                 switch state {
@@ -345,7 +345,6 @@ class MatchDetailsViewModel: NSObject {
         }
 
     }
-
 
     private func subscribeMatchLiveDataOnLists(withId matchId: String, sportAlphaCode: String) {
         Env.servicesProvider.subscribeToEventOnListsLiveDataUpdates(withId: matchId)

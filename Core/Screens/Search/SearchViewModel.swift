@@ -90,7 +90,7 @@ class SearchViewModel: NSObject {
         }
     }
 
-    func markAsFavorite(match : Match){
+    func markAsFavorite(match: Match){
         var isFavorite = false
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             isFavorite = true
@@ -165,7 +165,6 @@ class SearchViewModel: NSObject {
         }
         self.setSportMatchesArray()
     }
-
 
     func setSportMatchesArray() {
 
@@ -306,4 +305,3 @@ extension SearchViewModel: AggregatorStore {
         return matchesInfo
     }
 }
-

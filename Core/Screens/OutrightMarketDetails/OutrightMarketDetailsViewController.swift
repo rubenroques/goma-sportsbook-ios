@@ -328,14 +328,14 @@ class OutrightMarketDetailsViewController: UIViewController {
         
         if Env.userSessionStore.isUserLogged(){
             if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.competition.id) {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ in
                     Env.favoritesManager.removeFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
                     
                 }
                 actionSheetController.addAction(favoriteAction)
             }
             else {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ in
                     Env.favoritesManager.addFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
                     
                 }
@@ -343,12 +343,12 @@ class OutrightMarketDetailsViewController: UIViewController {
             }
         }
 
-        let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in
+        let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ in
             self?.didTapShareButton()
         }
         actionSheetController.addAction(shareAction)
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {
@@ -801,7 +801,6 @@ extension OutrightMarketDetailsViewController {
         self.view.addSubview(self.loadingBaseView)
         self.view.addSubview(self.sharedGameCardView)
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
-
         
         self.view.addSubview(self.unavailableMarketsView)
         self.unavailableMarketsView.addSubview(self.unavailableMarketsLabel)

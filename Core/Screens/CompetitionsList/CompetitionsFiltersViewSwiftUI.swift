@@ -162,7 +162,6 @@ struct CompetitionsFiltersView2: View {
     }
 }
 
-
 // MARK: - Size State
 enum SizeState {
     case opened
@@ -198,7 +197,8 @@ final class CompetitionsFiltersView2Model: ObservableObject {
     var titleText: String {
         if selectedIds.isEmpty {
             return localized("choose_competitions")
-        } else {
+        }
+        else {
             return "\(localized("choose_competitions")) (\(selectedIds.count))"
         }
     }

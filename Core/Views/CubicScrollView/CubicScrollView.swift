@@ -45,10 +45,6 @@ open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
         super.init(coder: aDecoder)
     }
 
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
     open func addChildViews(_ views: [UIView]) {
 
         self.stackView.removeAllArrangedSubviews()

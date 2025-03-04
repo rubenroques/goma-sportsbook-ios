@@ -81,7 +81,6 @@ class BetSubmissionSuccessViewController: UIViewController {
             self.loadingBaseView.isHidden = !isLoading
         }
     }
-    
 
     init(betPlacedDetailsArray: [BetPlacedDetails], cashbackResultValue: Double? = nil, usedCashback: Bool = false, bettingTickets: [BettingTicket]? = nil) {
         
@@ -383,7 +382,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.topImageView.image = UIImage(named: "bet_placed_banner")
         self.topImageView.contentMode = .scaleAspectFill
-        //self.topImageView.alpha = 1
+        // self.topImageView.alpha = 1
 
     }
 

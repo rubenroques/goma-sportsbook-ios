@@ -60,5 +60,3 @@ public class MarketSpecs: Codable {
         self.line = try container.decodeIfPresent(String.self, forKey: .line)
     }
 }
-
-

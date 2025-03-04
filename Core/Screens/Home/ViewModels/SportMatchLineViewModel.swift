@@ -359,7 +359,6 @@ extension SportMatchLineViewModel {
 
         self.matches = Array(matches.prefix(2))
 
-
     }
 
     private func splitEventsGroups(_ eventsGroups: [EventsGroup]) -> (matchesEventGroups: [EventsGroup], competitionsEventGroups: [EventsGroup]) {
@@ -439,4 +438,3 @@ extension SportMatchLineViewModel {
     }
 
 }
-

@@ -121,11 +121,6 @@ class MyFavoritesRootViewController: UIViewController {
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
 
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 

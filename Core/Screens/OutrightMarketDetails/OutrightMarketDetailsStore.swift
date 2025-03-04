@@ -43,7 +43,6 @@ class OutrightMarketDetailsStore {
             self.markets.append(market)
         }
     }
-    
   
     func marketGroupOrganizersFromGroups(withGroupKey key: String) -> [MarketGroupOrganizer] {
         guard let marketsIds = self.marketsForGroup[key] else { return [] }
@@ -225,6 +224,4 @@ class OutrightMarketDetailsStore {
         return marketGroupOrganizers
     }
     
-    
 }
-

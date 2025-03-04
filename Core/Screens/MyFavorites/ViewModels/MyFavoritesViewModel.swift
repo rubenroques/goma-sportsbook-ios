@@ -162,10 +162,10 @@ class MyFavoritesViewModel: NSObject {
 
             }
             else {
-                //self.processCompetitionOutrights(competitionInfo: competitionInfo)
+                // self.processCompetitionOutrights(competitionInfo: competitionInfo)
                 self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
             }
-            //self.subscribeCompetitionMatches(forMarketGroupId: competitionInfo.id, competitionInfo: competitionInfo)
+            // self.subscribeCompetitionMatches(forMarketGroupId: competitionInfo.id, competitionInfo: competitionInfo)
         }
     }
 
@@ -237,7 +237,7 @@ class MyFavoritesViewModel: NSObject {
                         self?.fetchedEventSummaryPublisher.value.append(eventId)
                     }, receiveValue: { [weak self] eventSummary in
                         guard let self = self else { return }
-                        if (eventSummary.homeTeamName != "" || eventSummary.awayTeamName != ""), let match = ServiceProviderModelMapper.match(fromEvent: eventSummary) {
+                        if eventSummary.homeTeamName != "" || eventSummary.awayTeamName != "", let match = ServiceProviderModelMapper.match(fromEvent: eventSummary) {
                             self.favoriteMatchesDataPublisher.value.append(match)
                         }
                     })

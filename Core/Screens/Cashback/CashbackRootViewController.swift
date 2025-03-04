@@ -145,11 +145,6 @@ class CashbackRootViewController: UIViewController {
         self.view.layoutIfNeeded()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
@@ -237,9 +232,11 @@ class CashbackRootViewController: UIViewController {
         if player?.currentItem?.currentTime() == player?.currentItem?.duration {
             player?.seek(to: .zero)
             player?.play()
-        } else if player?.timeControlStatus == .playing {
+        }
+        else if player?.timeControlStatus == .playing {
             player?.pause()
-        } else {
+        }
+        else {
             player?.play()
         }
     }
@@ -654,8 +651,8 @@ extension CashbackRootViewController {
     
         NSLayoutConstraint.activate([
             self.videoPlayerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            //self.videoPlayerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            //self.videoPlayerView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor),
+            // self.videoPlayerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            // self.videoPlayerView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor),
             self.videoPlayerView.widthAnchor.constraint(equalToConstant: containerWidth),
             self.videoPlayerView.topAnchor.constraint(equalTo: self.cashbackInfoBaseView.bottomAnchor, constant: 20),
             self.videoPlayerView.heightAnchor.constraint(equalTo: self.videoPlayerView.widthAnchor, multiplier: 16.0/9.0),
@@ -740,7 +737,6 @@ extension CashbackRootViewController {
             self.cashbackUsedExampleTitleLabel.bottomAnchor.constraint(equalTo: self.cashbackUsedExampleView.bottomAnchor, constant: -3)
 
         ])
-
 
         // Terms info
         NSLayoutConstraint.activate([

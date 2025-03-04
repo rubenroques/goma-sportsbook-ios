@@ -406,4 +406,3 @@ enum MessageCardType {
         }
     }
 }
-

@@ -44,7 +44,7 @@ class MyCompetitionsRootViewModel {
         self.startTabIndex = startTabIndex
         self.selectedIndexPublisher.send(startTabIndex)
 
-        //self.setupPublishers()
+        // self.setupPublishers()
     }
 
     func selectGamesType(atIndex index: Int) {
@@ -101,7 +101,7 @@ class MyCompetitionsRootViewModel {
                         self.fetchFavoriteCompetitionMatches()
                     }
                     else {
-                        //let popularCompetitionIds = ["29494.1", "29519.1", "29531.1", "29534.1"]
+                        // let popularCompetitionIds = ["29494.1", "29519.1", "29531.1", "29534.1"]
                         let popularCompetitionIds = Env.favoritesManager.topCompetitionIds
                         Env.favoritesManager.showSuggestedCompetitionsPublisher.send(true)
 
@@ -256,7 +256,8 @@ class MyCompetitionsRootViewModel {
                     if let competitionInfo {
                         print("Received competition info for ID \(competitionId): \(competitionInfo)")
                         self?.selectedCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
-                    } else {
+                    }
+                    else {
                         print("Received nil competition info for ID \(competitionId)")
                         self?.selectedCompetitionsInfoPublisher.value[competitionId] = nil
                         

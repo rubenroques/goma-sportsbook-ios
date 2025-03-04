@@ -151,7 +151,6 @@ class QuickBetViewController: UIViewController {
         self.betAmountView.layer.borderWidth = 2
         self.betAmountView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
 
-
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -250,7 +249,6 @@ class QuickBetViewController: UIViewController {
         self.subtitleLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.continueButton)
-
 
         self.betAmountView.backgroundColor = UIColor.App.inputBackground
         self.betAmountTextField.textColor = UIColor.App.inputText
@@ -468,7 +466,6 @@ class QuickBetViewController: UIViewController {
 }
 
 extension QuickBetViewController: UITextFieldDelegate {
-
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField == self.betAmountTextField {

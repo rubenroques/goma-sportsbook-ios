@@ -128,7 +128,7 @@ class CMSManagedHomeViewTemplateDataSource {
     private var highlightsBoostedMatches: [Match] = []
 
     //
-    //Hero card
+    // Hero card
     private var heroMatches: [Match]  = []
 
     // Make your own bet call to action
@@ -300,7 +300,6 @@ class CMSManagedHomeViewTemplateDataSource {
         self.fetchHeroMatches()
     }
 
-
     // User alerts
     func fetchAlerts() {
 
@@ -337,7 +336,8 @@ class CMSManagedHomeViewTemplateDataSource {
 
                 if Env.userSessionStore.isUserLogged() {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDIN" }
-                } else {
+                }
+                else {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDOFF" }
                 }
                 self.banners = displayBanners.map { promotionalBanner in
@@ -490,7 +490,7 @@ class CMSManagedHomeViewTemplateDataSource {
     func fetchHighlightMarkets() {
         let cancellable = Env.servicesProvider.getProChoiceMarketCards()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { _ in
 
             } receiveValue: { [weak self] highlightMarkets in
                 var mappedHighlightMarket: [ImageHighlightedContent<Market>] = []
@@ -793,7 +793,8 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
-            } else {
+            }
+            else {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
             }
         case .promotedSportSection:
@@ -836,7 +837,6 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return nil
         }
     }
-
 
     func iconName(forSection section: Int) -> String? {
         guard let contentType = contentType(forSection: section) else {
@@ -921,7 +921,6 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
         return nil
     }
-
 
     // Content type ViewModels methods
     func alertsArrayViewModel() -> [ActivationAlert] {

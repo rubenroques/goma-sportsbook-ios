@@ -21,7 +21,7 @@ extension ServiceProviderModelMapper {
                                 status: grantedBonus.status,
                                 amount: Double(grantedBonus.amount),
                                 remainingAmount: Double(grantedBonus.amount),
-                                expiryDate: grantedBonus.expiryDate ,
+                                expiryDate: grantedBonus.expiryDate,
                                 grantedDate: grantedBonus.triggerDate,
                                 initialWagerRequirementAmount: initialWagerAmount,
                                 remainingWagerRequirementAmount: remainingWagerAmount)
@@ -32,7 +32,7 @@ extension ServiceProviderModelMapper {
                             status: grantedBonus.status,
                             amount: Double(grantedBonus.amount),
                             remainingAmount: Double(grantedBonus.amount),
-                            expiryDate: grantedBonus.expiryDate ,
+                            expiryDate: grantedBonus.expiryDate,
                             grantedDate: grantedBonus.triggerDate)
     }
 

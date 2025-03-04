@@ -564,7 +564,7 @@ extension TopBarView {
             self.anonymousUserMenuImageView.topAnchor.constraint(equalTo: self.anonymousUserMenuBaseView.topAnchor, constant: 3),
             self.anonymousUserMenuImageView.bottomAnchor.constraint(equalTo: self.anonymousUserMenuBaseView.bottomAnchor, constant: -3),
 
-            //self.userInfoStackView.leadingAnchor.constraint(equalTo: self.appIconImageView.trailingAnchor, constant: 4),
+            // self.userInfoStackView.leadingAnchor.constraint(equalTo: self.appIconImageView.trailingAnchor, constant: 4),
             self.userInfoStackView.trailingAnchor.constraint(equalTo: self.profileBaseView.leadingAnchor, constant: -4),
             self.userInfoStackView.topAnchor.constraint(equalTo: self.topBarView.topAnchor),
             self.userInfoStackView.bottomAnchor.constraint(equalTo: self.topBarView.bottomAnchor),
@@ -622,7 +622,6 @@ extension TopBarView {
             self.legalAgeImageView.widthAnchor.constraint(equalTo: self.legalAgeImageView.heightAnchor)
 
         ])
-
         
         // Constraints
         self.profileBaseViewTrailingConstraint = NSLayoutConstraint(item: self.profileBaseView,

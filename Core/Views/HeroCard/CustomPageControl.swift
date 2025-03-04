@@ -71,7 +71,8 @@ class CustomPageControl: UIView {
                 
                 if index == self.currentPage {
                     pageIndicator.isActive = true
-                } else {
+                }
+                else {
                     pageIndicator.isActive = false
                 }
             }

@@ -53,7 +53,6 @@ class BonusHistoryCellViewModel: NSObject {
 //        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
         dateFormatterPrint.dateFormat = "dd-MM-yyyy HH:mm"
 
-
         let date = dateString
 
         if let formattedDate = dateFormatterGet.date(from: date) {

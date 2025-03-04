@@ -44,7 +44,7 @@ class TransactionsHistoryViewModel {
     var depositTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])
     var withdrawTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])
     var pendingWithdrawals = [PendingWithdrawal]()
-    
+
     var hasInitialAllTransactions: Bool = false
     var hasInitialDepositTransactions: Bool = false
     var hasInitialWithdrawTransactions: Bool = false
@@ -71,7 +71,7 @@ class TransactionsHistoryViewModel {
         self.transactionsType = transactionsType
         self.transactionTypePublisher.send(transactionsType)
         self.filterApplied = filterApplied
-        
+
         switch transactionsType {
         case .all:
             self.titlePublisher = .init("All")
@@ -81,9 +81,9 @@ class TransactionsHistoryViewModel {
             self.titlePublisher = .init("Withdraws")
         }
         self.calculateDate(filterApplied: filterApplied)
-   
+
         Env.servicesProvider.eventsConnectionStatePublisher
-            .sink { serviceStatus in
+            .sink { _ in
                 if !self.loadedInitialContent {
                     self.initialContentLoad()
                     self.loadedInitialContent = true
@@ -144,17 +144,17 @@ class TransactionsHistoryViewModel {
         self.allPage = 1
         self.depositPage = 1
         self.withdrawPage = 1
-        
+
         self.hasInitialAllTransactions = false
         self.hasInitialDepositTransactions = false
         self.hasInitialWithdrawTransactions = false
-        
+
         self.transactionsHasNextPage = true
         self.calculateDate(filterApplied: filterApplied)
         self.initialContentLoad()
 
     }
-    
+
     func calculateDate(filterApplied: FilterHistoryViewModel.FilterValue) {
 
         self.endDatePublisher.send(Date())
@@ -233,7 +233,7 @@ class TransactionsHistoryViewModel {
             }, receiveValue: { [weak self] transactionsDeposits in
 
                 guard let self = self else { return }
-                
+
                 if transactionsDeposits.isNotEmpty {
                     self.hasInitialAllTransactions = true
                 }
@@ -285,7 +285,7 @@ class TransactionsHistoryViewModel {
                 if transactionsDeposits.isNotEmpty {
                     self.hasInitialDepositTransactions = true
                 }
-                
+
                 let filteredTransactions = transactionsDeposits.filter({
                     $0.type != .automatedWithdrawal
                 })
@@ -367,7 +367,7 @@ class TransactionsHistoryViewModel {
                 if transactionsWithdrawals.isNotEmpty {
                     self.hasInitialWithdrawTransactions = true
                 }
-                
+
                 let filteredTransactions = transactionsWithdrawals.filter({
                     $0.type != .automatedWithdrawal
                 }).filter({
@@ -386,7 +386,7 @@ class TransactionsHistoryViewModel {
     }
 
     func processTransactions(transactions: [TransactionDetail], transactionType: TransactionsType) {
-        
+
         let transactionsHistory = transactions.map { transactionDetail -> TransactionHistory in
             let transactionHistory = ServiceProviderModelMapper.transactionHistory(fromServiceProviderTransactionDetail: transactionDetail)
             return transactionHistory
@@ -395,12 +395,12 @@ class TransactionsHistoryViewModel {
         switch transactionType {
         case .all:
             if self.allTransactions.value.isEmpty {
-                
+
                 let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: transactionsHistory)
-                
+
                 self.allTransactions.send(verifiedTransactionHistory)
                 self.transactionsPublisher.send(verifiedTransactionHistory)
-                
+
                 if verifiedTransactionHistory.isEmpty && self.transactionsHasNextPage {
                     self.requestNextPage()
                 }
@@ -408,25 +408,25 @@ class TransactionsHistoryViewModel {
             else {
                 var nextTransactions = self.allTransactions.value
                 nextTransactions.append(contentsOf: transactionsHistory)
-                
+
                 let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: nextTransactions)
-                
+
                 self.allTransactions.send(verifiedTransactionHistory)
                 self.transactionsPublisher.send(verifiedTransactionHistory)
             }
-            
+
             if !self.hasLoadedPendingWithdrawals.value {
                 self.getPendingWithdrawals()
             }
 
         case .deposit:
             if self.depositTransactions.value.isEmpty {
-                
+
                 let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: transactionsHistory)
-                
+
                 self.depositTransactions.send(verifiedTransactionHistory)
                 self.transactionsPublisher.send(verifiedTransactionHistory)
-                
+
                 if verifiedTransactionHistory.isEmpty && self.transactionsHasNextPage {
                     self.requestNextPage()
                 }
@@ -434,9 +434,9 @@ class TransactionsHistoryViewModel {
             else {
                 var nextTransactions = self.depositTransactions.value
                 nextTransactions.append(contentsOf: transactionsHistory)
-                
+
                 let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: nextTransactions)
-                
+
                 self.depositTransactions.send(verifiedTransactionHistory)
                 self.transactionsPublisher.send(verifiedTransactionHistory)
             }
@@ -444,23 +444,23 @@ class TransactionsHistoryViewModel {
             self.hasLoadedPendingWithdrawals.send(true)
         case .withdraw:
             if self.withdrawTransactions.value.isEmpty {
-                
+
                 let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: transactionsHistory)
-                
+
                 self.withdrawTransactions.send(verifiedTransactionHistory)
                 self.transactionsPublisher.send(verifiedTransactionHistory)
-                
+
                 if verifiedTransactionHistory.isEmpty && self.transactionsHasNextPage {
                     self.requestNextPage()
                 }
-                
+
             }
             else {
                 var nextTransactions = self.withdrawTransactions.value
                 nextTransactions.append(contentsOf: transactionsHistory)
-                
+
                 let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: nextTransactions)
-                
+
                 self.withdrawTransactions.send(verifiedTransactionHistory)
                 self.transactionsPublisher.send(verifiedTransactionHistory)
             }
@@ -471,12 +471,12 @@ class TransactionsHistoryViewModel {
         }
 
     }
-    
+
 //    func verifyTransactionsDetail(transactionsDetail: [TransactionDetail]) -> [TransactionDetail] {
 //        // Initial setup
 //        var skipNextTwo = false
 //        var matchCount = 0
-//        
+//
 //        var transactionsList = [TransactionDetail]()
 //
 //        transactionsDetail.enumerated().forEach { index, element in
@@ -519,15 +519,15 @@ class TransactionsHistoryViewModel {
 //                // Add element to transactionsList
 //                transactionsList.append(element)
 //            }
-//        
+//
 //        return transactionsList
 //    }
-    
+
     func verifyTransactionsHistory(transactionsHistory: [TransactionHistory]) -> [TransactionHistory] {
         // Initial setup
         var skipNextTwo = false
         var matchCount = 0
-        
+
         var transactionsList = [TransactionHistory]()
 
         transactionsHistory.enumerated().forEach { index, element in
@@ -586,7 +586,7 @@ class TransactionsHistoryViewModel {
                 // Add element to transactionsList
                 transactionsList.append(element)
             }
-        
+
         return transactionsList
     }
 
@@ -604,7 +604,7 @@ class TransactionsHistoryViewModel {
                     self?.shouldShowAlert?(.error)
 
                 }
-            }, receiveValue: { [weak self] cancelWithdrawalResponse in
+            }, receiveValue: { [weak self] _ in
 
                 self?.shouldShowAlert?(.success)
             })
@@ -616,7 +616,7 @@ class TransactionsHistoryViewModel {
         let auxDate = "\(date)"
         let dateSplited = auxDate.split(separator: " ")
         return "\(dateSplited[0])"
-        
+
     }
 
     func requestNextPage() {
@@ -665,7 +665,7 @@ extension TransactionsHistoryViewModel {
         case .withdraw:
             return self.withdrawTransactions.value.count
         }
-        //return self.transactionsPublisher.value.count
+        // return self.transactionsPublisher.value.count
     }
 
     func transactionForRow(atIndex index: Int) -> TransactionHistory? {
@@ -677,7 +677,7 @@ extension TransactionsHistoryViewModel {
         case .withdraw:
             return self.withdrawTransactions.value[safe: index]
         }
-        //return self.transactionsPublisher.value[safe: index]
+        // return self.transactionsPublisher.value[safe: index]
     }
 
 }

@@ -134,7 +134,7 @@ class LegacySportTypeStore {
                         sportLiveCount[sport.alphaId ?? sport.id] = liveSport
                     }
                     
-                    let mergedSports = currentLiveCount.merging(sportLiveCount) { (_, new) in new }
+                    let mergedSports = currentLiveCount.merging(sportLiveCount) { _, new in new }
                     
                     let finalSports = mergedSports.filter { $0.value.numberEvents != 0 }
                     

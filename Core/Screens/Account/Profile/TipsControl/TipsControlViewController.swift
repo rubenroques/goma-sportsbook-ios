@@ -50,7 +50,7 @@ class TipsControlViewController: UIViewController {
     private lazy var accordionFourthSectionDescriptionListLabel: UILabel = Self.createAccordionFourthSectionDescriptionListLabel()
     private lazy var accordionFourthSectionDescriptionLabel2: UILabel = Self.createAccordionFourthSectionDescriptionLabel2()
 
-    //private lazy var tipButton: UIButton = Self.createTipButton()
+    // private lazy var tipButton: UIButton = Self.createTipButton()
     private lazy var logo1ImageView: UIImageView = Self.createLogo1ImageView()
     private lazy var logo2ImageView: UIImageView = Self.createLogo2ImageView()
     private lazy var logo3ImageView: UIImageView = Self.createLogo3ImageView()
@@ -963,7 +963,7 @@ extension TipsControlViewController {
         self.scrollContainerView.addSubview(self.logo2ImageView)
         self.scrollContainerView.addSubview(self.logo3ImageView)
 
-        //self.scrollContainerView.addSubview(self.tipButton)
+        // self.scrollContainerView.addSubview(self.tipButton)
 
         self.initConstraints()
     }

@@ -138,7 +138,7 @@ class UserProfileViewModel {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] response in
+            }, receiveValue: { [weak self] _ in
                 Env.gomaSocialClient.getFollowingUsers()
             })
             .store(in: &cancellables)
@@ -157,7 +157,7 @@ class UserProfileViewModel {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] response in
+            }, receiveValue: { [weak self] _ in
                 Env.gomaSocialClient.getFollowingUsers()
             })
             .store(in: &cancellables)
@@ -176,7 +176,7 @@ class UserProfileViewModel {
                     print("ADD FRIEND REQUEST FINISHED")
                 }
 
-            }, receiveValue: { [weak self] response in
+            }, receiveValue: { [weak self] _ in
                 self?.showFriendRequestAlert?()
             })
             .store(in: &cancellables)
@@ -195,7 +195,7 @@ class UserProfileViewModel {
                         ()
                     }
 
-                }, receiveValue: { [weak self] response in
+                }, receiveValue: { [weak self] _ in
                     self?.shouldCloseUserProfile?()
                 })
                 .store(in: &cancellables)

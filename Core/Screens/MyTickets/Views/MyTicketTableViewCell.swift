@@ -164,7 +164,6 @@ class MyTicketTableViewCell: UITableViewCell {
 //        else {
 //            self.shareButton.isHidden = true
 //        }
-
             
         // Setup fonts
         self.titleLabel.font = AppFont.with(type: .heavy, size: 16)
@@ -809,7 +808,7 @@ class MyTicketTableViewCell: UITableViewCell {
         
         var values: [CGFloat] = [minValue, maxValue]
 
-        //Minimum and maximum labels
+        // Minimum and maximum labels
         self.minimumCashoutValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: minCashoutStep)) ?? ""
 
         self.maximumCashoutValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxSliderStake)) ?? ""

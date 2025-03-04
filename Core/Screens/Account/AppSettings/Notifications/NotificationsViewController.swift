@@ -37,15 +37,9 @@ class NotificationsViewController: UIViewController {
         self.setupWithTheme()
 
         self.setupTopStackView()
-        //self.setupBottomStackView()
+        // self.setupBottomStackView()
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        // self.viewModel.storeNotificationsUserSettings()
     }
     
     // MARK: Layout and Theme

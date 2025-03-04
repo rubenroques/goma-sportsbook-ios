@@ -171,7 +171,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         depositHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         depositHeaderTextFieldView.setSecureField(false)
-        //depositHeaderTextFieldView.setRemoveTextField()
+        // depositHeaderTextFieldView.setRemoveTextField()
 
         depositLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -183,7 +183,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         bettingHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         bettingHeaderTextFieldView.setSecureField(false)
-        //bettingHeaderTextFieldView.setRemoveTextField()
+        // bettingHeaderTextFieldView.setRemoveTextField()
 
         bettingLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -195,7 +195,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         lossHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         lossHeaderTextFieldView.setSecureField(false)
-        //lossHeaderTextFieldView.setRemoveTextField()
+        // lossHeaderTextFieldView.setRemoveTextField()
 
         lossLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -690,7 +690,7 @@ class ProfileLimitsManagementViewController: UIViewController {
 
             let period = self.lossFrequencySelectHeaderTextFieldView.text
             let amountString = self.lossHeaderTextFieldView.text
-            let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
+            let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)})
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: " ", with: "")
 
             self.viewModel.updateResponsibleGamingLimit(amount: amount)

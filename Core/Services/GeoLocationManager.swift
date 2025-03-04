@@ -76,11 +76,13 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
     func isLocationServicesEnabled() -> Bool {
         if CLLocationManager.locationServicesEnabled() {
-            switch CLLocationManager.authorizationStatus() {
+            switch locationManager?.authorizationStatus {
             case .notDetermined, .restricted, .denied:
                 return false
             case .authorizedAlways, .authorizedWhenInUse:
                 return true
+            case .none:
+                return false
             @unknown default:
                 return false
             }
@@ -89,13 +91,15 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch CLLocationManager.authorizationStatus() {
+        switch locationManager?.authorizationStatus {
         case .notDetermined:
             locationStatus.send(.notRequested)
         case .restricted, .denied:
             locationStatus.send(.notAuthorized)
         case .authorizedAlways, .authorizedWhenInUse:
             self.startGeoLocationUpdates()
+        case .none:
+            locationStatus.send(.notRequested)
         @unknown default:
             locationStatus.send(.notRequested)
         }
@@ -106,7 +110,9 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last?.coordinate else { return }
 
-        if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+        if locationManager?.authorizationStatus == .authorizedAlways ||
+            locationManager?.authorizationStatus == .authorizedWhenInUse
+        {
             self.lastKnownLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
             self.checkValidLocation(self.lastKnownLocation!)
         }

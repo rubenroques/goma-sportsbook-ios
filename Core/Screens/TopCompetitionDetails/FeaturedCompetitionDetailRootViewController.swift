@@ -19,7 +19,6 @@ class FeaturedCompetitionDetailRootViewController: UIViewController {
     
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
-
     
     private var collapsedCompetitionsSections: Set<Int> = []
     private var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -73,11 +72,6 @@ class FeaturedCompetitionDetailRootViewController: UIViewController {
 
         self.floatingShortcutsView.resetAnimations()
     
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
     }
     
     // MARK: - Layout and Theme

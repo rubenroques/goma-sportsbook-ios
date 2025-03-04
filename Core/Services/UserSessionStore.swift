@@ -475,7 +475,7 @@ extension UserSessionStore {
         Env.gomaNetworkClient.requestNotificationsUserSettings(deviceId: Env.deviceId)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
-                case .failure(let error):
+                case .failure:
                     self?.storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings.defaultSettings)
                 case .finished:
                     ()
@@ -640,7 +640,7 @@ extension UserSessionStore {
                         break
                     case .errorMessage:
                         break
-                    case .failedTempLock(let date):
+                    case .failedTempLock:
                         break
                     }
                     print("UserSessionStore - login failed, error: \(error)")
@@ -689,7 +689,7 @@ extension UserSessionStore {
         Env.gomaNetworkClient
             .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
             .replaceError(with: MessageNetworkResponse.failed)
-            .sink { [weak self] response in
+            .sink { [weak self] _ in
                 self?.loginGomaAPI(username: form.username, password: userId)
             }
             .store(in: &cancellables)
@@ -729,7 +729,6 @@ extension UserSessionStore {
     }
 
 }
-
 
 extension UserSessionStore {
     
@@ -809,7 +808,6 @@ extension UserSessionStore {
     }
 
 }
-
 
 struct LimitsValidation {
     var valid: Bool

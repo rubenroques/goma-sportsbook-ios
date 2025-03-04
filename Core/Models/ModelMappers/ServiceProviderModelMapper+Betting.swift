@@ -128,7 +128,6 @@ extension ServiceProviderModelMapper {
             transactionType = Self.stringFromTransactionType(transactionType: .automatedWithdrawal)
         }
         
-        
         if transactionDetail.amount < 0.0 {
             valueType = .loss
         }
@@ -198,7 +197,6 @@ extension ServiceProviderModelMapper {
         default: return nil
         }
     }
-    
 
     static func betPlacedDetailsArray(fromPlacedBetsResponse placedBetsResponse: PlacedBetsResponse) -> [BetPlacedDetails] {
         let betPlacedDetailsArray: [BetPlacedDetails] = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in

@@ -29,12 +29,6 @@ class PromotedCompetitionTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-//        self.promoImageView.kf.cancelDownloadTask()
-    }
     
     // MARK: - Theme and Layout
     override func layoutSubviews() {

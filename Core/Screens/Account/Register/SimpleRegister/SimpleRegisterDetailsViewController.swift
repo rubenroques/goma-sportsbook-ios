@@ -243,7 +243,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
                 self?.setupWithCountryCodes(countriesArray)
             }
             .store(in: &cancellables)
-        
 
         self.usernameHeaderTextView.textPublisher
             .removeDuplicates()
@@ -443,7 +442,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         self.resignFirstResponder()
 
         self.usernameHeaderTextView.resignFirstResponder()
-        //self.dateHeaderTextView.resignFirstResponder()
+        // self.dateHeaderTextView.resignFirstResponder()
         self.indicativeHeaderTextView.resignFirstResponder()
         self.phoneHeaderTextView.resignFirstResponder()
         self.passwordHeaderTextView.resignFirstResponder()

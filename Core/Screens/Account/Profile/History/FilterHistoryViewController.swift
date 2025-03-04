@@ -61,12 +61,12 @@ class FilterHistoryViewController: UIViewController {
         
         self.startTimeHeaderTextView.setPlaceholderText(localized("from"))
         self.startTimeHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
-        //self.startTimeHeaderTextView.isDisabled = false
+        // self.startTimeHeaderTextView.isDisabled = false
         self.startTimeHeaderTextView.setDatePickerMode()
         
         self.endTimeHeaderTextView.setPlaceholderText(localized("to"))
         self.endTimeHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
-        //self.endTimeHeaderTextView.isDisabled = false
+        // self.endTimeHeaderTextView.isDisabled = false
         self.endTimeHeaderTextView.setDatePickerMode()
 
         let calendar = Calendar(identifier: .gregorian)
@@ -119,11 +119,6 @@ class FilterHistoryViewController: UIViewController {
         self.checkMarketRadioOptions(views: filterRowViews, viewTapped: filterRowViews[self.viewModel.selectedFilterPublisher.value.identifier])
 
         self.checkDateRangeOption()
-    }
-
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -553,8 +548,6 @@ extension FilterHistoryViewController {
 
         self.dateRangeStackView.addArrangedSubview(self.startTimeHeaderTextView)
         self.dateRangeStackView.addArrangedSubview(self.endTimeHeaderTextView)
-        
-
 
         // Initialize constraints
         self.initConstraints()

@@ -23,8 +23,4 @@ class NibView: UIView, NibLoadable {
     func commonInit() {
 
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
 }

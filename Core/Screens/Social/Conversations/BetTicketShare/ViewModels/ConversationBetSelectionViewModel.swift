@@ -197,7 +197,7 @@ class ConversationBetSelectionViewModel {
 
     func sendMessage(message: String) {
 
-        var selectedBetSelectionCellViewModel: BetSelectionCellViewModel? = nil
+        var selectedBetSelectionCellViewModel: BetSelectionCellViewModel?
 
         for cellViewModel in self.cachedCellViewModels.values {
             if cellViewModel.isCheckboxSelectedPublisher.value {

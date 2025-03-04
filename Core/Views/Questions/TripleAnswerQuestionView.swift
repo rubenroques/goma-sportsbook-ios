@@ -128,7 +128,7 @@ class TripleAnswerQuestionView: UIView {
             if let question = self.titleLabel.text,
                let answer = self.secondAnswerLabel.text {
                 
-                self.didAnswerQuestion?(self.questionNumber,question, answer)
+                self.didAnswerQuestion?(self.questionNumber, question, answer)
                 
             }
             

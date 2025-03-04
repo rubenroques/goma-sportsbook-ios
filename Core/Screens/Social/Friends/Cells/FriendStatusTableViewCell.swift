@@ -139,13 +139,13 @@ class FriendStatusTableViewCell: UITableViewCell {
 
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        let removeFriendAction: UIAlertAction = UIAlertAction(title: "Remove friend", style: .default) { [weak self] _ -> Void in
+        let removeFriendAction: UIAlertAction = UIAlertAction(title: "Remove friend", style: .default) { [weak self] _ in
             print("REMOVE FRIEND ID: \(friendId)")
             self?.removeFriendAction?(friendId)
         }
         actionSheetController.addAction(removeFriendAction)
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {

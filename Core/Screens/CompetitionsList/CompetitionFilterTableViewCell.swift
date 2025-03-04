@@ -237,17 +237,20 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
         if viewModel.isLastCell {
             self.configureAsLastCell()
-        } else {
+        }
+        else {
             self.configureAsNormalCell()
         }
 
         if let countryIsoCode = viewModel.country?.iso2Code {
             if countryIsoCode != "" {
                 self.countryImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
-            } else {
+            }
+            else {
                 self.countryImageView.image = UIImage(named: "country_flag_240")
             }
-        } else {
+        }
+        else {
             self.countryImageView.image = UIImage(named: "country_flag_240")
         }
 

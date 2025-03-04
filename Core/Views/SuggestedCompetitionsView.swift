@@ -137,8 +137,6 @@ extension SuggestedCompetitionsView {
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 4),
             self.subtitleLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15)
 
-
-
         ])
 
     }

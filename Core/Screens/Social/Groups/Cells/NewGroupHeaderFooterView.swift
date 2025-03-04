@@ -26,11 +26,6 @@ class NewGroupHeaderFooterView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-    }
-
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -102,4 +97,3 @@ extension NewGroupHeaderFooterView {
         ])
     }
 }
-

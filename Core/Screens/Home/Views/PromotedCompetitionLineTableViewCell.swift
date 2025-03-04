@@ -148,7 +148,6 @@ extension PromotedCompetitionLineTableViewCell: UIScrollViewDelegate {
             }
         }
         
-        
         if scrollView.isTracking, scrollView == self.collectionView, let viewModel = self.viewModel {
             let screenWidth = UIScreen.main.bounds.size.width
             if scrollView.contentSize.width > screenWidth {
@@ -340,4 +339,3 @@ extension PromotedCompetitionLineTableViewCell {
      ])
     }
 }
-

@@ -159,7 +159,8 @@ class BoostedBetConfirmationView: UIView {
             totalTime -= 1
             let title = localized("accept") + " (\(self.totalTime) \(localized("seconds")))"
             acceptButton.setTitle(title, for: .normal)
-        } else {
+        }
+        else {
             countdownTimer?.invalidate()
             countdownTimer = nil
             

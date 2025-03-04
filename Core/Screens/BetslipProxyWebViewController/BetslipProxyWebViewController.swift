@@ -21,7 +21,6 @@ struct BetSwipeData: Codable {
     let outcomeOdds: Double?
 }
 
-
 class BetslipProxyWebViewController: UIViewController {
 
     var closeBetSwipe: () -> Void = { }

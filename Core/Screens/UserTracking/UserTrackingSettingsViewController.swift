@@ -69,15 +69,6 @@ class UserTrackingSettingsViewController: UIViewController {
         self.commonInit()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -197,7 +188,6 @@ extension UserTrackingSettingsViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
-
 
     private static func createSettingsBaseView() -> UIView {
         let view = UIView()

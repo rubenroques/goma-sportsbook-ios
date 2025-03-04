@@ -70,7 +70,6 @@ class PopUpPromotionView: NibView {
         self.topTitleLabel.font = AppFont.with(type: .heavy, size: 19)
         self.titleLabel.font = AppFont.with(type: .heavy, size: 20)
         self.subtitleLabel.font = AppFont.with(type: .bold, size: 14)
-        
 
         self.layer.cornerRadius = CornerRadius.modal
 

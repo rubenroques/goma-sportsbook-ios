@@ -23,7 +23,7 @@ class PaymentsViewModel {
     var shouldShowPaymentDropIn: CurrentValueSubject<Bool, Never> = .init(false)
 
     init() {
-        //self.processDepositResponse()
+        // self.processDepositResponse()
         self.getPayments()
     }
 
@@ -126,12 +126,6 @@ class PaymentsViewController: UIViewController {
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
         self.bind(toViewModel: self.viewModel)
-    }
-
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

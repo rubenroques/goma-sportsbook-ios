@@ -2042,7 +2042,7 @@ extension MatchDetailsViewController {
                 UIView.animate(withDuration: 0.5, animations: {
                     self?.mixMatchInfoDialogView.alpha = 1
                     self?.didShowMixMatchTooltip = true
-                }) { (completed) in
+                }) { completed in
                     if completed {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                             UIView.animate(withDuration: 0.5) {
@@ -2397,25 +2397,25 @@ extension MatchDetailsViewController {
         if Env.userSessionStore.isUserLogged() {
 
             if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.matchId) {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ in
                     Env.favoritesManager.removeFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
                 }
                 actionSheetController.addAction(favoriteAction)
             }
             else {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ in
                     Env.favoritesManager.addFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
                 }
                 actionSheetController.addAction(favoriteAction)
             }
         }
 
-        let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in
+        let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ in
             self?.didTapShareButton()
         }
         actionSheetController.addAction(shareAction)
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {
@@ -2815,4 +2815,3 @@ struct MatchDetailsViewController_Previews: PreviewProvider {
     MatchDetailsViewController_Previews.MatchDetailsViewControllerPreview(colorScheme: .light)
 }
 #endif
-

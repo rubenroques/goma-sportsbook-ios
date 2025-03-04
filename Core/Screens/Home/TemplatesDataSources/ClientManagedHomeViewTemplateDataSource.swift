@@ -141,7 +141,7 @@ class ClientManagedHomeViewTemplateDataSource {
     private var highlightsBoostedMatches: [Match] = []
 
     //
-    //Hero card
+    // Hero card
     private var heroMatches: [Match]  = []
 
     // Make your own bet call to action
@@ -228,7 +228,6 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchHeroMatches()
     }
 
-
     // User alerts
     func fetchAlerts() {
 
@@ -265,7 +264,8 @@ class ClientManagedHomeViewTemplateDataSource {
                 
                 if Env.userSessionStore.isUserLogged() {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDIN" }
-                } else {
+                }
+                else {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDOFF" }
                 }
                 self.banners = displayBanners.map { promotionalBanner in
@@ -415,7 +415,7 @@ class ClientManagedHomeViewTemplateDataSource {
     func fetchHighlightMarkets() {
         let cancellable = Env.servicesProvider.getProChoiceMarketCards()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { _ in
 
             } receiveValue: { [weak self] highlightMarkets in
                 let markets = highlightMarkets.map(\.content)
@@ -579,7 +579,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
         self.highlightedLiveMatches = []
         
-        var userId: String? = nil
+        var userId: String?
         
         if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
             userId = loggedUserId
@@ -724,7 +724,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
-            } else {
+            }
+            else {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
             }
         case .promotedSportSection:
@@ -767,7 +768,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return nil
         }
     }
-
 
     func iconName(forSection section: Int) -> String? {
         guard let contentType = contentType(forSection: section) else {
@@ -852,7 +852,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
         return nil
     }
-
 
     // Content type ViewModels methods
     func alertsArrayViewModel() -> [ActivationAlert] {

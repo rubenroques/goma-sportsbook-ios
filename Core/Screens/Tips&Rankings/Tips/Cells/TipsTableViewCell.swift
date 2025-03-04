@@ -63,7 +63,6 @@ class TipsTableViewCell: UITableViewCell {
 
         self.unfollowButton.addTarget(self, action: #selector(didTapUnfollowButton), for: .primaryActionTriggered)
 
-
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
 
         let userTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUser))
@@ -474,7 +473,7 @@ extension TipsTableViewCell {
         NSLayoutConstraint.activate([
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
             self.separatorLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
-            //self.separatorLineView.topAnchor.constraint(equalTo: self.tipsStackView.bottomAnchor, constant: 10),
+            // self.separatorLineView.topAnchor.constraint(equalTo: self.tipsStackView.bottomAnchor, constant: 10),
             self.separatorLineView.bottomAnchor.constraint(equalTo: self.totalOddsLabel.topAnchor, constant: -15),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
 

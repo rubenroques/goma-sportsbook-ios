@@ -365,7 +365,8 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                             self?.didSelectSeeAllCompetitionAction?(competition)
                         }
                     }
-                } else if let match = viewModel.match() {
+                }
+                else if let match = viewModel.match() {
                     cell.tappedAction = { [weak self] in
                         self?.tappedMatchLineAction?(match)
                     }
@@ -455,7 +456,6 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.didLongPressOdd = { [weak self] bettingTicket in
                             self?.didLongPressOdd?(bettingTicket)
                         }
-
                         
                         return cell
                     }

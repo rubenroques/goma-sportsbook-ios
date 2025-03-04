@@ -511,7 +511,7 @@ extension DocumentsRootViewController {
             self.kycStatusTitleLabel.topAnchor.constraint(equalTo: self.kycStatusBaseView.topAnchor, constant: 20),
             self.kycStatusTitleLabel.bottomAnchor.constraint(equalTo: self.kycStatusBaseView.bottomAnchor, constant: -20),
 
-            self.kycStatusView.trailingAnchor.constraint(equalTo: self.kycStatusBaseView.trailingAnchor,constant: -20),
+            self.kycStatusView.trailingAnchor.constraint(equalTo: self.kycStatusBaseView.trailingAnchor, constant: -20),
             self.kycStatusView.centerYAnchor.constraint(equalTo: self.kycStatusBaseView.centerYAnchor),
 
             self.kycStatusLabel.leadingAnchor.constraint(equalTo: self.kycStatusView.leadingAnchor, constant: 7),

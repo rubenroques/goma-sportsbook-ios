@@ -256,7 +256,6 @@ extension FeaturedTipView {
 
         self.initConstraints()
 
-
     }
 
     private func initConstraints() {

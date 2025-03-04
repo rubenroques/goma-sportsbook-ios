@@ -62,10 +62,12 @@ struct CurrencyFormater {
                 if let formattedNumber = numberFormatter.string(from: NSNumber(value: number)) {
                     filtered = formattedNumber
                     print("Formatted Number: \(formattedNumber)")
-                } else {
+                }
+                else {
                     print("Error formatting number")
                 }
-            } else {
+            }
+            else {
                 print("Invalid number string")
             }
             

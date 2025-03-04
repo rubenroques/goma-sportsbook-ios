@@ -110,7 +110,7 @@ class ConversationBetSelectionViewController: UIViewController {
 
          viewModel.hasTicketSelectedPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] hasTicketSelected in
+            .sink(receiveValue: { [weak self] _ in
 
                 self?.selectedBetTicketPublisher.send(self?.viewModel.selectedTicket)
             })

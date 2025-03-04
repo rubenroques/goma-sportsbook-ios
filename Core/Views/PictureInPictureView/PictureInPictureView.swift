@@ -8,7 +8,6 @@
 import UIKit
 import WebKit
 
-
 class BlockingWindow: UIWindow {
 
 }

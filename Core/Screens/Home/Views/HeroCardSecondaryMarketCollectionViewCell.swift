@@ -36,8 +36,8 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
     private lazy var awayUpChangeOddValueImageView: UIImageView = Self.createAwayUpChangeOddValueImageView()
     private lazy var awayDownChangeOddValueImageView: UIImageView = Self.createAwayDownChangeOddValueImageView()
 
-    private var match: Match? = nil
-    private var market: Market? = nil
+    private var match: Match?
+    private var market: Market?
     
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -131,7 +131,7 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
         
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
-            .sink{ [weak self] bettingTicket in
+            .sink{ [weak self] _ in
 
                 self?.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: self?.leftOutcome?.id ?? "")
 
@@ -271,7 +271,7 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
 //                })
 //                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
@@ -349,7 +349,7 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
 //                })
 //                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
                     guard let weakSelf = self,
@@ -424,7 +424,7 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
 //                })
 //                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
                     guard let weakSelf = self,

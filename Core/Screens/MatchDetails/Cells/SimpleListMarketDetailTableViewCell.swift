@@ -178,7 +178,7 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
         }
         else {
-            //Use double
+            // Use double
             let numberOfLines = Int(ceil(Double(outcomes) / 2))
             self.columnType = ColumnType.double
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight

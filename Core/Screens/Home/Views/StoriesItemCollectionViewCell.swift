@@ -17,15 +17,6 @@ struct StoriesItemCellViewModel {
     var contentString: String
     var read: Bool
 
-    init(id: String, imageName: String, title: String, link: String, contentString: String, read: Bool) {
-        self.id = id
-        self.imageName = imageName
-        self.title = title
-        self.link = link
-        self.contentString = contentString
-        self.read = read
-    }
-
 }
 
 class StoriesItemCollectionViewCell: UICollectionViewCell {
@@ -171,7 +162,6 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
         self.addSubview(self.imageView)
         self.addSubview(self.label)
 
-
         self.newPillForegroundView.addSubview(self.newPillLabel)
         self.newPillBaseView.addSubview(self.newPillForegroundView)
 
@@ -225,7 +215,7 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
             self.imageView.kf.setImage(with: url)
         }
 
-        //self.imageView.image = UIImage(named: viewModel.imageName)
+        // self.imageView.image = UIImage(named: viewModel.imageName)
         self.label.text = viewModel.title
 
 //        self.imageView.image = UIImage(named: "avatar3")

@@ -679,7 +679,7 @@ extension ConversationBetSelectionRootViewController {
             self.messageInputBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.messageInputBaseView.topAnchor.constraint(equalTo: self.pagesBaseView.bottomAnchor),
 //            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-            //self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70),
+            // self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70),
 
             self.messageInputLineSeparatorView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor),
             self.messageInputLineSeparatorView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor),

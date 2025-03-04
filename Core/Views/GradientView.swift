@@ -100,4 +100,3 @@ class GradientView: UIView {
     }
 
 }
-

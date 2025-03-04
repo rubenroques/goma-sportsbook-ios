@@ -29,11 +29,6 @@ class TextSubsectionView: UIView {
         self.commonInit()
         self.setupWithTheme()
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-    }
     
     func commonInit() {
     }

@@ -489,7 +489,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                 .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { [weak self] bettingOffer in
 
@@ -547,7 +547,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                 .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { [weak self] bettingOffer in
 
@@ -809,7 +809,7 @@ extension OddDoubleCollectionViewCell {
             return
         }
 
-        var bettingType: JSON? = nil
+        var bettingType: JSON?
 
         if let eventPartsArray = json["event_parts"].array {
             for partDict in eventPartsArray {
@@ -899,8 +899,6 @@ extension OddDoubleCollectionViewCell {
     }
 }
 
-
-
 import WebKit
 
 class StatsWebViewController: UIViewController, WKNavigationDelegate {
@@ -979,7 +977,7 @@ class StatsWebViewController: UIViewController, WKNavigationDelegate {
                 }
             }
         
-        let tapGesture = UITapGestureRecognizer(target: self, action:  #selector(closeButtonTapped))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(closeButtonTapped))
         self.view.addGestureRecognizer(tapGesture)
     }
 
@@ -987,7 +985,6 @@ class StatsWebViewController: UIViewController, WKNavigationDelegate {
         self.closeButton = UIButton(type: .custom)
         
         let closeImage = UIImage(named: "arrow_close_icon")?.withRenderingMode(.alwaysTemplate)
-
         
         self.closeButton.setImage(closeImage, for: .normal)
         self.closeButton.imageView?.setImageColor(color: UIColor.App.buttonTextPrimary)

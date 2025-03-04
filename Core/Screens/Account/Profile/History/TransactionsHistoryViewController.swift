@@ -255,7 +255,7 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return self.viewModel.numberOfRows()
+        // return self.viewModel.numberOfRows()
         switch section {
         case 0:
             return self.viewModel.numberOfRows()

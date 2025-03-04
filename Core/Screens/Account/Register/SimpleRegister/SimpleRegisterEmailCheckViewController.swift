@@ -61,10 +61,6 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
     func commonInit() {
         skipButton.setTitle(localized("skip"), for: .normal)
         skipButton.titleLabel?.font = AppFont.with(type: .semibold, size: 17)

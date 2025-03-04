@@ -284,7 +284,6 @@ class FullRegisterDocumentsViewController: UIViewController {
                 self.navigationController?.popToRootViewController(animated: true)
             })
             .store(in: &cancellables)
-
         
         if let firstName = form.firstName, let lastName = form.lastName {
             Env.gomaNetworkClient.requestUpdateNameProfile(name: "\(firstName) \(lastName)")
@@ -294,7 +293,6 @@ class FullRegisterDocumentsViewController: UIViewController {
                         }
                         .store(in: &cancellables)
         }
-        
         
     }
 

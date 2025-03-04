@@ -60,6 +60,4 @@ class DebugViewController: UIViewController {
         self.navigationController?.pushViewController(LogViewerViewController(), animated: true)
     }
 
-    
-
 }

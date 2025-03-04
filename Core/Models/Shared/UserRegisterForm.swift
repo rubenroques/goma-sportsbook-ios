@@ -66,11 +66,6 @@ extension EveryMatrix {
 
         var id: String
         var currentOdd: Double
-
-        init(id: String, currentOdd: Double) {
-            self.id = id
-            self.currentOdd = currentOdd
-        }
         enum CodingKeys: String, CodingKey {
             case id = "bettingOfferId"
             case currentOdd = "priceValue"

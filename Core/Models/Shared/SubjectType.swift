@@ -61,4 +61,3 @@ enum SubjectType: CaseIterable {
     }
     
 }
-

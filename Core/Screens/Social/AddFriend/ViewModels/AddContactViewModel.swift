@@ -357,14 +357,6 @@ struct ContactsData {
     let phoneNumber: [String]
     let emailAddress: String
     var identifier: String
-
-    init(givenName: String, familyName: String, phoneNumber: [String], emailAddress: String, identifier: String) {
-        self.givenName = givenName
-        self.familyName = familyName
-        self.phoneNumber = phoneNumber
-        self.emailAddress = emailAddress
-        self.identifier = identifier
-    }
 }
 
 struct UserContactSectionData {

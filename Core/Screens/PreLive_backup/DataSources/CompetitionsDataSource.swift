@@ -406,7 +406,6 @@ extension CompetitionsDataSource: UITableViewDataSource, UITableViewDelegate {
                 cell.matchStatsViewModel = matchStatsViewModel
             }
             
-            
             let viewModel = MatchLineTableCellViewModel(match: match)
             cell.configure(withViewModel: viewModel)
 

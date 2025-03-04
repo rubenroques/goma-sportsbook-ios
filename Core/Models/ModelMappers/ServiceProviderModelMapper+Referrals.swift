@@ -29,7 +29,6 @@ extension ServiceProviderModelMapper {
             kycStatus = .pass
         }
         
-        
         return Referee(id: referee.id, username: referee.username, registeredAt: referee.registeredAt, kycStatus: kycStatus, depositPassed: referee.depositPassed)
     }
 }

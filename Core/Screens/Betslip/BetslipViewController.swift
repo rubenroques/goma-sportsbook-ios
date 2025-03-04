@@ -48,7 +48,7 @@ class BetslipViewController: UIViewController {
         self.startScreen = startScreen
         
         switch startScreen {
-        case .sharedBet(_):
+        case .sharedBet:
             ()
         default:
             if Env.betslipManager.bettingTicketsPublisher.value.isEmpty {
@@ -182,20 +182,11 @@ class BetslipViewController: UIViewController {
 
         self.setupWithTheme()
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
         self.setupWithTheme()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
     }
 
     func setupWithTheme() {

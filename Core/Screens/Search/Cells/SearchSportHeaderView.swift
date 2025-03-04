@@ -41,11 +41,6 @@ class SearchSportHeaderView: UITableViewHeaderFooterView {
 
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-    }
-
     func commonInit() {
     }
 

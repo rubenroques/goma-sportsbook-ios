@@ -94,7 +94,8 @@ struct CompetitionFilterCell: View {
                         Circle()
                             .stroke(Color(.App.highlightPrimaryContrast), lineWidth: 0.5)
                     )
-            } else {
+            }
+            else {
                 Image("country_flag_240")
                     .resizable()
                     .aspectRatio(contentMode: .fill)

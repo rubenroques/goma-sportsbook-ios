@@ -164,7 +164,7 @@ class MyTicketsViewController: UIViewController {
             self?.ticketsTableView.reloadData()
         }
 
-        self.viewModel.redrawTableViewAction = { [weak self] withScroll in
+        self.viewModel.redrawTableViewAction = { [weak self] _ in
 //            // Use CATransaction to detect animation from table updates
 //            CATransaction.begin()
 //
@@ -185,7 +185,7 @@ class MyTicketsViewController: UIViewController {
 
         }
 
-        self.viewModel.updateCellAtIndexPath = { [weak self] cellIndexPath in
+        self.viewModel.updateCellAtIndexPath = { [weak self] _ in
 //            self?.ticketsTableView.reloadRows(at: [cellIndexPath], with: .automatic)
             print("REDRAW TICKET CELL!")
             self?.ticketsTableView.beginUpdates()
@@ -252,10 +252,6 @@ class MyTicketsViewController: UIViewController {
 
         self.setupWithTheme()
     }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-   }
 
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary

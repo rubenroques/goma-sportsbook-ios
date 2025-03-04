@@ -422,7 +422,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             self.leftOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
@@ -495,7 +495,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             self.middleOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
                     
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
@@ -567,7 +567,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             self.rightOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
                     
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
@@ -1024,7 +1024,6 @@ extension ProChoiceHighlightCollectionViewCell {
     }
     
     private func initConstraints() {
-
 
         NSLayoutConstraint.activate([
             self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 0),
@@ -1585,8 +1584,8 @@ extension ProChoiceHighlightCollectionViewCell {
 }
 
 //
-//@available(iOS 17, *)
-//#Preview("ProChoiceHighlightCollectionViewCell Preview") {
+// @available(iOS 17, *)
+// #Preview("ProChoiceHighlightCollectionViewCell Preview") {
 //    let vc = PreviewTableViewController()
 //    return vc
-//}
+// }

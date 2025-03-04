@@ -63,7 +63,7 @@ class ScoreView: UIView {
         Env.userSessionStore.userProfilePublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userProfile in
+            .sink { [weak self] _ in
                 self?.configureScores()
             }
             .store(in: &self.cancellables)
@@ -203,7 +203,7 @@ class ScoreView: UIView {
         
         // Add the game total value
         switch matchFull {
-        case .matchFull(let home,let away):
+        case .matchFull(let home, let away):
             let scoreCellView = ScoreCellView(homeScore: "\(home ?? 0)",
                                           awayScore: "\(away ?? 0)",
                                           style: .background)
@@ -290,7 +290,8 @@ class ScoreView: UIView {
             if self.sportCode.lowercased() == "tns" {
                 homeString = homeValue == 50 ? "A" : "\(homeValue)"
                 awayString = awayValue == 50 ? "A" : "\(awayValue)"
-            } else {
+            }
+            else {
                 homeString = "\(homeValue)"
                 awayString = "\(awayValue)"
             }
@@ -398,7 +399,6 @@ class ScoreCellView: UIView {
         self.setupView()
     }
     
-    
     private func setupView() {
         self.translatesAutoresizingMaskIntoConstraints = false
         
@@ -489,7 +489,5 @@ class ScoreCellView: UIView {
             self.awayScoreLabel.alpha = 1.0
         }
     }
- 
     
 }
-

@@ -258,7 +258,6 @@ class MyFavoritesViewController: UIViewController {
 //            }
 //        }
 
-
         Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in

@@ -140,7 +140,6 @@ class LiveDetailsViewController: UIViewController {
         
     }
 
-
     // MARK: - Bindings
     private func bind(toViewModel viewModel: LiveDetailsViewModel) {
 

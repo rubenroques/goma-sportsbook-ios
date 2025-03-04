@@ -195,7 +195,6 @@ class TopCompetitionDetailsViewController: UIViewController {
         self.backgroundImageView.backgroundColor = .clear
     }
 
-
     // MARK: - Bindings
     private func bind(toViewModel viewModel: TopCompetitionDetailsViewModel) {
 

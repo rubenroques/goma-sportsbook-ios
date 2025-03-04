@@ -132,7 +132,6 @@ class CompetitionDetailsViewController: UIViewController {
 
     }
 
-
     // MARK: - Bindings
     private func bind(toViewModel viewModel: CompetitionDetailsViewModel) {
 

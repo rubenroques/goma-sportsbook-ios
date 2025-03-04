@@ -303,7 +303,8 @@ class SimpleCompetitionDetailsViewController: UIViewController {
 
         if isFavorite {
             Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
-        } else {
+        }
+        else {
             Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
         }
 

@@ -41,13 +41,6 @@ class BettingPracticesViewController: UIViewController {
         self.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .primaryActionTriggered)
     }
     
-    // MARK: Theme and layout
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-
-    }
-    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 

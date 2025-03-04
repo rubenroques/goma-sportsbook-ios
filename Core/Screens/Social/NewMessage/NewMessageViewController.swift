@@ -83,13 +83,6 @@ class NewMessageViewController: UIViewController {
         }
     }
 
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-
-        super.viewDidLayoutSubviews()
-
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -180,7 +173,7 @@ class NewMessageViewController: UIViewController {
 
     private func showConversationDetail(conversationData: ConversationData) {
 
-        //let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+        // let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
 
         let conversationDetailViewModel = ConversationDetailViewModel(chatId: conversationData.id)
 

@@ -40,10 +40,6 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.setupWithTheme()

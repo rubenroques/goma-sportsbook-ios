@@ -128,11 +128,6 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.addGestureRecognizer(backSliderTapGesture)
     }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // No-op, UI is setup in init methods
-    }
-
     override func prepareForReuse() {
         super.prepareForReuse()
 

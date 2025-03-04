@@ -210,7 +210,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
             let navigationViewController = Router.navigationController(with: shareTicketFriendGroupViewController)
             self.present(navigationViewController, animated: true, completion: nil)
-            //self.present(shareTicketFriendGroupViewController, animated: true)
+            // self.present(shareTicketFriendGroupViewController, animated: true)
         }
     }
 
@@ -235,7 +235,7 @@ class ShareTicketChoiceViewController: UIViewController {
                 if betStatus == "OPEN",
                    let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
                     let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
-                    //let matchUrlString = "\(urlMobile)/bet/\(betToken)"
+                    // let matchUrlString = "\(urlMobile)/bet/\(betToken)"
                     let matchUrlString = "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)"
 
                     let socialAppUrlShareString = socialApp.urlShare.replacingOccurrences(of: "%url", with: matchUrlString)
@@ -244,7 +244,8 @@ class ShareTicketChoiceViewController: UIViewController {
                         if let socialShareUrl = URL(string: urlString) {
                             if UIApplication.shared.canOpenURL(socialShareUrl) {
                                 UIApplication.shared.open(socialShareUrl, options: [:], completionHandler: nil)
-                            } else {
+                            }
+                            else {
                                 print("Cannot share on \(socialApp.name)")
                             }
                          }
@@ -279,7 +280,7 @@ class ShareTicketChoiceViewController: UIViewController {
             if betStatus == "OPEN",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
                 let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
-                //let matchUrlString = "\(urlMobile)/bet/\(betToken)"
+                // let matchUrlString = "\(urlMobile)/bet/\(betToken)"
                 let matchUrlString = "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)"
 
                 self.pasteboard.string = matchUrlString
@@ -305,7 +306,7 @@ class ShareTicketChoiceViewController: UIViewController {
             if betStatus.lowercased() == "opened" || betStatus.lowercased() == "open",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
                 let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
-                //let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
+                // let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
                 let matchUrl = URL(string: "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)")
 
                 metadata.url = matchUrl
@@ -686,7 +687,7 @@ extension ShareTicketChoiceViewController {
             self.sendViaButton.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor, constant: 90),
             self.sendViaButton.trailingAnchor.constraint(equalTo: self.bottomShareView.trailingAnchor, constant: -90),
             self.sendViaButton.heightAnchor.constraint(equalToConstant: 31),
-            //self.sendViaButton.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 15),
+            // self.sendViaButton.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 15),
             self.sendViaButton.bottomAnchor.constraint(equalTo: self.bottomShareView.bottomAnchor, constant: -15)
         ])
 

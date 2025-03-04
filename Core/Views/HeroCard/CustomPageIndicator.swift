@@ -17,7 +17,8 @@ class CustomPageIndicator: UIView {
             
             if isActive {
                 self.startLoadingAnimation()
-            } else {
+            }
+            else {
                 self.stopLoadingAnimation()
             }
         }

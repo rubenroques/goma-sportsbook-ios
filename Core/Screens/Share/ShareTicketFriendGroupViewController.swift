@@ -196,7 +196,7 @@ class ShareTicketFriendGroupViewController: UIViewController {
         viewModel.messageSentAction = { [weak self] in
             guard let self = self else {return}
 
-            //self.shouldCloseParentViewController?()
+            // self.shouldCloseParentViewController?()
             self.canCloseParentViewController = true
             self.dismiss(animated: true, completion: nil)
 
@@ -633,7 +633,7 @@ extension ShareTicketFriendGroupViewController {
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
-            //self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
+            // self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 56),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -56),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),

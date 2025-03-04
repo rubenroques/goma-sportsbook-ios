@@ -253,7 +253,6 @@ class FooterResponsibleGamingView: UIView {
         self.openURLString(urlString)
     }
 
-
     @objc func openAboutURL() {
         let url = TargetVariables.links.legalAndInfo.about
         self.openURLString(url)

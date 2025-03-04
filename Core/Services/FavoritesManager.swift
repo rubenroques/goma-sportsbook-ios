@@ -146,7 +146,7 @@ class FavoritesManager {
 
         Env.servicesProvider.addFavoritesList(name: "Competitions")
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     break
@@ -172,7 +172,7 @@ class FavoritesManager {
             if favoriteAction == .add {
                 Env.servicesProvider.addFavoritesList(name: "Match:\(eventId)")
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { [weak self] completion in
+                    .sink(receiveCompletion: { completion in
                         switch completion {
                         case .finished:
                             break
@@ -210,7 +210,7 @@ class FavoritesManager {
                                 }
                             }
 
-                        }, receiveValue: { [weak self] favoritesListDeleteResponse in
+                        }, receiveValue: { [weak self] _ in
 
                             self?.fetchedMatchesListIds.removeValue(forKey: "\(eventId)")
 
@@ -252,7 +252,7 @@ class FavoritesManager {
                                         }
                                     }
 
-                                }, receiveValue: { [weak self] favoritesListDeleteResponse in
+                                }, receiveValue: { [weak self] _ in
 
                                     self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
 
@@ -274,7 +274,7 @@ class FavoritesManager {
                                         self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
                                     }
                                 }
-                            }, receiveValue: { [weak self] favoritesListDeleteResponse in
+                            }, receiveValue: { [weak self] _ in
 
                                 self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
                             })
@@ -290,7 +290,7 @@ class FavoritesManager {
 
         Env.servicesProvider.addFavoritesToList(listId: listId, eventId: eventId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     ()
@@ -298,7 +298,7 @@ class FavoritesManager {
                     print("FAVORITE ADD ERROR: \(error)")
                 }
 
-            }, receiveValue: { [weak self] favoriteAddResponse in
+            }, receiveValue: { [weak self] _ in
 
                 if isCompetitionFavorite {
                     if var fetchedFavoriteEventIds = self?.fetchedFavoriteEventIds {
@@ -427,7 +427,7 @@ class FavoritesManager {
 
         Env.servicesProvider.deleteFavoritesList(listId: listId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     ()
@@ -438,7 +438,7 @@ class FavoritesManager {
                     }
                 }
 
-            }, receiveValue: { [weak self] favoritesListDeleteResponse in
+            }, receiveValue: { _ in
                 
             })
             .store(in: &cancellables)

@@ -133,9 +133,9 @@ class ConversationsViewModel {
 
                 readMessagesPublisher
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] usersResponse in
+                    .sink(receiveValue: { [weak self] _ in
 
-                            //self?.updateConversationReadStatus(chatroomId: chatroomId)
+                            // self?.updateConversationReadStatus(chatroomId: chatroomId)
                             self?.updateConversationDetail(chatroomId: chatroomId)
 
                     })

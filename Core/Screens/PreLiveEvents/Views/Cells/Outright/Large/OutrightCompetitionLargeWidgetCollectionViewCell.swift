@@ -137,7 +137,7 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllView.backgroundColor = UIColor.App.backgroundOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
 
-        //self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+        // self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
     }
 
     private func adjustDesignToCardStyle() {
@@ -191,7 +191,7 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         self.countryNameCompetitionLabel.text = viewModel.countryName
 
         self.sportTypeImageView.image = UIImage(named: viewModel.sportImageName)
-        //self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+        // self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.competition.id)
         

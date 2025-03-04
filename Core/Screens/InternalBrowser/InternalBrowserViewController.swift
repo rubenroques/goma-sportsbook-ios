@@ -211,7 +211,6 @@ extension InternalBrowserViewController: UIAdaptivePresentationControllerDelegat
         self.resumeContentAction?(self.url ?? nil)
     }
     
-    
 }
 
 extension InternalBrowserViewController {

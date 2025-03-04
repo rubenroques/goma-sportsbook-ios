@@ -67,7 +67,7 @@ class AddFriendViewModel {
             })
             .store(in: &cancellables)
 
-        //self.dataNeedsReload.send()
+        // self.dataNeedsReload.send()
     }
 
     private func getGomaFriends() {

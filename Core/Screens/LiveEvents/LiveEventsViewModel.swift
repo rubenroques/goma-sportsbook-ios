@@ -157,7 +157,6 @@ class LiveEventsViewModel: NSObject {
             self?.didSelectCompetitionAction(competition)
         }
 
-
     }
 
     func connectPublishers() {
@@ -165,7 +164,7 @@ class LiveEventsViewModel: NSObject {
         self.selectedSportPublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] newSport in
+            .sink { [weak self] _ in
                 self?.resetScrollPosition?()
                 self?.fetchLiveMatches()
                 self?.fetchUpcomingMatches()
@@ -182,7 +181,6 @@ class LiveEventsViewModel: NSObject {
                 }
             }
             .store(in: &self.cancellables)
-
 
         self.chipsViewModel.$selectedIndex
             .map { MatchListType.allCases[$0 ?? 0] }
@@ -236,7 +234,6 @@ class LiveEventsViewModel: NSObject {
                 self?.liveSports = liveSports
             })
             .store(in: &cancellables)
-
 
     }
 

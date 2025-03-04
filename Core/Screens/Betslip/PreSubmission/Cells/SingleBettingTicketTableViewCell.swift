@@ -435,7 +435,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                     let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
                     self?.returnsValueLabel.text = possibleWinningsString
 
-                    //self?.oddValueLabel.text = OddConverter.stringForValue(boostedValue, format: UserDefaults.standard.userOddsFormat)
+                    // self?.oddValueLabel.text = OddConverter.stringForValue(boostedValue, format: UserDefaults.standard.userOddsFormat)
                     self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: boostedValue)
                     self?.refreshPossibleWinnings()
                 }
@@ -535,7 +535,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 self.currentBoostedOddPercentage = oddsBoost.oddsBoostPercent
 
                 // Sets old odd value
-                //let oldValueConverted = OddConverter.stringForValue(currentOddValue, format: UserDefaults.standard.userOddsFormat)
+                // let oldValueConverted = OddConverter.stringForValue(currentOddValue, format: UserDefaults.standard.userOddsFormat)
                 let oldValueConverted = OddFormatter.formatOdd(withValue: currentOddValue)
 
                 let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: oldValueConverted)

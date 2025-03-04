@@ -379,7 +379,7 @@ class RecruitAFriendViewController: UIViewController {
 
         self.hasGodfather = false
 
-        //self.setupReferrals()
+        // self.setupReferrals()
     }
 
     // MARK: Layout and Theme
@@ -1491,7 +1491,7 @@ extension RecruitAFriendViewController {
         NSLayoutConstraint.activate([
             self.regulationsBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.regulationsBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
-            //self.regulationsBaseView.topAnchor.constraint(equalTo: self.referralsBaseView.bottomAnchor, constant: 15),
+            // self.regulationsBaseView.topAnchor.constraint(equalTo: self.referralsBaseView.bottomAnchor, constant: 15),
 //            self.regulationsBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
 
             self.regulationsTitleLabel.leadingAnchor.constraint(equalTo: self.regulationsBaseView.leadingAnchor, constant: 16),

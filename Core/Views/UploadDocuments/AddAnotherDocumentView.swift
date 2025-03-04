@@ -42,11 +42,6 @@ class AddAnotherDocumentView: UIView {
         self.addAnotherBaseView.addGestureRecognizer(tapAddAnother)
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-    }
-
     func setupWithTheme() {
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -136,7 +131,7 @@ extension AddAnotherDocumentView {
             self.addAnotherBaseView.heightAnchor.constraint(equalToConstant: 40),
 
             self.addAnotherView.centerXAnchor.constraint(equalTo: self.addAnotherBaseView.centerXAnchor),
-            //self.addAnotherView.centerYAnchor.constraint(equalTo: self.addAnotherBaseView.centerYAnchor),
+            // self.addAnotherView.centerYAnchor.constraint(equalTo: self.addAnotherBaseView.centerYAnchor),
             self.addAnotherView.bottomAnchor.constraint(equalTo: self.addAnotherBaseView.bottomAnchor),
 
             self.addAnotherTitleLabel.leadingAnchor.constraint(equalTo: self.addAnotherView.leadingAnchor),

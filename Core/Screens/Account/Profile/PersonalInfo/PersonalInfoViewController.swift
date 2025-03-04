@@ -71,11 +71,6 @@ class PersonalInfoViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.setupWithTheme()
@@ -312,7 +307,7 @@ class PersonalInfoViewController: UIViewController {
                 return Just(false).eraseToAnyPublisher()
             }
         })
-        .sink(receiveValue: { (isEnabled: Bool) -> Void in
+        .sink(receiveValue: { (isEnabled: Bool) in
             self.editButton.isEnabled = isEnabled
         })
         .store(in: &cancellables)
@@ -380,7 +375,7 @@ class PersonalInfoViewController: UIViewController {
 
         // let username = usernameHeaderTextFieldView.text
         // let email = emailHeaderTextFieldView.text
-        //let gender = titleHeaderTextFieldView.text == UserTitle.mister.rawValue ? "M" : "F"
+        // let gender = titleHeaderTextFieldView.text == UserTitle.mister.rawValue ? "M" : "F"
         let gender = titleHeaderTextFieldView.text == UserGender.male.rawValue ? "M" : "F"
 
         let firstName = firstNameHeaderTextFieldView.text
@@ -635,4 +630,3 @@ extension PersonalInfoViewController {
     }
 
 }
-

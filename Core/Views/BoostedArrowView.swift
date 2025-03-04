@@ -70,10 +70,6 @@ class BoostedArrowView: UIView {
 
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
 }
 
 private class ArrowBoldCustomView: UIView {

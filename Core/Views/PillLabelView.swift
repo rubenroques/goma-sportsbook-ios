@@ -109,7 +109,6 @@ class PillLabelView: UIView {
         self.borderView.layer.cornerRadius = self.borderView.bounds.height / 2
     }
     
-    
     func setupWithTheme(withBorderColor borderColor: UIColor? = nil, withTextColor textColor: UIColor? = nil) {
         
         self.borderColor = borderColor

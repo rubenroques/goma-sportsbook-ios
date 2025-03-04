@@ -42,7 +42,7 @@ class BonusViewModel {
     var requestApplyBonus: ((EveryMatrix.ApplicableBonus) -> Void)?
 
     var hasQueuedBonus: CurrentValueSubject<Bool, Never> = .init(false)
-    //var shouldReloadAllBonusData: PassthroughSubject<Void, Never> = .init()
+    // var shouldReloadAllBonusData: PassthroughSubject<Void, Never> = .init()
     var shouldShowAlert: ((AlertType) -> Void)?
 
     enum BonusListType: Int {

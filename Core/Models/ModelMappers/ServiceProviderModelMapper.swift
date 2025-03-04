@@ -188,7 +188,8 @@ extension ServiceProviderModelMapper {
         let sport: Sport?
         if let marketSport = market.sport {
             sport = Self.sport(fromServiceProviderSportType: marketSport)
-        } else {
+        }
+        else {
             sport = nil
         }
         
@@ -385,7 +386,6 @@ extension ServiceProviderModelMapper {
         
         return PromotionalStory(id: promotionalStory.id, title: promotionalStory.title, imageUrl: promotionalStory.imageUrl, linkUrl: promotionalStory.linkUrl, bodyText: promotionalStory.bodyText )
     }
-    
 
     static func suggestedBetslips(fromPromotedBetslips promotedBetslips: [PromotedBetslip]) -> [SuggestedBetslip] {
         return promotedBetslips.map(Self.suggestedBetslip(fromPromotedBetslip:))

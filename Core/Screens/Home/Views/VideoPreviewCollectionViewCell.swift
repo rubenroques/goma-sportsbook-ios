@@ -77,10 +77,6 @@ class VideoPreviewCollectionViewCell: UICollectionViewCell {
         self.subtitleLabel.text = ""
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.setupWithTheme()

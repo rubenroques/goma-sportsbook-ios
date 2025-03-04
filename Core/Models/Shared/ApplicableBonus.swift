@@ -16,14 +16,4 @@ struct ApplicableBonus: Decodable {
     let html: String?
     let assets: String?
 
-    init(code: String, name: String, description: String,
-         url: String?, html: String?, assets: String?) {
-        self.code = code
-        self.name = name
-        self.description = description
-        self.url = url
-        self.html = html
-        self.assets = assets
-    }
-
 }

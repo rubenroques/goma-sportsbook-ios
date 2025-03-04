@@ -184,6 +184,5 @@ struct OddOutcomesSortingHelper {
             return nil
         }
     }
-
     
 }

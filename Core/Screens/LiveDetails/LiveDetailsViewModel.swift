@@ -59,7 +59,6 @@ class LiveDetailsViewModel {
             .store(in: &cancellables)
     }
 
-
     private func fetchMatches() {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)

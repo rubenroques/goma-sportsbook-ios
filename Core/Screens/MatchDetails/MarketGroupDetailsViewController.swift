@@ -94,10 +94,6 @@ class MarketGroupDetailsViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -115,10 +111,6 @@ class MarketGroupDetailsViewController: UIViewController {
         self.view.backgroundColor = .clear
 
         self.tableView.backgroundColor = .clear
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
     }
 
     // MARK: - Bindings
@@ -250,7 +242,6 @@ class MarketGroupDetailsViewController: UIViewController {
         self.reloadTableView()
     }
 }
-
 
 // MARK: - TableView Protocols
 //

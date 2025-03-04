@@ -625,7 +625,6 @@ class ProfileViewController: UIViewController {
         let promotionsTap = UITapGestureRecognizer(target: self, action: #selector(promotionsViewTapped(sender:)))
         promotionsView.addGestureRecognizer(promotionsTap)
 
-
         let responsibleGamingView = NavigationCardView()
         responsibleGamingView.setupView(title: localized("responsible_gaming"), iconTitle: "responsible_gaming_icon")
         let responsibleGamingTap = UITapGestureRecognizer(target: self, action: #selector(responsibleGamingViewTapped(sender:)))
@@ -674,7 +673,6 @@ class ProfileViewController: UIViewController {
         themeSelectorView.onThemeChange = { [weak self] newMode in
             self?.handleThemeChange(newMode)
         }
-        
 
         self.stackView.addArrangedSubview(myAccountView)
         self.stackView.addArrangedSubview(responsibleGamingView)
@@ -829,7 +827,7 @@ class ProfileViewController: UIViewController {
 
         UIView.animate(withDuration: 0.5, animations: {
             self.totalBalanceInfoDialogView.alpha = 1
-        }) { (completed) in
+        }) { completed in
             if completed {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                     UIView.animate(withDuration: 0.5) {
@@ -1023,10 +1021,6 @@ class ThemeSelectorView: UIView {
         
         setupContainerViews()
         updateSelection()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
     
     private func setupContainerViews() {

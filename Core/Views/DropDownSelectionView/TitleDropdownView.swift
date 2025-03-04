@@ -72,10 +72,6 @@ class TitleDropdownView: UIView {
 
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
     private func setupWithTheme() {
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -270,4 +266,3 @@ extension TitleDropdownView: UIPickerViewDelegate, UIPickerViewDataSource {
         self.textLabel.text = selectedItem
     }
 }
-

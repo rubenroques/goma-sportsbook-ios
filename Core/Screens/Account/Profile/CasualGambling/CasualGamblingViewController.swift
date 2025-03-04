@@ -45,7 +45,7 @@ class CasualGamblingViewController: UIViewController {
     private lazy var accordionFourthSectionDescriptionView: UIView = Self.createAccordionFourthSectionDescriptionView()
     private lazy var accordionFourthSectionDescriptionLabel: UILabel = Self.createAccordionFourthSectionDescriptionLabel()
 
-    //private lazy var tipButton: UIButton = Self.createTipButton()
+    // private lazy var tipButton: UIButton = Self.createTipButton()
     private lazy var logo1ImageView: UIImageView = Self.createLogo1ImageView()
     private lazy var logo2ImageView: UIImageView = Self.createLogo2ImageView()
     private lazy var logo3ImageView: UIImageView = Self.createLogo3ImageView()
@@ -890,7 +890,7 @@ extension CasualGamblingViewController {
         self.scrollContainerView.addSubview(self.logo2ImageView)
         self.scrollContainerView.addSubview(self.logo3ImageView)
         
-        //self.scrollContainerView.addSubview(self.tipButton)
+        // self.scrollContainerView.addSubview(self.tipButton)
 
         self.initConstraints()
     }
@@ -973,7 +973,7 @@ extension CasualGamblingViewController {
             self.accordionSecondSectionBaseView.leadingAnchor.constraint(equalTo: self.accordionView.leadingAnchor),
             self.accordionSecondSectionBaseView.trailingAnchor.constraint(equalTo: self.accordionView.trailingAnchor),
             self.accordionSecondSectionBaseView.topAnchor.constraint(equalTo: self.accordionFirstSectionBaseView.bottomAnchor),
-            //self.accordionSecondSectionBaseView.bottomAnchor.constraint(equalTo: self.accordionView.bottomAnchor),
+            // self.accordionSecondSectionBaseView.bottomAnchor.constraint(equalTo: self.accordionView.bottomAnchor),
             
             self.accordionSecondTextSectionView.leadingAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.leadingAnchor),
             self.accordionSecondTextSectionView.trailingAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.trailingAnchor),

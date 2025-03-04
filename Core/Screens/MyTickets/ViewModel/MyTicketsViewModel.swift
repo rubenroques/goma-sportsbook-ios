@@ -187,8 +187,6 @@ class MyTicketsViewModel: NSObject {
                 nextTickets.append(contentsOf: betHistoryEntries)
                 self.wonMyTickets.send(nextTickets)
             }
-        default:
-            ()
         }
 
         self.listStatePublisher.send(.loaded)
@@ -213,7 +211,8 @@ class MyTicketsViewModel: NSObject {
             
             startDate = self.getDateString(date: oneYearAgo)
             endDate = self.getDateString(date: currentDate, isEndDate: true)
-        } else {
+        }
+        else {
             print("Error calculating one year ago")
         }
 
@@ -253,12 +252,11 @@ class MyTicketsViewModel: NSObject {
             .store(in: &cancellables)
     }
     
-    
     // Get alowed bets first
     func loadOpenedTickets(page: Int, isNextPage: Bool = false) {
         Env.servicesProvider.allowedCashoutBetIds()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
+            .sink { [weak self] _ in
                 self?.loadOpenedTicketsContent(page: page, isNextPage: isNextPage)
             } receiveValue: { [weak self] betIds in
                 self?.allowedCashoutBetIds = betIds
@@ -283,10 +281,10 @@ class MyTicketsViewModel: NSObject {
             
             startDate = self.getDateString(date: oneYearAgo)
             endDate = self.getDateString(date: currentDate, isEndDate: true)
-        } else {
+        }
+        else {
             print("Error calculating one year ago")
         }
-  
 
         Env.servicesProvider.getOpenBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
@@ -342,7 +340,8 @@ class MyTicketsViewModel: NSObject {
             
             startDate = self.getDateString(date: oneYearAgo)
             endDate = self.getDateString(date: currentDate, isEndDate: true)
-        } else {
+        }
+        else {
             print("Error calculating one year ago")
         }
 
@@ -407,7 +406,8 @@ class MyTicketsViewModel: NSObject {
             if let resetDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date) {
                 finalDate = resetDate
 
-            } else {
+            }
+            else {
                 print("Failed to reset to start date.")
             }
         }
@@ -415,7 +415,8 @@ class MyTicketsViewModel: NSObject {
             if let resetDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date) {
                 finalDate = resetDate
 
-            } else {
+            }
+            else {
                 print("Failed to reset to end date.")
             }
         }
@@ -519,14 +520,12 @@ class MyTicketsViewModel: NSObject {
     }
 
     func getSharedBetTokens() {
-
         // TODO: Get a bet token for the shared clicked bet
         // Send it to self?.clickedBetTokenPublisher.send(betToken)
         if let betslipId = self.clickedBetId {
             print("BETSLIP TICKET ID: \(betslipId)")
             self.clickedBetTokenPublisher.send(betslipId)
         }
-
     }
     
     func shouldShowLoadingCell() -> Bool {
@@ -537,7 +536,6 @@ class MyTicketsViewModel: NSObject {
             return self.resolvedMyTickets.value.isNotEmpty && hasNextPage
         case .won:
             return self.wonMyTickets.value.isNotEmpty && hasNextPage
-         
        }
     }
     

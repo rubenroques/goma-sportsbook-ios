@@ -198,7 +198,7 @@ class GomaGamingSocialServiceClient {
             Logger.log("SocketSocialDebug: error \(data)")
         }
         
-        self.socket?.onAny({ data in
+        self.socket?.onAny({ _ in
             // Logger.log("SocketSocialDebug: Any - \(data)")
         })
         
@@ -353,7 +353,7 @@ class GomaGamingSocialServiceClient {
                                 else {
                                     self.chatroomLastMessagePublisher[chatroomId] = .init(lastMessage)
 
-                                    //self.allChatroomIdsLastMessageSubscribed.value.append(chatroomId)
+                                    // self.allChatroomIdsLastMessageSubscribed.value.append(chatroomId)
 
                                     self.checkAllLastMessagesSubscribed()
                                 }
@@ -524,7 +524,7 @@ class GomaGamingSocialServiceClient {
         // Last Message
         self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
 
-        //All Messages
+        // All Messages
         self.chatroomMessagesPublisher[chatroomId] = .init([])
 
         let chatHandlerId = self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
@@ -577,7 +577,7 @@ class GomaGamingSocialServiceClient {
             self.socketCustomHandlers.insert(chatHandlerId)
         }
 
-        //Read messages
+        // Read messages
         let handlerId = self.socket?.on("social.chatroom.\(chatroomId).read") { data, _ in
             print("SocketDebug: on social.chatroom.\(chatroomId).read: \( data.json() )")
             let chatUsers = self.parseChatUsers(data: data)

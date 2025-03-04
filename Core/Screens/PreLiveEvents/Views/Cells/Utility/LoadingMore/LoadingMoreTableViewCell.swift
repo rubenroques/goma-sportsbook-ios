@@ -100,7 +100,8 @@ private class PreviewTableViewController: UITableViewController {
         // Animate cells alternately for testing
         if indexPath.row % 2 == 0 {
             cell.startAnimating()
-        } else {
+        }
+        else {
             cell.stopAnimating()
         }
 

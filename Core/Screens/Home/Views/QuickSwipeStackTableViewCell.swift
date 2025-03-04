@@ -120,7 +120,6 @@ class QuickSwipeStackTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
-
     func startCollectionViewTimer() {
         self.resetTime()
     }

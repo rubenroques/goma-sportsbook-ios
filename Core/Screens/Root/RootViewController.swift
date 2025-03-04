@@ -358,7 +358,6 @@ class RootViewController: UIViewController {
         self.commonInit()
         // self.loadChildViewControllerIfNeeded(tab: )
 
-
         // Setup fonts
         self.sportsbookTitleLabel.font = AppFont.with(type: .heavy, size: 10)
         
@@ -553,11 +552,6 @@ class RootViewController: UIViewController {
             .store(in: &cancellables)
 
         Env.userSessionStore.refreshUserWallet()
-
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
 
     }
 
@@ -2191,7 +2185,7 @@ extension RootViewController {
             context.evaluatePolicy(
                 LAPolicy.deviceOwnerAuthentication,
                 localizedReason: localized("access_requires_authentication"),
-                reply: { success, error in
+                reply: { _, error in
 
                     DispatchQueue.main.async {
                         if let err = error {

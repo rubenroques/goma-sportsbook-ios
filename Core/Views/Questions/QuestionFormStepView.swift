@@ -46,11 +46,6 @@ class QuestionFormStepView: UIView {
     private func commonInit() {
     }
     
-    // MARK: Layout and theme
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-    
     func setupWithTheme() {
         self.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -72,7 +67,7 @@ class QuestionFormStepView: UIView {
             
             view.answerChoice
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] answerChoice in
+                .sink(receiveValue: { [weak self] _ in
                     self?.checkFormValidation()
                 })
                 .store(in: &cancellables)

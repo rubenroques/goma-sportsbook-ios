@@ -56,7 +56,7 @@ class GenericAvatarErrorViewController: UIViewController {
         path.move(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
         path.addCurve(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height),
                       controlPoint1: CGPoint(x: self.shapeView.frame.size.width*0.40, y: 0),
-                      controlPoint2: CGPoint(x:self.shapeView.frame.size.width*0.60, y: 20))
+                      controlPoint2: CGPoint(x: self.shapeView.frame.size.width*0.60, y: 20))
         path.addLine(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height))
         path.addLine(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
         path.close()

@@ -36,7 +36,7 @@ class CloseAccountViewModel {
                     self?.shouldShowAlert.send(.error)
                 }
 
-            }, receiveValue: { [weak self] lockPlayerResponse in
+            }, receiveValue: { [weak self] _ in
 
                 self?.shouldShowAlert.send(.success)
 

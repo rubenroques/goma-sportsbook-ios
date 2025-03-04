@@ -272,7 +272,7 @@ class IdentificationDocsViewModel {
                 case .finished:
                     ()
                 case .failure(let error):
-                    //self?.isLoadingPublisher.send(false)
+                    // self?.isLoadingPublisher.send(false)
                     self?.reloadData()
                 }
 
@@ -333,7 +333,7 @@ class IdentificationDocsViewModel {
                 var retry: Bool = true
 
                 self.dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-                var uploadDate: Date? = nil
+                var uploadDate: Date?
 
                 // Check documents state
                 if let levelName = applicantDataResponse.reviewData?.levelName,

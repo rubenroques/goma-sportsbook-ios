@@ -77,7 +77,7 @@ class DepositWebViewController: UIViewController {
     }
 
     @IBAction private func didTapCloseButton() {
-        //self.navigationController?.popToRootViewController(animated: true)
+        // self.navigationController?.popToRootViewController(animated: true)
         self.dismiss(animated: true, completion: {
             self.presentingViewController?.dismiss(animated: true, completion: nil)
         })
