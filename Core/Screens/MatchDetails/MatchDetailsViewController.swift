@@ -1,8 +1,6 @@
 //
-//  MatchDetailsViewController.swift
+//  MatchDetailsViewController+Programmatic
 //  Sportsbook
-//
-//  Created by André Lascas on 23/11/2021.
 //
 
 import UIKit
@@ -13,130 +11,143 @@ import ServicesProvider
 
 class MatchDetailsViewController: UIViewController {
 
-    @IBOutlet private var topView: UIView!
-    @IBOutlet private var headerDetailView: UIView!
-    @IBOutlet private var headerDetailTopView: UIView!
-    @IBOutlet private var backButton: UIButton!
-    @IBOutlet private var shareButton: UIButton!
+    // MARK: - Private Properties
 
-    @IBOutlet private var headerCompetitionDetailView: UIView!
-    @IBOutlet private var headerCompetitionLabel: UILabel!
-    @IBOutlet private var headerCompetitionSportImageView: UIImageView!
-    @IBOutlet private var headerCompetitionImageView: UIImageView!
+    // Top and header views
+    private lazy var topView: UIView = Self.createTopView()
+    private lazy var headerDetailView: UIView = Self.createHeaderDetailView()
+    private lazy var headerDetailTopView: UIView = Self.createHeaderDetailTopView()
+    private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var shareButton: UIButton = Self.createShareButton()
 
-    @IBOutlet private var headerDetailStackView: UIStackView!
-    @IBOutlet private var headerDetailHomeView: UIView!
-    @IBOutlet private var headerDetailHomeLabel: UILabel!
-    @IBOutlet private var headerDetailAwayView: UIView!
-    @IBOutlet private var headerDetailAwayLabel: UILabel!
+    // Competition details
+    private lazy var headerCompetitionDetailView: UIView = Self.createHeaderCompetitionDetailView()
+    private lazy var headerCompetitionLabel: UILabel = Self.createHeaderCompetitionLabel()
+    private lazy var headerCompetitionSportImageView: UIImageView = Self.createHeaderCompetitionSportImageView()
+    private lazy var headerCompetitionCountryImageView: UIImageView = Self.createHeaderCompetitionCountryImageView()
 
-    @IBOutlet private var homeServingIndicatorView: UIView!
-    @IBOutlet private var awayServingIndicatorView: UIView!
+    // Header details
+    private lazy var headerDetailStackView: UIStackView = Self.createHeaderDetailStackView()
+    private lazy var headerDetailHomeView: UIView = Self.createHeaderDetailHomeView()
+    private lazy var headerDetailHomeLabel: UILabel = Self.createHeaderDetailHomeLabel()
+    private lazy var headerDetailAwayView: UIView = Self.createHeaderDetailAwayView()
+    private lazy var headerDetailAwayLabel: UILabel = Self.createHeaderDetailAwayLabel()
 
-    @IBOutlet private var headerDetailMiddleView: UIView!
-    @IBOutlet private var headerDetailMiddleStackView: UIStackView!
+    // Serving indicators
+    private lazy var homeServingIndicatorView: UIView = Self.createHomeServingIndicatorView()
+    private lazy var awayServingIndicatorView: UIView = Self.createAwayServingIndicatorView()
 
-    @IBOutlet private var headerDetailPreliveView: UIView!
-    @IBOutlet private var headerDetailPreliveTopLabel: UILabel!
-    @IBOutlet private var headerDetailPreliveBottomLabel: UILabel!
+    // Header middle section
+    private lazy var headerDetailMiddleView: UIView = Self.createHeaderDetailMiddleView()
+    private lazy var headerDetailMiddleStackView: UIStackView = Self.createHeaderDetailMiddleStackView()
 
-    @IBOutlet private var headerDetailLiveView: UIView!
-    @IBOutlet private var headerDetailLiveTopLabel: UILabel!
-    @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
+    // Pre-live details
+    private lazy var headerDetailPreliveView: UIView = Self.createHeaderDetailPreliveView()
+    private lazy var headerDetailPreliveTopLabel: UILabel = Self.createHeaderDetailPreliveTopLabel()
+    private lazy var headerDetailPreliveBottomLabel: UILabel = Self.createHeaderDetailPreliveBottomLabel()
 
-    @IBOutlet private var headerButtonsBaseView: UIView!
-    @IBOutlet private var headerButtonsStackView: UIStackView!
-    @IBOutlet private var headerLiveButtonBaseView: UIView!
-    @IBOutlet private var liveButtonLabel: UILabel!
-    @IBOutlet private var liveButtonImageView: UIImageView!
-    @IBOutlet private var fieldExpandImageView: UIImageView!
+    // Live details
+    private lazy var headerDetailLiveView: UIView = Self.createHeaderDetailLiveView()
+    private lazy var headerDetailLiveTopLabel: UILabel = Self.createHeaderDetailLiveTopLabel()
+    private lazy var headerDetailLiveBottomLabel: UILabel = Self.createHeaderDetailLiveBottomLabel()
 
-    @IBOutlet private var headerStatsButtonBaseView: UIView!
-    @IBOutlet private var statsButtonLabel: UILabel!
-    @IBOutlet private var statsButtonImageView: UIImageView!
+    // Header buttons
+    private lazy var headerButtonsBaseView: UIView = Self.createHeaderButtonsBaseView()
+    private lazy var headerButtonsStackView: UIStackView = Self.createHeaderButtonsStackView()
+    private lazy var headerLiveButtonBaseView: UIView = Self.createHeaderLiveButtonBaseView()
+    private lazy var liveButtonLabel: UILabel = Self.createLiveButtonLabel()
+    private lazy var liveButtonImageView: UIImageView = Self.createLiveButtonImageView()
+    private lazy var fieldExpandImageView: UIImageView = Self.createFieldExpandImageView()
 
-    @IBOutlet private var accountValueView: UIView!
-    @IBOutlet private var accountPlusView: UIView!
-    @IBOutlet private var accountValueLabel: UILabel!
-    @IBOutlet private var accountPlusImageView: UIImageView!
+    // Stats button section
+    private lazy var headerStatsButtonBaseView: UIView = Self.createHeaderStatsButtonBaseView()
+    private lazy var statsButtonLabel: UILabel = Self.createStatsButtonLabel()
+    private lazy var statsButtonImageView: UIImageView = Self.createStatsButtonImageView()
 
-    @IBOutlet private var matchFieldBaseView: UIView!
-    @IBOutlet private var matchFieldLoadingView: UIActivityIndicatorView!
+    // Account section
+    private lazy var accountValueView: UIView = Self.createAccountValueView()
+    private lazy var accountPlusView: UIView = Self.createAccountPlusView()
+    private lazy var accountValueLabel: UILabel = Self.createAccountValueLabel()
+    private lazy var accountPlusImageView: UIImageView = Self.createAccountPlusImageView()
 
-    @IBOutlet private var matchFieldWebView: WKWebView!
-    @IBOutlet private var matchFieldWebViewHeight: NSLayoutConstraint!
+    // Match field section
+    private lazy var matchFieldBaseView: UIView = Self.createMatchFieldBaseView()
+    private lazy var matchFieldLoadingView: UIActivityIndicatorView = Self.createMatchFieldLoadingView()
+    private lazy var matchFieldWebView: WKWebView = Self.createMatchFieldWebView()
+    private lazy var matchFieldWebViewHeightConstraint: NSLayoutConstraint = Self.createMatchFieldWebViewHeightConstraintConstraint()
 
-    @IBOutlet private var statsBaseView: UIView!
-    @IBOutlet private var statsCollectionBaseView: UIView!
-    @IBOutlet private var statsCollectionView: UICollectionView!
-    @IBOutlet private var statsCollectionViewHeight: NSLayoutConstraint!
-    @IBOutlet private var statsBackSliderView: UIView!
-    @IBOutlet private var statsNotFoundLabel: UILabel!
+    // Stats section
+    private lazy var statsBaseView: UIView = Self.createStatsBaseView()
+    private lazy var statsCollectionBaseView: UIView = Self.createStatsCollectionBaseView()
+    private lazy var statsCollectionView: UICollectionView = Self.createStatsCollectionView()
+    private lazy var statsCollectionViewHeightConstraint: NSLayoutConstraint = Self.createStatsCollectionViewHeightConstraintConstraint()
+    private lazy var statsBackSliderView: UIView = Self.createStatsBackSliderView()
+    private lazy var statsNotFoundLabel: UILabel = Self.createStatsNotFoundLabel()
 
-    @IBOutlet private var marketTypesBaseView: UIView!
+    // Market types section
+    private lazy var marketTypesBaseView: UIView = Self.createMarketTypesBaseView()
 
     private var chipsTypeView: ChipsTypeView
 
-    private lazy var backgroundGradientView: GradientView = {
-        let view = GradientView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private lazy var backgroundGradientView: GradientView = Self.createBackgroundGradientView()
 
-    @IBOutlet private var marketGroupsPagedBaseView: UIView!
+    // Market groups paged section
+    private lazy var marketGroupsPagedBaseView: UIView = Self.createMarketGroupsPagedBaseView()
     private var marketGroupsPagedViewController: UIPageViewController
 
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
-    @IBOutlet private var matchNotAvailableView: UIView!
-    @IBOutlet private var matchNotAvailableLabel: UILabel!
+    // Match not available section
+    private lazy var matchNotAvailableView: UIView = Self.createMatchNotAvailableView()
+    private lazy var matchNotAvailableLabel: UILabel = Self.createMatchNotAvailableLabel()
 
-    @IBOutlet private var marketsNotAvailableView: UIView!
-    @IBOutlet private var marketsNotAvailableLabel: UILabel!
+    // Markets not available section
+    private lazy var marketsNotAvailableView: UIView = Self.createMarketsNotAvailableView()
+    private lazy var marketsNotAvailableLabel: UILabel = Self.createMarketsNotAvailableLabel()
 
-    @IBOutlet private var homeRedCardImage: UIImageView!
-    @IBOutlet private var awayRedCardImage: UIImageView!
-    @IBOutlet private var homeRedCardLabel: UILabel!
-    @IBOutlet private var awayRedCardsLabel: UILabel!
+    // Red card indicators
+    private lazy var homeRedCardImage: UIImageView = Self.createHomeRedCardImage()
+    private lazy var awayRedCardImage: UIImageView = Self.createAwayRedCardImage()
+    private lazy var homeRedCardLabel: UILabel = Self.createHomeRedCardLabel()
+    private lazy var awayRedCardsLabel: UILabel = Self.createAwayRedCardsLabel()
 
-    @IBOutlet private var marketsStackView: UIStackView!
+    // Markets stack
+    private lazy var marketsStackView: UIStackView = Self.createMarketsStackView()
 
     // New top details view
-    @IBOutlet private weak var topSeparatorAlphaLineView: FadingView!
-    @IBOutlet private weak var matchDetailsContentView: UIView!
-    @IBOutlet private weak var homeTeamLabel: UILabel!
-    @IBOutlet private weak var awayTeamLabel: UILabel!
-    @IBOutlet private weak var liveTimeLabel: UILabel!
-    @IBOutlet private weak var preLiveDetailsView: UIView!
-    @IBOutlet private weak var preLiveDateLabel: UILabel!
-    @IBOutlet private weak var preLiveTimeLabel: UILabel!
-    @IBOutlet private weak var liveDetailsView: UIView!
-    @IBOutlet private weak var scoreView: ScoreView!
+    private lazy var topSeparatorAlphaLineView: FadingView = Self.createTopSeparatorAlphaLineView()
+    private lazy var matchDetailsContentView: UIView = Self.createMatchDetailsContentView()
+    private lazy var homeTeamLabel: UILabel = Self.createHomeTeamLabel()
+    private lazy var awayTeamLabel: UILabel = Self.createAwayTeamLabel()
+    private lazy var liveTimeLabel: UILabel = Self.createLiveTimeLabel()
+    private lazy var preLiveDetailsView: UIView = Self.createPreLiveDetailsView()
+    private lazy var preLiveDateLabel: UILabel = Self.createPreLiveDateLabel()
+    private lazy var preLiveTimeLabel: UILabel = Self.createPreLiveTimeLabel()
+    private lazy var liveDetailsView: UIView = Self.createLiveDetailsView()
+    private lazy var scoreView: ScoreView = Self.createScoreView()
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
-    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
-        let floatingShortcutsView = FloatingShortcutsView()
-        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
-        return floatingShortcutsView
-    }
 
-    private lazy var sharedGameCardView: SharedGameCardView = {
-        let gameCard = SharedGameCardView()
-        gameCard.translatesAutoresizingMaskIntoConstraints = false
-        gameCard.isHidden = true
+    private lazy var sharedGameCardView: SharedGameCardView = Self.createSharedGameCardView()
 
-        return gameCard
-    }()
+    // Special reference to left and right gradient base views (possibly not needed in programmatic implementation)
+    private var leftGradientBaseView: UIView?
+    private var rightGradientBaseView: UIView?
+
+    // Tooltip views
+    lazy var mixMatchInfoDialogView: InfoDialogView = Self.createMixMatchInfoDialogView()
+
+    // MARK: - Private Properties (State)
 
     private var showingStatsBackSliderView: Bool = false
     private var shouldShowStatsView = false
     private var isStatsViewExpanded: Bool = false {
         didSet {
             if isStatsViewExpanded {
-                self.statsCollectionViewHeight.constant = 148
+                self.statsCollectionViewHeightConstraint.constant = 148
             }
             else {
-                self.statsCollectionViewHeight.constant = 0
+                self.statsCollectionViewHeightConstraint.constant = 0
             }
 
             UIView.animate(withDuration: 0.2, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut) {
@@ -146,15 +157,8 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    // Tooltip views
-    lazy var mixMatchInfoDialogView: InfoDialogView = {
-        let view = InfoDialogView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(title: localized("mix_match_tooltip_description"))
-        return view
-    }()
-
     var didShowMixMatchTooltip: Bool = false
+
     // =========================================================================
     // Header bar and buttons logic
     // =========================================================================
@@ -173,14 +177,14 @@ class MatchDetailsViewController: UIViewController {
     private var isMatchFieldExpanded: Bool = false {
         didSet {
             if self.isMatchFieldExpanded {
-                self.matchFieldWebViewHeight.constant = matchFielHeight
+                self.matchFieldWebViewHeightConstraint.constant = matchFielHeight
                 self.fieldExpandImageView.image = UIImage(named: "arrow_up_icon")
                 self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
             }
             else {
                 self.fieldExpandImageView.image = UIImage(named: "arrow_down_icon")
                 self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
-                self.matchFieldWebViewHeight.constant = 0
+                self.matchFieldWebViewHeightConstraint.constant = 0
             }
 
             UIView.animate(withDuration: 0.2, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut) {
@@ -282,8 +286,7 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    //
-    // ======
+    // Match field height calculations
     private var matchFieldMaximumHeight: CGFloat {
         if self.isMatchFieldExpanded {
             return self.matchFielHeight
@@ -299,11 +302,8 @@ class MatchDetailsViewController: UIViewController {
     var dragInitialY: CGFloat = 0
     var dragPreviousY: CGFloat = 0
     var dragDirection: InnerScrollDragDirection = .up
-    //
-    //
 
-    // =========================================================================
-
+    // Market groups and page control
     private var marketGroupsViewControllers = [UIViewController]()
     private var currentPageViewControllerIndex: Int = 0
 
@@ -313,7 +313,7 @@ class MatchDetailsViewController: UIViewController {
 
     var showMixMatchDefault: Bool = false
 
-    // MARK: - Lifetime and Cycle
+    // MARK: - Initialization and Lifecycle
     init(viewModel: MatchDetailsViewModel) {
         self.viewModel = viewModel
 
@@ -323,7 +323,7 @@ class MatchDetailsViewController: UIViewController {
                                                                     navigationOrientation: .horizontal,
                                                                     options: nil)
 
-        super.init(nibName: "MatchDetailsViewController", bundle: nil)
+        super.init(nibName: nil, bundle: nil)
     }
 
     @available(iOS, unavailable)
@@ -338,73 +338,53 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupNotifications()
+        // Add child view controllers
+        self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
+        self.view.insertSubview(self.backgroundGradientView, at: 0)
 
-        // Setup fonts
-        self.matchNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
-        self.accountValueLabel.font = AppFont.with(type: .heavy, size: 12)
-        self.homeTeamLabel.font = AppFont.with(type: .heavy, size: 16)
-        self.awayTeamLabel.font = AppFont.with(type: .heavy, size: 16)
-        self.preLiveDateLabel.font = AppFont.with(type: .bold, size: 14)
-        self.preLiveTimeLabel.font = AppFont.with(type: .heavy, size: 16)
-        self.liveTimeLabel.font = AppFont.with(type: .heavy, size: 10)
-        self.liveButtonLabel.font = AppFont.with(type: .bold, size: 13)
-        self.statsButtonLabel.font = AppFont.with(type: .bold, size: 13)
-        self.statsNotFoundLabel.font = AppFont.with(type: .medium, size: 17)
-        self.marketsNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
+        setupSubviews()
+        setupNotifications()
+        setupFonts()
+        setupEventHandlers()
 
         self.view.transitionId = "SeeMoreToMatchDetails"
-        
+
         self.homeTeamLabel.text = ""
         self.awayTeamLabel.text = ""
 
-        //
-        self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
-
-        //
-        self.view.insertSubview(self.backgroundGradientView, at: 0)
-
-        NSLayoutConstraint.activate([
-            self.backgroundGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.backgroundGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.backgroundGradientView.topAnchor.constraint(equalTo: self.headerDetailView.bottomAnchor),
-            self.backgroundGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-        ])
-        //
-
-        //
-        self.matchFieldWebViewHeight.constant = 0
-
-        //
+        // Set initial UI states
         self.matchNotAvailableView.isHidden = true
-
         self.marketsNotAvailableView.isHidden = true
         self.marketsNotAvailableLabel.text = localized("markets_not_available")
-
         self.matchFieldBaseView.isHidden = false
         self.statsBaseView.isHidden = false
 
-        //
+        // Initialize field and stats state
         self.isLiveFieldReady = false
         self.shouldShowLiveFieldWebView = false
 
+        // Configure serving indicators
         self.homeServingIndicatorView.isHidden = true
         self.awayServingIndicatorView.isHidden = true
 
-        //
+        // Configure back button
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
 
+        // Configure share button
         self.shareButton.setTitle("", for: .normal)
         self.shareButton.setImage(UIImage(named: "more_options_icon"), for: .normal)
 
+        // Configure competition label
         self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
 
-        self.headerCompetitionImageView.image = nil
-        self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
-        self.headerCompetitionImageView.contentMode = .scaleAspectFill
-        self.headerCompetitionImageView.layer.borderWidth = 0.5
+        // Configure competition image
+        self.headerCompetitionCountryImageView.image = nil
+        self.headerCompetitionCountryImageView.layer.cornerRadius = self.headerCompetitionCountryImageView.frame.width/2
+        self.headerCompetitionCountryImageView.contentMode = .scaleAspectFill
+        self.headerCompetitionCountryImageView.layer.borderWidth = 0.5
 
+        // Configure team labels
         self.headerDetailHomeLabel.text = localized("home_label_default")
         self.headerDetailHomeLabel.font = AppFont.with(type: .bold, size: 16)
         self.headerDetailHomeLabel.numberOfLines = 0
@@ -413,12 +393,14 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailAwayLabel.font = AppFont.with(type: .bold, size: 16)
         self.headerDetailAwayLabel.numberOfLines = 0
 
+        // Configure prelive labels
         self.headerDetailPreliveTopLabel.text = localized("match_label_default")
         self.headerDetailPreliveTopLabel.font = AppFont.with(type: .semibold, size: 12)
 
         self.headerDetailPreliveBottomLabel.text = "00:00"
         self.headerDetailPreliveBottomLabel.font = AppFont.with(type: .bold, size: 16)
 
+        // Configure live labels
         self.headerDetailLiveTopLabel.text = "'0 - 0'"
         self.headerDetailLiveTopLabel.font = AppFont.with(type: .bold, size: 16)
 
@@ -428,6 +410,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.liveButtonLabel.text = ""
 
+        // Configure red card indicators
         self.homeRedCardImage.isHidden = true
         self.awayRedCardImage.isHidden = true
         self.homeRedCardLabel.isHidden = true
@@ -437,23 +420,11 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveView.isHidden = true
         self.headerDetailPreliveView.isHidden = false
 
-        // Market Types base view
-        self.addChildViewController(self.marketGroupsPagedViewController, toView: self.marketGroupsPagedBaseView)
-
-        self.marketTypesBaseView.addSubview(self.chipsTypeView)
-        NSLayoutConstraint.activate([
-            self.chipsTypeView.leadingAnchor.constraint(equalTo: self.marketTypesBaseView.leadingAnchor),
-            self.chipsTypeView.trailingAnchor.constraint(equalTo: self.marketTypesBaseView.trailingAnchor),
-            self.chipsTypeView.topAnchor.constraint(equalTo: self.marketTypesBaseView.topAnchor),
-            self.chipsTypeView.bottomAnchor.constraint(equalTo: self.marketTypesBaseView.bottomAnchor),
-        ])
-
-
+        // Configure page view controller
         self.marketGroupsPagedViewController.delegate = self
         self.marketGroupsPagedViewController.dataSource = self
 
-        //
-        // account balance
+        // Configure account balance view
         self.accountValueView.isHidden = true
         self.accountValueView.layer.cornerRadius = CornerRadius.view
         self.accountValueView.layer.masksToBounds = true
@@ -462,25 +433,25 @@ class MatchDetailsViewController: UIViewController {
         self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
         self.accountPlusView.layer.masksToBounds = true
 
+        // Setup gestures
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         accountValueView.addGestureRecognizer(accountValueTapGesture)
 
         let competitionDetailTapGesture = UITapGestureRecognizer(target: self, action: #selector(openCompetitionsDetails))
         headerCompetitionDetailView.addGestureRecognizer(competitionDetailTapGesture)
 
-        // matchFieldWebView
-        //
+        // Configure webview
         self.matchFieldWebView.scrollView.alwaysBounceVertical = false
         self.matchFieldWebView.scrollView.bounces = false
         self.matchFieldWebView.navigationDelegate = self
 
+        // Configure loading view
         self.matchFieldLoadingView.hidesWhenStopped = true
         self.matchFieldLoadingView.stopAnimating()
         self.matchFieldLoadingView.layer.anchorPoint = CGPoint(x: 1.0, y: 0.5)
         self.matchFieldLoadingView.transform = CGAffineTransform.init(scaleX: 0.6, y: 0.6)
 
-        //
-        // stats
+        // Configure stats collection view
         self.statsCollectionView.delegate = self
         self.statsCollectionView.dataSource = self
         self.statsCollectionView.allowsSelection = false
@@ -495,6 +466,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.statsCollectionView.register(MatchStatsCollectionViewCell.nib, forCellWithReuseIdentifier: MatchStatsCollectionViewCell.identifier)
 
+        // Configure stats back slider
         self.statsBackSliderView.alpha = 0.0
         self.statsBackSliderView.layer.cornerRadius = 6
 
@@ -503,31 +475,55 @@ class MatchDetailsViewController: UIViewController {
 
         self.statsNotFoundLabel.isHidden = true
 
-        // match share
-        //
-        self.view.addSubview(self.sharedGameCardView)
-
-        NSLayoutConstraint.activate([
-            sharedGameCardView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
-            sharedGameCardView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
-            sharedGameCardView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            sharedGameCardView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        ])
-
+        // Configure header button gestures
         let didTapLiveGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveButtonHeaderView))
         self.headerLiveButtonBaseView.addGestureRecognizer(didTapLiveGesture)
 
         let didTapStatsGesture = UITapGestureRecognizer(target: self, action: #selector(didTapStatsButtonHeaderView))
         self.headerStatsButtonBaseView.addGestureRecognizer(didTapStatsGesture)
 
+        // Initial header bar selection
         self.headerBarSelection = .none
 
+        // Apply theme
         self.setupWithTheme()
 
+        // Bind to view model
         self.bind(toViewModel: self.viewModel)
 
-        //
-        // Add loading view controller
+        // Add loading spinner
+        self.configureLoadingSpinner()
+
+        // Configure shared game card
+        self.view.sendSubviewToBack(self.sharedGameCardView)
+
+        // Make sure the match not available view is on top
+        self.view.bringSubviewToFront(self.matchNotAvailableView)
+
+        // Configure tooltip
+        self.configureTooltip()
+
+        if self.showMixMatchDefault {
+            self.currentPageViewControllerIndex = 1
+        }
+
+    }
+
+    private func setupFonts() {
+        self.matchNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
+        self.accountValueLabel.font = AppFont.with(type: .heavy, size: 12)
+        self.homeTeamLabel.font = AppFont.with(type: .heavy, size: 16)
+        self.awayTeamLabel.font = AppFont.with(type: .heavy, size: 16)
+        self.preLiveDateLabel.font = AppFont.with(type: .bold, size: 14)
+        self.preLiveTimeLabel.font = AppFont.with(type: .heavy, size: 16)
+        self.liveTimeLabel.font = AppFont.with(type: .heavy, size: 10)
+        self.liveButtonLabel.font = AppFont.with(type: .bold, size: 13)
+        self.statsButtonLabel.font = AppFont.with(type: .bold, size: 13)
+        self.statsNotFoundLabel.font = AppFont.with(type: .medium, size: 17)
+        self.marketsNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
+    }
+
+    private func configureLoadingSpinner() {
         self.loadingSpinnerViewController.willMove(toParent: self)
         self.addChild(self.loadingSpinnerViewController)
 
@@ -546,20 +542,12 @@ class MatchDetailsViewController: UIViewController {
         // Start loading
         self.loadingSpinnerViewController.startAnimating()
         self.loadingSpinnerViewController.view.isHidden = false
-        //
-        //
+    }
 
-        // Shared Game
-        self.view.sendSubviewToBack(self.sharedGameCardView)
-
-        //
-        self.view.bringSubviewToFront(self.matchNotAvailableView)
-
-        // Tooltip
+    private func configureTooltip() {
         self.view.addSubview(self.mixMatchInfoDialogView)
 
         NSLayoutConstraint.activate([
-
             self.mixMatchInfoDialogView.bottomAnchor.constraint(equalTo: self.chipsTypeView.topAnchor, constant: 5),
             self.mixMatchInfoDialogView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
             self.mixMatchInfoDialogView.trailingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 20),
@@ -567,10 +555,6 @@ class MatchDetailsViewController: UIViewController {
         ])
 
         self.mixMatchInfoDialogView.alpha = 0
-
-        if self.showMixMatchDefault {
-            self.currentPageViewControllerIndex = 1
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -588,8 +572,7 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        // betslip
-        //
+        // Add and configure floating shortcuts view
         self.view.addSubview(self.floatingShortcutsView)
         NSLayoutConstraint.activate([
             self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
@@ -627,8 +610,519 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        self.headerCompetitionCountryImageView.layer.cornerRadius = self.headerCompetitionCountryImageView.frame.size.width / 2
+
         self.awayServingIndicatorView.layer.cornerRadius = self.awayServingIndicatorView.frame.size.width / 2
         self.homeServingIndicatorView.layer.cornerRadius = self.homeServingIndicatorView.frame.size.width / 2
+
+        // Update the gradient layers if needed
+        if let leftMaskLayer = self.leftGradientBaseView?.layer.mask as? CAGradientLayer {
+            leftMaskLayer.frame = self.leftGradientBaseView?.bounds ?? .zero
+        }
+
+        if let rightMaskLayer = self.rightGradientBaseView?.layer.mask as? CAGradientLayer {
+            rightMaskLayer.frame = self.rightGradientBaseView?.bounds ?? .zero
+        }
+    }
+}
+
+extension MatchDetailsViewController {
+
+    // MARK: - Setup Methods
+
+    func setupSubviews() {
+        // Add main views to view hierarchy
+        view.addSubview(topView)
+        view.addSubview(headerDetailView)
+        view.addSubview(matchNotAvailableView)
+        view.addSubview(marketsNotAvailableView)
+        view.addSubview(marketGroupsPagedBaseView)
+        view.addSubview(marketsStackView)
+
+        // Top view setup
+        setupTopViewHierarchy()
+
+        // Header detail view setup
+        setupHeaderDetailViewHierarchy()
+
+        // Match not available view setup
+        setupMatchNotAvailableViewHierarchy()
+
+        // Markets not available view setup
+        setupMarketsNotAvailableViewHierarchy()
+
+        // Markets stack view setup
+        setupMarketsStackViewHierarchy()
+
+        // Add shared game card view
+        view.addSubview(sharedGameCardView)
+
+        // Stats collection view height constraint
+        statsCollectionViewHeightConstraint = statsCollectionBaseView.heightAnchor.constraint(equalToConstant: 0)
+
+        // Match field web view height constraint
+        matchFieldWebViewHeightConstraint = matchFieldWebView.heightAnchor.constraint(equalToConstant: 0)
+
+        // Set up constraints
+        setupConstraints()
+    }
+
+    private func setupTopViewHierarchy() {
+        // Top view is empty for background color
+    }
+
+    private func setupHeaderDetailViewHierarchy() {
+        // Add main components to header detail view
+        headerDetailView.addSubview(headerDetailTopView)
+        headerDetailView.addSubview(matchDetailsContentView)
+        headerDetailView.addSubview(topSeparatorAlphaLineView)
+
+        // Set up header detail top view
+        headerDetailTopView.addSubview(backButton)
+        headerDetailTopView.addSubview(shareButton)
+        headerDetailTopView.addSubview(headerCompetitionDetailView)
+        headerDetailTopView.addSubview(accountValueView)
+
+        // Set up competition detail view
+        headerCompetitionDetailView.addSubview(headerCompetitionSportImageView)
+        headerCompetitionDetailView.addSubview(headerCompetitionCountryImageView)
+        headerCompetitionDetailView.addSubview(headerCompetitionLabel)
+
+        // Set up account value view
+        accountValueView.addSubview(accountPlusView)
+        accountValueView.addSubview(accountValueLabel)
+        accountPlusView.addSubview(accountPlusImageView)
+
+        // Set up match details content view
+        matchDetailsContentView.addSubview(homeTeamLabel)
+        matchDetailsContentView.addSubview(awayTeamLabel)
+        matchDetailsContentView.addSubview(homeServingIndicatorView)
+        matchDetailsContentView.addSubview(awayServingIndicatorView)
+        matchDetailsContentView.addSubview(preLiveDetailsView)
+        matchDetailsContentView.addSubview(liveDetailsView)
+        matchDetailsContentView.addSubview(liveTimeLabel)
+
+        // Set up pre-live details view
+        preLiveDetailsView.addSubview(preLiveDateLabel)
+        preLiveDetailsView.addSubview(preLiveTimeLabel)
+
+        // Set up live details view
+        liveDetailsView.addSubview(scoreView)
+
+        // Set up header detail stack view (alternative UI)
+        headerDetailView.addSubview(headerDetailStackView)
+
+        // Add views to header detail stack view
+        headerDetailStackView.addArrangedSubview(headerDetailHomeView)
+        headerDetailStackView.addArrangedSubview(headerDetailMiddleView)
+        headerDetailStackView.addArrangedSubview(headerDetailAwayView)
+
+        // Set up home detail view
+        headerDetailHomeView.addSubview(headerDetailHomeLabel)
+
+        // Set up away detail view
+        headerDetailAwayView.addSubview(headerDetailAwayLabel)
+
+        // Set up middle detail view
+        headerDetailMiddleView.addSubview(headerDetailMiddleStackView)
+
+        // Add pre-live and live views to middle stack view
+        headerDetailMiddleStackView.addArrangedSubview(headerDetailPreliveView)
+        headerDetailMiddleStackView.addArrangedSubview(headerDetailLiveView)
+
+        // Set up pre-live view
+        headerDetailPreliveView.addSubview(headerDetailPreliveTopLabel)
+        headerDetailPreliveView.addSubview(headerDetailPreliveBottomLabel)
+
+        // Set up live view
+        headerDetailLiveView.addSubview(headerDetailLiveTopLabel)
+        headerDetailLiveView.addSubview(headerDetailLiveBottomLabel)
+
+        // Add red card indicators
+        headerDetailMiddleView.addSubview(homeRedCardImage)
+        headerDetailMiddleView.addSubview(homeRedCardLabel)
+        headerDetailMiddleView.addSubview(awayRedCardImage)
+        headerDetailMiddleView.addSubview(awayRedCardsLabel)
+    }
+
+    private func setupMatchNotAvailableViewHierarchy() {
+        matchNotAvailableView.addSubview(matchNotAvailableLabel)
+    }
+
+    private func setupMarketsNotAvailableViewHierarchy() {
+        marketsNotAvailableView.addSubview(marketsNotAvailableLabel)
+    }
+
+    private func setupMarketsStackViewHierarchy() {
+
+        // Setup market types view
+        marketTypesBaseView.addSubview(chipsTypeView)
+
+        // Add views to markets stack view
+        marketsStackView.addArrangedSubview(headerButtonsBaseView)
+        marketsStackView.addArrangedSubview(statsBaseView)
+        marketsStackView.addArrangedSubview(matchFieldBaseView)
+        marketsStackView.addArrangedSubview(marketTypesBaseView)
+
+        // Set up header buttons base view
+        headerButtonsBaseView.addSubview(headerButtonsStackView)
+
+        // Add button views to header buttons stack view
+        headerButtonsStackView.addArrangedSubview(headerLiveButtonBaseView)
+        headerButtonsStackView.addArrangedSubview(headerStatsButtonBaseView)
+
+        // Set up live button view
+        headerLiveButtonBaseView.addSubview(liveButtonLabel)
+        headerLiveButtonBaseView.addSubview(liveButtonImageView)
+        headerLiveButtonBaseView.addSubview(fieldExpandImageView)
+
+        // Set up stats button view
+        headerStatsButtonBaseView.addSubview(statsButtonLabel)
+        headerStatsButtonBaseView.addSubview(statsButtonImageView)
+
+        // Set up stats base view
+        statsBaseView.addSubview(statsCollectionBaseView)
+        statsBaseView.addSubview(statsNotFoundLabel)
+
+        // Set up stats collection base view
+        statsCollectionBaseView.addSubview(statsCollectionView)
+        statsCollectionBaseView.addSubview(statsBackSliderView)
+
+        // Set up match field base view
+        matchFieldBaseView.addSubview(matchFieldWebView)
+        matchFieldBaseView.addSubview(matchFieldLoadingView)
+    }
+
+    private func setupConstraints() {
+        // Top level constraints
+        NSLayoutConstraint.activate([
+            // Top view
+            topView.topAnchor.constraint(equalTo: view.topAnchor),
+            topView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+
+            // Header detail view
+            headerDetailView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerDetailView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerDetailView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerDetailView.heightAnchor.constraint(equalToConstant: 130),
+
+            // Background gradient view
+            backgroundGradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundGradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundGradientView.topAnchor.constraint(equalTo: headerDetailView.bottomAnchor),
+            backgroundGradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Match not available view
+            matchNotAvailableView.topAnchor.constraint(equalTo: headerDetailTopView.bottomAnchor),
+            matchNotAvailableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            matchNotAvailableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            matchNotAvailableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Markets not available view
+            marketsNotAvailableView.topAnchor.constraint(equalTo: marketsStackView.bottomAnchor),
+            marketsNotAvailableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            marketsNotAvailableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            marketsNotAvailableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Markets stack view
+            marketsStackView.topAnchor.constraint(equalTo: headerDetailView.bottomAnchor),
+            marketsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            marketsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            // Market groups paged base view
+            marketGroupsPagedBaseView.topAnchor.constraint(equalTo: marketsStackView.bottomAnchor),
+            marketGroupsPagedBaseView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            marketGroupsPagedBaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            marketGroupsPagedBaseView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Shared game card view
+            sharedGameCardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            sharedGameCardView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            sharedGameCardView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            sharedGameCardView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        // Header detail top view constraints
+        NSLayoutConstraint.activate([
+            headerDetailTopView.topAnchor.constraint(equalTo: headerDetailView.topAnchor),
+            headerDetailTopView.leadingAnchor.constraint(equalTo: headerDetailView.leadingAnchor),
+            headerDetailTopView.trailingAnchor.constraint(equalTo: headerDetailView.trailingAnchor),
+            headerDetailTopView.heightAnchor.constraint(equalToConstant: 44),
+
+            // Top separator line
+            topSeparatorAlphaLineView.topAnchor.constraint(equalTo: headerDetailTopView.bottomAnchor),
+            topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: headerDetailView.leadingAnchor),
+            topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: headerDetailView.trailingAnchor),
+            topSeparatorAlphaLineView.heightAnchor.constraint(equalToConstant: 1),
+
+            // Match details content view
+            matchDetailsContentView.topAnchor.constraint(equalTo: topSeparatorAlphaLineView.bottomAnchor),
+            matchDetailsContentView.leadingAnchor.constraint(equalTo: headerDetailView.leadingAnchor),
+            matchDetailsContentView.trailingAnchor.constraint(equalTo: headerDetailView.trailingAnchor),
+            matchDetailsContentView.bottomAnchor.constraint(equalTo: headerDetailView.bottomAnchor),
+
+            // Back button
+            backButton.leadingAnchor.constraint(equalTo: headerDetailTopView.leadingAnchor),
+            backButton.centerYAnchor.constraint(equalTo: headerDetailTopView.centerYAnchor),
+            backButton.widthAnchor.constraint(equalToConstant: 40),
+            backButton.heightAnchor.constraint(equalToConstant: 44),
+
+            // Share button
+            shareButton.trailingAnchor.constraint(equalTo: headerDetailTopView.trailingAnchor, constant: -1),
+            shareButton.centerYAnchor.constraint(equalTo: headerDetailTopView.centerYAnchor),
+            shareButton.widthAnchor.constraint(equalToConstant: 40),
+            shareButton.heightAnchor.constraint(equalToConstant: 44),
+
+            // Competition detail view
+            headerCompetitionDetailView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 1),
+            headerCompetitionDetailView.centerYAnchor.constraint(equalTo: headerDetailTopView.centerYAnchor),
+            headerCompetitionDetailView.heightAnchor.constraint(equalToConstant: 30),
+
+            // Account value view
+            accountValueView.centerYAnchor.constraint(equalTo: headerDetailTopView.centerYAnchor),
+            accountValueView.heightAnchor.constraint(equalToConstant: 24),
+            accountValueView.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor, constant: -8)
+        ])
+
+        // Competition detail view constraints
+        NSLayoutConstraint.activate([
+            headerCompetitionSportImageView.leadingAnchor.constraint(equalTo: headerCompetitionDetailView.leadingAnchor, constant: 2),
+            headerCompetitionSportImageView.centerYAnchor.constraint(equalTo: headerCompetitionDetailView.centerYAnchor),
+            headerCompetitionSportImageView.widthAnchor.constraint(equalToConstant: 17),
+            headerCompetitionSportImageView.heightAnchor.constraint(equalToConstant: 17),
+
+            headerCompetitionCountryImageView.leadingAnchor.constraint(equalTo: headerCompetitionSportImageView.trailingAnchor, constant: 5),
+            headerCompetitionCountryImageView.centerYAnchor.constraint(equalTo: headerCompetitionLabel.centerYAnchor),
+            headerCompetitionCountryImageView.widthAnchor.constraint(equalToConstant: 20),
+            headerCompetitionCountryImageView.heightAnchor.constraint(equalToConstant: 20),
+
+            headerCompetitionLabel.leadingAnchor.constraint(equalTo: headerCompetitionCountryImageView.trailingAnchor, constant: 5),
+            headerCompetitionLabel.centerYAnchor.constraint(equalTo: headerCompetitionDetailView.centerYAnchor),
+            headerCompetitionLabel.trailingAnchor.constraint(equalTo: headerCompetitionDetailView.trailingAnchor, constant: -8)
+        ])
+
+        // Account value view constraints
+        NSLayoutConstraint.activate([
+            accountPlusView.leadingAnchor.constraint(equalTo: accountValueView.leadingAnchor, constant: 4),
+            accountPlusView.topAnchor.constraint(equalTo: accountValueView.topAnchor, constant: 4),
+            accountPlusView.bottomAnchor.constraint(equalTo: accountValueView.bottomAnchor, constant: -4),
+            accountPlusView.widthAnchor.constraint(equalTo: accountPlusView.heightAnchor),
+
+            accountPlusImageView.centerXAnchor.constraint(equalTo: accountPlusView.centerXAnchor),
+            accountPlusImageView.centerYAnchor.constraint(equalTo: accountPlusView.centerYAnchor),
+            accountPlusImageView.widthAnchor.constraint(equalToConstant: 12),
+
+            accountValueLabel.leadingAnchor.constraint(equalTo: accountPlusView.trailingAnchor, constant: 4),
+            accountValueLabel.trailingAnchor.constraint(equalTo: accountValueView.trailingAnchor, constant: -4),
+            accountValueLabel.centerYAnchor.constraint(equalTo: accountValueView.centerYAnchor)
+        ])
+
+        // Match details content view constraints
+        NSLayoutConstraint.activate([
+            homeTeamLabel.leadingAnchor.constraint(equalTo: matchDetailsContentView.leadingAnchor, constant: 15),
+            homeTeamLabel.topAnchor.constraint(equalTo: matchDetailsContentView.topAnchor, constant: 14),
+
+            awayTeamLabel.leadingAnchor.constraint(equalTo: matchDetailsContentView.leadingAnchor, constant: 15),
+            awayTeamLabel.topAnchor.constraint(equalTo: homeTeamLabel.bottomAnchor, constant: 10),
+
+            homeServingIndicatorView.leadingAnchor.constraint(equalTo: homeTeamLabel.trailingAnchor, constant: 5),
+            homeServingIndicatorView.centerYAnchor.constraint(equalTo: homeTeamLabel.centerYAnchor),
+            homeServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
+            homeServingIndicatorView.heightAnchor.constraint(equalToConstant: 9),
+
+            awayServingIndicatorView.leadingAnchor.constraint(equalTo: awayTeamLabel.trailingAnchor, constant: 5),
+            awayServingIndicatorView.centerYAnchor.constraint(equalTo: awayTeamLabel.centerYAnchor),
+            awayServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
+            awayServingIndicatorView.heightAnchor.constraint(equalToConstant: 9),
+
+            liveTimeLabel.leadingAnchor.constraint(equalTo: homeTeamLabel.leadingAnchor),
+            liveTimeLabel.topAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor, constant: 8),
+            liveTimeLabel.trailingAnchor.constraint(lessThanOrEqualTo: matchDetailsContentView.centerXAnchor, constant: -10),
+
+            preLiveDetailsView.leadingAnchor.constraint(equalTo: matchDetailsContentView.centerXAnchor),
+            preLiveDetailsView.topAnchor.constraint(equalTo: homeTeamLabel.topAnchor),
+            preLiveDetailsView.bottomAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor),
+            preLiveDetailsView.trailingAnchor.constraint(equalTo: matchDetailsContentView.trailingAnchor, constant: -15),
+
+            liveDetailsView.leadingAnchor.constraint(equalTo: matchDetailsContentView.centerXAnchor),
+            liveDetailsView.topAnchor.constraint(equalTo: homeTeamLabel.topAnchor),
+            liveDetailsView.bottomAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor),
+            liveDetailsView.trailingAnchor.constraint(equalTo: matchDetailsContentView.trailingAnchor, constant: -15)
+        ])
+
+        // Pre-live details view constraints
+        NSLayoutConstraint.activate([
+            preLiveDateLabel.centerYAnchor.constraint(equalTo: homeTeamLabel.centerYAnchor),
+            preLiveDateLabel.trailingAnchor.constraint(equalTo: preLiveDetailsView.trailingAnchor),
+
+            preLiveTimeLabel.centerYAnchor.constraint(equalTo: awayTeamLabel.centerYAnchor),
+            preLiveTimeLabel.trailingAnchor.constraint(equalTo: preLiveDetailsView.trailingAnchor)
+        ])
+
+        // Live details view constraints
+        NSLayoutConstraint.activate([
+            scoreView.trailingAnchor.constraint(equalTo: liveDetailsView.trailingAnchor),
+            scoreView.topAnchor.constraint(equalTo: liveDetailsView.topAnchor),
+            scoreView.bottomAnchor.constraint(equalTo: liveDetailsView.bottomAnchor),
+            scoreView.leadingAnchor.constraint(greaterThanOrEqualTo: liveDetailsView.leadingAnchor, constant: 30)
+        ])
+
+        // Markets stack view constraints
+        NSLayoutConstraint.activate([
+            // Header buttons base view
+            headerButtonsBaseView.heightAnchor.constraint(equalToConstant: 40),
+
+            // Header buttons stack view
+            headerButtonsStackView.topAnchor.constraint(equalTo: headerButtonsBaseView.topAnchor, constant: 2),
+            headerButtonsStackView.leadingAnchor.constraint(equalTo: headerButtonsBaseView.leadingAnchor),
+            headerButtonsStackView.trailingAnchor.constraint(equalTo: headerButtonsBaseView.trailingAnchor),
+            headerButtonsStackView.bottomAnchor.constraint(equalTo: headerButtonsBaseView.bottomAnchor),
+
+            // Header stats buttons constraint to match width of live button
+            headerLiveButtonBaseView.widthAnchor.constraint(equalTo: headerStatsButtonBaseView.widthAnchor),
+        ])
+
+        // Market types base view constraint for height
+        NSLayoutConstraint.activate([
+            marketTypesBaseView.heightAnchor.constraint(equalToConstant: 70)
+        ])
+
+        // Live button components constraints
+        NSLayoutConstraint.activate([
+            liveButtonImageView.centerYAnchor.constraint(equalTo: headerLiveButtonBaseView.centerYAnchor, constant: -1),
+            liveButtonImageView.widthAnchor.constraint(equalToConstant: 13),
+            liveButtonImageView.heightAnchor.constraint(equalToConstant: 13),
+
+            liveButtonLabel.centerXAnchor.constraint(equalTo: headerLiveButtonBaseView.centerXAnchor, constant: 8),
+            liveButtonLabel.leadingAnchor.constraint(equalTo: liveButtonImageView.trailingAnchor, constant: 8),
+            liveButtonLabel.centerYAnchor.constraint(equalTo: headerLiveButtonBaseView.centerYAnchor),
+
+            fieldExpandImageView.leadingAnchor.constraint(equalTo: liveButtonLabel.trailingAnchor, constant: 8),
+            fieldExpandImageView.centerYAnchor.constraint(equalTo: headerLiveButtonBaseView.centerYAnchor),
+            fieldExpandImageView.widthAnchor.constraint(equalToConstant: 10),
+            fieldExpandImageView.heightAnchor.constraint(equalToConstant: 10)
+        ])
+
+        // Stats button components constraints
+        NSLayoutConstraint.activate([
+            statsButtonImageView.leadingAnchor.constraint(equalTo: headerStatsButtonBaseView.leadingAnchor, constant: 4),
+            statsButtonImageView.centerYAnchor.constraint(equalTo: headerStatsButtonBaseView.centerYAnchor, constant: -1),
+            statsButtonImageView.widthAnchor.constraint(equalToConstant: 12),
+            statsButtonImageView.heightAnchor.constraint(equalToConstant: 12),
+
+            statsButtonLabel.leadingAnchor.constraint(equalTo: statsButtonImageView.trailingAnchor, constant: 8),
+            statsButtonLabel.centerYAnchor.constraint(equalTo: headerStatsButtonBaseView.centerYAnchor),
+            statsButtonLabel.trailingAnchor.constraint(equalTo: headerStatsButtonBaseView.trailingAnchor, constant: -4)
+        ])
+
+        // Match field web view constraints
+        NSLayoutConstraint.activate([
+            matchFieldWebView.topAnchor.constraint(equalTo: matchFieldBaseView.topAnchor),
+            matchFieldWebView.leadingAnchor.constraint(equalTo: matchFieldBaseView.leadingAnchor),
+            matchFieldWebView.trailingAnchor.constraint(equalTo: matchFieldBaseView.trailingAnchor),
+            matchFieldWebView.bottomAnchor.constraint(equalTo: matchFieldBaseView.bottomAnchor),
+
+            matchFieldLoadingView.centerYAnchor.constraint(equalTo: headerLiveButtonBaseView.centerYAnchor),
+            matchFieldLoadingView.leadingAnchor.constraint(equalTo: headerLiveButtonBaseView.trailingAnchor, constant: 20)
+        ])
+
+        // Stats collection view constraints
+        NSLayoutConstraint.activate([
+            statsCollectionBaseView.topAnchor.constraint(equalTo: statsBaseView.topAnchor),
+            statsCollectionBaseView.leadingAnchor.constraint(equalTo: statsBaseView.leadingAnchor),
+            statsCollectionBaseView.trailingAnchor.constraint(equalTo: statsBaseView.trailingAnchor),
+            statsCollectionBaseView.bottomAnchor.constraint(equalTo: statsBaseView.bottomAnchor),
+
+            statsCollectionView.topAnchor.constraint(equalTo: statsCollectionBaseView.topAnchor),
+            statsCollectionView.leadingAnchor.constraint(equalTo: statsCollectionBaseView.leadingAnchor),
+            statsCollectionView.trailingAnchor.constraint(equalTo: statsCollectionBaseView.trailingAnchor),
+            statsCollectionView.heightAnchor.constraint(equalToConstant: 147),
+
+            statsBackSliderView.leadingAnchor.constraint(equalTo: statsCollectionBaseView.leadingAnchor, constant: -36),
+            statsBackSliderView.centerYAnchor.constraint(equalTo: statsCollectionView.centerYAnchor),
+            statsBackSliderView.widthAnchor.constraint(equalToConstant: 78),
+            statsBackSliderView.heightAnchor.constraint(equalToConstant: 38),
+
+            statsNotFoundLabel.centerXAnchor.constraint(equalTo: statsCollectionView.centerXAnchor),
+            statsNotFoundLabel.centerYAnchor.constraint(equalTo: statsCollectionView.centerYAnchor),
+            statsNotFoundLabel.leadingAnchor.constraint(equalTo: statsBaseView.leadingAnchor, constant: 57),
+            statsNotFoundLabel.trailingAnchor.constraint(equalTo: statsBaseView.trailingAnchor, constant: -57)
+        ])
+
+        // Match not available view constraints
+        NSLayoutConstraint.activate([
+            matchNotAvailableLabel.centerXAnchor.constraint(equalTo: matchNotAvailableView.centerXAnchor),
+            matchNotAvailableLabel.centerYAnchor.constraint(equalTo: matchNotAvailableView.centerYAnchor, constant: -20),
+            matchNotAvailableLabel.leadingAnchor.constraint(equalTo: matchNotAvailableView.leadingAnchor, constant: 36),
+            matchNotAvailableLabel.trailingAnchor.constraint(equalTo: matchNotAvailableView.trailingAnchor, constant: -36)
+        ])
+
+        // Markets not available view constraints
+        NSLayoutConstraint.activate([
+            marketsNotAvailableLabel.centerXAnchor.constraint(equalTo: marketsNotAvailableView.centerXAnchor),
+            marketsNotAvailableLabel.centerYAnchor.constraint(equalTo: marketsNotAvailableView.centerYAnchor),
+            marketsNotAvailableLabel.leadingAnchor.constraint(equalTo: marketsNotAvailableView.leadingAnchor, constant: 30),
+            marketsNotAvailableLabel.trailingAnchor.constraint(equalTo: marketsNotAvailableView.trailingAnchor, constant: -30)
+        ])
+
+        // Alternative header detail stack view (may be hidden initially)
+        NSLayoutConstraint.activate([
+            headerDetailStackView.topAnchor.constraint(equalTo: headerDetailTopView.bottomAnchor),
+            headerDetailStackView.leadingAnchor.constraint(equalTo: headerDetailView.leadingAnchor),
+            headerDetailStackView.trailingAnchor.constraint(equalTo: headerDetailView.trailingAnchor),
+            headerDetailStackView.bottomAnchor.constraint(equalTo: headerDetailView.bottomAnchor)
+        ])
+
+        // Red card indicators constraints
+        NSLayoutConstraint.activate([
+            homeRedCardImage.centerYAnchor.constraint(equalTo: headerDetailMiddleView.centerYAnchor),
+            homeRedCardImage.trailingAnchor.constraint(equalTo: headerDetailMiddleStackView.leadingAnchor),
+            homeRedCardImage.widthAnchor.constraint(equalToConstant: 9),
+            homeRedCardImage.heightAnchor.constraint(equalToConstant: 14),
+
+            homeRedCardLabel.centerYAnchor.constraint(equalTo: headerDetailMiddleView.centerYAnchor),
+            homeRedCardLabel.trailingAnchor.constraint(equalTo: homeRedCardImage.trailingAnchor),
+            homeRedCardLabel.widthAnchor.constraint(equalToConstant: 10),
+            homeRedCardLabel.heightAnchor.constraint(equalToConstant: 14),
+
+            awayRedCardImage.centerYAnchor.constraint(equalTo: headerDetailMiddleView.centerYAnchor),
+            awayRedCardImage.leadingAnchor.constraint(equalTo: headerDetailMiddleStackView.trailingAnchor),
+            awayRedCardImage.widthAnchor.constraint(equalToConstant: 9),
+            awayRedCardImage.heightAnchor.constraint(equalToConstant: 14),
+
+            awayRedCardsLabel.centerYAnchor.constraint(equalTo: headerDetailMiddleView.centerYAnchor),
+            awayRedCardsLabel.leadingAnchor.constraint(equalTo: awayRedCardImage.leadingAnchor),
+            awayRedCardsLabel.widthAnchor.constraint(equalToConstant: 10),
+            awayRedCardsLabel.heightAnchor.constraint(equalToConstant: 14)
+        ])
+
+        NSLayoutConstraint.activate([
+            chipsTypeView.leadingAnchor.constraint(equalTo: marketTypesBaseView.leadingAnchor),
+            chipsTypeView.trailingAnchor.constraint(equalTo: marketTypesBaseView.trailingAnchor),
+            chipsTypeView.topAnchor.constraint(equalTo: marketTypesBaseView.topAnchor),
+            chipsTypeView.bottomAnchor.constraint(equalTo: marketTypesBaseView.bottomAnchor),
+        ])
+        
+        // Updatable Constraint for animations
+        self.matchFieldWebViewHeightConstraint = NSLayoutConstraint(item: self.matchFieldWebView,
+                                                                  attribute: .height,
+                                                                    relatedBy: .equal,
+                                                                  toItem: nil,
+                                                                  attribute: .notAnAttribute,
+                                                                    multiplier: 1,
+                                                                    constant: 0)
+        self.matchFieldWebViewHeightConstraint.isActive = true
+        
+        self.statsCollectionViewHeightConstraint = NSLayoutConstraint(item: self.statsCollectionBaseView,
+                                                                  attribute: .height,
+                                                                    relatedBy: .equal,
+                                                                  toItem: nil,
+                                                                  attribute: .notAnAttribute,
+                                                                    multiplier: 1,
+                                                                    constant: 0)
+        self.statsCollectionViewHeightConstraint.isActive = true
     }
 
     func setupWithTheme() {
@@ -643,7 +1137,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerCompetitionLabel.textColor = UIColor.App.textSecondary
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
 
-        self.headerCompetitionImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
+        self.headerCompetitionCountryImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
 
         self.headerDetailStackView.backgroundColor = .clear
         self.headerDetailHomeView.backgroundColor = .clear
@@ -684,7 +1178,7 @@ class MatchDetailsViewController: UIViewController {
         }
 
         self.marketGroupsPagedBaseView.backgroundColor = .clear
-        
+
         // Market List CollectionView
         self.chipsTypeView.backgroundColor = UIColor.App.pillNavigation
         self.marketTypesBaseView.backgroundColor = UIColor.App.pillNavigation
@@ -735,11 +1229,635 @@ class MatchDetailsViewController: UIViewController {
 
         self.scoreView.backgroundColor = .clear
         self.scoreView.setupWithTheme()
-
     }
 
+    private func setupEventHandlers() {
+        // Add tap gesture recognizers
+        let didTapLiveGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveButtonHeaderView))
+        headerLiveButtonBaseView.addGestureRecognizer(didTapLiveGesture)
+
+        let didTapStatsGesture = UITapGestureRecognizer(target: self, action: #selector(didTapStatsButtonHeaderView))
+        headerStatsButtonBaseView.addGestureRecognizer(didTapStatsGesture)
+
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        accountValueView.addGestureRecognizer(accountValueTapGesture)
+
+        let competitionDetailTapGesture = UITapGestureRecognizer(target: self, action: #selector(openCompetitionsDetails))
+        headerCompetitionDetailView.addGestureRecognizer(competitionDetailTapGesture)
+
+        let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
+        statsBackSliderView.addGestureRecognizer(backSliderTapGesture)
+
+        // Add button actions
+        backButton.addTarget(self, action: #selector(didTapBackAction), for: .touchUpInside)
+        shareButton.addTarget(self, action: #selector(didTapMoreOptionsButton), for: .primaryActionTriggered)
+    }
+}
+
+// MARK: - Factory Methods for UI Elements
+extension MatchDetailsViewController {
+
+    // MARK: - Top Level Views
+
+    static func createTopView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHeaderDetailView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHeaderDetailTopView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createBackButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+        return button
+    }
+
+    static func createShareButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "more_options_icon"), for: .normal)
+        return button
+    }
+
+    // MARK: - Competition Detail Views
+
+    static func createHeaderCompetitionDetailView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHeaderCompetitionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 11)
+        return label
+    }
+
+    static func createHeaderCompetitionSportImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }
+
+    static func createHeaderCompetitionCountryImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 10 // Will be updated in viewDidLayoutSubviews
+        imageView.layer.borderWidth = 0.5
+        return imageView
+    }
+
+    // MARK: - Header Detail Stack Views
+
+    static func createHeaderDetailStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 4
+        stackView.isHidden = true
+        return stackView
+    }
+
+    static func createHeaderDetailHomeView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHeaderDetailHomeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.numberOfLines = 0
+        label.textAlignment = .right
+        return label
+    }
+
+    static func createHeaderDetailAwayView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHeaderDetailAwayLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.numberOfLines = 0
+        return label
+    }
+
+    // MARK: - Serving Indicators
+
+    static func createHomeServingIndicatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    static func createAwayServingIndicatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    // MARK: - Header Middle Section
+
+    static func createHeaderDetailMiddleView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHeaderDetailMiddleStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        return stackView
+    }
+
+    // MARK: - Pre-live Details
+
+    static func createHeaderDetailPreliveView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHeaderDetailPreliveTopLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("match_label_default")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .center
+        return label
+    }
+
+    static func createHeaderDetailPreliveBottomLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "00:00"
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .center
+        return label
+    }
+
+    // MARK: - Live Details
+
+    static func createHeaderDetailLiveView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    static func createHeaderDetailLiveTopLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "'0 - 0'"
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .center
+        return label
+    }
+
+    static func createHeaderDetailLiveBottomLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("match_start_label_default")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }
+
+    // MARK: - Header Buttons
+
+    static func createHeaderButtonsBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHeaderButtonsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 2
+        return stackView
+    }
+
+    static func createHeaderLiveButtonBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createLiveButtonLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 13)
+        return label
+    }
+
+    static func createLiveButtonImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "tabbar_live_icon")
+        return imageView
+    }
+
+    static func createFieldExpandImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "arrow_down_icon")
+        return imageView
+    }
+
+    // MARK: - Stats Button Section
+
+    static func createHeaderStatsButtonBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createStatsButtonLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Teams Statistics"
+        label.font = AppFont.with(type: .bold, size: 13)
+        return label
+    }
+
+    static func createStatsButtonImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "market_stats_icon")
+        return imageView
+    }
+
+    // MARK: - Account Section
+
+    static func createAccountValueView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    static func createAccountPlusView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createAccountValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .heavy, size: 12)
+        return label
+    }
+
+    static func createAccountPlusImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "plus_small_icon")
+        return imageView
+    }
+
+    // MARK: - Match Field Section
+
+    static func createMatchFieldBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createMatchFieldLoadingView() -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }
+
+    static func createMatchFieldWebView() -> WKWebView {
+        let config = WKWebViewConfiguration()
+        config.mediaTypesRequiringUserActionForPlayback = []
+
+        let webView = WKWebView(frame: .zero, configuration: config)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.scrollView.alwaysBounceVertical = false
+        webView.scrollView.bounces = false
+        return webView
+    }
+
+    static func createMatchFieldWebViewHeightConstraintConstraint() -> NSLayoutConstraint {
+        return NSLayoutConstraint()
+    }
+
+    // MARK: - Stats Section
+
+    static func createStatsBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }
+
+    static func createStatsCollectionBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createStatsCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
+        return collectionView
+    }
+
+    static func createStatsCollectionViewHeightConstraintConstraint() -> NSLayoutConstraint {
+        return NSLayoutConstraint()
+    }
+
+    static func createStatsBackSliderView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0.0
+        view.layer.cornerRadius = 6
+
+        // Add arrow image
+        let arrowImage = UIImageView(image: UIImage(named: "arrow_circle_left_icon"))
+        arrowImage.translatesAutoresizingMaskIntoConstraints = false
+        arrowImage.contentMode = .scaleAspectFit
+        view.addSubview(arrowImage)
+
+        NSLayoutConstraint.activate([
+            arrowImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            arrowImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -7),
+            arrowImage.widthAnchor.constraint(equalToConstant: 24),
+            arrowImage.heightAnchor.constraint(equalToConstant: 24)
+        ])
+
+        return view
+    }
+
+    static func createStatsNotFoundLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .medium, size: 17)
+        label.text = localized("There aren't any statistics available for this event.")
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.isHidden = true
+        return label
+    }
+
+    // MARK: - Market Types Section
+
+    static func createMarketTypesBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createBackgroundGradientView() -> GradientView {
+        let gradientView = GradientView()
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
+        return gradientView
+    }
+
+    // MARK: - Market Groups Paged Section
+
+    static func createMarketGroupsPagedBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    // MARK: - Match Not Available Section
+
+    static func createMatchNotAvailableView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    static func createMatchNotAvailableLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.text = localized("This match is no longer available for betting")
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }
+
+    // MARK: - Markets Not Available Section
+
+    static func createMarketsNotAvailableView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    static func createMarketsNotAvailableLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.text = localized("markets_not_available")
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }
+
+    // MARK: - Red Card Indicators
+
+    static func createHomeRedCardImage() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "red_card_image")
+        imageView.isHidden = true
+        return imageView
+    }
+
+    static func createAwayRedCardImage() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "red_card_image")
+        imageView.isHidden = true
+        return imageView
+    }
+
+    static func createHomeRedCardLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 9)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }
+
+    static func createAwayRedCardsLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 9)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }
+
+    // MARK: - Markets Stack
+
+    static func createMarketsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        return stackView
+    }
+
+    // MARK: - New Top Details View
+
+    static func createTopSeparatorAlphaLineView() -> FadingView {
+        let view = FadingView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.colors = [.clear, .black, .black, .clear]
+        view.startPoint = CGPoint(x: 0.0, y: 0.5)
+        view.endPoint = CGPoint(x: 1.0, y: 0.5)
+        view.fadeLocations = [0.0, 0.42, 0.58, 1.0]
+        return view
+    }
+
+    static func createMatchDetailsContentView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createHomeTeamLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .heavy, size: 16)
+        return label
+    }
+
+    static func createAwayTeamLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .heavy, size: 16)
+        return label
+    }
+
+    static func createLiveTimeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .heavy, size: 10)
+        label.isHidden = true
+        return label
+    }
+
+    static func createPreLiveDetailsView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createPreLiveDateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .right
+        return label
+    }
+
+    static func createPreLiveTimeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .heavy, size: 16)
+        label.textAlignment = .right
+        return label
+    }
+
+    static func createLiveDetailsView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    static func createScoreView() -> ScoreView {
+        let view = ScoreView(sportCode: "FBL", score: [:])
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createFloatingShortcutsView() -> FloatingShortcutsView {
+        let view = FloatingShortcutsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createSharedGameCardView() -> SharedGameCardView {
+        let view = SharedGameCardView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    static func createMixMatchInfoDialogView() -> InfoDialogView {
+        let view = InfoDialogView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("mix_match_tooltip_description"))
+        view.alpha = 0
+        return view
+    }
+
+}
+
+//
+//  Binding and Actions)
+extension MatchDetailsViewController {
+
     // MARK: - Bindings
-    private func bind(toViewModel viewModel: MatchDetailsViewModel) {
+
+    func bind(toViewModel viewModel: MatchDetailsViewModel) {
 
         Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
@@ -782,7 +1900,7 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &self.cancellables)
-//
+        //
         self.viewModel.selectedMarketTypeIndexPublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -938,8 +2056,9 @@ class MatchDetailsViewController: UIViewController {
             }
 
         }
-
     }
+
+    // MARK: - Methods for UI Updates
 
     private func refreshViewModel() {
         self.viewModel.forceRefreshData()
@@ -1084,7 +2203,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerCompetitionLabel.text = match.competitionName
 
         let assetName = Assets.flagName(withCountryCode: match.venue?.isoCode ?? match.venue?.id ?? "")
-        self.headerCompetitionImageView.image =  UIImage(named: assetName)
+        self.headerCompetitionCountryImageView.image =  UIImage(named: assetName)
 
         if let sportIconImage = UIImage(named: "sport_type_icon_\(match.sport.id)") {
             self.headerCompetitionSportImageView.image =  sportIconImage
@@ -1134,12 +2253,13 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
+    // MARK: - Button Actions and Gestures
+
     @objc func didTapLiveButtonHeaderView() {
 
         if !isLiveFieldReady {
             return
         }
-
         if !shouldShowLiveFieldWebView {
             return
         }
@@ -1195,14 +2315,8 @@ class MatchDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
-    @objc private func openCompetitionsDetails() {
-
-//        if let match = self.viewModel.match {
-//            let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId], sport: match.sport)
-//            let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
-//            self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
-//        }
-
+    @objc func openCompetitionsDetails() {
+        // Commented out in original code
     }
 
     @objc func didTapChatView() {
@@ -1251,7 +2365,7 @@ class MatchDetailsViewController: UIViewController {
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetails,
                                                                                     cashbackResultValue: nil,
                                                                                     usedCashback: false,
-        bettingTickets: [bettingTicket])
+                                                                                    bettingTickets: [bettingTicket])
 
         self.present(Router.navigationController(with: betSubmissionSuccessViewController), animated: true)
     }
@@ -1269,7 +2383,7 @@ class MatchDetailsViewController: UIViewController {
         self.statsCollectionView.setContentOffset(CGPoint(x: -self.statsCollectionView.contentInset.left, y: 1), animated: true)
     }
 
-    @IBAction private func didTapBackAction() {
+    @objc private func didTapBackAction() {
         if self.isRootModal {
             self.presentingViewController?.dismiss(animated: true)
         }
@@ -1278,7 +2392,7 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    @IBAction private func didTapMoreOptionsButton() {
+    @objc private func didTapMoreOptionsButton() {
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         if Env.userSessionStore.isUserLogged() {
@@ -1312,11 +2426,6 @@ class MatchDetailsViewController: UIViewController {
         }
 
         self.present(actionSheetController, animated: true, completion: nil)
-//        }
-//        else {
-//            let loginViewController = Router.navigationController(with: LoginViewController())
-//            self.present(loginViewController, animated: true, completion: nil)
-//        }
     }
 
     private func didTapShareButton() {
@@ -1394,20 +2503,10 @@ class MatchDetailsViewController: UIViewController {
 
         return fullString
     }
-
-//    func slugify(_ inputString: String) -> String {
-//        let normalizedString = inputString.folding(options: .diacriticInsensitive, locale: .current)
-//        let withoutSpecialCharacters = normalizedString.replacingOccurrences(of: "[^a-zA-Z0-9\\s-]", with: "", options: .regularExpression, range: nil)
-//        let lowercasedString = withoutSpecialCharacters.lowercased()
-//        let trimmedString = lowercasedString.trimmingCharacters(in: .whitespacesAndNewlines)
-//        let replacingSpacesWithDash = trimmedString.replacingOccurrences(of: "\\s+", with: "-", options: .regularExpression, range: nil)
-//        let removingConsecutiveDashes = replacingSpacesWithDash.replacingOccurrences(of: "--+", with: "-", options: .regularExpression, range: nil)
-//
-//        return removingConsecutiveDashes
-//    }
-
 }
 
+//
+//  Delegates Previews
 extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
@@ -1445,9 +2544,9 @@ extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewCo
             self.selectMarketType(atIndex: 0)
         }
     }
-
 }
 
+// MARK: - WKNavigationDelegate
 extension MatchDetailsViewController: WKNavigationDelegate {
 
     private func recalculateWebview() {
@@ -1487,9 +2586,9 @@ extension MatchDetailsViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
 
     }
-
 }
 
+// MARK: - UIGestureRecognizerDelegate
 extension MatchDetailsViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -1503,9 +2602,9 @@ extension MatchDetailsViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-
 }
 
+// MARK: - UICollectionView Delegate, DataSource & FlowLayout
 extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -1568,9 +2667,9 @@ extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionView
         }
         return CGSize(width: width, height: collectionView.frame.size.height - 4)
     }
-
 }
 
+// MARK: - UIScrollViewDelegate
 extension MatchDetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == self.statsCollectionView {
@@ -1594,48 +2693,37 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
                 }
             }
         }
-
     }
 }
 
+// MARK: - InnerTableViewScrollDelegate
 extension MatchDetailsViewController: InnerTableViewScrollDelegate {
 
     var currentHeaderHeight: CGFloat {
-        return matchFieldWebViewHeight.constant
+        return matchFieldWebViewHeightConstraint.constant
     }
 
-//    func innerTableViewDidScroll(withDistance scrollDistance: CGFloat) {
-//        matchFieldWebViewHeight.constant -= scrollDistance
-//        if matchFieldWebViewHeight.constant > matchFieldMaximumHeight {
-//            matchFieldWebViewHeight.constant = matchFieldMaximumHeight
-//        }
-//
-//        if matchFieldWebViewHeight.constant < matchFieldMinimumHeight {
-//            matchFieldWebViewHeight.constant = matchFieldMinimumHeight
-//        }
-//    }
-
     func innerTableViewDidScroll(withDistance scrollDistance: CGFloat) {
-        let newHeight = matchFieldWebViewHeight.constant - scrollDistance
+        let newHeight = matchFieldWebViewHeightConstraint.constant - scrollDistance
 
         if newHeight > matchFieldMaximumHeight {
-            if matchFieldWebViewHeight.constant != matchFieldMaximumHeight {
-                matchFieldWebViewHeight.constant = matchFieldMaximumHeight
+            if matchFieldWebViewHeightConstraint.constant != matchFieldMaximumHeight {
+                matchFieldWebViewHeightConstraint.constant = matchFieldMaximumHeight
             }
         }
         else if newHeight < matchFieldMinimumHeight {
-            if matchFieldWebViewHeight.constant != matchFieldMinimumHeight {
-                matchFieldWebViewHeight.constant = matchFieldMinimumHeight
+            if matchFieldWebViewHeightConstraint.constant != matchFieldMinimumHeight {
+                matchFieldWebViewHeightConstraint.constant = matchFieldMinimumHeight
             }
         }
         else {
-            matchFieldWebViewHeight.constant = newHeight
+            matchFieldWebViewHeightConstraint.constant = newHeight
         }
     }
 
     func innerTableViewScrollEnded(withScrollDirection scrollDirection: InnerScrollDragDirection) {
 
-        let topViewHeight = self.matchFieldWebViewHeight.constant
+        let topViewHeight = self.matchFieldWebViewHeightConstraint.constant
 
         if topViewHeight <= self.matchFieldMinimumHeight + 20 {
             self.scrollToFinalView()
@@ -1663,7 +2751,7 @@ extension MatchDetailsViewController: InnerTableViewScrollDelegate {
             time = 0.25
         }
 
-        self.matchFieldWebViewHeight.constant = self.matchFieldMaximumHeight
+        self.matchFieldWebViewHeightConstraint.constant = self.matchFieldMaximumHeight
 
         UIView.animate(withDuration: TimeInterval(time), animations: {
             self.view.layoutIfNeeded()
@@ -1678,23 +2766,54 @@ extension MatchDetailsViewController: InnerTableViewScrollDelegate {
         if time < 0.25 {
             time = 0.25
         }
-        self.matchFieldWebViewHeight.constant = self.matchFieldMinimumHeight
+        self.matchFieldWebViewHeightConstraint.constant = self.matchFieldMinimumHeight
 
         UIView.animate(withDuration: TimeInterval(time), animations: {
             self.view.layoutIfNeeded()
         })
     }
-
 }
 
-//
-enum InnerScrollDragDirection {
-    case up
-    case down
+// MARK: - SwiftUI Preview
+#if DEBUG
+import SwiftUI
+
+struct MatchDetailsViewController_Previews: PreviewProvider {
+
+    static var previews: some View {
+        Group {
+            MatchDetailsViewControllerPreview(colorScheme: .light)
+                .previewDisplayName("Light Mode")
+
+            MatchDetailsViewControllerPreview(colorScheme: .dark)
+                .previewDisplayName("Dark Mode")
+        }
+    }
+
+    struct MatchDetailsViewControllerPreview: UIViewControllerRepresentable {
+        let colorScheme: ColorScheme
+
+        func makeUIViewController(context: Context) -> MatchDetailsViewController {
+            // Create a mock match
+            let match = PreviewModelsHelper.createFootballMatchWithMultipleMarkets()
+
+            // Create the view model with the mock match
+            let viewModel = MatchDetailsViewModel(match: match)
+
+            // Create the view controller with the view model
+            return MatchDetailsViewController(viewModel: viewModel)
+        }
+
+        func updateUIViewController(_ uiViewController: MatchDetailsViewController, context: Context) {
+            // Nothing to update
+        }
+    }
 }
 
-protocol InnerTableViewScrollDelegate: AnyObject {
-    var currentHeaderHeight: CGFloat { get }
-    func innerTableViewDidScroll(withDistance scrollDistance: CGFloat)
-    func innerTableViewScrollEnded(withScrollDirection scrollDirection: InnerScrollDragDirection)
+// For iOS 17+
+@available(iOS 17.0, *)
+#Preview("MatchDetailsViewController", traits: .defaultLayout) {
+    MatchDetailsViewController_Previews.MatchDetailsViewControllerPreview(colorScheme: .light)
 }
+#endif
+

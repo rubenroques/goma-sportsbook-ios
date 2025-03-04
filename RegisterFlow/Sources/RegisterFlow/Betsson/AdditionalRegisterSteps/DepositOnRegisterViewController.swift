@@ -923,8 +923,7 @@ public extension DepositOnRegisterViewController {
             self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
 
-        self.footerBottomConstraint =             self.footerBaseView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20)
-
+        self.footerBottomConstraint = self.footerBaseView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20)
         self.footerBottomConstraint.isActive = true
 
         self.bonusBottomConstraint = self.bonusBaseView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20)
