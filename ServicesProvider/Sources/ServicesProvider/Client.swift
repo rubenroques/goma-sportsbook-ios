@@ -2,7 +2,7 @@ import Combine
 import Foundation
 import SharedModels
 
-public class ServicesProviderClient {
+public class Client {
 
     public enum ProviderType {
         case everymatrix
@@ -33,7 +33,7 @@ public class ServicesProviderClient {
 
     public var sumsubDataProvider: SumsubDataProvider?
 
-    private var configuration = ServicesProviderConfiguration() {
+    private var configuration = Configuration() {
         didSet {
             switch self.configuration.environment {
             case .production:
@@ -49,7 +49,7 @@ public class ServicesProviderClient {
 
     public var appBaseUrl: String = SportRadarConfiguration.shared.clientBaseUrl
 
-    public init(providerType: ProviderType, configuration: ServicesProviderConfiguration) {
+    public init(providerType: ProviderType, configuration: Configuration) {
         self.providerType = providerType
         self.configuration = configuration
 
@@ -123,7 +123,7 @@ public class ServicesProviderClient {
 
 }
 
-extension ServicesProviderClient {
+extension Client {
 
     //
     // Sports
@@ -462,7 +462,7 @@ extension ServicesProviderClient {
 
 }
 
-extension ServicesProviderClient {
+extension Client {
     public func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
         guard
             let eventsProvider = self.eventsProvider
@@ -779,7 +779,7 @@ extension ServicesProviderClient {
 }
 
 
-extension ServicesProviderClient {
+extension Client {
 
     //
     // PrivilegedAccessManager
@@ -1027,7 +1027,7 @@ extension ServicesProviderClient {
 
 }
 
-extension ServicesProviderClient {
+extension Client {
 
     public func getAllCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError> {
         guard
@@ -1060,7 +1060,7 @@ extension ServicesProviderClient {
 
 }
 
-extension ServicesProviderClient {
+extension Client {
 
     //
     // Betslip
@@ -1259,7 +1259,7 @@ extension ServicesProviderClient {
 }
 
 // Documents
-extension ServicesProviderClient {
+extension Client {
 
     public func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError> {
         guard
@@ -1672,7 +1672,7 @@ extension ServicesProviderClient {
 }
 
 // AnalyticsProvider
-extension ServicesProviderClient {
+extension Client {
 
     public func trackEvent(_ event: AnalyticsTrackedEvent, userIdentifer: String?) -> AnyPublisher<Void, ServiceProviderError> {
         guard
@@ -1688,7 +1688,7 @@ extension ServicesProviderClient {
 
 }
 
-extension ServicesProviderClient {
+extension Client {
 
     public func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         guard
@@ -1752,7 +1752,7 @@ extension ServicesProviderClient {
 }
 
 // MARK: - ManagedContentProvider Implementation
-extension ServicesProviderClient {
+extension Client {
 
     public func preFetchHomeContent() -> AnyPublisher<CMSInitialDump, ServiceProviderError> {
         guard
@@ -1914,7 +1914,7 @@ extension ServicesProviderClient {
 }
 
 // Utilities
-extension ServicesProviderClient {
+extension Client {
 
     public func getDatesFilter(timeRange: String) -> [Date] {
         guard

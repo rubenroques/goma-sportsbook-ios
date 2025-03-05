@@ -419,9 +419,9 @@ class LiveEventsViewController: UIViewController {
         tableView.addSubview(self.refreshControl)
         
         self.tableView.separatorStyle = .none
-        self.tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         
-        self.tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier+"Live")
+        self.tableView.register(MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier+"Live")
         
         self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)

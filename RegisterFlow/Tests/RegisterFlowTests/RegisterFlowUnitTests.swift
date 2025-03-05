@@ -24,7 +24,7 @@ final class RegisterFlowUnitTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        let servicesProviderConfiguration = ServicesProviderConfiguration(environment: .staging)
+        let servicesProviderConfiguration = Configuration(environment: .staging)
         
         let client = ServicesProviderClient(providerType: .sportradar, configuration: servicesProviderConfiguration)
         

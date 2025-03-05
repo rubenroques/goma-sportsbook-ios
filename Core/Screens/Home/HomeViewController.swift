@@ -76,8 +76,8 @@ class HomeViewController: UIViewController {
         self.tableView.register(PromotedCompetitionLineTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
 
-        self.tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
-        self.tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier+"Live") // Live only cards
+        self.tableView.register(MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier+"Live") // Live only cards
 
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)

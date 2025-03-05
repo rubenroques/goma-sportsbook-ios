@@ -187,7 +187,7 @@ class SearchViewController: UIViewController {
         
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier) // fallback
         
-        self.tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(CompetitionSearchTableViewCell.nib, forCellReuseIdentifier: CompetitionSearchTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(SearchSportHeaderView.self, forHeaderFooterViewReuseIdentifier: SearchSportHeaderView.identifier)

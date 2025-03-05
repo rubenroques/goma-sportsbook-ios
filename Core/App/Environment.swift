@@ -16,9 +16,9 @@ class Environment {
 
     let gomaNetworkClient = GomaGamingServiceClient()
 
-    lazy var servicesProvider: ServicesProviderClient = {
+    lazy var servicesProvider: ServicesProvider.Client = {
         
-        var serviceProviderEnvironment: ServicesProvider.ServicesProviderConfiguration.Environment
+        var serviceProviderEnvironment: ServicesProvider.Configuration.Environment
         switch TargetVariables.serviceProviderEnvironment {
         case .prod:
             serviceProviderEnvironment = .production
@@ -26,13 +26,13 @@ class Environment {
             serviceProviderEnvironment = .staging
         }
         
-        let servicesProviderConfiguration = ServicesProviderConfiguration(environment: serviceProviderEnvironment, deviceUUID: Env.deviceId)
+        let servicesProviderConfiguration = ServicesProvider.Configuration(environment: serviceProviderEnvironment, deviceUUID: Env.deviceId)
         let provider = TargetVariables.serviceProviderType
         switch provider {
         case .everymatrix:
-            return ServicesProviderClient(providerType: .everymatrix, configuration: servicesProviderConfiguration)
+            return ServicesProvider.Client(providerType: .everymatrix, configuration: servicesProviderConfiguration)
         case .sportradar:
-            return ServicesProviderClient(providerType: .sportradar, configuration: servicesProviderConfiguration)
+            return ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
         }
         
     }()
