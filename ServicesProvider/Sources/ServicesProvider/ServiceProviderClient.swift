@@ -622,26 +622,6 @@ extension ServicesProviderClient {
         return eventsProvider.getHomeSliders()
     }
 
-    public func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return eventsProvider.getTopCompetitionsPointers()
-    }
-
-    public func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return eventsProvider.getTopCompetitions()
-    }
-
     public func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -1910,6 +1890,27 @@ extension ServicesProviderClient {
         }
         return managedContentProvider.getProChoiceMarketCards()
     }
+
+    public func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getTopCompetitionsPointers()
+    }
+
+    public func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getTopCompetitions()
+    }
+
 }
 
 // Utilities

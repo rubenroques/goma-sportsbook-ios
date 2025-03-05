@@ -95,4 +95,8 @@ protocol ManagedContentProvider: Connector {
     
     func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError>
     
+    func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError>
+    
+    func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
+    
 }

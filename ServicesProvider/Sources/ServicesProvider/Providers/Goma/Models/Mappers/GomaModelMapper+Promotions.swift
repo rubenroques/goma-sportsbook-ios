@@ -166,13 +166,13 @@ extension GomaModelMapper {
             imageUrl: pointer.imageUrl
         )
     }
-    
-    
+
+
     // MARK: - TopImageCardPointer AKA Highlighted Event Mapper
     static func topImageCardPointers(fromInternaTopImageCardPointers pointers: GomaModels.TopImageCardPointers) -> TopImageCardPointers {
         return pointers.map { topImageCardPointer(fromInternaTopImageCardPointer: $0) }
     }
-    
+
     static func topImageCardPointer(fromInternaTopImageCardPointer pointer: GomaModels.TopImageCardPointer) -> TopImageCardPointer {
         return TopImageCardPointer(
             eventId: pointer.eventId,
@@ -180,5 +180,13 @@ extension GomaModelMapper {
             imageUrl: pointer.imageUrl
         )
     }
-    
+
+    static func topCompetitionPointers(fromInternalTopCompetitionPointers pointers: GomaModels.TopCompetitionPointers) -> TopCompetitionPointers {
+        return pointers.map { topCompetitionPointer(fromInternalTopCompetitionPointer: $0) }
+    }
+
+    static func topCompetitionPointer(fromInternalTopCompetitionPointer pointer: GomaModels.TopCompetitionPointer) -> TopCompetitionPointer {
+        return TopCompetitionPointer.init(id: pointer, name: "", competitionId: "")
+    }
+
 }

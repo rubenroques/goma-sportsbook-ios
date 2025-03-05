@@ -182,5 +182,17 @@ class GomaManagedContentProvider: ManagedContentProvider {
     func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError> {
         fatalError("")
     }
-    
+
+    func getTopCompetitionsPointers() -> AnyPublisher<TopCompetitionPointers, ServiceProviderError> {
+        return self.apiClient.topCompetitions()
+            .map({ pointers in
+                return GomaModelMapper.topCompetitionPointers(fromInternalTopCompetitionPointers: pointers)
+            })
+            .eraseToAnyPublisher()
+    }
+
+    func getTopCompetitions() -> AnyPublisher<TopCompetitions, ServiceProviderError> {
+        fatalError("")
+    }
+
 }

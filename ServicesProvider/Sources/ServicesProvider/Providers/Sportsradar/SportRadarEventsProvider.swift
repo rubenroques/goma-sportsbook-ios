@@ -138,6 +138,15 @@ class SportRadarEventsProvider: EventsProvider {
         }
     }
 
+    //
+    // MARK: - Custom Request
+    func customRequest<T: Codable>(endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
+        let requestPublisher: AnyPublisher<T, ServiceProviderError> = self.restConnector.request(endpoint)
+        return requestPublisher
+    }
+
+    //
+    // MARK: - Pre Live Matches
     func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, eventCount: Int? = nil, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
         // Get the session
@@ -549,7 +558,7 @@ class SportRadarEventsProvider: EventsProvider {
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
-        
+
         // events lists
         for paginator in self.eventsPaginators.values {
             if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventOnListsLiveDataUpdates(withId: id) {
@@ -1151,7 +1160,7 @@ extension SportRadarEventsProvider {
             })
             .eraseToAnyPublisher()
     }
-    
+
     func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
 
         let endpoint = SportRadarRestAPIClient.promotionalTopStories
@@ -1193,128 +1202,6 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
 
-    }
-
-    func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
-        let endpoint = SportRadarRestAPIClient.getTopCompetitions
-        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.TopCompetitionData]>, ServiceProviderError> = self.restConnector.request(endpoint)
-        return requestPublisher.map( { sportRadarResponse -> [TopCompetitionPointer] in
-            let topCompetitions = sportRadarResponse.data.flatMap({
-                $0.competitions
-            })
-            let mappedTopCompetitions = topCompetitions.map(SportRadarModelMapper.topCompetitionPointer(fromInternalTopCompetitionPointer:))
-            return mappedTopCompetitions
-        })
-        .eraseToAnyPublisher()
-    }
-
-    func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
-
-        let publisher = self.getTopCompetitionsPointers()
-            .flatMap({ (topCompetitionPointers: [TopCompetitionPointer]) -> AnyPublisher<[TopCompetition], ServiceProviderError> in
-
-                let getCompetitonNodesRequests: [AnyPublisher<SportRadarModels.SportCompetitionInfo?, ServiceProviderError>] = topCompetitionPointers
-                    .map { topCompetitionPointer in
-                        let competitionIdComponents = topCompetitionPointer.competitionId.components(separatedBy: "/")
-                        let competitionId: String = (competitionIdComponents.last ?? "").lowercased()
-
-                        if !competitionId.hasSuffix(".1") {
-                            return Just(Optional<SportRadarModels.SportCompetitionInfo>.none)
-                                .setFailureType(to: ServiceProviderError.self)
-                                .eraseToAnyPublisher()
-                        }
-
-                        let endpoint = SportRadarRestAPIClient.competitionMarketGroups(competitionId: competitionId)
-                        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.SportCompetitionInfo>, ServiceProviderError> = self.restConnector.request(endpoint)
-                        return requestPublisher.map({ response in
-                            return response.data
-                        })
-                        .catch({ (error: ServiceProviderError) -> AnyPublisher<SportRadarModels.SportCompetitionInfo?, ServiceProviderError> in
-                            return Just(Optional<SportRadarModels.SportCompetitionInfo>.none)
-                                .setFailureType(to: ServiceProviderError.self)
-                                .eraseToAnyPublisher()
-                        })
-                        .eraseToAnyPublisher()
-                    }
-
-                let mergedPublishers = Publishers.MergeMany(getCompetitonNodesRequests)
-                    .compactMap({ $0 })
-                    .collect()
-                    .flatMap { competitionsInfoArray -> AnyPublisher<[TopCompetition], ServiceProviderError> in
-
-                        let getCompetitonCountryRequests: [AnyPublisher<SportRadarModels.CompetitionParentNode, ServiceProviderError>] = competitionsInfoArray
-                            .map { (competitionsInfo: SportRadarModels.SportCompetitionInfo) -> AnyPublisher<SportRadarModels.CompetitionParentNode, ServiceProviderError>? in
-
-                                guard
-                                    let parentId = competitionsInfo.parentId
-                                else {
-                                    // If no parent id, we cannot request country info
-                                    return nil
-                                }
-
-                                let endpoint = SportRadarRestAPIClient.getTopCompetitionCountry(competitionId: parentId)
-                                let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.CompetitionParentNode>, ServiceProviderError> = self.restConnector.request(endpoint)
-
-                                return requestPublisher.map({ (response: SportRadarModels.SportRadarResponse<SportRadarModels.CompetitionParentNode>) -> SportRadarModels.CompetitionParentNode in
-                                    return response.data
-                                })
-                                .eraseToAnyPublisher()
-                            }
-                            .compactMap({ $0 })
-
-                        return Publishers.MergeMany(getCompetitonCountryRequests)
-                            .collect()
-                            .map { (competitionParentNodes: [SportRadarModels.CompetitionParentNode]) -> [TopCompetition] in
-                                var topCompetitionsArray: [TopCompetition] = []
-
-                                var competitionCountriesDictionary: [String: String] = [:]
-                                for competitionParentNode in competitionParentNodes {
-                                    competitionCountriesDictionary[competitionParentNode.id] = competitionParentNode.name
-                                }
-
-                                var competitionAndParentIdDictionary: [String: String] = [:]
-                                for competitionsInfo in competitionsInfoArray {
-                                    if let parentId = competitionsInfo.parentId {
-                                        competitionAndParentIdDictionary[competitionsInfo.id] = parentId
-                                    }
-                                }
-
-                                for topCompetitionPointer in topCompetitionPointers {
-
-                                    let competitionIdComponents = topCompetitionPointer.competitionId.components(separatedBy: "/")
-                                    let competitionId: String = (competitionIdComponents.last ?? "").lowercased()
-
-                                    let competitionParentId = competitionAndParentIdDictionary[competitionId] ?? ""
-
-                                    guard
-                                        let competitonCountryName = competitionCountriesDictionary[competitionParentId]
-                                    else {
-                                        continue
-                                    }
-
-                                    let country: Country? = Country.country(withName: competitonCountryName)
-
-                                    let sportNameComponents = topCompetitionPointer.competitionId.components(separatedBy: "/")
-                                    let sportName: String = (sportNameComponents[safe: sportNameComponents.count - 3] ?? "").lowercased()
-
-                                    let namedSport: SportRadarModels.SportType = SportRadarModels.SportType.init(name: sportName, numberEvents: 0, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: 0)
-                                    let mappedSport = SportRadarModelMapper.sportType(fromSportRadarSportType: namedSport)
-
-                                    topCompetitionsArray.append(
-                                        TopCompetition(id: competitionId,
-                                                       name: topCompetitionPointer.name,
-                                                       country: country,
-                                                       sportType: mappedSport))
-                                }
-                                return topCompetitionsArray
-                            }
-                            .eraseToAnyPublisher()
-                    }
-
-                return mergedPublishers.eraseToAnyPublisher()
-            })
-
-        return publisher.eraseToAnyPublisher()
     }
 
     func getEventSummary(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError> {

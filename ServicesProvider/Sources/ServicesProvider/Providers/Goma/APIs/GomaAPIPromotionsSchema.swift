@@ -22,7 +22,7 @@ enum GomaAPIPromotionsSchema {
     case stories
     case news(pageIndex: Int, pageSize: Int)
     case proChoices
-    
+    case topCompetitions
     // Initial Dump
     case initialDump
 }
@@ -56,6 +56,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "/api/promotions/v1/news"
         case .proChoices:
             return "/api/promotions/v1/pro-choices"
+        case .topCompetitions:
+            return "/api/competitions/v1/featured"
         case .initialDump:
             return "/api/initial-dump/v1"
         }
@@ -141,6 +143,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "Get news articles"
         case .proChoices:
             return "Get pro betting choices"
+        case .topCompetitions:
+            return "Get top/featured competitions"
         case .initialDump:
             return "Get initial data dump including sports, competitions, and events"
         }
