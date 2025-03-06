@@ -29,7 +29,7 @@ public class LimitsOnRegisterViewModel {
         case autoPayoutServerMessageError(message: String)
     }
 
-    let servicesProvider: ServicesProviderClient
+    let servicesProvider: ServicesProvider.Client
     var limits: [ResponsibleGamingLimit] = []
     
     public var hasRollingWeeklyLimits: Bool = false
@@ -41,7 +41,7 @@ public class LimitsOnRegisterViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    public init(servicesProvider: ServicesProviderClient, limits: [ResponsibleGamingLimit] = []) {
+    public init(servicesProvider: ServicesProvider.Client, limits: [ResponsibleGamingLimit] = []) {
         self.servicesProvider = servicesProvider
         self.limits = limits
     }

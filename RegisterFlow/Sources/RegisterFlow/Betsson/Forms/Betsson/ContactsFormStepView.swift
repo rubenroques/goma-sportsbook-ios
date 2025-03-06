@@ -79,7 +79,7 @@ class ContactsFormStepViewModel {
             .eraseToAnyPublisher()
     }
 
-    private var serviceProvider: ServicesProviderClient
+    private var serviceProvider: ServicesProvider.Client
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     private var cancellables = Set<AnyCancellable>()
@@ -89,7 +89,7 @@ class ContactsFormStepViewModel {
          phoneNumber: String? = nil,
          prefixCountry: Country?,
          defaultCountryIso3Code: String,
-         serviceProvider: ServicesProviderClient,
+         serviceProvider: ServicesProvider.Client,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
 
         self.title = title

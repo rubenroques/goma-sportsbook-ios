@@ -43,7 +43,7 @@ class NicknameFormStepViewModel {
         }
     }
 
-    private let serviceProvider: ServicesProviderClient
+    private let serviceProvider: ServicesProvider.Client
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     private var validateNicknameCancellables: AnyCancellable?
@@ -51,7 +51,7 @@ class NicknameFormStepViewModel {
 
     init(title: String,
          nickname: String?,
-         serviceProvider: ServicesProviderClient,
+         serviceProvider: ServicesProvider.Client,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
         self.title = title
 

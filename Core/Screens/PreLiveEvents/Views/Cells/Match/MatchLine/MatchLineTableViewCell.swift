@@ -706,6 +706,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 }
 
+/*
 #if DEBUG
 import SwiftUI
 
@@ -866,3 +867,4 @@ extension MatchLinePreviewViewController: UITableViewDelegate, UITableViewDataSo
 }
 
 #endif
+*/

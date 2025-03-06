@@ -35,7 +35,7 @@ public class SteppedRegistrationViewModel {
 
     public var userRegisterEnvelop: UserRegisterEnvelop
 
-    let serviceProvider: ServicesProviderClient
+    let serviceProvider: ServicesProvider.Client
     public let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
@@ -56,7 +56,7 @@ public class SteppedRegistrationViewModel {
     public init(registerSteps: [RegisterStep]? = nil,
                 currentStep: Int? = nil,
                 userRegisterEnvelop: UserRegisterEnvelop,
-                serviceProvider: ServicesProviderClient,
+                serviceProvider: ServicesProvider.Client,
                 userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
                 hasLegalAgeWarning: Bool = false,
                 registerFlowType: RegisterFlow.FlowType) {

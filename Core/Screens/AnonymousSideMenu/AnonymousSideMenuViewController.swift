@@ -97,8 +97,10 @@ class AnonymousSideMenuViewController: UIViewController {
         self.registerButton.addTarget(self, action: #selector(didTapRegisterButton), for: .primaryActionTriggered)
         self.loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
 
-        let versionBaseViewTap = UITapGestureRecognizer(target: self, action: #selector(handleDebugTap))
-        self.versionBaseView.addGestureRecognizer(versionBaseViewTap)
+        if TargetVariables.enableDeveloperSettings {
+            let versionBaseViewTap = UITapGestureRecognizer(target: self, action: #selector(handleDebugTap))
+            self.versionBaseView.addGestureRecognizer(versionBaseViewTap)
+        }
     }
 
     // MARK: - Layout and Theme
@@ -178,6 +180,19 @@ class AnonymousSideMenuViewController: UIViewController {
         self.menusStackView.addArrangedSubview(recruitFriendView)
         self.menusStackView.addArrangedSubview(supportView)
         
+        if TargetVariables.enableDeveloperSettings && UserDefaults.standard.isDeveloperModeEnabled {
+            self.addDeveloperMenu()
+        }
+    }
+
+    func addDeveloperMenu() {
+        guard self.menusStackView.viewWithTag(7) == nil else { return }
+        let developerView = NavigationCardView()
+        developerView.tag = 7
+        developerView.setupView(title: "Developer Settings", iconTitle: "developer_icon")
+        let developerTap = UITapGestureRecognizer(target: self, action: #selector(developerViewTapped))
+        developerView.addGestureRecognizer(developerTap)
+        self.menusStackView.addArrangedSubview(developerView)
     }
 
     // MARK: - Actions
@@ -192,17 +207,16 @@ class AnonymousSideMenuViewController: UIViewController {
 
     @objc func handleDebugTap() {
         if let lastTapTime = lastTapTime, Date().timeIntervalSince(lastTapTime) > 2 {
-            // Reset the counter if more than a second has passed since the last tap
             tapCounter = 0
         }
-
-        self.tapCounter += 1
-        self.lastTapTime = Date()
-
-        if tapCounter >= 7 {
-            // If 10 taps have been detected in less than a second, show the developer screen
-            self.showDeveloperScreen()
-            self.tapCounter = 0
+        
+        tapCounter += 1
+        lastTapTime = Date()
+        
+        if tapCounter >= 4 {
+            UserDefaults.standard.isDeveloperModeEnabled = true
+            addDeveloperMenu() // Refresh menus to show developer option
+            tapCounter = 0
         }
     }
 
@@ -222,6 +236,11 @@ class AnonymousSideMenuViewController: UIViewController {
         recruitAFriendViewController.fromAnonymousMenu = true
 
         self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
+    }
+
+    @objc private func developerViewTapped() {
+        let developerSettingsVC = DeveloperSettingsViewController()
+        self.navigationController?.pushViewController(developerSettingsVC, animated: true)
     }
 
 }

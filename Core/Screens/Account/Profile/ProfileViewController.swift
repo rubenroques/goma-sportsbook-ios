@@ -117,6 +117,11 @@ class ProfileViewController: UIViewController {
     private var themeBaseView: UIView!
     private var themeSelectorView: ThemeSelectorView!
 
+    // Add to existing properties
+    private var tapCounter = 0
+    private var lastTapTime: Date?
+    private var developerView: UIView?
+
     init(userProfile: UserProfile? = nil) {
 
         self.pageMode = .anonymous
@@ -142,6 +147,10 @@ class ProfileViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
+        
+        if TargetVariables.enableDeveloperSettings {
+            self.setupDeveloperMenu()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -423,18 +432,7 @@ class ProfileViewController: UIViewController {
         self.verifyUserActivationConditions()
 
         self.setupStackView()
-
-//        let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
-//        self.profilePictureBaseView.addGestureRecognizer(testTap)
-        
     }
-    
-//    @objc private func testTap() {
-//        
-//        let vc = BetSubmissionSuccessViewController(betPlacedDetailsArray: [], usedCashback: false)
-//        
-//        self.present(vc, animated: true)
-//    }
 
     private func getOptInBonus() {
 
@@ -823,8 +821,6 @@ class ProfileViewController: UIViewController {
     }
 
     @objc private func tapTotalBalanceInfo() {
-        print("TAPPED TOTAL BALANCE INFO!")
-
         UIView.animate(withDuration: 0.5, animations: {
             self.totalBalanceInfoDialogView.alpha = 1
         }) { completed in
@@ -838,6 +834,50 @@ class ProfileViewController: UIViewController {
         }
     }
 
+    private func setupDeveloperMenu() {
+        let versionTap = UITapGestureRecognizer(target: self, action: #selector(handleDebugTap))
+        self.infoLabel.isUserInteractionEnabled = true
+        self.infoLabel.addGestureRecognizer(versionTap)
+        
+        if TargetVariables.enableDeveloperSettings && UserDefaults.standard.isDeveloperModeEnabled {
+            self.addDeveloperMenu()
+        }
+    }
+
+    private func addDeveloperMenu() {
+        guard developerView == nil else { return }
+        
+        let developerBaseView = UIView()
+        let developerCardView = NavigationCardView()
+        developerCardView.setupView(title: "Developer Settings", iconTitle: "developer_icon")
+        let developerTap = UITapGestureRecognizer(target: self, action: #selector(developerViewTapped))
+        developerCardView.addGestureRecognizer(developerTap)
+        
+        // Add to main stack view - add this before the logout view
+        self.stackView.addArrangedSubview(developerBaseView)
+        developerBaseView.addSubview(developerCardView)
+        self.developerView = developerBaseView
+    }
+
+    @objc private func handleDebugTap() {
+        if let lastTapTime = lastTapTime, Date().timeIntervalSince(lastTapTime) > 2 {
+            tapCounter = 0
+        }
+        
+        tapCounter += 1
+        lastTapTime = Date()
+        
+        if tapCounter >= 4 {
+            UserDefaults.standard.isDeveloperModeEnabled = true
+            addDeveloperMenu()
+            tapCounter = 0
+        }
+    }
+
+    @objc private func developerViewTapped() {
+        let developerSettingsVC = DeveloperSettingsViewController()
+        self.navigationController?.pushViewController(developerSettingsVC, animated: true)
+    }
 }
 
 extension ProfileViewController {

@@ -38,7 +38,6 @@ class DebugViewController: UIViewController {
             default:
                 ()
             }
-
         }
 
         self.addChildViewController(debugTableViewController, toView: self.view)

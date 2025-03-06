@@ -11,6 +11,7 @@ extension Notification.Name {
     static let didMoveToInvalidLocation = Notification.Name("didMoveToInvalidLocation")
     static let didMoveToValidLocation = Notification.Name("didMoveToValidLocation")
     static let didChangeAppTheme = Notification.Name("didChangeAppTheme")
+    static let targetFeaturesDidChange = Notification.Name("targetFeaturesDidChange")
 }
 
 extension NotificationCenter {

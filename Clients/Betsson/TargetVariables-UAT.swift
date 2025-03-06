@@ -60,7 +60,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback, .legalAgeWarning]
+        return [.cashback, .legalAgeWarning, .mixMatch]
     }
 
     static var shouldUserBlurEffectTabBar: Bool {
@@ -111,8 +111,12 @@ struct TargetVariables: SportsbookTarget {
     static var localizationOverrides: [String: String] {
         return [:]
     }
-    
+
     static var registerFlowType: RegisterFlowType {
         return .betsson
+    }
+
+    static var enableDeveloperSettings: Bool {
+        return true
     }
 }

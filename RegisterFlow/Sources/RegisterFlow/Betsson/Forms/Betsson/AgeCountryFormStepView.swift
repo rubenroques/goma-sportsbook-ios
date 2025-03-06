@@ -103,7 +103,7 @@ class AgeCountryFormStepViewModel {
         }
     }
 
-    private var serviceProvider: ServicesProviderClient
+    private var serviceProvider: ServicesProvider.Client
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
     private var adresseFrancaiseClient: AdresseFrancaiseClient
 
@@ -134,7 +134,7 @@ class AgeCountryFormStepViewModel {
          departmentOfBirth: String?,
          placeBirth: String?,
 
-         serviceProvider: ServicesProviderClient,
+         serviceProvider: ServicesProvider.Client,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
          adresseFrancaiseClient: AdresseFrancaiseClient = AdresseFrancaiseClient()) {
 

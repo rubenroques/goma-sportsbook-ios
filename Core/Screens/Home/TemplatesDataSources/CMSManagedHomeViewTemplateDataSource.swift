@@ -597,6 +597,7 @@ class CMSManagedHomeViewTemplateDataSource {
                 else {
                     self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
                 }
+                
                 self?.refreshPublisher.send()
             })
 

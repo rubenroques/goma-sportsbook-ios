@@ -104,7 +104,7 @@ The package includes implementations for different backend systems:
 
 ## Service Provider Client
 
-The **ServicesProviderClient** class serves as the main entry point for the application:
+The **ServicesProvider.Client** class serves as the main entry point for the application:
 - Initializes and configures the appropriate providers based on configuration
 - Provides a unified interface to access all provider functionality
 - Manages connection state and authentication

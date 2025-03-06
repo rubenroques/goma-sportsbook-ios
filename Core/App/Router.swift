@@ -966,10 +966,6 @@ extension Router {
         return navigationController
     }
 
-    static func createRootViewControllerNavigation() -> UIViewController {
-        return Router.navigationController(with: TestsViewController())
-    }
-
     static func navigationController(with viewController: UIViewController) -> UINavigationController {
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.setNavigationBarHidden(true, animated: false)

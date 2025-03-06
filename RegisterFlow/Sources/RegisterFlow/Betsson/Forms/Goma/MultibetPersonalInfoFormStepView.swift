@@ -23,7 +23,7 @@ class MultibetPersonalInfoFormStepViewModel {
     var emailState: CurrentValueSubject<EmailState, Never> = .init(.empty)
     private var checkEmailRegisteredCancellables: AnyCancellable?
     
-    private var serviceProvider: ServicesProviderClient
+    private var serviceProvider: ServicesProvider.Client
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
@@ -47,7 +47,7 @@ class MultibetPersonalInfoFormStepViewModel {
          fullName: String? = nil,
          email: String? = nil,
          nickname: String? = nil,
-         serviceProvider: ServicesProviderClient,
+         serviceProvider: ServicesProvider.Client,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
 
         self.title = title

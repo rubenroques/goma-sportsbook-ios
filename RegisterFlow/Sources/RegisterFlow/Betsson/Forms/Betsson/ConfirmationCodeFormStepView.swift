@@ -80,13 +80,13 @@ class ConfirmationCodeFormStepViewModel {
     private var verifiedCode: CurrentValueSubject<String?, Never>
     private var isVerifiedSubject: CurrentValueSubject<Bool, Never> = .init(false)
 
-    private let serviceProvider: ServicesProviderClient
+    private let serviceProvider: ServicesProvider.Client
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     private var cancellables = Set<AnyCancellable>()
 
     init(title: String,
-         serviceProvider: ServicesProviderClient,
+         serviceProvider: ServicesProvider.Client,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
 
         self.title = title

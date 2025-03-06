@@ -186,7 +186,7 @@ extension GomaModelMapper {
     }
 
     static func topCompetitionPointer(fromInternalTopCompetitionPointer pointer: GomaModels.TopCompetitionPointer) -> TopCompetitionPointer {
-        return TopCompetitionPointer.init(id: pointer, name: "", competitionId: "")
+        return TopCompetitionPointer.init(id: pointer, name: "", competitionId: pointer)
     }
 
 }

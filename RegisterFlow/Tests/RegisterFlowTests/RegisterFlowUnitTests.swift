@@ -16,7 +16,7 @@ import SharedModels
 
 final class RegisterFlowUnitTests: XCTestCase {
     var registrationViewModel: SteppedRegistrationViewModel!
-    var mockServiceProvider: ServicesProviderClient?
+    var mockServiceProvider: ServicesProvider.Client?
     var mockEnvelopUpdater: UserRegisterEnvelopUpdater!
     
     private var cancellables = Set<AnyCancellable>()
@@ -26,7 +26,7 @@ final class RegisterFlowUnitTests: XCTestCase {
         
         let servicesProviderConfiguration = Configuration(environment: .staging)
         
-        let client = ServicesProviderClient(providerType: .sportradar, configuration: servicesProviderConfiguration)
+        let client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
         
         client.connect()
         

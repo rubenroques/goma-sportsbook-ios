@@ -13,7 +13,7 @@ import Extensions
 struct FormStepViewFactory {
 
     static func formStepView(forFormStep formStep: FormStep,
-                             serviceProvider: ServicesProviderClient,
+                             serviceProvider: ServicesProvider.Client,
                              userRegisterEnvelop: UserRegisterEnvelop,
                              userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
                              hasReferralCode: Bool? = nil,

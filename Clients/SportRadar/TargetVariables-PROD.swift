@@ -111,5 +111,9 @@ struct TargetVariables: SportsbookTarget {
             "app_version_profile_2": "® Tous droits réservés",
         ]
     }
+    
+    static var enableDeveloperSettings: Bool {
+        return true
+    }
 
 }

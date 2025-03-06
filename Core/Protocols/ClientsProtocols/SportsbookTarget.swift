@@ -44,9 +44,16 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
     static var knowYourClientLevels: [KnowYourCustomerLevel: String] { get }
 
     static var localizationOverrides: [String: String] { get }
+
+    static var enableDeveloperSettings: Bool { get }
+
+    // static var registerFlowType: RegisterFlowType { get }
+
+    static var links: URLEndpoint.Links { get }
+
 }
 
-enum SportsbookTargetFeatures: CaseIterable {
+enum SportsbookTargetFeatures: Codable, CaseIterable {
     case homeBanners
     case homePopUps
 
@@ -73,6 +80,8 @@ enum SportsbookTargetFeatures: CaseIterable {
 
     case responsibleGamingForm
     case legalAgeWarning
+    
+    case mixMatch
 }
 
 enum SportsbookSupportedLanguage: String, CaseIterable {
@@ -91,15 +100,41 @@ enum KnowYourCustomerLevel: Int, CaseIterable {
 }
 
 extension SportsbookTarget {
-
-    static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool {
-        for enabledFeature in Self.features {
-            if feature == enabledFeature {
-                return true
-            }
+    private static var dynamicFeatureOverrides: Set<SportsbookTargetFeatures>? {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: "DynamicFeatureOverrides") else { return nil }
+            return try? JSONDecoder().decode(Set<SportsbookTargetFeatures>.self, from: data)
         }
-        return false
+        set {
+            if let newValue = newValue {
+                let data = try? JSONEncoder().encode(newValue)
+                UserDefaults.standard.set(data, forKey: "DynamicFeatureOverrides")
+            }
+            else {
+                UserDefaults.standard.removeObject(forKey: "DynamicFeatureOverrides")
+            }
+            NotificationCenter.default.post(.targetFeaturesDidChange)
+        }
     }
+    
+    static func getCurrentFeatures() -> [SportsbookTargetFeatures] {
+        return dynamicFeatureOverrides?.map { $0 } ?? Self.features
+    }
+    
+    static func setDynamicFeatures(_ features: [SportsbookTargetFeatures]) {
+        dynamicFeatureOverrides = Set(features)
+    }
+    
+    static func resetToDefaultFeatures() {
+        dynamicFeatureOverrides = nil
+    }
+    
+    static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool {
+        return getCurrentFeatures().contains(feature)
+    }
+}
+
+extension SportsbookTarget {
 
     static var supportedCardStyles: [CardsStyle] {
         return CardsStyle.allCases
@@ -143,4 +178,8 @@ extension SportsbookTarget {
         return URLEndpoint.Links.empty
     }
     
+    static var enableDeveloperSettings: Bool {
+        return true
+    }
+
 }

@@ -387,72 +387,64 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
                     .compactMap({ $0 })
                     .collect()
                     .flatMap { competitionsInfoArray -> AnyPublisher<[TopCompetition], ServiceProviderError> in
-
-                        let getCompetitonCountryRequests: [AnyPublisher<SportRadarModels.CompetitionParentNode, ServiceProviderError>] = competitionsInfoArray
-                            .map { (competitionsInfo: SportRadarModels.SportCompetitionInfo) -> AnyPublisher<SportRadarModels.CompetitionParentNode, ServiceProviderError>? in
-
-                                guard
-                                    let parentId = competitionsInfo.parentId
-                                else {
-                                    // If no parent id, we cannot request country info
-                                    return nil
-                                }
-
-                                let endpoint = SportRadarRestAPIClient.getTopCompetitionCountry(competitionId: parentId)
-                                let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.CompetitionParentNode>, ServiceProviderError> = self.eventsProvider.customRequest(endpoint: endpoint)
-
-                                return requestPublisher.map({ (response: SportRadarModels.SportRadarResponse<SportRadarModels.CompetitionParentNode>) -> SportRadarModels.CompetitionParentNode in
-                                    return response.data
-                                })
-                                .eraseToAnyPublisher()
-                            }
-                            .compactMap({ $0 })
-
-                        return Publishers.MergeMany(getCompetitonCountryRequests)
+                        let getCompetitionCountryRequests = competitionsInfoArray
+                            .compactMap { $0.parentId }
+                            .map { self.eventsProvider.getTopCompetitionCountry(competitionParentId: $0).eraseToAnyPublisher() }
+                        return Publishers.MergeMany(getCompetitionCountryRequests)
                             .collect()
-                            .map { (competitionParentNodes: [SportRadarModels.CompetitionParentNode]) -> [TopCompetition] in
-                                var topCompetitionsArray: [TopCompetition] = []
-
-                                var competitionCountriesDictionary: [String: String] = [:]
-                                for competitionParentNode in competitionParentNodes {
-                                    competitionCountriesDictionary[competitionParentNode.id] = competitionParentNode.name
+                            .map { competitionParentNodes in
+                                // Create a dictionary mapping competition parent IDs to their country names
+                                let competitionCountriesDictionary = competitionParentNodes.reduce(into: [String: String]()) {
+                                    $0[$1.id] = $1.name
                                 }
 
-                                var competitionAndParentIdDictionary: [String: String] = [:]
-                                for competitionsInfo in competitionsInfoArray {
-                                    if let parentId = competitionsInfo.parentId {
-                                        competitionAndParentIdDictionary[competitionsInfo.id] = parentId
+                                // Create a dictionary mapping competition IDs to their names
+                                let competitionNameDictionary = competitionsInfoArray.reduce(into: [String: String]()) {
+                                    $0[$1.id] = $1.name
+                                }
+
+                                // Create a dictionary mapping competition IDs to their parent IDs (if available)
+                                let competitionAndParentIdDictionary = competitionsInfoArray.reduce(into: [String: String]()) {
+                                    if let parentId = $1.parentId {
+                                        $0[$1.id] = parentId
                                     }
                                 }
 
-                                for topCompetitionPointer in topCompetitionPointers {
-
-                                    let competitionIdComponents = topCompetitionPointer.competitionId.components(separatedBy: "/")
-                                    let competitionId: String = (competitionIdComponents.last ?? "").lowercased()
-
-                                    let competitionParentId = competitionAndParentIdDictionary[competitionId] ?? ""
-
-                                    guard
-                                        let competitonCountryName = competitionCountriesDictionary[competitionParentId]
-                                    else {
-                                        continue
+                                // Iterate over the list of top competition pointers and map them to `TopCompetition` objects
+                                return topCompetitionPointers.compactMap { pointer in
+                                    // Extract the competition ID from the last component of the competition ID string
+                                    guard let competitionId = pointer.competitionId.components(separatedBy: "/").last?.lowercased() else {
+                                        return nil // Skip if we cannot extract a valid competition ID
                                     }
 
-                                    let country: Country? = Country.country(withName: competitonCountryName)
+                                    // Retrieve the parent competition ID, country name, and competition name
+                                    guard let competitionParentId = competitionAndParentIdDictionary[competitionId],
+                                          let competitionCountryName = competitionCountriesDictionary[competitionParentId],
+                                          let competitionName = competitionNameDictionary[competitionId] else {
+                                        return nil // Skip if any required data is missing
+                                    }
 
-                                    let sportNameComponents = topCompetitionPointer.competitionId.components(separatedBy: "/")
-                                    let sportName: String = (sportNameComponents[safe: sportNameComponents.count - 3] ?? "").lowercased()
+                                    // Get the `Country` object based on the competition country name
+                                    let country = Country.country(withName: competitionCountryName)
 
-                                    let namedSport: SportRadarModels.SportType = SportRadarModels.SportType.init(name: sportName, numberEvents: 0, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: 0)
+                                    // Extract the sport name (assumed to be the third-to-last component in the competition ID string)
+                                    let sportName = pointer.competitionId.components(separatedBy: "/").dropLast(2).last?.lowercased() ?? ""
+
+                                    // Create a `SportType` object
+                                    let namedSport = SportRadarModels.SportType(
+                                        name: sportName,
+                                        numberEvents: 0,
+                                        numberOutrightEvents: 0,
+                                        numberOutrightMarkets: 0,
+                                        numberLiveEvents: 0
+                                    )
+
+                                    // Map the sport type using `SportRadarModelMapper`
                                     let mappedSport = SportRadarModelMapper.sportType(fromSportRadarSportType: namedSport)
 
-                                    topCompetitionsArray.append(
-                                        TopCompetition(id: competitionId,
-                                                       name: topCompetitionPointer.name,
-                                                       country: country,
-                                                       sportType: mappedSport))
+                                    // Create and return a `TopCompetition` object
+                                    return TopCompetition(id: competitionId, name: competitionName, country: country, sportType: mappedSport)
                                 }
-                                return topCompetitionsArray
                             }
                             .eraseToAnyPublisher()
                     }
@@ -460,4 +452,5 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
             })
         return publisher.eraseToAnyPublisher()
     }
+    
 }

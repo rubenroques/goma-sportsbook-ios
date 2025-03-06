@@ -1295,6 +1295,16 @@ extension SportRadarEventsProvider {
         .replaceError(with: nil)
         .eraseToAnyPublisher()
     }
+    
+    func getTopCompetitionCountry(competitionParentId: String) -> AnyPublisher<SportRadarModels.CompetitionParentNode, ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.getTopCompetitionCountry(competitionId: competitionParentId)
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.CompetitionParentNode>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map({ (response: SportRadarModels.SportRadarResponse<SportRadarModels.CompetitionParentNode>) -> SportRadarModels.CompetitionParentNode in
+            return response.data
+        })
+        .eraseToAnyPublisher()
+    }
 
     //
     // MARK: - Favorites
