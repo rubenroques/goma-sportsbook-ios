@@ -121,6 +121,18 @@ public class Client {
         self.eventsProvider?.reconnectIfNeeded()
     }
 
+    // MARK: - Feature Flags
+
+    public func setMixMatchFeatureEnabled(_ enabled: Bool) {
+        if let eventsProvider = self.eventsProvider as? SportRadarEventsProvider {
+            eventsProvider.isMixMatchEnabled = enabled
+        }
+
+        if let bettingProvider = self.bettingProvider as? SportRadarBettingProvider {
+            bettingProvider.setMixMatchFeatureEnabled(enabled)
+        }
+    }
+
 }
 
 extension Client {

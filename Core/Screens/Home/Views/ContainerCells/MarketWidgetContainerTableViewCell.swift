@@ -155,7 +155,12 @@ extension MarketWidgetContainerTableViewCell: UICollectionViewDelegate, UICollec
         }
         
         cell.tappedMixMatchAction = { [weak self] matchId in
-            self?.tappedMixMatchIdAction(matchId)
+            if TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
+                self?.tappedMixMatchIdAction(matchId)
+            } else {
+                // If MixMatch is not enabled, use the regular match action instead
+                self?.tappedMatchIdAction(matchId)
+            }
         }
 
         return cell

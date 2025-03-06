@@ -255,6 +255,18 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return localized("mix_match_mix_string") + localized("mix_match_match_string")
             }
         }
+
+        static var availableCases: [BetslipType] {
+            if TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
+                return BetslipType.allCases
+            } else {
+                return BetslipType.allCases.filter { $0 != .betBuilder }
+            }
+        }
+
+        static func indexFor(_ type: BetslipType) -> Int? {
+            return BetslipType.availableCases.firstIndex(of: type)
+        }
     }
 
     private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
@@ -427,9 +439,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(loadingBaseView)
 
         self.betTypeSegmentControlView = SegmentControlView(
-            options: BetslipType.allCases.map(\.title),
+            options: BetslipType.availableCases.map(\.title),
             customItemAttributedString: { index in
-                if index == 3 {
+                // Check if this is the betBuilder case
+                let availableCases = BetslipType.availableCases
+                if index < availableCases.count && availableCases[index] == .betBuilder {
                     let mixString = localized("mix_match_mix_string") // Mix
                     let matchString = localized("mix_match_match_string") // Match
                     let fullString = mixString + matchString
@@ -449,7 +463,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return nil
             },
             customItemLeftAccessoryImage: { index in
-                if index == 3 {
+                // Check if this is the betBuilder case
+                let availableCases = BetslipType.availableCases
+                if index < availableCases.count && availableCases[index] == .betBuilder {
                     return UIImage(named: "mix_match_icon")
                 }
                 return nil
@@ -791,19 +807,32 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }) != nil
 
                 if betTickets.count == 1, containsSingle {
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 0, animated: true)
+                    if let index = BetslipType.indexFor(.simple) {
+                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: index, animated: true)
+                    }
                 }
                 else if betTickets.count > 1, sameMatchBets {
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 3, animated: true)
+                    if let index = BetslipType.indexFor(.betBuilder), TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
+                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: index, animated: true)
+                    } else if let index = BetslipType.indexFor(.multiple) {
+                        // Fallback to multiple if MixMatch is not enabled
+                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: index, animated: true)
+                    }
                 }
                 else if containsMultiple, betTickets.count > 1, !userDidSelectedSystemBet {
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                    if let index = BetslipType.indexFor(.multiple) {
+                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: index, animated: true)
+                    }
                 }
-                else if oldSegmentIndex == 1, !containsMultiple {
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 0, animated: true)
+                else if oldSegmentIndex == BetslipType.indexFor(.multiple), !containsMultiple {
+                    if let index = BetslipType.indexFor(.simple) {
+                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: index, animated: true)
+                    }
                 }
-                else if userDidSelectedSystemBet, oldSegmentIndex == 2, !containsSystem {
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                else if userDidSelectedSystemBet, oldSegmentIndex == BetslipType.indexFor(.system), !containsSystem {
+                    if let index = BetslipType.indexFor(.multiple) {
+                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: index, animated: true)
+                    }
                 }
 
                 if let newSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex, newSegmentIndex != oldSegmentIndex {
@@ -844,11 +873,21 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return false
                 }) != nil
 
-                self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: containsSingle)
-                self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: containsMultiple)
-                self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: containsSystem)
+                if let index = BetslipType.indexFor(.simple) {
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: index, isEnabled: containsSingle)
+                }
 
-                self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 3, isEnabled: true)
+                if let index = BetslipType.indexFor(.multiple) {
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: index, isEnabled: containsMultiple)
+                }
+
+                if let index = BetslipType.indexFor(.system) {
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: index, isEnabled: containsSystem)
+                }
+
+                if let index = BetslipType.indexFor(.betBuilder) {
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: index, isEnabled: true)
+                }
             }
             .store(in: &cancellables)
 
@@ -1023,7 +1062,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.systemWinningsBaseView.isHidden = true
                     self?.cashbackBaseView.isHidden = true
 
-                    self?.mixMatchWinningsBaseView.isHidden = false
+                    // Only show MixMatch UI if the feature is enabled
+                    self?.mixMatchWinningsBaseView.isHidden = !TargetVariables.hasFeatureEnabled(feature: .mixMatch)
 
                     self?.betBuilderWarningView.isHidden = false
                 }
@@ -1064,7 +1104,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingValue, _, bettingTickets in
-                
+
                 let ticketsMatches = bettingTickets.map(\.matchId)
                 let allBetsSameMatch = Set(ticketsMatches).count == 1
 
@@ -1097,11 +1137,11 @@ class PreSubmissionBetslipViewController: UIViewController {
                 let ticketsMatches = bettingTickets.map(\.matchId)
                 let allBetsSameMatch = Set(ticketsMatches).count == 1
                 let hasValidBettingValue = bettingValue > 0.0 && allBetsSameMatch
-                
+
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &self.cancellables)
-        
+
         //
         //
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
@@ -1288,7 +1328,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        if TargetVariables.features.contains(.freebets) {
+        if TargetVariables.hasFeatureEnabled(feature: .freebets) {
             Env.servicesProvider
                 .getFreebet()
                 .receive(on: DispatchQueue.main)
@@ -1356,7 +1396,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
         // Cashback
-        if TargetVariables.features.contains(.cashback) {
+        if TargetVariables.hasFeatureEnabled(feature: .cashback) {
             self.isCashbackEnabled = true
             self.setupCashback()
         }
@@ -1639,7 +1679,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private func setupFonts() {
         // Font size 17
         self.cashbackValueLabel.font = AppFont.with(type: .bold, size: 17)
-        
+
         // Font size 16
         let size16Labels: [UILabel] = [
             self.systemBetTypeTitleLabel,
@@ -1660,7 +1700,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.secondaryMixMatchWinningsValueLabel
         ]
         size16Labels.forEach { $0.font = AppFont.with(type: .bold, size: 16) }
-        
+
         // Font size 14
         let size14Labels: [UILabel] = [
             self.cashbackTitleLabel,
@@ -1668,7 +1708,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.cashbackInfoSingleValueLabel
         ]
         size14Labels.forEach { $0.font = AppFont.with(type: .bold, size: 14) }
-        
+
         // Font size 11
         let size11Labels: [UILabel] = [
             self.systemOddsTitleLabel,
@@ -2013,22 +2053,14 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     private func didChangeSelectedSegmentItem(toIndex index: Int) {
+        let availableCases: [PreSubmissionBetslipViewController.BetslipType] = BetslipType.availableCases
 
-        switch index {
-        case 0:
-            self.listTypePublisher.value = .simple
-            self.userSelectedSystemBet = false
-        case 1:
-            self.listTypePublisher.value = .multiple
-            self.userSelectedSystemBet = false
-        case 2:
-            self.listTypePublisher.value = .system
-            self.userSelectedSystemBet = true
-        case 3:
-            self.listTypePublisher.value = .betBuilder
-            self.userSelectedSystemBet = false
-        default:
-            ()
+        if index < availableCases.count {
+            let selectedType: PreSubmissionBetslipViewController.BetslipType = availableCases[index]
+            self.listTypePublisher.value = selectedType
+
+            // Set userSelectedSystemBet flag based on the selected type
+            self.userSelectedSystemBet = (selectedType == .system)
         }
 
         self.tableView.reloadData()

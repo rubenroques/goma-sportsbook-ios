@@ -30,6 +30,8 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueCellType(MultipleBettingTicketTableViewCell.self),
            let bettingTicket = self.bettingTickets[safe: indexPath.row] {
+            // Always set mixMatchMode to false for MultipleBettingTicketDataSource
+            // This is for regular multiple bets, not MixMatch bets
             cell.configureWithBettingTicket(bettingTicket, mixMatchMode: false)
             return cell
         }

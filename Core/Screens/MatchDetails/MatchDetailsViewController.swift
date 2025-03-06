@@ -503,7 +503,7 @@ class MatchDetailsViewController: UIViewController {
         // Configure tooltip
         self.configureTooltip()
 
-        if self.showMixMatchDefault {
+        if self.showMixMatchDefault && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
             self.currentPageViewControllerIndex = 1
         }
 
@@ -1104,7 +1104,7 @@ extension MatchDetailsViewController {
             chipsTypeView.topAnchor.constraint(equalTo: marketTypesBaseView.topAnchor),
             chipsTypeView.bottomAnchor.constraint(equalTo: marketTypesBaseView.bottomAnchor),
         ])
-        
+
         // Updatable Constraint for animations
         self.matchFieldWebViewHeightConstraint = NSLayoutConstraint(item: self.matchFieldWebView,
                                                                   attribute: .height,
@@ -1114,7 +1114,7 @@ extension MatchDetailsViewController {
                                                                     multiplier: 1,
                                                                     constant: 0)
         self.matchFieldWebViewHeightConstraint.isActive = true
-        
+
         self.statsCollectionViewHeightConstraint = NSLayoutConstraint(item: self.statsCollectionBaseView,
                                                                   attribute: .height,
                                                                     relatedBy: .equal,
@@ -2095,7 +2095,7 @@ extension MatchDetailsViewController {
             }
         }
 
-        if self.showMixMatchDefault {
+        if self.showMixMatchDefault && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
             if let firstViewController = self.marketGroupsViewControllers[safe: 1] {
                 self.marketGroupsPagedViewController.setViewControllers([firstViewController],
                                                                         direction: .forward,

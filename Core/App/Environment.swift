@@ -12,9 +12,9 @@ let Env = Environment() // swiftlint:disable:this identifier_name
 
 class Environment {
 
-    let appSession = AppSession()
+    let appSession: AppSession = AppSession()
 
-    let gomaNetworkClient = GomaGamingServiceClient()
+    let gomaNetworkClient: GomaGamingServiceClient = GomaGamingServiceClient()
 
     lazy var servicesProvider: ServicesProvider.Client = {
         
@@ -28,40 +28,45 @@ class Environment {
         
         let servicesProviderConfiguration = ServicesProvider.Configuration(environment: serviceProviderEnvironment, deviceUUID: Env.deviceId)
         let provider = TargetVariables.serviceProviderType
+        let client: ServicesProvider.Client
         switch provider {
         case .everymatrix:
-            return ServicesProvider.Client(providerType: .everymatrix, configuration: servicesProviderConfiguration)
+            client = ServicesProvider.Client(providerType: .everymatrix, configuration: servicesProviderConfiguration)
         case .sportradar:
-            return ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
+            client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
         }
         
+        // Set feature flags
+        client.setMixMatchFeatureEnabled(TargetVariables.hasFeatureEnabled(feature: .mixMatch))
+        
+        return client
     }()
 
-    let betslipManager = BetslipManager()
+    let betslipManager: BetslipManager = BetslipManager()
 
-    let userSessionStore = UserSessionStore()
-    let businessSettingsSocket = RealtimeSocketClient()
-    let locationManager = GeoLocationManager()
-    let gomaSocialClient = GomaGamingSocialServiceClient()
-    let sportsStore = SportTypeStore()
+    let userSessionStore: UserSessionStore = UserSessionStore()
+    let businessSettingsSocket: RealtimeSocketClient = RealtimeSocketClient()
+    let locationManager: GeoLocationManager = GeoLocationManager()
+    let gomaSocialClient: GomaGamingSocialServiceClient = GomaGamingSocialServiceClient()
+    let sportsStore: SportTypeStore = SportTypeStore()
 
-    var calendar = Calendar.autoupdatingCurrent
-    var locale = Locale.autoupdatingCurrent
-    var timezone = TimeZone.autoupdatingCurrent
+    var calendar: Calendar = Calendar.autoupdatingCurrent
+    var locale: Locale = Locale.autoupdatingCurrent
+    var timezone: TimeZone = TimeZone.autoupdatingCurrent
     var date: () -> Date = { Date.init() }
 
-    var favoritesManager = FavoritesManager()
+    var favoritesManager: FavoritesManager = FavoritesManager()
     var deviceFirebaseCloudMessagingToken: String = ""
 
     var deviceId: String {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
-    let urlSchemaManager = URLSchemaManager()
+    let urlSchemaManager: URLSchemaManager = URLSchemaManager()
 
     // Sumsub keys
     let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"
-    let sumsubSecretKey = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
+    let sumsubSecretKey: String = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
     
     init() {
 

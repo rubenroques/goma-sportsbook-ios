@@ -11,7 +11,7 @@ class BetBuilderBettingTicketDataSource: NSObject, UITableViewDelegate, UITableV
 
     var bettingTickets: [BettingTicket] = []
     var invalidBettingTicketIds: [String] = []
-    
+
     init(bettingTickets: [BettingTicket]) {
         self.bettingTickets = bettingTickets
     }
@@ -27,12 +27,12 @@ class BetBuilderBettingTicketDataSource: NSObject, UITableViewDelegate, UITableV
         else {
             fatalError()
         }
-        
+
         let isInvalid = self.invalidBettingTicketIds.contains(bettingTicket.id)
         cell.configureWithBettingTicket(bettingTicket,
                                         showInvalidView: isInvalid,
-                                        mixMatchMode: true)
-        
+                                        mixMatchMode: TargetVariables.hasFeatureEnabled(feature: .mixMatch))
+
         return cell
     }
 
@@ -43,5 +43,5 @@ class BetBuilderBettingTicketDataSource: NSObject, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 99
     }
-    
+
 }

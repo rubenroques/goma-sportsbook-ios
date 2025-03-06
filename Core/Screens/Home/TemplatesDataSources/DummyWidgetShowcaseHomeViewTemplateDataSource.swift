@@ -984,7 +984,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             if let match = self.highlightsVisualImageMatches[safe: index] {
                 var type = MatchWidgetType.topImage
 
-                if match.markets.first?.customBetAvailable ?? false {
+                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
                     type = .topImageWithMixMatch
                 }
 
@@ -1057,7 +1057,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
         case (0, .highlightedMatches):
             ids = self.highlightsVisualImageMatches.map { match in
                 var type = MatchWidgetType.topImage
-                if match.markets.first?.customBetAvailable ?? false {
+                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
                     type = .topImageWithMixMatch
                 }
                 return match.id + type.rawValue
@@ -1065,7 +1065,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
 
             viewModels = self.highlightsVisualImageMatches.map { match in
                 var type = MatchWidgetType.topImage
-                if match.markets.first?.customBetAvailable ?? false {
+                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
                     type = .topImageWithMixMatch
                 }
                 return MatchWidgetCellViewModel(match: match, matchWidgetType: type)

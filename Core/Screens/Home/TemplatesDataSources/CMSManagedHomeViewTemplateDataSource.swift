@@ -1024,7 +1024,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             if let match = self.highlightsVisualImageMatches[safe: index] {
                 var type = MatchWidgetType.topImage
 
-                if match.markets.first?.customBetAvailable ?? false {
+                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
                     type = .topImageWithMixMatch
                 }
 
@@ -1085,7 +1085,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case (0, .highlightedMatches):
             ids = self.highlightsVisualImageMatches.map { match in
                 var type = MatchWidgetType.topImage
-                if match.markets.first?.customBetAvailable ?? false {
+                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
                     type = .topImageWithMixMatch
                 }
                 return match.id + type.rawValue
@@ -1093,7 +1093,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
             viewModels = self.highlightsVisualImageMatches.map { match in
                 var type = MatchWidgetType.topImage
-                if match.markets.first?.customBetAvailable ?? false {
+                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
                     type = .topImageWithMixMatch
                 }
                 return MatchWidgetCellViewModel(match: match, matchWidgetType: type)

@@ -307,7 +307,10 @@ class HomeViewController: UIViewController {
     }
 
     private func openMatchDetails(matchId: String, isMixMatch: Bool = false) {
-        if isMixMatch {
+        // Only enable MixMatch if the feature is enabled
+        let showMixMatch = isMixMatch && TargetVariables.hasFeatureEnabled(feature: .mixMatch)
+
+        if showMixMatch {
             let matchDetailsViewModel = MatchDetailsViewModel(matchId: matchId)
 
             let matchDetailsViewController = MatchDetailsViewController(viewModel: matchDetailsViewModel)
@@ -732,7 +735,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .userMessage:
             return UITableViewCell()
-    
+
         case .bannerLine:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: BannerScrollTableViewCell.identifier) as? BannerScrollTableViewCell,

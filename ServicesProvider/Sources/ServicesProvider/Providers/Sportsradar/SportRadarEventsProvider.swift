@@ -16,6 +16,9 @@ class SportRadarEventsProvider: EventsProvider {
     private var socketConnector: SportRadarSocketConnector
     private var restConnector: SportRadarRestConnector
 
+    // Property to determine if MixMatch feature is enabled
+    var isMixMatchEnabled: Bool = false
+
     var sessionCoordinator: SportRadarSessionCoordinator
 
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
@@ -1295,7 +1298,7 @@ extension SportRadarEventsProvider {
         .replaceError(with: nil)
         .eraseToAnyPublisher()
     }
-    
+
     func getTopCompetitionCountry(competitionParentId: String) -> AnyPublisher<SportRadarModels.CompetitionParentNode, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.getTopCompetitionCountry(competitionId: competitionParentId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.CompetitionParentNode>, ServiceProviderError> = self.restConnector.request(endpoint)
@@ -1790,18 +1793,21 @@ extension SportRadarEventsProvider {
             $0.customBetAvailable ?? false
         })
 
-        let betBuilderMarketGroup = MarketGroup(type: "MixMatch",
-                                                id: "99",
-                                                groupKey: "99",
-                                                translatedName: "MixMatch",
-                                                position: 99,
-                                                isDefault: false,
-                                                numberOfMarkets: betBuilderMarkets.count,
-                                                loaded: true,
-                                                markets: betBuilderMarkets)
+        // Only create the MixMatch market group if the feature is enabled
+        if self.isMixMatchEnabled {
+            let betBuilderMarketGroup = MarketGroup(type: "MixMatch",
+                                                    id: "99",
+                                                    groupKey: "99",
+                                                    translatedName: "MixMatch",
+                                                    position: 99,
+                                                    isDefault: false,
+                                                    numberOfMarkets: betBuilderMarkets.count,
+                                                    loaded: true,
+                                                    markets: betBuilderMarkets)
 
-        if sortedMarketGroupsArray.count >= 1 && !betBuilderMarkets.isEmpty {
-            sortedMarketGroupsArray.insert(betBuilderMarketGroup, at: 1)
+            if sortedMarketGroupsArray.count >= 1 && !betBuilderMarkets.isEmpty {
+                sortedMarketGroupsArray.insert(betBuilderMarketGroup, at: 1)
+            }
         }
 
         //self.marketGroupsPublisher.send(sortedMarketGroupsArray)
