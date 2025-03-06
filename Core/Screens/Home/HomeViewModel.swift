@@ -18,7 +18,8 @@ enum HomeTemplateBuilderType {
 
 class HomeViewModel {
 
-    enum Content {
+    enum Content: Hashable, Codable {
+        
         case userMessage
         case userFavorites
         case bannerLine
@@ -26,9 +27,10 @@ class HomeViewModel {
         case sportGroup(Sport)
 
         case userProfile
-        case featuredTips
         case footerBanner
 
+        case promotedBetslips
+        
         case quickSwipeStack
         case makeOwnBetCallToAction
 
@@ -56,7 +58,7 @@ class HomeViewModel {
             case .suggestedBets: return "suggestedBets"
             case .sportGroup(let sport): return "sport[\(sport)]"
             case .userProfile: return "userProfile"
-            case .featuredTips: return "featuredTips"
+            case .promotedBetslips: return "promotedBetslips"
             case .footerBanner: return "footerBanner"
 
             case .quickSwipeStack: return "quickSwipeStack"

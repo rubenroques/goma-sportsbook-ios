@@ -724,7 +724,11 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.requestMultipleBetReturn()
                 self?.requestSystemBetInfo()
                 self?.requestCashbackResult()
-                self?.refreshBetBuilderExpectedReturn()
+
+                // Only refresh BetBuilder expected return if MixMatch feature is enabled
+                if TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
+                    self?.refreshBetBuilderExpectedReturn()
+                }
             }
             .store(in: &cancellables)
 
@@ -1100,7 +1104,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         // BetBuilder logic
         Publishers.CombineLatest3(debounceRealValuePublisher, self.listTypePublisher, Env.betslipManager.bettingTicketsPublisher)
             .filter({ _, listTypePublisher, _ -> Bool in
-                return listTypePublisher == .betBuilder
+                // Only process BetBuilder logic if MixMatch feature is enabled
+                return listTypePublisher == .betBuilder && TargetVariables.hasFeatureEnabled(feature: .mixMatch)
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingValue, _, bettingTickets in
@@ -1130,7 +1135,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         // PlaceBetButton for betBuilder
         Publishers.CombineLatest3(debounceRealValuePublisher, self.listTypePublisher, Env.betslipManager.bettingTicketsPublisher)
             .filter({ _, listTypePublisher, _ -> Bool in
-                return listTypePublisher == .betBuilder
+                // Only process BetBuilder logic if MixMatch feature is enabled
+                return listTypePublisher == .betBuilder && TargetVariables.hasFeatureEnabled(feature: .mixMatch)
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingValue, _, bettingTickets in
@@ -1285,17 +1291,19 @@ class PreSubmissionBetslipViewController: UIViewController {
         //
         // BetBuilder
         //
-        Env.betslipManager.betBuilderProcessor.invalidTicketsPublisher
-            .map({ tickets in
-                return tickets.map(\.id)
-            })
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] invalidTicketIds in
-                self?.betBuilderBettingTicketDataSource.invalidBettingTicketIds = invalidTicketIds
-                self?.tableView.reloadData()
-            }
-            .store(in: &self.cancellables)
+        if TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
+            Env.betslipManager.betBuilderProcessor.invalidTicketsPublisher
+                .map({ tickets in
+                    return tickets.map(\.id)
+                })
+                .removeDuplicates()
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] invalidTicketIds in
+                    self?.betBuilderBettingTicketDataSource.invalidBettingTicketIds = invalidTicketIds
+                    self?.tableView.reloadData()
+                }
+                .store(in: &self.cancellables)
+        }
 
         //
         // NOTE: Debounce table reload so the switches can fully animate
@@ -2153,7 +2161,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.potentialReturn)) ?? localized("no_value")
         self.systemWinningsValueLabel.text = possibleWinningsString
         self.secondarySystemWinningsValueLabel.text = possibleWinningsString
-
         let totalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.totalStake)) ?? localized("no_value")
         self.systemOddsValueLabel.text = totalBetAmountString
         self.secondarySystemOddsValueLabel.text = totalBetAmountString

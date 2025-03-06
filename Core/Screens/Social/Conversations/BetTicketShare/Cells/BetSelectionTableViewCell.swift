@@ -102,7 +102,7 @@ class BetSelectionTableViewCell: UITableViewCell {
         else if viewModel.ticket.type?.uppercased() == "SYSTEM" {
             self.titleLabel.text = localized("system") + " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(viewModel.ticket.localizedBetStatus.capitalized)"
         }
-        else if viewModel.ticket.type?.lowercased() == "mix_match" {
+        else if viewModel.ticket.type?.lowercased() == "mix_match" && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
             self.titleLabel.text = localized("mix-match")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
         }
         else {

@@ -338,7 +338,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .favorites:
             return HomeViewModel.Content.userFavorites
         case .featuredTips:
-            return HomeViewModel.Content.featuredTips
+            return HomeViewModel.Content.promotedBetslips
         case .suggestedBets:
             return HomeViewModel.Content.suggestedBets
         case .sport(let id, let name, _):

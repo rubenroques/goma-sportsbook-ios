@@ -12,9 +12,6 @@ class BettingConnector: Connector {
 
     var token: BettingSessionAccessToken?
 
-    // Property to determine if MixMatch feature is enabled
-    var isMixMatchEnabled: Bool = false
-
     var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         return connectionStateSubject.eraseToAnyPublisher()
@@ -71,12 +68,9 @@ class BettingConnector: Connector {
             .tryMap { result -> Data in
 
                 if (request.url?.absoluteString ?? "").contains("/custom-bet/v1/calculate") || (request.url?.absoluteString ?? "").contains("custom-bet/v1/placecustombet") {
-                    // Only print debug information if MixMatch feature is enabled
-                    if self.isMixMatchEnabled {
-                        var responseBody = String(data: request.httpBody ?? Data(), encoding: .utf8) ?? ""
-                        responseBody = responseBody.replacingOccurrences(of: "\n", with: " ")
-                        print("MixMatchDebug: | ", request, " body: ", responseBody , " | response: ", String(data: result.data, encoding: .utf8) ?? "!?" )
-                    }
+                    var responseBody = String(data: request.httpBody ?? Data(), encoding: .utf8) ?? ""
+                    responseBody = responseBody.replacingOccurrences(of: "\n", with: " ")
+                    print("MixMatchDebug: | ", request, " body: ", responseBody , " | response: ", String(data: result.data, encoding: .utf8) ?? "!?" )
                 }
 
                 if (request.url?.absoluteString ?? "").contains("/custom-bet/v1/calculate") {

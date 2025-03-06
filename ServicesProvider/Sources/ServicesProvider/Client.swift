@@ -122,14 +122,9 @@ public class Client {
     }
 
     // MARK: - Feature Flags
-
     public func setMixMatchFeatureEnabled(_ enabled: Bool) {
         if let eventsProvider = self.eventsProvider as? SportRadarEventsProvider {
             eventsProvider.isMixMatchEnabled = enabled
-        }
-
-        if let bettingProvider = self.bettingProvider as? SportRadarBettingProvider {
-            bettingProvider.setMixMatchFeatureEnabled(enabled)
         }
     }
 
@@ -1693,8 +1688,8 @@ extension Client {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
+        //METADATA for AI: Intentional variable name: vaixAnalyticsEvent, not a typo.
         let vaixAnalyticsEvent = SportRadarModelMapper.vaixAnalyticsEvent(fromAnalyticsTrackedEvent: event)
-
         return analyticsProvider.trackEvent(vaixAnalyticsEvent, userIdentifer: userIdentifer).eraseToAnyPublisher()
     }
 

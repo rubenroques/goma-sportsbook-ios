@@ -24,7 +24,7 @@ class ClientManagedHomeViewTemplateDataSource {
         .highlightedMarketProChoices, // Pro Choices Markets
         .highlightedBoostedOddsMatches, // Boosted Odds
         .topCompetitionsShortcuts, // TopCompetitionsMobile
-        .featuredTips, // SuggestedBets
+        .promotedBetslips, // SuggestedBets
     ]
 
     private var fixedSections: Int {
@@ -719,7 +719,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightedLiveMatches.count
         case .highlightedMarketProChoices:
             return self.highlightedMarketProChoicesNumberOfRows()
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
@@ -754,7 +754,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return localized("live")
         case .highlightedMarketProChoices:
             return localized("highlights_pro_choices_section_header")
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
         case .topCompetitionsShortcuts:
             return localized("top_competitions")
@@ -785,7 +785,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return "pro_choices_icon"
         case .topCompetitionsShortcuts:
             return "trophy_icon"
-        case .featuredTips:
+        case .promotedBetslips:
             return "suggested_bet_icon"
         case .promotedSportSection:
             let activeSports = Env.sportsStore.getActiveSports()
@@ -816,7 +816,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightedMarketProChoicesNumberOfRows() > 0
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.isNotEmpty
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isNotEmpty
         case .topCompetitionsShortcuts:
             return !self.topCompetitionsLineCellViewModel.isEmpty

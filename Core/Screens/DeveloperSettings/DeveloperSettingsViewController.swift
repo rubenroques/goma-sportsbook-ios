@@ -87,6 +87,8 @@ class DeveloperSettingsViewController: UIViewController {
             featureTogglesStackView.addArrangedSubview(container)
         }
         
+        print("SportsbookTargetFeatures.allCases: \(SportsbookTargetFeatures.allCases)")
+        
         // Add Reset button
         let resetButton = UIButton(type: .system)
         resetButton.setTitle("Reset to Default Features", for: .normal)

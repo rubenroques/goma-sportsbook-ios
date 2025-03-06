@@ -243,7 +243,7 @@ class CMSManagedHomeViewTemplateDataSource {
         case .topCompetitions:
             return .topCompetitionsShortcuts
         case .suggestedBets:
-            return .featuredTips
+            return .promotedBetslips
         case .popularEvents:
             return .promotedSportSection
         }
@@ -263,7 +263,7 @@ class CMSManagedHomeViewTemplateDataSource {
             .highlightedMarketProChoices, // Pro Choices Markets
             .highlightedBoostedOddsMatches, // Boosted Odds
             .topCompetitionsShortcuts, // TopCompetitionsMobile
-            .featuredTips, // SuggestedBets
+            .promotedBetslips, // SuggestedBets
         ]
     }
 
@@ -273,6 +273,7 @@ class CMSManagedHomeViewTemplateDataSource {
     }
 
     func refreshData() {
+        // Clear all caches regardless of which widgets are present
         self.matchWidgetContainerTableViewModelCache = [:]
         self.matchWidgetCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
@@ -287,17 +288,50 @@ class CMSManagedHomeViewTemplateDataSource {
 
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
 
-        self.fetchQuickSwipeMatches()
-        self.fetchHighlightMatches()
-        self.fetchHighlightMarkets()
+        // Only fetch data for widgets that are present in contentTypes
+        if self.contentTypes.contains(.quickSwipeStack) {
+            self.fetchQuickSwipeMatches()
+        }
 
-        self.fetchPromotedSports()
-        self.fetchPromotedBetslips()
-        self.fetchPromotionalStories()
-        self.fetchTopCompetitions()
-        self.fetchHighlightedLiveMatches()
+        if self.contentTypes.contains(.highlightedMatches) || self.contentTypes.contains(.highlightedBoostedOddsMatches) {
+            self.fetchHighlightMatches()
+        }
 
-        self.fetchHeroMatches()
+        if self.contentTypes.contains(.highlightedMarketProChoices) {
+            self.fetchHighlightMarkets()
+        }
+
+        if self.contentTypes.contains(.promotedSportSection) {
+            self.fetchPromotedSports()
+        }
+
+        if self.contentTypes.contains(.promotedBetslips) {
+            self.fetchPromotedBetslips()
+        }
+
+        if self.contentTypes.contains(.promotionalStories) {
+            self.fetchPromotionalStories()
+        }
+
+        if self.contentTypes.contains(.topCompetitionsShortcuts) {
+            self.fetchTopCompetitions()
+        }
+
+        if self.contentTypes.contains(.highlightedLiveMatches) {
+            self.fetchHighlightedLiveMatches()
+        }
+
+        if self.contentTypes.contains(.heroCard) {
+            self.fetchHeroMatches()
+        }
+
+        if self.contentTypes.contains(.userProfile) {
+            self.fetchAlerts()
+        }
+
+        if self.contentTypes.contains(.bannerLine) {
+            self.fetchBanners()
+        }
     }
 
     // User alerts
@@ -597,7 +631,7 @@ class CMSManagedHomeViewTemplateDataSource {
                 else {
                     self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
                 }
-                
+
                 self?.refreshPublisher.send()
             })
 
@@ -789,7 +823,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightedLiveMatches.count
         case .highlightedMarketProChoices:
             return self.highlightedMarketProChoicesNumberOfRows()
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
@@ -824,7 +858,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return localized("live")
         case .highlightedMarketProChoices:
             return localized("highlights_pro_choices_section_header")
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
         case .topCompetitionsShortcuts:
             return localized("top_competitions")
@@ -855,7 +889,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return "pro_choices_icon"
         case .topCompetitionsShortcuts:
             return "trophy_icon"
-        case .featuredTips:
+        case .promotedBetslips:
             return "suggested_bet_icon"
         case .promotedSportSection:
             let activeSports = Env.sportsStore.getActiveSports()
@@ -886,7 +920,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightedMarketProChoicesNumberOfRows() > 0
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.isNotEmpty
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isNotEmpty
         case .topCompetitionsShortcuts:
             return !self.topCompetitionsLineCellViewModel.isEmpty

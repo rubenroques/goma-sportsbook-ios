@@ -38,7 +38,7 @@ class MyTicketCellViewModel {
     var hasSetupPartialCashoutSlider: Bool = false
 
     private var cashoutSubscription: AnyCancellable?
-    
+
     var allowedCashback: Bool = false
     var hasRedraw: Bool = false
 
@@ -76,7 +76,7 @@ class MyTicketCellViewModel {
         else if ticket.type?.lowercased() == "system" {
             self.title = localized("system")+" - \(ticket.systemBetType?.capitalized ?? "") - \(ticket.localizedBetStatus.capitalized)"
         }
-        else if ticket.type?.lowercased() == "mix_match" {
+        else if ticket.type?.lowercased() == "mix_match" && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
             self.title = localized("mix-match")+" - \(ticket.localizedBetStatus.capitalized)"
         }
         else {

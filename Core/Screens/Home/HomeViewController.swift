@@ -797,7 +797,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             return cell
-        case .featuredTips:
+        case .promotedBetslips:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell,
                 let featuredBetLineViewModel = self.viewModel.featuredTipLineViewModel()
@@ -1263,7 +1263,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .userFavorites:
             return UITableView.automaticDimension
-        case .featuredTips:
+        case .promotedBetslips:
             return UITableView.automaticDimension
         case .suggestedBets:
             return 346
@@ -1355,7 +1355,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
-        case .featuredTips:
+        case .promotedBetslips:
             return FeaturedTipLineTableViewCell.estimatedHeight
         case .suggestedBets:
             return 336
@@ -1499,7 +1499,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         if case .userFavorites = self.viewModel.contentType(forSection: section) {
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
         }
-        else if case .featuredTips = self.viewModel.contentType(forSection: section) {
+        else if case .promotedBetslips = self.viewModel.contentType(forSection: section) {
             seeAllLabel.isHidden = true
         }
         else if case .highlightedLiveMatches = self.viewModel.contentType(forSection: section) {
@@ -1555,7 +1555,7 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
                 _ = self.viewModel.bannerLineViewModel()
             case .userFavorites:
                 break
-            case .featuredTips:
+            case .promotedBetslips:
                 break
             case .suggestedBets:
                 _ = self.viewModel.suggestedBetLineViewModel()

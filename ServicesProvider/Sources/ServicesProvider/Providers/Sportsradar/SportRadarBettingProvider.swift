@@ -419,11 +419,6 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
-    // MARK: - Feature Flags
-    
-    func setMixMatchFeatureEnabled(_ enabled: Bool) {
-        self.connector.isMixMatchEnabled = enabled
-    }
 }
 
 extension SportRadarBettingProvider {

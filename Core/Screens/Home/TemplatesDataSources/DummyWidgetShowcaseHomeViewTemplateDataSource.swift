@@ -741,10 +741,11 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return self.highlightedLiveMatches.count
         case .highlightedMarketProChoices:
             return self.highlightedMarketProChoicesNumberOfRows()
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
-            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+            if (Env.businessSettingsSocket.clientSettings.featuredCompetition?.id) != nil {
+                // Our list of top competitions and the special competition that also appear in the bottom tab bar
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
             }
             else {
@@ -778,7 +779,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return localized("live")
         case .highlightedMarketProChoices:
             return localized("highlights_pro_choices_section_header")
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
         case .topCompetitionsShortcuts:
             return localized("top_competitions")
@@ -811,7 +812,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return "pro_choices_icon"
         case .topCompetitionsShortcuts:
             return "trophy_icon"
-        case .featuredTips:
+        case .promotedBetslips:
             return "suggested_bet_icon"
         case .videoNewsLine:
             return "video_small_icon"
@@ -844,7 +845,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return self.highlightedMarketProChoicesNumberOfRows() > 0
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.isNotEmpty
-        case .featuredTips:
+        case .promotedBetslips:
             return self.suggestedBetslips.isNotEmpty
         case .topCompetitionsShortcuts:
             return !self.topCompetitionsLineCellViewModel.isEmpty

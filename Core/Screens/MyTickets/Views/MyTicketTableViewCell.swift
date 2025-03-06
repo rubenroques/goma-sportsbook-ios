@@ -42,7 +42,7 @@ class MyTicketTableViewCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
     @IBOutlet private weak var cashbackValueLabel: UILabel!
 
     @IBOutlet private weak var cashoutBaseView: UIView!
@@ -69,12 +69,12 @@ class MyTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var minimumCashoutValueLabel: UILabel!
     @IBOutlet private weak var maximumCashoutValueLabel: UILabel!
-    
+
     @IBOutlet private weak var multisliderZeroHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var multisliderNormalHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var partialCashoutButtonTopSliderConstraint: NSLayoutConstraint!
     @IBOutlet private weak var partialCashoutButtonTopViewConstraint: NSLayoutConstraint!
-    
+
     // Custom views
     lazy var learnMoreBaseView: CashbackLearnMoreView = {
         let view = CashbackLearnMoreView()
@@ -89,7 +89,7 @@ class MyTicketTableViewCell: UITableViewCell {
     private var isLoadingCellDataSubscription: AnyCancellable?
 
     private var cashoutSubscription: AnyCancellable?
-    
+
     private var selectedMatch: String = ""
 
     private var cashoutValue: Double?
@@ -105,9 +105,9 @@ class MyTicketTableViewCell: UITableViewCell {
     var showPartialCashoutSliderView: Bool = true {
         didSet {
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
-            
+
             let partialCashoutEnabled = Env.businessSettingsSocket.clientSettings.partialCashoutEnabled
-            
+
             self.partialCashoutMultiSlider?.isHidden = !partialCashoutEnabled
             self.maximumCashoutValueLabel.isHidden = !partialCashoutEnabled
             self.minimumCashoutValueLabel.isHidden = !partialCashoutEnabled
@@ -146,52 +146,52 @@ class MyTicketTableViewCell: UITableViewCell {
     var tappedMatchDetail: ((String) -> Void)?
     var shouldShowCashbackInfo: (() -> Void)?
     var needsDataUpdate: (() -> Void)?
-    
+
     var partialCashoutMultiSlider: MultiSlider?
 
     deinit {
         print("MyTicketTableViewCell.deinit")
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
         self.selectionStyle = .none
-        
+
 //        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
 //            self.shareButton.isHidden = false
 //        }
 //        else {
 //            self.shareButton.isHidden = true
 //        }
-            
+
         // Setup fonts
         self.titleLabel.font = AppFont.with(type: .heavy, size: 16)
         self.subtitleLabel.font = AppFont.with(type: .bold, size: 10)
         self.freebetLabel.font = AppFont.with(type: .bold, size: 10)
         self.betIdLabel.font = AppFont.with(type: .bold, size: 10)
-        
+
         self.totalOddTitleLabel.font = AppFont.with(type: .bold, size: 12)
         self.betAmountTitleLabel.font = AppFont.with(type: .bold, size: 12)
         self.winningsTitleLabel.font = AppFont.with(type: .bold, size: 12)
-        
+
         self.totalOddSubtitleLabel.font = AppFont.with(type: .bold, size: 16)
         self.betAmountSubtitleLabel.font = AppFont.with(type: .bold, size: 16)
         self.cashbackValueLabel.font = AppFont.with(type: .bold, size: 16)
         self.winningsSubtitleLabel.font = AppFont.with(type: .bold, size: 16)
-        
+
         self.originalAmountValueLabel.font = AppFont.with(type: .bold, size: 9)
         self.returnedAmountValueLabel.font = AppFont.with(type: .bold, size: 9)
-        
+
         self.minimumCashoutValueLabel.font = AppFont.with(type: .bold, size: 12)
         self.maximumCashoutValueLabel.font = AppFont.with(type: .bold, size: 12)
-        
+
         self.cashbackInfoBaseView.addSubview(self.cashbackInfoView)
         NSLayoutConstraint.activate([
             self.cashbackInfoView.centerXAnchor.constraint(equalTo: self.cashbackInfoBaseView.centerXAnchor),
             self.cashbackInfoView.centerYAnchor.constraint(equalTo: self.cashbackInfoBaseView.centerYAnchor),
         ])
-        
+
         //
         self.shareButton.isHidden = false
 
@@ -203,16 +203,16 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 10
-        
+
         self.baseView.layer.masksToBounds = true
 
         self.titleLabel.text = ""
         self.subtitleLabel.text = ""
         self.betIdLabel.text = ""
-        
+
         self.totalOddTitleLabel.text = localized("total_odd")
         self.totalOddTitleLabel.font = AppFont.with(type: .semibold, size: 12)
-        
+
         self.betAmountTitleLabel.text = localized("bet_amount")
         self.betAmountTitleLabel.font = AppFont.with(type: .semibold, size: 12)
 
@@ -227,7 +227,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.winningsSubtitleLabel.text = "-"
         self.winningsSubtitleLabel.font = AppFont.with(type: .semibold, size: 16)
-        
+
         self.cashbackValueLabel.font = AppFont.with(type: .semibold, size: 16)
 
         self.freebetLabel.text = localized("Freebet")
@@ -264,7 +264,7 @@ class MyTicketTableViewCell: UITableViewCell {
             UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
                 self?.learnMoreBaseView.alpha = 1
             })
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) {
                 UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
                     self?.learnMoreBaseView.alpha = 0
@@ -285,12 +285,12 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         self.learnMoreBaseView.alpha = 0
-        
+
         let partialCashoutEnabled = Env.businessSettingsSocket.clientSettings.partialCashoutEnabled
-        
+
         self.multisliderZeroHeightConstraint.isActive = !partialCashoutEnabled
         self.multisliderNormalHeightConstraint.isActive = partialCashoutEnabled
-        
+
         self.partialCashoutButtonTopViewConstraint.isActive = !partialCashoutEnabled
         self.partialCashoutButtonTopSliderConstraint.isActive = partialCashoutEnabled
 
@@ -356,7 +356,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
-        
+
         self.topStatusView.backgroundColor = .clear
         self.headerBaseView.backgroundColor = .clear
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
@@ -366,12 +366,12 @@ class MyTicketTableViewCell: UITableViewCell {
         self.subtitleLabel.textColor = UIColor.App.textSecondary
 
         self.betIdLabel.textColor = UIColor.App.textSecondary
-        
+
         self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.bottomBaseView.backgroundColor = .clear
         self.bottomStackView.backgroundColor = .clear
         self.cashoutBaseView.backgroundColor = .clear
-        
+
         self.cashoutButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.cashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
         self.cashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.39), for: .disabled)
@@ -511,7 +511,7 @@ class MyTicketTableViewCell: UITableViewCell {
             })
 
         self.betCardsStackView.removeAllArrangedSubviews()
-        
+
         for (index, betHistoryEntrySelection) in (betHistoryEntry.selections ?? []).enumerated() {
 
             let myTicketBetLineView = MyTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection,
@@ -520,7 +520,7 @@ class MyTicketTableViewCell: UITableViewCell {
             myTicketBetLineView.tappedMatchDetail = { [weak self] matchId in
                 self?.tappedMatchDetail?(matchId)
             }
-           
+
             self.betCardsStackView.addArrangedSubview(myTicketBetLineView)
         }
 
@@ -534,7 +534,7 @@ class MyTicketTableViewCell: UITableViewCell {
         else if betHistoryEntry.type?.lowercased() == "system" {
             self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betHistoryEntry.localizedBetStatus.capitalized)"
         }
-        else if betHistoryEntry.type?.lowercased() == "mix_match" {
+        else if betHistoryEntry.type?.lowercased() == "mix_match" && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
             self.titleLabel.text = localized("mix-match")+" - \(betHistoryEntry.localizedBetStatus.capitalized)"
         }
         else {
@@ -664,7 +664,7 @@ class MyTicketTableViewCell: UITableViewCell {
             case "OPEN":
                 self.resetHighlightedCard()
                 self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
-                
+
                 if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
@@ -727,16 +727,16 @@ class MyTicketTableViewCell: UITableViewCell {
             else {
                 self.usedCashback = false
             }
-            
+
             var cashbackReturn = 0.0
-            
+
             if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn, potentialCashbackReturn > 0 {
                 cashbackReturn = potentialCashbackReturn
             }
             else if let potentialFreebetReturn = betHistoryEntry.potentialFreebetReturn, potentialFreebetReturn != 0 {
                 cashbackReturn = potentialFreebetReturn
             }
-            
+
             if cashbackReturn > 0 {
                 self.hasCashback = true
                 let potentialCashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackReturn))
@@ -801,11 +801,11 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         var minCashoutStep = 0.01
-        
+
         var minValue: CGFloat = minCashoutStep
         var maxValue: CGFloat = maxSliderStake
         var middleValue: CGFloat = maxValue/2 // Default slider place
-        
+
         var values: [CGFloat] = [minValue, maxValue]
 
         // Minimum and maximum labels
@@ -846,15 +846,15 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         self.partialCashoutButton.isEnabled = false
-        
+
         if Env.businessSettingsSocket.clientSettings.partialCashoutEnabled {
             self.viewModel?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(maxSliderStake/2)")
-            
+
             self.viewModel?.partialCashoutSliderValue = Double(maxSliderStake/2)
         }
         else {
             self.viewModel?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(maxSliderStake)")
-            
+
             self.viewModel?.partialCashoutSliderValue = Double(maxSliderStake)
         }
     }

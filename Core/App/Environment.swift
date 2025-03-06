@@ -17,7 +17,7 @@ class Environment {
     let gomaNetworkClient: GomaGamingServiceClient = GomaGamingServiceClient()
 
     lazy var servicesProvider: ServicesProvider.Client = {
-        
+
         var serviceProviderEnvironment: ServicesProvider.Configuration.Environment
         switch TargetVariables.serviceProviderEnvironment {
         case .prod:
@@ -25,7 +25,7 @@ class Environment {
         case .dev:
             serviceProviderEnvironment = .staging
         }
-        
+
         let servicesProviderConfiguration = ServicesProvider.Configuration(environment: serviceProviderEnvironment, deviceUUID: Env.deviceId)
         let provider = TargetVariables.serviceProviderType
         let client: ServicesProvider.Client
@@ -35,10 +35,10 @@ class Environment {
         case .sportradar:
             client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
         }
-        
+
         // Set feature flags
         client.setMixMatchFeatureEnabled(TargetVariables.hasFeatureEnabled(feature: .mixMatch))
-        
+
         return client
     }()
 
@@ -67,7 +67,7 @@ class Environment {
     // Sumsub keys
     let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"
     let sumsubSecretKey: String = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
-    
+
     init() {
 
     }
@@ -91,3 +91,71 @@ extension Environment {
         return Bundle.main.bundleIdentifier ?? "com.goma.sportsbook"
     }
 }
+
+
+/**
+    NEW SERVICESPROVIDER INIT LOGIC. CONFIG BUILD
+
+    /// Create and configure a ServicesProvider client with feature flags
+    public static func createClient() throws -> ServicesProviderClient {
+        // Create a configuration builder
+        let configBuilder = Configuration.Builder()
+
+        // Configure environment
+        configBuilder.withEnvironment(.staging)
+
+        // Set device UUID
+        configBuilder.withDeviceUUID(UUID().uuidString)
+
+        // Configure provider mappings
+        configBuilder.useProvider(.goma, forDomain: .managedContent)
+        configBuilder.useProvider(.sportsradar, forDomain: .liveEvents)
+        configBuilder.useProvider(.sportsradar, forDomain: .preLiveEvents)
+        configBuilder.useProvider(.goma, forDomain: .playerAccountManagement)
+
+        // Set provider credentials
+        configBuilder.withCredentials(.goma, credential:
+            Configuration.ProviderCredentials(name: "goma-api-key", secret: "goma-secret"))
+        configBuilder.withCredentials(.sportsradar, credential:
+            Configuration.ProviderCredentials(name: "sportsradar-api-key", secret: "sportsradar-secret"))
+
+        // Enable features
+        configBuilder.enableFeature(.mixMatch)
+
+        // Build the configuration
+        let configuration = try configBuilder.build()
+
+        // Create the client with the configuration
+        return ServicesProviderClient(configuration: configuration)
+    }
+
+    /// Example of how to use the client
+    public static func exampleUsage() {
+        do {
+            // Create the client
+            let client = try createClient()
+
+            // Use the client to fetch data
+            let cancellable = client.getHomeTemplate()
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        print("Successfully fetched home template")
+                    case .failure(let error):
+                        print("Error fetching home template: \(error)")
+                    }
+                }, receiveValue: { template in
+                    print("Received home template with \(template.widgets.count) widgets")
+                })
+
+            // Keep the cancellable reference
+            _ = cancellable
+
+        } catch let error as ConfigurationError {
+            print("Configuration error: \(error.localizedDescription)")
+        } catch {
+            print("Unknown error: \(error)")
+        }
+    }
+
+*/
