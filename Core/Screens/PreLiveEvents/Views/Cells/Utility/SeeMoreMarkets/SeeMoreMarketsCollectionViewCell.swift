@@ -227,16 +227,6 @@ private extension SeeMoreMarketsCollectionViewCell {
 #if DEBUG
 import SwiftUI
 
-private struct UIViewPreview: UIViewRepresentable {
-    let view: UIView
-
-    func makeUIView(context: Context) -> UIView {
-        return view
-    }
-
-    func updateUIView(_ uiView: UIView, context: Context) {}
-}
-
 // Create a container to properly display collection view cells
 private class PreviewCellContainer: UIView {
     let cell: SeeMoreMarketsCollectionViewCell
@@ -300,21 +290,21 @@ private class PreviewCellContainer: UIView {
         HStack(spacing: 20) {
             // Light mode, default state
             VStack {
-                UIViewPreview(view: PreviewCellContainer(cell: defaultCell))
+                PreviewUIView(view: PreviewCellContainer(cell: defaultCell))
                     .frame(width: 107, height: 114)
                 Text("Default").font(.caption)
             }
             
             // Light mode, 25% animation
             VStack {
-                UIViewPreview(view: PreviewCellContainer(cell: cell25pct))
+                PreviewUIView(view: PreviewCellContainer(cell: cell25pct))
                     .frame(width: 107, height: 114)
                 Text("25%").font(.caption)
             }
             
             // Light mode, 50% animation
             VStack {
-                UIViewPreview(view: PreviewCellContainer(cell: cell50pct))
+                PreviewUIView(view: PreviewCellContainer(cell: cell50pct))
                     .frame(width: 107, height: 114)
                 Text("50%").font(.caption)
             }
@@ -323,21 +313,21 @@ private class PreviewCellContainer: UIView {
         HStack(spacing: 20) {
             // Light mode, 75% animation
             VStack {
-                UIViewPreview(view: PreviewCellContainer(cell: cell75pct))
+                PreviewUIView(view: PreviewCellContainer(cell: cell75pct))
                     .frame(width: 107, height: 114)
                 Text("75%").font(.caption)
             }
             
             // Light mode, 100% animation
             VStack {
-                UIViewPreview(view: PreviewCellContainer(cell: cell100pct))
+                PreviewUIView(view: PreviewCellContainer(cell: cell100pct))
                     .frame(width: 107, height: 114)
                 Text("100%").font(.caption)
             }
             
             // Dark mode version
             VStack {
-                UIViewPreview(view: PreviewCellContainer(cell: darkModeCell))
+                PreviewUIView(view: PreviewCellContainer(cell: darkModeCell))
                     .frame(width: 107, height: 114)
                     .preferredColorScheme(.dark)
                 Text("Dark Mode").font(.caption)
@@ -347,7 +337,7 @@ private class PreviewCellContainer: UIView {
         // Hidden subtitle variation
         HStack(spacing: 20) {
             VStack {
-                UIViewPreview(view: PreviewCellContainer(cell: hiddenSubtitleCell))
+                PreviewUIView(view: PreviewCellContainer(cell: hiddenSubtitleCell))
                     .frame(width: 107, height: 114)
                 Text("Hidden Subtitle").font(.caption)
             }

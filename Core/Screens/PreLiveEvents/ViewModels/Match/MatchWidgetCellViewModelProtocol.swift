@@ -1,0 +1,55 @@
+import Foundation
+import UIKit
+import Combine
+import ServicesProvider
+
+/// Protocol that defines the requirements for a MatchWidgetCellViewModel
+protocol MatchWidgetCellViewModelProtocol {
+    /// The match data
+    var match: Match { get }
+    
+    /// Match widget type (normal, boosted, etc.)
+    var matchWidgetType: MatchWidgetType { get }
+    
+    /// Match status (live, preLive)
+    var matchWidgetStatus: MatchWidgetStatus { get }
+    
+    /// Publisher for home team name
+    var homeTeamNamePublisher: AnyPublisher<String, Never> { get }
+    
+    /// Publisher for away team name
+    var awayTeamNamePublisher: AnyPublisher<String, Never> { get }
+    
+    /// Publisher for active player serve
+    var activePlayerServePublisher: AnyPublisher<Match.ActivePlayerServe?, Never> { get }
+    
+    /// Publisher for start date string
+    var startDateStringPublisher: AnyPublisher<String, Never> { get }
+    
+    /// Publisher for start time string
+    var startTimeStringPublisher: AnyPublisher<String, Never> { get }
+    
+    /// Publisher for event name
+    var eventNamePublisher: AnyPublisher<String?, Never> { get }
+    
+    /// Publisher for match score
+    var matchScorePublisher: AnyPublisher<String, Never> { get }
+    
+    /// Publisher for match time details
+    var matchTimeDetailsPublisher: AnyPublisher<String?, Never> { get }
+    
+    /// Publisher for sport icon image
+    var sportIconImagePublisher: AnyPublisher<UIImage, Never> { get }
+    
+    /// Publisher for country flag image
+    var countryFlagImagePublisher: AnyPublisher<UIImage, Never> { get }
+    
+    /// Publisher for whether the match is a favorite
+    var isFavoriteMatchPublisher: AnyPublisher<Bool, Never> { get }
+    
+    /// Publisher for whether the card should be drawn as live
+    var isLiveCardPublisher: AnyPublisher<Bool, Never> { get }
+    
+    /// Updates the match data
+    func updateWithMatch(_ match: Match)
+} 

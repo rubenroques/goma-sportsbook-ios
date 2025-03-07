@@ -1007,45 +1007,30 @@ extension LiveEventsViewController: SportTypeSelectionViewDelegate {
 #if DEBUG
 import SwiftUI
 
-struct LiveEventsViewController_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        Group {
-            LiveEventsViewControllerPreview(colorScheme: .light)
-                .previewDisplayName("Light Mode")
-            
-            LiveEventsViewControllerPreview(colorScheme: .dark)
-                .previewDisplayName("Dark Mode")
-        }
-    }
-    
-    struct LiveEventsViewControllerPreview: UIViewControllerRepresentable {
-        let colorScheme: ColorScheme
-        
-        func makeUIViewController(context: Context) -> LiveEventsViewController {
-            // Create mock data for preview
-            let viewModel = createMockViewModel()
-            return LiveEventsViewController(viewModel: viewModel)
-        }
-        
-        func updateUIViewController(_ uiViewController: LiveEventsViewController, context: Context) {
-            
-        }
-        
-        private func createMockViewModel() -> LiveEventsViewModel {
-            // Use PreviewModelsHelper to create mock data
-            var football = PreviewModelsHelper.createFootballSport()
-            football.liveEventsCount = 12
-
-            let mockViewModel = LiveEventsViewModel(selectedSport: football)
-            return mockViewModel
-        }
-    }
-}
 
 // For iOS 17+
 @available(iOS 17.0, *)
 #Preview("LiveEventsViewController", traits: .defaultLayout) {
-    LiveEventsViewController_Previews.LiveEventsViewControllerPreview(colorScheme: .light)
+    PreviewUIViewController {
+        // Create mock data for preview
+        var football = PreviewModelsHelper.createFootballSport()
+        football.liveEventsCount = 12
+        
+        let mockViewModel = LiveEventsViewModel(selectedSport: football)
+        return LiveEventsViewController(viewModel: mockViewModel)
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("LiveEventsViewController (Dark)", traits: .defaultLayout) {
+    PreviewUIViewController {
+        // Create mock data for preview
+        var football = PreviewModelsHelper.createFootballSport()
+        football.liveEventsCount = 12
+        
+        let mockViewModel = LiveEventsViewModel(selectedSport: football)
+        return LiveEventsViewController(viewModel: mockViewModel)
+    }
+    .preferredColorScheme(.dark)
 }
 #endif

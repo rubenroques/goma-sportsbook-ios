@@ -706,24 +706,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 }
 
-/*
+
 #if DEBUG
 import SwiftUI
-
-// MARK: - Preview Helper
-private struct PreviewContainer<T: UIViewController>: UIViewControllerRepresentable {
-    let viewController: T
-
-    init(_ viewControllerBuilder: @escaping () -> T) {
-        viewController = viewControllerBuilder()
-    }
-
-    func makeUIViewController(context: Context) -> T {
-        return viewController
-    }
-
-    func updateUIViewController(_ uiViewController: T, context: Context) {}
-}
 
 // MARK: - Preview View Controller
 private class MatchLinePreviewViewController: UIViewController {
@@ -853,18 +838,18 @@ extension MatchLinePreviewViewController: UITableViewDelegate, UITableViewDataSo
 // MARK: - SwiftUI Previews
 @available(iOS 17.0, *)
 #Preview("MatchLineTableViewCell States") {
-    PreviewContainer {
+    PreviewUIViewController {
         MatchLinePreviewViewController()
     }
 }
 
 @available(iOS 17.0, *)
 #Preview("MatchLineTableViewCell States (Dark)") {
-    PreviewContainer {
+    PreviewUIViewController {
         MatchLinePreviewViewController()
     }
     .preferredColorScheme(.dark)
 }
 
 #endif
-*/
+

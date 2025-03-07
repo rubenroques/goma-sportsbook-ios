@@ -2777,41 +2777,33 @@ extension MatchDetailsViewController: InnerTableViewScrollDelegate {
 #if DEBUG
 import SwiftUI
 
-struct MatchDetailsViewController_Previews: PreviewProvider {
-
-    static var previews: some View {
-        Group {
-            MatchDetailsViewControllerPreview(colorScheme: .light)
-                .previewDisplayName("Light Mode")
-
-            MatchDetailsViewControllerPreview(colorScheme: .dark)
-                .previewDisplayName("Dark Mode")
-        }
-    }
-
-    struct MatchDetailsViewControllerPreview: UIViewControllerRepresentable {
-        let colorScheme: ColorScheme
-
-        func makeUIViewController(context: Context) -> MatchDetailsViewController {
-            // Create a mock match
-            let match = PreviewModelsHelper.createFootballMatchWithMultipleMarkets()
-
-            // Create the view model with the mock match
-            let viewModel = MatchDetailsViewModel(match: match)
-
-            // Create the view controller with the view model
-            return MatchDetailsViewController(viewModel: viewModel)
-        }
-
-        func updateUIViewController(_ uiViewController: MatchDetailsViewController, context: Context) {
-            // Nothing to update
-        }
-    }
-}
-
 // For iOS 17+
 @available(iOS 17.0, *)
 #Preview("MatchDetailsViewController", traits: .defaultLayout) {
-    MatchDetailsViewController_Previews.MatchDetailsViewControllerPreview(colorScheme: .light)
+    PreviewUIViewController {
+        // Create a mock match
+        let match = PreviewModelsHelper.createFootballMatchWithMultipleMarkets()
+        
+        // Create the view model with the mock match
+        let viewModel = MatchDetailsViewModel(match: match)
+        
+        // Create the view controller with the view model
+        return MatchDetailsViewController(viewModel: viewModel)
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("MatchDetailsViewController (Dark)", traits: .defaultLayout) {
+    PreviewUIViewController {
+        // Create a mock match
+        let match = PreviewModelsHelper.createFootballMatchWithMultipleMarkets()
+        
+        // Create the view model with the mock match
+        let viewModel = MatchDetailsViewModel(match: match)
+        
+        // Create the view controller with the view model
+        return MatchDetailsViewController(viewModel: viewModel)
+    }
+    .preferredColorScheme(.dark)
 }
 #endif
