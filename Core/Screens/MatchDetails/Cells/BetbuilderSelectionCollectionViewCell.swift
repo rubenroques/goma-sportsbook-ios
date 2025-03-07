@@ -16,7 +16,7 @@ class BetbuilderSelectionCellViewModel {
     var totalOdd: CurrentValueSubject<Double, Never> = .init(0.0)
     
     // MARK: Private properties
-    var cancellables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
     
     init(betSelections: [BettingTicket]) {
         self.betSelections = betSelections
@@ -77,6 +77,7 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
     
     private var viewModel: BetbuilderSelectionCellViewModel?
     
+    private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
     private var cancellables = Set<AnyCancellable>()
     
     private var isBetbuilderSelected: Bool = false {
@@ -224,6 +225,44 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                 
             })
             .store(in: &cancellables)
+        
+        for betSelection in viewModel.betSelections {
+            self.oddUpdatesPublisher[betSelection.outcomeId] = Env.servicesProvider
+                .subscribeToEventOnListsOutcomeUpdates(withId: betSelection.outcomeId)
+                .compactMap({ $0 })
+                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+                .map(\.bettingOffer)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure:
+                        break
+                    }
+                }, receiveValue: { [weak self] (updatedBettingOffer: BettingOffer) in
+                    
+                    self?.updateSelection(outcomeId: betSelection.outcomeId, odd: updatedBettingOffer.decimalOdd)
+                    
+                })
+            
+        }
+    }
+    
+    func updateSelection(outcomeId: String, odd: Double) {
+        
+        if let viewModel = self.viewModel {
+            var betSelections = viewModel.betSelections
+            if let index = betSelections.firstIndex(where: { $0.outcomeId == outcomeId }) {
+                var newBettingTicket = betSelections[index]
+                newBettingTicket.odd = .decimal(odd: odd)
+                betSelections[index] = newBettingTicket
+            }
+            viewModel.betSelections = betSelections
+            
+            viewModel.requestBetBuilderTotalOdd()
+        }
+        
     }
     
     // MARK: Action

@@ -111,5 +111,13 @@ struct TargetVariables: SportsbookTarget {
     static var localizationOverrides: [String: String] {
         return [:]
     }
+    
+    static var hasPopularBetbuilder: Bool {
+        return true
+    }
+    
+    static var popularBetbuilderPresentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode {
+        return .multiplesPerLineByType
+    }
 
 }

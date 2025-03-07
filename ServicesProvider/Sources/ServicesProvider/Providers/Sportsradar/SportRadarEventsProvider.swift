@@ -1530,16 +1530,72 @@ extension SportRadarEventsProvider {
                     .collect()
                     // Restore the original order of events
                     .map { events in
+                                                
+                        var marketsByEventId: [String: [Market]] = [:]
+                        var newEvents: [Event] = []
                         
-                        return events.sorted { leftEvent, rightEvent in
-                            let leftEventMarketGroupId = eventMarketGroupRelations[leftEvent.id] ?? ""
-                            let rightEventMarketGroupId = eventMarketGroupRelations[rightEvent.id] ?? ""
-
-                            let leftPosition = uniqueMarketGroupIds.firstIndex(of: leftEventMarketGroupId) ?? 100
-                            let rightPosition = uniqueMarketGroupIds.firstIndex(of: rightEventMarketGroupId) ?? 101
-
-                            return leftPosition < rightPosition
+                        // Group markets by eventId from market's event info
+                        for event in events {
+                            for market in event.markets {
+                                guard let eventId = market.eventId else { continue
+                                }
+                                
+                                // Add market to dictionary
+                                if marketsByEventId[eventId] == nil {
+                                    marketsByEventId[eventId] = [market]
+                                }
+                                else {
+                                    marketsByEventId[eventId]?.append(market)
+                                }
+                            }
+                            
+                            for (eventId, markets) in marketsByEventId {
+                                guard let firstMarket = markets.first,
+                                      let eventId = firstMarket.eventId else {
+                                    continue
+                                }
+                                
+                                // Create new event using event info from market
+                                let newEvent = Event(
+                                    id: eventId,
+                                    homeTeamName: firstMarket.homeParticipant ?? event.homeTeamName,
+                                    awayTeamName: firstMarket.awayParticipant ?? event.awayTeamName,
+                                    homeTeamScore: event.homeTeamScore,
+                                    awayTeamScore: event.awayTeamScore,
+                                    competitionId: firstMarket.competitionId ?? event.competitionId,
+                                    competitionName: firstMarket.competitionName ?? event.competitionName,
+                                    sport: firstMarket.sport ?? event.sport,
+                                    sportIdCode: firstMarket.sportIdCode,
+                                    startDate: firstMarket.startDate ?? event.startDate,
+                                    markets: markets,
+                                    venueCountry: firstMarket.venueCountry ?? event.venueCountry,
+                                    trackableReference: event.trackableReference,
+                                    status: event.status,
+                                    matchTime: event.matchTime,
+                                    activePlayerServing: event.activePlayerServing,
+                                    scores: event.scores
+                                )
+                                
+                                newEvent.promoImageURL = event.promoImageURL
+                                
+                                newEvents.append(newEvent)
+                            }
                         }
+                        
+                        return newEvents.sorted { lhs, rhs in
+                            
+                            return lhs.id < rhs.id
+                            
+                        }
+                        //                        return events.sorted { leftEvent, rightEvent in
+//                            let leftEventMarketGroupId = eventMarketGroupRelations[leftEvent.id] ?? ""
+//                            let rightEventMarketGroupId = eventMarketGroupRelations[rightEvent.id] ?? ""
+//
+//                            let leftPosition = uniqueMarketGroupIds.firstIndex(of: leftEventMarketGroupId) ?? 100
+//                            let rightPosition = uniqueMarketGroupIds.firstIndex(of: rightEventMarketGroupId) ?? 101
+//
+//                            return leftPosition < rightPosition
+//                        }
                     }
                     .eraseToAnyPublisher()
 
