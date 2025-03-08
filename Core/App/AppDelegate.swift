@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             print("App is running for previews")
             return true
         }
-
+                
         //
         // External Localization tool
         #if DEBUG
