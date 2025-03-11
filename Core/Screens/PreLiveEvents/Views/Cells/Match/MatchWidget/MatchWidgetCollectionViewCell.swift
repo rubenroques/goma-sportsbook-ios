@@ -39,8 +39,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         liveGradientBorderView.gradientCornerRadius = 9
 
         liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
-                                             UIColor.App.liveBorderGradient2,
-                                             UIColor.App.liveBorderGradient1]
+                                                 UIColor.App.liveBorderGradient2,
+                                                 UIColor.App.liveBorderGradient1]
 
         return liveGradientBorderView
     }()
@@ -104,24 +104,36 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var favoritesButton: UIButton!
 
-    @IBOutlet private weak var participantsBaseView: UIView!
+    // MARK: - Private Properties
+    private lazy var participantsBaseView: UIView = Self.createParticipantsBaseView()
+    private lazy var homeParticipantNameLabel: UILabel = Self.createHomeParticipantNameLabel()
+    private lazy var awayParticipantNameLabel: UILabel = Self.createAwayParticipantNameLabel()
+    private lazy var dateStackView: UIStackView = Self.createDateStackView()
+    private lazy var dateLabel: UILabel = Self.createDateLabel()
+    private lazy var timeLabel: UILabel = Self.createTimeLabel()
+    private lazy var resultStackView: UIStackView = Self.createResultStackView()
+    private lazy var resultLabel: UILabel = Self.createResultLabel()
 
-    @IBOutlet private weak var homeParticipantNameLabel: UILabel!
-    @IBOutlet private weak var awayParticipantNameLabel: UILabel!
+    // MARK: - IBOutlets
+    // @IBOutlet private weak var participantsBaseView: UIView!
+    // @IBOutlet private weak var homeParticipantNameLabel: UILabel!
+    // @IBOutlet private weak var awayParticipantNameLabel: UILabel!
+    // @IBOutlet private weak var resultStackView: UIStackView!
+    // @IBOutlet private weak var resultLabel: UILabel!
+    // @IBOutlet private weak var dateStackView: UIStackView!
+    // @IBOutlet private weak var dateLabel: UILabel!
+    // @IBOutlet private weak var timeLabel: UILabel!
 
     @IBOutlet private weak var outrightNameBaseView: UIView!
     @IBOutlet private weak var outrightNameLabel: UILabel!
 
-    @IBOutlet private weak var resultStackView: UIStackView!
-    @IBOutlet private weak var resultLabel: UILabel!
+
     @IBOutlet private weak var matchTimeLabel: UILabel!
     @IBOutlet private weak var liveMatchDotBaseView: UIView!
     @IBOutlet private weak var liveMatchDotImageView: UIView!
 
     @IBOutlet private weak var headerLineStackView: UIStackView!
-    @IBOutlet private weak var dateStackView: UIStackView!
-    @IBOutlet private weak var dateLabel: UILabel!
-    @IBOutlet private weak var timeLabel: UILabel!
+
 
     @IBOutlet private weak var oddsStackView: UIStackView!
 
@@ -2140,9 +2152,9 @@ extension MatchWidgetCollectionViewCell {
             else if matchWidgetType == .boosted {
                 self?.marketNamePillLabelView.isHidden = false
             }
-//            else if matchWidgetType == .topImageOutright || matchWidgetType == .topImage || matchWidgetType == .topImageWithMixMatch {
-//                self?.marketNamePillLabelView.isHidden = false
-//            }
+            //            else if matchWidgetType == .topImageOutright || matchWidgetType == .topImage || matchWidgetType == .topImageWithMixMatch {
+            //                self?.marketNamePillLabelView.isHidden = false
+            //            }
             else {
                 self?.marketNamePillLabelView.isHidden = true
             }
@@ -2647,21 +2659,21 @@ extension MatchWidgetCollectionViewCell {
     //
     func selectMiddleOddButton() {
         /*
-        switch self.viewModel?.matchWidgetType ?? .normal {
-        case .normal, .topImage, .topImageOutright:
-            self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
-            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-        case .boosted:
-            self.homeBoostedOddValueBaseView.backgroundColor = UIColor.App.highlightPrimary
-            self.homeBaseView.backgroundColor = UIColor.App.highlightPrimary
-            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
-            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-            self.homeBoostedOddArrowView.highlightColor = .black
-        case .backgroundImage:
-            ()
-        }
-        */
+         switch self.viewModel?.matchWidgetType ?? .normal {
+         case .normal, .topImage, .topImageOutright:
+         self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+         self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+         self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+         case .boosted:
+         self.homeBoostedOddValueBaseView.backgroundColor = UIColor.App.highlightPrimary
+         self.homeBaseView.backgroundColor = UIColor.App.highlightPrimary
+         self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+         self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+         self.homeBoostedOddArrowView.highlightColor = .black
+         case .backgroundImage:
+         ()
+         }
+         */
 
         self.setupWithTheme()
     }
@@ -2671,21 +2683,21 @@ extension MatchWidgetCollectionViewCell {
         // TODO: avoid calling the entire setup with theme
 
         /*
-        switch self.viewModel?.matchWidgetType ?? .normal {
-        case .normal, .topImage, .topImageOutright:
-            self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
-            self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
-            self.homeOddValueLabel.textColor = UIColor.App.textPrimary
-        case .boosted:
-            self.homeBoostedOddValueBaseView.backgroundColor = UIColor(hex: 0x03061B)
-            self.homeBaseView.backgroundColor = UIColor(hex: 0x03061B)
-            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
-            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-            self.homeBoostedOddArrowView.highlightColor = UIColor.App.highlightPrimary
-        case .backgroundImage:
-            ()
-        }
-        */
+         switch self.viewModel?.matchWidgetType ?? .normal {
+         case .normal, .topImage, .topImageOutright:
+         self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+         self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
+         self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+         case .boosted:
+         self.homeBoostedOddValueBaseView.backgroundColor = UIColor(hex: 0x03061B)
+         self.homeBaseView.backgroundColor = UIColor(hex: 0x03061B)
+         self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+         self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+         self.homeBoostedOddArrowView.highlightColor = UIColor.App.highlightPrimary
+         case .backgroundImage:
+         ()
+         }
+         */
 
         self.setupWithTheme()
     }
@@ -2942,17 +2954,17 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.insertSubview(self.boostedBackgroungImageView, at: 0)
 
         NSLayoutConstraint.activate([
-//            boostedTitleArrowView.widthAnchor.constraint(equalToConstant: 21),
-//            boostedTitleArrowView.heightAnchor.constraint(equalToConstant: 18),
-//            boostedTitleArrowView.leadingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.leadingAnchor),
-//            boostedTitleArrowView.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor, constant: 2),
-//            boostedTitleArrowView.bottomAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.bottomAnchor, constant: -2),
-//
-//            self.boostedTopRightCornerLabel.leadingAnchor.constraint(equalTo: boostedTitleArrowView.trailingAnchor, constant: 2),
-//            self.boostedTopRightCornerLabel.trailingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.trailingAnchor),
-//            self.boostedTopRightCornerLabel.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor),
-//            self.boostedTopRightCornerLabel.bottomAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.bottomAnchor),
-//            self.boostedTopRightCornerLabel.widthAnchor.constraint(equalToConstant: 56),
+            //            boostedTitleArrowView.widthAnchor.constraint(equalToConstant: 21),
+            //            boostedTitleArrowView.heightAnchor.constraint(equalToConstant: 18),
+            //            boostedTitleArrowView.leadingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.leadingAnchor),
+            //            boostedTitleArrowView.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor, constant: 2),
+            //            boostedTitleArrowView.bottomAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.bottomAnchor, constant: -2),
+            //
+            //            self.boostedTopRightCornerLabel.leadingAnchor.constraint(equalTo: boostedTitleArrowView.trailingAnchor, constant: 2),
+            //            self.boostedTopRightCornerLabel.trailingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.trailingAnchor),
+            //            self.boostedTopRightCornerLabel.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor),
+            //            self.boostedTopRightCornerLabel.bottomAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.bottomAnchor),
+            //            self.boostedTopRightCornerLabel.widthAnchor.constraint(equalToConstant: 56),
 
             self.boostedTopRightCornerImageView.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor),
             self.boostedTopRightCornerImageView.trailingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.trailingAnchor),
@@ -3162,6 +3174,160 @@ extension MatchWidgetCollectionViewCell {
 
         self.homeNameLabel.setContentHuggingPriority(UILayoutPriority(990), for: .horizontal)
         self.awayNameLabel.setContentHuggingPriority(UILayoutPriority(990), for: .horizontal)
+    }
+
+}
+
+private extension MatchWidgetCollectionViewCell {
+
+    private func setupSubviews() {
+        self.setupParticipantsViews()
+        self.initConstraints()
+    }
+
+    // MARK: - Setup Methods
+    private func setupParticipantsViews() {
+        // Add subviews to main content view
+        self.mainContentBaseView.addSubview(self.participantsBaseView)
+
+        // Add subviews to participants base view
+        self.participantsBaseView.addSubview(self.homeParticipantNameLabel)
+        self.participantsBaseView.addSubview(self.awayParticipantNameLabel)
+        self.participantsBaseView.addSubview(self.dateStackView)
+        self.participantsBaseView.addSubview(self.resultStackView)
+
+        // Add subviews to date stack view
+        self.dateStackView.addArrangedSubview(self.dateLabel)
+        self.dateStackView.addArrangedSubview(self.timeLabel)
+
+        // Add subviews to result stack view
+        self.resultStackView.addArrangedSubview(self.resultLabel)
+    }
+
+    private func initConstraints() {
+        self.initParticipantsConstraints()
+    }
+
+    private func initParticipantsConstraints() {
+        // Participants base view constraints
+        NSLayoutConstraint.activate([
+            self.participantsBaseView.leadingAnchor.constraint(equalTo: self.oddsStackView.leadingAnchor),
+            self.participantsBaseView.trailingAnchor.constraint(equalTo: self.oddsStackView.trailingAnchor),
+            self.participantsBaseView.topAnchor.constraint(equalTo: self.headerLineStackView.bottomAnchor, constant: 4),
+            // This constraint is excluded in variation but kept for reference
+            // self.oddsStackView.topAnchor.constraint(equalTo: self.participantsBaseView.bottomAnchor, constant: 5),
+            self.participantsBaseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 67)
+        ])
+
+        // Home participant name label constraints
+        NSLayoutConstraint.activate([
+            self.homeParticipantNameLabel.leadingAnchor.constraint(equalTo: self.participantsBaseView.leadingAnchor),
+            self.homeParticipantNameLabel.topAnchor.constraint(equalTo: self.participantsBaseView.topAnchor, constant: 4),
+            self.homeParticipantNameLabel.centerYAnchor.constraint(equalTo: self.participantsBaseView.centerYAnchor)
+        ])
+
+        // Away participant name label constraints
+        NSLayoutConstraint.activate([
+            self.awayParticipantNameLabel.trailingAnchor.constraint(equalTo: self.participantsBaseView.trailingAnchor),
+            self.awayParticipantNameLabel.topAnchor.constraint(equalTo: self.participantsBaseView.topAnchor, constant: 4),
+            self.awayParticipantNameLabel.centerYAnchor.constraint(equalTo: self.participantsBaseView.centerYAnchor)
+        ])
+
+        // Date stack view constraints
+        NSLayoutConstraint.activate([
+            self.dateStackView.centerXAnchor.constraint(equalTo: self.participantsBaseView.centerXAnchor),
+            self.dateStackView.centerYAnchor.constraint(equalTo: self.participantsBaseView.centerYAnchor)
+        ])
+
+        // Result stack view constraints
+        NSLayoutConstraint.activate([
+            self.resultStackView.centerXAnchor.constraint(equalTo: self.participantsBaseView.centerXAnchor)
+        ])
+
+        // Result label constraints
+        NSLayoutConstraint.activate([
+            self.resultLabel.centerYAnchor.constraint(equalTo: self.participantsBaseView.centerYAnchor, constant: -4)
+        ])
+
+        // Spacing constraints between elements
+        NSLayoutConstraint.activate([
+            self.dateStackView.leadingAnchor.constraint(equalTo: self.homeParticipantNameLabel.trailingAnchor, constant: 10),
+            self.awayParticipantNameLabel.leadingAnchor.constraint(equalTo: self.dateStackView.trailingAnchor, constant: 10)
+        ])
+
+    }
+
+    static func createParticipantsBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }
+
+    static func createHomeParticipantNameLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textColor = UIColor.App.textPrimary
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        return label
+    }
+
+    static func createAwayParticipantNameLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textColor = UIColor.App.textPrimary
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        return label
+    }
+
+    static func createDateStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 2
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.backgroundColor = .clear
+        return stackView
+    }
+
+    static func createDateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Roboto-Medium", size: 12)
+        label.textColor = UIColor(white: 0.333333, alpha: 1.0)
+        label.textAlignment = .center
+        return label
+    }
+
+    static func createTimeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Roboto-Bold", size: 16)
+        label.textAlignment = .center
+        return label
+    }
+
+    static func createResultStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.backgroundColor = .clear
+        return stackView
+    }
+
+    static func createResultLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Roboto-Bold", size: 17)
+        label.textAlignment = .center
+        return label
     }
 
 }
