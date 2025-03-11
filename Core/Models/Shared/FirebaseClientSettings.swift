@@ -21,15 +21,15 @@ struct FirebaseClientSettings: Codable {
     let requiredPhoneVerification: Bool
 
     let locale: Locale?
-    
+
     let partialCashoutEnabled: Bool
-    
+
     let hasRollingWeeklyLimits: Bool
     let homeLiveEventsCount: Int
 
     let replaySportsCodes: [String]
     let ungroupedMarkets: [String]
-    
+
     let featuredCompetition: FeaturedCompetition?
 
     struct Locale: Codable {
@@ -75,19 +75,33 @@ struct FirebaseClientSettings: Codable {
             self.showInformationPopUp = false
         }
 
+        #if DEBUG
+        var simulateMaintenanceMode = false
+        if simulateMaintenanceMode {
+            print("[MaintenanceDebug] Using debug override for maintenance mode")
+            self.isOnMaintenance = true
+            self.maintenanceReason = "[DEBUG] App is under maintenance for testing purposes"
+        }
+        else {
+            let isOnMaintenanceInt = try container.decode(Int.self, forKey: .isOnMaintenance)
+            self.isOnMaintenance = isOnMaintenanceInt == 1
+            self.maintenanceReason = (try? container.decode(String.self, forKey: .maintenanceReason)) ?? ""
+        }
+        #else
         let isOnMaintenanceInt = try container.decode(Int.self, forKey: .isOnMaintenance)
         self.isOnMaintenance = isOnMaintenanceInt == 1
+        self.maintenanceReason = (try? container.decode(String.self, forKey: .maintenanceReason)) ?? ""
+        #endif
 
         self.currentAppVersion = try container.decode(String.self, forKey: .currentAppVersion)
         self.requiredAppVersion = try container.decode(String.self, forKey: .requiredAppVersion)
         self.lastUpdate = try container.decode(TimeInterval.self, forKey: .lastUpdate)
 
-        self.maintenanceReason = (try? container.decode(String.self, forKey: .maintenanceReason)) ?? ""
         self.locale = try? container.decode(Locale.self, forKey: .locale)
 
         let requiredPhoneVerificationInt = (try? container.decode(Int.self, forKey: .requiredPhoneVerification)) ?? 0
         self.requiredPhoneVerification = requiredPhoneVerificationInt == 1
-        
+
         let partialCashoutEnabledInt = try container.decode(Int.self, forKey: .partialCashoutEnabled)
         self.partialCashoutEnabled = partialCashoutEnabledInt == 1
 
@@ -100,7 +114,7 @@ struct FirebaseClientSettings: Codable {
         else {
             self.replaySportsCodes = []
         }
-        
+
         if let ungroupedMarketsDictionary = try? container.decode([Int: Int].self, forKey: .ungroupedMarkets) {
             self.ungroupedMarkets = ungroupedMarketsDictionary.map(\.value).map(String.init)
         }
@@ -116,13 +130,13 @@ struct FirebaseClientSettings: Codable {
         else {
             self.ungroupedMarkets = []
         }
-        
+
         let hasRollingWeeklyLimitsInt = (try? container.decode(Int.self, forKey: .hasRollingWeeklyLimits)) ?? 0
         self.hasRollingWeeklyLimits = hasRollingWeeklyLimitsInt == 1
-        
+
         let homeLiveEventsCountInt = (try? container.decode(Int.self, forKey: .homeLiveEventsCount)) ?? 3
         self.homeLiveEventsCount = homeLiveEventsCountInt
-        
+
         let featuredCompetition = try container.decodeIfPresent(FeaturedCompetition.self, forKey: .featuredCompetition)
         self.featuredCompetition = featuredCompetition
     }
