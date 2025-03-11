@@ -7857,16 +7857,6 @@
 		CE7E80362D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E801A2D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift */; };
 		CE7E80372D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80192D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift */; };
 		CE7E80382D7A145E00A5558A /* MatchWidgetCellViewModel+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80182D7A145E00A5558A /* MatchWidgetCellViewModel+Protocol.swift */; };
-		CE7E803A2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E803B2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E803C2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E803D2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E803E2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E803F2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E80402D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E80412D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E80422D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
-		CE7E80432D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */; };
 		CE7E80452D7A368300A5558A /* PreviewUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80442D7A368300A5558A /* PreviewUIView.swift */; };
 		CE7E80462D7A368300A5558A /* PreviewUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80442D7A368300A5558A /* PreviewUIView.swift */; };
 		CE7E80472D7A368300A5558A /* PreviewUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7E80442D7A368300A5558A /* PreviewUIView.swift */; };
@@ -9365,6 +9355,146 @@
 		CECF6A252D68D534003ABDDF /* URLEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */; };
 		CECF6A262D68D534003ABDDF /* URLEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */; };
 		CECF6A272D68D534003ABDDF /* URLEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */; };
+		CEDB58DC2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB58DD2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB58DE2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB58DF2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB58E02D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB58E12D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB58E22D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB58E32D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB58E42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58E52D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58E62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58E72D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58E82D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB58E92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB58EA2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB58EB2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58EC2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58ED2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58EE2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58EF2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB58F02D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB58F12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB58F22D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB58F32D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB58F42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB58F52D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB58F62D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB58F72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB58F82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB58F92D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58FA2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58FB2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58FC2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB58FD2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB58FE2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB58FF2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59002D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59012D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB59022D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59032D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59042D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59052D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59062D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59072D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59082D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB59092D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB590A2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB590B2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB590C2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB590D2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB590E2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB590F2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59102D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59112D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59122D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB59132D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB59142D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB59152D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59162D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59172D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59182D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59192D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB591A2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB591B2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB591C2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB591D2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB591E2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB591F2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59202D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59212D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59222D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59232D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59242D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB59252D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59262D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59272D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59282D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59292D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB592A2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB592B2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB592C2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB592D2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB592E2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB592F2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB59302D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB59312D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59322D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59332D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59342D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59352D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB59362D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB59372D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59382D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59392D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB593A2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB593B2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB593C2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB593D2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB593E2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB593F2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59402D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB59412D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59422D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59432D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59442D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59452D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB59462D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59472D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59482D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59492D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB594A2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB594B2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB594C2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB594D2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB594E2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB594F2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59502D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB59512D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB59522D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB59532D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59542D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59552D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB59562D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59572D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59582D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59592D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB595A2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB595B2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB595C2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB595D2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB595E2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */; };
+		CEDB595F2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CEDB59602D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CEDB59612D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59622D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */; };
+		CEDB59632D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */; };
+		CEDB59642D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59652D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59662D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */; };
+		CEDB59672D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */; };
 		CEE502D02D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
 		CEE502D12D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
 		CEE502D22D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
@@ -10380,7 +10510,6 @@
 		CE7E80182D7A145E00A5558A /* MatchWidgetCellViewModel+Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCellViewModel+Protocol.swift"; sourceTree = "<group>"; };
 		CE7E80192D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetCellViewModelProtocol.swift; sourceTree = "<group>"; };
 		CE7E801A2D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMatchWidgetCellViewModel.swift; sourceTree = "<group>"; };
-		CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMatchWidgetCell.swift; sourceTree = "<group>"; };
 		CE7E80442D7A368300A5558A /* PreviewUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewUIView.swift; sourceTree = "<group>"; };
 		CE7E804F2D7A3D7400A5558A /* PreviewUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewUIViewController.swift; sourceTree = "<group>"; };
 		CE7E805A2D7A721D00A5558A /* PreviewTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewTableViewController.swift; sourceTree = "<group>"; };
@@ -10468,6 +10597,20 @@
 		CEB73A082D7687E5009C4E0F /* InnerScrollDragDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerScrollDragDirection.swift; sourceTree = "<group>"; };
 		CEC57BD62D53C74900EA0D60 /* zendesk_support.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
 		CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEndpoints.swift; sourceTree = "<group>"; };
+		CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundImageMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackgroundImageMatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
+		CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoostedMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BoostedMatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
+		CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassicLiveMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClassicLiveMatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
+		CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassicPreLiveMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClassicPreLiveMatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
+		CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LiveMatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
+		CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreLiveMatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
+		CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopImageMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopImageMatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
 		CEE502CF2D66A609001B0342 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
 		CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelHelperTests.swift; sourceTree = "<group>"; };
 		CEE502E32D66B496001B0342 /* SportsMerger.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SportsMerger.txt; sourceTree = "<group>"; };
@@ -14553,7 +14696,13 @@
 		CEAB09802D77588D00541098 /* MatchWidget */ = {
 			isa = PBXGroup;
 			children = (
-				CE7E80392D7A146C00A5558A /* BaseMatchWidgetCell.swift */,
+				CEDB58C92D80A31F00D0C0C3 /* BackgroundImage */,
+				CEDB58CC2D80A31F00D0C0C3 /* Boosted */,
+				CEDB58CF2D80A31F00D0C0C3 /* ClassicLive */,
+				CEDB58D22D80A31F00D0C0C3 /* ClassicPreLive */,
+				CEDB58D52D80A31F00D0C0C3 /* Live */,
+				CEDB58D82D80A31F00D0C0C3 /* PreLive */,
+				CEDB58DB2D80A31F00D0C0C3 /* TopImage */,
 				CEAB097D2D77588D00541098 /* MatchWidgetCollectionViewCell.swift */,
 				CEAB097E2D77588D00541098 /* MatchWidgetCollectionViewCell.xib */,
 				CEAB097F2D77588D00541098 /* MatchWidgetContainerTableViewCell.swift */,
@@ -14732,6 +14881,69 @@
 				CEC57BD62D53C74900EA0D60 /* zendesk_support.html */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		CEDB58C92D80A31F00D0C0C3 /* BackgroundImage */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB58C72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift */,
+				CEDB58C82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib */,
+			);
+			path = BackgroundImage;
+			sourceTree = "<group>";
+		};
+		CEDB58CC2D80A31F00D0C0C3 /* Boosted */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB58CA2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift */,
+				CEDB58CB2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib */,
+			);
+			path = Boosted;
+			sourceTree = "<group>";
+		};
+		CEDB58CF2D80A31F00D0C0C3 /* ClassicLive */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB58CD2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift */,
+				CEDB58CE2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib */,
+			);
+			path = ClassicLive;
+			sourceTree = "<group>";
+		};
+		CEDB58D22D80A31F00D0C0C3 /* ClassicPreLive */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB58D02D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift */,
+				CEDB58D12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib */,
+			);
+			path = ClassicPreLive;
+			sourceTree = "<group>";
+		};
+		CEDB58D52D80A31F00D0C0C3 /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB58D32D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift */,
+				CEDB58D42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib */,
+			);
+			path = Live;
+			sourceTree = "<group>";
+		};
+		CEDB58D82D80A31F00D0C0C3 /* PreLive */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB58D62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift */,
+				CEDB58D72D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib */,
+			);
+			path = PreLive;
+			sourceTree = "<group>";
+		};
+		CEDB58DB2D80A31F00D0C0C3 /* TopImage */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB58D92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift */,
+				CEDB58DA2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib */,
+			);
+			path = TopImage;
 			sourceTree = "<group>";
 		};
 		F410E62727BC4F78005C1964 /* Cells */ = {
@@ -15546,6 +15758,13 @@
 				CE0C6CE62D56377800EAD26B /* avatar1-light.json in Resources */,
 				CE0C6CE72D56377800EAD26B /* avatar4-light.json in Resources */,
 				CE0C6CE82D56377800EAD26B /* avatar2-light.json in Resources */,
+				CEDB59532D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59542D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59552D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59562D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59572D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59582D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59592D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				CE0C6CE92D56377800EAD26B /* avatar1-dark.json in Resources */,
 				CE0C6CEA2D56377800EAD26B /* avatar5-light.json in Resources */,
 				CE0C6CEB2D56377800EAD26B /* avatar3-dark.json in Resources */,
@@ -15717,6 +15936,13 @@
 				457CBBF2282D27D000ED0F00 /* README.md in Resources */,
 				455897F62A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				A9BAFB482AB0B46D002EDBA1 /* Localizable.strings in Resources */,
+				CEDB58DC2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58DD2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58DE2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58DF2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58E02D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58E12D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58E22D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				457CBBF4282D27D000ED0F00 /* PopUpPromotionView.xib in Resources */,
 				455897FE2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				457CBBF6282D27D000ED0F00 /* PreSubmissionBetslipViewController.xib in Resources */,
@@ -15870,6 +16096,13 @@
 				455897F72A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				457CBE9D282D2CD100ED0F00 /* PopUpPromotionView.xib in Resources */,
 				A9BAFB492AB0B46D002EDBA1 /* Localizable.strings in Resources */,
+				CEDB58F12D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58F22D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58F32D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58F42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58F52D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58F62D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB58F72D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				455897FF2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				457CBE9F282D2CD100ED0F00 /* PreSubmissionBetslipViewController.xib in Resources */,
 				457CBEA1282D2CD100ED0F00 /* BetslipViewController.xib in Resources */,
@@ -16023,6 +16256,13 @@
 				455897F32A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				A9BAFB452AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				4589C975282024E400243547 /* PreSubmissionBetslipViewController.xib in Resources */,
+				CEDB59222D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59232D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59242D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59252D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59262D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59272D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59282D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				455897FB2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				4589C977282024E400243547 /* BetslipViewController.xib in Resources */,
 				4589C9E12820279E00243547 /* Colors.xcassets in Resources */,
@@ -16212,6 +16452,13 @@
 				CEAB0A182D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45A3330E298976BA008181E9 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				45A33310298976BA008181E9 /* DepositViewController.xib in Resources */,
+				CEDB591B2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB591C2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB591D2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB591E2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB591F2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59202D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59212D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				45A33312298976BA008181E9 /* HomeFilterViewController.xib in Resources */,
 				45A33313298976BA008181E9 /* FilterSliderInfoView.xib in Resources */,
 				45A33315298976BA008181E9 /* EmailVerificationViewController.xib in Resources */,
@@ -16296,6 +16543,13 @@
 				45634B642CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
 				45634B652CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
 				45634B662CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				CEDB59612D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59622D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59632D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59642D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59652D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59662D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59672D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				45634B672CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
 				45634B682CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
 				45634B692CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
@@ -16548,6 +16802,13 @@
 				CEAB0B702D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45290A032CB6AAFC00D69021 /* Roboto-Black.ttf in Resources */,
 				45290A042CB6AAFC00D69021 /* Roboto-MediumItalic.ttf in Resources */,
+				CEDB59062D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59072D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59082D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59092D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB590A2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB590B2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB590C2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				45290A052CB6AAFC00D69021 /* Roboto-Light.ttf in Resources */,
 				45290A062CB6AAFC00D69021 /* Roboto-Thin.ttf in Resources */,
 				45290A072CB6AAFC00D69021 /* Roboto-ThinItalic.ttf in Resources */,
@@ -16695,6 +16956,13 @@
 				A9C3432328F9A74A0055360B /* PreSubmissionBetslipViewController.xib in Resources */,
 				45F805992A05385B005296E0 /* dots-loading.json in Resources */,
 				A9C3439028F9A7DC0055360B /* GoogleService-Info.plist in Resources */,
+				CEDB593E2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB593F2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59402D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59412D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59422D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59432D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59442D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				A9D5BB7228FD688F001B0E13 /* GOMASportRadar-Assets.xcassets in Resources */,
 				A9C3432528F9A74A0055360B /* BetslipViewController.xib in Resources */,
 				A9C3432728F9A74A0055360B /* MatchFiltersViewController.xib in Resources */,
@@ -16867,6 +17135,13 @@
 				CE12A4742D31347E0022BDF7 /* sports-loading.json in Resources */,
 				CE12A4762D31347E0022BDF7 /* DepositViewController.xib in Resources */,
 				CE12A4772D31347E0022BDF7 /* HomeFilterViewController.xib in Resources */,
+				CEDB59372D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59382D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59392D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB593A2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB593B2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB593C2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB593D2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				CE12A4782D31347E0022BDF7 /* first_deposit_8.json in Resources */,
 				CE2E0F142D3995D100488EF5 /* replay_sucess.json in Resources */,
 				CE12A4792D31347E0022BDF7 /* FilterSliderInfoView.xib in Resources */,
@@ -16969,6 +17244,13 @@
 				CEAB09AC2D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB09AD2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB09AE2D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
+				CEDB58FF2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59002D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59012D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59022D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59032D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59042D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.xib in Resources */,
+				CEDB59052D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.xib in Resources */,
 				CEAB09AF2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB09B02D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB09B12D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
@@ -17325,6 +17607,13 @@
 				450B787128F58574009229E3 /* SharedBetData.swift in Sources */,
 				458735372AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				A90C372129C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
+				CEDB594C2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB594D2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB594E2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB594F2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59502D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59512D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59522D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				450B787228F58574009229E3 /* HeaderTextFieldView.swift in Sources */,
 				450B787328F58574009229E3 /* SocialItemCollectionViewCell.swift in Sources */,
 				A90FB7E629B0BD9C00D08A7C /* CasualGamblingViewController.swift in Sources */,
@@ -17698,7 +17987,6 @@
 				A9BA04192A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				450B799828F58574009229E3 /* DateHeaderFooterView.swift in Sources */,
 				450B799928F58574009229E3 /* ToastCustom.swift in Sources */,
-				CE7E803B2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				450B799A28F58574009229E3 /* MaintenanceViewController.swift in Sources */,
 				450B799B28F58574009229E3 /* SupportPageViewModel.swift in Sources */,
 				450B799C28F58574009229E3 /* FriendStatusCellViewModel.swift in Sources */,
@@ -18201,6 +18489,13 @@
 				4542DFEE2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				457CBA14282D27D000ED0F00 /* RadioButton.swift in Sources */,
 				457CBA16282D27D000ED0F00 /* Constants.swift in Sources */,
+				CEDB58E32D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58E42D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58E52D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58E62D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58E72D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58E82D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58E92D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				A9C1C09B2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				A96FAECB29804C0600A0751F /* Data+Extensions.swift in Sources */,
 				457CBA18282D27D000ED0F00 /* ConversationsDetailViewModel.swift in Sources */,
@@ -18574,7 +18869,6 @@
 				457CBAF2282D27D000ED0F00 /* MatchOddsContent.swift in Sources */,
 				457CBAF4282D27D000ED0F00 /* BetSubmissionSuccessViewController.swift in Sources */,
 				457CBAF6282D27D000ED0F00 /* NibView.swift in Sources */,
-				CE7E80422D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				457CBAF7282D27D000ED0F00 /* BonusHistoryCellViewModel.swift in Sources */,
 				457CBAF8282D27D000ED0F00 /* BonusProgressView.swift in Sources */,
 				A9C18A96285CDF0B009F0063 /* ToastCustom.swift in Sources */,
@@ -19251,12 +19545,18 @@
 				A9A43C902A4B2BE7008FB399 /* ManualUploadsDocumentsViewModel.swift in Sources */,
 				457CBD6B282D2CD100ED0F00 /* UserSettingsGoma.swift in Sources */,
 				A9DF8E0E28DDFC590083BF56 /* SportStatisticView.swift in Sources */,
+				CEDB58EA2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58EB2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58EC2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58ED2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58EE2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58EF2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58F02D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				457CBD6C282D2CD100ED0F00 /* Localization.swift in Sources */,
 				457CBD6D282D2CD100ED0F00 /* NewGroupViewController.swift in Sources */,
 				457CBD70282D2CD100ED0F00 /* ChatNotificationsViewController.swift in Sources */,
 				457CBD71282D2CD100ED0F00 /* BetslipErrorView.swift in Sources */,
 				A9C1C0AC28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
-				CE7E80412D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				A90FB7F529B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				A90C372E29C37AB8007B8AEC /* IBANProofViewModel.swift in Sources */,
 				457CBD72282D2CD100ED0F00 /* CompetitionSearchTableViewCell.swift in Sources */,
@@ -19693,6 +19993,13 @@
 				4589C796282024E400243547 /* SharedBetData.swift in Sources */,
 				458735382AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				A90C372229C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
+				CEDB59292D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB592A2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB592B2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB592C2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB592D2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB592E2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB592F2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				4589C797282024E400243547 /* HeaderTextFieldView.swift in Sources */,
 				A9863EDE286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
 				A90FB7E729B0BD9C00D08A7C /* CasualGamblingViewController.swift in Sources */,
@@ -20066,7 +20373,6 @@
 				A9BA041A2A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				4589C87F282024E400243547 /* DateHeaderFooterView.swift in Sources */,
 				A9C18A94285CDF0B009F0063 /* ToastCustom.swift in Sources */,
-				CE7E803D2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				4589C880282024E400243547 /* MaintenanceViewController.swift in Sources */,
 				451B0A40286AFD7300005FA5 /* SupportPageViewModel.swift in Sources */,
 				45A6BB832821459200D9B416 /* FriendStatusCellViewModel.swift in Sources */,
@@ -20440,6 +20746,13 @@
 				45A33083298976BA008181E9 /* SharedBetData.swift in Sources */,
 				458735362AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				A90C372029C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
+				CEDB59142D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59152D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59162D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59172D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59182D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59192D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB591A2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				45A33084298976BA008181E9 /* HeaderTextFieldView.swift in Sources */,
 				45A33085298976BA008181E9 /* SocialItemCollectionViewCell.swift in Sources */,
 				A90FB7E529B0BD9C00D08A7C /* CasualGamblingViewController.swift in Sources */,
@@ -20813,7 +21126,6 @@
 				A9BA04182A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				45A331B1298976BA008181E9 /* BonusProgressView.swift in Sources */,
 				45A331B2298976BA008181E9 /* DateHeaderFooterView.swift in Sources */,
-				CE7E803E2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				45A331B3298976BA008181E9 /* ToastCustom.swift in Sources */,
 				45A331B4298976BA008181E9 /* MaintenanceViewController.swift in Sources */,
 				45A331B5298976BA008181E9 /* SupportPageViewModel.swift in Sources */,
@@ -21187,6 +21499,13 @@
 				A93FE2082A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				A9D534062A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				A9863EDF286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
+				CEDB595A2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB595B2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB595C2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB595D2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB595E2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB595F2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59602D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				452B9D2C2C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */,
 				45A6BBE328246A7500D9B416 /* SharedBetData.swift in Sources */,
 				45A6BBE428246A7500D9B416 /* HeaderTextFieldView.swift in Sources */,
@@ -21560,7 +21879,6 @@
 				45A6BCE028246A7500D9B416 /* ForbiddenLocationViewController.swift in Sources */,
 				45A6BCE128246A7500D9B416 /* OddFormatter.swift in Sources */,
 				459EF2752BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift in Sources */,
-				CE7E803F2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				A98EFDA5287C66B000655A26 /* SharedTicketCardView.swift in Sources */,
 				45D64AF62B6002F70092DA8E /* BoostedBetConfirmationView.swift in Sources */,
 				45B6E21A283FCF7E001B570C /* SentTicketMessageTableViewCell.swift in Sources */,
@@ -21934,6 +22252,13 @@
 				45F6BB172AB3732C00C81DE1 /* SharedBetData.swift in Sources */,
 				45F6BB182AB3732C00C81DE1 /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				45F6BB192AB3732C00C81DE1 /* WithdrawSuccessViewController.swift in Sources */,
+				CEDB590D2D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB590E2D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB590F2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59102D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59112D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59122D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59132D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				45F6BB1A2AB3732C00C81DE1 /* HeaderTextFieldView.swift in Sources */,
 				45F6BB1B2AB3732C00C81DE1 /* SocialItemCollectionViewCell.swift in Sources */,
 				45F6BB1C2AB3732C00C81DE1 /* CasualGamblingViewController.swift in Sources */,
@@ -22307,7 +22632,6 @@
 				45F6BC5F2AB3732C00C81DE1 /* CardOptionRadioView.swift in Sources */,
 				45F6BC602AB3732C00C81DE1 /* BonusProgressView.swift in Sources */,
 				45F6BC612AB3732C00C81DE1 /* DateHeaderFooterView.swift in Sources */,
-				CE7E803C2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				45F6BC622AB3732C00C81DE1 /* ToastCustom.swift in Sources */,
 				45F6BC632AB3732C00C81DE1 /* MaintenanceViewController.swift in Sources */,
 				45F6BC642AB3732C00C81DE1 /* SupportPageViewModel.swift in Sources */,
@@ -22999,12 +23323,18 @@
 				A90FB7FC29B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				A9BB462D2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				A9C341A428F9A74A0055360B /* UserProfileInfoViewController.swift in Sources */,
+				CEDB59452D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59462D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59472D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59482D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59492D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB594A2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB594B2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				A9C341A628F9A74A0055360B /* NotEmpty.swift in Sources */,
 				A9C341A728F9A74A0055360B /* VersionUpdateViewController.swift in Sources */,
 				A9C341A828F9A74A0055360B /* SportSelectionCollectionViewCell.swift in Sources */,
 				A9C341A928F9A74A0055360B /* MultiSlider.swift in Sources */,
 				45044AFD291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */,
-				CE7E803A2D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				A9C341AA28F9A74A0055360B /* UserLoginForm.swift in Sources */,
 				A9A43C8D2A4B2BE7008FB399 /* ManualUploadsDocumentsViewModel.swift in Sources */,
 				A9C341AC28F9A74A0055360B /* Tournament.swift in Sources */,
@@ -23441,6 +23771,13 @@
 				CE12A1742D31347E0022BDF7 /* SharedBetData.swift in Sources */,
 				CE12A1752D31347E0022BDF7 /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				CE12A1762D31347E0022BDF7 /* WithdrawSuccessViewController.swift in Sources */,
+				CEDB59302D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59312D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59322D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59332D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59342D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59352D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB59362D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				CE12A1772D31347E0022BDF7 /* HeaderTextFieldView.swift in Sources */,
 				CE12A1782D31347E0022BDF7 /* SocialItemCollectionViewCell.swift in Sources */,
 				CE12A1792D31347E0022BDF7 /* CasualGamblingViewController.swift in Sources */,
@@ -23814,7 +24151,6 @@
 				CE12A2D22D31347E0022BDF7 /* DateHeaderFooterView.swift in Sources */,
 				CE12A2D32D31347E0022BDF7 /* ToastCustom.swift in Sources */,
 				CE12A2D42D31347E0022BDF7 /* MaintenanceViewController.swift in Sources */,
-				CE7E80432D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				CE12A2D52D31347E0022BDF7 /* SupportPageViewModel.swift in Sources */,
 				CE12A2D62D31347E0022BDF7 /* FriendStatusCellViewModel.swift in Sources */,
 				CE12A2D72D31347E0022BDF7 /* FriendStatusTableViewCell.swift in Sources */,
@@ -24123,7 +24459,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE7E80402D7A146C00A5558A /* BaseMatchWidgetCell.swift in Sources */,
 				CEA565FC2D5A58D800696793 /* SearchViewController.swift in Sources */,
 				CEA565FD2D5A58D800696793 /* BetslipHistory.swift in Sources */,
 				CEA565FE2D5A58D800696793 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
@@ -24854,6 +25189,13 @@
 				CEA568C82D5A58D800696793 /* SmallToolTipViewModel.swift in Sources */,
 				CEA568CA2D5A58D800696793 /* Odd.swift in Sources */,
 				CEA568CB2D5A58D800696793 /* NetworkSession.swift in Sources */,
+				CEDB58F82D80A31F00D0C0C3 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58F92D80A31F00D0C0C3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58FA2D80A31F00D0C0C3 /* ClassicLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58FB2D80A31F00D0C0C3 /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58FC2D80A31F00D0C0C3 /* ClassicPreLiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58FD2D80A31F00D0C0C3 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				CEDB58FE2D80A31F00D0C0C3 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				CEA568CC2D5A58D800696793 /* RankingsListViewController.swift in Sources */,
 				CEA568CD2D5A58D800696793 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				CEA568CE2D5A58D800696793 /* PhonePrefixSelectorViewController.swift in Sources */,
