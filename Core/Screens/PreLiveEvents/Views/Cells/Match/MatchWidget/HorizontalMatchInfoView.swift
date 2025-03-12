@@ -23,71 +23,45 @@ class HorizontalMatchInfoViewModel {
     private(set) var awayTeamNamePublisher = CurrentValueSubject<String, Never>("")
     private(set) var displayStatePublisher = CurrentValueSubject<DisplayState, Never>(.preLive(date: "", time: ""))
 
-    // MARK: Properties
-    private var match: Match?
-    private var cancellables = Set<AnyCancellable>()
-
     // MARK: Initialization
-    init(match: Match? = nil) {
-        if let match = match {
-            self.configure(with: match)
-        }
+    init(homeTeamName: String = "",
+         awayTeamName: String = "",
+         displayState: DisplayState = .preLive(date: "", time: "")) {
+
+        self.homeTeamNamePublisher.send(homeTeamName)
+        self.awayTeamNamePublisher.send(awayTeamName)
+        self.displayStatePublisher.send(displayState)
     }
 
     // MARK: Configuration
-    func configure(with match: Match) {
-        self.match = match
+    func configure(homeTeamName: String,
+                   awayTeamName: String,
+                   displayState: DisplayState) {
 
-        // Update team names
-        self.homeTeamNamePublisher.send(match.homeParticipant.name)
-        self.awayTeamNamePublisher.send(match.awayParticipant.name)
-
-        // Update display state based on match status
-        self.updateDisplayState(match: match)
+        self.homeTeamNamePublisher.send(homeTeamName)
+        self.awayTeamNamePublisher.send(awayTeamName)
+        self.displayStatePublisher.send(displayState)
     }
+}
 
-    // MARK: Update Methods
-    private func formatDate(_ date: Date?) -> (dateString: String, timeString: String) {
-        guard let date = date else {
-            return ("", "")
+// MARK: - CustomDebugStringConvertible
+extension HorizontalMatchInfoViewModel: CustomDebugStringConvertible {
+    var debugDescription: String {
+        let homeTeam = homeTeamNamePublisher.value
+        let awayTeam = awayTeamNamePublisher.value
+        let state = displayStatePublisher.value
+
+        let stateDescription: String
+        switch state {
+        case .preLive(let date, let time):
+            stateDescription = "PreLive (\(date) \(time))"
+        case .live(let score, let matchTime):
+            stateDescription = "Live (\(score), \(matchTime ?? "no time"))"
+        case .ended(let score):
+            stateDescription = "Ended (\(score))"
         }
 
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d"
-        let dateString = dateFormatter.string(from: date)
-
-        dateFormatter.dateFormat = "HH:mm"
-        let timeString = dateFormatter.string(from: date)
-
-        return (dateString, timeString)
-    }
-
-    private func formatScore(homeScore: Int?, awayScore: Int?) -> String {
-        guard let homeScore = homeScore, let awayScore = awayScore else {
-            return ""
-        }
-        return "\(homeScore) - \(awayScore)"
-    }
-
-    func updateDisplayState(match: Match) {
-        switch match.status {
-        case .notStarted:
-            let (dateString, timeString) = formatDate(match.date)
-            self.displayStatePublisher.send(.preLive(date: dateString, time: timeString))
-
-        case .inProgress:
-            let score = formatScore(homeScore: match.homeParticipantScore, awayScore: match.awayParticipantScore)
-            self.displayStatePublisher.send(.live(score: score, matchTime: match.matchTime))
-
-        case .ended:
-            let score = formatScore(homeScore: match.homeParticipantScore, awayScore: match.awayParticipantScore)
-            self.displayStatePublisher.send(.ended(score: score))
-
-        case .unknown:
-            // Default to pre-live if status is unknown
-            let (dateString, timeString) = formatDate(match.date)
-            self.displayStatePublisher.send(.preLive(date: dateString, time: timeString))
-        }
+        return "HorizontalMatchInfoViewModel: \(homeTeam) vs \(awayTeam) - \(stateDescription)"
     }
 }
 
@@ -358,9 +332,6 @@ extension HorizontalMatchInfoView {
             self.resultStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             self.resultLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 
-            // Minimum height constraint
-            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 67),
-
             // Live match dot base view constraints
             self.liveMatchDotBaseView.widthAnchor.constraint(equalToConstant: 8),
             self.liveMatchDotBaseView.heightAnchor.constraint(equalTo: self.liveMatchDotBaseView.widthAnchor, multiplier: 1),
@@ -369,7 +340,10 @@ extension HorizontalMatchInfoView {
             self.liveMatchDotImageView.centerXAnchor.constraint(equalTo: self.liveMatchDotBaseView.centerXAnchor),
             self.liveMatchDotImageView.centerYAnchor.constraint(equalTo: self.liveMatchDotBaseView.centerYAnchor),
             self.liveMatchDotImageView.widthAnchor.constraint(equalTo: self.liveMatchDotBaseView.widthAnchor),
-            self.liveMatchDotImageView.heightAnchor.constraint(equalTo: self.liveMatchDotBaseView.heightAnchor)
+            self.liveMatchDotImageView.heightAnchor.constraint(equalTo: self.liveMatchDotBaseView.heightAnchor),
+
+            // Minimum height constraint
+            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 67),
         ])
     }
 }
@@ -379,8 +353,11 @@ extension HorizontalMatchInfoView {
     VStack(spacing: 20) {
         PreviewUIView {
             let view = HorizontalMatchInfoView()
-            let match = PreviewModelsHelper.createFootballMatch()
-            let viewModel = HorizontalMatchInfoViewModel(match: match)
+            let viewModel = HorizontalMatchInfoViewModel(
+                homeTeamName: "Real Madrid",
+                awayTeamName: "Barcelona",
+                displayState: .preLive(date: "Jul 24", time: "20:30")
+            )
             view.configure(with: viewModel)
             view.backgroundColor = .systemGray6
             return view
@@ -389,8 +366,11 @@ extension HorizontalMatchInfoView {
 
         PreviewUIView {
             let view = HorizontalMatchInfoView()
-            let match = PreviewModelsHelper.createLiveFootballMatch()
-            let viewModel = HorizontalMatchInfoViewModel(match: match)
+            let viewModel = HorizontalMatchInfoViewModel(
+                homeTeamName: "Manchester United",
+                awayTeamName: "Liverpool",
+                displayState: .live(score: "2 - 1", matchTime: "45'")
+            )
             view.configure(with: viewModel)
             view.backgroundColor = .systemGray6
             return view
@@ -399,8 +379,11 @@ extension HorizontalMatchInfoView {
 
         PreviewUIView {
             let view = HorizontalMatchInfoView()
-            let match = PreviewModelsHelper.createCompletedFootballMatch()
-            let viewModel = HorizontalMatchInfoViewModel(match: match)
+            let viewModel = HorizontalMatchInfoViewModel(
+                homeTeamName: "Bayern Munich",
+                awayTeamName: "Dortmund",
+                displayState: .ended(score: "3 - 2")
+            )
             view.configure(with: viewModel)
             view.backgroundColor = .systemGray6
             return view
@@ -414,8 +397,11 @@ extension HorizontalMatchInfoView {
 @available(iOS 17.0, *)
 #Preview("HorizontalMatchInfoView - Pre-Live") {
     PreviewUIView {
-        let match = PreviewModelsHelper.createFootballMatch()
-        let viewModel = HorizontalMatchInfoViewModel(match: match)
+        let viewModel = HorizontalMatchInfoViewModel(
+            homeTeamName: "Real Madrid",
+            awayTeamName: "Barcelona",
+            displayState: .preLive(date: "Jul 24", time: "20:30")
+        )
 
         let view = HorizontalMatchInfoView()
         view.configure(with: viewModel)
@@ -429,8 +415,11 @@ extension HorizontalMatchInfoView {
 @available(iOS 17.0, *)
 #Preview("HorizontalMatchInfoView - Live") {
     PreviewUIView {
-        let match = PreviewModelsHelper.createLiveFootballMatch()
-        let viewModel = HorizontalMatchInfoViewModel(match: match)
+        let viewModel = HorizontalMatchInfoViewModel(
+            homeTeamName: "Manchester United",
+            awayTeamName: "Liverpool",
+            displayState: .live(score: "2 - 1", matchTime: "45'")
+        )
 
         let view = HorizontalMatchInfoView()
         view.configure(with: viewModel)
@@ -444,8 +433,11 @@ extension HorizontalMatchInfoView {
 @available(iOS 17.0, *)
 #Preview("HorizontalMatchInfoView - Ended") {
     PreviewUIView {
-        let match = PreviewModelsHelper.createCompletedFootballMatch()
-        let viewModel = HorizontalMatchInfoViewModel(match: match)
+        let viewModel = HorizontalMatchInfoViewModel(
+            homeTeamName: "Bayern Munich",
+            awayTeamName: "Dortmund",
+            displayState: .ended(score: "3 - 2")
+        )
 
         let view = HorizontalMatchInfoView()
         view.configure(with: viewModel)
@@ -456,3 +448,44 @@ extension HorizontalMatchInfoView {
     .frame(width: 300, height: 67)
 }
 
+/**
+
+ // In the parent ViewModel
+ func updateMatchInfoViewModel(for match: Match) -> HorizontalMatchInfoViewModel {
+     // Format data and determine state
+     let homeTeamName = match.homeParticipant.name
+     let awayTeamName = match.awayParticipant.name
+
+     let displayState: HorizontalMatchInfoViewModel.DisplayState
+
+     switch match.status {
+     case .notStarted:
+         let dateString = formatDate(match.date)
+         let timeString = formatTime(match.date)
+         displayState = .preLive(date: dateString, time: timeString)
+     case .inProgress:
+         let score = formatScore(match.homeParticipantScore, match.awayParticipantScore)
+         displayState = .live(score: score, matchTime: match.matchTime)
+     case .ended:
+         let score = formatScore(match.homeParticipantScore, match.awayParticipantScore)
+         displayState = .ended(score: score)
+     case .unknown:
+         let dateString = formatDate(match.date)
+         let timeString = formatTime(match.date)
+         displayState = .preLive(date: dateString, time: timeString)
+     }
+
+     return HorizontalMatchInfoViewModel(
+         homeTeamName: homeTeamName,
+         awayTeamName: awayTeamName,
+         displayState: displayState
+     )
+ }
+
+ // In the parent ViewController
+ func updateUI() {
+     let matchInfoViewModel = viewModel.updateMatchInfoViewModel(for: currentMatch)
+     matchInfoView.configure(with: matchInfoViewModel)
+ }
+
+ */

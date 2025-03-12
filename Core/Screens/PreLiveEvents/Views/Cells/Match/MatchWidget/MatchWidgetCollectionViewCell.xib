@@ -474,107 +474,10 @@
                                             </stackView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D8R-G1-Yk3">
                                                 <rect key="frame" x="12" y="29" width="506" height="163"/>
-                                                <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="0C8-cR-9rM">
-                                                        <rect key="frame" x="222" y="64" width="62" height="35.5"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="247" verticalHuggingPriority="247" horizontalCompressionResistancePriority="755" verticalCompressionResistancePriority="755" text="Wednesday" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t8t-gn-c1f">
-                                                                <rect key="frame" x="0.0" y="0.0" width="62" height="14.5"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="12"/>
-                                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="14:30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jgd-2r-wV6">
-                                                                <rect key="frame" x="0.0" y="16.5" width="62" height="19"/>
-                                                                <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="16"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iph-Xc-owq">
-                                                        <rect key="frame" x="161.5" y="70" width="183" height="26"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="760" verticalCompressionResistancePriority="760" text="89-29" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wmf-LZ-bWj">
-                                                                <rect key="frame" x="0.0" y="0.0" width="183" height="15"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="15" id="efw-H1-vSz"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="17"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="M3p-MU-BKg">
-                                                                <rect key="frame" x="0.0" y="15" width="183" height="11"/>
-                                                                <subviews>
-                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="USx-ge-MMc">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="8" height="11"/>
-                                                                        <subviews>
-                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_live" translatesAutoresizingMaskIntoConstraints="NO" id="jb4-7h-Mof">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="8" height="10"/>
-                                                                            </imageView>
-                                                                        </subviews>
-                                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="bottom" secondItem="jb4-7h-Mof" secondAttribute="bottom" constant="1" id="GCf-Mw-wDe"/>
-                                                                            <constraint firstItem="jb4-7h-Mof" firstAttribute="top" secondItem="USx-ge-MMc" secondAttribute="top" id="Kaf-z5-5V7"/>
-                                                                            <constraint firstAttribute="trailing" secondItem="jb4-7h-Mof" secondAttribute="trailing" id="fqg-2O-yVL"/>
-                                                                            <constraint firstItem="jb4-7h-Mof" firstAttribute="leading" secondItem="USx-ge-MMc" secondAttribute="leading" id="gE8-Ku-HAY"/>
-                                                                            <constraint firstAttribute="width" secondItem="USx-ge-MMc" secondAttribute="height" multiplier="10:13" id="hJB-Jj-9qo"/>
-                                                                        </constraints>
-                                                                    </view>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="757" verticalCompressionResistancePriority="757" text="30:51 - 1st Half 30:51 - 1st Half 30:51 - 1st Half " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7L-x9-JEu">
-                                                                        <rect key="frame" x="11" y="0.0" width="172" height="11"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="height" constant="11" id="X6L-db-NQv"/>
-                                                                        </constraints>
-                                                                        <fontDescription key="fontDescription" name="Roboto-Semibold" family="Roboto" pointSize="8"/>
-                                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <nil key="highlightedColor"/>
-                                                                    </label>
-                                                                </subviews>
-                                                            </stackView>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    </stackView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="747" verticalCompressionResistancePriority="747" text="Manchester United" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rwv-VC-F8F">
-                                                        <rect key="frame" x="294" y="4" width="212" height="155"/>
-                                                        <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="14"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="747" verticalCompressionResistancePriority="747" text="Young Boys" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jak-MM-0V4">
-                                                        <rect key="frame" x="0.0" y="4" width="212" height="155"/>
-                                                        <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="14"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
-                                                    <constraint firstItem="0C8-cR-9rM" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" id="2Mu-Hz-yGt"/>
-                                                    <constraint firstItem="0C8-cR-9rM" firstAttribute="centerX" secondItem="D8R-G1-Yk3" secondAttribute="centerX" id="9A0-rI-tex"/>
-                                                    <constraint firstItem="jak-MM-0V4" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" id="GjL-gu-UQX"/>
-                                                    <constraint firstItem="Wmf-LZ-bWj" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" constant="-4" id="Jxv-Tx-Z5X"/>
-                                                    <constraint firstItem="rwv-VC-F8F" firstAttribute="leading" secondItem="0C8-cR-9rM" secondAttribute="trailing" constant="10" id="KEd-Rf-vlw"/>
-                                                    <constraint firstAttribute="trailing" secondItem="rwv-VC-F8F" secondAttribute="trailing" id="Ll5-Dk-XAf"/>
-                                                    <constraint firstItem="jak-MM-0V4" firstAttribute="leading" secondItem="D8R-G1-Yk3" secondAttribute="leading" id="Rzd-jP-jeT"/>
-                                                    <constraint firstItem="jak-MM-0V4" firstAttribute="centerY" secondItem="iph-Xc-owq" secondAttribute="centerY" id="TIr-Lx-HgP"/>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="67" id="WkJ-AG-pI4"/>
-                                                    <constraint firstItem="rwv-VC-F8F" firstAttribute="top" secondItem="D8R-G1-Yk3" secondAttribute="top" constant="4" id="aIx-bo-x7K"/>
-                                                    <constraint firstItem="rwv-VC-F8F" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" id="d3E-63-Daf"/>
-                                                    <constraint firstItem="jak-MM-0V4" firstAttribute="top" secondItem="D8R-G1-Yk3" secondAttribute="top" constant="4" id="eLH-bI-eAm"/>
-                                                    <constraint firstItem="iph-Xc-owq" firstAttribute="centerX" secondItem="D8R-G1-Yk3" secondAttribute="centerX" id="eih-VX-8b9"/>
-                                                    <constraint firstItem="0C8-cR-9rM" firstAttribute="leading" secondItem="jak-MM-0V4" secondAttribute="trailing" constant="10" id="gh6-nU-IiK"/>
-                                                    <constraint firstItem="rwv-VC-F8F" firstAttribute="centerY" secondItem="iph-Xc-owq" secondAttribute="centerY" id="oIp-M4-OEm"/>
                                                 </constraints>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="TIr-Lx-HgP"/>
-                                                        <exclude reference="oIp-M4-OEm"/>
-                                                    </mask>
-                                                </variation>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rDf-xB-CUD">
                                                 <rect key="frame" x="12" y="29" width="506" height="201"/>
@@ -716,15 +619,11 @@
                 <outlet property="awayBaseView" destination="hqr-8r-9MW" id="x5D-bW-FeG"/>
                 <outlet property="awayBoostedOddArrowView" destination="eaV-UD-93W" id="WUa-oX-j4k"/>
                 <outlet property="awayBoostedOddValueBaseView" destination="znd-6M-sgl" id="HLd-HH-BeA"/>
-                <outlet property="awayCenterViewConstraint" destination="d3E-63-Daf" id="JAo-bN-iP6"/>
                 <outlet property="awayDownChangeOddValueImage" destination="zZE-cC-AJK" id="njp-iO-AdV"/>
-                <outlet property="awayLeadingConstraint" destination="KEd-Rf-vlw" id="yCV-o8-5pp"/>
                 <outlet property="awayNewBoostedOddValueLabel" destination="Kfj-TM-Gp4" id="4vl-2D-B2L"/>
                 <outlet property="awayOddTitleLabel" destination="zhr-Li-prE" id="Ana-Ag-1sA"/>
                 <outlet property="awayOddValueLabel" destination="inY-A0-OM8" id="J9v-1d-qqR"/>
                 <outlet property="awayOldBoostedOddValueLabel" destination="esH-Iu-I2V" id="2UT-Sd-kci"/>
-                <outlet property="awayParticipantNameLabel" destination="rwv-VC-F8F" id="Zum-Ch-kdM"/>
-                <outlet property="awayResultCenterViewConstraint" destination="oIp-M4-OEm" id="SG3-Sx-gUk"/>
                 <outlet property="awayUpChangeOddValueImage" destination="Kfa-Lg-U8s" id="mci-Md-HVd"/>
                 <outlet property="backgroundImageView" destination="HO2-M2-haM" id="uD2-ZE-BEn"/>
                 <outlet property="baseStackView" destination="bYZ-iV-ZlD" id="Kmf-8n-a49"/>
@@ -732,8 +631,6 @@
                 <outlet property="boostedOddBottomLineView" destination="q88-WX-WNe" id="ivT-e7-CiH"/>
                 <outlet property="bottomMarginSpaceConstraint" destination="jPE-gz-w4d" id="EGE-mc-Tip"/>
                 <outlet property="buttonsHeightConstraint" destination="Yes-UE-fhZ" id="ftJ-A1-loa"/>
-                <outlet property="dateLabel" destination="t8t-gn-c1f" id="LHy-qf-qwM"/>
-                <outlet property="dateStackView" destination="0C8-cR-9rM" id="gKN-uO-HWS"/>
                 <outlet property="drawBaseView" destination="wiF-3k-PPt" id="eM9-Pp-eYx"/>
                 <outlet property="drawBoostedOddArrowView" destination="Lj9-lb-O4B" id="cyl-jN-xUS"/>
                 <outlet property="drawBoostedOddValueBaseView" destination="B12-Oa-KGF" id="aqh-Pd-N1e"/>
@@ -751,19 +648,14 @@
                 <outlet property="homeBaseView" destination="3W6-fO-bs3" id="8Z3-gZ-lCr"/>
                 <outlet property="homeBoostedOddArrowView" destination="TxJ-Xv-aiD" id="aWL-FY-gsP"/>
                 <outlet property="homeBoostedOddValueBaseView" destination="6Eb-ZH-AaN" id="Q8D-tB-yfZ"/>
-                <outlet property="homeCenterViewConstraint" destination="GjL-gu-UQX" id="vFe-Z3-EJU"/>
                 <outlet property="homeDownChangeOddValueImage" destination="lQV-Me-9U0" id="Zs6-G9-35L"/>
                 <outlet property="homeNewBoostedOddValueLabel" destination="Rpd-wV-b4U" id="MqX-nx-6ta"/>
                 <outlet property="homeOddTitleLabel" destination="KED-Ji-mWw" id="ITU-W3-8pK"/>
                 <outlet property="homeOddValueLabel" destination="kPI-8c-DpA" id="1y9-EK-yIz"/>
                 <outlet property="homeOldBoostedOddValueLabel" destination="fZ9-QZ-7U9" id="BIh-fb-hUG"/>
-                <outlet property="homeParticipantNameLabel" destination="jak-MM-0V4" id="QTm-pu-lAd"/>
-                <outlet property="homeResultCenterViewConstraint" destination="TIr-Lx-HgP" id="glP-hY-zpE"/>
-                <outlet property="homeTrailingConstraint" destination="gh6-nU-IiK" id="LRN-cv-753"/>
                 <outlet property="homeUpChangeOddValueImage" destination="Sdg-bV-HK8" id="BrH-s1-Nfu"/>
+                <outlet property="horizontalMatchInfoBaseView" destination="D8R-G1-Yk3" id="u90-3l-Uk2"/>
                 <outlet property="leadingMarginSpaceConstraint" destination="4Ve-ok-zLQ" id="VnT-oc-VH7"/>
-                <outlet property="liveMatchDotBaseView" destination="USx-ge-MMc" id="2Rx-Ar-TBa"/>
-                <outlet property="liveMatchDotImageView" destination="jb4-7h-Mof" id="Hds-oO-XzZ"/>
                 <outlet property="locationFlagImageView" destination="BvN-9q-msd" id="Z8B-jh-Ehe"/>
                 <outlet property="mainContentBaseView" destination="T2w-ri-ozy" id="wzb-mL-jSq"/>
                 <outlet property="marketBottomConstraint" destination="3ON-QZ-rnM" id="FLy-IS-pQD"/>
@@ -772,24 +664,18 @@
                 <outlet property="marketNameLabel" destination="Apt-Hi-3bs" id="2e7-uS-VFe"/>
                 <outlet property="marketNameView" destination="RmP-yp-eRX" id="NiE-Qn-aa3"/>
                 <outlet property="marketTopConstraint" destination="5uj-Wk-QLn" id="bsG-LO-uh5"/>
-                <outlet property="matchTimeLabel" destination="o7L-x9-JEu" id="Wqr-Tz-D0H"/>
                 <outlet property="oddsStackView" destination="kTP-cv-RCw" id="WXr-a6-clg"/>
                 <outlet property="outrightBaseView" destination="5sN-2a-36p" id="YTc-tK-WdQ"/>
                 <outlet property="outrightNameBaseView" destination="rDf-xB-CUD" id="nwI-yF-m4f"/>
                 <outlet property="outrightNameLabel" destination="PX7-dz-RdJ" id="J6x-Jm-Inq"/>
                 <outlet property="outrightSeeLabel" destination="8fp-qH-d2o" id="ZnG-Wg-d49"/>
-                <outlet property="participantsBaseView" destination="D8R-G1-Yk3" id="n6Q-CP-41c"/>
                 <outlet property="participantsBottomConstraint" destination="VV9-JI-uRu" id="SSa-Q3-DRJ"/>
-                <outlet property="resultCenterConstraint" destination="2Mu-Hz-yGt" id="FU2-6y-yee"/>
-                <outlet property="resultLabel" destination="Wmf-LZ-bWj" id="w2a-KP-uad"/>
-                <outlet property="resultStackView" destination="iph-Xc-owq" id="dsH-Vl-Cvd"/>
                 <outlet property="seeAllBaseView" destination="Xel-CJ-cY5" id="Dfl-gY-KSc"/>
                 <outlet property="seeAllLabel" destination="Vrs-dD-HHo" id="3Bb-90-ubx"/>
                 <outlet property="sportTypeImageView" destination="dC7-iS-7O5" id="Wjz-ap-UKS"/>
                 <outlet property="suspendedBaseView" destination="DoR-hW-9XB" id="30i-gU-w3n"/>
                 <outlet property="suspendedLabel" destination="Thh-yZ-s6v" id="Xsi-9y-Nef"/>
                 <outlet property="teamsHeightConstraint" destination="WkJ-AG-pI4" id="XD9-8p-6d2"/>
-                <outlet property="timeLabel" destination="Jgd-2r-wV6" id="0s8-p0-ezf"/>
                 <outlet property="topImageBaseView" destination="eYs-JT-HdW" id="gxh-5i-5L4"/>
                 <outlet property="topImageView" destination="9lk-mQ-XAm" id="Hrl-PL-8Ni"/>
                 <outlet property="topMarginSpaceConstraint" destination="Rin-Ge-cb1" id="FRL-iP-muw"/>
@@ -799,7 +685,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="icon_live" width="10" height="10"/>
         <image name="odd_down_icon" width="10" height="5"/>
         <image name="odd_up_icon" width="10" height="5"/>
         <image name="soccer_banner_dummy" width="306" height="172"/>
@@ -814,7 +699,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

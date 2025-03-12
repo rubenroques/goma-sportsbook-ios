@@ -9355,6 +9355,16 @@
 		CEDB59702D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59682D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift */; };
 		CEDB59712D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59682D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift */; };
 		CEDB59722D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59682D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift */; };
+		CEDB59742D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB59752D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB59762D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB59772D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB59782D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB59792D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB597A2D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB597B2D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB597C2D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
+		CEDB597D2D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */; };
 		CEE502D02D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
 		CEE502D12D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
 		CEE502D22D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
@@ -10457,6 +10467,7 @@
 		CEC57BD62D53C74900EA0D60 /* zendesk_support.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
 		CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEndpoints.swift; sourceTree = "<group>"; };
 		CEDB59682D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalMatchInfoView.swift; sourceTree = "<group>"; };
+		CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalMatchInfoView.swift; sourceTree = "<group>"; };
 		CEE502CF2D66A609001B0342 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
 		CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelHelperTests.swift; sourceTree = "<group>"; };
 		CEE502E32D66B496001B0342 /* SportsMerger.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SportsMerger.txt; sourceTree = "<group>"; };
@@ -14542,6 +14553,7 @@
 			isa = PBXGroup;
 			children = (
 				CEDB59682D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift */,
+				CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */,
 				CEAB097D2D77588D00541098 /* MatchWidgetCollectionViewCell.swift */,
 				CEAB097E2D77588D00541098 /* MatchWidgetCollectionViewCell.xib */,
 				CEAB097F2D77588D00541098 /* MatchWidgetContainerTableViewCell.swift */,
@@ -17916,6 +17928,7 @@
 				450B7A5928F58574009229E3 /* NewMessageViewController.swift in Sources */,
 				450B7A5A28F58574009229E3 /* UserProfileTipsViewModel.swift in Sources */,
 				450B7A5B28F58574009229E3 /* LiveDetailsViewModel.swift in Sources */,
+				CEDB59792D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				450B7A5C28F58574009229E3 /* TitleTabularDataSource.swift in Sources */,
 				450B7A5D28F58574009229E3 /* MessageDetailWebViewController.swift in Sources */,
 				450B7A5E28F58574009229E3 /* DepositWebViewController.swift in Sources */,
@@ -18791,6 +18804,7 @@
 				457CBB92282D27D000ED0F00 /* NotificationsViewController.swift in Sources */,
 				A9DF8E1628E45B970083BF56 /* UserProfileTipsViewModel.swift in Sources */,
 				457CBB93282D27D000ED0F00 /* LiveDetailsViewModel.swift in Sources */,
+				CEDB597B2D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				457CBB94282D27D000ED0F00 /* TitleTabularDataSource.swift in Sources */,
 				456D6FCD289ACE5600B7E542 /* MessageDetailWebViewController.swift in Sources */,
 				457CBB95282D27D000ED0F00 /* DepositWebViewController.swift in Sources */,
@@ -19279,6 +19293,7 @@
 				457CBD88282D2CD100ED0F00 /* LoginViewController.swift in Sources */,
 				457CBD89282D2CD100ED0F00 /* GroupUserManagementTableViewCell.swift in Sources */,
 				A9DF8E1F28E45BF00083BF56 /* UserProfileViewModel.swift in Sources */,
+				CEDB59782D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				457CBD8A282D2CD100ED0F00 /* HomeViewModel.swift in Sources */,
 				457CBF0A282D2D3700ED0F00 /* ClientVariables.swift in Sources */,
 				457CBD8B282D2CD100ED0F00 /* MatchStatsCollectionViewCell.swift in Sources */,
@@ -20281,6 +20296,7 @@
 				A9DF8E1428E45B970083BF56 /* UserProfileTipsViewModel.swift in Sources */,
 				4589C914282024E400243547 /* LiveDetailsViewModel.swift in Sources */,
 				4589C915282024E400243547 /* TitleTabularDataSource.swift in Sources */,
+				CEDB597A2D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				456D6FCB289ACE5600B7E542 /* MessageDetailWebViewController.swift in Sources */,
 				4589C916282024E400243547 /* DepositWebViewController.swift in Sources */,
 				A986D33428C7609800AF95D7 /* TipsTableViewCell.swift in Sources */,
@@ -21027,6 +21043,7 @@
 				45A33279298976BA008181E9 /* NotificationsViewController.swift in Sources */,
 				45A3327A298976BA008181E9 /* NewMessageViewController.swift in Sources */,
 				45A3327B298976BA008181E9 /* UserProfileTipsViewModel.swift in Sources */,
+				CEDB59752D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				45A3327C298976BA008181E9 /* LiveDetailsViewModel.swift in Sources */,
 				45A3327D298976BA008181E9 /* TitleTabularDataSource.swift in Sources */,
 				45A3327E298976BA008181E9 /* MessageDetailWebViewController.swift in Sources */,
@@ -21773,6 +21790,7 @@
 				A9DF8E1528E45B970083BF56 /* UserProfileTipsViewModel.swift in Sources */,
 				45A6BD6A28246A7500D9B416 /* NotificationsViewController.swift in Sources */,
 				45A6BD6B28246A7500D9B416 /* LiveDetailsViewModel.swift in Sources */,
+				CEDB597D2D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				456D6FCC289ACE5600B7E542 /* MessageDetailWebViewController.swift in Sources */,
 				45A6BD6C28246A7500D9B416 /* TitleTabularDataSource.swift in Sources */,
 				A986D33528C7609800AF95D7 /* TipsTableViewCell.swift in Sources */,
@@ -22519,6 +22537,7 @@
 				45F6BD372AB3732C00C81DE1 /* NotificationsViewController.swift in Sources */,
 				45F6BD382AB3732C00C81DE1 /* NewMessageViewController.swift in Sources */,
 				45F6BD392AB3732C00C81DE1 /* UserProfileTipsViewModel.swift in Sources */,
+				CEDB59772D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				45F6BD3A2AB3732C00C81DE1 /* LiveDetailsViewModel.swift in Sources */,
 				45F6BD3B2AB3732C00C81DE1 /* TitleTabularDataSource.swift in Sources */,
 				45F6BD3C2AB3732C00C81DE1 /* MessageDetailWebViewController.swift in Sources */,
@@ -23022,6 +23041,7 @@
 				A9C341C928F9A74A0055360B /* TabularBarView.swift in Sources */,
 				6547C88D2C650BA50041409C /* CustomPageIndicator.swift in Sources */,
 				A9C341CA28F9A74A0055360B /* SimpleRegisterDetailsViewController.swift in Sources */,
+				CEDB59742D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				A9C341CB28F9A74A0055360B /* UIAlertController+Extensions.swift in Sources */,
 				A9C341CC28F9A74A0055360B /* CGPoint+Extensions.swift in Sources */,
 				A9C341CD28F9A74A0055360B /* RankingCellViewModel.swift in Sources */,
@@ -24024,6 +24044,7 @@
 				CE12A3B92D31347E0022BDF7 /* UserProfileTipsViewModel.swift in Sources */,
 				CE12A3BA2D31347E0022BDF7 /* LiveDetailsViewModel.swift in Sources */,
 				CE12A3BB2D31347E0022BDF7 /* TitleTabularDataSource.swift in Sources */,
+				CEDB59762D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				CE12A3BC2D31347E0022BDF7 /* MessageDetailWebViewController.swift in Sources */,
 				CE12A3BD2D31347E0022BDF7 /* DepositWebViewController.swift in Sources */,
 				CE12A3BE2D31347E0022BDF7 /* PaymentStatus.swift in Sources */,
@@ -24501,6 +24522,7 @@
 				CEA5679F2D5A58D800696793 /* ModalTransitionDismissing.swift in Sources */,
 				CEA567A12D5A58D800696793 /* ForbiddenLocationViewController.swift in Sources */,
 				CEA567A22D5A58D800696793 /* OddFormatter.swift in Sources */,
+				CEDB597C2D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
 				CEA567A32D5A58D800696793 /* ServiceProviderModelMapper+Scores.swift in Sources */,
 				CEA567A52D5A58D800696793 /* SharedTicketCardView.swift in Sources */,
 				CEA567A62D5A58D800696793 /* BoostedBetConfirmationView.swift in Sources */,

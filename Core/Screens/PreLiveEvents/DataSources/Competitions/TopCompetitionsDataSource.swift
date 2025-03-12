@@ -23,6 +23,7 @@ class TopCompetitionsDataSource: NSObject {
     var filteredCompetitionsSubject: CurrentValueSubject<[Competition], Never> = .init([])
 
     var hasTopCompetitionsPublisher: AnyPublisher<Bool, Never> {
+        // TODO: SP Merge - This logic of top competitions and competitions needs to be moved into SP
         return Publishers.CombineLatest(self.sportSubject.removeDuplicates(),
                                         self.topCompetitionsIdentifiersSubject.removeDuplicates())
             .map { currentSport, topCompetitionsIdentifiers -> Bool in
@@ -145,6 +146,7 @@ extension TopCompetitionsDataSource {
                     print("TopCompetitionsDataSource getTopCompetitionsIdentifier error: \(error)")
                 }
             }, receiveValue: { [weak self] topCompetitions in
+                // TODO: SP Merge - This logic of top competitions and competitions needs to be moved into SP
                 let topCompetitionsIds = self?.processTopCompetitions(topCompetitions: topCompetitions) ?? [:]
                 self?.topCompetitionsIdentifiersSubject.send(topCompetitionsIds)
             })
@@ -156,21 +158,26 @@ extension TopCompetitionsDataSource {
         var competitionsIdentifiers: [String: [String]] = [:]
         for topCompetition in topCompetitions {
             let competitionComponents = topCompetition.competitionId.components(separatedBy: "/")
-            let competitionName = competitionComponents[competitionComponents.count - 3].lowercased()
-            if let competitionId = competitionComponents.last {
-                if let topCompetition = competitionsIdentifiers[competitionName] {
-                    if !topCompetition.contains(where: {
-                        $0 == competitionId
-                    }) {
-                        competitionsIdentifiers[competitionName]?.append(competitionId)
+            if let competitionName = competitionComponents[safe: competitionComponents.count - 3]?.lowercased() {
+                if let competitionId = competitionComponents.last {
+                    if let topCompetition = competitionsIdentifiers[competitionName] {
+                        if !topCompetition.contains(where: {
+                            $0 == competitionId
+                        }) {
+                            competitionsIdentifiers[competitionName]?.append(competitionId)
+                        }
+                        
                     }
-
-                }
-                else {
-                    competitionsIdentifiers[competitionName] = [competitionId]
+                    else {
+                        competitionsIdentifiers[competitionName] = [competitionId]
+                    }
                 }
             }
+            else {
+                competitionsIdentifiers[topCompetition.id] = [topCompetition.competitionId]
+            }
         }
+        // TODO: SP Merge - This logic of top competitions and competitions needs to be moved into SP
         return competitionsIdentifiers
     }
 
@@ -183,7 +190,9 @@ extension TopCompetitionsDataSource {
     private func fetchTopCompetitionsMatches() {
 
         self.activeNetworkRequestCount += 1
-
+        
+        // TODO: SP Merge - This logic of top competitions and competitions needs to be moved into SP
+        
         let currentSportName = self.sportSubject.value.name.lowercased().replacingOccurrences(of: " ", with: "-")
         let competitionIds = self.topCompetitionsIdentifiersSubject.value[currentSportName] ?? []
 
@@ -212,7 +221,7 @@ extension TopCompetitionsDataSource {
     }
 
     private func requestForTopCompetitionsMatchesWithIds(_ competitionIds: [String]) -> [AnyPublisher<SportCompetitionInfo?, Never>] {
-
+        // TODO: SP Merge - This logic of top competitions and competitions needs to be moved into SP
         var publishers: [AnyPublisher<SportCompetitionInfo?, Never>] = []
         for competitionId in competitionIds {
             let sportCompetitionInfoPublisher = Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
@@ -226,7 +235,7 @@ extension TopCompetitionsDataSource {
     }
 
     private func processTopCompetitionsInfo(_ selectedTopCompetitionsInfo: [String: SportCompetitionInfo]) {
-
+        // TODO: SP Merge - This logic of top competitions and competitions needs to be moved into SP
         let competitionInfos = selectedTopCompetitionsInfo.map({ $0.value }).filter({
             $0.marketGroups.isNotEmpty
         })
@@ -246,7 +255,7 @@ extension TopCompetitionsDataSource {
     }
 
     private func subscribeTopCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
-
+        // TODO: SP Merge - This logic of top competitions and competitions needs to be moved into SP
         let competitionId = competitionInfo.id
 
         self.activeNetworkRequestCount += 1
