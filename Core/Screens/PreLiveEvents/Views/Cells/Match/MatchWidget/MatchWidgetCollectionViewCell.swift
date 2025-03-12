@@ -134,7 +134,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var headerLineStackView: UIStackView!
 
-
     @IBOutlet private weak var oddsStackView: UIStackView!
 
     @IBOutlet private weak var homeBaseView: UIView!

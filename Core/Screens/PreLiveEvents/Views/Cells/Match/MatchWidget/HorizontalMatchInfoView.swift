@@ -101,7 +101,10 @@ class HorizontalMatchInfoView: UIView {
     private lazy var timeLabel: UILabel = Self.createTimeLabel()
     private lazy var resultStackView: UIStackView = Self.createResultStackView()
     private lazy var resultLabel: UILabel = Self.createResultLabel()
+    private lazy var matchTimeStackView: UIStackView = Self.createMatchTimeStackView()
     private lazy var matchTimeLabel: UILabel = Self.createMatchTimeLabel()
+    private lazy var liveMatchDotBaseView: UIView = Self.createLiveMatchDotBaseView()
+    private lazy var liveMatchDotImageView: UIImageView = Self.createLiveMatchDotImageView()
 
     // MARK: ViewModel
     private var viewModel: HorizontalMatchInfoViewModel?
@@ -133,6 +136,8 @@ class HorizontalMatchInfoView: UIView {
 
         self.resultLabel.textColor = UIColor.App.textPrimary
         self.matchTimeLabel.textColor = UIColor.App.textSecondary
+
+        self.liveMatchDotBaseView.backgroundColor = .clear
     }
 
     // MARK: Configuration
@@ -173,6 +178,7 @@ class HorizontalMatchInfoView: UIView {
                     self?.timeLabel.text = time
                     self?.dateStackView.isHidden = false
                     self?.resultStackView.isHidden = true
+                    self?.liveMatchDotBaseView.isHidden = true
 
                 case .live(let score, let matchTime):
                     self?.resultLabel.text = score
@@ -180,12 +186,14 @@ class HorizontalMatchInfoView: UIView {
                     self?.matchTimeLabel.isHidden = matchTime == nil
                     self?.dateStackView.isHidden = true
                     self?.resultStackView.isHidden = false
+                    self?.liveMatchDotBaseView.isHidden = false
 
                 case .ended(let score):
                     self?.resultLabel.text = score
                     self?.matchTimeLabel.isHidden = true
                     self?.dateStackView.isHidden = true
                     self?.resultStackView.isHidden = false
+                    self?.liveMatchDotBaseView.isHidden = true
                 }
             }
             .store(in: &cancellables)
@@ -249,6 +257,7 @@ extension HorizontalMatchInfoView {
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.backgroundColor = .clear
+        stackView.spacing = 2
         return stackView
     }
 
@@ -263,6 +272,17 @@ extension HorizontalMatchInfoView {
         return label
     }
 
+    private static func createMatchTimeStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.backgroundColor = .clear
+        stackView.spacing = 2
+        return stackView
+    }
+
     private static func createMatchTimeLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -270,6 +290,21 @@ extension HorizontalMatchInfoView {
         label.numberOfLines = 1
         label.textAlignment = .center
         return label
+    }
+
+    private static func createLiveMatchDotBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }
+
+    private static func createLiveMatchDotImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "icon_live")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }
 
     private func setupSubviews() {
@@ -282,11 +317,20 @@ extension HorizontalMatchInfoView {
         self.dateStackView.addArrangedSubview(self.dateLabel)
         self.dateStackView.addArrangedSubview(self.timeLabel)
 
+        // Add live match dot
+        self.liveMatchDotBaseView.addSubview(self.liveMatchDotImageView)
+        self.liveMatchDotBaseView.isHidden = true
+
+        self.matchTimeStackView.addArrangedSubview(self.matchTimeLabel)
+        self.matchTimeStackView.addArrangedSubview(self.liveMatchDotBaseView)
+
         // Add subviews to result stack view
-        self.resultStackView.addArrangedSubview(self.matchTimeLabel)
+        self.resultStackView.addArrangedSubview(self.matchTimeStackView)
         self.resultStackView.addArrangedSubview(self.resultLabel)
 
+        // Set initial state
         self.matchTimeLabel.isHidden = true
+        self.resultStackView.isHidden = true
 
         self.initConstraints()
     }
@@ -315,7 +359,17 @@ extension HorizontalMatchInfoView {
             self.resultLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 
             // Minimum height constraint
-            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 67)
+            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 67),
+
+            // Live match dot base view constraints
+            self.liveMatchDotBaseView.widthAnchor.constraint(equalToConstant: 8),
+            self.liveMatchDotBaseView.heightAnchor.constraint(equalTo: self.liveMatchDotBaseView.widthAnchor, multiplier: 1),
+
+            // Live match dot image view constraints
+            self.liveMatchDotImageView.centerXAnchor.constraint(equalTo: self.liveMatchDotBaseView.centerXAnchor),
+            self.liveMatchDotImageView.centerYAnchor.constraint(equalTo: self.liveMatchDotBaseView.centerYAnchor),
+            self.liveMatchDotImageView.widthAnchor.constraint(equalTo: self.liveMatchDotBaseView.widthAnchor),
+            self.liveMatchDotImageView.heightAnchor.constraint(equalTo: self.liveMatchDotBaseView.heightAnchor)
         ])
     }
 }
