@@ -138,7 +138,7 @@ struct PreviewModelsHelper {
     static func createHomeParticipant() -> Participant {
         return Participant(
             id: "1",
-            name: "Team A"
+            name: "Real Madrid"
         )
     }
 
@@ -146,7 +146,7 @@ struct PreviewModelsHelper {
     static func createAwayParticipant() -> Participant {
         return Participant(
             id: "2",
-            name: "Team B"
+            name: "SL Benfica"
         )
     }
 
@@ -379,7 +379,7 @@ struct PreviewModelsHelper {
             awayParticipant: createAwayParticipant(),
             homeParticipantScore: 0,
             awayParticipantScore: 0,
-            date: Date(),
+            date: Date(timeIntervalSince1970: 1741210200),
             sport: createFootballSport(),
             sportIdCode: "football",
             venue: createVenue(),
@@ -403,7 +403,7 @@ struct PreviewModelsHelper {
         match.status = .inProgress("21")
         match.homeParticipantScore = 1
         match.awayParticipantScore = 0
-        match.matchTime = "21:06"
+        match.matchTime = "21'"
         return match
     }
 

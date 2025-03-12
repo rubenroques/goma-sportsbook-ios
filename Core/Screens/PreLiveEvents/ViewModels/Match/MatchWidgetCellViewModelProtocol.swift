@@ -5,6 +5,7 @@ import ServicesProvider
 
 /// Protocol that defines the requirements for a MatchWidgetCellViewModel
 protocol MatchWidgetCellViewModelProtocol {
+        
     /// The match data
     var match: Match { get }
     
@@ -53,3 +54,4 @@ protocol MatchWidgetCellViewModelProtocol {
     /// Updates the match data
     func updateWithMatch(_ match: Match)
 } 
+

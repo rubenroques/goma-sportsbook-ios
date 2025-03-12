@@ -11,12 +11,17 @@ import Combine
 
 // MARK: - ViewModel
 class HorizontalMatchInfoViewModel {
+    // MARK: Display State
+    enum DisplayState {
+        case preLive(date: String, time: String)
+        case live(score: String, matchTime: String?)
+        case ended(score: String)
+    }
+
     // MARK: Publishers
     private(set) var homeTeamNamePublisher = CurrentValueSubject<String, Never>("")
     private(set) var awayTeamNamePublisher = CurrentValueSubject<String, Never>("")
-    private(set) var startDateStringPublisher = CurrentValueSubject<String, Never>("")
-    private(set) var startTimeStringPublisher = CurrentValueSubject<String, Never>("")
-    private(set) var matchScorePublisher = CurrentValueSubject<String?, Never>(nil)
+    private(set) var displayStatePublisher = CurrentValueSubject<DisplayState, Never>(.preLive(date: "", time: ""))
 
     // MARK: Properties
     private var match: Match?
@@ -37,42 +42,51 @@ class HorizontalMatchInfoViewModel {
         self.homeTeamNamePublisher.send(match.homeParticipant.name)
         self.awayTeamNamePublisher.send(match.awayParticipant.name)
 
-        // Update date and time
-        self.updateDateAndTime(date: match.date)
-
-        // Update score if available
-        self.updateScore(match: match)
+        // Update display state based on match status
+        self.updateDisplayState(match: match)
     }
 
     // MARK: Update Methods
-    func updateDateAndTime(date: Date?) {
-
-        guard
-            let date = date
-        else {
-            self.startDateStringPublisher.send("")
-            self.startTimeStringPublisher.send("")
-            return
+    private func formatDate(_ date: Date?) -> (dateString: String, timeString: String) {
+        guard let date = date else {
+            return ("", "")
         }
 
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE, MMM d"
+        dateFormatter.dateFormat = "MMM d"
         let dateString = dateFormatter.string(from: date)
 
         dateFormatter.dateFormat = "HH:mm"
         let timeString = dateFormatter.string(from: date)
 
-        self.startDateStringPublisher.send(dateString)
-        self.startTimeStringPublisher.send(timeString)
+        return (dateString, timeString)
     }
 
-    func updateScore(match: Match) {
-        if let homeParticipantScore = match.homeParticipantScore, let awayParticipantScore = match.awayParticipantScore {
-            let scoreString = "\(homeParticipantScore) - \(awayParticipantScore)"
-            self.matchScorePublisher.send(scoreString)
+    private func formatScore(homeScore: Int?, awayScore: Int?) -> String {
+        guard let homeScore = homeScore, let awayScore = awayScore else {
+            return ""
         }
-        else {
-            self.matchScorePublisher.send(nil)
+        return "\(homeScore) - \(awayScore)"
+    }
+
+    func updateDisplayState(match: Match) {
+        switch match.status {
+        case .notStarted:
+            let (dateString, timeString) = formatDate(match.date)
+            self.displayStatePublisher.send(.preLive(date: dateString, time: timeString))
+
+        case .inProgress:
+            let score = formatScore(homeScore: match.homeParticipantScore, awayScore: match.awayParticipantScore)
+            self.displayStatePublisher.send(.live(score: score, matchTime: match.matchTime))
+
+        case .ended:
+            let score = formatScore(homeScore: match.homeParticipantScore, awayScore: match.awayParticipantScore)
+            self.displayStatePublisher.send(.ended(score: score))
+
+        case .unknown:
+            // Default to pre-live if status is unknown
+            let (dateString, timeString) = formatDate(match.date)
+            self.displayStatePublisher.send(.preLive(date: dateString, time: timeString))
         }
     }
 }
@@ -87,6 +101,7 @@ class HorizontalMatchInfoView: UIView {
     private lazy var timeLabel: UILabel = Self.createTimeLabel()
     private lazy var resultStackView: UIStackView = Self.createResultStackView()
     private lazy var resultLabel: UILabel = Self.createResultLabel()
+    private lazy var matchTimeLabel: UILabel = Self.createMatchTimeLabel()
 
     // MARK: ViewModel
     private var viewModel: HorizontalMatchInfoViewModel?
@@ -117,6 +132,7 @@ class HorizontalMatchInfoView: UIView {
         self.timeLabel.textColor = UIColor.App.textPrimary
 
         self.resultLabel.textColor = UIColor.App.textPrimary
+        self.matchTimeLabel.textColor = UIColor.App.textSecondary
     }
 
     // MARK: Configuration
@@ -147,51 +163,32 @@ class HorizontalMatchInfoView: UIView {
             }
             .store(in: &cancellables)
 
-        // Bind date
-        viewModel.startDateStringPublisher
+        // Bind display state
+        viewModel.displayStatePublisher
             .receive(on: RunLoop.main)
-            .sink { [weak self] date in
-                self?.dateLabel.text = date
-            }
-            .store(in: &cancellables)
+            .sink { [weak self] state in
+                switch state {
+                case .preLive(let date, let time):
+                    self?.dateLabel.text = date
+                    self?.timeLabel.text = time
+                    self?.dateStackView.isHidden = false
+                    self?.resultStackView.isHidden = true
 
-        // Bind time
-        viewModel.startTimeStringPublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] time in
-                self?.timeLabel.text = time
-            }
-            .store(in: &cancellables)
-
-        // Bind score
-        viewModel.matchScorePublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] score in
-                if let score = score {
+                case .live(let score, let matchTime):
                     self?.resultLabel.text = score
+                    self?.matchTimeLabel.text = matchTime
+                    self?.matchTimeLabel.isHidden = matchTime == nil
+                    self?.dateStackView.isHidden = true
+                    self?.resultStackView.isHidden = false
+
+                case .ended(let score):
+                    self?.resultLabel.text = score
+                    self?.matchTimeLabel.isHidden = true
+                    self?.dateStackView.isHidden = true
                     self?.resultStackView.isHidden = false
                 }
-                else {
-                    self?.resultStackView.isHidden = true
-                }
             }
             .store(in: &cancellables)
-    }
-
-    // For backward compatibility
-    func configure(homeParticipant: String, awayParticipant: String, date: String, time: String, result: String?) {
-        self.homeParticipantNameLabel.text = homeParticipant
-        self.awayParticipantNameLabel.text = awayParticipant
-        self.dateLabel.text = date
-        self.timeLabel.text = time
-
-        if let result = result {
-            self.resultLabel.text = result
-            self.resultStackView.isHidden = false
-        }
-        else {
-            self.resultStackView.isHidden = true
-        }
     }
 }
 
@@ -261,8 +258,17 @@ extension HorizontalMatchInfoView {
         label.font = AppFont.with(type: .bold, size: 17)
         label.numberOfLines = 1
         label.textAlignment = .center
-        let heightConstraint = label.heightAnchor.constraint(equalToConstant: 15)
+        let heightConstraint = label.heightAnchor.constraint(equalToConstant: 17)
         heightConstraint.isActive = true
+        return label
+    }
+
+    private static func createMatchTimeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .medium, size: 10)
+        label.numberOfLines = 1
+        label.textAlignment = .center
         return label
     }
 
@@ -277,7 +283,10 @@ extension HorizontalMatchInfoView {
         self.dateStackView.addArrangedSubview(self.timeLabel)
 
         // Add subviews to result stack view
+        self.resultStackView.addArrangedSubview(self.matchTimeLabel)
         self.resultStackView.addArrangedSubview(self.resultLabel)
+
+        self.matchTimeLabel.isHidden = true
 
         self.initConstraints()
     }
@@ -292,17 +301,18 @@ extension HorizontalMatchInfoView {
             // Date stack view - center
             self.dateStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             self.dateStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            self.dateStackView.leadingAnchor.constraint(equalTo: self.homeParticipantNameLabel.trailingAnchor, constant: 10),
+            self.dateStackView.leadingAnchor.constraint(equalTo: self.homeParticipantNameLabel.trailingAnchor, constant: -1),
+            self.dateStackView.widthAnchor.constraint(equalToConstant: 78),
 
             // Away participant label - right side
-            self.awayParticipantNameLabel.leadingAnchor.constraint(equalTo: self.dateStackView.trailingAnchor, constant: 10),
+            self.awayParticipantNameLabel.leadingAnchor.constraint(equalTo: self.dateStackView.trailingAnchor, constant: -1),
             self.awayParticipantNameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.awayParticipantNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 4),
             self.awayParticipantNameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 
             // Result stack view - center (overlays date stack view when visible)
             self.resultStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.resultLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -4),
+            self.resultLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 
             // Minimum height constraint
             self.heightAnchor.constraint(greaterThanOrEqualToConstant: 67)
@@ -310,46 +320,15 @@ extension HorizontalMatchInfoView {
     }
 }
 
-// MARK: - SwiftUI Previews
 @available(iOS 17.0, *)
-#Preview("HorizontalMatchInfoView - Standard") {
-    PreviewUIView {
-        let view = HorizontalMatchInfoView()
-        // let match = PreviewModelsHelper.createFootballMatch()
-        // let viewModel = HorizontalMatchInfoViewModel(match: match)
-        // view.configure(with: viewModel)
-        
-        view.configure(homeParticipant: "Real Madrid",
-                       awayParticipant: "Barcelona",
-                       date: "11 March",
-                       time: "20:30",
-                       result: "0 - 0")
-        view.backgroundColor = .lightGray
-        return view
-    }
-    .frame(width: 300, height: 67)
-}
-
-@available(iOS 17.0, *)
-#Preview("HorizontalMatchInfoView - With Result") {
-    PreviewUIView {
-        let view = HorizontalMatchInfoView()
-        let match = PreviewModelsHelper.createLiveFootballMatch()
-        let viewModel = HorizontalMatchInfoViewModel(match: match)
-        view.configure(with: viewModel)
-        return view
-    }
-    .frame(width: 300, height: 67)
-}
-
-@available(iOS 17.0, *)
-#Preview("HorizontalMatchInfoView - Multiple States") {
+#Preview("HorizontalMatchInfoView - All States") {
     VStack(spacing: 20) {
         PreviewUIView {
             let view = HorizontalMatchInfoView()
             let match = PreviewModelsHelper.createFootballMatch()
             let viewModel = HorizontalMatchInfoViewModel(match: match)
             view.configure(with: viewModel)
+            view.backgroundColor = .systemGray6
             return view
         }
         .frame(width: 300, height: 67)
@@ -359,6 +338,7 @@ extension HorizontalMatchInfoView {
             let match = PreviewModelsHelper.createLiveFootballMatch()
             let viewModel = HorizontalMatchInfoViewModel(match: match)
             view.configure(with: viewModel)
+            view.backgroundColor = .systemGray6
             return view
         }
         .frame(width: 300, height: 67)
@@ -368,9 +348,57 @@ extension HorizontalMatchInfoView {
             let match = PreviewModelsHelper.createCompletedFootballMatch()
             let viewModel = HorizontalMatchInfoViewModel(match: match)
             view.configure(with: viewModel)
+            view.backgroundColor = .systemGray6
             return view
         }
         .frame(width: 300, height: 67)
     }
     .padding()
 }
+
+// MARK: - SwiftUI Previews
+@available(iOS 17.0, *)
+#Preview("HorizontalMatchInfoView - Pre-Live") {
+    PreviewUIView {
+        let match = PreviewModelsHelper.createFootballMatch()
+        let viewModel = HorizontalMatchInfoViewModel(match: match)
+
+        let view = HorizontalMatchInfoView()
+        view.configure(with: viewModel)
+
+        view.backgroundColor = .systemGray6
+        return view
+    }
+    .frame(width: 300, height: 67)
+}
+
+@available(iOS 17.0, *)
+#Preview("HorizontalMatchInfoView - Live") {
+    PreviewUIView {
+        let match = PreviewModelsHelper.createLiveFootballMatch()
+        let viewModel = HorizontalMatchInfoViewModel(match: match)
+
+        let view = HorizontalMatchInfoView()
+        view.configure(with: viewModel)
+
+        view.backgroundColor = .systemGray6
+        return view
+    }
+    .frame(width: 300, height: 67)
+}
+
+@available(iOS 17.0, *)
+#Preview("HorizontalMatchInfoView - Ended") {
+    PreviewUIView {
+        let match = PreviewModelsHelper.createCompletedFootballMatch()
+        let viewModel = HorizontalMatchInfoViewModel(match: match)
+
+        let view = HorizontalMatchInfoView()
+        view.configure(with: viewModel)
+
+        view.backgroundColor = .systemGray6
+        return view
+    }
+    .frame(width: 300, height: 67)
+}
+
