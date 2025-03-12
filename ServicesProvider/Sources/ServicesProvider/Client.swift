@@ -577,16 +577,6 @@ extension Client {
         return eventsProvider.getHomeSliders()
     }
 
-    public func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return eventsProvider.getPromotionalTopBanners()
-    }
-
     public func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider

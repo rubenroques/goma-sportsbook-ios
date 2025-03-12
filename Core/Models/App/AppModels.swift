@@ -343,13 +343,13 @@ enum MarketType {
 }
 
 struct BannerInfo {
-    var type: String
     var id: String
-    var matchId: String?
+    var title: String
+    var subtitle: String?
+    var ctaText: String?
+    var ctaUrl: String?
     var imageURL: String?
-    var priorityOrder: Int?
-    var marketId: String?
-    var location: String?
+    var userType: String?
     var specialAction: BannerSpecialAction
 }
 

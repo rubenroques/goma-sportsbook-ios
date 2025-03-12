@@ -85,7 +85,6 @@ protocol EventsProvider: Connector {
 
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>
 
-    func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError>
     func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError>
     func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
 

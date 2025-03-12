@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Ruben Roques on 30/05/2023.
 //
@@ -37,5 +37,6 @@ extension SportRadarModelMapper {
                                  bannerContents: internalPromotionalBanner.bannerContents,
                                  specialAction: bannerSpecialAction)
     }
+
 
 }
