@@ -408,6 +408,41 @@ extension VerticalMatchInfoView {
 
 // MARK: - SwiftUI Previews
 @available(iOS 17.0, *)
+#Preview("VerticalMatchInfoView - All States") {
+    VStack(spacing: 20) {
+        PreviewUIView {
+            let view = VerticalMatchInfoView()
+            let viewModel = VerticalMatchInfoViewModel(
+                homeTeamName: "Real Madrid",
+                awayTeamName: "Barcelona",
+                displayState: .preLive(date: "Jul 24", time: "20:30")
+            )
+            view.configure(with: viewModel)
+            view.backgroundColor = .systemGray6
+            return view
+        }
+        .frame(width: 300, height: 70)
+        
+        PreviewUIView {
+            let view = VerticalMatchInfoView()
+            let viewModel = VerticalMatchInfoViewModel(
+                homeTeamName: "Djokovic",
+                awayTeamName: "Nadal",
+                displayState: .live(matchTimeStatus: "3rd Set"),
+                servingIndicator: .away,
+                detailedScore: ("TNS", [:]),
+                marketName: "Match Winner"
+            )
+            view.configure(with: viewModel)
+            view.backgroundColor = UIColor.systemGray6
+            return view
+        }
+        .frame(width: 300, height: 70)
+        
+    }
+}
+
+@available(iOS 17.0, *)
 #Preview("VerticalMatchInfoView - Pre-Live") {
     PreviewUIView {
         let view = VerticalMatchInfoView()
@@ -420,12 +455,12 @@ extension VerticalMatchInfoView {
             marketName: "Match Winner"
         )
         view.configure(with: viewModel)
-        view.backgroundColor = UIColor.App.backgroundCards
+        view.backgroundColor = UIColor.systemGray6
         return view
     }
-    .frame(width: 300, height: 100)
+    .frame(width: 300, height: 70)
 }
-/*
+
 @available(iOS 17.0, *)
 #Preview("VerticalMatchInfoView - Live") {
     PreviewUIView {
@@ -439,10 +474,10 @@ extension VerticalMatchInfoView {
             marketName: "Match Winner"
         )
         view.configure(with: viewModel)
-        view.backgroundColor = UIColor.App.backgroundCards
+        view.backgroundColor = UIColor.systemGray6
         return view
     }
-    .frame(width: 300, height: 100)
+    .frame(width: 300, height: 70)
 }
 
 @available(iOS 17.0, *)
@@ -458,10 +493,10 @@ extension VerticalMatchInfoView {
             marketName: "Match Winner"
         )
         view.configure(with: viewModel)
-        view.backgroundColor = UIColor.App.backgroundCards
+        view.backgroundColor = UIColor.systemGray6
         return view
     }
-    .frame(width: 300, height: 100)
+    .frame(width: 300, height: 770)
 }
 
 @available(iOS 17.0, *)
@@ -477,9 +512,9 @@ extension VerticalMatchInfoView {
             marketName: "Match Winner"
         )
         view.configure(with: viewModel)
-        view.backgroundColor = UIColor.App.backgroundCards
+        view.backgroundColor = UIColor.systemGray6
         return view
     }
-    .frame(width: 300, height: 100)
+    .frame(width: 300, height: 70)
 }
-*/
+

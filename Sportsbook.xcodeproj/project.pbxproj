@@ -10313,7 +10313,6 @@
 		A9FB6D5128C645C800E3FE58 /* RankingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsViewController.swift; sourceTree = "<group>"; };
 		A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewController.swift; sourceTree = "<group>"; };
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
-		CE029DCF2D7D147100479924 /* RunPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunPreviews.swift; sourceTree = "<group>"; };
 		CE0C6C712D54746500EAD26B /* CompetitionsFiltersViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsFiltersViewSwiftUI.swift; sourceTree = "<group>"; };
 		CE0C6C7B2D5483DA00EAD26B /* CompetitionFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterCell.swift; sourceTree = "<group>"; };
 		CE0C6C852D54877400EAD26B /* CompetitionSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionSectionHeader.swift; sourceTree = "<group>"; };
@@ -14204,14 +14203,6 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		CE029DD02D7D147100479924 /* RunPreviews */ = {
-			isa = PBXGroup;
-			children = (
-				CE029DCF2D7D147100479924 /* RunPreviews.swift */,
-			);
-			path = RunPreviews;
-			sourceTree = "<group>";
-		};
 		CE0C6C912D56327E00EAD26B /* SmallToolTipView */ = {
 			isa = PBXGroup;
 			children = (
@@ -14716,7 +14707,6 @@
 		CEB739DD2D762BB3009C4E0F /* PreviewsHelper */ = {
 			isa = PBXGroup;
 			children = (
-				CE029DD02D7D147100479924 /* RunPreviews */,
 				CE7E805A2D7A721D00A5558A /* PreviewTableViewController.swift */,
 				CE7E804F2D7A3D7400A5558A /* PreviewUIViewController.swift */,
 				CE7E80652D7A80DA00A5558A /* PreviewCollectionViewController.swift */,
