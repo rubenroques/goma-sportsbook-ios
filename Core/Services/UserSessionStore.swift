@@ -577,12 +577,11 @@ extension UserSessionStore {
                 }
             }, receiveValue: { [weak self] (cashbackBalance: ServicesProvider.CashbackBalance) in
                 guard
-                    let balance = cashbackBalance.balance
+                    let cashbackBalance = cashbackBalance.balance
                 else {
                     self?.userCashbackBalance.send(nil)
                     return
                 }
-                let cashbackBalance = Double(balance)
                 self?.userCashbackBalance.send(cashbackBalance)
             })
             .store(in: &self.cancellables)

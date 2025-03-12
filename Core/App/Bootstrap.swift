@@ -34,6 +34,36 @@ class Bootstrap {
             }
         }
 
+        // Prepare the router for boot
+        self.setSupportedLanguages()
+        
+        self.bootTriggerCancelable = environment.businessSettingsSocket.maintenanceModePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] maintenanceModeType in
+                switch maintenanceModeType {
+                case .on:
+                    self?.router.showUnderMaintenanceScreenOnBoot()
+                case .off:
+                    self?.connectServiceProvider()
+                    self?.router.makeKeyAndVisible()
+                    self?.bootTriggerCancelable?.cancel()
+                case .unknown:
+                    break
+                }
+            })
+    }
+    
+    func setSupportedLanguages() {
+        // Force the target supported languages
+        let targetSupportedLanguages = TargetVariables.supportedLanguages.map(\.languageCode)
+        UserDefaults.standard.set(targetSupportedLanguages, forKey: "AppleLanguages")
+        UserDefaults.standard.synchronize()
+    }
+    
+    func connectServiceProvider() {
+
+        guard let environment = self.environment else { return }
+
         environment.servicesProvider.connect()
         environment.betslipManager.start()
 
@@ -60,23 +90,6 @@ class Bootstrap {
                 environment.favoritesManager.getUserFavorites()
             })
             .store(in: &self.cancellables)
-
-        // Prepare the router for boot
-        self.router.setSupportedLanguages()
-        
-        self.bootTriggerCancelable = environment.businessSettingsSocket.maintenanceModePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] maintenanceModeType in
-                switch maintenanceModeType {
-                case .on:
-                    self?.router.showUnderMaintenanceScreenOnBoot()
-                case .off:
-                    self?.router.makeKeyAndVisible()
-                    self?.bootTriggerCancelable?.cancel()
-                case .unknown:
-                    break
-                }
-            })
-        
     }
+    
 }
