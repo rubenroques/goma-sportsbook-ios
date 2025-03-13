@@ -14,7 +14,11 @@ enum SportRadarRestAPIClient {
     case get(contentIdentifier: ContentIdentifier)
     case subscribe(sessionToken: String, contentIdentifier: ContentIdentifier)
     case unsubscribe(sessionToken: String, contentIdentifier: ContentIdentifier)
+    
     case marketsFilter
+    case marketsFilterPreLive
+    case marketsFilterLive
+    
     case fieldWidgetId(eventId: String)
     case sportsBoNavigationList
     case sportsScheduledList(dateRange: String)
@@ -72,9 +76,13 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/unsubscribe"
         //
         case .marketsFilter:
-            // return "/sportradar/sportsbook/config/marketsFilter_v2.json"
-            // new: "/sportsbook/config/marketsFilter_v2.json"
             return "/sportsbook/config/marketsFilter_v2.json"
+            
+        case .marketsFilterPreLive:
+            return "/sportsbook/config/prematchmarketsFilterLive_v2.json"
+        case .marketsFilterLive:
+            return "/sportsbook/config/inplaymarketsFilterLive_v2.json"
+            
         //
         case .fieldWidgetId:
             return "/services/content/get"
@@ -171,8 +179,11 @@ extension SportRadarRestAPIClient: Endpoint {
         case .competitionMarketGroups: return nil
         case .search: return nil
         case .getEventSummary: return nil
-        case .getMarketInfo: return nil
         
+        case .getMarketInfo: return nil
+        case .marketsFilterPreLive: return nil
+        case .marketsFilterLive: return nil
+            
         case .getEventDetails:  return nil
         case .getEventSecundaryMarkets: return nil
             
@@ -211,7 +222,11 @@ extension SportRadarRestAPIClient: Endpoint {
         case .get: return .post
         case .subscribe: return .post
         case .unsubscribe: return .post
+        
         case .marketsFilter: return .get
+        case .marketsFilterPreLive: return .get
+        case .marketsFilterLive: return .get
+            
         case .fieldWidgetId: return .post
         case .sportsBoNavigationList: return .post
         case .sportsScheduledList: return .post
@@ -354,10 +369,8 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        
         case .search(let query, let resultLimit, let page, let isLive):
-
-            let type = isLive ? "Inplay" : "Prematch"
-
             let bodyString =
                         """
                         {
@@ -739,6 +752,11 @@ extension SportRadarRestAPIClient: Endpoint {
 
         case .marketsFilter:
             return SportRadarConfiguration.shared.sportRadarFrontEndURL
+        case .marketsFilterPreLive:
+            return SportRadarConfiguration.shared.sportRadarFrontEndURL
+        case .marketsFilterLive:
+            return SportRadarConfiguration.shared.sportRadarFrontEndURL
+            
             
         case .fieldWidgetId:
             return SportRadarConfiguration.shared.servicesRestHostname
@@ -836,8 +854,14 @@ extension SportRadarRestAPIClient: Endpoint {
             return ["Content-Type": "application/json",
                     "app-origin": "ios",
                     "Media-Type": "application/json"]
+        
         case .marketsFilter:
             return defaultHeaders
+        case .marketsFilterPreLive:
+            return defaultHeaders
+        case .marketsFilterLive:
+            return defaultHeaders
+            
         case .fieldWidgetId(_):
             return defaultHeaders
         case .sportsBoNavigationList:
@@ -950,7 +974,11 @@ extension SportRadarRestAPIClient: Endpoint {
             return "subscribe-\(contentIdentifier.contentType)"
         case .unsubscribe(_, let contentIdentifier):
             return "unsubscribe-\(contentIdentifier.contentType)"
+        
         case .marketsFilter: return "marketsFilter"
+        case .marketsFilterPreLive: return "marketsFilterPreLive"
+        case .marketsFilterLive: return "marketsFilterLive"
+            
         case .fieldWidgetId: return "fieldWidgetId"
         case .sportsBoNavigationList: return "sportsBoNavigationList"
         case .sportsScheduledList: return "sportsScheduledList"

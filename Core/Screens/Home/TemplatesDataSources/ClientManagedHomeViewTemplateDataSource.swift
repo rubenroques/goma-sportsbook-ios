@@ -265,7 +265,8 @@ class ClientManagedHomeViewTemplateDataSource {
                 
                 if Env.userSessionStore.isUserLogged() {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDIN" }
-                } else {
+                }
+                else {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDOFF" }
                 }
                 self.banners = displayBanners.map { promotionalBanner in
@@ -292,6 +293,7 @@ class ClientManagedHomeViewTemplateDataSource {
         let cancellable = Env.servicesProvider.getPromotionalTopStories()
             .receive(on: DispatchQueue.main)
             .sink { _ in
+                //
                 //
             } receiveValue: { [weak self] promotionalStories in
                 let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
@@ -720,7 +722,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .featuredTips:
             return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
-            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+            if (Env.businessSettingsSocket.clientSettings.featuredCompetition?.id) != nil {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
             } else {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
@@ -850,7 +852,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
         return nil
     }
-
 
     // Content type ViewModels methods
     func alertsArrayViewModel() -> [ActivationAlert] {
