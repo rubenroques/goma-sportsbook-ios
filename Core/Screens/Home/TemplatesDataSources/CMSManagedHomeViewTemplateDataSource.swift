@@ -20,9 +20,14 @@ class CMSManagedHomeViewTemplateDataSource {
 
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
+    // ALERTS
+    // New model
+    private var alerts = HomeAlerts()
+    
     // User Alert
     private var alertsArray: [ActivationAlert] = []
 
+    // BANNERS
     // Banners
     private var banners: [BannerInfo] = [] {
         didSet {
@@ -366,7 +371,8 @@ class CMSManagedHomeViewTemplateDataSource {
                 let filteredBanners = banners.filter { banner in
                     if Env.userSessionStore.isUserLogged() {
                         return banner.userType == "all" || banner.userType == "logged_in"
-                    } else {
+                    }
+                    else {
                         return banner.userType == "all" || banner.userType == "logged_out"
                     }
                 }

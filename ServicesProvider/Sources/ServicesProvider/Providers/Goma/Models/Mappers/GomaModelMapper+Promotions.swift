@@ -42,10 +42,9 @@ extension GomaModelMapper {
             ctaUrl: alertBanner.ctaUrl,
             platform: alertBanner.platform,
             status: alertBanner.status,
-            startDate: alertBanner.startDate,
-            endDate: alertBanner.endDate,
+            startDate: alertBanner.startDate != nil ? DateFormatter.iso8601.date(from: alertBanner.startDate!) : nil,
+            endDate: alertBanner.endDate != nil ? DateFormatter.iso8601.date(from: alertBanner.endDate!) : nil,
             userType: alertBanner.userType)
-
     }
 
     // MARK: - Banners

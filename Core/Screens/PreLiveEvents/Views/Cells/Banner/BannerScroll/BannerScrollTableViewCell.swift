@@ -17,8 +17,7 @@ class BannerScrollTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     var viewModel: BannerLineCellViewModel?
-    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType, BannerSpecialAction?) -> Void)?
-    var didLongPressOdd: ((BettingTicket) -> Void)?
+    var didTapBanner: ((String?) -> Void)?
 
     private var carouselCounter: Int = 0
     private weak var timer: Timer?
@@ -41,12 +40,9 @@ class BannerScrollTableViewCell: UITableViewCell {
         let flowLayout = FadeInCenterHorizontalFlowLayout()
         flowLayout.alpha = 0.0
         flowLayout.minimumScale = 1.0
-        // flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
         self.collectionView.collectionViewLayout = flowLayout
 
-        // let screenWidth = UIScreen.main.bounds.size.width
-        // let inset = (screenWidth - cellWidth) / 2
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 
         self.setupWithTheme()
@@ -55,20 +51,16 @@ class BannerScrollTableViewCell: UITableViewCell {
         self.collectionView.addGestureRecognizer(longPressGestureRecognizer)
 
         self.startCollectionViewTimer()
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
         self.setupWithTheme()
     }
 
     func setupWithTheme() {
-
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
-
         self.collectionBaseView.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
         self.collectionView.backgroundView?.backgroundColor = .clear
@@ -84,7 +76,6 @@ class BannerScrollTableViewCell: UITableViewCell {
     }
 
     @objc func autoScrollCollectionView(_ timer1: Timer) {
-
         guard
             let banners = self.viewModel?.banners,
             banners.isNotEmpty
@@ -101,11 +92,9 @@ class BannerScrollTableViewCell: UITableViewCell {
             self.carouselCounter = 0
             self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: true)
         }
-
     }
 
     @objc func longPressedResetTimerAction(sender: UILongPressGestureRecognizer) {
-        print("longpressed")
         if sender.state == .began {
             self.timer?.invalidate()
         }
@@ -116,7 +105,6 @@ class BannerScrollTableViewCell: UITableViewCell {
 }
 
 extension BannerScrollTableViewCell: UIScrollViewDelegate {
-
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let witdh = scrollView.frame.width - (scrollView.contentInset.left*2)
         let index = scrollView.contentOffset.x / witdh
@@ -127,7 +115,6 @@ extension BannerScrollTableViewCell: UIScrollViewDelegate {
 }
 
 extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -149,13 +136,9 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
         
         cell.setupWithViewModel(cellViewModel)
 
-        cell.didTapBannerViewAction = { [weak self] presentationType, specialAction in
+        cell.didTapBanner = { [weak self] ctaUrl in
             AnalyticsClient.sendEvent(event: .promoBannerClicked)
-            self?.didTapBannerViewAction?(presentationType, specialAction)
-        }
-
-        cell.didLongPressOdd = { [weak self] bettingTicket in
-            self?.didLongPressOdd?(bettingTicket)
+            self?.didTapBanner?(ctaUrl)
         }
 
         return cell
@@ -176,7 +159,6 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-
         let screenWidth = UIScreen.main.bounds.size.width
         var width = screenWidth*0.9
         if width > 390 {
@@ -184,5 +166,4 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
         }
         return CGSize(width: width, height: 158) // design width: 331
     }
-
 }

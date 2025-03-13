@@ -57,45 +57,6 @@ class DynamicHomeViewTemplateDataSource {
 
         self.homeFeedTemplate = homeFeedTemplate
 
-        var bannerCellViewModels: [BannerCellViewModel] = []
-        for content in self.homeFeedTemplate.feedContents {
-            switch content {
-            case .banners(let items):
-                let bannerCellViewModelsGroup = items.map { bannerItemFeedContent -> BannerCellViewModel? in
-                    if bannerItemFeedContent.type == "game", let contentId = bannerItemFeedContent.contentId {
-                        return BannerCellViewModel(
-                            presentationType: .externalMatch(
-                                contentId: String(contentId),
-                                imageURLString: bannerItemFeedContent.typeImageURL ?? "",
-                                eventPartId: String(bannerItemFeedContent.eventPartId ?? 0),
-                                betTypeId: String(bannerItemFeedContent.bettingTypeId ?? 0)),
-                            specialAction: .none)
-                    }
-                    else if bannerItemFeedContent.type == "stream" {
-                        return BannerCellViewModel(
-                            presentationType: .externalStream(
-                                imageURLString: bannerItemFeedContent.typeImageURL ?? "",
-                                streamURLString: bannerItemFeedContent.streamURL ?? ""),
-                            specialAction: .none)
-                    }
-                    else if bannerItemFeedContent.type == "external" {
-                        return BannerCellViewModel(
-                            presentationType: .externalLink(
-                                imageURLString: bannerItemFeedContent.typeImageURL ?? "",
-                                linkURLString: bannerItemFeedContent.externalLinkURL ?? ""),
-                            specialAction: .none)
-                    }
-                    return nil
-                }.compactMap({ $0 })
-
-                bannerCellViewModels.append(contentsOf: bannerCellViewModelsGroup)
-            default:
-                ()
-            }
-        }
-
-        self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
-
         self.refresh()
 
         Env.servicesProvider.eventsConnectionStatePublisher

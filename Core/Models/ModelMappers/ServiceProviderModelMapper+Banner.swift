@@ -9,21 +9,21 @@ import Foundation
 import ServicesProvider
 
 extension ServiceProviderModelMapper {
-    
-    static func bannerInfo(fromBanner banner: Banner) -> BannerInfo {
-        let specialAction: BannerSpecialAction = banner.ctaUrl != nil ?
-            .callToAction(url: banner.ctaUrl!, text: banner.ctaText ?? "") : .none
 
+    static func bannerInfo(fromBanner banner: Banner) -> BannerInfo {
         return BannerInfo(
             id: banner.id,
             title: banner.title,
             subtitle: banner.subtitle,
             ctaText: banner.ctaText,
             ctaUrl: banner.ctaUrl,
-            imageURL: banner.imageUrl?.absoluteString,
+            platform: banner.platform,
+            status: banner.status,
+            startDate: banner.startDate,
+            endDate: banner.endDate,
             userType: banner.userType,
-            specialAction: specialAction
+            imageURL: banner.imageUrl?.absoluteString
         )
     }
-    
+
 }

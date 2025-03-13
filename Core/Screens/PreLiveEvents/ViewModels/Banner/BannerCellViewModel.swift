@@ -26,20 +26,13 @@ class BannerCellViewModel {
     var ctaUrl: String?
     var ctaText: String?
     
-    init(id: String, matchId: String?, imageURL: String, marketId: String?, location: String?, specialAction: BannerSpecialAction) {
+    init(id: String, matchId: String?, imageURL: String, marketId: String?, location: String?) {
         self.id = id
         self.title = ""
         self.subtitle = nil
         self.imageURL = URL(string: imageURL)
-        
-        switch specialAction {
-        case .callToAction(let url, let text):
-            self.ctaUrl = url
-            self.ctaText = text
-        default:
-            self.ctaUrl = nil
-            self.ctaText = nil
-        }
+        self.ctaUrl = nil
+        self.ctaText = nil
     }
     
     init(bannerInfo: BannerInfo) {
