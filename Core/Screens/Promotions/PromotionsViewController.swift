@@ -120,7 +120,7 @@ class PromotionsViewModel {
                                             title: nil,
                                             blockType: "image",
                                             description: nil,
-                                            image: "https://indiansportsassociation.org/wp-content/uploads/2019/06/banner.jpg",
+                                            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTc149KY36fUBATBKfL9YYKeahlKQXSe9vmpQ&s",
                                             video: nil,
                                             buttonURL: nil,
                                             buttonText: nil,

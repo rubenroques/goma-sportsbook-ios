@@ -146,13 +146,13 @@ class PromotionDetailViewController: UIViewController {
 
                         }
                         else if textContentBlock.blockType == "video" {
-                            let videoSectionView = VideoSectionView()
-                            videoSectionView.translatesAutoresizingMaskIntoConstraints = false
+                            let videoBlockView = VideoBlockView()
+                            videoBlockView.translatesAutoresizingMaskIntoConstraints = false
                             if let url = URL(string: textContentBlock.video ?? "") {
-                                videoSectionView.configure(videoURL: url)
+                                videoBlockView.configure(videoURL: url)
                             }
                             
-                            blockViews.append(videoSectionView)
+                            blockViews.append(videoBlockView)
                         }
                         else if textContentBlock.blockType == "button" {
                             let actionButtonBlockView = ActionButtonBlockView()

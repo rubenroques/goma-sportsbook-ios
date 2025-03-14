@@ -45,7 +45,9 @@ class ImageSectionView: UIView {
     
     // MARK: Functions
     func configure(imageName: String) {
-        self.imageView.image = UIImage(named: imageName)
+        if let imageUrl = URL(string: imageName) {
+            self.imageView.kf.setImage(with: imageUrl)
+        }
     }
 
 }
@@ -57,6 +59,7 @@ extension ImageSectionView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = nil
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }
     

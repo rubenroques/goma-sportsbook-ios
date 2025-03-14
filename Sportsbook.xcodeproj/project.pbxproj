@@ -5203,6 +5203,16 @@
 		65EFF37E2D831C1100F1FC57 /* Promotions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3762D831C1100F1FC57 /* Promotions.swift */; };
 		65EFF37F2D831C1100F1FC57 /* Promotions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3762D831C1100F1FC57 /* Promotions.swift */; };
 		65EFF3802D831C1100F1FC57 /* Promotions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3762D831C1100F1FC57 /* Promotions.swift */; };
+		65EFF3822D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF3832D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF3842D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF3852D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF3862D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF3872D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF3882D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF3892D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF38A2D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
+		65EFF38B2D845F4F00F1FC57 /* VideoBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */; };
 		65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884172C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
@@ -9987,6 +9997,7 @@
 		65EFF3602D83090B00F1FC57 /* ListBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBlockView.swift; sourceTree = "<group>"; };
 		65EFF36B2D830D2D00F1FC57 /* StackViewBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewBlockView.swift; sourceTree = "<group>"; };
 		65EFF3762D831C1100F1FC57 /* Promotions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promotions.swift; sourceTree = "<group>"; };
+		65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBlockView.swift; sourceTree = "<group>"; };
 		65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		65F8841D2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetitionDetailRootViewController.swift; sourceTree = "<group>"; };
 		65F884272C1C43D300A56983 /* BannerTournamentTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTournamentTableViewHeader.swift; sourceTree = "<group>"; };
@@ -12859,6 +12870,7 @@
 				65EFF3552D8300BE00F1FC57 /* ActionButtonBlockView.swift */,
 				65EFF3602D83090B00F1FC57 /* ListBlockView.swift */,
 				65EFF36B2D830D2D00F1FC57 /* StackViewBlockView.swift */,
+				65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */,
 			);
 			path = Promotions;
 			sourceTree = "<group>";
@@ -17867,6 +17879,7 @@
 				A9958C6729703184001474E2 /* UploadDocumentsViewController.swift in Sources */,
 				A996B3F429893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
 				450FC40F2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */,
+				65EFF38A2D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				450B79DD28F58574009229E3 /* TabularBarDataSource.swift in Sources */,
 				450B79DE28F58574009229E3 /* SportSectionHeaderView.swift in Sources */,
 				450B79DF28F58574009229E3 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -18749,6 +18762,7 @@
 				A98708B628D3455300F27348 /* RankingsListViewModel.swift in Sources */,
 				65238E062C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				457CBB2D282D27D000ED0F00 /* TabularBarDataSource.swift in Sources */,
+				65EFF3862D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				457CBB2E282D27D000ED0F00 /* SportSectionHeaderView.swift in Sources */,
 				457CBB2F282D27D000ED0F00 /* MyTicketBetLineViewModel.swift in Sources */,
 				457CBB30282D27D000ED0F00 /* CheckboxButton.swift in Sources */,
@@ -19108,6 +19122,7 @@
 				CEAB0A792D77588D00541098 /* MatchWidgetCellViewModel.swift in Sources */,
 				CEAB0A7A2D77588D00541098 /* MatchWidgetContainerTableViewCell.swift in Sources */,
 				CEAB0A7B2D77588D00541098 /* ListTypeCollectionViewCell.swift in Sources */,
+				65EFF3872D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				CEAB0A7C2D77588D00541098 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				CEAB0A7D2D77588D00541098 /* TopCompetitionsDataSource.swift in Sources */,
 				CEAB0A7E2D77588D00541098 /* MatchWidgetCollectionViewCell.swift in Sources */,
@@ -20253,6 +20268,7 @@
 				A9958C6629703184001474E2 /* UploadDocumentsViewController.swift in Sources */,
 				A996B3F329893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
 				450FC4102A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */,
+				65EFF3842D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				4589C8B0282024E400243547 /* TabularBarDataSource.swift in Sources */,
 				4589C8B1282024E400243547 /* SportSectionHeaderView.swift in Sources */,
 				4589C8B2282024E400243547 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -21006,6 +21022,7 @@
 				45A331FA298976BA008181E9 /* RankingsListViewModel.swift in Sources */,
 				450FC40E2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */,
 				45A331FB298976BA008181E9 /* UploadDocumentsViewController.swift in Sources */,
+				65EFF3882D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				45A331FC298976BA008181E9 /* TabularBarDataSource.swift in Sources */,
 				45A331FD298976BA008181E9 /* SportSectionHeaderView.swift in Sources */,
 				45A331FE298976BA008181E9 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -21759,6 +21776,7 @@
 				45A6BD0628246A7500D9B416 /* SportSectionHeaderView.swift in Sources */,
 				45A6BD0728246A7500D9B416 /* MyTicketBetLineViewModel.swift in Sources */,
 				45A6BD0828246A7500D9B416 /* CheckboxButton.swift in Sources */,
+				65EFF3832D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				45A6BD0928246A7500D9B416 /* SocialViewController.swift in Sources */,
 				45A6BD0A28246A7500D9B416 /* BannerInfo.swift in Sources */,
 				45A6BD0B28246A7500D9B416 /* SocialModels.swift in Sources */,
@@ -22512,6 +22530,7 @@
 				45F6BCAE2AB3732C00C81DE1 /* FlipNumberView.swift in Sources */,
 				45F6BCAF2AB3732C00C81DE1 /* RankingsListViewModel.swift in Sources */,
 				45F6BCB02AB3732C00C81DE1 /* StoriesItemCollectionViewCell.swift in Sources */,
+				65EFF3892D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				45F6BCB12AB3732C00C81DE1 /* UploadDocumentsViewController.swift in Sources */,
 				45F6BCB22AB3732C00C81DE1 /* TabularBarDataSource.swift in Sources */,
 				45F6BCB32AB3732C00C81DE1 /* SportSectionHeaderView.swift in Sources */,
@@ -22886,6 +22905,7 @@
 				CEAB09E02D77588D00541098 /* MatchWidgetCellViewModel.swift in Sources */,
 				CEAB09E12D77588D00541098 /* MatchWidgetContainerTableViewCell.swift in Sources */,
 				CEAB09E22D77588D00541098 /* ListTypeCollectionViewCell.swift in Sources */,
+				65EFF3822D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				CEAB09E32D77588D00541098 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				CEAB09E42D77588D00541098 /* TopCompetitionsDataSource.swift in Sources */,
 				CEAB09E52D77588D00541098 /* MatchWidgetCollectionViewCell.swift in Sources */,
@@ -24031,6 +24051,7 @@
 				CE12A3252D31347E0022BDF7 /* PaymentsDropIn.swift in Sources */,
 				CE12A3262D31347E0022BDF7 /* StoriesItemCollectionViewCell.swift in Sources */,
 				CE12A3272D31347E0022BDF7 /* TabularBarDataSource.swift in Sources */,
+				65EFF38B2D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				CE12A3282D31347E0022BDF7 /* SportSectionHeaderView.swift in Sources */,
 				CE12A3292D31347E0022BDF7 /* MyTicketBetLineViewModel.swift in Sources */,
 				CE12A32A2D31347E0022BDF7 /* CheckboxButton.swift in Sources */,
@@ -25003,6 +25024,7 @@
 				CEA568CD2D5A58D800696793 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				CEA568CE2D5A58D800696793 /* PhonePrefixSelectorViewController.swift in Sources */,
 				65EFF34D2D82F8DF00F1FC57 /* VideoSectionView.swift in Sources */,
+				65EFF3852D845F4F00F1FC57 /* VideoBlockView.swift in Sources */,
 				CEA568CF2D5A58D800696793 /* DocumentsRootViewModel.swift in Sources */,
 				CEA568D02D5A58D800696793 /* ChatSettingsViewModel.swift in Sources */,
 				CEA568D12D5A58D800696793 /* BettingOffer.swift in Sources */,
