@@ -19,3 +19,12 @@ enum ActivationAlertType {
     case profile
     case documents
 }
+
+typealias HomeAlerts = [HomeAlert]
+
+struct HomeAlert {
+    var title: String?
+    var subtitle: String?
+    var ctaText: String?
+    var ctaLink: String?
+}

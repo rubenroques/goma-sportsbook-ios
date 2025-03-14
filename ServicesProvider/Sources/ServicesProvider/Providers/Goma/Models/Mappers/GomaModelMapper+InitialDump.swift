@@ -14,13 +14,13 @@ extension GomaModelMapper {
     static func initialDump(fromInternalInitialDump dump: GomaModels.InitialDump) -> CMSInitialDump {
         return CMSInitialDump(
             homeTemplate: homeTemplate(fromInternalHomeTemplate: dump.homeTemplate),
-            promotions: promotionsContent(fromInternalPromotionsContent: dump.promotions)
+            homeWidgetContent: homeWidgetContent(fromInternalhomeWidgetContent: dump.homeWidgetContent)
         )
     }
 
     // MARK: - Promotions Content Mapper
-    static func promotionsContent(fromInternalPromotionsContent content: GomaModels.PromotionsContent) -> PromotionsContent {
-        return PromotionsContent(
+    static func homeWidgetContent(fromInternalhomeWidgetContent content: GomaModels.HomeWidgetContent) -> HomeWidgetContent {
+        return HomeWidgetContent(
             alertBanner: content.alertBanner != nil ? alertBanner(fromInternalAlertBanner: content.alertBanner!) : nil,
             banners: banners(fromInternalBanners: content.banners ?? []),
             carouselEvents: carouselEvents(fromInternalCarouselEvents: content.carouselEvents ?? []),

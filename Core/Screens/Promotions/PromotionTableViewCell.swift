@@ -85,6 +85,10 @@ class PromotionTableViewCell: UITableViewCell {
         
         self.descriptionLabel.text = viewModel.promotionInfo.slug
         
+        if let imageUrl = URL(string: viewModel.promotionInfo.listDisplayImageUrl) {
+            self.backgroundImageView.kf.setImage(with: imageUrl)
+        }
+        
     }
     
     // MARK: Actions
@@ -105,7 +109,7 @@ extension PromotionTableViewCell {
     private static func createBackgroundImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betsson_mobile_banner")
+        imageView.image = nil
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView

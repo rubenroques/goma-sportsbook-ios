@@ -349,10 +349,10 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
-    private func openPromotionsView(specialAction: BannerSpecialAction?) {
+    private func openPromotionsView(specialAction: String?) {
 
         if let specialAction = specialAction,
-           specialAction == .register {
+           specialAction == "register" {
             let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
             self.present(loginViewController, animated: true, completion: nil)
         }
@@ -745,28 +745,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
 
-            cell.didTapBannerViewAction = { [weak self] presentationType, specialAction in
-                switch presentationType {
-                case .image:
-                    // self?.openBonusView()
-                    self?.openPromotionsView(specialAction: specialAction)
-                case .match(let matchId):
-                    self?.openMatchDetails(matchId: matchId)
-                case .externalMatch(let matchId, _, _, _):
-                    self?.openMatchDetails(matchId: matchId)
-                case .externalLink(_, let linkURLString):
-                    if let linkURL =  URL(string: linkURLString) {
-                        self?.didTapExternalLinkAction(linkURL)
-                    }
-                case .externalStream(_, let streamURLString):
-                    if let streamURL =  URL(string: streamURLString) {
-                        self?.didTapExternalVideoAction(streamURL)
-                    }
+            cell.didTapBanner = { [weak self] ctaUrl in
+                if let ctaUrl = ctaUrl, let url = URL(string: ctaUrl) {
+                    self?.didTapExternalLinkAction(url)
                 }
-            }
-
-            cell.didLongPressOdd = { [weak self] bettingTicket in
-                self?.openQuickbet(bettingTicket)
             }
 
             return cell

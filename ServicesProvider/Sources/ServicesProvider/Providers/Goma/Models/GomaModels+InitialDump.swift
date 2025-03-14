@@ -13,16 +13,16 @@ extension GomaModels {
     struct InitialDump: Codable {
 
         let homeTemplate: HomeTemplate
-        let promotions: PromotionsContent
+        let homeWidgetContent: HomeWidgetContent
 
         enum CodingKeys: String, CodingKey {
             case homeTemplate = "home_template"
-            case promotions = "promotions"
+            case homeWidgetContent = "home_widgets"
         }
     }
 
     // MARK: - Promotions Content
-    struct PromotionsContent: Codable {
+    struct HomeWidgetContent: Codable {
         let alertBanner: GomaModels.AlertBanner?
         let banners: GomaModels.Banners?
         let carouselEvents: GomaModels.CarouselEvents?

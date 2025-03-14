@@ -78,60 +78,72 @@ private extension LoadingMoreTableViewCell {
 #if DEBUG
 import SwiftUI
 
-// MARK: - Preview Helper Classes
-private class PreviewTableViewController: UITableViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+// MARK: - Preview State
+private enum LoadingMorePreviewState: PreviewStateRepresentable {
+    case loading
+    case idle
 
-        self.tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: "LoadingMoreTableViewCell")
-        self.tableView.separatorStyle = .none
-        self.tableView.backgroundColor = .clear
+    var title: String {
+        switch self {
+        case .loading: return "Loading State"
+        case .idle: return "Idle State"
+        }
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3 // Show multiple cells for testing
+    var subtitle: String? {
+        switch self {
+        case .loading: return "Activity indicator is animating"
+        case .idle: return "Activity indicator is hidden"
+        }
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "LoadingMoreTableViewCell") as? LoadingMoreTableViewCell else {
-            fatalError("Could not dequeue LoadingMoreTableViewCell")
-        }
-
-        // Animate cells alternately for testing
-        if indexPath.row % 2 == 0 {
-            cell.startAnimating()
-        }
-        else {
-            cell.stopAnimating()
-        }
-
-        return cell
-    }
-
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    var cellHeight: CGFloat? {
         return 69 // Same height as in original XIB
     }
 }
 
-// MARK: - UIKit to SwiftUI Bridge
-private struct UIKitPreview: UIViewControllerRepresentable {
-    let viewController: UIViewController
-
-    func makeUIViewController(context: Context) -> UIViewController {
-        return viewController
-    }
-
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-}
-
 // MARK: - Previews
+@available(iOS 17.0, *)
 #Preview("Light Mode") {
-    UIKitPreview(viewController: PreviewTableViewController())
+    PreviewUIViewController {
+        let states: [LoadingMorePreviewState] = [.loading, .idle]
+
+        return PreviewTableViewController<LoadingMoreTableViewCell, LoadingMorePreviewState>(
+            states: states,
+            cellClass: LoadingMoreTableViewCell.self,
+            defaultCellHeight: 69,
+            configurator: { cell, state, _ in
+                switch state {
+                case .loading:
+                    cell.startAnimating()
+                case .idle:
+                    cell.stopAnimating()
+                }
+            }
+        )
+    }
 }
 
+@available(iOS 17.0, *)
 #Preview("Dark Mode") {
-    UIKitPreview(viewController: PreviewTableViewController())
-        .preferredColorScheme(.dark)
+    PreviewUIViewController {
+        let states: [LoadingMorePreviewState] = [.loading, .idle]
+
+        return PreviewTableViewController<LoadingMoreTableViewCell, LoadingMorePreviewState>(
+            states: states,
+            cellClass: LoadingMoreTableViewCell.self,
+            defaultCellHeight: 69,
+            configurator: { cell, state, _ in
+                switch state {
+                case .loading:
+                    cell.startAnimating()
+                case .idle:
+                    cell.stopAnimating()
+                }
+            }
+        )
+    }
+    .preferredColorScheme(.dark)
 }
 
 #endif

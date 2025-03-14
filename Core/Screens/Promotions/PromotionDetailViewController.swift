@@ -90,13 +90,14 @@ class PromotionDetailViewController: UIViewController {
 
         }
         
-        if let headerImageName = self.viewModel.promotion.staticPage.headerImage {
-            self.headerImageView.image = UIImage(named: "betsson_mobile_banner")
+        if let headerImageName = self.viewModel.promotion.staticPage.headerImageUrl,
+           let headerUrl = URL(string: headerImageName){
+            self.headerImageView.kf.setImage(with: headerUrl)
         }
         
         self.gradientHeaderView.isHidden = self.viewModel.promotion.staticPage.headerTitle != nil ? false : true
         
-        self.headerImageView.isHidden = self.viewModel.promotion.staticPage.headerImage != nil ? false : true
+        self.headerImageView.isHidden = self.viewModel.promotion.staticPage.headerImageUrl != nil ? false : true
 
     }
     
@@ -165,6 +166,21 @@ class PromotionDetailViewController: UIViewController {
                             
                             blockViews.append(actionButtonBlockView)
                         }
+                        else if textContentBlock.blockType == "bulleted_list" {
+                            
+                            if let bulletedListItems = textContentBlock.bulletedListItems {
+                                
+                                for bulletedListItem in bulletedListItems {
+                                    
+                                    let bulletedItemBlock = BulletItemBlockView()
+                                    bulletedItemBlock.translatesAutoresizingMaskIntoConstraints = false
+                                    bulletedItemBlock.configure(title: bulletedListItem.text)
+                                    
+                                    blockViews.append(bulletedItemBlock)
+                                }
+                                
+                            }
+                        }
                     }
                     
                     stackViewBlockView.configure(views: blockViews)
@@ -181,29 +197,91 @@ class PromotionDetailViewController: UIViewController {
                     
                     var blockViews = [UIView]()
                     
+                    if let title = listBlock.title {
+                        let titleBlockView = TitleBlockView()
+                        titleBlockView.translatesAutoresizingMaskIntoConstraints = false
+                        titleBlockView.configure(title: title)
+                        
+                        blockViews.append(titleBlockView)
+                    }
+                    
                     for itemBlock in listBlock.items {
+                        
+                        var listItemViews = [UIView]()
                         
                         let listBlockView = ListBlockView()
                         listBlockView.translatesAutoresizingMaskIntoConstraints = false
                         
-                        var listBlockTitle = ""
-                        var listBlockSubtitle = ""
-                        var listBlockIconName = ""
+                        var itemIconName = listBlock.genericListItemsIcon
                         
-                        for itemContentBlock in itemBlock.contentBlocks {
+                        if let itemBlockIconName = itemBlock.itemIcon {
+                            itemIconName = itemBlockIconName
+                        }
+                        
+                        for textContentBlock in itemBlock.contentBlocks {
                             
-                            if itemContentBlock.blockType == "title" {
-                                listBlockTitle = itemContentBlock.title ?? ""
+                            if textContentBlock.blockType == "title" {
+                                let titleBlockView = TitleBlockView()
+                                titleBlockView.translatesAutoresizingMaskIntoConstraints = false
+                                titleBlockView.configure(title: textContentBlock.title ?? "")
+                                titleBlockView.isCentered = false
+                                
+                                listItemViews.append(titleBlockView)
                             }
-                            else if itemContentBlock.blockType == "description" {
-                                listBlockSubtitle = itemContentBlock.description ?? ""
+                            else if textContentBlock.blockType == "description" {
+                                let descriptionBlockView = DescriptionBlockView()
+                                descriptionBlockView.translatesAutoresizingMaskIntoConstraints = false
+                                descriptionBlockView.configure(description: textContentBlock.description ?? "")
+                                
+                                listItemViews.append(descriptionBlockView)
+
                             }
-                            else if itemContentBlock.blockType == "image" {
-                                listBlockIconName = itemContentBlock.image ?? ""
+                            else if textContentBlock.blockType == "image" {
+                                let imageBlockView = ImageBlockView()
+                                imageBlockView.translatesAutoresizingMaskIntoConstraints = false
+                                imageBlockView.configure(imageName: textContentBlock.image ?? "")
+                                
+                                listItemViews.append(imageBlockView)
+
+                            }
+                            else if textContentBlock.blockType == "video" {
+                                let videoBlockView = VideoBlockView()
+                                videoBlockView.translatesAutoresizingMaskIntoConstraints = false
+                                if let url = URL(string: textContentBlock.video ?? "") {
+                                    videoBlockView.configure(videoURL: url)
+                                }
+                                
+                                listItemViews.append(videoBlockView)
+                            }
+                            else if textContentBlock.blockType == "button" {
+                                let actionButtonBlockView = ActionButtonBlockView()
+                                actionButtonBlockView.translatesAutoresizingMaskIntoConstraints = false
+                                actionButtonBlockView.configure(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonURL ?? "")
+                                
+                                actionButtonBlockView.tappedActionButtonAction = { [weak self] actionName in
+                                    print("CTA ACTION: \(actionName)")
+                                }
+                                
+                                listItemViews.append(actionButtonBlockView)
+                            }
+                            else if textContentBlock.blockType == "bulleted_list" {
+                                
+                                if let bulletedListItems = textContentBlock.bulletedListItems {
+                                    
+                                    for bulletedListItem in bulletedListItems {
+                                        
+                                        let bulletedItemBlock = BulletItemBlockView()
+                                        bulletedItemBlock.translatesAutoresizingMaskIntoConstraints = false
+                                        bulletedItemBlock.configure(title: bulletedListItem.text)
+                                        
+                                        listItemViews.append(bulletedItemBlock)
+                                    }
+                                    
+                                }
                             }
                         }
                         
-                        listBlockView.configure(iconName: listBlockIconName, title: listBlockTitle, subtitle: listBlockSubtitle)
+                        listBlockView.configure(iconName: itemIconName ?? "", views: listItemViews)
                         
                         blockViews.append(listBlockView)
                     }
@@ -221,7 +299,7 @@ class PromotionDetailViewController: UIViewController {
                     if listBlock.bannerType == "image" {
                         let imageSectionView = ImageSectionView()
                         imageSectionView.translatesAutoresizingMaskIntoConstraints = false
-                        imageSectionView.configure(imageName: listBlock.bannerLinkUrl ?? "")
+                        imageSectionView.configure(imageName: listBlock.imageUrl ?? "")
                         
                         stackView.addArrangedSubview(imageSectionView)
                     }

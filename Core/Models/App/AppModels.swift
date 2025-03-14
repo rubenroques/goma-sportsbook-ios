@@ -15,7 +15,7 @@ struct CompetitionGroup {
     var aggregationType: AggregationType
     var competitions: [Competition]
     var country: Country?
-    
+
     enum AggregationType {
         case popular
         case region
@@ -59,14 +59,14 @@ struct Participant: Codable, Hashable {
 }
 
 struct Market: Hashable {
-    
+
     enum OutcomesOrder: Codable, Hashable {
         case none
         case odds // by odd
         case name // by name
         case setup // The original order that the server sends us
     }
-    
+
     var id: String
     var typeId: String
     var name: String
@@ -92,20 +92,20 @@ struct Market: Hashable {
     var awayParticipant: String?
 
     var eventId: String?
-    
+
     var competitionName: String?
-    
+
     var statsTypeId: String?
 
     var outcomesOrder: OutcomesOrder
-    
+
     var customBetAvailable: Bool?
-    
+
     var sport: Sport?
     var sportIdCode: String?
-    
+
     var venueCountry: Country?
-    
+
     init(id: String,
          typeId: String,
          name: String,
@@ -133,7 +133,7 @@ struct Market: Hashable {
          sportIdCode: String? = nil,
          venueCountry: Country? = nil
     ) {
-        
+
         self.id = id
         self.typeId = typeId
         self.name = name
@@ -180,7 +180,7 @@ struct Outcome: Hashable {
     var externalReference: String?
     var customBetAvailableMarket: Bool?
     var isTerminated: Bool?
-    
+
     init(id: String,
          codeName: String,
          typeName: String,
@@ -268,7 +268,7 @@ enum OddFormat: Codable, Hashable, CustomStringConvertible, Equatable {
         }
 
     }
-    
+
     var decimalValue: Double {
         switch self {
         case .fraction(let numerator, let denominator):
@@ -343,14 +343,30 @@ enum MarketType {
 }
 
 struct BannerInfo {
-    var type: String
     var id: String
-    var matchId: String?
+    var title: String
+    var subtitle: String?
+    var ctaText: String?
+    var ctaUrl: String?
+    var platform: String?
+    var status: String?
+    var startDate: Date?
+    var endDate: Date?
+    var userType: String?
     var imageURL: String?
-    var priorityOrder: Int?
-    var marketId: String?
-    var location: String?
-    var specialAction: BannerSpecialAction
+}
+
+struct AlertBannerInfo {
+    var id: String
+    var title: String
+    var subtitle: String?
+    var ctaText: String?
+    var ctaUrl: String?
+    var platform: String?
+    var status: String?
+    var startDate: Date?
+    var endDate: Date?
+    var userType: String?
 }
 
 struct Country: Codable, Hashable {
@@ -384,23 +400,23 @@ enum LockedStatus: String, Codable, Hashable {
 }
 
 struct UserProfile: Codable, Hashable {
-    
+
     var userIdentifier: String
     var sessionKey: String
-    
+
     var username: String
     var email: String
     var firstName: String?
     var middleName: String?
     var lastName: String?
     var birthDate: Date
-    
+
     var nationality: Country?
     var country: Country?
-    
+
     var gender: UserGender
     var title: UserTitle?
-    
+
     var personalIdNumber: String?
     var address: String?
     var province: String?
@@ -428,7 +444,7 @@ struct UserProfile: Codable, Hashable {
     var kycExpire: String?
 
     var currency: String?
-    
+
     init(userIdentifier: String, sessionKey: String, username: String, email: String, firstName: String? = nil, middleName: String? = nil, lastName: String? = nil,
          birthDate: Date, nationality: Country?, country: Country?, gender: UserGender, title: UserTitle?, personalIdNumber: String?,
          address: String?, province: String?, city: String?, postalCode: String?, birthDepartment: String?, streetNumber: String?,
@@ -459,7 +475,7 @@ struct UserProfile: Codable, Hashable {
         self.mobilePhone = mobilePhone
         self.mobileCountryCode = mobileCountryCode
         self.mobileLocalNumber = mobileLocalNumber
-        
+
         self.avatarName = avatarName
         self.godfatherCode = godfatherCode
         self.placeOfBirth = placeOfBirth
@@ -473,7 +489,7 @@ struct UserProfile: Codable, Hashable {
         self.kycExpire = kycExpire
         self.currency = currency
     }
-    
+
 }
 
 struct UserWallet {

@@ -32,7 +32,10 @@ struct PromotionInfo: Codable {
     let status: String
     let userType: String
     let listDisplayNote: String
-    let listDisplayDescription, startDate, endDate: String
+    let listDisplayDescription: String
+    let listDisplayImageUrl: String
+    let startDate: String
+    let endDate: String
     let staticPage: StaticPage
 
     enum CodingKeys: String, CodingKey {
@@ -45,6 +48,7 @@ struct PromotionInfo: Codable {
         case userType = "user_type"
         case listDisplayNote = "list_display_note"
         case listDisplayDescription = "list_display_description"
+        case listDisplayImageUrl = "list_display_image_url"
         case startDate = "start_date"
         case endDate = "end_date"
         case staticPage = "static_page"
@@ -56,7 +60,7 @@ struct StaticPage: Codable {
     let title: String
     let slug: String
     let headerTitle: String?
-    let headerImage: String?
+    let headerImageUrl: String?
     let isActive: Bool
     let usedForPromotions: Bool
     let platform: String
@@ -71,7 +75,7 @@ struct StaticPage: Codable {
         case title = "title"
         case slug = "slug"
         case headerTitle
-        case headerImage
+        case headerImageUrl = "header_image_url"
         case isActive = "is_active"
         case usedForPromotions = "used_for_promotions"
         case platform = "platform"
@@ -107,52 +111,26 @@ struct BannerBlock: Codable {
     let bannerLinkUrl: String?
     let bannerType: String
     let bannerLinkTarget: String?
+    let imageUrl: String?
     
     enum CodingKeys: String, CodingKey {
         case bannerLinkUrl = "banner_link_url"
         case bannerType = "banner_type"
         case bannerLinkTarget = "banner_link_target"
-    }
-}
-
-// MARK: - List
-struct ListBlock: Codable {
-    let title: String?
-    let items: [ItemBlock]
-}
-
-// MARK: - Item
-struct ItemBlock: Codable {
-    let contentBlocks: [ItemContentBlock]
-
-    enum CodingKeys: String, CodingKey {
-        case contentBlocks = "content_blocks"
-    }
-}
-
-// MARK: - ItemContentBlock
-struct ItemContentBlock: Codable {
-    let blockType: String
-    let title: String?
-    let description: String?
-    let image: String?
-
-    enum CodingKeys: String, CodingKey {
-        case blockType = "block_type"
-        case title = "title"
-        case description = "description"
-        case image = "image"
+        case imageUrl = "image_url"
     }
 }
 
 // MARK: - Text
 struct TextBlock: Codable {
-    let sectionHighlighted: Bool
+    let sectionHighlighted: Bool?
     let contentBlocks: [TextContentBlock]
+    let itemIcon: String?
 
     enum CodingKeys: String, CodingKey {
         case sectionHighlighted = "section_highlighted"
         case contentBlocks = "content_blocks"
+        case itemIcon = "item_icon"
     }
 }
 
@@ -166,6 +144,7 @@ struct TextContentBlock: Codable {
     let buttonURL: String?
     let buttonText: String?
     let buttonTarget: String?
+    let bulletedListItems: [BulletedListItem]?
 
     enum CodingKeys: String, CodingKey {
         case title = "title"
@@ -176,6 +155,28 @@ struct TextContentBlock: Codable {
         case buttonURL = "button_url"
         case buttonText = "button_text"
         case buttonTarget = "button_target"
+        case bulletedListItems = "bulleted_list_items"
+    }
+}
+
+// MARK: - List
+struct ListBlock: Codable {
+    let title: String?
+    let genericListItemsIcon: String?
+    let items: [TextBlock]
+    
+    enum CodingKeys: String, CodingKey {
+        case title = "title"
+        case genericListItemsIcon = "generic_list_items_icon"
+        case items = "items"
+    }
+}
+
+struct BulletedListItem: Codable {
+    let text: String
+    
+    enum CodingKeys: String, CodingKey {
+        case text = "text"
     }
 }
 

@@ -1227,18 +1227,6 @@ extension GomaAPIProvider: EventsProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
-        // TODO: SP MErge - it should have been replaced
-        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-//        let endpoint = GomaAPIClient.getBanners
-//        let publisher: AnyPublisher<[GomaModels.Banner], ServiceProviderError> = self.connector.request(endpoint)
-//        return publisher.map({ banners in
-////            let banners = banners.filter({ $0.isActive == 1 })
-//            let convertedBanners = GomaModelMapper.promotionalBanners(fromBanners: banners)
-//            return convertedBanners
-//        }).eraseToAnyPublisher()
-    }
-
     func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
         // TODO: SP MErge - it should have been replaced
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()

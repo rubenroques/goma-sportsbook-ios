@@ -31,15 +31,19 @@ extension SportRadarModels {
             self.status = try container.decode(String.self, forKey: .status)
             self.message = try container.decodeIfPresent(String.self, forKey: .message)
             
-            if let balanceString = try? container.decodeIfPresent(String.self, forKey: .balance) {
-                self.balance = balanceString
+            var balanceString = ""
+            if let balanceStringValue = try? container.decodeIfPresent(String.self, forKey: .balance) {
+                balanceString = balanceStringValue
             }
-            else if let balanceDouble = try? container.decodeIfPresent(Double.self, forKey: .balance) {
-                self.balance = String(balanceDouble)
+            else if let balanceDoubleValue = try? container.decodeIfPresent(Double.self, forKey: .balance) {
+                balanceString = String(balanceDoubleValue)
             }
             else {
-                self.balance = nil
+                balanceString = ""
             }
+            
+            let cleanedString = balanceString.replacingOccurrences(of: ",", with: "")
+            self.balance = cleanedString
         }
     }
 

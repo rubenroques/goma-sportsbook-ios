@@ -11,7 +11,14 @@ class TitleBlockView: UIView {
 
     // MARK: Private properties
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-
+    
+    // MARK: Public properties
+    var isCentered: Bool = true {
+        didSet {
+            self.titleLabel.textAlignment = isCentered ? .center : .left
+        }
+    }
+    
     // MARK: Lifetime and cycle
     init() {
                 
@@ -28,6 +35,7 @@ class TitleBlockView: UIView {
     }
 
     private func commonInit() {
+        self.isCentered = true
     }
     
     // MARK: Layout and theme

@@ -1,0 +1,28 @@
+# Configuration file for SwiftCellCloner
+# This file defines the source files and target cases for cloning
+
+source:
+  # Path to the source Swift file
+  swift_file: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/MatchWidgetCollectionViewCell.swift"
+
+  # Path to the source XIB file
+  xib_file: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/MatchWidgetCollectionViewCell.xib"
+
+  # Base class name to be replaced
+  base_class_name: "MatchWidgetCollectionViewCell"
+
+output:
+  # Base directory where the new files will be created
+  base_directory: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/"
+
+# List of target cases to clone into
+# For each case, a subdirectory will be created with the case name
+# and the files will be cloned with the case name prefixed to the base class name
+target_cases:
+  - Live
+  - PreLive
+  - TopImage
+  - Boosted
+  - BackgroundImage
+  - ClassicLive
+  - ClassicPreLive

@@ -14,11 +14,14 @@ class VideoBlockView: UIView {
     private lazy var videoContainerView: UIView = Self.createVideoContainerView()
     private lazy var playPauseButton: UIButton = Self.createPlayPauseButton()
     
+    private lazy var heightConstraint: NSLayoutConstraint = Self.createHeightConstraint()
+
     private var playerLayer: AVPlayerLayer?
     private var player: AVPlayer?
     private var isPlaying = false
     
-    private let videoHeight: CGFloat = 400
+    private let defaultVideoHeight: CGFloat = 250
+    private let maxVideoHeight: CGFloat = 500
 
     // MARK: Lifetime and cycle
     init() {
@@ -72,18 +75,77 @@ class VideoBlockView: UIView {
         self.player?.pause()
         self.playerLayer?.removeFromSuperlayer()
         
-        self.player = AVPlayer(url: videoURL)
+        // Get video dimensions and set height before creating player
+        self.setVideoHeight(from: videoURL) { [weak self] in
+            guard let self = self else { return }
+            
+            self.player = AVPlayer(url: videoURL)
+            
+            let playerLayer = AVPlayerLayer(player: self.player)
+            playerLayer.videoGravity = .resizeAspectFill
+            playerLayer.frame = self.videoContainerView.bounds
+            self.videoContainerView.layer.addSublayer(playerLayer)
+            self.playerLayer = playerLayer
+            
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(self.playerDidFinishPlaying),
+                                                   name: .AVPlayerItemDidPlayToEndTime,
+                                                   object: self.player?.currentItem)
+            
+            // Find parent stack view and invalidate its layout
+//            if let stackView = self.findParentStackView() {
+//                stackView.setNeedsLayout()
+//                stackView.layoutIfNeeded()
+//
+//            }
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+    }
+    
+    private func setVideoHeight(from url: URL, completion: @escaping () -> Void) {
+        let asset = AVAsset(url: url)
         
-        let playerLayer = AVPlayerLayer(player: self.player)
-        playerLayer.videoGravity = .resizeAspectFill
-        playerLayer.frame = self.videoContainerView.bounds
-        self.videoContainerView.layer.addSublayer(playerLayer)
-        self.playerLayer = playerLayer
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.playerDidFinishPlaying),
-                                             name: .AVPlayerItemDidPlayToEndTime,
-                                             object: self.player?.currentItem)
+        Task {
+            do {
+                let tracks = try await asset.loadTracks(withMediaType: .video)
+                if let videoTrack = tracks.first {
+                    let size = try await videoTrack.load(.naturalSize)
+                    let transform = try await videoTrack.load(.preferredTransform)
+                    
+                    await MainActor.run {
+                        // Account for video rotation
+                        let videoRect = CGRect(origin: .zero, size: size).applying(transform)
+                        let videoHeight = abs(videoRect.height)
+                        let videoWidth = abs(videoRect.width)
+                        
+                        // Calculate height maintaining aspect ratio based on screen width
+                        let screenWidth = UIScreen.main.bounds.width - 30 // Account for leading/trailing margins
+                        let aspectRatio = videoHeight / videoWidth
+                        var finalHeight = screenWidth * aspectRatio
+                        
+                        // Update height constraint
+                        self.heightConstraint.constant = finalHeight
+                        
+                        completion()
+                    }
+                } else {
+                    await MainActor.run {
+                        // Fallback to default height if no video track
+                        self.heightConstraint.constant = self.defaultVideoHeight
+                        
+                        completion()
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    // Fallback to default height on error
+                    self.heightConstraint .constant = self.defaultVideoHeight
+
+                    completion()
+                }
+            }
+        }
     }
     
     func play() {
@@ -149,6 +211,11 @@ extension VideoBlockView {
         return button
     }
     
+    private static func createHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
     func setupSubviews() {
         self.addSubview(self.videoContainerView)
         self.addSubview(self.playPauseButton)
@@ -157,20 +224,26 @@ extension VideoBlockView {
     }
     
     func initConstraints() {
+        
         NSLayoutConstraint.activate([
             // Video container constraints
             self.videoContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
             self.videoContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
             self.videoContainerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
             self.videoContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
-            
-            self.heightAnchor.constraint(equalToConstant: self.videoHeight),
-            
+                        
             // Play/pause button constraints
             self.playPauseButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             self.playPauseButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.playPauseButton.widthAnchor.constraint(equalToConstant: 50),
             self.playPauseButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        self.heightConstraint = self.heightAnchor.constraint(equalToConstant: self.defaultVideoHeight)
+        self.heightConstraint.isActive = true
+        
+        NSLayoutConstraint.activate([
+            self.videoContainerView.heightAnchor.constraint(equalTo: self.heightAnchor, constant: -10)
         ])
     }
 }

@@ -121,3 +121,4 @@ ServicesProvider/swagger/node_modules
 
 **/__pycache__/
 
+.cursorignore

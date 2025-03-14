@@ -73,6 +73,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
         case .news(let pageIndex, let pageSize):
             queryItems.append(URLQueryItem(name: "page", value: "\(pageIndex)"))
             queryItems.append(URLQueryItem(name: "page_size", value: "\(pageSize)"))
+        case .initialDump:
+            queryItems.append(URLQueryItem(name: "promotions", value: "false"))
         default:
             break
         }

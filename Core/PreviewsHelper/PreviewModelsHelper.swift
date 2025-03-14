@@ -110,10 +110,6 @@ import ServicesProvider
  - `createPromotionalStory()` - Single promotional story
  - `createPromotionalStories()` - Collection of promotional stories
 
- ### Banner Info
- - `createPromotionalBannerInfo()` - Banner for promotional offer
- - `createMatchBannerInfo()` - Banner for match highlight
- - `createRegistrationBannerInfo()` - Banner for registration call-to-action
 
  ## Usage Example:
  ```swift
@@ -138,7 +134,7 @@ struct PreviewModelsHelper {
     static func createHomeParticipant() -> Participant {
         return Participant(
             id: "1",
-            name: "Team A"
+            name: "Real Madrid"
         )
     }
 
@@ -146,7 +142,7 @@ struct PreviewModelsHelper {
     static func createAwayParticipant() -> Participant {
         return Participant(
             id: "2",
-            name: "Team B"
+            name: "SL Benfica"
         )
     }
 
@@ -379,7 +375,7 @@ struct PreviewModelsHelper {
             awayParticipant: createAwayParticipant(),
             homeParticipantScore: 0,
             awayParticipantScore: 0,
-            date: Date(),
+            date: Date(timeIntervalSince1970: 1741210200),
             sport: createFootballSport(),
             sportIdCode: "football",
             venue: createVenue(),
@@ -403,7 +399,7 @@ struct PreviewModelsHelper {
         match.status = .inProgress("21")
         match.homeParticipantScore = 1
         match.awayParticipantScore = 0
-        match.matchTime = "21:06"
+        match.matchTime = "21'"
         return match
     }
 
@@ -752,49 +748,8 @@ struct PreviewModelsHelper {
         ]
     }
 
-    // MARK: - Banner Info
-
-    /// Creates a mock banner info for a promotional offer
-    static func createPromotionalBannerInfo() -> BannerInfo {
-        return BannerInfo(
-            type: "promotion",
-            id: "banner1",
-            matchId: nil,
-            imageURL: "https://example.com/banner1.jpg",
-            priorityOrder: 1,
-            marketId: nil,
-            location: "home",
-            specialAction: .callToAction(url: "https://example.com/promo", text: "Claim Now")
-        )
-    }
-
-    /// Creates a mock banner info for a match highlight
-    static func createMatchBannerInfo() -> BannerInfo {
-        return BannerInfo(
-            type: "match",
-            id: "banner2",
-            matchId: "123",
-            imageURL: "https://example.com/banner2.jpg",
-            priorityOrder: 2,
-            marketId: "1",
-            location: "home",
-            specialAction: .none
-        )
-    }
-
-    /// Creates a mock banner info for registration
-    static func createRegistrationBannerInfo() -> BannerInfo {
-        return BannerInfo(
-            type: "registration",
-            id: "banner3",
-            matchId: nil,
-            imageURL: "https://example.com/banner3.jpg",
-            priorityOrder: 3,
-            marketId: nil,
-            location: "home",
-            specialAction: .register
-        )
-    }
+    // MARK: - BannerInfo
+    // LISSING
 
     // MARK: - Tennis Match
 

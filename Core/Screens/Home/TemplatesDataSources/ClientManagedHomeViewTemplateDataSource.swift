@@ -46,11 +46,7 @@ class ClientManagedHomeViewTemplateDataSource {
                     bannerCellViewModels.append(bannerViewModel)
                 }
                 else {
-                    let bannerViewModel = BannerCellViewModel(id: banner.id,
-                                                              matchId: banner.matchId,
-                                                              imageURL: banner.imageURL ?? "",
-                                                              marketId: banner.marketId,
-                                                              location: banner.location, specialAction: banner.specialAction)
+                    let bannerViewModel = BannerCellViewModel(bannerInfo: banner)
                     bannerCellViewModels.append(bannerViewModel)
                     self.bannersLineViewModelCache[banner.id] = bannerViewModel
                 }
@@ -253,33 +249,24 @@ class ClientManagedHomeViewTemplateDataSource {
 
     // User alerts
     func fetchBanners() {
-        let cancellable = Env.servicesProvider.getPromotionalTopBanners()
+        let cancellable = Env.servicesProvider.getBanners()
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 //
-            } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
+            } receiveValue: { [weak self] (banners: [Banner]) in
                 guard let self = self else { return }
 
-                var displayBanners = promotionalBanners
-
-                if Env.userSessionStore.isUserLogged() {
-                    displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDIN" }
+                // Filter banners based on user login status if needed
+                let filteredBanners = banners.filter { banner in
+                    if Env.userSessionStore.isUserLogged() {
+                        return banner.userType == "all" || banner.userType == "logged_in"
+                    } else {
+                        return banner.userType == "all" || banner.userType == "logged_out"
+                    }
                 }
-                else {
-                    displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDOFF" }
-                }
-                self.banners = displayBanners.map { promotionalBanner in
-                    BannerInfo(
-                        type: "",
-                        id: promotionalBanner.id,
-                        matchId: nil,
-                        imageURL: promotionalBanner.imageURL,
-                        priorityOrder: nil,
-                        marketId: nil,
-                        location: promotionalBanner.location,
-                        specialAction: promotionalBanner.specialAction
-                    )
-                }
+                
+                // Map to BannerInfo using the new mapper
+                self.banners = filteredBanners.map(ServiceProviderModelMapper.bannerInfo(fromBanner:))
                 self.refreshPublisher.send()
             }
 

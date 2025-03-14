@@ -11,8 +11,7 @@ class ListBlockView: UIView {
 
     // MARK: Private properties
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
-    private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+    private lazy var stackView: UIStackView = Self.createStackView()
 
     // MARK: Lifetime and cycle
     init() {
@@ -43,19 +42,22 @@ class ListBlockView: UIView {
         
         self.iconImageView.backgroundColor = .clear
         
-        self.titleLabel.textColor = UIColor.App.highlightPrimary
-        
-        self.subtitleLabel.textColor = UIColor.App.textPrimary
+        self.stackView.backgroundColor = .clear
     }
     
     // MARK: Functions
-    func configure(iconName: String, title: String, subtitle: String) {
+    func configure(iconName: String, views: [UIView]) {
         
-        self.iconImageView.image = UIImage(named: iconName)
+        if let imageUrl = URL(string: iconName) {
+            self.iconImageView.kf.setImage(with: imageUrl)
+        }
         
-        self.titleLabel.text = title
+        for viewItem in views {
+            self.stackView.addArrangedSubview(viewItem)
+        }
         
-        self.subtitleLabel.text = subtitle
+        self.stackView.setNeedsLayout()
+        self.stackView.layoutIfNeeded()
     }
 
 }
@@ -71,30 +73,18 @@ extension ListBlockView {
         return imageView
     }
     
-    private static func createTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Title"
-        label.font = AppFont.with(type: .semibold, size: 14)
-        label.textAlignment = .left
-        return label
-    }
-    
-    private static func createSubtitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Subtitle"
-        label.font = AppFont.with(type: .regular, size: 12)
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        return label
+    private static func createStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        return stackView
     }
     
     func setupSubviews() {
         
         self.addSubview(self.iconImageView)
-        self.addSubview(self.titleLabel)
-        self.addSubview(self.subtitleLabel)
+        self.addSubview(self.stackView)
         
         self.initConstraints()
     }
@@ -106,16 +96,13 @@ extension ListBlockView {
             self.iconImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
             self.iconImageView.widthAnchor.constraint(equalToConstant: 30),
             self.iconImageView.heightAnchor.constraint(equalToConstant: 30),
-            self.iconImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.iconImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 10),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
-            self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+            self.stackView.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 10),
+            self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
+            self.stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+            self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
             
-            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 10),
-            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
-            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 10),
-            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
         ])
     }
 }

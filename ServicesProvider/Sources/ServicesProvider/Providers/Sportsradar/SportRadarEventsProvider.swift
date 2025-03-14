@@ -1100,7 +1100,8 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
 
     }
-
+    
+/*
     func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.promotionalTopBanners
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.PromotionalBannersResponse]>, ServiceProviderError> = self.restConnector.request(endpoint)
@@ -1112,7 +1113,8 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
     }
-
+*/
+    
     func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.promotionalTopEvents
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
