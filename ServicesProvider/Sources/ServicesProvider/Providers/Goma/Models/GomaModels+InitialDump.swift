@@ -8,7 +8,7 @@
 import Foundation
 
 extension GomaModels {
-
+    
     // MARK: - Initial Dump
     struct InitialDump: Codable {
 

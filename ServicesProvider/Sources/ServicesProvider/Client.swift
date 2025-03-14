@@ -27,6 +27,8 @@ public class Client {
 
     private var managedContentProvider: (any ManagedContentProvider)? // TODO: SP Merge - Use login connectors
 
+    private var downloadableContentsProvider: (any DownloadableContentsProvider)?
+
     private var analyticsProvider: (any AnalyticsProvider)?
 
     private var cancellables = Set<AnyCancellable>()
@@ -86,10 +88,19 @@ public class Client {
             self.eventsProvider = eventsProvider
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
 
+            // The common API Authenticator
+            // All subsets of the GOMA api should share the same Authenticator, it's a shared token and connection
+            let  gomaAPIAuthenticator =  GomaAPIAuthenticator(deviceIdentifier: self.configuration.deviceUUID ?? "")
+
             self.managedContentProvider = SportRadarManagedContentProvider(
                 sessionCoordinator: sessionCoordinator,
                 eventsProvider: eventsProvider,
-                gomaManagedContentProvider: GomaManagedContentProvider(gomaAPIAuthenticator: GomaAPIAuthenticator(deviceIdentifier: self.configuration.deviceUUID ?? ""))
+                gomaManagedContentProvider: GomaManagedContentProvider(gomaAPIAuthenticator: gomaAPIAuthenticator)
+            )
+
+            self.downloadableContentsProvider = SportRadarDownloadableContentsProvider(
+                sessionCoordinator: sessionCoordinator,
+                gomaDownloadableContentsProvider: GomaDownloadableContentsProvider(gomaAPIAuthenticator: gomaAPIAuthenticator)
             )
 
             sessionCoordinator.registerUpdater(sportRadarPrivilegedAccessManager, forKey: .launchToken)
@@ -1906,6 +1917,20 @@ extension Client {
         }
 
         return managedContentProvider.getTopCompetitions()
+    }
+
+}
+
+extension Client {
+
+    public func getDownloadableContentItems() -> AnyPublisher<DownloadableContentItems, ServiceProviderError> {
+        guard
+            let downloadableContentsProvider = self.downloadableContentsProvider
+        else {
+            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return downloadableContentsProvider.getDownloadableContentItems()
     }
 
 }

@@ -52,7 +52,6 @@ class GomaAPIPromotionsClient {
                 self?.cache.cacheInitialDump(initialDump)
             })
             .eraseToAnyPublisher()
-
         return publisher
     }
 
@@ -201,3 +200,5 @@ class GomaAPIPromotionsClient {
     }
 
 }
+
+

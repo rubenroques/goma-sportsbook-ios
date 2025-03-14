@@ -9,11 +9,11 @@ import Foundation
 
 extension GomaModelMapper {
     
-    static func featuredTips(fromInternaFeaturedTips internalFeaturedTips: [GomaModels.FeaturedTip]) -> [FeaturedTip] {
-        return internalFeaturedTips.map(Self.featuredTip(fromInternaFeaturedTip:))
+    static func featuredTips(fromInternalFeaturedTips internalFeaturedTips: [GomaModels.FeaturedTip]) -> [FeaturedTip] {
+        return internalFeaturedTips.map(Self.featuredTip(fromInternalFeaturedTip:))
     }
     
-    static func featuredTip(fromInternaFeaturedTip internalFeaturedTip: GomaModels.FeaturedTip) -> FeaturedTip {
+    static func featuredTip(fromInternalFeaturedTip internalFeaturedTip: GomaModels.FeaturedTip) -> FeaturedTip {
     
         let tipUser = FeaturedTipUser(id: "\(internalFeaturedTip.user.id)",
                 name: internalFeaturedTip.user.name,

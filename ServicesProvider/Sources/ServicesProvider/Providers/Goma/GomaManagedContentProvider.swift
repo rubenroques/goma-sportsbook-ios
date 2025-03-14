@@ -23,8 +23,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
-
-    init(gomaAPIAuthenticator: GomaAPIAuthenticator = GomaAPIAuthenticator(deviceIdentifier: "") ) {
+    init(gomaAPIAuthenticator: GomaAPIAuthenticator = GomaAPIAuthenticator(deviceIdentifier: "")) {
         self.authenticator = gomaAPIAuthenticator
 
         self.apiClient = GomaAPIPromotionsClient(

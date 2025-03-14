@@ -25,6 +25,7 @@ enum GomaAPIPromotionsSchema {
     case topCompetitions
     // Initial Dump
     case initialDump
+    case downloadableContents
 }
 
 extension GomaAPIPromotionsSchema: Endpoint {
@@ -60,6 +61,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "/api/competitions/v1/featured"
         case .initialDump:
             return "/api/initial-dump/v1"
+        case .downloadableContents:
+            return "/api/cms/v1/downloadable-contents"
         }
     }
 
@@ -149,6 +152,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "Get top/featured competitions"
         case .initialDump:
             return "Get initial data dump including sports, competitions, and events"
+        case .downloadableContents:
+            return "Get downloadable contents"
         }
     }
 }

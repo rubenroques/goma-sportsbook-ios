@@ -1441,7 +1441,7 @@ extension GomaAPIProvider: EventsProvider {
 
         let publisher: AnyPublisher<GomaModels.FeaturedTipsPagedResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ featuredTipsResponse in
-            return GomaModelMapper.featuredTips(fromInternaFeaturedTips: featuredTipsResponse.featuredTips)
+            return GomaModelMapper.featuredTips(fromInternalFeaturedTips: featuredTipsResponse.featuredTips)
         }).eraseToAnyPublisher()
     }
 

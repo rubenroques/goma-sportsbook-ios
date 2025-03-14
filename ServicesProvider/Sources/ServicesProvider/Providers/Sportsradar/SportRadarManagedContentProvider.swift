@@ -45,7 +45,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
                     self?.connectionStateSubject.send(.disconnected)
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
 
     // MARK: - ManagedContentProvider Implementation
@@ -454,3 +454,5 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
     }
     
 }
+
+
