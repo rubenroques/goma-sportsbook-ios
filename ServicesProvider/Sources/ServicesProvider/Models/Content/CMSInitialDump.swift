@@ -13,12 +13,12 @@ public struct CMSInitialDump: Codable, Equatable, Hashable {
     public let homeTemplate: HomeTemplate
 
     /// All promotional content
-    public let promotions: PromotionsContent
+    public let homeWidgetContent: HomeWidgetContent
 
 }
 
 /// Contains all promotional content grouped by type
-public struct PromotionsContent: Codable, Equatable, Hashable {
+public struct HomeWidgetContent: Codable, Equatable, Hashable {
     /// Alert banner at the top of the app
     public let alertBanner: AlertBanner?
 

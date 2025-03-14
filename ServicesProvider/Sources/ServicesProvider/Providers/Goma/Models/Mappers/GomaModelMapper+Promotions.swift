@@ -34,6 +34,10 @@ extension GomaModelMapper {
     }
 
     static func alertBanner(fromInternalAlertBanner alertBanner: GomaModels.AlertBanner) -> AlertBanner {
+        
+        let startDate = alertBanner.startDate.flatMap { Self.isoDateFormatter.date(from: $0) }
+        let endDate = alertBanner.endDate.flatMap { Self.isoDateFormatter.date(from: $0) }
+        
         return AlertBanner(
             id: String(alertBanner.id),
             title: alertBanner.title,
@@ -42,8 +46,8 @@ extension GomaModelMapper {
             ctaUrl: alertBanner.ctaUrl,
             platform: alertBanner.platform,
             status: alertBanner.status,
-            startDate: alertBanner.startDate != nil ? DateFormatter.iso8601.date(from: alertBanner.startDate!) : nil,
-            endDate: alertBanner.endDate != nil ? DateFormatter.iso8601.date(from: alertBanner.endDate!) : nil,
+            startDate: startDate,
+            endDate: endDate,
             userType: alertBanner.userType)
     }
 
