@@ -36,7 +36,7 @@ class GomaAPIDownloadableContentClient {
         /// Get downloadable content
     /// - Returns: A publisher with the decoded response or error
     func downloadableContents() -> AnyPublisher<[GomaModels.DownloadableContent], ServiceProviderError> {
-        let endpoint = GomaAPIPromotionsSchema.downloadableContents
+        let endpoint = GomaAPIDownloadableContentSchema.downloadableContents
         return self.connector.request(endpoint)
     }
     

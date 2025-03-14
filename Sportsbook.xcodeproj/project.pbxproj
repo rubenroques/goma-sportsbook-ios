@@ -8796,6 +8796,87 @@
 		CEA569CE2D5A59C500696793 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CEA569A82D5A59C500696793 /* avatar6-dark.json */; };
 		CEA569CF2D5A59C500696793 /* ClientVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA569B92D5A59C500696793 /* ClientVariables.swift */; };
 		CEA569D02D5A59C500696793 /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA569BA2D5A59C500696793 /* TargetVariables.swift */; };
+		CEA667032D84A70B00C74895 /* URLManagementServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667022D84A70B00C74895 /* URLManagementServiceTests.swift */; };
+		CEA6670A2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA6670B2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA6670C2D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA6670D2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA6670E2D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA6670F2D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA667102D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA667112D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA667122D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA667132D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA667142D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA667152D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA667162D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA667172D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA667182D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA667192D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA6671A2D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA6671B2D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA6671C2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA6671D2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA6671E2D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA6671F2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA667202D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA667212D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA667222D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA667232D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA667242D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA667252D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA667262D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA667272D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA667282D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA667292D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA6672A2D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA6672B2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA6672C2D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA6672D2D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA6672E2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA6672F2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA667302D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA667312D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA667322D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA667332D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA667342D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA667352D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA667362D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA667372D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA667382D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA667392D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA6673A2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA6673B2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA6673C2D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA6673D2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA6673E2D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA6673F2D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA667402D84A72800C74895 /* LinksProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */; };
+		CEA667412D84A72800C74895 /* DynamicLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */; };
+		CEA667422D84A72800C74895 /* LinksManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667062D84A72800C74895 /* LinksManagementService.swift */; };
+		CEA667432D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */; };
+		CEA667442D84A72800C74895 /* StaticLinksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667052D84A72800C74895 /* StaticLinksProvider.swift */; };
+		CEA667452D84A72800C74895 /* LinksProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667082D84A72800C74895 /* LinksProviderFactory.swift */; };
+		CEA667472D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA667482D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA667492D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA6674A2D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA6674B2D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA6674C2D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA6674D2D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA6674E2D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA6674F2D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA667502D84A76100C74895 /* URLPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667462D84A76100C74895 /* URLPath.swift */; };
+		CEA667522D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA667532D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA667542D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA667552D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA667562D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA667572D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA667582D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA667592D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA6675A2D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA6675B2D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
 		CEAB09A62D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB09A72D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB09A82D77588D00541098 /* MatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB097E2D77588D00541098 /* MatchWidgetCollectionViewCell.xib */; };
@@ -10420,6 +10501,15 @@
 		CEA569B72D5A59C500696793 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CEA569B92D5A59C500696793 /* ClientVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientVariables.swift; sourceTree = "<group>"; };
 		CEA569BA2D5A59C500696793 /* TargetVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetVariables.swift; sourceTree = "<group>"; };
+		CEA667022D84A70B00C74895 /* URLManagementServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLManagementServiceTests.swift; sourceTree = "<group>"; };
+		CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLinksProvider.swift; sourceTree = "<group>"; };
+		CEA667052D84A72800C74895 /* StaticLinksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLinksProvider.swift; sourceTree = "<group>"; };
+		CEA667062D84A72800C74895 /* LinksManagementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksManagementService.swift; sourceTree = "<group>"; };
+		CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksManagementServiceProtocol.swift; sourceTree = "<group>"; };
+		CEA667082D84A72800C74895 /* LinksProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksProviderFactory.swift; sourceTree = "<group>"; };
+		CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksProviderProtocol.swift; sourceTree = "<group>"; };
+		CEA667462D84A76100C74895 /* URLPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPath.swift; sourceTree = "<group>"; };
+		CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinksManagementService+Mocks.swift"; sourceTree = "<group>"; };
 		CEAB09502D77588D00541098 /* CompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsDataSource.swift; sourceTree = "<group>"; };
 		CEAB09512D77588D00541098 /* FavoriteCompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCompetitionsDataSource.swift; sourceTree = "<group>"; };
 		CEAB09522D77588D00541098 /* TopCompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopCompetitionsDataSource.swift; sourceTree = "<group>"; };
@@ -11338,6 +11428,7 @@
 				455A0C6A26BD902F00EC572D /* SportsbookTests.swift */,
 				CEE502E32D66B496001B0342 /* SportsMerger.txt */,
 				CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */,
+				CEA667022D84A70B00C74895 /* URLManagementServiceTests.swift */,
 				455A0C6C26BD903000EC572D /* Info.plist */,
 			);
 			path = CoreTests;
@@ -11477,6 +11568,7 @@
 				A996B3F229893FEC00A535FC /* PaymentsDropIn.swift */,
 				455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */,
 				45CE4DD62B04E357005C2414 /* SecundaryMarketsService.swift */,
+				CEA6675C2D84BFAD00C74895 /* LinksProvider */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -11627,6 +11719,7 @@
 			isa = PBXGroup;
 			children = (
 				CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */,
+				CEA667462D84A76100C74895 /* URLPath.swift */,
 				453976272933F6D100E747EF /* ModelMappers */,
 				A97D246A28180566003EEDEC /* GGAPI */,
 				45D728D52715F6C700EFE04D /* App */,
@@ -14390,6 +14483,20 @@
 				CEA569B82D5A59C500696793 /* Misc */,
 			);
 			path = ATP;
+			sourceTree = "<group>";
+		};
+		CEA6675C2D84BFAD00C74895 /* LinksProvider */ = {
+			isa = PBXGroup;
+			children = (
+				CEA667042D84A72800C74895 /* DynamicLinksProvider.swift */,
+				CEA667052D84A72800C74895 /* StaticLinksProvider.swift */,
+				CEA667062D84A72800C74895 /* LinksManagementService.swift */,
+				CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */,
+				CEA667072D84A72800C74895 /* LinksManagementServiceProtocol.swift */,
+				CEA667082D84A72800C74895 /* LinksProviderFactory.swift */,
+				CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */,
+			);
+			path = LinksProvider;
 			sourceTree = "<group>";
 		};
 		CEAB09532D77588D00541098 /* Competitions */ = {
@@ -17598,6 +17705,12 @@
 				4511356B2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				450B795E28F58574009229E3 /* BetslipErrorView.swift in Sources */,
 				450B795F28F58574009229E3 /* CompetitionSearchTableViewCell.swift in Sources */,
+				CEA667222D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA667232D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA667242D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA667252D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA667262D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA667272D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				450B796028F58574009229E3 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				450B796228F58574009229E3 /* SelectChatroomTableViewCell.swift in Sources */,
 				452B9D292C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */,
@@ -17681,6 +17794,7 @@
 				450B798328F58574009229E3 /* BonusViewController.swift in Sources */,
 				450B798428F58574009229E3 /* ChatMessageView.swift in Sources */,
 				450B798528F58574009229E3 /* CurrencyHelper.swift in Sources */,
+				CEA667492D84A76100C74895 /* URLPath.swift in Sources */,
 				450FC3FF2A2B2588000DB866 /* BoostedArrowView.swift in Sources */,
 				450B798628F58574009229E3 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				450B798728F58574009229E3 /* EditGroupAddUserViewController.swift in Sources */,
@@ -17854,6 +17968,7 @@
 				45372F5C29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				450B7A1D28F58574009229E3 /* SearchTitleSectionHeaderView.swift in Sources */,
 				450B7A1E28F58574009229E3 /* EmptyCardTableViewCell.swift in Sources */,
+				CEA667552D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				450B7A2028F58574009229E3 /* AddFriendViewController.swift in Sources */,
 				653A37CB2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				45F6BA712AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
@@ -18013,6 +18128,7 @@
 			files = (
 				A9D534092A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				A9DF8E6428E751F10083BF56 /* ListTitleHeaderFooterView.swift in Sources */,
+				CEA667032D84A70B00C74895 /* URLManagementServiceTests.swift in Sources */,
 				A9A43C912A4B2BE7008FB399 /* ManualUploadsDocumentsViewModel.swift in Sources */,
 				A9958C7E2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
 				A9C719182A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */,
@@ -18476,6 +18592,12 @@
 				CEA565A42D5A1D2500696793 /* ServiceProviderModelMapper+Profile.swift in Sources */,
 				CEA565A52D5A1D2500696793 /* ServiceProviderModelMapper+Country.swift in Sources */,
 				A9A1B2CC2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
+				CEA6672E2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA6672F2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA667302D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA667312D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA667322D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA667332D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				457CBAC3282D27D000ED0F00 /* Localization.swift in Sources */,
 				A90FB80829B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
 				457CBAC4282D27D000ED0F00 /* NewGroupViewController.swift in Sources */,
@@ -18559,6 +18681,7 @@
 				457CBAE7282D27D000ED0F00 /* BonusViewController.swift in Sources */,
 				455AE1312A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */,
 				A9C2D52929C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
+				CEA667482D84A76100C74895 /* URLPath.swift in Sources */,
 				457CBAE8282D27D000ED0F00 /* ChatMessageView.swift in Sources */,
 				4511356F2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				A9DF8E2F28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift in Sources */,
@@ -18732,6 +18855,7 @@
 				A93FE2092A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				457CBB64282D27D000ED0F00 /* NetworkModels.swift in Sources */,
 				457CBB65282D27D000ED0F00 /* RootViewController.swift in Sources */,
+				CEA667542D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				A9BA041D2A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				457CBB67282D27D000ED0F00 /* SportType.swift in Sources */,
 				A9A43C862A4B2B9C008FB399 /* ExtraDocsViewModel.swift in Sources */,
@@ -18903,6 +19027,7 @@
 				45C10F8128772DA700037BBE /* NSObject+Shift.swift in Sources */,
 				457CBC94282D2CD100ED0F00 /* HomeAwayCardStatsView.swift in Sources */,
 				457CBC95282D2CD100ED0F00 /* MarketGroupOrganizer.swift in Sources */,
+				CEA6674A2D84A76100C74895 /* URLPath.swift in Sources */,
 				451B0A3D286AFD7300005FA5 /* SupportPageViewController.swift in Sources */,
 				457CBC97282D2CD100ED0F00 /* UIApplication+Extensions.swift in Sources */,
 				457CBC98282D2CD100ED0F00 /* SuggestedBetLineViewModel.swift in Sources */,
@@ -19231,6 +19356,7 @@
 				A96FAEDD2981912100A0751F /* UploadDocuments.swift in Sources */,
 				457CBD54282D2CD100ED0F00 /* NotificationsViewModel.swift in Sources */,
 				653A37932D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
+				CEA667522D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				45CE4DDE2B04E357005C2414 /* SecundaryMarketsService.swift in Sources */,
 				457CBD55282D2CD100ED0F00 /* UserSessionStore.swift in Sources */,
 				45B6E21C283FCF7E001B570C /* SentTicketMessageTableViewCell.swift in Sources */,
@@ -19626,6 +19752,12 @@
 				45ECD77D2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				457CBE5F282D2CD100ED0F00 /* ChatSettingsViewModel.swift in Sources */,
 				457CBE60282D2CD100ED0F00 /* GomaGamingSocialServiceClient.swift in Sources */,
+				CEA667162D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA667172D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA667182D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA667192D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA6671A2D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA6671B2D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				A9DF8E4228E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
 				457CBE61282D2CD100ED0F00 /* BettingOffer.swift in Sources */,
 			);
@@ -19970,6 +20102,12 @@
 				4511356C2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				4589C853282024E400243547 /* CompetitionSearchTableViewCell.swift in Sources */,
 				4589C854282024E400243547 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
+				CEA6671C2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA6671D2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA6671E2D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA6671F2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA667202D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA667212D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				A9C1C0A928747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
 				4589C856282024E400243547 /* AutoLayoutDSL.swift in Sources */,
 				452B9D2A2C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */,
@@ -20053,6 +20191,7 @@
 				4589C86D282024E400243547 /* BonusViewController.swift in Sources */,
 				4589C86E282024E400243547 /* ChatMessageView.swift in Sources */,
 				4589C86F282024E400243547 /* CurrencyHelper.swift in Sources */,
+				CEA6674B2D84A76100C74895 /* URLPath.swift in Sources */,
 				450FC4002A2B2589000DB866 /* BoostedArrowView.swift in Sources */,
 				A9DF8E2D28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				45B6E237284151E7001B570C /* EditGroupAddUserViewController.swift in Sources */,
@@ -20226,6 +20365,7 @@
 				45372F5D29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				4589C8E2282024E400243547 /* EmptyCardTableViewCell.swift in Sources */,
 				4589C8E4282024E400243547 /* AddFriendViewController.swift in Sources */,
+				CEA667532D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				4589C8E5282024E400243547 /* GroupUserManagementCellViewModel.swift in Sources */,
 				653A37CA2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				45F6BA722AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
@@ -20718,6 +20858,12 @@
 				451135692BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				45A33176298976BA008181E9 /* ChatNotificationsViewController.swift in Sources */,
 				45A33177298976BA008181E9 /* BetslipErrorView.swift in Sources */,
+				CEA667102D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA667112D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA667122D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA667132D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA667142D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA667152D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				45A33178298976BA008181E9 /* CompetitionSearchTableViewCell.swift in Sources */,
 				45A33179298976BA008181E9 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				452B9D272C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */,
@@ -20801,6 +20947,7 @@
 				45A3319B298976BA008181E9 /* TipsViewController.swift in Sources */,
 				45A3319C298976BA008181E9 /* BonusViewController.swift in Sources */,
 				45A3319D298976BA008181E9 /* ChatMessageView.swift in Sources */,
+				CEA6674F2D84A76100C74895 /* URLPath.swift in Sources */,
 				450FC3FE2A2B2588000DB866 /* BoostedArrowView.swift in Sources */,
 				45A3319E298976BA008181E9 /* CurrencyHelper.swift in Sources */,
 				45A3319F298976BA008181E9 /* FeaturedTipDetailsViewModel.swift in Sources */,
@@ -20974,6 +21121,7 @@
 				45372F5B29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				45A3323C298976BA008181E9 /* SearchTitleSectionHeaderView.swift in Sources */,
 				45A3323E298976BA008181E9 /* EmptyCardTableViewCell.swift in Sources */,
+				CEA667582D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				45A33240298976BA008181E9 /* AddFriendViewController.swift in Sources */,
 				653A37C42D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				455E86B92AC464B20031AF26 /* TargetVariables-PROD.swift in Sources */,
@@ -21466,6 +21614,12 @@
 				45A6BCAE28246A7500D9B416 /* ActivationAlertScrollableView.swift in Sources */,
 				CEB24BA42CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				45A6BCB028246A7500D9B416 /* NewGroupManagementViewController.swift in Sources */,
+				CEA667402D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA667412D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA667422D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA667432D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA667442D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA667452D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				45A6BCB128246A7500D9B416 /* TabularBarView.swift in Sources */,
 				A90FB7DF29B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				45A6BCB228246A7500D9B416 /* CGPoint+Extensions.swift in Sources */,
@@ -21549,6 +21703,7 @@
 				45A6BCD028246A7500D9B416 /* BonusHistoryCellViewModel.swift in Sources */,
 				45A6BCD128246A7500D9B416 /* BonusProgressView.swift in Sources */,
 				A9C18A95285CDF0B009F0063 /* ToastCustom.swift in Sources */,
+				CEA6674E2D84A76100C74895 /* URLPath.swift in Sources */,
 				45A6BCD228246A7500D9B416 /* DateHeaderFooterView.swift in Sources */,
 				A96FAED32981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
 				A9A43C8E2A4B2BE7008FB399 /* ManualUploadsDocumentsViewModel.swift in Sources */,
@@ -21722,6 +21877,7 @@
 				450B782028F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				45A6BD3728246A7500D9B416 /* GamesNotificationViewModel.swift in Sources */,
 				45A6BD3828246A7500D9B416 /* SearchTitleSectionHeaderView.swift in Sources */,
+				CEA6675A2D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				A99CC2F42A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				45A6BD3928246A7500D9B416 /* EmptyCardTableViewCell.swift in Sources */,
 				45A6BD3B28246A7500D9B416 /* AddFriendViewController.swift in Sources */,
@@ -22214,6 +22370,12 @@
 				4511356A2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				45F6BC1F2AB3732C00C81DE1 /* NewGroupViewController.swift in Sources */,
 				45F6BC202AB3732C00C81DE1 /* ChatNotificationsViewController.swift in Sources */,
+				CEA667282D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA667292D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA6672A2D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA6672B2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA6672C2D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA6672D2D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				45F6BC212AB3732C00C81DE1 /* BetslipErrorView.swift in Sources */,
 				45F6BC222AB3732C00C81DE1 /* CompetitionSearchTableViewCell.swift in Sources */,
 				45F6BC232AB3732C00C81DE1 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
@@ -22297,6 +22459,7 @@
 				45F6BC492AB3732C00C81DE1 /* ProfileViewController.swift in Sources */,
 				45F6BC4A2AB3732C00C81DE1 /* TipsViewController.swift in Sources */,
 				45F6BC4B2AB3732C00C81DE1 /* BonusViewController.swift in Sources */,
+				CEA667502D84A76100C74895 /* URLPath.swift in Sources */,
 				45F6BC4C2AB3732C00C81DE1 /* ChatMessageView.swift in Sources */,
 				45F6BC4D2AB3732C00C81DE1 /* BoostedArrowView.swift in Sources */,
 				45F6BC4E2AB3732C00C81DE1 /* CurrencyHelper.swift in Sources */,
@@ -22470,6 +22633,7 @@
 				45F6BCF32AB3732C00C81DE1 /* ServiceProviderModelMapper.swift in Sources */,
 				45F6BCF42AB3732C00C81DE1 /* OddOutcomesSortingHelper.swift in Sources */,
 				45F6BCF52AB3732C00C81DE1 /* SearchTitleSectionHeaderView.swift in Sources */,
+				CEA667592D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				45F6BCF72AB3732C00C81DE1 /* EmptyCardTableViewCell.swift in Sources */,
 				653A37C92D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				45F6BCF82AB3732C00C81DE1 /* AddFriendViewController.swift in Sources */,
@@ -22656,6 +22820,7 @@
 				A9C340A728F9A74A0055360B /* HomeAwayCardStatsView.swift in Sources */,
 				A9C340A828F9A74A0055360B /* MarketGroupOrganizer.swift in Sources */,
 				A9C340A928F9A74A0055360B /* SupportPageViewController.swift in Sources */,
+				CEA667472D84A76100C74895 /* URLPath.swift in Sources */,
 				658A4CBA2B9F6C4800F73772 /* Referrals.swift in Sources */,
 				A9C340AB28F9A74A0055360B /* UIApplication+Extensions.swift in Sources */,
 				A9C719142A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */,
@@ -22984,6 +23149,7 @@
 				A9C3418C28F9A74A0055360B /* MarketGroupDetailsViewModel.swift in Sources */,
 				A9C3418D28F9A74A0055360B /* UIViewController+SwiftUI.swift in Sources */,
 				A9C3418E28F9A74A0055360B /* BonusDetailViewModel.swift in Sources */,
+				CEA6675B2D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				A9C3418F28F9A74A0055360B /* BettingNotificationViewModel.swift in Sources */,
 				A9C3419028F9A74A0055360B /* Sport.swift in Sources */,
 				A9C3419128F9A74A0055360B /* NotificationsViewModel.swift in Sources */,
@@ -23379,6 +23545,12 @@
 				A9C342E328F9A74A0055360B /* RankingsListViewController.swift in Sources */,
 				A9C342E428F9A74A0055360B /* PhonePrefixSelectorViewController.swift in Sources */,
 				A9C342E528F9A74A0055360B /* ChatSettingsViewModel.swift in Sources */,
+				CEA667342D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA667352D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA667362D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA667372D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA667382D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA667392D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				A9C342E628F9A74A0055360B /* GomaGamingSocialServiceClient.swift in Sources */,
 				A9C342E728F9A74A0055360B /* BettingOffer.swift in Sources */,
 			);
@@ -23723,6 +23895,12 @@
 				CE12A28C2D31347E0022BDF7 /* BetslipErrorView.swift in Sources */,
 				CE12A28D2D31347E0022BDF7 /* CompetitionSearchTableViewCell.swift in Sources */,
 				CE12A28E2D31347E0022BDF7 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
+				CEA6670A2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA6670B2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA6670C2D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA6670D2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA6670E2D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA6670F2D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				CE12A2902D31347E0022BDF7 /* SelectChatroomTableViewCell.swift in Sources */,
 				CE12A2912D31347E0022BDF7 /* BetBuilderBettingTicketDataSource.swift in Sources */,
 				CE12A2922D31347E0022BDF7 /* DocumentStateView.swift in Sources */,
@@ -23806,6 +23984,7 @@
 				CE12A2BB2D31347E0022BDF7 /* ChatMessageView.swift in Sources */,
 				CE12A2BC2D31347E0022BDF7 /* CurrencyHelper.swift in Sources */,
 				CE12A2BD2D31347E0022BDF7 /* BoostedArrowView.swift in Sources */,
+				CEA6674D2D84A76100C74895 /* URLPath.swift in Sources */,
 				CE12A2BE2D31347E0022BDF7 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				CE12A2BF2D31347E0022BDF7 /* EditGroupAddUserViewController.swift in Sources */,
 				CE12A2C02D31347E0022BDF7 /* Theme.swift in Sources */,
@@ -23979,6 +24158,7 @@
 				CE12A36E2D31347E0022BDF7 /* SearchTitleSectionHeaderView.swift in Sources */,
 				CE12A3712D31347E0022BDF7 /* EmptyCardTableViewCell.swift in Sources */,
 				CE12A3722D31347E0022BDF7 /* AddFriendViewController.swift in Sources */,
+				CEA667572D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				CE12A3732D31347E0022BDF7 /* BetslipProxyWebViewController.swift in Sources */,
 				653A37C82D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				CE12A3742D31347E0022BDF7 /* GroupUserManagementCellViewModel.swift in Sources */,
@@ -24189,6 +24369,7 @@
 				CEA566312D5A58D800696793 /* MyTicketsViewController.swift in Sources */,
 				CEB739F82D767AED009C4E0F /* LiveEventsViewController.swift in Sources */,
 				CEA566322D5A58D800696793 /* BettingPracticesQuestionnaireViewModel.swift in Sources */,
+				CEA6674C2D84A76100C74895 /* URLPath.swift in Sources */,
 				CEA566332D5A58D800696793 /* FilterFavoritesViewModel.swift in Sources */,
 				CEA566342D5A58D800696793 /* NavControllerTrasntitionPresenting.swift in Sources */,
 				CEA566352D5A58D800696793 /* SuggestedBetsListViewController.swift in Sources */,
@@ -24333,6 +24514,12 @@
 				CEA566C72D5A58D800696793 /* URLSchemaManager.swift in Sources */,
 				CEA566C82D5A58D800696793 /* TransactionsHistoryViewModel.swift in Sources */,
 				CE7E80272D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
+				CEA6673A2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
+				CEA6673B2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
+				CEA6673C2D84A72800C74895 /* LinksManagementService.swift in Sources */,
+				CEA6673D2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
+				CEA6673E2D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
+				CEA6673F2D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
 				CE7E80282D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */,
 				CE7E80292D7A145E00A5558A /* MatchWidgetCellViewModel+Protocol.swift in Sources */,
 				CEA566C92D5A58D800696793 /* NetworkError.swift in Sources */,
@@ -24491,6 +24678,7 @@
 				CEA5676A2D5A58D800696793 /* BonusAvailableDataSource.swift in Sources */,
 				CEA5676B2D5A58D800696793 /* LoginViewController.swift in Sources */,
 				CEA5676C2D5A58D800696793 /* GroupUserManagementTableViewCell.swift in Sources */,
+				CEA667562D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				CEA5676D2D5A58D800696793 /* SelectFriendCellViewModel.swift in Sources */,
 				CEA5676F2D5A58D800696793 /* HomeViewModel.swift in Sources */,
 				CEA567702D5A58D800696793 /* MatchStatsCollectionViewCell.swift in Sources */,

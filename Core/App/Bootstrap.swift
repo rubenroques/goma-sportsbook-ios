@@ -95,6 +95,18 @@ class Bootstrap {
                 environment.favoritesManager.getUserFavorites()
             })
             .store(in: &self.cancellables)
+
+        // Initialize URL Management with a delay to avoid delaying app startup
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            environment.linksProvider.fetchDynamicURLsIfNeeded { success in
+                if success {
+                    print("Dynamic URLs loaded successfully")
+                }
+                else {
+                    print("Failed to load dynamic URLs, using fallbacks")
+                }
+            }
+        }
     }
     
 }

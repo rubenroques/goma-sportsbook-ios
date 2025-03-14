@@ -64,6 +64,14 @@ class Environment {
 
     let urlSchemaManager: URLSchemaManager = URLSchemaManager()
 
+    /// URL provider for accessing dynamic URLs
+    lazy var linksProvider: LinksProviderProtocol = {
+        return LinksProviderFactory.createURLProvider(
+            initialLinks: TargetVariables.links,
+            servicesProvider: self.servicesProvider
+        )
+    }()
+
     // Sumsub keys
     let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"
     let sumsubSecretKey: String = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
@@ -91,7 +99,6 @@ extension Environment {
         return Bundle.main.bundleIdentifier ?? "com.goma.sportsbook"
     }
 }
-
 
 /**
     NEW SERVICESPROVIDER INIT LOGIC. CONFIG BUILD
