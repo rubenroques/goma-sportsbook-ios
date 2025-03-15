@@ -8,11 +8,18 @@ class LinksManagementService: LinksManagementServiceProtocol {
     // MARK: - Properties
 
     /// The current links configuration
-    private(set) var links: URLEndpoint.Links
+    private var _links: URLEndpoint.Links
+    private let linksQueue = DispatchQueue(label: "com.goma.LinksManagementService.queue")
+
+    var links: URLEndpoint.Links {
+        return linksQueue.sync { _links }
+    }
 
     // Cache keys
     private let cacheKey = "cached_dynamic_urls"
     private let cacheExpirationKey = "cached_dynamic_urls_expiration"
+    private let cacheVersionKey = "cached_dynamic_urls_version"
+    private let currentCacheVersion = 1
 
     #if DEBUG
     private let cacheExpirationInterval: TimeInterval = 10
@@ -36,12 +43,23 @@ class LinksManagementService: LinksManagementServiceProtocol {
         servicesProvider: ServicesProvider.Client,
         userDefaults: UserDefaults = .standard
     ) {
-        self.links = initialLinks
+        self._links = initialLinks
         self.servicesProvider = servicesProvider
         self.userDefaults = userDefaults
 
-        // Try to load from cache
-        self.loadCachedURLs()
+        // Try to load from cache first
+        if !loadCachedURLs() {
+            // If cache loading failed, schedule an immediate fetch
+            DispatchQueue.main.async { [weak self] in
+                self?.fetchIfNeeded()
+            }
+        }
+        else {
+            // Even if cache was loaded successfully, schedule a background refresh
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+                self?.fetchIfNeeded()
+            }
+        }
     }
 
     // MARK: - Public Methods
@@ -49,17 +67,21 @@ class LinksManagementService: LinksManagementServiceProtocol {
     /// Fetch dynamic URLs from the server
     /// - Parameter completion: Completion handler called when the operation completes
     func fetchDynamicURLs(completion: @escaping (Bool) -> Void = { _ in }) {
-        
+        self.fetchIfNeeded(completion: completion)
+    }
+
+    // MARK: - Private Methods
+
+    private func fetchIfNeeded(completion: @escaping (Bool) -> Void = { _ in }) {
         // Check if cache is still valid
-        if let expirationDate = userDefaults.object(forKey: cacheExpirationKey) as? Date,
-           Date() < expirationDate {
+        if self.isCacheValid() {
             // Cache is still valid, no need to fetch
-            print("Using cached URLs (valid until \(expirationDate))")
+            print("Using cached URLs (valid until \(String(describing: userDefaults.object(forKey: cacheExpirationKey) as? Date)))")
             completion(true)
             return
         }
 
-        // Cache is expired or doesn't exist, fetch from server
+        // Cache is expired, corrupted, or doesn't exist, fetch from server
         servicesProvider.getDownloadableContentItems()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { result in
@@ -71,16 +93,24 @@ class LinksManagementService: LinksManagementServiceProtocol {
                     break
                 }
             }, receiveValue: { [weak self] downloadableItems in
-                guard let self = self else { return }
+                guard let self = self else {
+                    completion(false)
+                    return
+                }
 
                 // Convert downloadable items to URLEndpoint.Links
                 let dynamicLinks = self.convertDownloadableItemsToLinks(downloadableItems)
 
-                // Merge with static links
-                let mergedLinks = self.mergeLinks(cachedLinks: dynamicLinks, staticLinks: self.links)
+                // Get current static links for merging
+                let currentLinks = self.links
 
-                // Update current links
-                self.links = mergedLinks
+                // Merge with static links
+                let mergedLinks = self.mergeLinks(cachedLinks: dynamicLinks, staticLinks: currentLinks)
+
+                // Update current links (thread-safe)
+                self.linksQueue.sync {
+                    self._links = mergedLinks
+                }
 
                 // Cache the merged links
                 self.cacheURLs(mergedLinks)
@@ -90,21 +120,65 @@ class LinksManagementService: LinksManagementServiceProtocol {
             .store(in: &cancellables)
     }
 
-    // MARK: - Private Methods
+    /// Check if the cache is valid
+    private func isCacheValid() -> Bool {
+        // Check if cache exists
+        guard let cachedData = userDefaults.data(forKey: cacheKey),
+              let expirationDate = userDefaults.object(forKey: cacheExpirationKey) as? Date,
+              let cacheVersion = userDefaults.object(forKey: cacheVersionKey) as? Int else {
+            return false
+        }
+
+        // Check if cache version matches current version
+        guard cacheVersion == currentCacheVersion else {
+            return false
+        }
+
+        // Check if cache has expired
+        guard Date() < expirationDate else {
+            return false
+        }
+
+        // Check if cache data is valid by attempting to decode it
+        do {
+            _ = try JSONDecoder().decode(URLEndpoint.Links.self, from: cachedData)
+            return true
+        } catch {
+            print("Cache validation failed: corrupted data - \(error)")
+            return false
+        }
+    }
+
     /// Load URLs from cache if available
-    private func loadCachedURLs() {
-        if let cachedData = userDefaults.data(forKey: cacheKey),
-           let expirationDate = userDefaults.object(forKey: cacheExpirationKey) as? Date,
-           Date() < expirationDate {
-            do {
-                let cachedLinks = try JSONDecoder().decode(URLEndpoint.Links.self, from: cachedData)
-                // Merge cached links with static links
-                self.links = self.mergeLinks(cachedLinks: cachedLinks, staticLinks: self.links)
-                print("Loaded URLs from cache")
+    /// Returns true if cache was successfully loaded, false otherwise
+    private func loadCachedURLs() -> Bool {
+        // Check if cache exists and is valid
+        guard
+            let cachedData = userDefaults.data(forKey: cacheKey),
+            let expirationDate = userDefaults.object(forKey: cacheExpirationKey) as? Date,
+            let cacheVersion = userDefaults.object(forKey: cacheVersionKey) as? Int,
+            cacheVersion == currentCacheVersion,
+            Date() < expirationDate
+        else {
+            return false
+        }
+
+        do {
+            let cachedLinks = try JSONDecoder().decode(URLEndpoint.Links.self, from: cachedData)
+            // Merge cached links with static links (thread-safe)
+            self.linksQueue.sync {
+                self._links = self.mergeLinks(cachedLinks: cachedLinks, staticLinks: self._links)
             }
-            catch {
-                print("Failed to decode cached URLs: \(error)")
-            }
+            print("Loaded URLs from cache")
+            return true
+        }
+        catch {
+            print("Failed to decode cached URLs: \(error)")
+            // Clear corrupted cache
+            self.userDefaults.removeObject(forKey: cacheKey)
+            self.userDefaults.removeObject(forKey: cacheExpirationKey)
+            self.userDefaults.removeObject(forKey: cacheVersionKey)
+            return false
         }
     }
 
@@ -114,6 +188,7 @@ class LinksManagementService: LinksManagementServiceProtocol {
             let data = try JSONEncoder().encode(links)
             userDefaults.set(data, forKey: cacheKey)
             userDefaults.set(Date().addingTimeInterval(cacheExpirationInterval), forKey: cacheExpirationKey)
+            userDefaults.set(currentCacheVersion, forKey: cacheVersionKey)
             print("URLs cached successfully")
         }
         catch {

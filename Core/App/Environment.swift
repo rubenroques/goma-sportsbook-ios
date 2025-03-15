@@ -36,9 +36,6 @@ class Environment {
             client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
         }
 
-        // Set feature flags
-        client.setMixMatchFeatureEnabled(TargetVariables.hasFeatureEnabled(feature: .mixMatch))
-
         return client
     }()
 

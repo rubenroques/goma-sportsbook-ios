@@ -20,7 +20,7 @@ class StaticLinksProvider: LinksProviderProtocol {
     
     /// Fetch dynamic URLs from the server (no-op for static provider)
     /// - Parameter completion: Completion handler called when the operation completes
-    func fetchDynamicURLsIfNeeded(completion: @escaping (Bool) -> Void) {
+    func fetchDynamicURLs(completion: @escaping (Bool) -> Void) {
         // Static provider doesn't fetch dynamic URLs
         completion(true)
     }

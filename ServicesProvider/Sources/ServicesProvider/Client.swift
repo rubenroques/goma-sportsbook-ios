@@ -132,13 +132,6 @@ public class Client {
         self.eventsProvider?.reconnectIfNeeded()
     }
 
-    // MARK: - Feature Flags
-    public func setMixMatchFeatureEnabled(_ enabled: Bool) {
-        if let eventsProvider = self.eventsProvider as? SportRadarEventsProvider {
-            eventsProvider.isMixMatchEnabled = enabled
-        }
-    }
-
 }
 
 extension Client {
@@ -481,7 +474,13 @@ extension Client {
 }
 
 extension Client {
-    public func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
+    
+    public func getMarketGroups(
+        forEvent event: Event,
+        includeMixMatchGroup hasMixMatchGroup: Bool,
+        includeAllMarketsGroup hasAllMarketsGroup: Bool
+    ) -> AnyPublisher<[MarketGroup], Never>
+    {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -496,7 +495,7 @@ extension Client {
                                                        markets: event.markets)]
             return Just(defaultMarketGroup).eraseToAnyPublisher()
         }
-        return eventsProvider.getMarketGroups(forEvent: event)
+        return eventsProvider.getMarketGroups(forEvent: event, includeMixMatchGroup: hasMixMatchGroup, includeAllMarketsGroup: hasAllMarketsGroup)
     }
 
     public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {

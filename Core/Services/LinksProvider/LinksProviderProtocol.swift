@@ -12,5 +12,5 @@ protocol LinksProviderProtocol {
 
     /// Fetch dynamic URLs from the server
     /// - Parameter completion: Completion handler called when the operation completes
-    func fetchDynamicURLsIfNeeded(completion: @escaping (Bool) -> Void)
+    func fetchDynamicURLs(completion: @escaping (Bool) -> Void)
 }
