@@ -191,5 +191,108 @@ extension GomaModelMapper {
     static func topCompetitionPointer(fromInternalTopCompetitionPointer pointer: GomaModels.TopCompetitionPointer) -> TopCompetitionPointer {
         return TopCompetitionPointer.init(id: pointer, name: "", competitionId: pointer)
     }
+    
+    static func promotionInfo(fromInternalPromotionInfo promotionInfo: GomaModels.PromotionInfo) -> PromotionInfo {
+        
+        let staticPage = self.staticPage(fromInternalStaticPage: promotionInfo.staticPage)
+        
+        let startDate = GomaAPIProvider.parseGomaDateString(promotionInfo.startDate ?? "")
+        
+        let endDate = GomaAPIProvider.parseGomaDateString(promotionInfo.endDate ?? "")
+        
+        return PromotionInfo(id: promotionInfo.id, title: promotionInfo.title, slug: promotionInfo.slug, sortOrder: promotionInfo.sortOrder, platform: promotionInfo.platform, status: promotionInfo.status, userType: promotionInfo.userType, listDisplayNote: promotionInfo.listDisplayNote, listDisplayDescription: promotionInfo.listDisplayDescription, listDisplayImageUrl: promotionInfo.listDisplayImageUrl, startDate: startDate, endDate: endDate, staticPage: staticPage)
+    }
+    
+    static func staticPage(fromInternalStaticPage staticPage: GomaModels.StaticPage) -> StaticPage {
+        
+        let sections = staticPage.sections.map { self.sectionBlock(fromInternalSectionBlock: $0)
+        }
+        let terms = staticPage.terms.map { self.termItem(fromInternalTermItem: $0)
+        }
+        
+        let startDate = GomaAPIProvider.parseGomaDateString(staticPage.startDate ?? "")
+        
+        let endDate = GomaAPIProvider.parseGomaDateString(staticPage.endDate ?? "")
+        
+        return StaticPage(title: staticPage.title, slug: staticPage.slug, headerTitle: staticPage.headerTitle, headerImageUrl: staticPage.headerImageUrl, isActive: staticPage.isActive, usedForPromotions: staticPage.usedForPromotions, platform: staticPage.platform, status: staticPage.status, userType: staticPage.userType, startDate: startDate, endDate: endDate, sections: sections, terms: terms)
+    }
+    
+    static func sectionBlock(fromInternalSectionBlock section: GomaModels.SectionBlock) -> SectionBlock {
+        
+        let textBlock = section.text.map { self.textBlock(fromInternalTextBlock: $0)
+        }
+        
+        let listBlock = section.list.map { self.listBlock(fromInternalListBlock: $0)
+        }
+        
+        return SectionBlock(
+            type: section.type,
+            sortOrder: section.sortOrder,
+            isActive: section.isActive,
+            banner: section.banner.map { bannerBlock(fromInternalBannerBlock: $0)
+            },
+            text: textBlock,
+            list: listBlock
+        )
+    }
 
+    static func bannerBlock(fromInternalBannerBlock banner: GomaModels.BannerBlock) -> BannerBlock {
+        
+        return BannerBlock(
+            bannerLinkUrl: banner.bannerLinkUrl,
+            bannerType: banner.bannerType,
+            bannerLinkTarget: banner.bannerLinkTarget,
+            imageUrl: banner.imageUrl
+        )
+    }
+
+    static func textBlock(fromInternalTextBlock text: GomaModels.TextBlock) -> TextBlock {
+        let contentBlocks = text.contentBlocks.map { textContentBlock(fromInternalTextContentBlock: $0)
+        }
+        
+        return TextBlock(
+            sectionHighlighted: text.sectionHighlighted,
+            contentBlocks: contentBlocks,
+            itemIcon: text.itemIcon
+        )
+    }
+
+    static func textContentBlock(fromInternalTextContentBlock content: GomaModels.TextContentBlock) -> TextContentBlock {
+        
+        let bulletedListItems = content.bulletedListItems?.map { bulletedListItem(fromInternalBulletedListItem: $0)
+        }
+        
+        return TextContentBlock(
+            title: content.title,
+            blockType: content.blockType,
+            description: content.description,
+            image: content.image,
+            video: content.video,
+            buttonURL: content.buttonURL,
+            buttonText: content.buttonText,
+            buttonTarget: content.buttonTarget,
+            bulletedListItems: bulletedListItems
+        )
+    }
+
+    static func bulletedListItem(fromInternalBulletedListItem item: GomaModels.BulletedListItem) -> BulletedListItem {
+        return BulletedListItem(text: item.text)
+    }
+
+    static func listBlock(fromInternalListBlock list: GomaModels.ListBlock) -> ListBlock {
+        let items = list.items.map { textBlock(fromInternalTextBlock: $0) }
+        
+        return ListBlock(
+            title: list.title,
+            genericListItemsIcon: list.genericListItemsIcon,
+            items: items
+        )
+    }
+
+    static func termItem(fromInternalTermItem term: GomaModels.TermItem) -> TermItem {
+        return TermItem(
+            label: term.label,
+            sortOrder: term.sortOrder
+        )
+    }
 }

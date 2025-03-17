@@ -1907,6 +1907,16 @@ extension Client {
 
         return managedContentProvider.getTopCompetitions()
     }
+    
+    public func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getPromotions()
+    }
 
 }
 

@@ -1,26 +1,26 @@
 //
 //  Promotions.swift
-//  Sportsbook
+//  ServicesProvider
 //
-//  Created by André Lascas on 13/03/2025.
+//  Created by André Lascas on 17/03/2025.
 //
 
 import Foundation
 
-struct PromotionInfo: Codable {
-    let id: Int
-    let title: String
-    let slug: String
-    let sortOrder: Int
-    let platform: String
-    let status: String
-    let userType: String
-    let listDisplayNote: String
-    let listDisplayDescription: String
-    let listDisplayImageUrl: String
-    let startDate: Date?
-    let endDate: Date?
-    let staticPage: StaticPage
+public struct PromotionInfo: Codable {
+    public let id: Int
+    public let title: String
+    public let slug: String
+    public let sortOrder: Int
+    public let platform: String
+    public let status: String
+    public let userType: String
+    public let listDisplayNote: String
+    public let listDisplayDescription: String
+    public let listDisplayImageUrl: String
+    public let startDate: Date?
+    public let endDate: Date?
+    public let staticPage: StaticPage
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -39,20 +39,20 @@ struct PromotionInfo: Codable {
     }
 }
 
-struct StaticPage: Codable {
-    let title: String
-    let slug: String
-    let headerTitle: String?
-    let headerImageUrl: String?
-    let isActive: Bool
-    let usedForPromotions: Bool
-    let platform: String
-    let status: String
-    let userType: String
-    let startDate: Date?
-    let endDate: Date?
-    let sections: [SectionBlock]
-    let terms: [TermItem]
+public struct StaticPage: Codable {
+    public let title: String
+    public let slug: String
+    public let headerTitle: String?
+    public let headerImageUrl: String?
+    public let isActive: Bool
+    public let usedForPromotions: Bool
+    public let platform: String
+    public let status: String
+    public let userType: String
+    public let startDate: Date?
+    public let endDate: Date?
+    public let sections: [SectionBlock]
+    public let terms: [TermItem]
 
     enum CodingKeys: String, CodingKey {
         case title = "title"
@@ -71,13 +71,13 @@ struct StaticPage: Codable {
     }
 }
 
-struct SectionBlock: Codable {
-    let type: String
-    let sortOrder: Int
-    let isActive: Bool
-    let banner: BannerBlock?
-    let text: TextBlock?
-    let list: ListBlock?
+public struct SectionBlock: Codable {
+    public let type: String
+    public let sortOrder: Int
+    public let isActive: Bool
+    public let banner: BannerBlock?
+    public let text: TextBlock?
+    public let list: ListBlock?
 
     enum CodingKeys: String, CodingKey {
         case type = "type"
@@ -89,11 +89,11 @@ struct SectionBlock: Codable {
     }
 }
 
-struct BannerBlock: Codable {
-    let bannerLinkUrl: String?
-    let bannerType: String
-    let bannerLinkTarget: String?
-    let imageUrl: String?
+public struct BannerBlock: Codable {
+    public let bannerLinkUrl: String?
+    public let bannerType: String
+    public let bannerLinkTarget: String?
+    public let imageUrl: String?
     
     enum CodingKeys: String, CodingKey {
         case bannerLinkUrl = "banner_link_url"
@@ -103,10 +103,10 @@ struct BannerBlock: Codable {
     }
 }
 
-struct TextBlock: Codable {
-    let sectionHighlighted: Bool?
-    let contentBlocks: [TextContentBlock]
-    let itemIcon: String?
+public struct TextBlock: Codable {
+    public let sectionHighlighted: Bool?
+    public let contentBlocks: [TextContentBlock]
+    public let itemIcon: String?
 
     enum CodingKeys: String, CodingKey {
         case sectionHighlighted = "section_highlighted"
@@ -115,16 +115,16 @@ struct TextBlock: Codable {
     }
 }
 
-struct TextContentBlock: Codable {
-    let title: String?
-    let blockType: String
-    let description: String?
-    let image: String?
-    let video: String?
-    let buttonURL: String?
-    let buttonText: String?
-    let buttonTarget: String?
-    let bulletedListItems: [BulletedListItem]?
+public struct TextContentBlock: Codable {
+    public let title: String?
+    public let blockType: String
+    public let description: String?
+    public let image: String?
+    public let video: String?
+    public let buttonURL: String?
+    public let buttonText: String?
+    public let buttonTarget: String?
+    public let bulletedListItems: [BulletedListItem]?
 
     enum CodingKeys: String, CodingKey {
         case title = "title"
@@ -139,10 +139,10 @@ struct TextContentBlock: Codable {
     }
 }
 
-struct ListBlock: Codable {
-    let title: String?
-    let genericListItemsIcon: String?
-    let items: [TextBlock]
+public struct ListBlock: Codable {
+    public let title: String?
+    public let genericListItemsIcon: String?
+    public let items: [TextBlock]
     
     enum CodingKeys: String, CodingKey {
         case title = "title"
@@ -151,17 +151,17 @@ struct ListBlock: Codable {
     }
 }
 
-struct BulletedListItem: Codable {
-    let text: String
+public struct BulletedListItem: Codable {
+    public let text: String
     
     enum CodingKeys: String, CodingKey {
         case text = "text"
     }
 }
 
-struct TermItem: Codable {
-    let label: String
-    let sortOrder: Int
+public struct TermItem: Codable {
+    public let label: String
+    public let sortOrder: Int
 
     enum CodingKeys: String, CodingKey {
         case label

@@ -15,6 +15,8 @@ class PromotionsViewModel {
     
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     
+    var cancellables = Set<AnyCancellable>()
+    
     init() {
         self.getPromotions()
     }
@@ -25,206 +27,191 @@ class PromotionsViewModel {
         
         // Mock promotions
 //        let promotions: [PromotionInfo] = [
-//            PromotionInfo(
-//                id: "1",
-//                title: "Super Bonus Offer",
-//                background: "bonus_background",
-//                date: "2025-03-11",
-//                description: "Get a 50% bonus on your first deposit up to $200!",
-//                headerTitle: "Exclusive Bonus!",
-//                headerImage: nil // Since headerTitle is set, headerImage must be nil
-//            ),
-//            PromotionInfo(
-//                id: "2",
-//                title: "Weekend Special",
-//                background: "weekend_special_bg",
-//                date: "2025-03-15",
-//                description: "Exclusive weekend offer! Bet $20 and get a free $10 bet.",
-//                headerTitle: nil, // Since headerImage is set, headerTitle must be nil
-//                headerImage: "header_weekend"
-//            ),
-//            PromotionInfo(
-//                id: "3",
-//                title: "VIP Exclusive Deal",
-//                background: "vip_deal_bg",
-//                date: "2025-03-20",
-//                description: "VIP members get double rewards points for all bets placed today!",
-//                headerTitle: "VIP Rewards",
-//                headerImage: nil
-//            ),
-//            PromotionInfo(
-//                id: "4",
-//                title: "Limited Time Free Bet",
-//                background: "free_bet_bg",
-//                date: "2025-03-25",
-//                description: "Sign up now and receive a free $5 bet – no deposit required!",
-//                headerTitle: nil,
-//                headerImage: "header_free_bet"
-//            )
-//        ]
-        let promotions: [PromotionInfo] = [
-                PromotionInfo(
-                    id: 3,
-                    title: "promo 2",
-                    slug: "promo-2",
-                    sortOrder: 1,
-                    platform: "all",
-                    status: "published",
-                    userType: "all",
-                    listDisplayNote: "Note 123",
-                    listDisplayDescription: "Description 123",
-                    listDisplayImageUrl: "https://cms.gomademo.com/storage/198/01JPA2GABR9BWFGBB9XNSASZRN.png",
-                    startDate: "2025-03-14T10:16:00.000000Z",
-                    endDate: "2026-03-14T10:16:00.000000Z",
-                    staticPage: StaticPage(
-                        title: "Static Page 2",
-                        slug: "static-page-2",
-                        headerTitle: "Promo 1",
-                        headerImageUrl: "https://cms.gomademo.com/storage/200/01JPAG0DJ9VM8HJ0NV8568B08X.png",
-                        isActive: true,
-                        usedForPromotions: true,
-                        platform: "all",
-                        status: "published",
-                        userType: "all",
-                        startDate: "2025-03-10T20:12:00.000000Z",
-                        endDate: "2026-03-10T20:12:00.000000Z",
-                        sections: [
-                            SectionBlock(
-                                type: "banner",
-                                sortOrder: 1,
-                                isActive: true,
-                                banner: BannerBlock(
-                                    bannerLinkUrl: nil,
-                                    bannerType: "image",
-                                    bannerLinkTarget: "_blank",
-                                    imageUrl: "https://cms.gomademo.com/storage/192/01JPA2DH3NTDVR6DPN5S0MHYY3.png"),
-                                text: nil,
-                                list: nil),
-                            SectionBlock(
-                                type: "text",
-                                sortOrder: 2,
-                                isActive: true,
-                                banner: nil,
-                                text: TextBlock(
-                                    sectionHighlighted: true,
-                                    contentBlocks: [
-                                        TextContentBlock(
-                                            title: "Text Section Title Text 1",
-                                            blockType: "title",
-                                            description: nil,
-                                            image: nil,
-                                            video: nil,
-                                            buttonURL: nil,
-                                            buttonText: nil,
-                                            buttonTarget: nil,
-                                            bulletedListItems: nil
-                                        ),
-                                        TextContentBlock(
-                                            title: nil,
-                                            blockType: "description",
-                                            description: "Text Section Title Description 1",
-                                            image: nil,
-                                            video: nil,
-                                            buttonURL: nil,
-                                            buttonText: nil,
-                                            buttonTarget: nil,
-                                            bulletedListItems: nil
-                                        ),
-                                        TextContentBlock(
-                                            title: nil,
-                                            blockType: "image",
-                                            description: nil,
-                                            image: "https://cms.gomademo.com/storage/193/01JPA2DHFVRMXKRMY4MNA69PHN.png",
-                                            video: nil,
-                                            buttonURL: nil,
-                                            buttonText: nil,
-                                            buttonTarget: nil,
-                                            bulletedListItems: nil
-                                        ),
-                                        TextContentBlock(
-                                            title: nil,
-                                            blockType: "video",
-                                            description: nil,
-                                            image: nil,
-                                            video: "https://cms.gomademo.com/storage/194/01JPA2DHGXC8GRN78XEYDVAJ07.mp4",
-                                            buttonURL: nil,
-                                            buttonText: nil,
-                                            buttonTarget: nil,
-                                            bulletedListItems: nil
-                                        ),
-                                        TextContentBlock(
-                                            title: nil,
-                                            blockType: "button",
-                                            description: nil,
-                                            image: nil,
-                                            video: nil,
-                                            buttonURL: "https://www.google.com",
-                                            buttonText: "Button 1",
-                                            buttonTarget: "_blank",
-                                            bulletedListItems: nil
-                                        ),
-                                        TextContentBlock(
-                                            title: nil,
-                                            blockType: "bulleted_list",
-                                            description: nil,
-                                            image: nil,
-                                            video: nil,
-                                            buttonURL: nil,
-                                            buttonText: nil,
-                                            buttonTarget: nil,
-                                            bulletedListItems: [
-                                                BulletedListItem(text: "Text Section - Bullet List item 1"),
-                                                BulletedListItem(text: "Text Section - Bullet List item 2"),
-                                                BulletedListItem(text: "Text Section - Bullet List item 3")
-                                            ]
-                                        )
-                                    ],
-                                    itemIcon: nil
-                                ),
-                                list: nil
-                            ),
-                            SectionBlock(
-                                type: "list",
-                                sortOrder: 3,
-                                isActive: true,
-                                banner: nil,
-                                text: nil,
-                                list: ListBlock(
-                                    title: "List Section Title 1",
-                                    genericListItemsIcon: "https://cms.gomademo.com/storage/195/01JPA2DHW9XHNASQ93Y8650C7F.png",
-                                    items: [
-                                        TextBlock(
-                                            sectionHighlighted: false, contentBlocks: [
-                                                TextContentBlock(title: "List Section - Item 1 - Title 1", blockType: "title", description: nil, image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
-                                                TextContentBlock(title: nil, blockType: "description", description: "List Section - Item 1 - Title 1", image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
-                                                TextContentBlock(title: nil, blockType: "image", description: nil, image: "https://cms.gomademo.com/storage/196/01JPA2DJ2J8PWJ9W7WE059Y5H5.png", video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
-                                                TextContentBlock(title: nil, blockType: "video", description: nil, image: nil, video: "https://cms.gomademo.com/storage/197/01JPA2DJ3KAKRSR82M0QJBDKMG.mp4", buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
-                                                TextContentBlock(title: nil, blockType: "button", description: nil, image: nil, video: nil, buttonURL: "https://www.google.com", buttonText: "List Section - Item 1 - Button 1", buttonTarget: "_blank", bulletedListItems: nil),
-                                                TextContentBlock(title: nil, blockType: "bulleted_list", description: nil, image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: [
-                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list"),
-                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list"),
-                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list")
-                                                ])
-                                            ],
-                                        itemIcon: nil
-                                        )
-                                    ]
-                                )
-                            )
-                        ],
-                        terms: [
-                            TermItem(label: "term 1", sortOrder: 1),
-                            TermItem(label: "term 2", sortOrder: 2),
-                            TermItem(label: "term 3", sortOrder: 3),
-                            TermItem(label: "term 4", sortOrder: 4)
-                        ]
-                    )
-                )
-            ]
+//                PromotionInfo(
+//                    id: 3,
+//                    title: "promo 2",
+//                    slug: "promo-2",
+//                    sortOrder: 1,
+//                    platform: "all",
+//                    status: "published",
+//                    userType: "all",
+//                    listDisplayNote: "Note 123",
+//                    listDisplayDescription: "Description 123",
+//                    listDisplayImageUrl: "https://cms.gomademo.com/storage/198/01JPA2GABR9BWFGBB9XNSASZRN.png",
+//                    startDate: "2025-03-14T10:16:00.000000Z",
+//                    endDate: "2026-03-14T10:16:00.000000Z",
+//                    staticPage: StaticPage(
+//                        title: "Static Page 2",
+//                        slug: "static-page-2",
+//                        headerTitle: "Promo 1",
+//                        headerImageUrl: "https://cms.gomademo.com/storage/200/01JPAG0DJ9VM8HJ0NV8568B08X.png",
+//                        isActive: true,
+//                        usedForPromotions: true,
+//                        platform: "all",
+//                        status: "published",
+//                        userType: "all",
+//                        startDate: "2025-03-10T20:12:00.000000Z",
+//                        endDate: "2026-03-10T20:12:00.000000Z",
+//                        sections: [
+//                            SectionBlock(
+//                                type: "banner",
+//                                sortOrder: 1,
+//                                isActive: true,
+//                                banner: BannerBlock(
+//                                    bannerLinkUrl: nil,
+//                                    bannerType: "image",
+//                                    bannerLinkTarget: "_blank",
+//                                    imageUrl: "https://cms.gomademo.com/storage/192/01JPA2DH3NTDVR6DPN5S0MHYY3.png"),
+//                                text: nil,
+//                                list: nil),
+//                            SectionBlock(
+//                                type: "text",
+//                                sortOrder: 2,
+//                                isActive: true,
+//                                banner: nil,
+//                                text: TextBlock(
+//                                    sectionHighlighted: true,
+//                                    contentBlocks: [
+//                                        TextContentBlock(
+//                                            title: "Text Section Title Text 1",
+//                                            blockType: "title",
+//                                            description: nil,
+//                                            image: nil,
+//                                            video: nil,
+//                                            buttonURL: nil,
+//                                            buttonText: nil,
+//                                            buttonTarget: nil,
+//                                            bulletedListItems: nil
+//                                        ),
+//                                        TextContentBlock(
+//                                            title: nil,
+//                                            blockType: "description",
+//                                            description: "Text Section Title Description 1",
+//                                            image: nil,
+//                                            video: nil,
+//                                            buttonURL: nil,
+//                                            buttonText: nil,
+//                                            buttonTarget: nil,
+//                                            bulletedListItems: nil
+//                                        ),
+//                                        TextContentBlock(
+//                                            title: nil,
+//                                            blockType: "image",
+//                                            description: nil,
+//                                            image: "https://cms.gomademo.com/storage/193/01JPA2DHFVRMXKRMY4MNA69PHN.png",
+//                                            video: nil,
+//                                            buttonURL: nil,
+//                                            buttonText: nil,
+//                                            buttonTarget: nil,
+//                                            bulletedListItems: nil
+//                                        ),
+//                                        TextContentBlock(
+//                                            title: nil,
+//                                            blockType: "video",
+//                                            description: nil,
+//                                            image: nil,
+//                                            video: "https://cms.gomademo.com/storage/194/01JPA2DHGXC8GRN78XEYDVAJ07.mp4",
+//                                            buttonURL: nil,
+//                                            buttonText: nil,
+//                                            buttonTarget: nil,
+//                                            bulletedListItems: nil
+//                                        ),
+//                                        TextContentBlock(
+//                                            title: nil,
+//                                            blockType: "button",
+//                                            description: nil,
+//                                            image: nil,
+//                                            video: nil,
+//                                            buttonURL: "https://www.google.com",
+//                                            buttonText: "Button 1",
+//                                            buttonTarget: "_blank",
+//                                            bulletedListItems: nil
+//                                        ),
+//                                        TextContentBlock(
+//                                            title: nil,
+//                                            blockType: "bulleted_list",
+//                                            description: nil,
+//                                            image: nil,
+//                                            video: nil,
+//                                            buttonURL: nil,
+//                                            buttonText: nil,
+//                                            buttonTarget: nil,
+//                                            bulletedListItems: [
+//                                                BulletedListItem(text: "Text Section - Bullet List item 1"),
+//                                                BulletedListItem(text: "Text Section - Bullet List item 2"),
+//                                                BulletedListItem(text: "Text Section - Bullet List item 3")
+//                                            ]
+//                                        )
+//                                    ],
+//                                    itemIcon: nil
+//                                ),
+//                                list: nil
+//                            ),
+//                            SectionBlock(
+//                                type: "list",
+//                                sortOrder: 3,
+//                                isActive: true,
+//                                banner: nil,
+//                                text: nil,
+//                                list: ListBlock(
+//                                    title: "List Section Title 1",
+//                                    genericListItemsIcon: "https://cms.gomademo.com/storage/195/01JPA2DHW9XHNASQ93Y8650C7F.png",
+//                                    items: [
+//                                        TextBlock(
+//                                            sectionHighlighted: false, contentBlocks: [
+//                                                TextContentBlock(title: "List Section - Item 1 - Title 1", blockType: "title", description: nil, image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
+//                                                TextContentBlock(title: nil, blockType: "description", description: "List Section - Item 1 - Title 1", image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
+//                                                TextContentBlock(title: nil, blockType: "image", description: nil, image: "https://cms.gomademo.com/storage/196/01JPA2DJ2J8PWJ9W7WE059Y5H5.png", video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
+//                                                TextContentBlock(title: nil, blockType: "video", description: nil, image: nil, video: "https://cms.gomademo.com/storage/197/01JPA2DJ3KAKRSR82M0QJBDKMG.mp4", buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
+//                                                TextContentBlock(title: nil, blockType: "button", description: nil, image: nil, video: nil, buttonURL: "https://www.google.com", buttonText: "List Section - Item 1 - Button 1", buttonTarget: "_blank", bulletedListItems: nil),
+//                                                TextContentBlock(title: nil, blockType: "bulleted_list", description: nil, image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: [
+//                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list"),
+//                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list"),
+//                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list")
+//                                                ])
+//                                            ],
+//                                        itemIcon: nil
+//                                        )
+//                                    ]
+//                                )
+//                            )
+//                        ],
+//                        terms: [
+//                            TermItem(label: "term 1", sortOrder: 1),
+//                            TermItem(label: "term 2", sortOrder: 2),
+//                            TermItem(label: "term 3", sortOrder: 3),
+//                            TermItem(label: "term 4", sortOrder: 4)
+//                        ]
+//                    )
+//                )
+//            ]
+//        
+//        self.promotions = promotions
+//        
+//        self.isLoadingPublisher.send(false)
         
-        self.promotions = promotions
-        
-        self.isLoadingPublisher.send(false)
+        Env.servicesProvider.getPromotions()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                
+                switch completion {
+                case .finished:
+                    print("FINISHED GET PROMOTIONS")
+                case .failure(let error):
+                    print("ERROR GET PROMOTIONS: \(error)")
+                }
+                
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] promotionsInfo in
+                
+                let mappedPromotionsInfo = promotionsInfo.map({
+                    ServiceProviderModelMapper.promotionInfo(fromInternalPromotionInfo: $0)
+                })
+                
+                self?.promotions = mappedPromotionsInfo
+            })
+            .store(in: &cancellables)
     }
     
     func viewModel(forIndex index: Int) -> PromotionCellViewModel? {

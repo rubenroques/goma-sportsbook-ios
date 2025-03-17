@@ -99,4 +99,5 @@ protocol ManagedContentProvider: Connector {
     
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
     
+    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError>
 }

@@ -1,22 +1,14 @@
 //
-//  PromotionTableViewCell.swift
+//  PromotionCollectionViewCell.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 11/03/2025.
+//  Created by André Lascas on 17/03/2025.
 //
 
 import UIKit
-class PromotionCellViewModel {
-    
-    var promotionInfo: PromotionInfo
-    
-    init(promotionInfo: PromotionInfo) {
-        self.promotionInfo = promotionInfo
-    }
-}
 
-class PromotionTableViewCell: UITableViewCell {
-
+class PromotionCollectionViewCell: UICollectionViewCell {
+    
     // MARK: Private Properties
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var backgroundImageView: UIImageView = Self.createBackgroundImageView()
@@ -32,8 +24,8 @@ class PromotionTableViewCell: UITableViewCell {
     let dateFormatter = DateFormatter()
 
     // MARK: - Lifetime and Cycle
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
 
         self.setupSubviews()
         self.setupWithTheme()
@@ -107,7 +99,7 @@ class PromotionTableViewCell: UITableViewCell {
     }
 }
 
-extension PromotionTableViewCell {
+extension PromotionCollectionViewCell {
 
     private static func createContainerView() -> UIView {
         let view = UIView()

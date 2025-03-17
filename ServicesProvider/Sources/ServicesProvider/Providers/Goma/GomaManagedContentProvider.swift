@@ -194,5 +194,17 @@ class GomaManagedContentProvider: ManagedContentProvider {
     func getTopCompetitions() -> AnyPublisher<TopCompetitions, ServiceProviderError> {
         fatalError("")
     }
+    
+    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
+        let endpoint = GomaAPIPromotionsSchema.allPromotions
+        
+        let publisher: AnyPublisher<[GomaModels.PromotionInfo], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
+        return publisher.map({ promotionsInfo in
+            let convertedPromotionsResponse = promotionsInfo.map({
+                GomaModelMapper.promotionInfo(fromInternalPromotionInfo: $0)
+            })
+            return convertedPromotionsResponse
+        }).eraseToAnyPublisher()
+    }
 
 }
