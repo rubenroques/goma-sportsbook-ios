@@ -25,7 +25,7 @@ extension GomaModels {
     struct HomeWidgetContent: Codable {
         let alertBanner: GomaModels.AlertBanner?
         let banners: GomaModels.Banners?
-        let carouselEvents: GomaModels.CarouselEvents?
+        let carouselEventPointers: GomaModels.CarouselEventPointers?
         let topImageCardPointers: GomaModels.TopImageCardPointers?
         let proChoiceCardPointers: GomaModels.ProChoiceCardPointers?
         let boostedOddsBanners: GomaModels.BoostedOddsPointers?
@@ -36,7 +36,7 @@ extension GomaModels {
         enum CodingKeys: String, CodingKey {
             case alertBanner = "alert_banner"
             case banners
-            case carouselEvents = "sport_banners"
+            case carouselEventPointers = "sport_banners"
             case topImageCardPointers = "highlighted_events"
             case proChoiceCardPointers = "pro_choices"
             case boostedOddsBanners = "boosted_odds_banners"

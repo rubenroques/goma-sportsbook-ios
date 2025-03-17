@@ -137,6 +137,23 @@ class DynamicHomeViewTemplateDataSource {
                                                            alertType: .profile)
             alertsArray.append(completeProfileAlertData)
         }
+        
+        // Fetch server-side alert banners
+        Env.servicesProvider.getAlertBanner()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                // Handle completion if needed
+            }, receiveValue: { [weak self] alertBanner in
+                guard let alertBanner = alertBanner else { return }
+                
+                // Create an ActivationAlert from the server AlertBanner using the mapper
+                let serverAlert = ServiceProviderModelMapper.activationAlert(fromAlertBanner: alertBanner)
+                
+                // Add the server alert to the existing alerts
+                self?.alertsArray.append(serverAlert)
+                self?.refreshPublisher.send()
+            })
+            .store(in: &self.cancellables)
     }
 
     // Favorites

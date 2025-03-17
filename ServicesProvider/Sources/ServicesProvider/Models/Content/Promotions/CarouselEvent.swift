@@ -7,9 +7,9 @@
 
 import Foundation
 
-public typealias CarouselEvents = [CarouselEvent]
+public typealias CarouselEventPointers = [CarouselEventPointer]
 /// Sport-related promotional banner
-public struct CarouselEvent: Identifiable, Equatable, Hashable, Codable {
+public struct CarouselEventPointer: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier
     public let id: String
 

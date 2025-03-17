@@ -85,9 +85,6 @@ protocol EventsProvider: Connector {
 
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>
 
-    func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError>
-    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
-
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>
 
     func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError>
@@ -130,8 +127,10 @@ protocol EventsProvider: Connector {
     func getNews() -> AnyPublisher<[News], ServiceProviderError>
     func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError>
     func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError>
-    func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError>
     
+        
+    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
+        
     func getPromotedEventsBySport() -> AnyPublisher<[SportType: Events], ServiceProviderError>
     func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError>
     func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError>

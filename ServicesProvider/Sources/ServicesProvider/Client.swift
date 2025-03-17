@@ -426,15 +426,6 @@ extension Client {
         return eventsProvider.getPromotedEventsGroups()
     }
 
-    public func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getPromotionalSlidingTopEventsPointers()
-    }
-
     public func getPromotedEventsBySport() -> AnyPublisher<[SportType : Events], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -585,16 +576,6 @@ extension Client {
         }
 
         return eventsProvider.getHomeSliders()
-    }
-
-    public func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return eventsProvider.getPromotionalSlidingTopEvents()
     }
 
     public func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
@@ -1801,7 +1782,17 @@ extension Client {
         return managedContentProvider.getBanners()
     }
 
-    public func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError> {
+    public func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getCarouselEventPointers()
+    }
+    
+    public func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
             let managedContentProvider = self.managedContentProvider
         else {
@@ -1810,6 +1801,7 @@ extension Client {
 
         return managedContentProvider.getCarouselEvents()
     }
+    
 
     public func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
         guard

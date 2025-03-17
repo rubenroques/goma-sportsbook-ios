@@ -171,6 +171,14 @@ class HomeViewController: UIViewController {
 
                 self.navigationController?.pushViewController(documentsRootViewController, animated: true)
             }
+            else if alertType == ActivationAlertType.server {
+                // For server alerts, we need to get the alert with the URL
+                if let alert = self.viewModel.alertsArrayViewModel().first(where: { $0.alertType == .server }),
+                   let urlString = alert.ctaUrl,
+                   let url = URL(string: urlString) {
+                    self.didTapExternalLinkAction(url)
+                }
+            }
         }
 
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)

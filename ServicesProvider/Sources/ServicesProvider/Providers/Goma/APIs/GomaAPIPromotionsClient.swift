@@ -111,9 +111,9 @@ class GomaAPIPromotionsClient {
 
     /// Get carousel events (formerly sport banners)
     /// - Returns: A publisher with the decoded response or error
-    func carouselEvents() -> AnyPublisher<GomaModels.CarouselEvents, ServiceProviderError> {
+    func carouselEventPointers() -> AnyPublisher<GomaModels.CarouselEventPointers, ServiceProviderError> {
         let endpoint = GomaAPIPromotionsSchema.sportBanners
-        if let cachedData = self.cache.getCachedInitialDump(), let carouselEvents = cachedData.homeWidgetContent.carouselEvents {
+        if let cachedData = self.cache.getCachedInitialDump(), let carouselEvents = cachedData.homeWidgetContent.carouselEventPointers {
             return Just(carouselEvents)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()

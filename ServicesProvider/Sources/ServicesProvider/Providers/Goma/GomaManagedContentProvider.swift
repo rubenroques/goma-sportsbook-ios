@@ -74,7 +74,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
     }
 
     func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
-
+        // TODO: SP Merge Needs tests
         return self.apiClient.banners()
             .map({ internalBanners in
                 return internalBanners.map({ internalBanner in
@@ -84,13 +84,25 @@ class GomaManagedContentProvider: ManagedContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError> {
+    func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError> {
 
-        return self.apiClient.carouselEvents()
+        return self.apiClient.carouselEventPointers()
             .map({ internalCarouselEvents in
-                return GomaModelMapper.carouselEvents(fromInternalCarouselEvents: internalCarouselEvents)
+                return GomaModelMapper.carouselEventPointers(fromInternalCarouselEventPointers: internalCarouselEvents)
             })
             .eraseToAnyPublisher()
+    }
+    
+    func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
+        // TODO: SP Merge Needs tests
+        let endpoint = GomaAPISchema.getEventsBanners
+        let publisher: AnyPublisher<[GomaModels.HeroCardEvents], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
+        return publisher.map({ heroCardEvents in
+            let convertedEvents = heroCardEvents.map({
+                return GomaModelMapper.event(fromInternalHeroCardEvent: $0)
+            })
+            return convertedEvents
+        }).eraseToAnyPublisher()
     }
 
     func getBoostedOddsPointers() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
@@ -102,6 +114,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
     }
 
     func getBoostedOddsEvents() -> AnyPublisher<Events, ServiceProviderError> {
+        // TODO: SP Merge Needs tests
         let endpoint = GomaAPISchema.getBoostedOddEvents
         let publisher: AnyPublisher<[GomaModels.BoostedEvent], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
         return publisher.print("getBoostedEvents").map({ boostedOddEvents in

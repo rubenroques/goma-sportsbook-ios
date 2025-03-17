@@ -271,7 +271,24 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
             })
 
         self.addCancellable(alertsCancellable)
-
+        
+        // Fetch server-side alert banners
+        let serverAlertsCancellable = Env.servicesProvider.getAlertBanner()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                // Handle completion if needed
+            }, receiveValue: { [weak self] alertBanner in
+                guard let alertBanner = alertBanner else { return }
+                
+                // Create an ActivationAlert from the server AlertBanner using the mapper
+                let serverAlert = ServiceProviderModelMapper.activationAlert(fromAlertBanner: alertBanner)
+                
+                // Add the server alert to the existing alerts
+                self?.alertsArray.append(serverAlert)
+                self?.refreshPublisher.send()
+            })
+        
+        self.addCancellable(serverAlertsCancellable)
     }
 
     // User alerts
@@ -320,7 +337,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     }
 
     func fetchQuickSwipeMatches() {
-        let cancellable = Env.servicesProvider.getPromotionalSlidingTopEvents()
+        let cancellable = Env.servicesProvider.getCarouselEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in

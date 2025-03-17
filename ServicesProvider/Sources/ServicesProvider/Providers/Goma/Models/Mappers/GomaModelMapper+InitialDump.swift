@@ -21,15 +21,15 @@ extension GomaModelMapper {
     // MARK: - Promotions Content Mapper
     static func homeWidgetContent(fromInternalhomeWidgetContent content: GomaModels.HomeWidgetContent) -> HomeWidgetContent {
         return HomeWidgetContent(
-            alertBanner: content.alertBanner != nil ? alertBanner(fromInternalAlertBanner: content.alertBanner!) : nil,
-            banners: banners(fromInternalBanners: content.banners ?? []),
-            carouselEvents: carouselEvents(fromInternalCarouselEvents: content.carouselEvents ?? []),
-            topImageCardPointers: topImageCardPointers(fromInternaTopImageCardPointers: content.topImageCardPointers ?? []),
-            proChoiceCardPointers: proChoiceCardPointers(fromInternalProChoiceCardPointers: content.proChoiceCardPointers ?? []),
-            boostedOddsBanners: boostedOddsPointers(fromInternalBoostedOddsPointers: content.boostedOddsBanners ?? []),
-            heroCardPointers: heroCardPointers(fromInternalHeroCardPointers: content.heroCardPointers ?? []),
-            stories: stories(fromInternalStories: content.stories ?? []),
-            news: newsItems(fromInternalNewsItems: content.news ?? [])
+            alertBanner: content.alertBanner != nil ? Self.alertBanner(fromInternalAlertBanner: content.alertBanner!) : nil,
+            banners: Self.banners(fromInternalBanners: content.banners ?? []),
+            carouselEventPointers: Self.carouselEventPointers(fromInternalCarouselEventPointers: content.carouselEventPointers ?? []),
+            topImageCardPointers: Self.topImageCardPointers(fromInternaTopImageCardPointers: content.topImageCardPointers ?? []),
+            proChoiceCardPointers: Self.proChoiceCardPointers(fromInternalProChoiceCardPointers: content.proChoiceCardPointers ?? []),
+            boostedOddsBanners: Self.boostedOddsPointers(fromInternalBoostedOddsPointers: content.boostedOddsBanners ?? []),
+            heroCardPointers: Self.heroCardPointers(fromInternalHeroCardPointers: content.heroCardPointers ?? []),
+            stories: Self.stories(fromInternalStories: content.stories ?? []),
+            news: Self.newsItems(fromInternalNewsItems: content.news ?? [])
         )
     }
 

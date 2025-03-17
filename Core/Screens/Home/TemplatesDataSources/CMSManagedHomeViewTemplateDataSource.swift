@@ -23,7 +23,7 @@ class CMSManagedHomeViewTemplateDataSource {
     // ALERTS
     // New model
     private var alerts = HomeAlerts()
-    
+
     // User Alert
     private var alertsArray: [ActivationAlert] = []
 
@@ -77,7 +77,7 @@ class CMSManagedHomeViewTemplateDataSource {
                     storiesViewModels.append(storyViewModel)
                 }
                 else {
-                    var readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
+                    let readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
                     let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
                                                                   imageName: promotionalStory.imageUrl,
                                                                   title: promotionalStory.title,
@@ -291,7 +291,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
         // Only fetch data for widgets that are present in contentTypes
         if self.contentTypes.contains(.quickSwipeStack) {
-            self.fetchQuickSwipeMatches()
+            self.fetchCarouselMatches()
         }
 
         if self.contentTypes.contains(.highlightedMatches) || self.contentTypes.contains(.highlightedBoostedOddsMatches) {
@@ -333,29 +333,40 @@ class CMSManagedHomeViewTemplateDataSource {
         if self.contentTypes.contains(.bannerLine) {
             self.fetchBanners()
         }
-    }
 
+    }
     // User alerts
     func fetchAlerts() {
-
-        let alertsCancellable = Env.userSessionStore.userKnowYourCustomerStatusPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] kycStatus in
+        let kycPublisher = Env.userSessionStore.userKnowYourCustomerStatusPublisher
+            .map { kycStatus -> [ActivationAlert] in
                 if kycStatus == .request {
-                    let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
-                                                                   description: localized("document_validation_required_description"),
-                                                                   linkLabel: localized("complete_your_verification"),
-                                                                   alertType: .documents)
-                    self?.alertsArray = [uploadDocumentsAlertData]
+                    let uploadDocumentsAlertData = ActivationAlert(
+                        title: localized("document_validation_required"),
+                        description: localized("document_validation_required_description"),
+                        linkLabel: localized("complete_your_verification"),
+                        alertType: .documents
+                    )
+                    return [uploadDocumentsAlertData]
                 }
-                else {
-                    self?.alertsArray = []
-                }
+                return []
+            }
+
+        let serverAlertsPublisher = Env.servicesProvider.getAlertBanner()
+            .map { alertBanner -> [ActivationAlert] in
+                guard let alertBanner = alertBanner else { return [] }
+                let serverAlert = ServiceProviderModelMapper.activationAlert(fromAlertBanner: alertBanner)
+                return [serverAlert]
+            }
+            .replaceError(with: [])
+
+        let combinedCancellable = Publishers.CombineLatest(kycPublisher, serverAlertsPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] kycAlerts, serverAlerts in
+                self?.alertsArray = kycAlerts + serverAlerts
                 self?.refreshPublisher.send()
-            })
+            }
 
-        self.addCancellable(alertsCancellable)
-
+        self.addCancellable(combinedCancellable)
     }
 
     // User alerts
@@ -404,8 +415,8 @@ class CMSManagedHomeViewTemplateDataSource {
         self.addCancellable(cancellable)
     }
 
-    func fetchQuickSwipeMatches() {
-        let cancellable = Env.servicesProvider.getPromotionalSlidingTopEvents()
+    func fetchCarouselMatches() {
+        let cancellable = Env.servicesProvider.getCarouselEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in

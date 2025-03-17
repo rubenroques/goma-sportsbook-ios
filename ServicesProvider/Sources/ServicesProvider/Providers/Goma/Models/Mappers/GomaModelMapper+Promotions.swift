@@ -74,12 +74,12 @@ extension GomaModelMapper {
 
     // MARK: - Sport Banners
 
-    static func carouselEvents(fromInternalCarouselEvents carousels: GomaModels.CarouselEvents) -> CarouselEvents {
-        return carousels.map { carouselEvent(fromInternalCarouselEvent: $0) }
+    static func carouselEventPointers(fromInternalCarouselEventPointers carousels: GomaModels.CarouselEventPointers) -> CarouselEventPointers {
+        return carousels.map { carouselEventPointer(fromInternalCarouselEventPointer: $0) }
     }
 
-    static func carouselEvent(fromInternalCarouselEvent carousel: GomaModels.CarouselEvent) -> CarouselEvent {
-        return CarouselEvent(
+    static func carouselEventPointer(fromInternalCarouselEventPointer carousel: GomaModels.CarouselEventPointer) -> CarouselEventPointer {
+        return CarouselEventPointer(
             id: String(carousel.id),
             eventId: carousel.eventId,
             eventMarketId: carousel.eventMarketId,

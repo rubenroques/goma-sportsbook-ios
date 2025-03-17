@@ -26,7 +26,7 @@ public struct HomeWidgetContent: Codable, Equatable, Hashable {
     public let banners: Banners?
 
     /// Sport-specific banners
-    public let carouselEvents: CarouselEvents?
+    public let carouselEventPointers: CarouselEventPointers?
 
     /// Highlighted events with custom images
     public let topImageCardPointers: TopImageCardPointers?
@@ -48,7 +48,7 @@ public struct HomeWidgetContent: Codable, Equatable, Hashable {
     
     init(alertBanner: AlertBanner?,
          banners: Banners?,
-         carouselEvents: CarouselEvents?,
+         carouselEventPointers: CarouselEventPointers?,
          topImageCardPointers: TopImageCardPointers?,
          proChoiceCardPointers: ProChoiceCardPointers?,
          boostedOddsBanners: BoostedOddsPointers?,
@@ -57,7 +57,7 @@ public struct HomeWidgetContent: Codable, Equatable, Hashable {
          news: NewsItems?) {
         self.alertBanner = alertBanner
         self.banners = banners
-        self.carouselEvents = carouselEvents
+        self.carouselEventPointers = carouselEventPointers
         self.topImageCardPointers = topImageCardPointers
         self.proChoiceCardPointers = proChoiceCardPointers
         self.boostedOddsBanners = boostedOddsBanners

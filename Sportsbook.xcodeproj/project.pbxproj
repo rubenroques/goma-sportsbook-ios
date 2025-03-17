@@ -8877,6 +8877,17 @@
 		CEA667592D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
 		CEA6675A2D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
 		CEA6675B2D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */; };
+		CEA6675E2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA6675F2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667602D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667612D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667622D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667632D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667642D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667652D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667662D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667672D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
+		CEA667682D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
 		CEAB09A62D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB09A72D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB09A82D77588D00541098 /* MatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB097E2D77588D00541098 /* MatchWidgetCollectionViewCell.xib */; };
@@ -10510,6 +10521,7 @@
 		CEA667092D84A72800C74895 /* LinksProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksProviderProtocol.swift; sourceTree = "<group>"; };
 		CEA667462D84A76100C74895 /* URLPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPath.swift; sourceTree = "<group>"; };
 		CEA667512D84A9F500C74895 /* LinksManagementService+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinksManagementService+Mocks.swift"; sourceTree = "<group>"; };
+		CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+AlertBanner.swift"; sourceTree = "<group>"; };
 		CEAB09502D77588D00541098 /* CompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsDataSource.swift; sourceTree = "<group>"; };
 		CEAB09512D77588D00541098 /* FavoriteCompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCompetitionsDataSource.swift; sourceTree = "<group>"; };
 		CEAB09522D77588D00541098 /* TopCompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopCompetitionsDataSource.swift; sourceTree = "<group>"; };
@@ -11224,6 +11236,7 @@
 			isa = PBXGroup;
 			children = (
 				450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */,
+				CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */,
 				45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */,
 				45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */,
 				450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */,
@@ -17666,6 +17679,7 @@
 				4546A89529D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				450B793C28F58574009229E3 /* TipsRootViewController.swift in Sources */,
 				450B793D28F58574009229E3 /* ActionButtonTableViewCell.swift in Sources */,
+				CEA667652D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				450B793E28F58574009229E3 /* EditGroupAddFriendViewModel.swift in Sources */,
 				450B793F28F58574009229E3 /* UserProfileTipsViewController.swift in Sources */,
 				A9A292482A61670100A7C334 /* UserReferralView.swift in Sources */,
@@ -18172,6 +18186,7 @@
 				CEA565A92D5A1D2500696793 /* ServicesProviderModelMapper+Bonus.swift in Sources */,
 				CEA565AA2D5A1D2500696793 /* ServiceProviderModelMapper+Scores.swift in Sources */,
 				CEA565AB2D5A1D2500696793 /* ServiceProviderModelMapper+Betting.swift in Sources */,
+				CEA667682D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				CEA565AC2D5A1D2500696793 /* ServiceProviderModelMapper.swift in Sources */,
 				CEA565AD2D5A1D2500696793 /* ServiceProviderModelMapper+Profile.swift in Sources */,
 				CEA565AE2D5A1D2500696793 /* ServiceProviderModelMapper+Referrals.swift in Sources */,
@@ -18553,6 +18568,7 @@
 				A9FB6D4528C61D2100E3FE58 /* TipsRootViewController.swift in Sources */,
 				457CBAA8282D27D000ED0F00 /* BonusDetailViewModel.swift in Sources */,
 				457CBAA9282D27D000ED0F00 /* BettingNotificationViewModel.swift in Sources */,
+				CEA667612D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				454F73BA299152C100437460 /* GradientView.swift in Sources */,
 				A98708CF28DA27DB00F27348 /* UserProfileTipsViewController.swift in Sources */,
 				457CBAAA282D27D000ED0F00 /* Sport.swift in Sources */,
@@ -19059,6 +19075,7 @@
 				457CBCAA282D2CD100ED0F00 /* SuggestedBetsListViewController.swift in Sources */,
 				45C10F3F28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */,
 				457CBCAC282D2CD100ED0F00 /* BettingNotificationsViewController.swift in Sources */,
+				CEA667632D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				457CBF07282D2D3700ED0F00 /* TargetVariables.swift in Sources */,
 				457CBCAD282D2CD100ED0F00 /* GeoLocationManager.swift in Sources */,
 				457CBCAF282D2CD100ED0F00 /* PersonalInfoViewController.swift in Sources */,
@@ -20063,6 +20080,7 @@
 				4546A89629D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				45B6E23B284151F9001B570C /* ActionButtonTableViewCell.swift in Sources */,
 				45B6E20A283E3F2A001B570C /* EditGroupAddFriendViewModel.swift in Sources */,
+				CEA6675E2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				A98708CD28DA27DB00F27348 /* UserProfileTipsViewController.swift in Sources */,
 				4589C837282024E400243547 /* AppSettingsViewController.swift in Sources */,
 				A9A292492A61670100A7C334 /* UserReferralView.swift in Sources */,
@@ -20819,6 +20837,7 @@
 				4546A89429D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				45A33152298976BA008181E9 /* UserSessionStore.swift in Sources */,
 				45A33153298976BA008181E9 /* TipsRootViewController.swift in Sources */,
+				CEA667672D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				45A33154298976BA008181E9 /* ActionButtonTableViewCell.swift in Sources */,
 				45A33155298976BA008181E9 /* EditGroupAddFriendViewModel.swift in Sources */,
 				A9A292472A61670100A7C334 /* UserReferralView.swift in Sources */,
@@ -21575,6 +21594,7 @@
 				45A6BC8A28246A7500D9B416 /* AggregatorRepository.swift in Sources */,
 				A9CB3E7B29CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */,
 				A9DF8DFC28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
+				CEA667662D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				CE16F2812D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				452B9D232C1890160032363F /* SystemBettingTicketDataSource.swift in Sources */,
 				A9DF8E6128E751F10083BF56 /* ListTitleHeaderFooterView.swift in Sources */,
@@ -22331,6 +22351,7 @@
 				45F6BBFB2AB3732C00C81DE1 /* UserSessionStore.swift in Sources */,
 				45F6BBFC2AB3732C00C81DE1 /* TipsRootViewController.swift in Sources */,
 				45F6BBFD2AB3732C00C81DE1 /* ActionButtonTableViewCell.swift in Sources */,
+				CEA667602D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				A9FEF5752AB8630600CB638F /* RegisterSuccessViewController.swift in Sources */,
 				45F6BBFE2AB3732C00C81DE1 /* EditGroupAddFriendViewModel.swift in Sources */,
 				45F6BBFF2AB3732C00C81DE1 /* UserReferralView.swift in Sources */,
@@ -22852,6 +22873,7 @@
 				A9C340C028F9A74A0055360B /* VideoPreviewCollectionViewCell.swift in Sources */,
 				A9C340C128F9A74A0055360B /* PopUpStore.swift in Sources */,
 				A9C340C228F9A74A0055360B /* MyTicketsViewController.swift in Sources */,
+				CEA667642D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				A9C340C328F9A74A0055360B /* SuggestedBetsListViewController.swift in Sources */,
 				65F8842C2C1C43D300A56983 /* BannerTournamentTableViewHeader.swift in Sources */,
 				A99CC2F32A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
@@ -23856,6 +23878,7 @@
 				CE12A2642D31347E0022BDF7 /* TipsRootViewController.swift in Sources */,
 				CE12A2652D31347E0022BDF7 /* ActionButtonTableViewCell.swift in Sources */,
 				CE12A2662D31347E0022BDF7 /* EditGroupAddFriendViewModel.swift in Sources */,
+				CEA6675F2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				CE12A2682D31347E0022BDF7 /* UserProfileTipsViewController.swift in Sources */,
 				CE12A2692D31347E0022BDF7 /* UserReferralView.swift in Sources */,
 				CE12A26A2D31347E0022BDF7 /* AppSettingsViewController.swift in Sources */,
@@ -24513,6 +24536,7 @@
 				CEA566C62D5A58D800696793 /* BettingTicket.swift in Sources */,
 				CEA566C72D5A58D800696793 /* URLSchemaManager.swift in Sources */,
 				CEA566C82D5A58D800696793 /* TransactionsHistoryViewModel.swift in Sources */,
+				CEA667622D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */,
 				CE7E80272D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CEA6673A2D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
 				CEA6673B2D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,

@@ -168,8 +168,8 @@ extension GomaModels {
         }
     }
 
-    typealias CarouselEvents = [CarouselEvent]
-    struct CarouselEvent: Identifiable, Equatable, Hashable, Codable {
+    typealias CarouselEventPointers = [CarouselEventPointer]
+    struct CarouselEventPointer: Identifiable, Equatable, Hashable, Codable {
 
         let id: Int
         let eventId: String
