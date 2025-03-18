@@ -10,4 +10,5 @@ import Foundation
 enum ServiceProviderType: String {
     case everymatrix
     case sportradar
+    case goma
 }

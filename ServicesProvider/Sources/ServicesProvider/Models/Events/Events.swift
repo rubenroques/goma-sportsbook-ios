@@ -74,7 +74,7 @@ public enum EventStatus: Hashable {
 }
 
 public typealias Events = [Event]
-public class Event: Codable, Equatable, Identifiable {
+public class Event: Codable, Hashable, Identifiable {
 
     public var id: String
     public var homeTeamName: String
@@ -261,6 +261,27 @@ public class Event: Codable, Equatable, Identifiable {
         lhs.trackableReference == rhs.trackableReference &&
         lhs.scores == rhs.scores &&
         lhs.activePlayerServing == rhs.activePlayerServing
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(homeTeamName)
+        hasher.combine(awayTeamName)
+        hasher.combine(homeTeamScore)
+        hasher.combine(awayTeamScore)
+        hasher.combine(competitionId)
+        hasher.combine(competitionName)
+        hasher.combine(sport)
+        hasher.combine(startDate)
+        hasher.combine(markets)
+        hasher.combine(venueCountry)
+        hasher.combine(numberMarkets)
+        hasher.combine(name)
+        hasher.combine(status)
+        hasher.combine(matchTime)
+        hasher.combine(trackableReference)
+        hasher.combine(scores)
+        hasher.combine(activePlayerServing)
     }
 }
 

@@ -12,13 +12,13 @@ import Extensions
 public struct GomaAPIClientConfiguration {
     
     enum Environment {
-        case production
-        case staging
+        case betsson
+        case gomaDemo
         case development
     }
     
     var environment: Environment
-    public static var shared = GomaAPIClientConfiguration(environment: .production)
+    public static var shared = GomaAPIClientConfiguration(environment: .development)
     
     init(environment: Environment) {
         self.environment = environment
@@ -26,15 +26,16 @@ public struct GomaAPIClientConfiguration {
     
     public var apiHostname: String {
         switch self.environment {
-        case .production: return "https://api.gomademo.com/"
-        case .staging, .development: return "https://api.gomademo.com/"
+        case .betsson: return "https://api.gomademo.com/"
+        case .gomaDemo, .development: return "https://api.gomademo.com/"
         }
     }
     
     public var instanceBusinessUnitToken: String {
         switch self.environment {
-        case .production: return "i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi"
-        case .staging, .development: return "i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi"
+        case .betsson: return "i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi"
+        case .gomaDemo: return "oSxUgVW5VdFmRpn1k8ve6XExaqyiQjN0z4XDfd8iqOhSDvufVCj0pBs5NLZVeHSu"
+        case .development: return "oSxUgVW5VdFmRpn1k8ve6XExaqyiQjN0z4XDfd8iqOhSDvufVCj0pBs5NLZVeHSu"
         }
     }
     

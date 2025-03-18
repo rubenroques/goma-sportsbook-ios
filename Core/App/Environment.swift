@@ -34,6 +34,8 @@ class Environment {
             client = ServicesProvider.Client(providerType: .everymatrix, configuration: servicesProviderConfiguration)
         case .sportradar:
             client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
+        case .goma:
+            client = ServicesProvider.Client(providerType: .goma, configuration: servicesProviderConfiguration)
         }
 
         return client

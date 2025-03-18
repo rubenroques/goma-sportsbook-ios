@@ -177,9 +177,10 @@ class CMSManagedHomeViewTemplateDataSource {
         // Banners are associated with profile publisher
         let profileCancellable = Env.userSessionStore.userProfilePublisher
             .removeDuplicates()
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.fetchBanners()
+                self?.refreshData()
             }
 
         self.addCancellable(profileCancellable)
@@ -270,7 +271,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
     func refreshTemplate() {
         // First refresh the home template
-        fetchHomeTemplate()
+        self.fetchHomeTemplate()
     }
 
     func refreshData() {
@@ -463,7 +464,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
     func fetchHighlightMatches() {
 
-        let imageMatches = Env.servicesProvider.getTopImageCardEvents()
+        let imageMatches = Env.servicesProvider.getTopImageEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])

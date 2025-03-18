@@ -128,7 +128,6 @@ protocol EventsProvider: Connector {
     func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError>
     func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError>
     
-        
     func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
         
     func getPromotedEventsBySport() -> AnyPublisher<[SportType: Events], ServiceProviderError>

@@ -1065,12 +1065,19 @@ extension GomaAPISchema: Endpoint {
     
     var headers: HTTP.Headers? {
         switch self {
-        default:
+        case .anonymousAuth:
             let defaultHeaders = [
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "App-Origin": "ios",
                 "x-api-key": GomaAPIClientConfiguration.shared.instanceBusinessUnitToken
+            ]
+            return defaultHeaders
+        default:
+            let defaultHeaders = [
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "App-Origin": "ios"
             ]
             return defaultHeaders
         }

@@ -7,6 +7,7 @@ public class Client {
     public enum ProviderType {
         case everymatrix
         case sportradar
+        case goma
     }
 
     public var privilegedAccessManagerConnectionStatePublisher: AnyPublisher<ConnectorState, Never> = Just(ConnectorState.disconnected).eraseToAnyPublisher()
@@ -73,6 +74,36 @@ public class Client {
             // self.privilegedAccessManager = everymatrixProvider
             // self.bettingProvider = everymatrixProvider
             // self.eventsProvider = everymatrixProvider
+            
+        case .goma:
+            guard let deviceUUID = self.configuration.deviceUUID else {
+                fatalError("GOMA API service provider required a deviceIdentifier")
+            }
+            
+            GomaAPIClientConfiguration.shared.environment = .gomaDemo
+            let gomaAPIAuthenticator =  GomaAPIAuthenticator(deviceIdentifier: deviceUUID)
+
+            let gomaConnector = GomaConnector(gomaAPIAuthenticator: gomaAPIAuthenticator)
+            
+            let gomaAPIProvider = GomaAPIProvider(connector: gomaConnector)
+            self.privilegedAccessManager = gomaAPIProvider
+            self.eventsProvider = gomaAPIProvider
+            self.bettingProvider = gomaAPIProvider
+            
+            let gomaManagedContentProvider = GomaManagedContentProvider(gomaAPIAuthenticator: gomaAPIAuthenticator)
+            self.managedContentProvider = gomaManagedContentProvider
+            
+            let gomaDownloadableContentsProvider = GomaDownloadableContentsProvider(gomaAPIAuthenticator: gomaAPIAuthenticator)
+            self.downloadableContentsProvider = gomaDownloadableContentsProvider
+            
+            gomaAPIProvider.connectionStatePublisher
+                .sink(receiveCompletion: { completion in
+
+                }, receiveValue: { [weak self] connectorState in
+                    self?.eventsConnectionStateSubject.send(connectorState)
+                }).store(in: &self.cancellables)
+            
+            
         case .sportradar:
 
             // Session Coordinator
@@ -90,6 +121,8 @@ public class Client {
 
             // The common API Authenticator
             // All subsets of the GOMA api should share the same Authenticator, it's a shared token and connection
+            GomaAPIClientConfiguration.shared.environment = .betsson
+            
             let  gomaAPIAuthenticator =  GomaAPIAuthenticator(deviceIdentifier: self.configuration.deviceUUID ?? "")
 
             self.managedContentProvider = SportRadarManagedContentProvider(
@@ -1842,14 +1875,14 @@ extension Client {
         return managedContentProvider.getHeroCardEvents()
     }
 
-    public func getTopImageCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
+    public func getTopImageEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
             let managedContentProvider = self.managedContentProvider
         else {
             return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getTopImageCardEvents()
+        return managedContentProvider.getTopImageEvents()
     }
 
     public func getStories() -> AnyPublisher<[Story], ServiceProviderError> {

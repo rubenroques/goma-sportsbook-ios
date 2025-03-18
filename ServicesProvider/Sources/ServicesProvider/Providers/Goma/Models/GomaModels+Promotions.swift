@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 extension GomaModels {
 
@@ -342,5 +343,6 @@ extension GomaModels {
     */
     typealias TopCompetitionPointers = [TopCompetitionPointer]
     typealias TopCompetitionPointer = String
+
 
 }

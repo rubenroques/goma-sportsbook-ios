@@ -126,11 +126,15 @@ class GomaConnector: Connector {
                 }
             })
             .mapError({ error -> ServiceProviderError in
+                
                 print("GGAPI Mapping error: \(error)")
                 if let typedError = error as? ServiceProviderError {
+                    print("GGAPI request: \(request)")
                     return typedError
                 }
                 else if let decodingError = error as? DecodingError {
+                    print("GGAPI request: \(request)")
+
                     let errorMessage = "\(decodingError)"
                     return ServiceProviderError.decodingError(message: errorMessage)
                 }
@@ -153,7 +157,7 @@ class GomaConnector: Connector {
             print("GGAPI Error Authorization token not found.")
         }
 
-        print("GGAPI GomaGaming URL Request: ", request.cURL(pretty: true), "\n==========================================")
+        print("GGAPI GomaGaming URL Request: ", request.cURL(pretty: false), "\n==========================================")
 
         return self.session.dataTaskPublisher(for: request)
             .tryMap { urlSessionOutput in
@@ -191,5 +195,4 @@ class GomaConnector: Connector {
             }
             .eraseToAnyPublisher()
     }
-
 }

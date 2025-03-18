@@ -384,7 +384,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
     func fetchHighlightMatches() {
 
-        let imageMatches = Env.servicesProvider.getTopImageCardEvents()
+        let imageMatches = Env.servicesProvider.getTopImageEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])

@@ -9,7 +9,6 @@ import Foundation
 
 extension GomaModels {
     
-    
     struct EventMetadataPointer: Codable {
         var id: String?
         var eventId: String
@@ -115,6 +114,7 @@ extension GomaModels {
         }
     }
     
+    typealias Events = [Event]
     struct Event: Codable, Equatable {
         
         /*
@@ -151,6 +151,8 @@ extension GomaModels {
         var metaDetails: MetaDetails?
         
         var scores: [String: Score]
+        
+        var imageUrl: String?
         
         enum CodingKeys: String, CodingKey {
             case identifier = "id"
@@ -190,6 +192,7 @@ extension GomaModels {
             case p4Score = "p4_score"
             case p5Score = "p5_score"
                    
+            case imageUrl = "image_url"
         }
         
         enum TeamsMetaCodingKeys: String, CodingKey {
@@ -233,6 +236,8 @@ extension GomaModels {
             else {
                 self.status = .unknown
             }
+            
+            self.imageUrl = try? container.decodeIfPresent(String.self, forKey: CodingKeys.imageUrl)
             
             self.placardInfo = try container.decodeIfPresent(GomaModels.PlacardInfo.self, forKey: CodingKeys.placardInfo)
             self.region = try container.decode(GomaModels.Region.self, forKey: CodingKeys.region)
@@ -415,6 +420,7 @@ extension GomaModels {
             try container.encode(self.sport, forKey: CodingKeys.sport)
             try container.encode(self.competition, forKey: CodingKeys.competition)
             try container.encode(self.markets, forKey: CodingKeys.markets)
+            try container.encodeIfPresent(self.imageUrl, forKey: CodingKeys.imageUrl)
         }
         
     }
@@ -483,6 +489,8 @@ extension GomaModels {
         }
         
     }
+    
+    typealias Competitions = [Competition]
     
     struct Competition: Codable, Equatable {
         var identifier: String
@@ -840,24 +848,5 @@ extension GomaModels {
             try container.encodeIfPresent(self.under, forKey: GomaModels.ParticipantStats.CodingKeys.under)
         }
     }
-    
-    struct BoostedEvent: Codable {
-        let id: Int
-        let name: String?
-        let title: String?
-        let ctaUrl: String?
-        let imageUrl: String?
-        let event: Event
-        let boostedMarket: Market
-        
-        enum CodingKeys: String, CodingKey {
-            case id = "id"
-            case name = "name"
-            case title = "title"
-            case ctaUrl = "cta_url"
-            case imageUrl = "image_url"
-            case event = "event"
-            case boostedMarket = "boosted_market"
-        }
-    }
+
 }

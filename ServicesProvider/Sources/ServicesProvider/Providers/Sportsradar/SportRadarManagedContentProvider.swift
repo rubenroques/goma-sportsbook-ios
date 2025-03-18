@@ -264,7 +264,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
         return self.gomaManagedContentProvider.getTopImageCardPointers()
     }
     
-    func getTopImageCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
+    func getTopImageEvents() -> AnyPublisher<Events, ServiceProviderError> {
         let requestPublisher = self.getTopImageCardPointers()
         return requestPublisher
             .flatMap({ topImageCardPointers -> AnyPublisher<Events, ServiceProviderError> in
