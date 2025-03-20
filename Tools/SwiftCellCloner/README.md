@@ -1,15 +1,15 @@
 # SwiftCellCloner
 
-A Python tool for cloning Swift UICollectionViewCell files with their XIB files. This tool is particularly useful for refactoring large cell classes into multiple specialized cells based on different types.
+A Python tool for cloning Swift UICollectionViewCell files with their extension files. This tool is particularly useful for refactoring large cell classes into multiple specialized cells based on different types.
 
 ## Overview
 
 SwiftCellCloner helps you break down monolithic cell classes into smaller, more focused components by:
 
 1. Creating subdirectories for each specialized cell type
-2. Cloning the original Swift and XIB files into each directory
-3. Renaming the classes to match their type (e.g., `LiveMatchWidgetCollectionViewCell`)
-4. Updating class references in XIB files
+2. Cloning the original Swift file into each directory
+3. Cloning all extension files in the Extensions subdirectory
+4. Renaming the classes to match their type (e.g., `LiveMatchWidgetCollectionViewCell`)
 
 ## Requirements
 
@@ -52,9 +52,10 @@ Defines the source files and base class name:
 ```yaml
 source:
   swift_file: "path/to/your/OriginalCell.swift"
-  xib_file: "path/to/your/OriginalCell.xib"
   base_class_name: "OriginalCell"
 ```
+
+The tool will automatically find all extension files in the "Extensions" directory located in the same directory as the main Swift file. Extension files should follow the naming pattern: `OriginalCell+ExtensionType.swift`.
 
 ### Output
 
@@ -84,9 +85,10 @@ See `config.example.yaml` for a complete example configuration.
 
 ## Notes
 
-- The tool assumes that your Swift classes conform to the `NibIdentifiable` protocol, which automatically provides `identifier` and `nib` properties based on the class name.
-- The tool does not add any static identifier or nib properties to the cloned files.
-- The tool only replaces the class name in the Swift file and the XIB file. It does not modify any other code.
+- The tool assumes your Swift files follow the standard naming conventions for iOS development.
+- The tool handles extension files in a dedicated "Extensions" subdirectory.
+- Files are expected to follow the naming pattern: `BaseClass+ExtensionType.swift`.
+- The tool only replaces class and extension names in the files. It does not modify other code logic.
 
 ## License
 

@@ -2,7 +2,7 @@
 //  BoostedOddsCollectionViewCell+Interactions.swift
 //  Sportsbook
 //
-//  Created by Refactoring on 2024.
+//  Created by Ruben Roques on 20/03/2025
 //
 
 import UIKit

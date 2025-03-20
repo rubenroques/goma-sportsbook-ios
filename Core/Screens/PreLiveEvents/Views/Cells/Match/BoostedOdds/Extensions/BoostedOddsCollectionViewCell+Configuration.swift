@@ -2,7 +2,7 @@
 //  BoostedOddsCollectionViewCell+Configuration.swift
 //  Sportsbook
 //
-//  Created by Refactoring on 2024.
+//  Created by Ruben Roques on 20/03/2025
 //
 
 import UIKit
@@ -199,14 +199,14 @@ extension BoostedOddsCollectionViewCell {
                 self?.eventNameLabel.text = eventName
             }
             .store(in: &self.cancellables)
-        
+
         viewModel.outrightNamePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] outrightName in
                 self?.outrightNameLabel.text = outrightName
             }
             .store(in: &self.cancellables)
-        
+
         // Bind boosted odds data
         viewModel.boostedOddsPublisher
             .receive(on: DispatchQueue.main)
