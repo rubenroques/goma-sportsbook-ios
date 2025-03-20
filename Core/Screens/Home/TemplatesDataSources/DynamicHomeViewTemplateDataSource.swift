@@ -425,6 +425,10 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
         return nil
     }
+    
+    func promotionLineViewModel() -> PromotionLineTableViewModel? {
+        return nil
+    }
 
     func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
         return nil

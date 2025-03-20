@@ -167,6 +167,13 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     // Hero card
     private var heroMatches: [Match]  = []
 
+    // Promotions
+    private var promotions: [PromotionInfo] = []
+    private var cachedPromotionLineViewModel: PromotionLineTableViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
 
@@ -945,6 +952,17 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             }
         }
         return nil
+    }
+    
+    func promotionLineViewModel() -> PromotionLineTableViewModel? {
+        if let promotionLineViewModel = self.cachedPromotionLineViewModel {
+            return promotionLineViewModel
+        }
+        else {
+            let promotions = self.promotions
+            self.cachedPromotionLineViewModel = PromotionLineTableViewModel(promotions: promotions)
+            return self.cachedPromotionLineViewModel
+        }
     }
 
     // Highlights

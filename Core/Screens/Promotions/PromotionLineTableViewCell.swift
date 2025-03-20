@@ -17,36 +17,8 @@ class PromotionLineTableViewModel {
     
     var cancellables = Set<AnyCancellable>()
     
-    init() {
-        self.getPromotions()
-    }
-    
-    private func getPromotions() {
-        
-        self.isLoadingPublisher.send(true)
-        
-        Env.servicesProvider.getPromotions()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                
-                switch completion {
-                case .finished:
-                    print("FINISHED GET PROMOTIONS")
-                case .failure(let error):
-                    print("ERROR GET PROMOTIONS: \(error)")
-                }
-                
-                self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] promotionsInfo in
-                
-                let mappedPromotionsInfo = promotionsInfo.map({
-                    ServiceProviderModelMapper.promotionInfo(fromInternalPromotionInfo: $0)
-                })
-                
-                self?.promotions = mappedPromotionsInfo
-            })
-            .store(in: &cancellables)
+    init(promotions: [PromotionInfo]) {
+        self.promotions = promotions
     }
     
     func viewModel(forIndex index: Int) -> PromotionCellViewModel? {
@@ -74,9 +46,11 @@ class PromotionLineTableViewCell: UITableViewCell {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
     
-    private let cellHeight: CGFloat = 300.0
+    private let cellHeight: CGFloat = 320.0
     
     var viewModel: PromotionLineTableViewModel?
+    
+    var didTapPromotionAction: ((PromotionInfo) -> Void)?
 
     // MARK: Lifetime and cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -120,11 +94,19 @@ class PromotionLineTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.containerView.backgroundColor = .clear
         
         self.collectionView.backgroundView?.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
 
+    }
+    
+    // MARK: Functions
+    func configure(withViewModel viewModel: PromotionLineTableViewModel) {
+        
+        self.viewModel = viewModel
+        
+        self.collectionView.reloadData()
     }
 }
 
@@ -149,15 +131,20 @@ extension PromotionLineTableViewCell: UICollectionViewDelegate, UICollectionView
         
         cell.configure(viewModel: viewModel)
         
+        cell.didTapPromotionAction = { [weak self] in
+            self?.didTapPromotionAction?(viewModel.promotionInfo)
+        }
+        
         return cell
         
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let topMargin: CGFloat = 5.0
-        let leftMargin: CGFloat = 10.0
-        return CGSize(width: collectionView.frame.size.width - (leftMargin * 2),
-                      height: collectionView.frame.size.height + (topMargin * 2))
+        
+        let itemWidth = collectionView.frame.size.width * 0.9
+        
+        return CGSize(width: itemWidth,
+                      height: collectionView.frame.size.height)
     }
 
 }
@@ -199,15 +186,15 @@ extension PromotionLineTableViewCell {
         NSLayoutConstraint.activate([
             self.containerView.heightAnchor.constraint(equalToConstant: self.cellHeight),
             
-            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 15),
-            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
-            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5),
-            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -5),
+            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
+            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10),
             
-            self.collectionView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 0),
-            self.collectionView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 0),
-            self.collectionView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 0),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: 0)
+            self.collectionView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.collectionView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.collectionView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
         ])
         
     }

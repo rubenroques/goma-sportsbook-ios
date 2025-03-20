@@ -227,7 +227,8 @@ class PromotionDetailViewController: UIViewController {
                             actionButtonBlockView.configure(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonURL ?? "")
                             
                             actionButtonBlockView.tappedActionButtonAction = { [weak self] actionName in
-                                print("CTA ACTION: \(actionName)")
+                                
+                                self?.openAction(actionName: actionName)
                             }
                             
                             blockViews.append(actionButtonBlockView)
@@ -325,7 +326,8 @@ class PromotionDetailViewController: UIViewController {
                                 actionButtonBlockView.configure(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonURL ?? "")
                                 
                                 actionButtonBlockView.tappedActionButtonAction = { [weak self] actionName in
-                                    print("CTA ACTION: \(actionName)")
+                                    
+                                    self?.openAction(actionName: actionName)
                                 }
                                 
                                 listItemViews.append(actionButtonBlockView)
@@ -549,6 +551,12 @@ class PromotionDetailViewController: UIViewController {
         attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
 
         label.attributedText = attributedString
+    }
+    
+    private func openAction(actionName: String) {
+        if let url = URL(string: actionName) {
+            UIApplication.shared.open(url)
+        }
     }
     
     // MARK: Actions

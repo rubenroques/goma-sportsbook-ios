@@ -123,7 +123,7 @@ class VideoSectionView: UIView {
     
     @objc private func appWillEnterForeground() {
         // Optionally auto-resume
-        self.play()
+        // self.play()
     }
 }
 

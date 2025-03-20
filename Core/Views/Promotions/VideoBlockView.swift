@@ -92,12 +92,7 @@ class VideoBlockView: UIView {
                                                    name: .AVPlayerItemDidPlayToEndTime,
                                                    object: self.player?.currentItem)
             
-            // Find parent stack view and invalidate its layout
-//            if let stackView = self.findParentStackView() {
-//                stackView.setNeedsLayout()
-//                stackView.layoutIfNeeded()
-//
-//            }
+           
             self.setNeedsLayout()
             self.layoutIfNeeded()
         }
@@ -185,7 +180,7 @@ class VideoBlockView: UIView {
     
     @objc private func appWillEnterForeground() {
         // Optionally auto-resume
-        self.play()
+        // self.play()
     }
 }
 

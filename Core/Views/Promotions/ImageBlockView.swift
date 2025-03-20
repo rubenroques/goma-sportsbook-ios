@@ -74,10 +74,11 @@ extension ImageBlockView {
         
         NSLayoutConstraint.activate([
             
-            self.imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
-            self.imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
+            self.imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 15),
+            self.imageView.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -15),
             self.imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
-            self.imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
+            self.imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
+            self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ])
     }
 }

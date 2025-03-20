@@ -15,8 +15,8 @@ public struct PromotionInfo: Codable {
     public let platform: String
     public let status: String
     public let userType: String
-    public let listDisplayNote: String
-    public let listDisplayDescription: String
+    public let listDisplayNote: String?
+    public let listDisplayDescription: String?
     public let listDisplayImageUrl: String
     public let startDate: Date?
     public let endDate: Date?

@@ -92,7 +92,7 @@ class PromotionTableViewCell: UITableViewCell {
             self.dateLabel.text = "Permanent offer"
         }
         
-        self.descriptionLabel.text = viewModel.promotionInfo.slug
+        self.descriptionLabel.text = viewModel.promotionInfo.listDisplayDescription ?? ""
         
         if let imageUrl = URL(string: viewModel.promotionInfo.listDisplayImageUrl) {
             self.backgroundImageView.kf.setImage(with: imageUrl)
@@ -184,16 +184,16 @@ extension PromotionTableViewCell {
             self.backgroundImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.backgroundImageView.heightAnchor.constraint(equalToConstant: 190),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 4),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -4),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 12),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -12),
             self.titleLabel.topAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor, constant: 12),
             
-            self.dateLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 4),
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -4),
+            self.dateLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 12),
+            self.dateLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -12),
             self.dateLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 8),
             
-            self.descriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 4),
-            self.descriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -4),
+            self.descriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 12),
+            self.descriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -12),
             self.descriptionLabel.topAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 5),
             self.descriptionLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16)
         ])

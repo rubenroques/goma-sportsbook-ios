@@ -40,6 +40,8 @@ class HomeViewModel {
         case highlightedBoostedOddsMatches
 
         case highlightedLiveMatches
+        
+        case promotions
 
         case promotionalStories
         case promotedSportSection
@@ -77,6 +79,8 @@ class HomeViewModel {
 
             case .heroCard: return "heroCard"
             case .highlightedMarketProChoices: return "highlightedMarketProChoices"
+                
+            case .promotions: return "promotions"
 
             case .videoNewsLine: return "videoNewsLine"
             }
@@ -204,6 +208,10 @@ extension HomeViewModel {
 
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
         return self.homeViewTemplateDataSource.heroCardMatchViewModel(forIndex: index)
+    }
+    
+    func promotionLineViewModel() -> PromotionLineTableViewModel? {
+        return self.homeViewTemplateDataSource.promotionLineViewModel()
     }
 
     func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {

@@ -351,8 +351,8 @@ extension GomaModels {
         let platform: String
         let status: String
         let userType: String
-        let listDisplayNote: String
-        let listDisplayDescription: String
+        let listDisplayNote: String?
+        let listDisplayDescription: String?
         let listDisplayImageUrl: String
         let startDate: String?
         let endDate: String?
