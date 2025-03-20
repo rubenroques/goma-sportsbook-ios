@@ -525,3 +525,112 @@ extension MatchWidgetCollectionViewCell {
 extension MatchWidgetCollectionViewCell {
     // Animation methods
 }
+
+extension MatchWidgetCollectionViewCell {
+    
+    func setupBoostedAndMixMatch() {
+        
+        
+        
+        // Cashback
+        self.baseView.addSubview(self.cashbackIconImageView)
+        
+        self.cashbackIconImageViewHeightConstraint = self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 18)
+        
+        NSLayoutConstraint.activate([
+            self.cashbackIconImageViewHeightConstraint,
+            self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.headerLineStackView.centerYAnchor),
+            
+            self.headerLineStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
+        ])
+        
+        self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
+                                                                          attribute: .trailing,
+                                                                          relatedBy: .equal,
+                                                                          toItem: self.baseView,
+                                                                          attribute: .trailing,
+                                                                          multiplier: 1,
+                                                                          constant: -8)
+        self.cashbackImageViewBaseTrailingConstraint.isActive = true
+        
+        self.cashbackImageViewLiveTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
+                                                                          attribute: .trailing,
+                                                                          relatedBy: .equal,
+                                                                          toItem: self.liveTipView,
+                                                                          attribute: .leading,
+                                                                          multiplier: 1,
+                                                                          constant: -6)
+        self.cashbackImageViewLiveTrailingConstraint.isActive = false
+        
+        NSLayoutConstraint.activate([
+            self.headerLineStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
+        ])
+        //
+        
+        // see all button
+        self.bottomSeeAllMarketsContainerView.isHidden = true
+        
+        self.baseStackView.addArrangedSubview(self.bottomSeeAllMarketsContainerView)
+        
+        self.bottomSeeAllMarketsContainerView.addSubview(self.bottomSeeAllMarketsBaseView)
+        self.bottomSeeAllMarketsBaseView.addSubview(self.bottomSeeAllMarketsLabel)
+        self.bottomSeeAllMarketsBaseView.addSubview(self.bottomSeeAllMarketsArrowIconImageView)
+        
+        NSLayoutConstraint.activate([
+            self.bottomSeeAllMarketsContainerView.heightAnchor.constraint(equalToConstant: 34),
+            
+            self.bottomSeeAllMarketsBaseView.heightAnchor.constraint(equalToConstant: 27),
+            self.bottomSeeAllMarketsBaseView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.leadingAnchor, constant: 12),
+            self.bottomSeeAllMarketsBaseView.trailingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.trailingAnchor, constant: -12),
+            self.bottomSeeAllMarketsBaseView.topAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.topAnchor),
+            
+            self.bottomSeeAllMarketsLabel.centerXAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerXAnchor),
+            self.bottomSeeAllMarketsLabel.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerYAnchor),
+            
+            self.bottomSeeAllMarketsArrowIconImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.bottomSeeAllMarketsArrowIconImageView.heightAnchor.constraint(equalToConstant: 12),
+            self.bottomSeeAllMarketsArrowIconImageView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsLabel.trailingAnchor, constant: 4),
+            self.bottomSeeAllMarketsArrowIconImageView.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsLabel.centerYAnchor),
+        ])
+        
+        // MixMatch
+        self.mixMatchContainerView.isHidden = true
+        
+        self.baseStackView.addArrangedSubview(self.mixMatchContainerView)
+        self.mixMatchContainerView.addSubview(self.mixMatchBaseView)
+        self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
+        self.mixMatchBaseView.addSubview(self.mixMatchIconImageView)
+        self.mixMatchBaseView.addSubview(self.mixMatchLabel)
+        self.mixMatchBaseView.addSubview(self.mixMatchNavigationIconImageView)
+        
+        NSLayoutConstraint.activate([
+            self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 34),
+            
+            self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 27),
+            self.mixMatchBaseView.leadingAnchor.constraint(equalTo: self.mixMatchContainerView.leadingAnchor, constant: 12),
+            self.mixMatchBaseView.trailingAnchor.constraint(equalTo: self.mixMatchContainerView.trailingAnchor, constant: -12),
+            self.mixMatchBaseView.topAnchor.constraint(equalTo: self.mixMatchContainerView.topAnchor),
+            
+            self.mixMatchBackgroundImageView.leadingAnchor.constraint(equalTo: self.mixMatchBaseView.leadingAnchor),
+            self.mixMatchBackgroundImageView.trailingAnchor.constraint(equalTo: self.mixMatchBaseView.trailingAnchor),
+            self.mixMatchBackgroundImageView.topAnchor.constraint(equalTo: self.mixMatchBaseView.topAnchor),
+            self.mixMatchBackgroundImageView.bottomAnchor.constraint(equalTo: self.mixMatchBaseView.bottomAnchor),
+            
+            self.mixMatchLabel.centerXAnchor.constraint(equalTo: self.mixMatchBaseView.centerXAnchor),
+            self.mixMatchLabel.centerYAnchor.constraint(equalTo: self.mixMatchBaseView.centerYAnchor),
+            
+            self.mixMatchIconImageView.widthAnchor.constraint(equalToConstant: 21),
+            self.mixMatchIconImageView.heightAnchor.constraint(equalToConstant: 25),
+            self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2),
+            self.mixMatchIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
+            
+            self.mixMatchNavigationIconImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.mixMatchNavigationIconImageView.heightAnchor.constraint(equalToConstant: 13),
+            self.mixMatchNavigationIconImageView.leadingAnchor.constraint(equalTo: self.mixMatchLabel.trailingAnchor, constant: 6),
+            self.mixMatchNavigationIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
+            
+        ])
+        
+    }
+}

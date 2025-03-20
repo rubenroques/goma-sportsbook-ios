@@ -13,6 +13,10 @@ extension MatchWidgetCollectionViewCell {
     
     // MARK: - Setup Gesture Recognizers
     func setupGestureRecognizers() {
+        
+        // Favorite button target
+        self.favoritesButton.addTarget(self, action: #selector(didTapFavoritesButton), for: .touchUpInside)
+        
         // Odd button tap gestures
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -110,7 +114,7 @@ extension MatchWidgetCollectionViewCell {
     }
     
     // MARK: - Odd Button Interactions
-    @IBAction private func didTapFavoritesButton(_ sender: Any) {
+    @objc private func didTapFavoritesButton() {
         if Env.userSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
                 self.markAsFavorite(match: match)

@@ -30,6 +30,9 @@ extension MatchWidgetCollectionViewCell {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+
         stackView.spacing = 7
         return stackView
     }
@@ -63,7 +66,11 @@ extension MatchWidgetCollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .medium, size: 11)
         label.textColor = UIColor.App.textPrimary
-        label.textAlignment = .natural
+        label.textAlignment = .left
+        
+        label.setContentHuggingPriority(UILayoutPriority(200), for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
         return label
     }
     

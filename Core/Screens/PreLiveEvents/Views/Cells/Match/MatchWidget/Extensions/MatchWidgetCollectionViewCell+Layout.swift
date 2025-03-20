@@ -275,16 +275,24 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.sendSubviewToBack(self.liveGradientBorderView)
         self.baseView.sendSubviewToBack(self.gradientBorderView)
 
-        // Setup live tip view
-        self.baseView.addSubview(self.liveTipView)
-        self.liveTipView.addSubview(self.liveTipLabel)
-
         // Setup cashback icon
         self.baseView.addSubview(self.cashbackIconImageView)
 
+        // Live Tip
+        self.liveTipView.isHidden = true
+        self.baseView.addSubview(self.liveTipView)
+        self.liveTipView.addSubview(self.liveTipLabel)
+        self.liveTipLabel.text = localized("live").uppercased() + " ⦿"
+        
+        self.liveTipView.layer.cornerRadius = 9
+        
+        
+        //
         // Setup boosted odd bottom line
         self.setupBoostedOddBottomLine()
 
+        self.setupBoostedAndMixMatch()
+        
         // Initialize constraints
         self.initConstraints()
 
@@ -333,14 +341,18 @@ extension MatchWidgetCollectionViewCell {
 
         NSLayoutConstraint.activate([
             self.topMarginSpaceConstraint,
-            self.leadingMarginSpaceConstraint
+            self.leadingMarginSpaceConstraint,
+            
+            self.locationFlagImageView.heightAnchor.constraint(equalTo: self.locationFlagImageView.widthAnchor),
+            self.sportTypeImageView.heightAnchor.constraint(equalTo: self.sportTypeImageView.widthAnchor),
+            self.favoritesButton.heightAnchor.constraint(equalTo: self.favoritesButton.widthAnchor),
         ])
 
         // Event name label constraints
         NSLayoutConstraint.activate([
-            self.eventNameLabel.leadingAnchor.constraint(equalTo: eventNameContainerView.leadingAnchor),
-            self.eventNameLabel.trailingAnchor.constraint(equalTo: eventNameContainerView.trailingAnchor, constant: -1),
-            self.eventNameLabel.centerYAnchor.constraint(equalTo: eventNameContainerView.centerYAnchor, constant: 1)
+            self.eventNameLabel.leadingAnchor.constraint(equalTo: self.eventNameContainerView.leadingAnchor),
+            self.eventNameLabel.trailingAnchor.constraint(equalTo: self.eventNameContainerView.trailingAnchor),
+            self.eventNameLabel.centerYAnchor.constraint(equalTo: self.eventNameContainerView.centerYAnchor)
         ])
 
         // Favorites button constraints
@@ -498,6 +510,19 @@ extension MatchWidgetCollectionViewCell {
             self.baseView.topAnchor.constraint(equalTo: self.liveGradientBorderView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.liveGradientBorderView.bottomAnchor),
         ])
+        
+        // Live Tip
+        NSLayoutConstraint.activate([
+            self.liveTipView.heightAnchor.constraint(equalToConstant: 18),
+            
+            self.liveTipView.leadingAnchor.constraint(equalTo: self.liveTipLabel.leadingAnchor, constant: -9),
+            self.liveTipView.trailingAnchor.constraint(equalTo: self.liveTipLabel.trailingAnchor, constant: 18),
+            self.liveTipView.centerYAnchor.constraint(equalTo: self.liveTipLabel.centerYAnchor),
+            self.liveTipView.topAnchor.constraint(equalTo: self.liveTipLabel.topAnchor, constant: 2),
+            
+            self.liveTipView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 8),
+            self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10)
+        ])
     }
 
     // MARK: - Setup Specialized Views
@@ -564,7 +589,7 @@ extension MatchWidgetCollectionViewCell {
         }
 
         if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
-            self.bottomMarginSpaceConstraint.constant = 12
+            self.bottomMarginSpaceConstraint.constant = -12
 
             self.homeContentRedesignTopConstraint.constant = 13
             self.awayContentRedesignTopConstraint.constant = 33
@@ -590,7 +615,7 @@ extension MatchWidgetCollectionViewCell {
         self.adjustMarketNameView(isShown: false)
 
         if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
-            self.bottomMarginSpaceConstraint.constant = 12
+            self.bottomMarginSpaceConstraint.constant = -12
 
             self.homeContentRedesignTopConstraint.constant = 25
             self.awayContentRedesignTopConstraint.constant = 45
@@ -671,9 +696,10 @@ extension MatchWidgetCollectionViewCell {
 
     func adjustDesignToSmallCardHeightStyle() {
         self.topMarginSpaceConstraint.constant = 8
+        self.bottomMarginSpaceConstraint.constant = -8
         self.leadingMarginSpaceConstraint.constant = 8
-        self.trailingMarginSpaceConstraint.constant = 8
-        self.bottomMarginSpaceConstraint.constant = 8
+        self.trailingMarginSpaceConstraint.constant = -8
+        
 
         self.headerHeightConstraint.constant = 12
         self.teamsHeightConstraint.constant = 26
@@ -692,9 +718,9 @@ extension MatchWidgetCollectionViewCell {
 
     func adjustDesignToNormalCardHeightStyle() {
         self.topMarginSpaceConstraint.constant = 11
-        self.bottomMarginSpaceConstraint.constant = 12
+        self.bottomMarginSpaceConstraint.constant = -12
         self.leadingMarginSpaceConstraint.constant = 12
-        self.trailingMarginSpaceConstraint.constant = 12
+        self.trailingMarginSpaceConstraint.constant = -12
 
         self.headerHeightConstraint.constant = 17
         self.teamsHeightConstraint.constant = 67

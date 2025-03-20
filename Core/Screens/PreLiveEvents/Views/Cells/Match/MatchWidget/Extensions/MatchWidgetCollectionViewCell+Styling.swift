@@ -357,11 +357,11 @@ extension MatchWidgetCollectionViewCell {
 
         switch StyleHelper.cardsStyleActive() {
         case .small:
-            self.bottomMarginSpaceConstraint.constant = 8
+            self.bottomMarginSpaceConstraint.constant = -8
             self.teamsHeightConstraint.constant = 26
             self.topMarginSpaceConstraint.constant = 8
         case .normal:
-            self.bottomMarginSpaceConstraint.constant = 12
+            self.bottomMarginSpaceConstraint.constant = -12
             self.teamsHeightConstraint.constant = 67
             self.topMarginSpaceConstraint.constant = 11
         }
@@ -386,7 +386,7 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.layer.borderWidth = 0
         self.baseView.layer.borderColor = nil
         self.headerLineStackView.alpha = 1.0
-        self.bottomMarginSpaceConstraint.constant = 12
+        self.bottomMarginSpaceConstraint.constant = -12
         self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
     }
@@ -413,7 +413,7 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.layer.borderWidth = 0
         self.baseView.layer.borderColor = nil
         self.headerLineStackView.alpha = 1.0
-        self.bottomMarginSpaceConstraint.constant = 12
+        self.bottomMarginSpaceConstraint.constant = -12
         self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
 
@@ -436,7 +436,7 @@ extension MatchWidgetCollectionViewCell {
         self.awayBoostedOddValueBaseView.isHidden = false
 
         self.headerLineStackView.alpha = 1.0
-        self.bottomMarginSpaceConstraint.constant = 12
+        self.bottomMarginSpaceConstraint.constant = -12
         self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
 
@@ -462,7 +462,7 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.layer.borderColor = nil
         self.headerLineStackView.alpha = 0.0
 
-        self.bottomMarginSpaceConstraint.constant = 28
+        self.bottomMarginSpaceConstraint.constant = -28
         self.teamsHeightConstraint.constant = 47
         self.topMarginSpaceConstraint.constant = 0
 
