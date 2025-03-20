@@ -3,20 +3,21 @@
 
 source:
   # Path to the source Swift file (main class file)
-  swift_file: "Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/MatchWidgetCollectionViewCell.swift"
+  swift_file: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/MatchWidgetCollectionViewCell.swift"
 
   # Base class name to be replaced
   base_class_name: "MatchWidgetCollectionViewCell"
 
 output:
   # Base directory where the new files will be created
-  base_directory: "Core/Screens/PreLiveEvents/Views/Cells/Match"
+  base_directory: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match"
 
 # List of target cases to clone into
 # For each case, a subdirectory will be created with the case name
 # and the files will be cloned with the case name prefixed to the base class name
 # Extension files will be automatically found and processed
 target_cases:
+  - Boosted
   - Live
   - PreLive
   - TopImage

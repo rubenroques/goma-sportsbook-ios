@@ -2,7 +2,7 @@
 //  MatchWidgetCollectionViewCell.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 30/09/2021.
+//  Created by Ruben Roques on 20/03/2025
 //
 
 import UIKit
@@ -27,20 +27,20 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var baseView: UIView = self.createBaseView()
     lazy var baseStackView: UIStackView = self.createBaseStackView()
     lazy var headerLineStackView: UIStackView = self.createHeaderLineStackView()
-    
-    // Header elements  
+
+    // Header elements
     lazy var favoritesIconImageView: UIImageView = self.createFavoritesIconImageView()
     lazy var eventNameLabel: UILabel = self.createEventNameLabel()
     lazy var locationFlagImageView: UIImageView = self.createLocationFlagImageView()
     lazy var sportTypeImageView: UIImageView = self.createSportTypeImageView()
     lazy var favoritesButton: UIButton = self.createFavoritesButton()
-    
+
     // Content views
     lazy var mainContentBaseView: UIView = self.createMainContentBaseView()
     lazy var horizontalMatchInfoBaseView: UIView = self.createHorizontalMatchInfoBaseView()
     lazy var outrightNameBaseView: UIView = self.createOutrightNameBaseView()
     lazy var outrightNameLabel: UILabel = self.createOutrightNameLabel()
-    
+
     // Odds views
     lazy var oddsStackView: UIStackView = self.createOddsStackView()
     lazy var homeBaseView: UIView = self.createHomeBaseView()
@@ -52,16 +52,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var awayBaseView: UIView = self.createAwayBaseView()
     lazy var awayOddTitleLabel: UILabel = self.createAwayOddTitleLabel()
     lazy var awayOddValueLabel: UILabel = self.createAwayOddValueLabel()
-    
+
     // Outright views
     lazy var outrightBaseView: UIView = self.createOutrightBaseView()
     lazy var outrightSeeLabel: UILabel = self.createOutrightSeeLabel()
-    
+
     // Market views
     lazy var marketNameView: UIView = self.createMarketNameView()
     lazy var marketNameInnerView: UIView = self.createMarketNameInnerView()
     lazy var marketNameLabel: UILabel = self.createMarketNameLabel()
-    
+
     // Boosted odds views
     lazy var homeBoostedOddValueBaseView: UIView = self.createHomeBoostedOddValueBaseView()
     lazy var homeNewBoostedOddValueLabel: UILabel = self.createNewTitleBoostedOddLabel()
@@ -77,7 +77,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var awayNewBoostedOddValueLabel: UILabel = self.createNewTitleBoostedOddLabel()
     lazy var awayBoostedOddArrowView: BoostedArrowView = self.createAwayBoostedOddArrowView()
     lazy var awayOldBoostedOddValueLabel: UILabel = self.createOldTitleBoostedOddLabel()
-    
+
     // Odds change indicators
     lazy var homeUpChangeOddValueImage: UIImageView = self.createHomeUpChangeOddValueImage()
     lazy var homeDownChangeOddValueImage: UIImageView = self.createHomeDownChangeOddValueImage()
@@ -85,19 +85,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var drawDownChangeOddValueImage: UIImageView = self.createDrawDownChangeOddValueImage()
     lazy var awayUpChangeOddValueImage: UIImageView = self.createAwayUpChangeOddValueImage()
     lazy var awayDownChangeOddValueImage: UIImageView = self.createAwayDownChangeOddValueImage()
-    
+
     // Status views
     lazy var suspendedBaseView: UIView = self.createSuspendedBaseView()
     lazy var suspendedLabel: UILabel = self.createSuspendedLabel()
     lazy var seeAllBaseView: UIView = self.createSeeAllBaseView()
     lazy var seeAllLabel: UILabel = self.createSeeAllLabel()
-    
+
     // Image views
     lazy var backgroundImageView: UIImageView = self.createBackgroundImageView()
     lazy var topImageBaseView: UIView = self.createTopImageBaseView()
     lazy var topImageView: UIImageView = self.createTopImageView()
     lazy var boostedOddBottomLineView: UIView = self.createBoostedOddBottomLineView()
-    
+
     // Border views
     lazy var gradientBorderView: GradientBorderView = self.createGradientBorderView()
     lazy var liveGradientBorderView: GradientBorderView = self.createLiveGradientBorderView()
@@ -168,7 +168,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var awayContentRedesignTopConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var homeToRightConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var awayToRightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    
+
     // Layout constraints (previously IBOutlets)
     lazy var topMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var bottomMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
@@ -263,7 +263,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         view.backgroundColor = .clear
         return view
     }()
-    
+
     // Team elements stack views
     lazy var homeElementsStackView: UIStackView = self.createHomeElementsStackView()
     lazy var awayElementsStackView: UIStackView = self.createAwayElementsStackView()
@@ -275,7 +275,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         setupInitialState()
         setupGestureRecognizers()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupSubviews()
@@ -527,24 +527,24 @@ extension MatchWidgetCollectionViewCell {
 }
 
 extension MatchWidgetCollectionViewCell {
-    
+
     func setupBoostedAndMixMatch() {
-        
-        
-        
+
+
+
         // Cashback
         self.baseView.addSubview(self.cashbackIconImageView)
-        
+
         self.cashbackIconImageViewHeightConstraint = self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 18)
-        
+
         NSLayoutConstraint.activate([
             self.cashbackIconImageViewHeightConstraint,
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
             self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.headerLineStackView.centerYAnchor),
-            
+
             self.headerLineStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
         ])
-        
+
         self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
                                                                           attribute: .trailing,
                                                                           relatedBy: .equal,
@@ -553,7 +553,7 @@ extension MatchWidgetCollectionViewCell {
                                                                           multiplier: 1,
                                                                           constant: -8)
         self.cashbackImageViewBaseTrailingConstraint.isActive = true
-        
+
         self.cashbackImageViewLiveTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
                                                                           attribute: .trailing,
                                                                           relatedBy: .equal,
@@ -562,75 +562,75 @@ extension MatchWidgetCollectionViewCell {
                                                                           multiplier: 1,
                                                                           constant: -6)
         self.cashbackImageViewLiveTrailingConstraint.isActive = false
-        
+
         NSLayoutConstraint.activate([
             self.headerLineStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
         ])
         //
-        
+
         // see all button
         self.bottomSeeAllMarketsContainerView.isHidden = true
-        
+
         self.baseStackView.addArrangedSubview(self.bottomSeeAllMarketsContainerView)
-        
+
         self.bottomSeeAllMarketsContainerView.addSubview(self.bottomSeeAllMarketsBaseView)
         self.bottomSeeAllMarketsBaseView.addSubview(self.bottomSeeAllMarketsLabel)
         self.bottomSeeAllMarketsBaseView.addSubview(self.bottomSeeAllMarketsArrowIconImageView)
-        
+
         NSLayoutConstraint.activate([
             self.bottomSeeAllMarketsContainerView.heightAnchor.constraint(equalToConstant: 34),
-            
+
             self.bottomSeeAllMarketsBaseView.heightAnchor.constraint(equalToConstant: 27),
             self.bottomSeeAllMarketsBaseView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.leadingAnchor, constant: 12),
             self.bottomSeeAllMarketsBaseView.trailingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.trailingAnchor, constant: -12),
             self.bottomSeeAllMarketsBaseView.topAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.topAnchor),
-            
+
             self.bottomSeeAllMarketsLabel.centerXAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerXAnchor),
             self.bottomSeeAllMarketsLabel.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerYAnchor),
-            
+
             self.bottomSeeAllMarketsArrowIconImageView.widthAnchor.constraint(equalToConstant: 12),
             self.bottomSeeAllMarketsArrowIconImageView.heightAnchor.constraint(equalToConstant: 12),
             self.bottomSeeAllMarketsArrowIconImageView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsLabel.trailingAnchor, constant: 4),
             self.bottomSeeAllMarketsArrowIconImageView.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsLabel.centerYAnchor),
         ])
-        
+
         // MixMatch
         self.mixMatchContainerView.isHidden = true
-        
+
         self.baseStackView.addArrangedSubview(self.mixMatchContainerView)
         self.mixMatchContainerView.addSubview(self.mixMatchBaseView)
         self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
         self.mixMatchBaseView.addSubview(self.mixMatchIconImageView)
         self.mixMatchBaseView.addSubview(self.mixMatchLabel)
         self.mixMatchBaseView.addSubview(self.mixMatchNavigationIconImageView)
-        
+
         NSLayoutConstraint.activate([
             self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 34),
-            
+
             self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 27),
             self.mixMatchBaseView.leadingAnchor.constraint(equalTo: self.mixMatchContainerView.leadingAnchor, constant: 12),
             self.mixMatchBaseView.trailingAnchor.constraint(equalTo: self.mixMatchContainerView.trailingAnchor, constant: -12),
             self.mixMatchBaseView.topAnchor.constraint(equalTo: self.mixMatchContainerView.topAnchor),
-            
+
             self.mixMatchBackgroundImageView.leadingAnchor.constraint(equalTo: self.mixMatchBaseView.leadingAnchor),
             self.mixMatchBackgroundImageView.trailingAnchor.constraint(equalTo: self.mixMatchBaseView.trailingAnchor),
             self.mixMatchBackgroundImageView.topAnchor.constraint(equalTo: self.mixMatchBaseView.topAnchor),
             self.mixMatchBackgroundImageView.bottomAnchor.constraint(equalTo: self.mixMatchBaseView.bottomAnchor),
-            
+
             self.mixMatchLabel.centerXAnchor.constraint(equalTo: self.mixMatchBaseView.centerXAnchor),
             self.mixMatchLabel.centerYAnchor.constraint(equalTo: self.mixMatchBaseView.centerYAnchor),
-            
+
             self.mixMatchIconImageView.widthAnchor.constraint(equalToConstant: 21),
             self.mixMatchIconImageView.heightAnchor.constraint(equalToConstant: 25),
             self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2),
             self.mixMatchIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
-            
+
             self.mixMatchNavigationIconImageView.widthAnchor.constraint(equalToConstant: 11),
             self.mixMatchNavigationIconImageView.heightAnchor.constraint(equalToConstant: 13),
             self.mixMatchNavigationIconImageView.leadingAnchor.constraint(equalTo: self.mixMatchLabel.trailingAnchor, constant: 6),
             self.mixMatchNavigationIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
-            
+
         ])
-        
+
     }
 }

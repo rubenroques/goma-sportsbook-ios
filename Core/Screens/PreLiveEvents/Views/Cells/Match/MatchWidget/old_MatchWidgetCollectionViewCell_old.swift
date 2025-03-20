@@ -2,7 +2,7 @@
 //  MatchWidgetCollectionViewCell.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 30/09/2021.
+//  Created by Ruben Roques on 20/03/2025
 //
 
 import UIKit

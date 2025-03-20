@@ -315,7 +315,6 @@ extension VerticalMatchInfoView {
         return stackView
     }
     
-    
     // MARK: Layout Setup
     private func setupSubviews() {
         self.addSubview(self.topSeparatorAlphaLineView)
