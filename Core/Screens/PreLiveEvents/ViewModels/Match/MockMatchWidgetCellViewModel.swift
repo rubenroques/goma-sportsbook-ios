@@ -155,6 +155,150 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
+    
+    // MARK: - New Mock Publishers
+    
+    /// Publisher for widget appearance
+    var widgetAppearancePublisher: AnyPublisher<WidgetAppearance, Never> {
+        return Publishers.CombineLatest3(
+            self.$matchWidgetStatus,
+            self.$matchWidgetType,
+            self.isLiveCardPublisher
+        )
+        .map { status, type, isLiveCard -> WidgetAppearance in
+            let isLive = status == .live
+            
+            // Determine gradient visibility based on widget type and status
+            let shouldHideNormalGradient: Bool
+            let shouldHideLiveGradient: Bool
+            
+            switch type {
+            case .normal, .boosted, .topImage, .topImageWithMixMatch:
+                shouldHideNormalGradient = isLive
+                shouldHideLiveGradient = !isLive
+            case .backgroundImage, .topImageOutright:
+                shouldHideNormalGradient = true
+                shouldHideLiveGradient = true
+            }
+            
+            return WidgetAppearance(
+                widgetType: type,
+                isLive: isLive,
+                isLiveCard: isLiveCard,
+                shouldHideNormalGradient: shouldHideNormalGradient,
+                shouldHideLiveGradient: shouldHideLiveGradient
+            )
+        }
+        .eraseToAnyPublisher()
+    }
+ 
+    /// Publisher for boosted odds info
+    var boostedOddsPublisher: AnyPublisher<BoostedOddsInfo, Never> {
+        return self.$match
+            .map { _ in
+                return BoostedOddsInfo(
+                    title: "Home Win",
+                    oldValue: "2.10",
+                    newValue: "2.50",
+                    oldValueAttributed: nil
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    /// Publisher for market presentation
+    var marketPresentationPublisher: AnyPublisher<MarketPresentation, Never> {
+        return Publishers.CombineLatest(
+            self.$match,
+            self.$matchWidgetType
+        )
+        .map { match, widgetType -> MarketPresentation in
+            // Create mock outcomes
+            let outcomes: [OutcomePresentation] = [
+                OutcomePresentation(
+                    outcome: nil,
+                    position: .left,
+                    title: "Home",
+                    formattedValue: "1.85",
+                    value: 1.85,
+                    isSelected: false,
+                    isInteractive: true
+                ),
+                OutcomePresentation(
+                    outcome: nil,
+                    position: .middle,
+                    title: "Draw",
+                    formattedValue: "3.40",
+                    value: 3.40,
+                    isSelected: false,
+                    isInteractive: true
+                ),
+                OutcomePresentation(
+                    outcome: nil,
+                    position: .right,
+                    title: "Away",
+                    formattedValue: "4.20",
+                    value: 4.20,
+                    isSelected: false,
+                    isInteractive: true
+                )
+            ]
+            
+            return MarketPresentation(
+                market: match.markets.first,
+                marketName: "1X2",
+                widgetType: widgetType,
+                isMarketAvailable: true,
+                isCustomBetAvailable: false,
+                shouldShowMarketPill: widgetType == .boosted,
+                outcomes: outcomes,
+                boostedOutcome: widgetType == .boosted ? false : nil
+            )
+        }
+        .eraseToAnyPublisher()
+    }
+    
+    /// Publisher for left outcome updates
+    var leftOutcomeUpdatesPublisher: AnyPublisher<OutcomeUpdate, ServiceProviderError> {
+        return Just(OutcomeUpdate(
+            outcome: nil,
+            isAvailable: true,
+            newValue: 1.85,
+            formattedValue: "1.85",
+            changeDirection: nil,
+            isSelected: false
+        ))
+        .setFailureType(to: ServiceProviderError.self)
+        .eraseToAnyPublisher()
+    }
+    
+    /// Publisher for middle outcome updates
+    var middleOutcomeUpdatesPublisher: AnyPublisher<OutcomeUpdate, ServiceProviderError> {
+        return Just(OutcomeUpdate(
+            outcome: nil,
+            isAvailable: true,
+            newValue: 3.40,
+            formattedValue: "3.40",
+            changeDirection: nil,
+            isSelected: false
+        ))
+        .setFailureType(to: ServiceProviderError.self)
+        .eraseToAnyPublisher()
+    }
+    
+    /// Publisher for right outcome updates
+    var rightOutcomeUpdatesPublisher: AnyPublisher<OutcomeUpdate, ServiceProviderError> {
+        return Just(OutcomeUpdate(
+            outcome: nil,
+            isAvailable: true,
+            newValue: 4.20,
+            formattedValue: "4.20",
+            changeDirection: nil,
+            isSelected: false
+        ))
+        .setFailureType(to: ServiceProviderError.self)
+        .eraseToAnyPublisher()
+    }
 
     // MARK: - Initialization
 

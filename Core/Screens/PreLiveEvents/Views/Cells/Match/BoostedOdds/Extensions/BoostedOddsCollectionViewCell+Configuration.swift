@@ -1,5 +1,5 @@
 //
-//  MatchWidgetCollectionViewCell+Configuration.swift
+//  BoostedOddsCollectionViewCell+Configuration.swift
 //  Sportsbook
 //
 //  Created by Refactoring on 2024.
@@ -10,7 +10,7 @@ import Combine
 import ServicesProvider
 
 // MARK: - Configuration Methods
-extension MatchWidgetCollectionViewCell {
+extension BoostedOddsCollectionViewCell {
 
     // MARK: - ViewModel Configuration
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {

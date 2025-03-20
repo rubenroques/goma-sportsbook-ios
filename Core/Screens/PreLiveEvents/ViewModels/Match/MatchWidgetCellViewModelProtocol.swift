@@ -51,6 +51,26 @@ protocol MatchWidgetCellViewModelProtocol {
     /// Publisher for whether the card should be drawn as live
     var isLiveCardPublisher: AnyPublisher<Bool, Never> { get }
     
+    // MARK: - New Presentation Publishers
+    
+    /// Publisher for widget appearance settings
+    var widgetAppearancePublisher: AnyPublisher<WidgetAppearance, Never> { get }
+    
+    /// Publisher for boosted odds information
+    var boostedOddsPublisher: AnyPublisher<BoostedOddsInfo, Never> { get }
+    
+    /// Publisher for market presentation data
+    var marketPresentationPublisher: AnyPublisher<MarketPresentation, Never> { get }
+    
+    /// Publisher for left outcome updates
+    var leftOutcomeUpdatesPublisher: AnyPublisher<OutcomeUpdate, ServiceProviderError> { get }
+    
+    /// Publisher for middle outcome updates
+    var middleOutcomeUpdatesPublisher: AnyPublisher<OutcomeUpdate, ServiceProviderError> { get }
+    
+    /// Publisher for right outcome updates
+    var rightOutcomeUpdatesPublisher: AnyPublisher<OutcomeUpdate, ServiceProviderError> { get }
+    
     /// Updates the match data
     func updateWithMatch(_ match: Match)
 } 
