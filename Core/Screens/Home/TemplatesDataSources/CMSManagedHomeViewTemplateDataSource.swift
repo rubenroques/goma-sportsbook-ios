@@ -248,6 +248,12 @@ class CMSManagedHomeViewTemplateDataSource {
             return .promotedBetslips
         case .popularEvents:
             return .promotedSportSection
+        case .favorites:
+            return .userFavorites
+        case .featuredTips:
+            return .promotedBetslips
+        case .news:
+            return .videoNewsLine
         }
     }
 

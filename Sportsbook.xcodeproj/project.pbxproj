@@ -10479,6 +10479,72 @@
 		CEEFD4872D88CA4500AE4301 /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
 		CEEFD4882D88CA4500AE4301 /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
 		CEEFD4892D88CA4500AE4301 /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		CEEFDE5D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE5E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE5F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE602D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE612D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE622D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE632D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE642D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE652D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE662D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE672D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE682D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE692D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE6A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE6B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE6C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE6D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE6E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE6F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE702D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE712D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE722D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE732D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE742D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE752D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE762D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE772D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE782D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE792D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE7A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE7B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE7C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE7D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE7E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE7F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE802D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE812D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE822D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE832D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE842D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE852D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE862D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE872D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE882D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE892D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE8A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE8B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE8C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE8D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE8E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE8F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE902D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE912D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE922D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE932D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE942D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE952D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE962D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE972D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE982D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
+		CEEFDE992D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */; };
+		CEEFDE9A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */; };
+		CEEFDE9B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */; };
+		CEEFDE9C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */; };
+		CEEFDE9D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */; };
+		CEEFDE9E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */; };
 		F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
@@ -11608,6 +11674,12 @@
 		CEE502CF2D66A609001B0342 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
 		CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelHelperTests.swift; sourceTree = "<group>"; };
 		CEE502E32D66B496001B0342 /* SportsMerger.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SportsMerger.txt; sourceTree = "<group>"; };
+		CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
+		CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
+		CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
+		CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
+		CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Layout.swift"; sourceTree = "<group>"; };
+		CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Styling.swift"; sourceTree = "<group>"; };
 		F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
@@ -15759,11 +15831,12 @@
 		CEAB09802D77588D00541098 /* MatchWidget */ = {
 			isa = PBXGroup;
 			children = (
+				CEAB097D2D77588D00541098 /* MatchWidgetCollectionViewCell.swift */,
+				CEAB097E2D77588D00541098 /* MatchWidgetCollectionViewCell.xib */,
+				CEEFDE5C2D8B772900630F7E /* Extensions */,
 				CEDB59682D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift */,
 				CE0AEAA92D8A41EE007CCFC3 /* MatchHeaderView.swift */,
 				CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */,
-				CEAB097D2D77588D00541098 /* MatchWidgetCollectionViewCell.swift */,
-				CEAB097E2D77588D00541098 /* MatchWidgetCollectionViewCell.xib */,
 				CEAB097F2D77588D00541098 /* MatchWidgetContainerTableViewCell.swift */,
 			);
 			path = MatchWidget;
@@ -16001,6 +16074,19 @@
 				CEC57BD62D53C74900EA0D60 /* zendesk_support.html */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		CEEFDE5C2D8B772900630F7E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */,
+				CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */,
+				CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */,
+				CEEFDE592D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift */,
+				CEEFDE5A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift */,
+				CEEFDE5B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		F410E62727BC4F78005C1964 /* Cells */ = {
@@ -19116,6 +19202,12 @@
 				452B9D0E2C188E660032363F /* SingleBettingTicketDataSource.swift in Sources */,
 				450B794228F58574009229E3 /* UIStackView+Extensions.swift in Sources */,
 				A96FAED12981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
+				CEEFDE872D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE882D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE892D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE8A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE8B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE8C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				450B794328F58574009229E3 /* AggregatorRepository.swift in Sources */,
 				CE16F2822D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				A9A43C792A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
@@ -20006,6 +20098,12 @@
 				45B6E21B283FCF7E001B570C /* SentTicketMessageTableViewCell.swift in Sources */,
 				457CBAAC282D27D000ED0F00 /* UserSessionStore.swift in Sources */,
 				457CBAAD282D27D000ED0F00 /* AppSettingsViewController.swift in Sources */,
+				CEEFDE812D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE822D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE832D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE842D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE852D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE862D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				A9DF8DFD28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
 				457CBAAE282D27D000ED0F00 /* GameSuggestedView.swift in Sources */,
 				A9DF8E6228E751F10083BF56 /* ListTitleHeaderFooterView.swift in Sources */,
@@ -20562,6 +20660,12 @@
 				457CBCCC282D2CD100ED0F00 /* OddViewPosition.swift in Sources */,
 				459874BE2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				457CBCCD282D2CD100ED0F00 /* FilterSliderInfoView.swift in Sources */,
+				CEEFDE5D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE5E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE5F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE602D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE612D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE622D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				A99DE67A29A643F800AA24AA /* PaymentStatus.swift in Sources */,
 				457CBCCF282D2CD100ED0F00 /* Environment.swift in Sources */,
 				A9A2924D2A61670100A7C334 /* UserReferralView.swift in Sources */,
@@ -21520,6 +21624,12 @@
 				452B9D0F2C188E660032363F /* SingleBettingTicketDataSource.swift in Sources */,
 				4589C83A282024E400243547 /* AggregatorRepository.swift in Sources */,
 				A96FAED02981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
+				CEEFDE7B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE7C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE7D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE7E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE7F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE802D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				A9DF8DFB28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
 				CE16F27E2D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				A9A43C7A2A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
@@ -22278,6 +22388,12 @@
 				452B9D0C2C188E660032363F /* SingleBettingTicketDataSource.swift in Sources */,
 				45A33158298976BA008181E9 /* GameSuggestedView.swift in Sources */,
 				45A33159298976BA008181E9 /* UIStackView+Extensions.swift in Sources */,
+				CEEFDE632D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE642D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE652D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE662D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE672D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE682D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45A3315A298976BA008181E9 /* UploadDocumentsViewModel.swift in Sources */,
 				45A3315B298976BA008181E9 /* AggregatorRepository.swift in Sources */,
 				CE16F2842D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
@@ -23036,6 +23152,12 @@
 				45A6BC8D28246A7500D9B416 /* Fonts.swift in Sources */,
 				653A38402D53921900B89CDF /* BettingPracticesViewController.swift in Sources */,
 				A98708C628DA278F00F27348 /* UserProfileInfoViewController.swift in Sources */,
+				CEEFDE752D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE762D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE772D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE782D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE792D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE7A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45A6BC9028246A7500D9B416 /* NotEmpty.swift in Sources */,
 				45A6BC9128246A7500D9B416 /* VersionUpdateViewController.swift in Sources */,
 				45A6BC9228246A7500D9B416 /* SportSelectionCollectionViewCell.swift in Sources */,
@@ -23794,6 +23916,12 @@
 				452B9D0D2C188E660032363F /* SingleBettingTicketDataSource.swift in Sources */,
 				45F6BC022AB3732C00C81DE1 /* GameSuggestedView.swift in Sources */,
 				45F6BC032AB3732C00C81DE1 /* UIStackView+Extensions.swift in Sources */,
+				CEEFDE932D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE942D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE952D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE962D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE972D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE982D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45F6BC042AB3732C00C81DE1 /* UploadDocumentsViewModel.swift in Sources */,
 				45F6BC052AB3732C00C81DE1 /* AggregatorRepository.swift in Sources */,
 				CE16F2862D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
@@ -24365,6 +24493,12 @@
 				A9C340E728F9A74A0055360B /* SelectFriendTableViewCell.swift in Sources */,
 				A9DD89F72A57144D00D3A5FE /* SubjectType.swift in Sources */,
 				A9C340E928F9A74A0055360B /* CompetitionFilterSectionViewModel.swift in Sources */,
+				CEEFDE692D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE6A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE6B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE6C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE6D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE6E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45B74AD1292BFE3500F2076C /* ServiceProviderType.swift in Sources */,
 				450FC4092A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				A9C340EA28F9A74A0055360B /* ResultsHeaderFooterView.swift in Sources */,
@@ -25323,6 +25457,12 @@
 				CE12A26D2D31347E0022BDF7 /* UIStackView+Extensions.swift in Sources */,
 				CE12A26E2D31347E0022BDF7 /* UploadDocumentsViewModel.swift in Sources */,
 				CE12A26F2D31347E0022BDF7 /* AggregatorRepository.swift in Sources */,
+				CEEFDE8D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE8E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE8F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE902D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE912D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE922D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE12A2712D31347E0022BDF7 /* RibDocsViewModel.swift in Sources */,
 				CE16F27F2D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				CE12A2722D31347E0022BDF7 /* UserInfoSimpleCardView.swift in Sources */,
@@ -26434,6 +26574,12 @@
 				CEA568752D5A58D800696793 /* CompetitionsFiltersView.swift in Sources */,
 				CEA568762D5A58D800696793 /* CompetitionDetailsViewModel.swift in Sources */,
 				CEA568772D5A58D800696793 /* SportsbookTarget.swift in Sources */,
+				CEEFDE992D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE9A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE9B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE9C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE9D2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE9E2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CEA568782D5A58D800696793 /* UserProfileInfoViewModel.swift in Sources */,
 				CEA568792D5A58D800696793 /* FailableDecodable.swift in Sources */,
 				CEA5687A2D5A58D800696793 /* FilterLineView.swift in Sources */,
@@ -26836,6 +26982,12 @@
 				CEB5D52D2D88BC4D00B9D73F /* GameSuggestedView.swift in Sources */,
 				CEB5D52E2D88BC4D00B9D73F /* SingleBettingTicketDataSource.swift in Sources */,
 				CEB5D52F2D88BC4D00B9D73F /* UIStackView+Extensions.swift in Sources */,
+				CEEFDE6F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CEEFDE702D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CEEFDE712D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CEEFDE722D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CEEFDE732D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEFDE742D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CEB5D5302D88BC4D00B9D73F /* UploadDocumentsViewModel.swift in Sources */,
 				CEB5D5312D88BC4D00B9D73F /* AggregatorRepository.swift in Sources */,
 				CEB5D5322D88BC4D00B9D73F /* RibDocsViewModel.swift in Sources */,

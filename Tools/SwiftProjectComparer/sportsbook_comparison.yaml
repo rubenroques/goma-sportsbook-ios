@@ -1,0 +1,65 @@
+# Configuration for Sportsbook Project Comparison
+# -------------------------------------------
+
+# Base project directory (current version)
+# This is the project that will be updated with missing types
+base_directory: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios"
+
+# Legacy project directory (old version with divergent code)
+# Replace this with the actual path to your legacy codebase
+legacy_directory: "/path/to/legacy/sportsbook-ios"
+
+# Directories to exclude from comparison
+excluded_directories:
+  - "Pods"
+  - "Carthage"
+  - "DerivedData"
+  - ".git"
+  - "fastlane"
+  - "Scripts"
+  - "Tools"
+  - "Generated"
+  - "Library"
+  - "vendor"
+  - "TestFlight"
+  - "Products"
+
+# Types to ignore during comparison
+ignored_types:
+  # Common Swift utility types
+  names:
+    - "CodingKeys"
+    - "AppDelegate"
+    - "SceneDelegate"
+    - "Bundle"
+    - "String"
+    - "Data"
+    - "Int"
+    - "URL"
+  
+  # Sportsbook-specific utility types
+  classes:
+    - "BaseViewController"
+    - "BaseView"
+    - "BaseTableViewCell"
+    - "BaseCollectionViewCell"
+  
+  # Common test-related types
+  patterns:
+    - ".*Tests$"
+    - "Test.*"
+    - "Mock.*"
+    - ".*TestCase"
+    
+  # Common UIKit extensions
+  extensions:
+    - "UIColor"
+    - "UIView"
+    - "UITableView"
+    - "UICollectionView"
+    - "String"
+    - "Date"
+    - "UIImage"
+
+# Output report location
+output_report: "sportsbook_comparison_report.md" 

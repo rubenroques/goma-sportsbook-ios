@@ -1,0 +1,29 @@
+# Example configuration for Swift Code Migration Validator
+# -----------------------------------------------
+
+# Path to the original monolithic Swift file
+old_file: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/MatchWidgetCollectionViewCell_old.swift"
+
+# Option 1: List of specific extension files
+new_files:
+  - "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/MatchWidgetCollectionViewCell.swift"
+  - "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/Extensions/MatchWidgetCollectionViewCell+Animations.swift"
+  - "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/Extensions/MatchWidgetCollectionViewCell+Configuration.swift"
+  - "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/Extensions/MatchWidgetCollectionViewCell+Factory.swift"
+  - "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/Extensions/MatchWidgetCollectionViewCell+Interactions.swift"
+  - "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/Extensions/MatchWidgetCollectionViewCell+Layout.swift"
+  - "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/Extensions/MatchWidgetCollectionViewCell+Styling.swift"
+
+ignore_lines:
+  # Common imports that may appear in multiple files
+  - "import UIKit"
+  - "import Foundation"
+
+  # Common Swift syntax elements that may be formatted differently
+  - "{"
+  - "}"
+  - "}()"
+  - "extension MatchWidgetCollectionViewCell {"
+  - "// MARK"
+
+  - "lazy var mix*"

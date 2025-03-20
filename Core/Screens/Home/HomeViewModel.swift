@@ -49,7 +49,7 @@ class HomeViewModel {
 
         case highlightedMarketProChoices
         case videoNewsLine
-
+        
         var identifier: String {
             switch self {
             case .userMessage: return "userMessage"

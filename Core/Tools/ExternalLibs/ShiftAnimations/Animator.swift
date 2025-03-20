@@ -28,7 +28,7 @@ public final class Animator {
     private let fromViewControllerType: UIViewController.Type?
     /// The view controller's type that is being transitioned too.
     private let toViewControllerType: UIViewController.Type?
-    
+
     public init(fromView: UIView,
                 toView: UIView,
                 container: UIView,
@@ -48,7 +48,7 @@ public final class Animator {
         self.fromViewControllerType = fromViewControllerType
         self.toViewControllerType = toViewControllerType
     }
-    
+
     public convenience init(fromView fromViewController: UIViewController,
                             toView toViewController: UIViewController,
                             container: UIView,
@@ -56,7 +56,7 @@ public final class Animator {
         // For presenting we want to use the toViewControllers options,
         // on dismissal we want the fromViewController since it is being dismissed.
         let sourceViewController = isPresenting ? toViewController : fromViewController
-        
+
         self.init(fromView: fromViewController.view,
             toView: toViewController.view,
             container: container,
@@ -68,43 +68,43 @@ public final class Animator {
             toViewControllerType: type(of: toViewController)
         )
     }
-    
+
     /// The view being presented or dismissed.
     private var sourceView: UIView {
         return isPresenting ? toView : fromView
     }
-    
+
     /// The other view than the `sourceView`
     private var nonSourceView: UIView {
         return isPresenting ? fromView : toView
     }
-    
+
     /// Perform the transition animation.
     /// - Parameter completion: A closure to be called on completion.
     public func animate(completion: @escaping (Bool) -> Void) {
         let transitionContainer = buildTransitionContainer(in: container, frame: toView.frame)
         let fromViewShapshot = addFromViewSnapshot(fromView: fromView, container: container)
-        
+
         let views = buildViews()
-        
+
         defaultAnimation?.apply(to: views, isPresenting: isPresenting)
-        
+
         applyAnimations(to: views)
-        
+
         views.topViews.reversed().forEach { $0.takeSnapshot() }
         views.bottomViews.reversed().forEach { $0.takeSnapshot() }
-        
+
         views.forEach { $0.addSnapshot() }
         views.forEach { $0.adjustPosition() }
-        
+
         // All snapshots have been taken, so we can remove the `fromViewShapshot`
         // since there wont be anymore flashing, and the transition can begin.
         fromViewShapshot.removeFromSuperview()
-        
+
         views.forEach{ $0.performNonAnimatedChanges() }
         views.forEach{ $0.performCaAnimations() }
         views.forEach{ $0.performUiViewAnimations() }
-        
+
         delay(views.maxDuration) {
             completion(true)
             views.forEach{ $0.finish() }
@@ -118,34 +118,34 @@ public final class Animator {
             toViewControllerType: toViewControllerType,
             fromViewControllerType: fromViewControllerType
         )
-        
+
         views.toViews.forEach{ $0.applyModifers(filter: filter) }
         views.fromViews.forEach{ $0.applyModifers(filter: filter) }
     }
-    
+
     /// Builds the list of `views` used for the transition,
     /// and also assigns any matches that may exist.
     private func buildViews() -> ShiftViews {
         // Bit of a logic shift here. Normally we can think about things
         // in the context of "to" and "from" views. However we need to make the matches
         // in the "source" view. e.g. the view being presented or dismissed.
-        
+
         let potential = potentialMatches(of: nonSourceView)
-        
+
         let (sourceViews, matches) = animatedViews(
             of: sourceView,
             reverseAnimations: !isPresenting,
             potentialMatches: potential,
             ignoreViews: []
         )
-        
+
         let (nonSourceViews, _) = animatedViews(
             of: nonSourceView,
             reverseAnimations: isPresenting,
             potentialMatches: [:],
             ignoreViews: matches
         )
-        
+
         return ShiftViews(
             fromViews: isPresenting ? nonSourceViews : sourceViews,
             toViews: isPresenting ? sourceViews : nonSourceViews,
@@ -153,7 +153,7 @@ public final class Animator {
             isPresenting: isPresenting
         )
     }
-    
+
     /// Builds up a list of views that need to be animated in the transition.
     private func animatedViews(of view: UIView,
                                reverseAnimations: Bool,
@@ -162,7 +162,7 @@ public final class Animator {
                                parent: ViewContext? = nil) -> ([ViewContext], Set<String>) {
         var views = [ViewContext]()
         var matches = Set<String>()
-        
+
         animatedViews(
             of: view,
             reverseAnimations: reverseAnimations,
@@ -172,10 +172,10 @@ public final class Animator {
             views: &views,
             matches: &matches
         )
-        
+
         return (views, matches)
     }
-    
+
     /// Builds up a list of views that need to be animated in the transition.
     private func animatedViews(of view: UIView,
                                reverseAnimations: Bool,
@@ -186,13 +186,13 @@ public final class Animator {
                                matches: inout Set<String>) {
         guard !view.isHidden else { return}
         var parent = parent
-        
+
         if let id = view.shift.id, ignoreViews.contains(id) {
             // View is listed in the ignore views so ignore.
             // It was already matched so it exists in the other view.
             return
         }
-        
+
         if let id = view.shift.id, let match = potentialMatches[id] {
             let context = ViewContext(
                 view: view,
@@ -202,18 +202,19 @@ public final class Animator {
                 baselineDuration: baselineDuration,
                 isRootView: parent == nil
             )
-            
+
             matches.insert(id)
             views.append(context)
             parent = context
-        } else if view.shift.requiresAnimation || parent == nil {
+        }
+        else if view.shift.requiresAnimation || parent == nil {
             let superView: Superview
             if let parent = parent, view.shift.superview != .container {
                 superView = .parent(parent)
             } else {
                 superView = .global(container)
             }
-            
+
             let context = ViewContext(
                 view: view,
                 match: nil,
@@ -222,11 +223,11 @@ public final class Animator {
                 baselineDuration: baselineDuration,
                 isRootView: parent == nil
             )
-            
+
             views.append(context)
             parent = context
         }
-        
+
         for subview in view.subviews {
             animatedViews(
                 of: subview,
@@ -265,20 +266,20 @@ public final class Animator {
         fromViewShapshot.frame = fromView.frame
         return fromViewShapshot
     }
-    
+
     /// Builds up a dictionary of views that have an `id` set.
     func potentialMatches(of view: UIView) -> [String: UIView] {
         var result = [String: UIView]()
         potentialMatches(of: view, result: &result)
         return result
     }
-    
+
     /// Builds up a dictionary of views that have an `id` set.
     private func potentialMatches(of view: UIView, result: inout [String: UIView]) {
         if let id = view.shift.id {
             result[id] = view
         }
-        
+
         for subview in view.subviews {
             potentialMatches(of: subview, result: &result)
         }
@@ -303,7 +304,7 @@ public enum ViewOrder {
 public final class ShiftViews: Collection {
     public typealias Index = Int
     public typealias Element = ViewContext
-    
+
     /// The views being transitioned from.
     public let fromViews: [ViewContext]
     /// The views being transitioned too.
@@ -312,7 +313,7 @@ public final class ShiftViews: Collection {
     private let order: ViewOrder
     /// Whether or not the view is being presented.
     private let isPresenting: Bool
-    
+
     init(fromViews: [ViewContext],
          toViews: [ViewContext],
          order: ViewOrder,
@@ -322,24 +323,24 @@ public final class ShiftViews: Collection {
         self.order = order
         self.isPresenting = isPresenting
     }
-    
+
     /// The source view is either the view being transitioned to,
     /// or the view being dismissed.
     /// This is the view that all matches reside in as well.
     public var sourceViewRoot: ViewContext? {
         return isPresenting ? toRootView : fromRootView
     }
-    
+
     /// The view we are transitioning from.
     public var fromRootView: ViewContext? {
         return fromViews.first { $0.isRootView }
     }
-    
+
     /// The view we are transitioning too.
     public var toRootView: ViewContext? {
         return toViews.first { $0.isRootView }
     }
-    
+
     /// The views at the bottom of the container.
     /// These are below the `topViews`
     public var bottomViews: [ViewContext] {
@@ -352,7 +353,7 @@ public final class ShiftViews: Collection {
             return fromViews
         }
     }
-    
+
     /// The views at the top of the container.
     /// These are abolve the `bottomViews`
     public var topViews: [ViewContext] {
@@ -365,23 +366,23 @@ public final class ShiftViews: Collection {
             return toViews
         }
     }
-    
+
     public var startIndex: Int {
         return bottomViews.startIndex
     }
-    
+
     public var maxDuration: TimeInterval {
         return map{ $0.duration }.max() ?? 0
     }
-       
+
     public var endIndex: Int {
         return bottomViews.endIndex + topViews.endIndex
     }
-    
+
     public func index(after i: Int) -> Int {
         return i + 1
     }
-    
+
     public subscript(position: Int) -> ViewContext {
         if position < bottomViews.endIndex {
             return bottomViews[position]

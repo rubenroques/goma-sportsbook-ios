@@ -624,7 +624,7 @@ extension SportMatchDoubleLineTableViewCell {
 
         self.topCollectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
                                         forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
-        self.topCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
+        self.topCollectionView.register(MatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.topCollectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
         self.topCollectionView.register(SeeMoreMarketsCollectionViewCell.self, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
@@ -632,7 +632,7 @@ extension SportMatchDoubleLineTableViewCell {
 
         self.bottomCollectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
                                            forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
-        self.bottomCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
+        self.bottomCollectionView.register(MatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.bottomCollectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.bottomCollectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
         self.bottomCollectionView.register(SeeMoreMarketsCollectionViewCell.self, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)

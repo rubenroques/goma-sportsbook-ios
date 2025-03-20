@@ -104,7 +104,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
-        self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
+        self.collectionView.register(MatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.collectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
         self.collectionView.register(SeeMoreMarketsCollectionViewCell.self, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)

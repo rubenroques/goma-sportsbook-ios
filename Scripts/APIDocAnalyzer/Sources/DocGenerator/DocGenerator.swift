@@ -52,9 +52,11 @@ enum Parameters: Codable {
         let container = try decoder.singleValueContainer()
         if let dict = try? container.decode([String: ParameterDetails].self) {
             self = .dictionary(dict)
-        } else if let str = try? container.decode(String.self) {
+        }
+        else if let str = try? container.decode(String.self) {
             self = .single(str)
-        } else {
+        }
+        else {
             throw DecodingError.typeMismatch(
                 Parameters.self,
                 DecodingError.Context(

@@ -541,7 +541,7 @@ extension SportMatchSingleLineTableViewCell {
         self.collectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
                                            forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
 
-        self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
+        self.collectionView.register(MatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.collectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
         self.collectionView.register(SeeMoreMarketsCollectionViewCell.self, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)

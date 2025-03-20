@@ -818,7 +818,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                 else if betTickets.count > 1, sameMatchBets {
                     if let index = BetslipType.indexFor(.betBuilder), TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
                         self?.betTypeSegmentControlView?.setSelectedItem(atIndex: index, animated: true)
-                    } else if let index = BetslipType.indexFor(.multiple) {
+                    }
+                    else if let index = BetslipType.indexFor(.multiple) {
                         // Fallback to multiple if MixMatch is not enabled
                         self?.betTypeSegmentControlView?.setSelectedItem(atIndex: index, animated: true)
                     }

@@ -1,0 +1,24 @@
+# Configuration for Swift Dependency Graph Generator
+# ---------------------------------------------
+
+# Path to your Swift project directory
+project_directory: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios"
+
+# Directories to exclude from analysis
+excluded_directories:
+  - ".build"
+  - "Pods"
+  - "Carthage"
+  - "DerivedData"
+  - ".git"
+  - "fastlane"
+  - "Scripts"
+  - "Tools"
+  - "Library"
+  - "vendor"
+  - "TestFlight"
+  - "Products"
+  - "Tools"
+
+# Output HTML file path
+output_file: "dependency_graph.html"

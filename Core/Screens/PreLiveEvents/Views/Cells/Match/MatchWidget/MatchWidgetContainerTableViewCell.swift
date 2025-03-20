@@ -275,12 +275,12 @@ extension MatchWidgetContainerTableViewCell {
         collectionView.isScrollEnabled = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-        collectionView.register(MatchWidgetCollectionViewCell.nib, 
+        collectionView.register(MatchWidgetCollectionViewCell.self,
                                 forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
 
         for matchWidgetType in MatchWidgetType.allCases {
             // Register a cell for each cell type to avoid glitches in the redrawing
-            collectionView.register(MatchWidgetCollectionViewCell.nib, 
+            collectionView.register(MatchWidgetCollectionViewCell.self,
                                     forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier+matchWidgetType.rawValue)
         }
 
@@ -288,13 +288,13 @@ extension MatchWidgetContainerTableViewCell {
     }
 
     private static func createBackSliderView() -> UIView {
-        var backSliderView = UIView()
+        let backSliderView = UIView()
         backSliderView.translatesAutoresizingMaskIntoConstraints = false
         return backSliderView
     }
     
     private static func createBackSliderIconImageView() -> UIImageView {
-        var backSliderIconImageView: UIImageView = UIImageView()
+        let backSliderIconImageView: UIImageView = UIImageView()
         backSliderIconImageView.image = UIImage(named: "arrow_circle_left_icon")
         backSliderIconImageView.translatesAutoresizingMaskIntoConstraints = false
         backSliderIconImageView.contentMode = .scaleAspectFit
