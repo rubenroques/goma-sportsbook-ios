@@ -11,12 +11,12 @@ import Combine
 class FeaturedTipLineViewModel {
 
     static let maxTicketsBeforeExpand = 3
-    
+
     enum DataType {
         case featuredTips([FeaturedTip])
         case suggestedBetslips([SuggestedBetslip])
     }
-    
+
     var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
 
     var dataType: DataType
@@ -54,7 +54,7 @@ class FeaturedTipLineViewModel {
         case .featuredTips(let featuredTips):
             featuredTips.map({ ($0.selections ?? []).count }).max() ?? 0
         case .suggestedBetslips(let suggestedBetslips):
-            suggestedBetslips.map({ ($0.selections ?? []).count }).max() ?? 0
+            suggestedBetslips.map({ ($0.selections ?? []).count}).max() ?? 0
         }
     }
 

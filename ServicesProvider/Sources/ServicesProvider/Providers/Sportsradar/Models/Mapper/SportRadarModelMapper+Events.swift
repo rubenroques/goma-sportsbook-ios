@@ -194,16 +194,11 @@ extension SportRadarModelMapper {
     }
 
     static func bannerResponse(fromInternalBannerResponse internalBannerResponse: SportRadarModels.BannerResponse) -> BannerResponse {
-
         let banners = internalBannerResponse.bannerItems.map({ banner -> Banner in
             let banner = Self.banner(fromInternalBanner: banner)
-
             return banner
-
         })
-
         return BannerResponse(bannerItems: banners)
-
     }
 
     static func banner(fromInternalBanner internalBanner: SportRadarModels.Banner) -> Banner {

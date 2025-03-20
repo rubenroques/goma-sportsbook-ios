@@ -155,10 +155,10 @@ class MatchDetailsViewModel: NSObject {
     }
 
     private func connectPublishers() {
-        
+
         // Set a default selected tab
         self.chipsTypeViewModel.selectTab(at: 0)
-        
+
         self.marketGroupsState
             .receive(on: DispatchQueue.main)
             .compactMap { (marketGroupsState: LoadableContent<[MarketGroup]>) -> [MarketGroup]? in
@@ -219,12 +219,37 @@ class MatchDetailsViewModel: NSObject {
                 self?.selectedMarketTypeIndexPublisher.send(selectedIndex)
             }
             .store(in: &self.cancellables)
-        
+
         self.matchStatsViewModel.statsTypePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] statsJSON in
                 self?.statsJSON = statsJSON
                 self?.matchStatsUpdatedPublisher.send()
+            }
+            .store(in: &self.cancellables)
+
+        self.matchCurrentValueSubject
+            .compactMap { (loadableContent: LoadableContent<Match>) -> String? in
+                switch loadableContent {
+                case .loaded(let match):
+                    return match.trackableReference
+                case .loading, .failed, .idle:
+                    return nil
+                }
+            }
+            .removeDuplicates()
+            // Explicitly provide return type to help compiler choose the right flatMap overload
+            .flatMap( { (matchTrackableReference: String) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> in
+                return Env.servicesProvider.getRecommendedBetBuilders(eventId: matchTrackableReference, multibetsCount: 5, selectionsCount: 3, userId: nil)
+                    .eraseToAnyPublisher()
+            })
+            .catch { error -> AnyPublisher<RecommendedBetBuilders, Never> in
+                print("Error retrieving data: \(error)")
+                let emptyValue = RecommendedBetBuilders(recommendations: [])
+                return Just(emptyValue).eraseToAnyPublisher()
+            }
+            .sink { recommendedBetBuilders in
+                print("Got recommended BetBuilders: \(recommendedBetBuilders)")
             }
             .store(in: &self.cancellables)
 
@@ -317,9 +342,26 @@ class MatchDetailsViewModel: NSObject {
         // Request the remaining marketGroups details
         self.matchGroupsCancellable = matchDetailsReceivedPublisher
             .flatMap({ (event: ServicesProvider.Event) -> AnyPublisher<[MarketGroup], Never> in
-                return Env.servicesProvider.getMarketGroups(forEvent: event)
+
+                switch event.status {
+                case .notStarted, .unknown, .ended, .none:
+                    return Env.servicesProvider.getMarketGroups(forPreLiveEvent: event)
+                        .catch { _ in
+                            // Fallback to generic method if specific method fails
+                            return Env.servicesProvider.getMarketGroups(forEvent: event)
+                        }
                         .map(Self.convertMarketGroups(_:))
                         .eraseToAnyPublisher()
+                case .inProgress:
+                    return Env.servicesProvider.getMarketGroups(forLiveEvent: event)
+                        .catch { _ in
+                            // Fallback to generic method if specific method fails
+                            return Env.servicesProvider.getMarketGroups(forEvent: event)
+                        }
+                        .map(Self.convertMarketGroups(_:))
+                        .eraseToAnyPublisher()
+                }
+                
             })
             .sink { [weak self] completion in
                 if case .failure = completion {

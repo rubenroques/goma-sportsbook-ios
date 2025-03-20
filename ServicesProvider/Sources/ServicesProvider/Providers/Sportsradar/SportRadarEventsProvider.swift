@@ -976,7 +976,6 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 extension SportRadarEventsProvider {
 
     func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
-
         let fallbackMarketGroup = [MarketGroup.init(type: "0",
                                                     id: "0",
                                                     groupKey: "All Markets",
@@ -996,7 +995,30 @@ extension SportRadarEventsProvider {
             })
             .replaceError(with: fallbackMarketGroup)
             .eraseToAnyPublisher()
+    }
+    
+    func getMarketGroups(forPreLiveEvent event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.marketsFilterPreLive
+        let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.restConnector.request(endpoint)
 
+        return requestPublisher
+            .flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
+                let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
+                return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+    }
+    
+    func getMarketGroups(forLiveEvent event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.marketsFilterLive
+        let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
+                let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
+                return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
     }
 
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
@@ -1979,6 +2001,22 @@ extension SportRadarEventsProvider {
             .map { response in
                 let promotedBetslipsBatchResponse = SportRadarModelMapper.promotedBetslipsBatchResponse(fromInternalPromotedBetslipsBatchResponse: response)
                 return promotedBetslipsBatchResponse.promotedBetslips
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func getRecommendedBetBuilders(eventId: String, multibetsCount: Int, selectionsCount: Int, userId: String?) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> {
+        let endpoint = VaixAPIClient.recommendedBetBuilders(eventId: eventId, multibetsCount: multibetsCount, selectionsCount: selectionsCount, userId: userId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.RecommendedBetBuildersResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .mapError({ error in
+                return error
+            })
+            .map { response in
+                let recommendedBetBuilders = SportRadarModelMapper.recommendedBetBuildersResponse(fromInternalResponse: response)
+                return recommendedBetBuilders
             }
             .eraseToAnyPublisher()
     }
