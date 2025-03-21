@@ -2506,13 +2506,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.addAmountValue(50.0)
     }
 
-    @IBAction func didTapSpinWheelButton() {
-        
-        if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner.html") {
-            let spinWheelWebViewModel = SpinWheelWebViewModel()
-            
-            let spinWheelWebViewController = SpinWheelWebViewController(url: url, viewModel: spinWheelWebViewModel)
-            
+    @IBAction private func didTapSpinWheelButton() {
+        if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
+            let spinWheelWebViewModel = SpinWheelViewModel(url: url)
+            let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)
+            spinWheelWebViewController.modalPresentationStyle = .fullScreen
             self.present(spinWheelWebViewController, animated: true)
         }
     }
