@@ -14,7 +14,7 @@ enum SpinWheelMessage: Codable {
     case wheelGotClicked
     case wonPrize(prize: String)
     case exitWheel
-    case error(message: String)
+    case hostError
 
     var action: String {
         switch self {
@@ -28,7 +28,7 @@ enum SpinWheelMessage: Codable {
             return "won-prize"
         case .exitWheel:
             return "exit-wheel"
-        case .error:
+        case .hostError:
             return "error"
         }
     }
@@ -39,8 +39,8 @@ enum SpinWheelMessage: Codable {
             return ["action": action]
         case .wonPrize(let prize):
             return ["action": action, "prize": prize]
-        case .error(let message):
-            return ["action": action, "msg": message]
+        case .hostError:
+            return ["action": action]
         }
     }
 
@@ -64,10 +64,7 @@ enum SpinWheelMessage: Codable {
         case "exit-wheel":
             return .exitWheel
         case "error":
-            if let message = dictionary["msg"] as? String {
-                return .error(message: message)
-            }
-            return .error(message: "Unknown error")
+            return .hostError
         default:
             return nil
         }
@@ -84,6 +81,7 @@ class SpinWheelViewModel {
 
     // MARK: - Private Properties
     private var cancellables: Set<AnyCancellable> = []
+    private var widgetLoadedTriggered = false
 
     // MARK: - Initialization
     init(url: URL) {
@@ -92,30 +90,45 @@ class SpinWheelViewModel {
 
     // MARK: - Public Methods
     func handleMessageFromWebView(_ message: SpinWheelMessage) {
+        print("SpinWheelVM: Handling message from WebView: \(message)")
+
         switch message {
         case .widgetLoaded:
+            // Ensure widgetLoaded is processed only once
+            guard !widgetLoadedTriggered else {
+                print("SpinWheelVM: Ignoring duplicate widgetLoaded message")
+                return
+            }
+
+            widgetLoadedTriggered = true
+            print("SpinWheelVM: Widget loaded message received, will send removeLoader after delay")
             // Wait 2 seconds before sending remove-loader message
             Just(())
-                .delay(for: .seconds(2), scheduler: DispatchQueue.main)
+                .delay(for: .milliseconds(1200), scheduler: DispatchQueue.main)
                 .sink { [weak self] _ in
+                    print("SpinWheelVM: Delay completed, sending removeLoader message")
                     self?.messageToWebViewPublisher.send(.removeLoader)
                 }
-                .store(in: &cancellables)
+                .store(in: &self.cancellables)
         case .wheelGotClicked:
+            print("SpinWheelVM: Wheel clicked message received, will send prize after delay")
             // Wait 2 seconds before sending won-prize message with hardcoded 20% prize
             Just(())
-                .delay(for: .seconds(2), scheduler: DispatchQueue.main)
+                .delay(for: .milliseconds(200), scheduler: DispatchQueue.main)
                 .sink { [weak self] _ in
+                    print("SpinWheelVM: Delay completed, sending wonPrize message with 20%")
                     self?.messageToWebViewPublisher.send(.wonPrize(prize: "20%"))
                 }
-                .store(in: &cancellables)
+                .store(in: &self.cancellables)
         case .exitWheel:
+            print("SpinWheelVM: Exit wheel message received, sending exit command")
             exitPublisher.send()
-        case .error(let message):
-            print("Error received from wheel: \(message)")
-            // Here you could handle the error, perhaps show an alert or log it
-        default:
-            break
+        case .removeLoader:
+            print("SpinWheelVM: Remove loader message received (no action needed)")
+        case .wonPrize(let prize):
+            print("SpinWheelVM: Won prize message received with prize: \(prize) (no action needed)")
+        case .hostError:
+            print("SpinWheelVM: Host error message received (no action needed)")
         }
     }
 }
