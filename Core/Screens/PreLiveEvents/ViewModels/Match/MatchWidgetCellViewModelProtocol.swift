@@ -7,13 +7,13 @@ import ServicesProvider
 protocol MatchWidgetCellViewModelProtocol {
         
     /// The match data
-    var match: Match { get }
+    var matchPublisher: AnyPublisher<Match, Never> { get }
     
     /// Match widget type (normal, boosted, etc.)
-    var matchWidgetType: MatchWidgetType { get }
+    var matchWidgetTypePublisher: AnyPublisher<MatchWidgetType, Never> { get }
     
     /// Match status (live, preLive)
-    var matchWidgetStatus: MatchWidgetStatus { get }
+    var matchWidgetStatusPublisher: AnyPublisher<MatchWidgetStatus, Never> { get }
     
     /// Publisher for home team name
     var homeTeamNamePublisher: AnyPublisher<String, Never> { get }
@@ -40,10 +40,10 @@ protocol MatchWidgetCellViewModelProtocol {
     var matchTimeDetailsPublisher: AnyPublisher<String?, Never> { get }
     
     /// Publisher for sport icon image
-    var sportIconImagePublisher: AnyPublisher<UIImage, Never> { get }
+    var sportIconImageNamePublisher: AnyPublisher<String?, Never> { get }
     
     /// Publisher for country flag image
-    var countryFlagImagePublisher: AnyPublisher<UIImage, Never> { get }
+    var countryFlagImageNamePublisher: AnyPublisher<String?, Never> { get }
     
     /// Publisher for whether the match is a favorite
     var isFavoriteMatchPublisher: AnyPublisher<Bool, Never> { get }

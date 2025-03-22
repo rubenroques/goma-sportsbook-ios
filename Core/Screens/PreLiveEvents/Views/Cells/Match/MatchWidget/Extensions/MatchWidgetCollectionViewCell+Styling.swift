@@ -29,8 +29,6 @@ extension MatchWidgetCollectionViewCell {
         self.outrightBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.outrightSeeLabel.textColor = UIColor.App.textPrimary
 
-        self.locationFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
-
         self.homeServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
         self.awayServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
 
@@ -88,7 +86,6 @@ extension MatchWidgetCollectionViewCell {
     }
 
     private func applyNormalStyling() {
-        self.eventNameLabel.textColor = UIColor.App.textSecondary
 
         self.dateNewLabel.textColor = UIColor.App.textSecondary
         self.timeNewLabel.textColor = UIColor.App.textPrimary
@@ -146,7 +143,6 @@ extension MatchWidgetCollectionViewCell {
     }
 
     private func applyOutrightStyling() {
-        self.eventNameLabel.textColor = UIColor.App.textSecondary
         self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
         self.outrightNameLabel.textColor = UIColor.App.textPrimary
 
@@ -204,7 +200,6 @@ extension MatchWidgetCollectionViewCell {
     }
 
     private func applyBoostedStyling() {
-        self.eventNameLabel.textColor = UIColor.App.textSecondary
         self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.dateNewLabel.textColor = UIColor.App.textSecondary
@@ -243,7 +238,6 @@ extension MatchWidgetCollectionViewCell {
     }
 
     private func applyBackgroundImageStyling() {
-        self.eventNameLabel.textColor = UIColor.App.buttonTextPrimary
         self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.dateNewLabel.textColor = UIColor.App.textSecondary
@@ -349,7 +343,7 @@ extension MatchWidgetCollectionViewCell {
 
         self.baseView.layer.borderWidth = 0
         self.baseView.layer.borderColor = nil
-        self.headerLineStackView.alpha = 1.0
+
 
         self.homeBoostedOddValueBaseView.isHidden = true
         self.drawBoostedOddValueBaseView.isHidden = true
@@ -385,7 +379,7 @@ extension MatchWidgetCollectionViewCell {
 
         self.baseView.layer.borderWidth = 0
         self.baseView.layer.borderColor = nil
-        self.headerLineStackView.alpha = 1.0
+
         self.bottomMarginSpaceConstraint.constant = -12
         self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
@@ -412,7 +406,7 @@ extension MatchWidgetCollectionViewCell {
 
         self.baseView.layer.borderWidth = 0
         self.baseView.layer.borderColor = nil
-        self.headerLineStackView.alpha = 1.0
+
         self.bottomMarginSpaceConstraint.constant = -12
         self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
@@ -435,7 +429,7 @@ extension MatchWidgetCollectionViewCell {
         self.drawBoostedOddValueBaseView.isHidden = false
         self.awayBoostedOddValueBaseView.isHidden = false
 
-        self.headerLineStackView.alpha = 1.0
+
         self.bottomMarginSpaceConstraint.constant = -12
         self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
@@ -460,7 +454,7 @@ extension MatchWidgetCollectionViewCell {
 
         self.baseView.layer.borderWidth = 0
         self.baseView.layer.borderColor = nil
-        self.headerLineStackView.alpha = 0.0
+
 
         self.bottomMarginSpaceConstraint.constant = -28
         self.teamsHeightConstraint.constant = 47

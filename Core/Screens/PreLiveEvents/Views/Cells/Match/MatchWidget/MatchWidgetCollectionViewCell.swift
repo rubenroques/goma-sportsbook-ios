@@ -26,14 +26,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // Base views
     lazy var baseView: UIView = self.createBaseView()
     lazy var baseStackView: UIStackView = self.createBaseStackView()
-    lazy var headerLineStackView: UIStackView = self.createHeaderLineStackView()
 
-    // Header elements
-    lazy var favoritesIconImageView: UIImageView = self.createFavoritesIconImageView()
-    lazy var eventNameLabel: UILabel = self.createEventNameLabel()
-    lazy var locationFlagImageView: UIImageView = self.createLocationFlagImageView()
-    lazy var sportTypeImageView: UIImageView = self.createSportTypeImageView()
-    lazy var favoritesButton: UIButton = self.createFavoritesButton()
+    // Replace with new MatchHeaderView
+    lazy var matchHeaderView: MatchHeaderView = self.createMatchHeaderView()
 
     // Content views
     lazy var mainContentBaseView: UIView = self.createMainContentBaseView()
@@ -188,17 +183,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     static var normalCellHeight: CGFloat = 162
     static var smallCellHeight: CGFloat = 92
 
-    var isFavorite: Bool = false {
-        didSet {
-            if self.isFavorite {
-                self.favoritesIconImageView.image = UIImage(named: "selected_favorite_icon")
-            }
-            else {
-                self.favoritesIconImageView.image = UIImage(named: "unselected_favorite_icon")
-            }
-        }
-    }
-
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback
@@ -256,14 +240,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     var cachedCardsStyle: CardsStyle?
     var cancellables: Set<AnyCancellable> = []
 
-    // Supporting views
-    lazy var eventNameContainerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        return view
-    }()
-
     // Team elements stack views
     lazy var homeElementsStackView: UIStackView = self.createHomeElementsStackView()
     lazy var awayElementsStackView: UIStackView = self.createAwayElementsStackView()
@@ -301,7 +277,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        cleanupForReuse()
+        
+        self.cleanupForReuse()
     }
 
     // MARK: - Setup Initial State
@@ -350,7 +327,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayOldBoostedOddValueLabel.text = "-"
 
         // Setup view properties
-        setupViewProperties()
+        self.setupViewProperties()
+
+        // Initialize MatchHeaderView with empty state
+        self.matchHeaderView.configure(with: MatchHeaderViewModel())
 
         // Hide non-normal widget style elements
         self.backgroundImageView.isHidden = true
@@ -401,7 +381,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayDownChangeOddValueImage.alpha = 0.0
 
         // Setup buttons and views
-        self.favoritesButton.backgroundColor = .clear
         self.horizontalMatchInfoBaseView.backgroundColor = .clear
         self.outrightNameBaseView.backgroundColor = .clear
 
@@ -442,12 +421,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayBaseView.alpha = 1.0
 
         // Clear text
-        self.eventNameLabel.text = ""
         self.suspendedLabel.text = localized("suspended")
-
-        // Hide images
-        self.locationFlagImageView.image = nil
-        self.sportTypeImageView.image = nil
 
         // Show/hide main views
         self.oddsStackView.isHidden = false
@@ -540,9 +514,9 @@ extension MatchWidgetCollectionViewCell {
         NSLayoutConstraint.activate([
             self.cashbackIconImageViewHeightConstraint,
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
-            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.headerLineStackView.centerYAnchor),
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.matchHeaderView.centerYAnchor),
 
-            self.headerLineStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
+            self.matchHeaderView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
         ])
 
         self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
@@ -564,7 +538,7 @@ extension MatchWidgetCollectionViewCell {
         self.cashbackImageViewLiveTrailingConstraint.isActive = false
 
         NSLayoutConstraint.activate([
-            self.headerLineStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
+            self.matchHeaderView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
         ])
         //
 

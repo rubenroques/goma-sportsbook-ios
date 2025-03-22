@@ -5,22 +5,30 @@ import ServicesProvider
 
 /// A mock implementation of MatchWidgetCellViewModelProtocol for testing and previews
 class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
+    
     // MARK: - Properties
-
-    /// The current match data
-    @Published private(set) var match: Match
-
-    /// Current match widget type
-    @Published private(set) var matchWidgetType: MatchWidgetType
-
-    /// Current match widget status
-    @Published private(set) var matchWidgetStatus: MatchWidgetStatus
-
+    
+    private let matchSubject: CurrentValueSubject<Match, Never>
+    var matchPublisher: AnyPublisher<Match, Never> {
+        return self.matchSubject.eraseToAnyPublisher()
+    }
+    
+    private let matchWidgetTypeSubject = CurrentValueSubject<MatchWidgetType, Never>(.normal)
+    var matchWidgetTypePublisher: AnyPublisher<MatchWidgetType, Never> {
+        return self.matchWidgetTypeSubject.eraseToAnyPublisher()
+    }
+    
+    private let matchWidgetStatusSubject = CurrentValueSubject<MatchWidgetStatus, Never>(.unknown)
+    var matchWidgetStatusPublisher: AnyPublisher<MatchWidgetStatus, Never> {
+        return self.matchWidgetStatusSubject.eraseToAnyPublisher()
+    }
+    
+    
     // MARK: - Publishers
 
     /// Publisher for home team name
     var homeTeamNamePublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.homeParticipant.name }
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -28,7 +36,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Publisher for away team name
     var awayTeamNamePublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.awayParticipant.name }
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -36,7 +44,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Publisher for active player serve
     var activePlayerServePublisher: AnyPublisher<Match.ActivePlayerServe?, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.activePlayerServe }
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -44,7 +52,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Publisher for start date string
     var startDateStringPublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 guard let date = match.date else { return "" }
 
@@ -58,7 +66,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Publisher for start time string
     var startTimeStringPublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 guard let date = match.date else { return "" }
 
@@ -72,7 +80,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Publisher for event name
     var eventNamePublisher: AnyPublisher<String?, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 return match.venue?.name ?? match.competitionName
             }
@@ -82,7 +90,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Publisher for match score
     var matchScorePublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 let homeScore = match.homeParticipantScore ?? 0
                 let awayScore = match.awayParticipantScore ?? 0
@@ -94,7 +102,8 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Publisher for match time details
     var matchTimeDetailsPublisher: AnyPublisher<String?, Never> {
-        return self.$match.map { match in
+        return self.matchPublisher
+            .map { match in
             let details = [match.matchTime, match.detailedStatus]
             return details.compactMap({ $0 }).joined(separator: " - ")
         }
@@ -103,30 +112,30 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
     }
 
     /// Publisher for sport icon image
-    var sportIconImagePublisher: AnyPublisher<UIImage, Never> {
-        return self.$match
+    var sportIconImageNamePublisher: AnyPublisher<String?, Never> {
+        return self.matchPublisher
             .map { match in
-                if let sportIconImage = UIImage(named: "sport_type_icon_\(match.sport.id)") {
-                    return sportIconImage
+                if UIImage(named: "sport_type_icon_\(match.sport.id)") != nil {
+                    return "sport_type_icon_\(match.sport.id)"
                 }
-                else if let defaultImage = UIImage(named: "sport_type_icon_default") {
-                    return defaultImage
+                else if UIImage(named: "sport_type_icon_default") != nil {
+                    return "sport_type_icon_default"
                 }
                 else {
-                    return UIImage()
+                    return nil
                 }
             }
             .eraseToAnyPublisher()
     }
 
     /// Publisher for country flag image
-    var countryFlagImagePublisher: AnyPublisher<UIImage, Never> {
-        return self.$match
+    var countryFlagImageNamePublisher: AnyPublisher<String?, Never> {
+        return self.matchPublisher
             .map { match in
                 let isoCode = match.venue?.isoCode ?? ""
                 let countryId = match.venue?.id ?? ""
                 let assetName = isoCode.isEmpty ? countryId : isoCode
-                return UIImage(named: "flag_\(assetName.lowercased())") ?? UIImage()
+                return "flag_\(assetName.lowercased())"
             }
             .eraseToAnyPublisher()
     }
@@ -139,7 +148,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Publisher for whether the card should be drawn as live
     var isLiveCardPublisher: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest(self.$matchWidgetStatus, self.$match)
+        return Publishers.CombineLatest(self.matchWidgetStatusPublisher, self.matchPublisher)
             .map { matchWidgetStatus, match in
                 if matchWidgetStatus == .live {
                     return true
@@ -161,8 +170,8 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
     /// Publisher for widget appearance
     var widgetAppearancePublisher: AnyPublisher<WidgetAppearance, Never> {
         return Publishers.CombineLatest3(
-            self.$matchWidgetStatus,
-            self.$matchWidgetType,
+            self.matchWidgetStatusPublisher,
+            self.matchWidgetTypePublisher,
             self.isLiveCardPublisher
         )
         .map { status, type, isLiveCard -> WidgetAppearance in
@@ -194,7 +203,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
  
     /// Publisher for boosted odds info
     var boostedOddsPublisher: AnyPublisher<BoostedOddsInfo, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { _ in
                 return BoostedOddsInfo(
                     title: "Home Win",
@@ -209,8 +218,8 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
     /// Publisher for market presentation
     var marketPresentationPublisher: AnyPublisher<MarketPresentation, Never> {
         return Publishers.CombineLatest(
-            self.$match,
-            self.$matchWidgetType
+            self.matchPublisher,
+            self.matchWidgetTypePublisher
         )
         .map { match, widgetType -> MarketPresentation in
             // Create mock outcomes
@@ -304,18 +313,19 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Initializes a new mock view model with the provided match and optional type/status
     init(match: Match, matchWidgetType: MatchWidgetType = .normal, matchWidgetStatus: MatchWidgetStatus = .unknown) {
-        self.match = match
-        self.matchWidgetType = matchWidgetType
+        
+        self.matchSubject = .init(match)
+        self.matchWidgetTypeSubject.send(matchWidgetType)
 
         // Determine status if not explicitly provided
         if matchWidgetStatus != .unknown {
-            self.matchWidgetStatus = matchWidgetStatus
+            self.matchWidgetStatusSubject.send(matchWidgetStatus)
         }
         else if match.status.isLive || match.status.isPostLive {
-            self.matchWidgetStatus = .live
+            self.matchWidgetStatusSubject.send(.live)
         }
         else {
-            self.matchWidgetStatus = .preLive
+            self.matchWidgetStatusSubject.send(.preLive)
         }
     }
 
@@ -323,7 +333,7 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
 
     /// Updates the match data
     func updateWithMatch(_ match: Match) {
-        self.match = match
+        self.matchSubject.send(match)
     }
 }
 

@@ -44,20 +44,20 @@ class MarketWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
     
-    var sportIconImagePublisher: AnyPublisher<UIImage, Never> {
+    var sportIconImageNamePublisher: AnyPublisher<String?, Never> {
         return self.$highlightedMarket
             .map { highlightedMarket in
                 
                 let sportId = highlightedMarket.content.sport?.id
 
                 if let sportIconImage = UIImage(named: "sport_type_icon_\(sportId ?? "")") {
-                    return sportIconImage
+                    return "sport_type_icon_\(sportId ?? "")"
                 }
                 else if let defaultImage = UIImage(named: "sport_type_icon_default") {
-                    return defaultImage
+                    return "sport_type_icon_default"
                 }
                 else {
-                    return UIImage()
+                    return nil
                 }
             }
             .eraseToAnyPublisher()
@@ -77,11 +77,11 @@ class MarketWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
     
-    var countryFlagImagePublisher: AnyPublisher<UIImage, Never> {
+    var countryFlagImageNamePublisher: AnyPublisher<String, Never> {
         return Publishers.CombineLatest(self.countryISOCodePublisher, self.countryIdPublisher)
             .map({ countryISOCode, countryId in
                 let assetName = Assets.flagName(withCountryCode: countryISOCode != "" ? countryISOCode : countryId)
-                return UIImage(named: assetName) ?? UIImage()
+                return assetName
             })
             .removeDuplicates()
             .eraseToAnyPublisher()

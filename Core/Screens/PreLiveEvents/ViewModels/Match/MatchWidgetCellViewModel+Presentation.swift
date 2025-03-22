@@ -84,8 +84,8 @@ extension MatchWidgetCellViewModel {
     /// Publisher for widget appearance settings (live status, border visibility, etc.)
     var widgetAppearancePublisher: AnyPublisher<WidgetAppearance, Never> {
         return Publishers.CombineLatest3(
-            self.$matchWidgetStatus,
-            self.$matchWidgetType,
+            self.matchWidgetStatusPublisher,
+            self.matchWidgetTypePublisher,
             self.isLiveCardPublisher
         )
         .map { status, type, isLiveCard -> WidgetAppearance in
@@ -128,7 +128,7 @@ extension MatchWidgetCellViewModel {
     /// Publisher for boosted odds information
     var boostedOddsPublisher: AnyPublisher<BoostedOddsInfo, Never> {
         return Publishers.CombineLatest(
-            self.$match,
+            self.matchPublisher,
             self.$oldBoostedOddOutcome
         )
         .map { match, oldBoostedOddOutcome -> BoostedOddsInfo in
@@ -136,7 +136,7 @@ extension MatchWidgetCellViewModel {
             var title = ""
             var oldValue = "-"
             var newValue = "-"
-            var oldValueAttributed: NSAttributedString? = nil
+            var oldValueAttributed: NSAttributedString?
             
             // Process market and outcome data if available
             if let newMarket = match.markets.first,
@@ -173,8 +173,8 @@ extension MatchWidgetCellViewModel {
         return Publishers.CombineLatest4(
             self.defaultMarketPublisher,
             self.isDefaultMarketAvailablePublisher,
-            self.$matchWidgetType,
-            self.$matchWidgetStatus
+            self.matchWidgetTypePublisher,
+            self.matchWidgetStatusPublisher
         )
         .map { [weak self] market, isAvailable, widgetType, status -> MarketPresentation in
             guard let self = self else {

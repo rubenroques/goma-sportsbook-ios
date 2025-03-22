@@ -29,67 +29,99 @@ class MatchWidgetCellViewModel {
 
     //
     //
-    @Published private(set) var match: Match // Full match, with markets and live data
+    // @Published private(set) var match: Match // Full match, with markets and live data
 
+    // Replace @Published with a Curren@PubtValueSubject
+    private let matchSubject: CurrentValueSubject<Match, Never> // You'll need a default Match for initialization
+    var matchPublisher: AnyPublisher<Match, Never> {
+        return matchSubject.eraseToAnyPublisher()
+    }
+
+    // Add a property to access the current value directly
+    private(set) var match: Match {
+        get { matchSubject.value }
+        set { matchSubject.send(newValue) }
+    }
+    
+    //
+    private let matchWidgetStatusSubject = CurrentValueSubject<MatchWidgetStatus, Never>(.unknown)
+    var matchWidgetStatusPublisher: AnyPublisher<MatchWidgetStatus, Never> {
+        return matchWidgetStatusSubject.eraseToAnyPublisher()
+    }
+    private(set) var matchWidgetStatus: MatchWidgetStatus {
+        get { matchWidgetStatusSubject.value }
+        set { matchWidgetStatusSubject.send(newValue) }
+    }
+
+    //
+    private let matchWidgetTypeSubject = CurrentValueSubject<MatchWidgetType, Never>(.normal)
+    var matchWidgetTypePublisher: AnyPublisher<MatchWidgetType, Never> {
+        return matchWidgetTypeSubject.eraseToAnyPublisher()
+    }
+    private(set) var matchWidgetType: MatchWidgetType {
+        get { matchWidgetTypeSubject.value }
+        set { matchWidgetTypeSubject.send(newValue) }
+    }
+    
     private var matchMarketsSubject: CurrentValueSubject<Match, Never>
     private var matchLiveDataSubject: CurrentValueSubject<MatchLiveData?, Never>
 
     //
     //
     var homeTeamNamePublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.homeParticipant.name }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     var awayTeamNamePublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.awayParticipant.name }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     var activePlayerServePublisher: AnyPublisher<Match.ActivePlayerServe?, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.activePlayerServe }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     var mainMarketNamePublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.markets.first?.name ?? ""}
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     var countryIdPublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.venue?.id ?? ""}
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     var countryISOCodePublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.venue?.isoCode ?? ""}
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
-    var countryFlagImagePublisher: AnyPublisher<UIImage, Never> {
+    var countryFlagImageNamePublisher: AnyPublisher<String?, Never> {
         return Publishers.CombineLatest(self.countryISOCodePublisher, self.countryIdPublisher)
             .map({ countryISOCode, countryId in
                 let assetName = Assets.flagName(withCountryCode: countryISOCode != "" ? countryISOCode : countryId)
-                return UIImage(named: assetName) ?? UIImage()
+                return assetName
             })
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     var startDateStringPublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 if let date = match.date {
                     return MatchWidgetCellViewModel.startDateString(fromDate: date)
@@ -103,7 +135,7 @@ class MatchWidgetCellViewModel {
     }
 
     var startTimeStringPublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 if let date = match.date {
                     return MatchWidgetCellViewModel.hourDateFormatter.string(from: date)
@@ -117,7 +149,7 @@ class MatchWidgetCellViewModel {
     }
 
     var isTodayPublisher: AnyPublisher<Bool, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 if let date = match.date {
                     return Env.calendar.isDateInToday(date)
@@ -131,7 +163,7 @@ class MatchWidgetCellViewModel {
     }
 
     var isLiveCardPublisher: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest(self.$matchWidgetStatus, self.$match)
+        return Publishers.CombineLatest(self.matchWidgetStatusPublisher, self.matchPublisher)
             .map { matchWidgetStatus, match in
                 if matchWidgetStatus == .live {
                     return true
@@ -149,7 +181,7 @@ class MatchWidgetCellViewModel {
     }
 
     var matchScorePublisher: AnyPublisher<String, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 var homeScore = "0"
                 var awayScore = "0"
@@ -166,31 +198,31 @@ class MatchWidgetCellViewModel {
     }
 
     var detailedScoresPublisher: AnyPublisher<([String: Score], String), Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 return (match.detailedScores ?? [:], match.sport.alphaId ?? "")
             }
             .eraseToAnyPublisher()
     }
 
-    var sportIconImagePublisher: AnyPublisher<UIImage, Never> {
-        return self.$match
+    var sportIconImageNamePublisher: AnyPublisher<String?, Never> {
+        return self.matchPublisher
             .map { match in
-                if let sportIconImage = UIImage(named: "sport_type_icon_\(match.sport.id)") {
-                    return sportIconImage
+                if UIImage(named: "sport_type_icon_\(match.sport.id)") != nil {
+                    return "sport_type_icon_\(match.sport.id)"
                 }
-                else if let defaultImage = UIImage(named: "sport_type_icon_default") {
-                    return defaultImage
+                else if UIImage(named: "sport_type_icon_default") != nil {
+                    return "sport_type_icon_default"
                 }
                 else {
-                    return UIImage()
+                    return nil
                 }
             }
             .eraseToAnyPublisher()
     }
 
     var matchTimeDetailsPublisher: AnyPublisher<String?, Never> {
-        return self.$match.map { match in
+        return self.matchPublisher.map { match in
             let details = [match.matchTime, match.detailedStatus]
             return details.compactMap({ $0 }).joined(separator: " - ")
         }
@@ -199,15 +231,8 @@ class MatchWidgetCellViewModel {
 
     }
 
-    var competitionNamePublisher: AnyPublisher<String, Never> {
-        return self.$match
-            .map { $0.competitionName }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
     var promoImageURLPublisher: AnyPublisher<URL?, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 return URL(string: match.promoImageURL ?? "")
             }
@@ -242,13 +267,21 @@ class MatchWidgetCellViewModel {
     }
 
     var defaultMarketPublisher: AnyPublisher<Market?, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { $0.markets.first }
             .eraseToAnyPublisher()
     }
 
+    var competitionNamePublisher: AnyPublisher<String, Never> {
+        return self.matchPublisher
+            .map { $0.competitionName }
+            .prepend(self.match.competitionName)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     var eventNamePublisher: AnyPublisher<String?, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 return match.venue?.name ?? match.competitionName
             }
@@ -256,8 +289,24 @@ class MatchWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
 
+    var matchHeaderNamePublisher: AnyPublisher<String?, Never> {
+        return Publishers.CombineLatest3(self.matchWidgetTypePublisher,
+                                  self.eventNamePublisher,
+                                  self.competitionNamePublisher)
+        .map { matchWidgetType, eventName, competitionName in
+            switch matchWidgetType {
+            case .topImageOutright:
+                return eventName
+            default:
+                return competitionName
+            }
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
     var outrightNamePublisher: AnyPublisher<String?, Never> {
-        return self.$match
+        return self.matchPublisher
             .map { match in
                 return match.competitionOutright?.name
             }
@@ -265,17 +314,14 @@ class MatchWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
 
+    private var isFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
+
     var isFavoriteMatchPublisher: AnyPublisher<Bool, Never> {
-        return self.$match
-            .map { match in
-                return Env.favoritesManager.isEventFavorite(eventId: match.id)
-            }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
+        return self.isFavoriteSubject.eraseToAnyPublisher()
     }
 
     var canHaveCashbackPublisher: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest(self.$match, self.$matchWidgetType)
+        return Publishers.CombineLatest(self.matchPublisher, self.matchWidgetTypePublisher)
             .map { match, matchWidgetType in
                 if RePlayFeatureHelper.shouldShowRePlay(forMatch: match) {
                     return matchWidgetType == .normal || matchWidgetType == .topImage || matchWidgetType == .topImageWithMixMatch
@@ -288,6 +334,21 @@ class MatchWidgetCellViewModel {
 
     var currentCollectionPage: CurrentValueSubject<Int, Never> = .init(0)
 
+    //
+    // MatchHeaderViewModel
+    let matchHeaderViewModel = MatchHeaderViewModel()
+
+    // MARK: Actions
+    var favoriteAction: ((Bool) -> Void) = { _ in } {
+        didSet {
+            matchHeaderViewModel.favoriteAction = self.favoriteAction
+        }
+    }
+
+    //
+    //
+
+    //
     //
     struct BoostedOutcome {
         var type: String
@@ -309,9 +370,7 @@ class MatchWidgetCellViewModel {
 
     @Published private(set) var oldBoostedOddOutcome: BoostedOutcome?
 
-    @Published private(set) var matchWidgetStatus: MatchWidgetStatus = .unknown
-    @Published private(set) var matchWidgetType: MatchWidgetType = .normal
-
+    
     // HorizontalMatchInfoViewModel publisher
     private let horizontalMatchInfoViewModelSubject = CurrentValueSubject<HorizontalMatchInfoViewModel, Never>(HorizontalMatchInfoViewModel())
     var horizontalMatchInfoViewModelPublisher: AnyPublisher<HorizontalMatchInfoViewModel, Never> {
@@ -324,24 +383,21 @@ class MatchWidgetCellViewModel {
 
     init(match: Match, matchWidgetType: MatchWidgetType = .normal, matchWidgetStatus: MatchWidgetStatus = .unknown) {
 
-        self.match = match
-
-        // let viewModelDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
-        // print("BlinkDebug: CellVM init \(viewModelDesc) \(matchWidgetType) \(matchWidgetStatus)")
-
+        self.matchSubject = .init(match)
+        
         switch matchWidgetStatus {
         case .live, .preLive:
-            self.matchWidgetStatus = matchWidgetStatus
+            self.matchWidgetStatusSubject.send(matchWidgetStatus)
         case .unknown:
             if match.status.isLive || match.status.isPostLive {
-                self.matchWidgetStatus = .live
+                self.matchWidgetStatusSubject.send(.live)
             }
             else {
-                self.matchWidgetStatus = .preLive
+                self.matchWidgetStatusSubject.send(.preLive)
             }
         }
 
-        self.matchWidgetType = matchWidgetType
+        self.matchWidgetTypeSubject.send(matchWidgetType)
 
         self.matchMarketsSubject = .init(match)
         self.matchLiveDataSubject = .init(nil)
@@ -397,9 +453,58 @@ class MatchWidgetCellViewModel {
             }
             .store(in: &self.cancellables)
 
+        //
+
+
+        //
+        self.matchPublisher
+            .map { match in
+                return Env.favoritesManager.isEventFavorite(eventId: match.id)
+            }
+            .removeDuplicates()
+            .sink { isFavorite in
+                self.isFavoriteSubject.send(isFavorite)
+            }
+            .store(in: &self.cancellables)
+
         // TODO:
         // Keep our matchWidgetStatus updated with the match
         // mainly from notStarted -> live
+
+        //
+        // Subscritions to update the header with the infos from the match
+        self.countryFlagImageNamePublisher
+            .receive(on: DispatchQueue.main)
+            .replaceError(with: nil)
+            .sink { countryFlagImageName in
+                self.matchHeaderViewModel.setCountryImageName(countryFlagImageName)
+            }
+            .store(in: &self.cancellables)
+
+        self.sportIconImageNamePublisher
+            .receive(on: DispatchQueue.main)
+            .replaceError(with: nil)
+            .sink { sportIconImageName in
+                self.matchHeaderViewModel.setSportImageName(sportIconImageName)
+            }
+            .store(in: &self.cancellables)
+
+        self.matchHeaderNamePublisher
+            .receive(on: DispatchQueue.main)
+            .replaceError(with: nil)
+            .sink { matchHeaderName in
+                self.matchHeaderViewModel.setCompetitionName(matchHeaderName)
+            }
+            .store(in: &self.cancellables)
+
+        self.isFavoriteMatchPublisher
+            .receive(on: DispatchQueue.main)
+            .replaceError(with: false)
+            .sink { isFavoriteMatch in
+                self.matchHeaderViewModel.setIsFavorite(isFavoriteMatch)
+            }
+            .store(in: &self.cancellables)
+        //
 
         // Request the updated content
         self.subscribeMatchLiveData(withId: match.id, shouldRequestLiveDataFallback: shouldRequestLiveDataFallback)
@@ -433,7 +538,7 @@ class MatchWidgetCellViewModel {
             )
         )
         // Finally combine with the match for status
-        .combineLatest(self.$match)
+        .combineLatest(self.matchPublisher)
         .map { combinedData, match in
             let ((homeTeamName, awayTeamName, score), (dateString, timeString)) = combinedData
 
@@ -466,6 +571,42 @@ class MatchWidgetCellViewModel {
         }
         .store(in: &self.cancellables)
     }
+
+    func toggleFavorite() {
+        if self.matchWidgetTypeSubject.value == .topImageOutright {
+            if Env.favoritesManager.isEventFavorite(eventId: self.match.id) {
+                Env.favoritesManager.removeFavorite(eventId: self.match.id, favoriteType: .competition)
+                self.isFavoriteSubject.send(false)
+            }
+            else {
+                Env.favoritesManager.addFavorite(eventId: self.match.id, favoriteType: .competition)
+                self.isFavoriteSubject.send(true)
+            }
+        }
+        else {
+            if Env.favoritesManager.isEventFavorite(eventId: self.match.id) {
+                Env.favoritesManager.removeFavorite(eventId: self.match.id, favoriteType: .match)
+                self.isFavoriteSubject.send(false)
+            }
+            else {
+                Env.favoritesManager.addFavorite(eventId: self.match.id, favoriteType: .match)
+                self.isFavoriteSubject.send(true)
+            }
+        }
+    }
+
+    func setCountryFlag(hidden: Bool) {
+        self.matchHeaderViewModel.setCountryFlag(hidden: hidden)
+    }
+
+    func setSportImage(hidden: Bool) {
+        self.matchHeaderViewModel.setSportImage(hidden: hidden)
+    }
+
+    func setFavoriteIcon(hidden: Bool) {
+        self.matchHeaderViewModel.setFavoriteIcon(hidden: hidden)
+    }
+
 }
 
 //
@@ -527,7 +668,7 @@ extension MatchWidgetCellViewModel {
     private func loadBoostedOddOldValueIfNeeded() {
 
         guard
-            self.matchWidgetType == .boosted,
+            self.matchWidgetTypeSubject.value == .boosted,
             let originalMarketId = self.match.oldMainMarketId
         else {
             return
@@ -536,7 +677,7 @@ extension MatchWidgetCellViewModel {
         Publishers.CombineLatest(
             Env.servicesProvider.getMarketInfo(marketId: originalMarketId)
                 .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:)),
-            self.$match
+            self.matchPublisher
                 .compactMap({ $0 })
                 .setFailureType(to: ServicesProvider.ServiceProviderError.self)
         )
@@ -620,4 +761,5 @@ extension MatchWidgetCellViewModel {
             return relativeDateString // Today, Yesterday
         }
     }
+
 }

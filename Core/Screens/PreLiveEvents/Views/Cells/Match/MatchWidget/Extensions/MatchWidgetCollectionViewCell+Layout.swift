@@ -11,7 +11,6 @@ import UIKit
 extension MatchWidgetCollectionViewCell {
 
     func setupFonts() {
-        self.eventNameLabel.font = AppFont.with(type: .medium, size: 14)
         self.suspendedLabel.font = AppFont.with(type: .bold, size: 13)
         self.seeAllLabel.font = AppFont.with(type: .bold, size: 13)
         // Odd value labels
@@ -51,7 +50,6 @@ extension MatchWidgetCollectionViewCell {
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
 
-        self.favoritesButton.backgroundColor = .clear
         self.horizontalMatchInfoBaseView.backgroundColor = .clear
         self.outrightNameBaseView.backgroundColor = .clear
 
@@ -87,8 +85,6 @@ extension MatchWidgetCollectionViewCell {
         self.drawBaseView.alpha = 1.0
         self.awayBaseView.alpha = 1.0
 
-        self.eventNameLabel.text = ""
-
         self.homeNameLabel.text = ""
         self.awayNameLabel.text = ""
 
@@ -107,9 +103,6 @@ extension MatchWidgetCollectionViewCell {
         self.matchTimeStatusNewLabel.isHidden = true
 
         self.suspendedLabel.text = localized("suspended")
-
-        self.locationFlagImageView.image = nil
-        self.sportTypeImageView.image = nil
 
         self.oddsStackView.isHidden = false
         self.suspendedBaseView.isHidden = true
@@ -164,19 +157,7 @@ extension MatchWidgetCollectionViewCell {
 
         // Set up main content
         self.mainContentBaseView.addSubview(self.backgroundImageView)
-        self.mainContentBaseView.addSubview(self.headerLineStackView)
-
-        // Set up header line
-        self.headerLineStackView.addArrangedSubview(self.favoritesIconImageView)
-        self.headerLineStackView.addArrangedSubview(self.sportTypeImageView)
-        self.headerLineStackView.addArrangedSubview(self.locationFlagImageView)
-
-        // Add event name to container and add to header
-        self.eventNameContainerView.addSubview(self.eventNameLabel)
-        self.headerLineStackView.addArrangedSubview(self.eventNameContainerView)
-
-        // Add favorites button
-        self.mainContentBaseView.addSubview(self.favoritesButton)
+        self.mainContentBaseView.addSubview(self.matchHeaderView)
 
         // Add odds stack view
         self.mainContentBaseView.addSubview(self.oddsStackView)
@@ -283,16 +264,16 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.addSubview(self.liveTipView)
         self.liveTipView.addSubview(self.liveTipLabel)
         self.liveTipLabel.text = localized("live").uppercased() + " ⦿"
-        
+
         self.liveTipView.layer.cornerRadius = 9
-        
-        
+
+
         //
         // Setup boosted odd bottom line
         self.setupBoostedOddBottomLine()
 
         self.setupBoostedAndMixMatch()
-        
+
         // Initialize constraints
         self.initConstraints()
 
@@ -333,34 +314,16 @@ extension MatchWidgetCollectionViewCell {
         ])
 
         // Header line constraints
-        self.headerHeightConstraint = self.headerLineStackView.heightAnchor.constraint(equalToConstant: 17)
+        self.headerHeightConstraint = self.matchHeaderView.heightAnchor.constraint(equalToConstant: 17)
         self.headerHeightConstraint.isActive = true
 
-        self.topMarginSpaceConstraint = self.headerLineStackView.topAnchor.constraint(equalTo: self.mainContentBaseView.topAnchor, constant: 12)
-        self.leadingMarginSpaceConstraint = self.headerLineStackView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 12)
+        self.topMarginSpaceConstraint = self.matchHeaderView.topAnchor.constraint(equalTo: self.mainContentBaseView.topAnchor, constant: 12)
+        self.leadingMarginSpaceConstraint = self.matchHeaderView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 12)
 
         NSLayoutConstraint.activate([
             self.topMarginSpaceConstraint,
             self.leadingMarginSpaceConstraint,
-            
-            self.locationFlagImageView.heightAnchor.constraint(equalTo: self.locationFlagImageView.widthAnchor),
-            self.sportTypeImageView.heightAnchor.constraint(equalTo: self.sportTypeImageView.widthAnchor),
-            self.favoritesButton.heightAnchor.constraint(equalTo: self.favoritesButton.widthAnchor),
-        ])
-
-        // Event name label constraints
-        NSLayoutConstraint.activate([
-            self.eventNameLabel.leadingAnchor.constraint(equalTo: self.eventNameContainerView.leadingAnchor),
-            self.eventNameLabel.trailingAnchor.constraint(equalTo: self.eventNameContainerView.trailingAnchor),
-            self.eventNameLabel.centerYAnchor.constraint(equalTo: self.eventNameContainerView.centerYAnchor)
-        ])
-
-        // Favorites button constraints
-        NSLayoutConstraint.activate([
-            self.favoritesButton.centerXAnchor.constraint(equalTo: self.favoritesIconImageView.centerXAnchor),
-            self.favoritesButton.centerYAnchor.constraint(equalTo: self.favoritesIconImageView.centerYAnchor),
-            self.favoritesButton.widthAnchor.constraint(equalToConstant: 40),
-            self.favoritesButton.heightAnchor.constraint(equalToConstant: 40)
+            self.matchHeaderView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -12)
         ])
 
         // Odds stack view constraints
@@ -461,7 +424,7 @@ extension MatchWidgetCollectionViewCell {
         NSLayoutConstraint.activate([
             self.outrightNameBaseView.leadingAnchor.constraint(equalTo: self.horizontalMatchInfoBaseView.leadingAnchor),
             self.outrightNameBaseView.trailingAnchor.constraint(equalTo: self.horizontalMatchInfoBaseView.trailingAnchor),
-            self.outrightNameBaseView.topAnchor.constraint(equalTo: self.headerLineStackView.bottomAnchor, constant: 4),
+            self.outrightNameBaseView.topAnchor.constraint(equalTo: self.matchHeaderView.bottomAnchor, constant: 4),
             self.outrightNameBaseView.bottomAnchor.constraint(equalTo: self.oddsStackView.topAnchor, constant: 5),
 
             self.outrightNameLabel.centerYAnchor.constraint(equalTo: self.outrightNameBaseView.centerYAnchor),
@@ -473,7 +436,7 @@ extension MatchWidgetCollectionViewCell {
         NSLayoutConstraint.activate([
             self.horizontalMatchInfoBaseView.leadingAnchor.constraint(equalTo: self.oddsStackView.leadingAnchor),
             self.horizontalMatchInfoBaseView.trailingAnchor.constraint(equalTo: self.oddsStackView.trailingAnchor),
-            self.horizontalMatchInfoBaseView.topAnchor.constraint(equalTo: self.headerLineStackView.bottomAnchor, constant: 4)
+            self.horizontalMatchInfoBaseView.topAnchor.constraint(equalTo: self.matchHeaderView.bottomAnchor, constant: 4)
         ])
 
         // Market name view constraints
@@ -510,16 +473,16 @@ extension MatchWidgetCollectionViewCell {
             self.baseView.topAnchor.constraint(equalTo: self.liveGradientBorderView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.liveGradientBorderView.bottomAnchor),
         ])
-        
+
         // Live Tip
         NSLayoutConstraint.activate([
             self.liveTipView.heightAnchor.constraint(equalToConstant: 18),
-            
+
             self.liveTipView.leadingAnchor.constraint(equalTo: self.liveTipLabel.leadingAnchor, constant: -9),
             self.liveTipView.trailingAnchor.constraint(equalTo: self.liveTipLabel.trailingAnchor, constant: 18),
             self.liveTipView.centerYAnchor.constraint(equalTo: self.liveTipLabel.centerYAnchor),
             self.liveTipView.topAnchor.constraint(equalTo: self.liveTipLabel.topAnchor, constant: 2),
-            
+
             self.liveTipView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 8),
             self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10)
         ])
@@ -552,12 +515,9 @@ extension MatchWidgetCollectionViewCell {
                                                                  cornerRadius: 9).cgPath
 
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
-        self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
 
         self.awayServingIndicatorView.layer.cornerRadius = self.awayServingIndicatorView.frame.size.width / 2
         self.homeServingIndicatorView.layer.cornerRadius = self.homeServingIndicatorView.frame.size.width / 2
-
-        self.locationFlagImageView.layer.borderWidth = 0.5
 
         self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
 
@@ -699,7 +659,7 @@ extension MatchWidgetCollectionViewCell {
         self.bottomMarginSpaceConstraint.constant = -8
         self.leadingMarginSpaceConstraint.constant = 8
         self.trailingMarginSpaceConstraint.constant = -8
-        
+
 
         self.headerHeightConstraint.constant = 12
         self.teamsHeightConstraint.constant = 26
@@ -707,7 +667,6 @@ extension MatchWidgetCollectionViewCell {
 
         self.cashbackIconImageViewHeightConstraint.constant = 12
 
-        self.eventNameLabel.font = AppFont.with(type: .semibold, size: 9)
         self.outrightNameLabel.font = AppFont.with(type: .bold, size: 13)
         self.outrightNameLabel.numberOfLines = 2
 
@@ -727,8 +686,6 @@ extension MatchWidgetCollectionViewCell {
         self.buttonsHeightConstraint.constant = 40
 
         self.cashbackIconImageViewHeightConstraint.constant = 18
-
-        self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
 
         self.outrightNameLabel.font = AppFont.with(type: .bold, size: 14)
         self.outrightNameLabel.numberOfLines = 3
@@ -775,7 +732,7 @@ extension MatchWidgetCollectionViewCell {
         NSLayoutConstraint.activate([
             self.contentRedesignBaseView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 2),
             self.contentRedesignBaseView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -2),
-            self.contentRedesignBaseView.topAnchor.constraint(equalTo: self.headerLineStackView.bottomAnchor, constant: 3),
+            self.contentRedesignBaseView.topAnchor.constraint(equalTo: self.matchHeaderView.bottomAnchor, constant: 3),
             self.contentRedesignBaseView.bottomAnchor.constraint(equalTo: self.oddsStackView.topAnchor, constant: 0),
 
             self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor),

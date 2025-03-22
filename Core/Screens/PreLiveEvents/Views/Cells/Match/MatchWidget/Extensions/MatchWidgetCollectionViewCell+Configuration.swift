@@ -20,6 +20,8 @@ extension MatchWidgetCollectionViewCell {
 
         self.adjustDesignToCardHeightStyle()
 
+        self.matchHeaderView.configure(with: viewModel.matchHeaderViewModel)
+        
         // Set up main widget appearance based on type and status
         viewModel.widgetAppearancePublisher
             .receive(on: DispatchQueue.main)
@@ -106,21 +108,6 @@ extension MatchWidgetCollectionViewCell {
             }
             .store(in: &self.cancellables)
 
-        // Bind icons
-        viewModel.countryFlagImagePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] countryFlagImage in
-                self?.locationFlagImageView.image = countryFlagImage
-            }
-            .store(in: &self.cancellables)
-
-        viewModel.sportIconImagePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] sportIconImage in
-                self?.sportTypeImageView.image = sportIconImage
-            }
-            .store(in: &self.cancellables)
-
         // Bind match time details
         viewModel.matchTimeDetailsPublisher
             .receive(on: DispatchQueue.main)
@@ -136,14 +123,6 @@ extension MatchWidgetCollectionViewCell {
             .sink { [weak self] promoImageURL in
                 self?.backgroundImageView.kf.setImage(with: promoImageURL)
                 self?.topImageView.kf.setImage(with: promoImageURL)
-            }
-            .store(in: &self.cancellables)
-
-        // Bind favorite status
-        viewModel.isFavoriteMatchPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isFavoriteMatch in
-                self?.isFavorite = isFavoriteMatch
             }
             .store(in: &self.cancellables)
 
@@ -192,21 +171,13 @@ extension MatchWidgetCollectionViewCell {
             }
             .store(in: &self.cancellables)
 
-        // Bind event and competition names
-        viewModel.eventNamePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] eventName in
-                self?.eventNameLabel.text = eventName
-            }
-            .store(in: &self.cancellables)
-        
         viewModel.outrightNamePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] outrightName in
                 self?.outrightNameLabel.text = outrightName
             }
             .store(in: &self.cancellables)
-        
+
         // Bind boosted odds data
         viewModel.boostedOddsPublisher
             .receive(on: DispatchQueue.main)
@@ -320,7 +291,8 @@ extension MatchWidgetCollectionViewCell {
                     self.awayBaseView.isUserInteractionEnabled = false
                     self.awayBaseView.alpha = 0.5
                     self.setAwayOddValueLabel(toText: "-")
-                } else {
+                }
+                else {
                     self.awayBaseView.isUserInteractionEnabled = true
                     self.awayBaseView.alpha = 1.0
 
@@ -355,11 +327,13 @@ extension MatchWidgetCollectionViewCell {
             if isCustomBetAvailable {
                 self.mixMatchContainerView.isHidden = false
                 self.bottomSeeAllMarketsContainerView.isHidden = true
-            } else {
+            }
+            else {
                 self.mixMatchContainerView.isHidden = true
                 self.bottomSeeAllMarketsContainerView.isHidden = false
             }
-        } else if widgetType == .topImage {
+        }
+        else if widgetType == .topImage {
             self.mixMatchContainerView.isHidden = true
             self.bottomSeeAllMarketsContainerView.isHidden = false
         }
@@ -394,7 +368,8 @@ extension MatchWidgetCollectionViewCell {
             self.homeBaseView.isUserInteractionEnabled = leftOutcome.isInteractive
             self.homeBaseView.alpha = leftOutcome.isInteractive ? 1.0 : 0.5
             self.homeBaseView.isHidden = false
-        } else {
+        }
+        else {
             self.homeBaseView.isHidden = true
         }
 
@@ -406,7 +381,8 @@ extension MatchWidgetCollectionViewCell {
             self.drawBaseView.isUserInteractionEnabled = middleOutcome.isInteractive
             self.drawBaseView.alpha = middleOutcome.isInteractive ? 1.0 : 0.5
             self.drawBaseView.isHidden = false
-        } else {
+        }
+        else {
             self.drawBaseView.isHidden = true
         }
 
@@ -418,7 +394,8 @@ extension MatchWidgetCollectionViewCell {
             self.awayBaseView.isUserInteractionEnabled = rightOutcome.isInteractive
             self.awayBaseView.alpha = rightOutcome.isInteractive ? 1.0 : 0.5
             self.awayBaseView.isHidden = false
-        } else {
+        }
+        else {
             self.awayBaseView.isHidden = true
         }
     }
@@ -440,12 +417,15 @@ extension MatchWidgetCollectionViewCell {
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
-        self.locationFlagImageView.isHidden = !show
+        self.viewModel?.setCountryFlag(hidden: !show)
     }
 
     // MARK: - Cleanup
     func cleanupForReuse() {
         self.viewModel = nil
+        
+        // Custom subviews cleanup
+        self.matchHeaderView.cleanupForReuse()
 
         self.mixMatchContainerView.isHidden = true
         self.bottomSeeAllMarketsContainerView.isHidden = true
@@ -494,7 +474,6 @@ extension MatchWidgetCollectionViewCell {
         self.adjustDesignToCardHeightStyle()
 
         // Reset text fields
-        self.eventNameLabel.text = ""
         self.homeNameLabel.text = ""
         self.awayNameLabel.text = ""
         self.dateNewLabel.text = ""
@@ -530,12 +509,6 @@ extension MatchWidgetCollectionViewCell {
         self.drawBaseView.isUserInteractionEnabled = true
         self.awayBaseView.isUserInteractionEnabled = true
 
-        self.locationFlagImageView.isHidden = false
-        self.locationFlagImageView.image = nil
-
-        self.sportTypeImageView.image = nil
-
-        self.isFavorite = false
         self.hasCashback = false
 
         self.leftOutcomeDisabled = false
@@ -545,7 +518,8 @@ extension MatchWidgetCollectionViewCell {
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
         self.outrightBaseView.isHidden = true
-
+        
         self.setupWithTheme()
     }
+
 }

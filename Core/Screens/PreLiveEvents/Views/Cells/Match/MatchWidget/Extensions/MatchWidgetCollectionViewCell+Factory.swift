@@ -18,67 +18,18 @@ extension MatchWidgetCollectionViewCell {
         view.layer.cornerRadius = 9
         return view
     }
-    
+
     func createBaseStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         return stackView
     }
-    
-    func createHeaderLineStackView() -> UIStackView {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .fill
-        stackView.alignment = .fill
 
-        stackView.spacing = 7
-        return stackView
-    }
-
-    // MARK: - Event Info Views
-    func createFavoritesIconImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "unselected_favorite_icon")
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-    
-    func createSportTypeImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-    
-    func createLocationFlagImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        return imageView
-    }
-    
-    func createEventNameLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .medium, size: 11)
-        label.textColor = UIColor.App.textPrimary
-        label.textAlignment = .left
-        
-        label.setContentHuggingPriority(UILayoutPriority(200), for: .horizontal)
-        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        
-        return label
-    }
-    
-    func createFavoritesButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .clear
-        return button
+    func createMatchHeaderView() -> MatchHeaderView {
+        let headerView = MatchHeaderView()
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        return headerView
     }
 
     // MARK: - Border Views
@@ -117,7 +68,7 @@ extension MatchWidgetCollectionViewCell {
         view.backgroundColor = .clear
         return view
     }
-    
+
     func createDrawBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -126,7 +77,7 @@ extension MatchWidgetCollectionViewCell {
         view.backgroundColor = .clear
         return view
     }
-    
+
     func createAwayBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -135,7 +86,7 @@ extension MatchWidgetCollectionViewCell {
         view.backgroundColor = .clear
         return view
     }
-    
+
     func createOddsStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -144,7 +95,7 @@ extension MatchWidgetCollectionViewCell {
         stackView.spacing = 12
         return stackView
     }
-    
+
     func createHomeOddTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -152,7 +103,7 @@ extension MatchWidgetCollectionViewCell {
         label.textAlignment = .center
         return label
     }
-    
+
     func createDrawOddTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -160,7 +111,7 @@ extension MatchWidgetCollectionViewCell {
         label.textAlignment = .center
         return label
     }
-    
+
     func createAwayOddTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -168,7 +119,7 @@ extension MatchWidgetCollectionViewCell {
         label.textAlignment = .center
         return label
     }
-    
+
     func createHomeOddValueLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -176,7 +127,7 @@ extension MatchWidgetCollectionViewCell {
         label.textAlignment = .center
         return label
     }
-    
+
     func createDrawOddValueLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -184,7 +135,7 @@ extension MatchWidgetCollectionViewCell {
         label.textAlignment = .center
         return label
     }
-    
+
     func createAwayOddValueLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -192,7 +143,7 @@ extension MatchWidgetCollectionViewCell {
         label.textAlignment = .center
         return label
     }
-    
+
     // MARK: - Odd Change Indicators
     func createHomeUpChangeOddValueImage() -> UIImageView {
         let imageView = UIImageView()
@@ -202,7 +153,7 @@ extension MatchWidgetCollectionViewCell {
         imageView.alpha = 0.0
         return imageView
     }
-    
+
     func createHomeDownChangeOddValueImage() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -211,7 +162,7 @@ extension MatchWidgetCollectionViewCell {
         imageView.alpha = 0.0
         return imageView
     }
-    
+
     func createDrawUpChangeOddValueImage() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -220,7 +171,7 @@ extension MatchWidgetCollectionViewCell {
         imageView.alpha = 0.0
         return imageView
     }
-    
+
     func createDrawDownChangeOddValueImage() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -229,7 +180,7 @@ extension MatchWidgetCollectionViewCell {
         imageView.alpha = 0.0
         return imageView
     }
-    
+
     func createAwayUpChangeOddValueImage() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -238,7 +189,7 @@ extension MatchWidgetCollectionViewCell {
         imageView.alpha = 0.0
         return imageView
     }
-    
+
     func createAwayDownChangeOddValueImage() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -247,7 +198,7 @@ extension MatchWidgetCollectionViewCell {
         imageView.alpha = 0.0
         return imageView
     }
-    
+
     // MARK: - Market Views
     func createMarketNameView() -> UIView {
         let view = UIView()
@@ -255,14 +206,14 @@ extension MatchWidgetCollectionViewCell {
         view.backgroundColor = .clear
         return view
     }
-    
+
     func createMarketNameInnerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.App.highlightPrimary
         return view
     }
-    
+
     func createMarketNameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -280,7 +231,7 @@ extension MatchWidgetCollectionViewCell {
         view.layer.borderWidth = 1
         return view
     }
-    
+
     func createSuspendedLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -289,7 +240,7 @@ extension MatchWidgetCollectionViewCell {
         label.text = localized("suspended")
         return label
     }
-    
+
     func createSeeAllBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -297,7 +248,7 @@ extension MatchWidgetCollectionViewCell {
         view.backgroundColor = UIColor.App.backgroundSecondary
         return view
     }
-    
+
     func createSeeAllLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -306,7 +257,7 @@ extension MatchWidgetCollectionViewCell {
         label.textColor = UIColor.App.textSecondary
         return label
     }
-    
+
     // MARK: - Outright Views
     func createOutrightBaseView() -> UIView {
         let view = UIView()
@@ -315,14 +266,14 @@ extension MatchWidgetCollectionViewCell {
         view.backgroundColor = UIColor.App.backgroundSecondary
         return view
     }
-    
+
     func createOutrightNameBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
         return view
     }
-    
+
     func createOutrightNameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -331,7 +282,7 @@ extension MatchWidgetCollectionViewCell {
         label.numberOfLines = 2
         return label
     }
-    
+
     func createOutrightSeeLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -340,7 +291,7 @@ extension MatchWidgetCollectionViewCell {
         label.text = localized("view_competition_markets")
         return label
     }
-    
+
     // MARK: - Image Views
     func createTopImageBaseView() -> UIView {
         let view = UIView()
@@ -349,7 +300,7 @@ extension MatchWidgetCollectionViewCell {
         view.clipsToBounds = true
         return view
     }
-    
+
     func createTopImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -358,7 +309,7 @@ extension MatchWidgetCollectionViewCell {
         imageView.image = UIImage(named: "soccer_banner_dummy")
         return imageView
     }
-    
+
     func createBackgroundImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -368,7 +319,7 @@ extension MatchWidgetCollectionViewCell {
         imageView.image = UIImage(named: "soccer_banner_dummy")
         return imageView
     }
-    
+
     // MARK: - Main Content View
     func createMainContentBaseView() -> UIView {
         let view = UIView()
@@ -376,7 +327,7 @@ extension MatchWidgetCollectionViewCell {
         view.backgroundColor = .clear
         return view
     }
-    
+
     // MARK: - Boosted Odd Views
     func createHomeBoostedOddValueBaseView() -> UIView {
         let view = UIView()
@@ -385,7 +336,7 @@ extension MatchWidgetCollectionViewCell {
         view.isHidden = true
         return view
     }
-    
+
     func createDrawBoostedOddValueBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -393,7 +344,7 @@ extension MatchWidgetCollectionViewCell {
         view.isHidden = true
         return view
     }
-    
+
     func createAwayBoostedOddValueBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -401,25 +352,25 @@ extension MatchWidgetCollectionViewCell {
         view.isHidden = true
         return view
     }
-    
+
     func createHomeBoostedOddArrowView() -> BoostedArrowView {
         let arrowView = BoostedArrowView()
         arrowView.translatesAutoresizingMaskIntoConstraints = false
         return arrowView
     }
-    
+
     func createDrawBoostedOddArrowView() -> BoostedArrowView {
         let arrowView = BoostedArrowView()
         arrowView.translatesAutoresizingMaskIntoConstraints = false
         return arrowView
     }
-    
+
     func createAwayBoostedOddArrowView() -> BoostedArrowView {
         let arrowView = BoostedArrowView()
         arrowView.translatesAutoresizingMaskIntoConstraints = false
         return arrowView
     }
-    
+
     func createBoostedOddBottomLineView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -809,7 +760,7 @@ extension MatchWidgetCollectionViewCell {
         stackView.spacing = 4
         return stackView
     }
-    
+
     func createAwayElementsStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false

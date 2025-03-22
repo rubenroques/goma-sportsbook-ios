@@ -313,17 +313,22 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
 
-        viewModel.sportIconImagePublisher
+        viewModel.sportIconImageNamePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sportIconImage in
-                self?.sportImageView.image = sportIconImage
+                if let sportIconImage {
+                    self?.sportImageView.image = UIImage(named: sportIconImage)
+                }
+                else {
+                    self?.sportImageView.image = nil
+                }
             }
             .store(in: &self.cancellables)
         
-        viewModel.countryFlagImagePublisher
+        viewModel.countryFlagImageNamePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] countryFlagImage in
-                self?.countryImageView.image = countryFlagImage
+                self?.countryImageView.image = UIImage(named: countryFlagImage)
             }
             .store(in: &self.cancellables)
         

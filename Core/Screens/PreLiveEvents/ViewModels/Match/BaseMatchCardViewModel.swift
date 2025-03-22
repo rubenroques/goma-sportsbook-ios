@@ -36,31 +36,31 @@ class BaseMatchCardViewModel {
     }
     
     /// Publisher for sport icon image
-    var sportIconImagePublisher: AnyPublisher<UIImage, Never> {
+    var sportIconImageNamePublisher: AnyPublisher<String?, Never> {
         return self.$match
             .map { match in
                 if let sportIconImage = UIImage(named: "sport_type_icon_\(match.sport.id)") {
-                    return sportIconImage
+                    return "sport_type_icon_\(match.sport.id)"
                 }
                 else if let defaultImage = UIImage(named: "sport_type_icon_default") {
-                    return defaultImage
+                    return "sport_type_icon_default"
                 }
                 else {
-                    return UIImage()
+                    return nil
                 }
             }
             .eraseToAnyPublisher()
     }
     
     /// Publisher for country flag image
-    var countryFlagImagePublisher: AnyPublisher<UIImage, Never> {
+    var countryFlagImageNamePublisher: AnyPublisher<String?, Never> {
         return self.$match
-            .map { match in
-                let isoCode = match.venue?.isoCode ?? ""
-                let countryId = match.venue?.id ?? ""
-                let assetName = isoCode.isEmpty ? countryId : isoCode
-                return UIImage(named: "flag_\(assetName.lowercased())") ?? UIImage()
-            }
+            .map { $0.venue?.isoCode ?? ""}
+            .map({ countryIsoCode in
+                let assetName = Assets.flagName(withCountryCode: countryIsoCode)
+                return assetName
+            })
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
     

@@ -11,52 +11,85 @@ import Combine
 
 // MARK: - ViewModel
 class MatchHeaderViewModel {
+
     // MARK: Publishers
-    private(set) var eventNamePublisher = CurrentValueSubject<String, Never>("")
-    private(set) var countryISOCodePublisher = CurrentValueSubject<String, Never>("")
-    private(set) var numberOfBetsPublisher = CurrentValueSubject<Int?, Never>(nil)
+    private(set) var competitionNamePublisher = CurrentValueSubject<String?, Never>(nil)
+    private(set) var countryImageNamePublisher = CurrentValueSubject<String?, Never>(nil)
     private(set) var isFavoritePublisher = CurrentValueSubject<Bool, Never>(false)
-    private(set) var sportImageNamePublisher = CurrentValueSubject<String, Never>("")
+    private(set) var sportImageNamePublisher = CurrentValueSubject<String?, Never>(nil)
+
+    // New hidden state publishers
+    private(set) var isCountryFlagHiddenPublisher = CurrentValueSubject<Bool, Never>(false)
+    private(set) var isSportIconHiddenPublisher = CurrentValueSubject<Bool, Never>(false)
+    private(set) var isFavoriteIconHiddenPublisher = CurrentValueSubject<Bool, Never>(false)
 
     // MARK: Actions
-    var favoriteAction: ((Bool) -> Void)?
+    var favoriteAction: ((Bool) -> Void) = { _ in }
 
     // MARK: Initialization
-    init(eventName: String = "",
-         countryISOCode: String = "",
-         numberOfBets: Int? = nil,
+    init(competitionName: String = "",
+         countryImageName: String? = nil,
          isFavorite: Bool = false,
          sportImageName: String = "",
          favoriteAction: ((Bool) -> Void)? = nil) {
 
-        self.eventNamePublisher.send(eventName)
-        self.countryISOCodePublisher.send(countryISOCode)
-        self.numberOfBetsPublisher.send(numberOfBets)
+        self.competitionNamePublisher.send(competitionName)
+        self.countryImageNamePublisher.send(countryImageName)
         self.isFavoritePublisher.send(isFavorite)
         self.sportImageNamePublisher.send(sportImageName)
-        self.favoriteAction = favoriteAction
+
+        if let favoriteAction {
+            self.favoriteAction = favoriteAction
+        }
     }
 
     // MARK: Configuration
-    func configure(eventName: String,
-                   countryISOCode: String,
-                   numberOfBets: Int? = nil,
-                   isFavorite: Bool = false,
-                   sportImageName: String = "",
-                   favoriteAction: ((Bool) -> Void)? = nil) {
-
-        self.eventNamePublisher.send(eventName)
-        self.countryISOCodePublisher.send(countryISOCode)
-        self.numberOfBetsPublisher.send(numberOfBets)
-        self.isFavoritePublisher.send(isFavorite)
-        self.sportImageNamePublisher.send(sportImageName)
-        self.favoriteAction = favoriteAction
-    }
+//    func configure(competitionName: String? = "",
+//                   countryImageName: String? = nil,
+//                   isFavorite: Bool = false,
+//                   sportImageName: String = "",
+//                   favoriteAction: ((Bool) -> Void)? = nil) {
+//
+//        self.competitionNamePublisher.send(competitionName)
+//        self.countryImageNamePublisher.send(countryImageName)
+//        self.isFavoritePublisher.send(isFavorite)
+//        self.sportImageNamePublisher.send(sportImageName)
+//
+//        if let favoriteAction {
+//            self.favoriteAction = favoriteAction
+//        }
+//    }
 
     func toggleFavorite() {
         let newState = !isFavoritePublisher.value
         isFavoritePublisher.send(newState)
-        favoriteAction?(newState)
+        favoriteAction(newState)
+    }
+
+    // New methods to control hidden state
+    func setCompetitionName(_ name: String?) {
+        self.competitionNamePublisher.send(name)
+    }
+    func setCountryImageName(_ name: String?) {
+        self.countryImageNamePublisher.send(name)
+    }
+    func setIsFavorite(_ favorite: Bool) {
+        self.isFavoritePublisher.send(favorite)
+    }
+    func setSportImageName(_ name: String?) {
+        self.sportImageNamePublisher.send(name)
+    }
+
+    func setCountryFlag(hidden: Bool) {
+        isCountryFlagHiddenPublisher.send(hidden)
+    }
+
+    func setSportImage(hidden: Bool) {
+        isSportIconHiddenPublisher.send(hidden)
+    }
+
+    func setFavoriteIcon(hidden: Bool) {
+        isFavoriteIconHiddenPublisher.send(hidden)
     }
 }
 
@@ -67,14 +100,14 @@ class MatchHeaderView: UIView {
     private lazy var sportTypeImageView: UIImageView = Self.createSportTypeImageView()
     private lazy var locationFlagImageView: UIImageView = Self.createLocationFlagImageView()
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
-    private lazy var eventNameLabel: UILabel = Self.createEventNameLabel()
-    private lazy var numberOfBetsLabel: UILabel = Self.createNumberOfBetsLabel()
+    private lazy var competitionNameLabel: UILabel = Self.createEventNameLabel()
     private lazy var favoritesButton: UIButton = Self.createFavoritesButton()
 
     // MARK: ViewModel
     private var viewModel: MatchHeaderViewModel?
     private var cancellables = Set<AnyCancellable>()
 
+    //
     private static let height: CGFloat = 17
 
     // MARK: Lifetime Cycle
@@ -92,17 +125,35 @@ class MatchHeaderView: UIView {
         self.setupWithTheme()
     }
 
+    override var intrinsicContentSize: CGSize {
+        // Matching the height of the icons plus a bit of vertical padding
+        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
+        self.locationFlagImageView.layer.borderWidth = 0.5
+
+        self.sportTypeImageView.layer.cornerRadius = self.sportTypeImageView.frame.size.width / 2
+    }
+
     private func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.eventNameLabel.textColor = UIColor.App.textPrimary
-        self.numberOfBetsLabel.textColor = UIColor.App.textPrimary
+        self.competitionNameLabel.textColor = UIColor.App.textPrimary
         self.favoritesIconImageView.tintColor = UIColor.App.textPrimary
 
         self.favoritesButton.backgroundColor = .clear
         self.contentBaseView.backgroundColor = .clear
 
         self.contentBaseView.backgroundColor = .clear
+
+        self.sportTypeImageView.backgroundColor = .clear
+
+        self.locationFlagImageView.backgroundColor = .clear
+        self.locationFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
     }
 
     // MARK: Configuration
@@ -111,68 +162,67 @@ class MatchHeaderView: UIView {
         self.setupBindings()
     }
 
+    func cleanupForReuse() {
+        self.viewModel = nil
+
+        self.competitionNameLabel.text = nil
+        self.locationFlagImageView.image = nil
+        self.favoritesIconImageView.image = nil
+        self.sportTypeImageView.image = nil
+
+        self.cancellables.removeAll()
+    }
+
     private func setupBindings() {
         guard let viewModel = viewModel else { return }
 
         // Clear previous cancellables
-        cancellables.removeAll()
+        self.cancellables.removeAll()
 
         // Bind event name
-        viewModel.eventNamePublisher
-            .receive(on: RunLoop.main)
+        viewModel.competitionNamePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
-                self?.eventNameLabel.text = name
+                self?.competitionNameLabel.text = name
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         // Bind country ISO code (for flag)
-        viewModel.countryISOCodePublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] isoCode in
-                self?.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: isoCode))
-                self?.locationFlagImageView.isHidden = isoCode.isEmpty
+        viewModel.countryImageNamePublisher
+            .combineLatest(viewModel.isCountryFlagHiddenPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] countryImageName, isHidden in
+                self?.locationFlagImageView.image = countryImageName.flatMap { UIImage(named: $0) }
+                self?.locationFlagImageView.isHidden = isHidden
             }
-            .store(in: &cancellables)
-
-        // Bind number of bets
-        viewModel.numberOfBetsPublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] numberOfBets in
-                if let bets = numberOfBets {
-                    self?.numberOfBetsLabel.text = "\(bets)"
-                    self?.numberOfBetsLabel.isHidden = false
-                }
-                else {
-                    self?.numberOfBetsLabel.isHidden = true
-                }
-            }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         // Bind favorite state
         viewModel.isFavoritePublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] isFavorite in
+            .combineLatest(viewModel.isFavoriteIconHiddenPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFavorite, isHidden in
                 let imageName = isFavorite ? "selected_favorite_icon" : "unselected_favorite_icon"
                 self?.favoritesIconImageView.image = UIImage(named: imageName)
+                self?.favoritesIconImageView.isHidden = isHidden
+                self?.favoritesButton.isHidden = isHidden
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         // Bind sport image
         viewModel.sportImageNamePublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] sportImageName in
-                if !sportImageName.isEmpty {
-                    self?.sportTypeImageView.image = UIImage(named: "sport_type_icon_\(sportImageName)")
-                    self?.sportTypeImageView.isHidden = false
+            .combineLatest(viewModel.isSportIconHiddenPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sportImageName, isHidden in
+                if let sportImageName, !sportImageName.isEmpty {
+                    self?.sportTypeImageView.image = UIImage(named: sportImageName)
+                } else {
+                    self?.sportTypeImageView.image = nil
                 }
-                else {
-                    self?.sportTypeImageView.isHidden = true
-                }
+                self?.sportTypeImageView.isHidden = isHidden
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
-        // Add button action
-        favoritesButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
     }
 
     @objc private func favoriteButtonTapped() {
@@ -221,15 +271,6 @@ extension MatchHeaderView {
         return label
     }
 
-    private static func createNumberOfBetsLabel() -> UILabel {
-        let label: UILabel = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 11)
-        label.numberOfLines = 1
-        label.textAlignment = .right
-        return label
-    }
-
     private static func createFavoritesButton() -> UIButton {
         let button: UIButton = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -245,15 +286,13 @@ extension MatchHeaderView {
         self.addSubview(self.locationFlagImageView)
         self.addSubview(self.contentBaseView)
 
-        self.contentBaseView.addSubview(self.eventNameLabel)
+        self.contentBaseView.addSubview(self.competitionNameLabel)
 
-        self.addSubview(self.numberOfBetsLabel)
         self.addSubview(self.favoritesButton)
 
         self.initConstraints()
 
-        // Set initial state
-        self.numberOfBetsLabel.isHidden = true
+        self.favoritesButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
     }
 
     private func initConstraints() {
@@ -277,14 +316,11 @@ extension MatchHeaderView {
             self.contentBaseView.leadingAnchor.constraint(equalTo: self.locationFlagImageView.trailingAnchor, constant: 7),
             self.contentBaseView.topAnchor.constraint(equalTo: self.topAnchor),
             self.contentBaseView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            self.contentBaseView.trailingAnchor.constraint(equalTo: self.numberOfBetsLabel.leadingAnchor, constant: -5),
+            self.contentBaseView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
 
-            self.eventNameLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
-            self.eventNameLabel.centerYAnchor.constraint(equalTo: self.contentBaseView.centerYAnchor, constant: 1),
-            self.eventNameLabel.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -1),
-
-            self.numberOfBetsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.numberOfBetsLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.competitionNameLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+            self.competitionNameLabel.centerYAnchor.constraint(equalTo: self.contentBaseView.centerYAnchor, constant: 1),
+            self.competitionNameLabel.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -1),
 
             // Favorites button - invisible but covering the favorites icon for taps
             self.favoritesButton.centerXAnchor.constraint(equalTo: self.favoritesIconImageView.centerXAnchor),
@@ -296,16 +332,6 @@ extension MatchHeaderView {
         ])
     }
 
-    override var intrinsicContentSize: CGSize {
-        // Matching the height of the icons plus a bit of vertical padding
-        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
-    }
 }
 
 // MARK: - SwiftUI Previews
@@ -321,9 +347,8 @@ extension MatchHeaderView {
                 PreviewUIView {
                     let view = MatchHeaderView()
                     let viewModel = MatchHeaderViewModel(
-                        eventName: "Premier League",
-                        countryISOCode: "GB",
-                        numberOfBets: nil,
+                        competitionName: "Premier League",
+                        countryImageName: "GB",
                         isFavorite: false,
                         sportImageName: "1"
                     )
@@ -343,9 +368,8 @@ extension MatchHeaderView {
                 PreviewUIView {
                     let view = MatchHeaderView()
                     let viewModel = MatchHeaderViewModel(
-                        eventName: "La Liga",
-                        countryISOCode: "ES",
-                        numberOfBets: 25,
+                        competitionName: "La Liga",
+                        countryImageName: "ES",
                         isFavorite: true,
                         sportImageName: "1"
                     )
@@ -365,9 +389,8 @@ extension MatchHeaderView {
                 PreviewUIView {
                     let view = MatchHeaderView()
                     let viewModel = MatchHeaderViewModel(
-                        eventName: "Serie A",
-                        countryISOCode: "IT",
-                        numberOfBets: nil,
+                        competitionName: "Serie A",
+                        countryImageName: "IT",
                         isFavorite: true,
                         sportImageName: "8"
                     )
