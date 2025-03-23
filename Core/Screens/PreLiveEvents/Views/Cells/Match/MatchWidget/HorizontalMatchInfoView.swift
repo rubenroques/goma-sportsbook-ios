@@ -343,7 +343,7 @@ extension HorizontalMatchInfoView {
             self.liveMatchDotImageView.heightAnchor.constraint(equalTo: self.liveMatchDotBaseView.heightAnchor),
 
             // Minimum height constraint
-            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 67),
+            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 70),
         ])
     }
 }
@@ -362,7 +362,7 @@ extension HorizontalMatchInfoView {
             view.backgroundColor = .systemGray6
             return view
         }
-        .frame(width: 300, height: 67)
+        .frame(width: 300, height: 70)
 
         PreviewUIView {
             let view = HorizontalMatchInfoView()
@@ -375,7 +375,7 @@ extension HorizontalMatchInfoView {
             view.backgroundColor = .systemGray6
             return view
         }
-        .frame(width: 300, height: 67)
+        .frame(width: 300, height: 70)
 
         PreviewUIView {
             let view = HorizontalMatchInfoView()
@@ -388,7 +388,7 @@ extension HorizontalMatchInfoView {
             view.backgroundColor = .systemGray6
             return view
         }
-        .frame(width: 300, height: 67)
+        .frame(width: 300, height: 70)
     }
     .padding()
 }
@@ -409,7 +409,7 @@ extension HorizontalMatchInfoView {
         view.backgroundColor = .systemGray6
         return view
     }
-    .frame(width: 300, height: 67)
+    .frame(width: 300, height: 70)
 }
 
 @available(iOS 17.0, *)
@@ -427,7 +427,7 @@ extension HorizontalMatchInfoView {
         view.backgroundColor = .systemGray6
         return view
     }
-    .frame(width: 300, height: 67)
+    .frame(width: 300, height: 70)
 }
 
 @available(iOS 17.0, *)
@@ -445,7 +445,7 @@ extension HorizontalMatchInfoView {
         view.backgroundColor = .systemGray6
         return view
     }
-    .frame(width: 300, height: 67)
+    .frame(width: 300, height: 70)
 }
 
 /**
