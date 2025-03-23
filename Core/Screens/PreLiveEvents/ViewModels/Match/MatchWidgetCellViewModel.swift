@@ -42,7 +42,7 @@ class MatchWidgetCellViewModel {
         get { matchSubject.value }
         set { matchSubject.send(newValue) }
     }
-    
+
     //
     private let matchWidgetStatusSubject = CurrentValueSubject<MatchWidgetStatus, Never>(.unknown)
     var matchWidgetStatusPublisher: AnyPublisher<MatchWidgetStatus, Never> {
@@ -62,7 +62,7 @@ class MatchWidgetCellViewModel {
         get { matchWidgetTypeSubject.value }
         set { matchWidgetTypeSubject.send(newValue) }
     }
-    
+
     private var matchMarketsSubject: CurrentValueSubject<Match, Never>
     private var matchLiveDataSubject: CurrentValueSubject<MatchLiveData?, Never>
 
@@ -338,6 +338,9 @@ class MatchWidgetCellViewModel {
     // MatchHeaderViewModel
     let matchHeaderViewModel = MatchHeaderViewModel()
 
+    // MatchInfoViewModel
+    let matchInfoViewModel = MatchInfoViewModel()
+
     // MARK: Actions
     var favoriteAction: ((Bool) -> Void) = { _ in } {
         didSet {
@@ -370,7 +373,7 @@ class MatchWidgetCellViewModel {
 
     @Published private(set) var oldBoostedOddOutcome: BoostedOutcome?
 
-    
+
     // HorizontalMatchInfoViewModel publisher
     private let horizontalMatchInfoViewModelSubject = CurrentValueSubject<HorizontalMatchInfoViewModel, Never>(HorizontalMatchInfoViewModel())
     var horizontalMatchInfoViewModelPublisher: AnyPublisher<HorizontalMatchInfoViewModel, Never> {
@@ -384,7 +387,7 @@ class MatchWidgetCellViewModel {
     init(match: Match, matchWidgetType: MatchWidgetType = .normal, matchWidgetStatus: MatchWidgetStatus = .unknown) {
 
         self.matchSubject = .init(match)
-        
+
         switch matchWidgetStatus {
         case .live, .preLive:
             self.matchWidgetStatusSubject.send(matchWidgetStatus)
@@ -504,6 +507,67 @@ class MatchWidgetCellViewModel {
                 self.matchHeaderViewModel.setIsFavorite(isFavoriteMatch)
             }
             .store(in: &self.cancellables)
+
+        // Setup MatchInfoViewModel
+        Publishers.CombineLatest3(
+            self.homeTeamNamePublisher,
+            self.awayTeamNamePublisher,
+            self.matchScorePublisher
+        )
+        .combineLatest(
+            Publishers.CombineLatest(
+                self.startDateStringPublisher,
+                self.startTimeStringPublisher
+            )
+        )
+        .combineLatest(
+            Publishers.CombineLatest3(
+                self.activePlayerServePublisher,
+                self.detailedScoresPublisher,
+                self.mainMarketNamePublisher
+            )
+        )
+        .sink { [weak self] combinedData, additionalData in
+            guard let self = self else { return }
+
+            let ((homeTeamName, awayTeamName, score), (dateString, timeString)) = combinedData
+            let (activePlayerServe, detailedScores, marketName) = additionalData
+
+            // Determine display state based on match status
+            let displayState: MatchInfoViewModel.DisplayState
+            let servingIndicator: MatchInfoViewModel.ServingIndicator
+
+            if self.match.status.isLive {
+                displayState = .live(score: score, matchTime: self.match.matchTime)
+            } else if self.match.status.isPostLive {
+                displayState = .ended(score: score)
+            } else {
+                displayState = .preLive(date: dateString, time: timeString)
+            }
+
+            // Determine serving indicator
+            switch activePlayerServe {
+            case .home?:
+                servingIndicator = .home
+            case .away?:
+                servingIndicator = .away
+            default:
+                servingIndicator = .none
+            }
+
+            // Configure MatchInfoViewModel with all the data
+            self.matchInfoViewModel.configure(
+                homeTeamName: homeTeamName,
+                awayTeamName: awayTeamName,
+                displayState: displayState,
+                servingIndicator: servingIndicator,
+                detailedScore: (detailedScores.1, detailedScores.0),
+                marketName: marketName
+            )
+
+            self.matchInfoViewModel.setDisplayMode(.horizontal) // (.vertical)
+        }
+        .store(in: &self.cancellables)
         //
 
         // Request the updated content

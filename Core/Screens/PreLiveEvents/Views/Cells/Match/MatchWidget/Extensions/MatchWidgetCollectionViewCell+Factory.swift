@@ -58,6 +58,12 @@ extension MatchWidgetCollectionViewCell {
 
         return liveGradientBorderView
     }
+    
+    func createBoostedOddBottomLineAnimatedGradientView() -> GradientView {
+        let boostedOddBottomLineAnimatedGradientView = GradientView()
+        boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
+        return boostedOddBottomLineAnimatedGradientView
+    }
 
     // MARK: - Odd Button Views
     func createHomeBaseView() -> UIView {
@@ -197,30 +203,6 @@ extension MatchWidgetCollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         imageView.alpha = 0.0
         return imageView
-    }
-
-    // MARK: - Market Views
-    func createMarketNameView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        return view
-    }
-
-    func createMarketNameInnerView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.highlightPrimary
-        return view
-    }
-
-    func createMarketNameLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 8)
-        label.textAlignment = .center
-        label.textColor = UIColor.App.buttonTextPrimary
-        return label
     }
 
     // MARK: - Suspended and See All Views
@@ -422,6 +404,15 @@ extension MatchWidgetCollectionViewCell {
         return imageView
     }
 
+    func createTopRightInfoIconsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 0
+        stackView.clipsToBounds = false
+        return stackView
+    }
+    
     // MARK: - Live Indicator Views
     func createLiveTipView() -> UIView {
         let liveTipView = UIView()
@@ -434,6 +425,8 @@ extension MatchWidgetCollectionViewCell {
         liveTipView.layer.shadowOffset = CGSize(width: -4, height: 2)
         liveTipView.layer.shadowRadius = 5
 
+        liveTipView.layer.cornerRadius = 9
+        
         return liveTipView
     }
 
@@ -442,13 +435,21 @@ extension MatchWidgetCollectionViewCell {
         liveTipLabel.font = AppFont.with(type: .bold, size: 10)
         liveTipLabel.textAlignment = .left
         liveTipLabel.translatesAutoresizingMaskIntoConstraints = false
-        liveTipLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        liveTipLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        liveTipLabel.setContentHuggingPriority(.required, for: .horizontal)
+        liveTipLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        liveTipLabel.text = localized("live").uppercased() + " ⦿"
 
         return liveTipLabel
     }
 
     // MARK: - Icon Views
+    func createCashbackIconContainerView() -> UIView {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
+    }
+    
     func createCashbackIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -459,9 +460,15 @@ extension MatchWidgetCollectionViewCell {
 
     // MARK: - Match Info View
     func createHorizontalMatchInfoView() -> HorizontalMatchInfoView {
-        let horizontalMatchInfoView = HorizontalMatchInfoView()
-        horizontalMatchInfoView.translatesAutoresizingMaskIntoConstraints = false
-        return horizontalMatchInfoView
+        let view = HorizontalMatchInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    func createMatchInfoView() -> MatchInfoView {
+        let view = MatchInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     // MARK: - Team and Score Views
@@ -742,13 +749,6 @@ extension MatchWidgetCollectionViewCell {
         return label
     }
 
-    // MARK: - Content Views
-    func createHorizontalMatchInfoBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        return view
-    }
 
     // MARK: - Team Stack Views
     func createHomeElementsStackView() -> UIStackView {

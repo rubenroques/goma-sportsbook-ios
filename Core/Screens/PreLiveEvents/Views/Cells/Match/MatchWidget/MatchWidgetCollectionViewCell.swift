@@ -20,8 +20,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     let backgroundImageGradientLayer = CAGradientLayer()
     let backgroundImageBorderGradientLayer = CAGradientLayer()
     let backgroundImageBorderShapeLayer = CAShapeLayer()
-    let boostedOddBottomLineAnimatedGradientView = GradientView()
-
+    
     // Programmatically created views - defined in Factory extension
     // Base views
     lazy var baseView: UIView = self.createBaseView()
@@ -32,7 +31,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     // Content views
     lazy var mainContentBaseView: UIView = self.createMainContentBaseView()
-    lazy var horizontalMatchInfoBaseView: UIView = self.createHorizontalMatchInfoBaseView()
+    
+    // Outright
     lazy var outrightNameBaseView: UIView = self.createOutrightNameBaseView()
     lazy var outrightNameLabel: UILabel = self.createOutrightNameLabel()
 
@@ -51,11 +51,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // Outright views
     lazy var outrightBaseView: UIView = self.createOutrightBaseView()
     lazy var outrightSeeLabel: UILabel = self.createOutrightSeeLabel()
-
-    // Market views
-    lazy var marketNameView: UIView = self.createMarketNameView()
-    lazy var marketNameInnerView: UIView = self.createMarketNameInnerView()
-    lazy var marketNameLabel: UILabel = self.createMarketNameLabel()
 
     // Boosted odds views
     lazy var homeBoostedOddValueBaseView: UIView = self.createHomeBoostedOddValueBaseView()
@@ -96,27 +91,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // Border views
     lazy var gradientBorderView: GradientBorderView = self.createGradientBorderView()
     lazy var liveGradientBorderView: GradientBorderView = self.createLiveGradientBorderView()
+    
+    lazy var topRightInfoIconsStackView: UIStackView = self.createTopRightInfoIconsStackView()
     lazy var liveTipView: UIView = self.createLiveTipView()
     lazy var liveTipLabel: UILabel = self.createLiveTipLabel()
+    lazy var cashbackIconContainerView: UIView = self.createCashbackIconContainerView()
     lazy var cashbackIconImageView: UIImageView = self.createCashbackIconImageView()
-    lazy var horizontalMatchInfoView: HorizontalMatchInfoView = self.createHorizontalMatchInfoView()
 
-    // Team info views
-    lazy var homeNameLabel: UILabel = self.createHomeNameLabel()
-    lazy var awayNameLabel: UILabel = self.createAwayNameLabel()
-    lazy var homeServingIndicatorView: UIView = self.createHomeServingIndicatorView()
-    lazy var awayServingIndicatorView: UIView = self.createAwayServingIndicatorView()
-
-    // Time and date views
-    lazy var dateNewLabel: UILabel = self.createDateLabel()
-    lazy var timeNewLabel: UILabel = self.createTimeLabel()
-    lazy var matchTimeStatusNewLabel: UILabel = self.createMatchTimeStatusLabel()
-
-    // Score views
-    lazy var detailedScoreView: ScoreView = self.createDetailedScoreView()
-
-    // Market info views
-    lazy var marketNamePillLabelView: PillLabelView = self.createMarketNamePillLabelView()
+    // New MatchInfoView component
+    lazy var matchInfoView: MatchInfoView = self.createMatchInfoView()
 
     // Bottom action views
     lazy var bottomSeeAllMarketsContainerView: UIView = self.createBottomSeeAllMarketsContainerView()
@@ -145,9 +128,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var newTitleBoostedOddLabel: UILabel = self.createNewTitleBoostedOddLabel()
     lazy var newValueBoostedOddLabel: UILabel = self.createNewValueBoostedOddLabel()
 
+    lazy var boostedOddBottomLineAnimatedGradientView: GradientView = self.createBoostedOddBottomLineAnimatedGradientView()
+    
     // Separator views
     lazy var topSeparatorAlphaLineView: FadingView = self.createTopSeparatorAlphaLineView()
-    lazy var contentRedesignBaseView: UIView = self.createContentRedesignBaseView()
 
     // Boosted corner views
     lazy var boostedTopRightCornerBaseView: UIView = self.createBoostedTopRightCornerBaseView()
@@ -155,22 +139,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var boostedTopRightCornerImageView: UIImageView = self.createBoostedTopRightCornerImageView()
     lazy var boostedBackgroungImageView: UIImageView = UIImageView()
 
-    // Constraint references
-    lazy var cashbackIconImageViewHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var cashbackImageViewBaseTrailingConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var cashbackImageViewLiveTrailingConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var homeContentRedesignTopConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var awayContentRedesignTopConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var homeToRightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var awayToRightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-
     // Layout constraints (previously IBOutlets)
     lazy var topMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var bottomMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var leadingMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var trailingMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var headerHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var teamsHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var buttonsHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var marketBottomConstraint: NSLayoutConstraint = NSLayoutConstraint()
     lazy var marketTopConstraint: NSLayoutConstraint = NSLayoutConstraint()
@@ -277,12 +251,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         self.cleanupForReuse()
     }
 
     // MARK: - Setup Initial State
     func setupInitialState() {
+        self.backgroundView?.backgroundColor = .clear
+        self.backgroundColor = .clear
+
+        self.baseView.clipsToBounds = true
+        self.baseView.layer.cornerRadius = 9
+
         // hide non normal widget style elements
         self.backgroundImageView.isHidden = true
 
@@ -298,9 +278,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.topImageView.contentMode = .scaleAspectFill
 
-        // Add gradient to the bottom booster line
-        setupBoostedOddBottomLine()
-
         self.suspendedBaseView.layer.borderWidth = 1
 
         // Create a gradient layer on top of the image
@@ -315,7 +292,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.backgroundImageView.layer.addSublayer(self.backgroundImageGradientLayer)
 
         // Setup fonts
-        setupFonts()
+        self.setupFonts()
 
         // Hide boosted odds views
         self.homeBoostedOddValueBaseView.isHidden = true
@@ -328,9 +305,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         // Setup view properties
         self.setupViewProperties()
-
-        // Initialize MatchHeaderView with empty state
-        self.matchHeaderView.configure(with: MatchHeaderViewModel())
 
         // Hide non-normal widget style elements
         self.backgroundImageView.isHidden = true
@@ -365,13 +339,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawOldBoostedOddValueLabel.text = "-"
         self.awayOldBoostedOddValueLabel.text = "-"
 
-        // Basic setup
-        self.backgroundView?.backgroundColor = .clear
-        self.backgroundColor = .clear
-
-        self.baseView.clipsToBounds = true
-        self.baseView.layer.cornerRadius = 9
-
         // Reset odd change indicators
         self.homeUpChangeOddValueImage.alpha = 0.0
         self.homeDownChangeOddValueImage.alpha = 0.0
@@ -381,7 +348,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayDownChangeOddValueImage.alpha = 0.0
 
         // Setup buttons and views
-        self.horizontalMatchInfoBaseView.backgroundColor = .clear
         self.outrightNameBaseView.backgroundColor = .clear
 
         self.oddsStackView.backgroundColor = .clear
@@ -432,179 +398,23 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Set outright label
         self.outrightSeeLabel.text = localized("view_competition_markets")
 
-        // Market view setup
-        self.marketNameLabel.text = ""
-
-        self.marketNamePillLabelView.title = ""
-        self.marketNamePillLabelView.isHidden = true
-
-        // Old style views
-        self.horizontalMatchInfoBaseView.isHidden = true
-        self.marketNameView.isHidden = true
-
         // Gradient borders
         self.gradientBorderView.isHidden = true
         self.liveGradientBorderView.isHidden = true
 
         // Live tip
-        self.liveTipView.isHidden = true
+        self.hideLiveTipView()
         self.liveTipLabel.text = localized("live").uppercased() + " ⦿"
     }
 
-    func cellDidDisappear() {
-        cancelSubscriptions()
-    }
-
     func cancelSubscriptions() {
-        leftOddButtonSubscriber?.cancel()
-        leftOddButtonSubscriber = nil
+        self.leftOddButtonSubscriber?.cancel()
+        self.leftOddButtonSubscriber = nil
 
-        middleOddButtonSubscriber?.cancel()
-        middleOddButtonSubscriber = nil
+        self.middleOddButtonSubscriber?.cancel()
+        self.middleOddButtonSubscriber = nil
 
-        rightOddButtonSubscriber?.cancel()
-        rightOddButtonSubscriber = nil
-    }
-
-}
-
-//
-// Core functionality is kept in this file
-// MARK: - Factory Extension (implement in MatchWidgetCollectionViewCell+Factory.swift)
-extension MatchWidgetCollectionViewCell {
-    // Factory methods for UI components
-}
-
-// MARK: - Layout Extension (implement in MatchWidgetCollectionViewCell+Layout.swift)
-extension MatchWidgetCollectionViewCell {
-    // Layout methods
-}
-
-// MARK: - Configuration Extension (implement in MatchWidgetCollectionViewCell+Configuration.swift)
-extension MatchWidgetCollectionViewCell {
-    // Configuration methods
-}
-
-// MARK: - Interactions Extension (implement in MatchWidgetCollectionViewCell+Interactions.swift)
-extension MatchWidgetCollectionViewCell {
-    // Interaction methods
-}
-
-// MARK: - Styling Extension (implement in MatchWidgetCollectionViewCell+Styling.swift)
-extension MatchWidgetCollectionViewCell {
-    // Styling methods
-}
-
-// MARK: - Animation Extension (implement in MatchWidgetCollectionViewCell+Animations.swift)
-extension MatchWidgetCollectionViewCell {
-    // Animation methods
-}
-
-extension MatchWidgetCollectionViewCell {
-
-    func setupBoostedAndMixMatch() {
-
-
-
-        // Cashback
-        self.baseView.addSubview(self.cashbackIconImageView)
-
-        self.cashbackIconImageViewHeightConstraint = self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 18)
-
-        NSLayoutConstraint.activate([
-            self.cashbackIconImageViewHeightConstraint,
-            self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
-            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.matchHeaderView.centerYAnchor),
-
-            self.matchHeaderView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
-        ])
-
-        self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
-                                                                          attribute: .trailing,
-                                                                          relatedBy: .equal,
-                                                                          toItem: self.baseView,
-                                                                          attribute: .trailing,
-                                                                          multiplier: 1,
-                                                                          constant: -8)
-        self.cashbackImageViewBaseTrailingConstraint.isActive = true
-
-        self.cashbackImageViewLiveTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
-                                                                          attribute: .trailing,
-                                                                          relatedBy: .equal,
-                                                                          toItem: self.liveTipView,
-                                                                          attribute: .leading,
-                                                                          multiplier: 1,
-                                                                          constant: -6)
-        self.cashbackImageViewLiveTrailingConstraint.isActive = false
-
-        NSLayoutConstraint.activate([
-            self.matchHeaderView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
-        ])
-        //
-
-        // see all button
-        self.bottomSeeAllMarketsContainerView.isHidden = true
-
-        self.baseStackView.addArrangedSubview(self.bottomSeeAllMarketsContainerView)
-
-        self.bottomSeeAllMarketsContainerView.addSubview(self.bottomSeeAllMarketsBaseView)
-        self.bottomSeeAllMarketsBaseView.addSubview(self.bottomSeeAllMarketsLabel)
-        self.bottomSeeAllMarketsBaseView.addSubview(self.bottomSeeAllMarketsArrowIconImageView)
-
-        NSLayoutConstraint.activate([
-            self.bottomSeeAllMarketsContainerView.heightAnchor.constraint(equalToConstant: 34),
-
-            self.bottomSeeAllMarketsBaseView.heightAnchor.constraint(equalToConstant: 27),
-            self.bottomSeeAllMarketsBaseView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.leadingAnchor, constant: 12),
-            self.bottomSeeAllMarketsBaseView.trailingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.trailingAnchor, constant: -12),
-            self.bottomSeeAllMarketsBaseView.topAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.topAnchor),
-
-            self.bottomSeeAllMarketsLabel.centerXAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerXAnchor),
-            self.bottomSeeAllMarketsLabel.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerYAnchor),
-
-            self.bottomSeeAllMarketsArrowIconImageView.widthAnchor.constraint(equalToConstant: 12),
-            self.bottomSeeAllMarketsArrowIconImageView.heightAnchor.constraint(equalToConstant: 12),
-            self.bottomSeeAllMarketsArrowIconImageView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsLabel.trailingAnchor, constant: 4),
-            self.bottomSeeAllMarketsArrowIconImageView.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsLabel.centerYAnchor),
-        ])
-
-        // MixMatch
-        self.mixMatchContainerView.isHidden = true
-
-        self.baseStackView.addArrangedSubview(self.mixMatchContainerView)
-        self.mixMatchContainerView.addSubview(self.mixMatchBaseView)
-        self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
-        self.mixMatchBaseView.addSubview(self.mixMatchIconImageView)
-        self.mixMatchBaseView.addSubview(self.mixMatchLabel)
-        self.mixMatchBaseView.addSubview(self.mixMatchNavigationIconImageView)
-
-        NSLayoutConstraint.activate([
-            self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 34),
-
-            self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 27),
-            self.mixMatchBaseView.leadingAnchor.constraint(equalTo: self.mixMatchContainerView.leadingAnchor, constant: 12),
-            self.mixMatchBaseView.trailingAnchor.constraint(equalTo: self.mixMatchContainerView.trailingAnchor, constant: -12),
-            self.mixMatchBaseView.topAnchor.constraint(equalTo: self.mixMatchContainerView.topAnchor),
-
-            self.mixMatchBackgroundImageView.leadingAnchor.constraint(equalTo: self.mixMatchBaseView.leadingAnchor),
-            self.mixMatchBackgroundImageView.trailingAnchor.constraint(equalTo: self.mixMatchBaseView.trailingAnchor),
-            self.mixMatchBackgroundImageView.topAnchor.constraint(equalTo: self.mixMatchBaseView.topAnchor),
-            self.mixMatchBackgroundImageView.bottomAnchor.constraint(equalTo: self.mixMatchBaseView.bottomAnchor),
-
-            self.mixMatchLabel.centerXAnchor.constraint(equalTo: self.mixMatchBaseView.centerXAnchor),
-            self.mixMatchLabel.centerYAnchor.constraint(equalTo: self.mixMatchBaseView.centerYAnchor),
-
-            self.mixMatchIconImageView.widthAnchor.constraint(equalToConstant: 21),
-            self.mixMatchIconImageView.heightAnchor.constraint(equalToConstant: 25),
-            self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2),
-            self.mixMatchIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
-
-            self.mixMatchNavigationIconImageView.widthAnchor.constraint(equalToConstant: 11),
-            self.mixMatchNavigationIconImageView.heightAnchor.constraint(equalToConstant: 13),
-            self.mixMatchNavigationIconImageView.leadingAnchor.constraint(equalTo: self.mixMatchLabel.trailingAnchor, constant: 6),
-            self.mixMatchNavigationIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
-
-        ])
-
+        self.rightOddButtonSubscriber?.cancel()
+        self.rightOddButtonSubscriber = nil
     }
 }

@@ -29,9 +29,6 @@ extension MatchWidgetCollectionViewCell {
         self.outrightBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.outrightSeeLabel.textColor = UIColor.App.textPrimary
 
-        self.homeServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
-        self.awayServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
-
         // Bottom UI Elements
         self.bottomSeeAllMarketsBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.bottomSeeAllMarketsLabel.textColor = UIColor.App.textSecondary
@@ -59,16 +56,15 @@ extension MatchWidgetCollectionViewCell {
                                                   UIColor.App.cardBorderLineGradient2,
                                                   UIColor.App.cardBorderLineGradient3]
 
-        self.contentRedesignBaseView.backgroundColor = .clear
 
         // Apply styling based on widget type
-        applyWidgetTypeSpecificStyling()
+        self.applyWidgetTypeSpecificStyling()
 
         // Colors based of status
-        applyStatusBasedStyling()
+        self.applyStatusBasedStyling()
 
-        self.detailedScoreView.setupWithTheme()
-        self.marketNamePillLabelView.setupWithTheme()
+        self.matchInfoView.setupWithTheme()
+        self.matchHeaderView.setupWithTheme()
     }
 
     // MARK: - Widget Type Styling
@@ -86,11 +82,6 @@ extension MatchWidgetCollectionViewCell {
     }
 
     private func applyNormalStyling() {
-
-        self.dateNewLabel.textColor = UIColor.App.textSecondary
-        self.timeNewLabel.textColor = UIColor.App.textPrimary
-        self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
-
         self.topSeparatorAlphaLineView.isHidden = false
 
         self.oddsStackView.isHidden = false
@@ -146,10 +137,6 @@ extension MatchWidgetCollectionViewCell {
         self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
         self.outrightNameLabel.textColor = UIColor.App.textPrimary
 
-        self.dateNewLabel.textColor = UIColor.App.textSecondary
-        self.timeNewLabel.textColor = UIColor.App.textPrimary
-        self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
-
         self.topSeparatorAlphaLineView.isHidden = false
 
         self.oddsStackView.isHidden = false
@@ -202,10 +189,6 @@ extension MatchWidgetCollectionViewCell {
     private func applyBoostedStyling() {
         self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
 
-        self.dateNewLabel.textColor = UIColor.App.textSecondary
-        self.timeNewLabel.textColor = UIColor.App.textPrimary
-        self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
-
         self.topSeparatorAlphaLineView.isHidden = false
 
         self.oddsStackView.isHidden = true
@@ -240,16 +223,7 @@ extension MatchWidgetCollectionViewCell {
     private func applyBackgroundImageStyling() {
         self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
 
-        self.dateNewLabel.textColor = UIColor.App.textSecondary
-        self.timeNewLabel.textColor = UIColor.App.textPrimary
-        self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonTextPrimary
-
-        self.marketNameView.backgroundColor = .clear
-        self.marketNameInnerView.backgroundColor = UIColor.App.highlightPrimary
-
         self.topSeparatorAlphaLineView.isHidden = true
-
-        self.contentRedesignBaseView.backgroundColor = .clear
 
         self.oddsStackView.isHidden = false
         self.boostedOddBarView.isHidden = true
@@ -352,11 +326,9 @@ extension MatchWidgetCollectionViewCell {
         switch StyleHelper.cardsStyleActive() {
         case .small:
             self.bottomMarginSpaceConstraint.constant = -8
-            self.teamsHeightConstraint.constant = 26
             self.topMarginSpaceConstraint.constant = 8
         case .normal:
             self.bottomMarginSpaceConstraint.constant = -12
-            self.teamsHeightConstraint.constant = 67
             self.topMarginSpaceConstraint.constant = 11
         }
     }
@@ -381,7 +353,6 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.layer.borderColor = nil
 
         self.bottomMarginSpaceConstraint.constant = -12
-        self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
     }
 
@@ -408,7 +379,6 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.layer.borderColor = nil
 
         self.bottomMarginSpaceConstraint.constant = -12
-        self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
 
         self.showOutrightLayout()
@@ -429,9 +399,7 @@ extension MatchWidgetCollectionViewCell {
         self.drawBoostedOddValueBaseView.isHidden = false
         self.awayBoostedOddValueBaseView.isHidden = false
 
-
         self.bottomMarginSpaceConstraint.constant = -12
-        self.teamsHeightConstraint.constant = 67
         self.topMarginSpaceConstraint.constant = 11
 
         self.setupBoostedOddsSubviews()
@@ -455,9 +423,7 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.layer.borderWidth = 0
         self.baseView.layer.borderColor = nil
 
-
         self.bottomMarginSpaceConstraint.constant = -28
-        self.teamsHeightConstraint.constant = 47
         self.topMarginSpaceConstraint.constant = 0
 
         self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
@@ -506,9 +472,6 @@ extension MatchWidgetCollectionViewCell {
         self.seeAllBaseView.isHidden = true
         self.outrightBaseView.isHidden = false
 
-        self.horizontalMatchInfoBaseView.isHidden = true
         self.outrightNameBaseView.isHidden = false
-
-        self.contentRedesignBaseView.isHidden = true
     }
 }

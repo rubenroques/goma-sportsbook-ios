@@ -33,7 +33,6 @@ extension MatchWidgetCollectionViewCell {
         self.awayOldBoostedOddValueLabel.font = AppFont.with(type: .semibold, size: 9)
 
         self.outrightSeeLabel.font = AppFont.with(type: .semibold, size: 12)
-        self.marketNameLabel.font = AppFont.with(type: .bold, size: 8)
     }
 
     func setupViewProperties() {
@@ -43,6 +42,8 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 9
 
+        self.boostedOddBottomLineAnimatedGradientView.startAnimations()
+        
         self.homeUpChangeOddValueImage.alpha = 0.0
         self.homeDownChangeOddValueImage.alpha = 0.0
         self.drawUpChangeOddValueImage.alpha = 0.0
@@ -50,7 +51,6 @@ extension MatchWidgetCollectionViewCell {
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
 
-        self.horizontalMatchInfoBaseView.backgroundColor = .clear
         self.outrightNameBaseView.backgroundColor = .clear
 
         self.oddsStackView.backgroundColor = .clear
@@ -85,23 +85,7 @@ extension MatchWidgetCollectionViewCell {
         self.drawBaseView.alpha = 1.0
         self.awayBaseView.alpha = 1.0
 
-        self.homeNameLabel.text = ""
-        self.awayNameLabel.text = ""
-
-        self.homeServingIndicatorView.isHidden = true
-        self.awayServingIndicatorView.isHidden = true
-
-        self.detailedScoreView.updateScores([:])
-
         self.outrightNameLabel.text = ""
-
-        self.matchTimeStatusNewLabel.text = ""
-
-        self.dateNewLabel.text = ""
-        self.timeNewLabel.text = ""
-
-        self.matchTimeStatusNewLabel.isHidden = true
-
         self.suspendedLabel.text = localized("suspended")
 
         self.oddsStackView.isHidden = false
@@ -113,19 +97,8 @@ extension MatchWidgetCollectionViewCell {
         self.outrightSeeLabel.text = localized("view_competition_markets")
         self.outrightSeeLabel.font = AppFont.with(type: .semibold, size: 12)
 
-        // Market view and label
-        self.marketNameLabel.text = ""
-        self.marketNameLabel.font = AppFont.with(type: .bold, size: 8)
-
-        self.marketNamePillLabelView.title = ""
-        self.marketNamePillLabelView.isHidden = true
-
-        // Old style for teams and scores
-        self.horizontalMatchInfoBaseView.isHidden = true
-        self.marketNameView.isHidden = true
-
         // Setup Live Tip
-        self.liveTipView.isHidden = true
+        self.hideLiveTipView()
         self.liveTipLabel.text = localized("live").uppercased() + " ⦿"
 
         // Setup Gradient Border
@@ -237,18 +210,7 @@ extension MatchWidgetCollectionViewCell {
         self.mainContentBaseView.addSubview(self.outrightNameBaseView)
         self.outrightNameBaseView.addSubview(self.outrightNameLabel)
 
-        // Set up horizontal match info view
-        self.mainContentBaseView.addSubview(self.horizontalMatchInfoBaseView)
-        self.horizontalMatchInfoBaseView.addSubview(self.horizontalMatchInfoView)
-
-        // Set up market name view
-        self.mainContentBaseView.addSubview(self.marketNameView)
-        self.marketNameView.addSubview(self.marketNameInnerView)
-        self.marketNameInnerView.addSubview(self.marketNameLabel)
-
         // Initialize the horizontalMatchInfoView
-        self.horizontalMatchInfoBaseView.addSubview(self.horizontalMatchInfoView)
-
         // Set up border views
         self.baseView.addSubview(self.gradientBorderView)
         self.baseView.addSubview(self.liveGradientBorderView)
@@ -256,22 +218,26 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.sendSubviewToBack(self.liveGradientBorderView)
         self.baseView.sendSubviewToBack(self.gradientBorderView)
 
+        //
+        // Top Right icons
         // Setup cashback icon
-        self.baseView.addSubview(self.cashbackIconImageView)
-
+        self.baseView.addSubview(self.topRightInfoIconsStackView)
+        
         // Live Tip
-        self.liveTipView.isHidden = true
-        self.baseView.addSubview(self.liveTipView)
+        self.hideLiveTipView()
         self.liveTipView.addSubview(self.liveTipLabel)
         self.liveTipLabel.text = localized("live").uppercased() + " ⦿"
-
         self.liveTipView.layer.cornerRadius = 9
-
-
+        
+        self.cashbackIconContainerView.addSubview(self.cashbackIconImageView)
+        self.topRightInfoIconsStackView.addArrangedSubview(self.cashbackIconContainerView)
+        self.topRightInfoIconsStackView.addArrangedSubview(self.liveTipView)
+        //
+        
         //
         // Setup boosted odd bottom line
-        self.setupBoostedOddBottomLine()
 
+        self.setupBoostedOddBottomLine()
         self.setupBoostedAndMixMatch()
 
         // Initialize constraints
@@ -323,7 +289,7 @@ extension MatchWidgetCollectionViewCell {
         NSLayoutConstraint.activate([
             self.topMarginSpaceConstraint,
             self.leadingMarginSpaceConstraint,
-            self.matchHeaderView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -12)
+            self.matchHeaderView.trailingAnchor.constraint(equalTo: self.topRightInfoIconsStackView.leadingAnchor, constant: -4)
         ])
 
         // Odds stack view constraints
@@ -417,48 +383,13 @@ extension MatchWidgetCollectionViewCell {
             self.outrightSeeLabel.centerYAnchor.constraint(equalTo: self.outrightBaseView.centerYAnchor)
         ])
 
-        // Outright name view constraints
-        self.teamsHeightConstraint = self.horizontalMatchInfoBaseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 67)
-        self.teamsHeightConstraint.isActive = true
-
         NSLayoutConstraint.activate([
-            self.outrightNameBaseView.leadingAnchor.constraint(equalTo: self.horizontalMatchInfoBaseView.leadingAnchor),
-            self.outrightNameBaseView.trailingAnchor.constraint(equalTo: self.horizontalMatchInfoBaseView.trailingAnchor),
             self.outrightNameBaseView.topAnchor.constraint(equalTo: self.matchHeaderView.bottomAnchor, constant: 4),
             self.outrightNameBaseView.bottomAnchor.constraint(equalTo: self.oddsStackView.topAnchor, constant: 5),
 
             self.outrightNameLabel.centerYAnchor.constraint(equalTo: self.outrightNameBaseView.centerYAnchor),
             self.outrightNameLabel.leadingAnchor.constraint(equalTo: self.outrightNameBaseView.leadingAnchor, constant: 15),
             self.outrightNameLabel.trailingAnchor.constraint(equalTo: self.outrightNameBaseView.trailingAnchor, constant: -15)
-        ])
-
-        // Horizontal match info view constraints
-        NSLayoutConstraint.activate([
-            self.horizontalMatchInfoBaseView.leadingAnchor.constraint(equalTo: self.oddsStackView.leadingAnchor),
-            self.horizontalMatchInfoBaseView.trailingAnchor.constraint(equalTo: self.oddsStackView.trailingAnchor),
-            self.horizontalMatchInfoBaseView.topAnchor.constraint(equalTo: self.matchHeaderView.bottomAnchor, constant: 4)
-        ])
-
-        // Market name view constraints
-        self.marketHeightConstraint = self.marketNameView.heightAnchor.constraint(equalToConstant: 15)
-        self.marketHeightConstraint.isActive = true
-
-        self.marketTopConstraint = self.marketNameView.topAnchor.constraint(equalTo: self.horizontalMatchInfoBaseView.bottomAnchor, constant: 8)
-        self.marketBottomConstraint = self.marketNameView.bottomAnchor.constraint(equalTo: self.oddsStackView.topAnchor, constant: -10)
-
-        NSLayoutConstraint.activate([
-            self.marketNameView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 12),
-            self.marketNameView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -12),
-            self.marketTopConstraint,
-            self.marketBottomConstraint,
-
-            self.marketNameInnerView.centerXAnchor.constraint(equalTo: self.marketNameView.centerXAnchor),
-            self.marketNameInnerView.topAnchor.constraint(equalTo: self.marketNameView.topAnchor, constant: 1),
-            self.marketNameInnerView.bottomAnchor.constraint(equalTo: self.marketNameView.bottomAnchor, constant: -1),
-
-            self.marketNameLabel.centerYAnchor.constraint(equalTo: self.marketNameInnerView.centerYAnchor),
-            self.marketNameLabel.leadingAnchor.constraint(equalTo: self.marketNameInnerView.leadingAnchor, constant: 7),
-            self.marketNameLabel.trailingAnchor.constraint(equalTo: self.marketNameInnerView.trailingAnchor, constant: -7)
         ])
 
         // Border view constraints
@@ -474,6 +405,17 @@ extension MatchWidgetCollectionViewCell {
             self.baseView.bottomAnchor.constraint(equalTo: self.liveGradientBorderView.bottomAnchor),
         ])
 
+        // Cashback
+        NSLayoutConstraint.activate([
+            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 18),
+            self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
+            
+            self.cashbackIconContainerView.topAnchor.constraint(equalTo: self.cashbackIconImageView.topAnchor),
+            self.cashbackIconContainerView.leadingAnchor.constraint(equalTo: self.cashbackIconImageView.leadingAnchor),
+            self.cashbackIconContainerView.trailingAnchor.constraint(equalTo: self.cashbackIconImageView.trailingAnchor, constant: 16),
+            self.cashbackIconContainerView.bottomAnchor.constraint(equalTo: self.cashbackIconImageView.bottomAnchor),
+        ])
+        
         // Live Tip
         NSLayoutConstraint.activate([
             self.liveTipView.heightAnchor.constraint(equalToConstant: 18),
@@ -483,22 +425,14 @@ extension MatchWidgetCollectionViewCell {
             self.liveTipView.centerYAnchor.constraint(equalTo: self.liveTipLabel.centerYAnchor),
             self.liveTipView.topAnchor.constraint(equalTo: self.liveTipLabel.topAnchor, constant: 2),
 
-            self.liveTipView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 8),
-            self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10)
+            //
+            self.topRightInfoIconsStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 8),
+            self.topRightInfoIconsStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10)
         ])
     }
 
     // MARK: - Setup Specialized Views
     func setupBoostedOddBottomLine() {
-        self.boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
-        self.boostedOddBottomLineAnimatedGradientView.colors = [
-            (UIColor.init(hex: 0xFF6600), NSNumber(0.0)),
-            (UIColor.init(hex: 0xFEDB00), NSNumber(1.0))
-        ]
-        self.boostedOddBottomLineAnimatedGradientView.startPoint = CGPoint(x: 0.0, y: 0.5)
-        self.boostedOddBottomLineAnimatedGradientView.endPoint = CGPoint(x: 1.0, y: 0.5)
-        self.boostedOddBottomLineAnimatedGradientView.startAnimations()
-
         self.boostedOddBottomLineView.addSubview(self.boostedOddBottomLineAnimatedGradientView)
 
         NSLayoutConstraint.activate([
@@ -509,6 +443,71 @@ extension MatchWidgetCollectionViewCell {
         ])
     }
 
+    func setupBoostedAndMixMatch() {
+        // See all button
+        self.bottomSeeAllMarketsContainerView.isHidden = true
+
+        self.baseStackView.addArrangedSubview(self.bottomSeeAllMarketsContainerView)
+
+        self.bottomSeeAllMarketsContainerView.addSubview(self.bottomSeeAllMarketsBaseView)
+        self.bottomSeeAllMarketsBaseView.addSubview(self.bottomSeeAllMarketsLabel)
+        self.bottomSeeAllMarketsBaseView.addSubview(self.bottomSeeAllMarketsArrowIconImageView)
+
+        NSLayoutConstraint.activate([
+            self.bottomSeeAllMarketsContainerView.heightAnchor.constraint(equalToConstant: 34),
+
+            self.bottomSeeAllMarketsBaseView.heightAnchor.constraint(equalToConstant: 27),
+            self.bottomSeeAllMarketsBaseView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.leadingAnchor, constant: 12),
+            self.bottomSeeAllMarketsBaseView.trailingAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.trailingAnchor, constant: -12),
+            self.bottomSeeAllMarketsBaseView.topAnchor.constraint(equalTo: self.bottomSeeAllMarketsContainerView.topAnchor),
+
+            self.bottomSeeAllMarketsLabel.centerXAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerXAnchor),
+            self.bottomSeeAllMarketsLabel.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsBaseView.centerYAnchor),
+
+            self.bottomSeeAllMarketsArrowIconImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.bottomSeeAllMarketsArrowIconImageView.heightAnchor.constraint(equalToConstant: 12),
+            self.bottomSeeAllMarketsArrowIconImageView.leadingAnchor.constraint(equalTo: self.bottomSeeAllMarketsLabel.trailingAnchor, constant: 4),
+            self.bottomSeeAllMarketsArrowIconImageView.centerYAnchor.constraint(equalTo: self.bottomSeeAllMarketsLabel.centerYAnchor),
+        ])
+
+        // MixMatch
+        self.mixMatchContainerView.isHidden = true
+
+        self.baseStackView.addArrangedSubview(self.mixMatchContainerView)
+        self.mixMatchContainerView.addSubview(self.mixMatchBaseView)
+        self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
+        self.mixMatchBaseView.addSubview(self.mixMatchIconImageView)
+        self.mixMatchBaseView.addSubview(self.mixMatchLabel)
+        self.mixMatchBaseView.addSubview(self.mixMatchNavigationIconImageView)
+
+        NSLayoutConstraint.activate([
+            self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 34),
+
+            self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 27),
+            self.mixMatchBaseView.leadingAnchor.constraint(equalTo: self.mixMatchContainerView.leadingAnchor, constant: 12),
+            self.mixMatchBaseView.trailingAnchor.constraint(equalTo: self.mixMatchContainerView.trailingAnchor, constant: -12),
+            self.mixMatchBaseView.topAnchor.constraint(equalTo: self.mixMatchContainerView.topAnchor),
+
+            self.mixMatchBackgroundImageView.leadingAnchor.constraint(equalTo: self.mixMatchBaseView.leadingAnchor),
+            self.mixMatchBackgroundImageView.trailingAnchor.constraint(equalTo: self.mixMatchBaseView.trailingAnchor),
+            self.mixMatchBackgroundImageView.topAnchor.constraint(equalTo: self.mixMatchBaseView.topAnchor),
+            self.mixMatchBackgroundImageView.bottomAnchor.constraint(equalTo: self.mixMatchBaseView.bottomAnchor),
+
+            self.mixMatchLabel.centerXAnchor.constraint(equalTo: self.mixMatchBaseView.centerXAnchor),
+            self.mixMatchLabel.centerYAnchor.constraint(equalTo: self.mixMatchBaseView.centerYAnchor),
+
+            self.mixMatchIconImageView.widthAnchor.constraint(equalToConstant: 21),
+            self.mixMatchIconImageView.heightAnchor.constraint(equalToConstant: 25),
+            self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2),
+            self.mixMatchIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
+
+            self.mixMatchNavigationIconImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.mixMatchNavigationIconImageView.heightAnchor.constraint(equalToConstant: 13),
+            self.mixMatchNavigationIconImageView.leadingAnchor.constraint(equalTo: self.mixMatchLabel.trailingAnchor, constant: 6),
+            self.mixMatchNavigationIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
+        ])
+    }
+    
     func setupLayoutSubviews() {
         self.backgroundImageBorderGradientLayer.frame = self.baseView.bounds
         self.backgroundImageBorderShapeLayer.path = UIBezierPath(roundedRect: self.baseView.bounds,
@@ -516,30 +515,12 @@ extension MatchWidgetCollectionViewCell {
 
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
 
-        self.awayServingIndicatorView.layer.cornerRadius = self.awayServingIndicatorView.frame.size.width / 2
-        self.homeServingIndicatorView.layer.cornerRadius = self.homeServingIndicatorView.frame.size.width / 2
-
         self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
-
-        self.marketNameInnerView.layer.cornerRadius = self.marketNameInnerView.frame.size.height / 2
     }
 
     // MARK: - Card State Adjustments
     func drawAsLiveCard() {
-        self.dateNewLabel.isHidden = true
-        self.timeNewLabel.isHidden = true
-
-        self.homeToRightConstraint.isActive = false
-        self.awayToRightConstraint.isActive = false
-
-        self.detailedScoreView.isHidden = false
-
-        self.matchTimeStatusNewLabel.isHidden = false
-
-        self.liveTipView.isHidden = false
-
-        self.cashbackImageViewBaseTrailingConstraint.isActive = false
-        self.cashbackImageViewLiveTrailingConstraint.isActive = true
+        self.showLiveTipView()
 
         switch StyleHelper.cardsStyleActive() {
         case .small:
@@ -550,36 +531,29 @@ extension MatchWidgetCollectionViewCell {
 
         if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
             self.bottomMarginSpaceConstraint.constant = -12
-
-            self.homeContentRedesignTopConstraint.constant = 13
-            self.awayContentRedesignTopConstraint.constant = 33
         }
     }
 
     func drawAsPreLiveCard() {
-        self.dateNewLabel.isHidden = false
-        self.timeNewLabel.isHidden = false
-
-        self.homeToRightConstraint.isActive = true
-        self.awayToRightConstraint.isActive = true
-
-        self.detailedScoreView.isHidden = true
-
-        self.matchTimeStatusNewLabel.isHidden = true
-
-        self.liveTipView.isHidden = true
-
-        self.cashbackImageViewBaseTrailingConstraint.isActive = true
-        self.cashbackImageViewLiveTrailingConstraint.isActive = false
+        self.hideLiveTipView()
 
         self.adjustMarketNameView(isShown: false)
 
         if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
             self.bottomMarginSpaceConstraint.constant = -12
-
-            self.homeContentRedesignTopConstraint.constant = 25
-            self.awayContentRedesignTopConstraint.constant = 45
         }
+    }
+    
+    func showLiveTipView() {
+        self.liveTipView.isHidden = false
+        // to create a negative spacing to the cashback, make it closer
+        self.topRightInfoIconsStackView.spacing = -7
+    }
+    
+    func hideLiveTipView() {
+        self.liveTipView.isHidden = true
+        // cashback icon has a container view to give it space to the trailling superview
+        self.topRightInfoIconsStackView.spacing = 0
     }
 
     private func adjustMarketNameView(isShown: Bool) {
@@ -587,18 +561,11 @@ extension MatchWidgetCollectionViewCell {
             self.marketTopConstraint.constant = 8
             self.marketBottomConstraint.constant = -10
             self.marketHeightConstraint.constant = 15
-
-            self.marketNamePillLabelView.isHidden = false
         }
         else {
             self.marketTopConstraint.constant = 0
             self.marketBottomConstraint.constant = 0
             self.marketHeightConstraint.constant = 0
-
-            self.marketNameLabel.text = ""
-
-            self.marketNamePillLabelView.title = ""
-            self.marketNamePillLabelView.isHidden = true
         }
 
         self.setNeedsLayout()
@@ -613,27 +580,12 @@ extension MatchWidgetCollectionViewCell {
             if self.cachedCardsStyle == .small {
                 self.cachedCardsStyle = .normal
 
-                self.contentRedesignBaseView.isHidden = false
-                self.horizontalMatchInfoBaseView.isHidden = true
-                self.marketNameView.isHidden = true
-
                 self.adjustDesignToNormalCardHeightStyle()
 
                 self.setNeedsLayout()
                 self.layoutIfNeeded()
             }
             return
-        }
-
-        switch StyleHelper.cardsStyleActive() {
-        case .small:
-            self.contentRedesignBaseView.isHidden = true
-            self.horizontalMatchInfoBaseView.isHidden = false
-            self.marketNameView.isHidden = true
-        case .normal:
-            self.contentRedesignBaseView.isHidden = false
-            self.horizontalMatchInfoBaseView.isHidden = true
-            self.marketNameView.isHidden = true
         }
 
         // Avoid calling redraw and layout if the style is the same.
@@ -659,13 +611,9 @@ extension MatchWidgetCollectionViewCell {
         self.bottomMarginSpaceConstraint.constant = -8
         self.leadingMarginSpaceConstraint.constant = 8
         self.trailingMarginSpaceConstraint.constant = -8
-
-
+        
         self.headerHeightConstraint.constant = 12
-        self.teamsHeightConstraint.constant = 26
         self.buttonsHeightConstraint.constant = 27
-
-        self.cashbackIconImageViewHeightConstraint.constant = 12
 
         self.outrightNameLabel.font = AppFont.with(type: .bold, size: 13)
         self.outrightNameLabel.numberOfLines = 2
@@ -682,10 +630,7 @@ extension MatchWidgetCollectionViewCell {
         self.trailingMarginSpaceConstraint.constant = -12
 
         self.headerHeightConstraint.constant = 17
-        self.teamsHeightConstraint.constant = 67
         self.buttonsHeightConstraint.constant = 40
-
-        self.cashbackIconImageViewHeightConstraint.constant = 18
 
         self.outrightNameLabel.font = AppFont.with(type: .bold, size: 14)
         self.outrightNameLabel.numberOfLines = 3
@@ -697,91 +642,18 @@ extension MatchWidgetCollectionViewCell {
 
     // MARK: - Create Redesign Interface
     func createRedesignInterface() {
-        self.contentRedesignBaseView.backgroundColor = UIColor.App.backgroundCards
+        // Add the matchInfoView to the mainContentBaseView
+        self.mainContentBaseView.addSubview(self.matchInfoView)
 
-        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
-
-        self.mainContentBaseView.addSubview(self.contentRedesignBaseView)
-        self.contentRedesignBaseView.addSubview(self.topSeparatorAlphaLineView)
-
-        self.contentRedesignBaseView.addSubview(self.detailedScoreView)
-
-        // Add home elements to stack view
-        self.homeElementsStackView.addArrangedSubview(self.homeNameLabel)
-        self.homeElementsStackView.addArrangedSubview(self.homeServingIndicatorView)
-        self.contentRedesignBaseView.addSubview(self.homeElementsStackView)
-
-        // Add away elements to stack view
-        self.awayElementsStackView.addArrangedSubview(self.awayNameLabel)
-        self.awayElementsStackView.addArrangedSubview(self.awayServingIndicatorView)
-        self.contentRedesignBaseView.addSubview(self.awayElementsStackView)
-
-        self.contentRedesignBaseView.addSubview(self.dateNewLabel)
-        self.contentRedesignBaseView.addSubview(self.timeNewLabel)
-
-        self.contentRedesignBaseView.addSubview(self.matchTimeStatusNewLabel)
-
-        self.contentRedesignBaseView.addSubview(self.marketNamePillLabelView)
-
-        self.homeContentRedesignTopConstraint = self.homeElementsStackView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13)
-        self.awayContentRedesignTopConstraint = self.awayElementsStackView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 33)
-
-        self.homeToRightConstraint = self.dateNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.homeElementsStackView.trailingAnchor, constant: 5)
-        self.awayToRightConstraint = self.timeNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.awayElementsStackView.trailingAnchor, constant: 5)
-
+        // Set up constraints for the matchInfoView
         NSLayoutConstraint.activate([
-            self.contentRedesignBaseView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 2),
-            self.contentRedesignBaseView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -2),
-            self.contentRedesignBaseView.topAnchor.constraint(equalTo: self.matchHeaderView.bottomAnchor, constant: 3),
-            self.contentRedesignBaseView.bottomAnchor.constraint(equalTo: self.oddsStackView.topAnchor, constant: 0),
-
-            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor),
-            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor),
-            self.topSeparatorAlphaLineView.heightAnchor.constraint(equalToConstant: 1),
-            self.topSeparatorAlphaLineView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 4),
-
-            self.detailedScoreView.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
-            self.detailedScoreView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13),
-
-            self.detailedScoreView.leadingAnchor.constraint(greaterThanOrEqualTo: self.homeElementsStackView.trailingAnchor, constant: 5),
-            self.homeContentRedesignTopConstraint,
-            self.homeNameLabel.heightAnchor.constraint(equalTo: self.detailedScoreView.heightAnchor, multiplier: 0.5, constant: 1),
-
-            self.detailedScoreView.leadingAnchor.constraint(greaterThanOrEqualTo: self.awayElementsStackView.trailingAnchor, constant: 5),
-            self.awayContentRedesignTopConstraint,
-            self.awayNameLabel.heightAnchor.constraint(equalTo: self.detailedScoreView.heightAnchor, multiplier: 0.5, constant: 1),
-
-            self.homeElementsStackView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
-            self.awayElementsStackView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
-
-            self.homeServingIndicatorView.widthAnchor.constraint(equalTo: self.homeServingIndicatorView.heightAnchor),
-            self.homeServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
-
-            self.awayServingIndicatorView.widthAnchor.constraint(equalTo: self.awayServingIndicatorView.heightAnchor),
-            self.awayServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
-
-            self.dateNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
-            self.dateNewLabel.topAnchor.constraint(equalTo: self.homeNameLabel.topAnchor),
-            self.homeToRightConstraint,
-
-            self.timeNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
-            self.timeNewLabel.bottomAnchor.constraint(equalTo: self.awayNameLabel.bottomAnchor),
-            self.awayToRightConstraint,
-
-            self.matchTimeStatusNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
-            self.matchTimeStatusNewLabel.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -6),
-
-            self.marketNamePillLabelView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 11),
-            self.marketNamePillLabelView.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -4),
-
-            self.matchTimeStatusNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.marketNamePillLabelView.trailingAnchor, constant: 5),
+            self.matchInfoView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 2),
+            self.matchInfoView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -2),
+            self.matchInfoView.topAnchor.constraint(equalTo: self.matchHeaderView.bottomAnchor, constant: 3),
+            self.matchInfoView.bottomAnchor.constraint(equalTo: self.oddsStackView.topAnchor, constant: 0)
         ])
 
-        self.marketNamePillLabelView.setContentCompressionResistancePriority(UILayoutPriority(990), for: .horizontal)
-        self.matchTimeStatusNewLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-
-        self.homeNameLabel.setContentHuggingPriority(UILayoutPriority(990), for: .horizontal)
-        self.awayNameLabel.setContentHuggingPriority(UILayoutPriority(990), for: .horizontal)
+        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
     }
 
     // MARK: - Setup Boosted Odd Bar

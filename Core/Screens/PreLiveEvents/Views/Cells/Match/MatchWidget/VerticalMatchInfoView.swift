@@ -115,7 +115,7 @@ class VerticalMatchInfoView: UIView {
     
     // MARK: Theme Setup
     private func setupWithTheme() {
-        self.backgroundColor = UIColor.App.backgroundCards
+        self.backgroundColor = UIColor.clear
         
         self.homeNameLabel.textColor = UIColor.App.textPrimary
         self.awayNameLabel.textColor = UIColor.App.textPrimary
@@ -144,7 +144,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind home team name
         viewModel.homeTeamNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.homeNameLabel.text = name
             }
@@ -152,7 +152,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind away team name
         viewModel.awayTeamNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.awayNameLabel.text = name
             }
@@ -160,7 +160,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind display state
         viewModel.displayStatePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 switch state {
                 case .preLive(let date, let time):
@@ -187,7 +187,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind serving indicator
         viewModel.servingIndicatorPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] indicator in
                 switch indicator {
                 case .none:
@@ -205,7 +205,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind detailed score
         viewModel.detailedScorePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] scoreData in
                 self?.detailedScoreView.sportCode = scoreData.sportCode
                 self?.detailedScoreView.updateScores(scoreData.score)
@@ -214,7 +214,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind market name
         viewModel.marketNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] marketName in
                 self?.marketNamePillLabelView.title = marketName
                 self?.marketNamePillLabelView.isHidden = marketName.isEmpty

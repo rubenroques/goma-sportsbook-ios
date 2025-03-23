@@ -41,7 +41,7 @@ extension MatchWidgetCollectionViewCell {
 
         // Long press gesture for the card
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
-        self.horizontalMatchInfoBaseView.addGestureRecognizer(longPressGestureRecognizer)
+        self.addGestureRecognizer(longPressGestureRecognizer)
 
         // MixMatch tap gesture
         let tapMixMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMixMatch))

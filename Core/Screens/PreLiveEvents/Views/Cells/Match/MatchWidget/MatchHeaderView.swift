@@ -139,7 +139,7 @@ class MatchHeaderView: UIView {
         self.sportTypeImageView.layer.cornerRadius = self.sportTypeImageView.frame.size.width / 2
     }
 
-    private func setupWithTheme() {
+    func setupWithTheme() {
         self.backgroundColor = .clear
 
         self.competitionNameLabel.textColor = UIColor.App.textPrimary

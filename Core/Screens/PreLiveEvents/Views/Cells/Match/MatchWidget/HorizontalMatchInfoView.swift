@@ -128,7 +128,7 @@ class HorizontalMatchInfoView: UIView {
 
         // Bind home team name
         viewModel.homeTeamNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.homeParticipantNameLabel.text = name
             }
@@ -136,7 +136,7 @@ class HorizontalMatchInfoView: UIView {
 
         // Bind away team name
         viewModel.awayTeamNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.awayParticipantNameLabel.text = name
             }
@@ -144,7 +144,7 @@ class HorizontalMatchInfoView: UIView {
 
         // Bind display state
         viewModel.displayStatePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 switch state {
                 case .preLive(let date, let time):

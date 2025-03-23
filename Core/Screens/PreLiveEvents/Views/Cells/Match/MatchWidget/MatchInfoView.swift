@@ -103,7 +103,7 @@ class MatchInfoView: UIView {
         self.setupWithTheme()
     }
 
-    private func setupWithTheme() {
+    func setupWithTheme() {
         self.backgroundColor = .clear
         self.containerStackView.backgroundColor = .clear
     }

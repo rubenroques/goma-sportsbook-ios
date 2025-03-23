@@ -14,14 +14,20 @@ extension MatchWidgetCollectionViewCell {
 
     // MARK: - ViewModel Configuration
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
+        self.cancelSubscriptions()
         self.viewModel = viewModel
 
+
+        // Additional configuration...
         guard let viewModel = self.viewModel else { return }
 
         self.adjustDesignToCardHeightStyle()
 
+        // Setup MatchInfoView with data from viewModel
+        self.matchInfoView.configure(with: viewModel.matchInfoViewModel)
+
         self.matchHeaderView.configure(with: viewModel.matchHeaderViewModel)
-        
+
         // Set up main widget appearance based on type and status
         viewModel.widgetAppearancePublisher
             .receive(on: DispatchQueue.main)
@@ -48,71 +54,6 @@ extension MatchWidgetCollectionViewCell {
                 if appearance.widgetType == .topImageOutright {
                     self?.showOutrightLayout()
                 }
-            }
-            .store(in: &self.cancellables)
-
-        // Bind team names
-        viewModel.homeTeamNamePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] homeTeamName in
-                self?.homeNameLabel.text = homeTeamName
-            }
-            .store(in: &self.cancellables)
-
-        viewModel.awayTeamNamePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] awayTeamName in
-                self?.awayNameLabel.text = awayTeamName
-            }
-            .store(in: &self.cancellables)
-
-        // Bind serving indicator
-        viewModel.activePlayerServePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] activePlayerServing in
-                switch activePlayerServing {
-                case .home:
-                    self?.homeServingIndicatorView.isHidden = false
-                    self?.awayServingIndicatorView.isHidden = true
-                case .away:
-                    self?.homeServingIndicatorView.isHidden = true
-                    self?.awayServingIndicatorView.isHidden = false
-                case .none:
-                    self?.homeServingIndicatorView.isHidden = true
-                    self?.awayServingIndicatorView.isHidden = true
-                }
-            }
-            .store(in: &self.cancellables)
-
-        // Bind date and time
-        viewModel.startDateStringPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] startDateString in
-                self?.dateNewLabel.text = startDateString
-            }
-            .store(in: &self.cancellables)
-
-        viewModel.startTimeStringPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] startTimeString in
-                self?.timeNewLabel.text = startTimeString
-            }
-            .store(in: &self.cancellables)
-
-        // Bind match scores
-        viewModel.detailedScoresPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] detailedScoresDict, sportAlphaId in
-                self?.detailedScoreView.sportCode = sportAlphaId
-                self?.detailedScoreView.updateScores(detailedScoresDict)
-            }
-            .store(in: &self.cancellables)
-
-        // Bind match time details
-        viewModel.matchTimeDetailsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] matchTimeDetails in
-                self?.matchTimeStatusNewLabel.text = matchTimeDetails
             }
             .store(in: &self.cancellables)
 
@@ -164,10 +105,6 @@ extension MatchWidgetCollectionViewCell {
                     self?.showSeeAllView()
                 }
 
-                // Configure market name display
-                self?.marketNameLabel.text = marketPresentation.marketName
-                self?.marketNamePillLabelView.title = marketPresentation.marketName
-                self?.marketNamePillLabelView.isHidden = !marketPresentation.shouldShowMarketPill
             }
             .store(in: &self.cancellables)
 
@@ -191,14 +128,6 @@ extension MatchWidgetCollectionViewCell {
                 if let attributedString = boostedOddsInfo.oldValueAttributed {
                     self?.oldValueBoostedOddLabel.attributedText = attributedString
                 }
-            }
-            .store(in: &self.cancellables)
-
-        // Bind horizontal match info
-        viewModel.horizontalMatchInfoViewModelPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] horizontalMatchInfoViewModel in
-                self?.horizontalMatchInfoView.configure(with: horizontalMatchInfoViewModel)
             }
             .store(in: &self.cancellables)
 
@@ -252,8 +181,7 @@ extension MatchWidgetCollectionViewCell {
                     self.drawBaseView.isUserInteractionEnabled = false
                     self.drawBaseView.alpha = 0.5
                     self.setDrawOddValueLabel(toText: "-")
-                }
-                else {
+                } else {
                     self.drawBaseView.isUserInteractionEnabled = true
                     self.drawBaseView.alpha = 1.0
 
@@ -291,8 +219,7 @@ extension MatchWidgetCollectionViewCell {
                     self.awayBaseView.isUserInteractionEnabled = false
                     self.awayBaseView.alpha = 0.5
                     self.setAwayOddValueLabel(toText: "-")
-                }
-                else {
+                } else {
                     self.awayBaseView.isUserInteractionEnabled = true
                     self.awayBaseView.alpha = 1.0
 
@@ -327,8 +254,7 @@ extension MatchWidgetCollectionViewCell {
             if isCustomBetAvailable {
                 self.mixMatchContainerView.isHidden = false
                 self.bottomSeeAllMarketsContainerView.isHidden = true
-            }
-            else {
+            } else {
                 self.mixMatchContainerView.isHidden = true
                 self.bottomSeeAllMarketsContainerView.isHidden = false
             }
@@ -368,8 +294,7 @@ extension MatchWidgetCollectionViewCell {
             self.homeBaseView.isUserInteractionEnabled = leftOutcome.isInteractive
             self.homeBaseView.alpha = leftOutcome.isInteractive ? 1.0 : 0.5
             self.homeBaseView.isHidden = false
-        }
-        else {
+        } else {
             self.homeBaseView.isHidden = true
         }
 
@@ -381,8 +306,7 @@ extension MatchWidgetCollectionViewCell {
             self.drawBaseView.isUserInteractionEnabled = middleOutcome.isInteractive
             self.drawBaseView.alpha = middleOutcome.isInteractive ? 1.0 : 0.5
             self.drawBaseView.isHidden = false
-        }
-        else {
+        } else {
             self.drawBaseView.isHidden = true
         }
 
@@ -394,8 +318,7 @@ extension MatchWidgetCollectionViewCell {
             self.awayBaseView.isUserInteractionEnabled = rightOutcome.isInteractive
             self.awayBaseView.alpha = rightOutcome.isInteractive ? 1.0 : 0.5
             self.awayBaseView.isHidden = false
-        }
-        else {
+        } else {
             self.awayBaseView.isHidden = true
         }
     }
@@ -422,10 +345,15 @@ extension MatchWidgetCollectionViewCell {
 
     // MARK: - Cleanup
     func cleanupForReuse() {
-        self.viewModel = nil
-        
+        // Cancel previous subscriptions
+        self.cancelSubscriptions()
+
         // Custom subviews cleanup
         self.matchHeaderView.cleanupForReuse()
+        self.matchInfoView.cleanupForReuse()
+
+        // Reset view model
+        self.viewModel = nil
 
         self.mixMatchContainerView.isHidden = true
         self.bottomSeeAllMarketsContainerView.isHidden = true
@@ -462,22 +390,9 @@ extension MatchWidgetCollectionViewCell {
         self.drawBaseView.alpha = 1.0
         self.awayBaseView.alpha = 1.0
 
-        self.homeServingIndicatorView.isHidden = true
-        self.awayServingIndicatorView.isHidden = true
-
         self.outrightNameBaseView.isHidden = true
 
-        // Old style for teams and scores
-        self.horizontalMatchInfoBaseView.isHidden = true
-        self.marketNameView.isHidden = true
-
         self.adjustDesignToCardHeightStyle()
-
-        // Reset text fields
-        self.homeNameLabel.text = ""
-        self.awayNameLabel.text = ""
-        self.dateNewLabel.text = ""
-        self.timeNewLabel.text = ""
 
         self.homeOddTitleLabel.text = ""
         self.drawOddTitleLabel.text = ""
@@ -487,22 +402,12 @@ extension MatchWidgetCollectionViewCell {
         self.setDrawOddValueLabel(toText: "")
         self.setAwayOddValueLabel(toText: "")
 
-        self.detailedScoreView.updateScores([:])
-
         self.outrightNameLabel.text = ""
 
-        self.matchTimeStatusNewLabel.isHidden = true
-        self.matchTimeStatusNewLabel.text = ""
-
-        self.marketNameLabel.text = ""
-
         // Reset live indicators
-        self.liveTipView.isHidden = true
+        self.hideLiveTipView()
         self.gradientBorderView.isHidden = true
         self.liveGradientBorderView.isHidden = true
-
-        self.marketNamePillLabelView.title = ""
-        self.marketNamePillLabelView.isHidden = true
 
         // Reset button interaction states
         self.homeBaseView.isUserInteractionEnabled = true
@@ -518,7 +423,7 @@ extension MatchWidgetCollectionViewCell {
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
         self.outrightBaseView.isHidden = true
-        
+
         self.setupWithTheme()
     }
 
