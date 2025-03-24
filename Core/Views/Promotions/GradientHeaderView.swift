@@ -42,8 +42,8 @@ class GradientHeaderView: UIView {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.gradientView.colors = [(UIColor.App.highlightPrimary, NSNumber(0.0)),
-                                    (UIColor.App.highlightSecondary, NSNumber(1.0))]
+        self.gradientView.colors = [(UIColor.App.boostedOddsGradient1, NSNumber(0.0)),
+                                    (UIColor.App.boostedOddsGradient2, NSNumber(1.0))]
         
         self.titleLabel.textColor = UIColor.App.buttonTextPrimary
     }

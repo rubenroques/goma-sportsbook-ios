@@ -1917,6 +1917,16 @@ extension Client {
 
         return managedContentProvider.getPromotions()
     }
+    
+    public func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
+    }
 
 }
 

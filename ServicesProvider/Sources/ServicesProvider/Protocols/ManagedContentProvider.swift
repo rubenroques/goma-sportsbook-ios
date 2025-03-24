@@ -100,4 +100,6 @@ protocol ManagedContentProvider: Connector {
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
     
     func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError>
+    
+    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError>
 }

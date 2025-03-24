@@ -13,6 +13,7 @@ enum GomaAPIPromotionsSchema {
 
     // Promotions
     case allPromotions
+    case promotionDetails(promotionSlug: String, staticPageSlug: String)
     case alertBanner
     case banners
     case sportBanners
@@ -38,6 +39,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "/api/home/v1/template"
         case .allPromotions:
             return "/api/promotions/v1"
+        case .promotionDetails(let promotionSlug, let staticPageSlug):
+            return "/api/promotions/v1/\(promotionSlug)/\(staticPageSlug)"
         case .alertBanner:
             return "/api/promotions/v1/alert-banner"
         case .banners:
@@ -131,6 +134,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "Get home template configuration"
         case .allPromotions:
             return "Get all promotional content"
+        case .promotionDetails:
+            return "Get promotion details content"
         case .alertBanner:
             return "Get alert banner"
         case .banners:

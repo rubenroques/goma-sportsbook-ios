@@ -6,13 +6,50 @@
 //
 
 import UIKit
+import Combine
 
 class PromotionDetailViewModel {
     
     var promotion: PromotionInfo
     
+    var promotionDetailsPublisher: CurrentValueSubject<PromotionInfo?, Never> = .init(nil)
+    
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    
+    var cancellables = Set<AnyCancellable>()
+    
     init(promotion: PromotionInfo) {
         self.promotion = promotion
+        
+        self.getPromotionDetails()
+    }
+    
+    private func getPromotionDetails() {
+        self.isLoadingPublisher.send(true)
+        
+        if let staticPageSlug = promotion.staticPageSlug {
+            Env.servicesProvider.getPromotionDetails(promotionSlug: self.promotion.slug, staticPageSlug: staticPageSlug)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    
+                    switch completion {
+                    case .finished:
+                        print("FINISHED GET PROMOTION DETAILS")
+                    case .failure(let error):
+                        print("ERROR GET PROMOTION DETAILS: \(error)")
+                    }
+                    
+                    self?.isLoadingPublisher.send(false)
+
+                }, receiveValue: { [weak self] promotionsInfo in
+                    
+                    let mappedPromotionsInfo = ServiceProviderModelMapper.promotionInfo(fromInternalPromotionInfo: promotionsInfo)
+                    
+                    self?.promotionDetailsPublisher.send(mappedPromotionsInfo)
+                                        
+                })
+                .store(in: &cancellables)
+        }
     }
 }
 
@@ -33,6 +70,11 @@ class PromotionDetailViewController: UIViewController {
     private lazy var termsTitleLabel: UILabel = Self.createTermsTitleLabel()
     private lazy var termsToggleButton: UIButton = Self.createTermsToggleButton()
     private lazy var termsDescriptionLabel: UILabel = Self.createTermsDescriptionLabel()
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var emptyStateBaseView: UIView = Self.createEmptyStateBaseView()
+    private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
+    private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
     
     // Constraints
@@ -78,8 +120,16 @@ class PromotionDetailViewController: UIViewController {
         }
     }
     
+    var isEmptyState: Bool = false {
+        didSet {
+            self.emptyStateBaseView.isHidden = !isEmptyState
+        }
+    }
+    
     var disabledAlpha: CGFloat = 0.7
     var enabledAlpha: CGFloat = 1.0
+    
+    var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and cycle
     init(viewModel: PromotionDetailViewModel) {
@@ -102,25 +152,7 @@ class PromotionDetailViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
         
-        self.setupHeader()
-        
-        self.setupSections()
-        
-        if self.viewModel.promotion.staticPage.terms.isNotEmpty {
-            self.setupTerms()
-            self.stackViewBottomConstraint.isActive = false
-            self.termsContainerBottomConstraint.isActive = true
-
-            let termsToggleTap = UITapGestureRecognizer(target: self, action: #selector(didTapToggleButton))
-            self.termsView.addGestureRecognizer(termsToggleTap)
-            
-            self.isTermsCollapsed = true
-        }
-        else {
-            self.termsContainerView.isHidden = true
-            self.stackViewBottomConstraint.isActive = true
-            self.termsContainerBottomConstraint.isActive = false
-        }
+        self.bind(toViewModel: self.viewModel)
         
     }
     
@@ -134,6 +166,8 @@ class PromotionDetailViewController: UIViewController {
     private func setupWithTheme() {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
+        
+        self.gradientHeaderView
 
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
@@ -146,30 +180,74 @@ class PromotionDetailViewController: UIViewController {
         self.headerImageView.backgroundColor = .clear
         
         self.stackView.backgroundColor = .clear
+        
+        self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.emptyStateLabel.textColor = UIColor.App.textPrimary
+        
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+    }
+    
+    // MARK: Binding
+    private func bind(toViewModel viewModel: PromotionDetailViewModel) {
+        
+        viewModel.promotionDetailsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] promotionInfo in
+                
+                if let promotionInfo {
+                    
+                    self?.setupHeader(promotionInfo: promotionInfo)
+                    
+                    if let staticPage = promotionInfo.staticPage {
+                        self?.setupSections(staticPage: staticPage)
+                        
+                    }
+                    
+                    self?.isEmptyState = false
+                    
+                }
+                else {
+                    self?.isEmptyState = true
+                }
+                
+            })
+            .store(in: &cancellables)
+        
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                
+                self?.loadingBaseView.isHidden = !isLoading
+            })
+            .store(in: &cancellables)
     }
     
     // MARK: Functions
-    private func setupHeader() {
+    private func setupHeader(promotionInfo: PromotionInfo) {
         
-        if let headerTitle = self.viewModel.promotion.staticPage.headerTitle {
+        self.titleLabel.text = promotionInfo.title
+        
+        if let headerTitle = promotionInfo.staticPage?.title {
             self.gradientHeaderView.configure(title: headerTitle)
 
         }
         
-        if let headerImageName = self.viewModel.promotion.staticPage.headerImageUrl,
+        if let headerImageName = promotionInfo.staticPage?.headerImageUrl,
            let headerUrl = URL(string: headerImageName){
             self.headerImageView.kf.setImage(with: headerUrl)
         }
         
-        self.gradientHeaderView.isHidden = self.viewModel.promotion.staticPage.headerTitle != nil ? false : true
+        self.gradientHeaderView.isHidden = promotionInfo.staticPage?.title != nil ? false : true
         
-        self.headerImageView.isHidden = self.viewModel.promotion.staticPage.headerImageUrl != nil ? false : true
+        self.headerImageView.isHidden = promotionInfo.staticPage?.headerImageUrl != nil ? false : true
 
     }
     
-    private func setupSections() {
+    private func setupSections(staticPage: StaticPage) {
         
-        for sectionBlock in self.viewModel.promotion.staticPage.sections {
+        for sectionBlock in staticPage.sections {
             
             let stackView = UIStackView()
             stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -178,7 +256,7 @@ class PromotionDetailViewController: UIViewController {
             stackView.layer.cornerRadius = CornerRadius.button
             stackView.backgroundColor = UIColor.App.backgroundSecondary
             
-            if sectionBlock.type == "text" {
+            if sectionBlock.type == .text {
                 
                 if let textBlock = sectionBlock.text {
                     
@@ -189,14 +267,14 @@ class PromotionDetailViewController: UIViewController {
                     
                     for textContentBlock in textBlock.contentBlocks {
                         
-                        if textContentBlock.blockType == "title" {
+                        if textContentBlock.blockType == .title {
                             let titleBlockView = TitleBlockView()
                             titleBlockView.translatesAutoresizingMaskIntoConstraints = false
                             titleBlockView.configure(title: textContentBlock.title ?? "")
                             
                             blockViews.append(titleBlockView)
                         }
-                        else if textContentBlock.blockType == "description" {
+                        else if textContentBlock.blockType == .description {
                             let descriptionBlockView = DescriptionBlockView()
                             descriptionBlockView.translatesAutoresizingMaskIntoConstraints = false
                             descriptionBlockView.configure(description: textContentBlock.description ?? "")
@@ -204,7 +282,7 @@ class PromotionDetailViewController: UIViewController {
                             blockViews.append(descriptionBlockView)
 
                         }
-                        else if textContentBlock.blockType == "image" {
+                        else if textContentBlock.blockType == .image {
                             let imageBlockView = ImageBlockView()
                             imageBlockView.translatesAutoresizingMaskIntoConstraints = false
                             imageBlockView.configure(imageName: textContentBlock.image ?? "")
@@ -212,7 +290,7 @@ class PromotionDetailViewController: UIViewController {
                             blockViews.append(imageBlockView)
 
                         }
-                        else if textContentBlock.blockType == "video" {
+                        else if textContentBlock.blockType == .video {
                             let videoBlockView = VideoBlockView()
                             videoBlockView.translatesAutoresizingMaskIntoConstraints = false
                             if let url = URL(string: textContentBlock.video ?? "") {
@@ -221,7 +299,7 @@ class PromotionDetailViewController: UIViewController {
                             
                             blockViews.append(videoBlockView)
                         }
-                        else if textContentBlock.blockType == "button" {
+                        else if textContentBlock.blockType == .button {
                             let actionButtonBlockView = ActionButtonBlockView()
                             actionButtonBlockView.translatesAutoresizingMaskIntoConstraints = false
                             actionButtonBlockView.configure(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonURL ?? "")
@@ -233,7 +311,7 @@ class PromotionDetailViewController: UIViewController {
                             
                             blockViews.append(actionButtonBlockView)
                         }
-                        else if textContentBlock.blockType == "bulleted_list" {
+                        else if textContentBlock.blockType == .bulletedList {
                             
                             if let bulletedListItems = textContentBlock.bulletedListItems {
                                 
@@ -255,7 +333,7 @@ class PromotionDetailViewController: UIViewController {
                     stackView.addArrangedSubview(stackViewBlockView)
                 }
             }
-            else if sectionBlock.type == "list" {
+            else if sectionBlock.type == .list {
                 
                 if let listBlock = sectionBlock.list {
                     
@@ -287,7 +365,7 @@ class PromotionDetailViewController: UIViewController {
                         
                         for textContentBlock in itemBlock.contentBlocks {
                             
-                            if textContentBlock.blockType == "title" {
+                            if textContentBlock.blockType == .title {
                                 let titleBlockView = TitleBlockView()
                                 titleBlockView.translatesAutoresizingMaskIntoConstraints = false
                                 titleBlockView.configure(title: textContentBlock.title ?? "")
@@ -295,7 +373,7 @@ class PromotionDetailViewController: UIViewController {
                                 
                                 listItemViews.append(titleBlockView)
                             }
-                            else if textContentBlock.blockType == "description" {
+                            else if textContentBlock.blockType == .description {
                                 let descriptionBlockView = DescriptionBlockView()
                                 descriptionBlockView.translatesAutoresizingMaskIntoConstraints = false
                                 descriptionBlockView.configure(description: textContentBlock.description ?? "")
@@ -303,7 +381,7 @@ class PromotionDetailViewController: UIViewController {
                                 listItemViews.append(descriptionBlockView)
 
                             }
-                            else if textContentBlock.blockType == "image" {
+                            else if textContentBlock.blockType == .image {
                                 let imageBlockView = ImageBlockView()
                                 imageBlockView.translatesAutoresizingMaskIntoConstraints = false
                                 imageBlockView.configure(imageName: textContentBlock.image ?? "")
@@ -311,7 +389,7 @@ class PromotionDetailViewController: UIViewController {
                                 listItemViews.append(imageBlockView)
 
                             }
-                            else if textContentBlock.blockType == "video" {
+                            else if textContentBlock.blockType == .video {
                                 let videoBlockView = VideoBlockView()
                                 videoBlockView.translatesAutoresizingMaskIntoConstraints = false
                                 if let url = URL(string: textContentBlock.video ?? "") {
@@ -320,7 +398,7 @@ class PromotionDetailViewController: UIViewController {
                                 
                                 listItemViews.append(videoBlockView)
                             }
-                            else if textContentBlock.blockType == "button" {
+                            else if textContentBlock.blockType == .button {
                                 let actionButtonBlockView = ActionButtonBlockView()
                                 actionButtonBlockView.translatesAutoresizingMaskIntoConstraints = false
                                 actionButtonBlockView.configure(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonURL ?? "")
@@ -332,7 +410,7 @@ class PromotionDetailViewController: UIViewController {
                                 
                                 listItemViews.append(actionButtonBlockView)
                             }
-                            else if textContentBlock.blockType == "bulleted_list" {
+                            else if textContentBlock.blockType == .bulletedList {
                                 
                                 if let bulletedListItems = textContentBlock.bulletedListItems {
                                     
@@ -360,18 +438,18 @@ class PromotionDetailViewController: UIViewController {
 
                 }
             }
-            else if sectionBlock.type == "banner" {
+            else if sectionBlock.type == .banner {
                 
                 if let listBlock = sectionBlock.banner {
                     
-                    if listBlock.bannerType == "image" {
+                    if listBlock.bannerType == .image {
                         let imageSectionView = ImageSectionView()
                         imageSectionView.translatesAutoresizingMaskIntoConstraints = false
                         imageSectionView.configure(imageName: listBlock.imageUrl ?? "")
                         
                         stackView.addArrangedSubview(imageSectionView)
                     }
-                    else if listBlock.bannerType == "video" {
+                    else if listBlock.bannerType == .video {
                         let videoSectionView = VideoSectionView()
                         videoSectionView.translatesAutoresizingMaskIntoConstraints = false
                         if let videoUrl = URL(string: listBlock.bannerLinkUrl ?? "") {
@@ -390,167 +468,125 @@ class PromotionDetailViewController: UIViewController {
         self.stackView.setNeedsLayout()
         self.stackView.layoutIfNeeded()
         
-//        for i in 1...5 {
-//            
-//            let stackView = UIStackView()
-//            stackView.translatesAutoresizingMaskIntoConstraints = false
-//            stackView.axis = .vertical
-//            stackView.spacing = 0
-//            stackView.layer.cornerRadius = CornerRadius.button
-//            stackView.backgroundColor = UIColor.App.backgroundSecondary
-//            
-//            if i == 1 {
-//                
-//                let stackViewBlockView = StackViewBlockView()
-//                stackViewBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                
-//                let titleBlockView = TitleBlockView()
-//                titleBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                titleBlockView.configure(title: "Section \(i)")
-//                
-//                let imageBlockView = ImageBlockView()
-//                imageBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                imageBlockView.configure(imageName: "betsson_mobile_banner")
-//                
-//                let descriptionBlockView = DescriptionBlockView()
-//                descriptionBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                descriptionBlockView.configure(description: "A little setback? No worries. If your bet doesn't go as planned, our Replay feature is here to give you a second chance! Enjoy 10% of your stake back as soon as all selections on your ticket are closed, directly added as game credit.")
-//                
-//                let actionButtonBlockView = ActionButtonBlockView()
-//                actionButtonBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                actionButtonBlockView.configure(title: "Action", actionName: "openAction")
-//                
-//                actionButtonBlockView.tappedActionButtonAction = { [weak self] actionName in
-//                    print("CTA ACTION: \(actionName)")
-//                }
-//                
-//                stackViewBlockView.configure(views: [titleBlockView, descriptionBlockView, imageBlockView, actionButtonBlockView])
-//                
-//                stackView.addArrangedSubview(stackViewBlockView)
-//
-//            }
-//            else if i == 2 {
-//                let stackViewBlockView = StackViewBlockView()
-//                stackViewBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                
-//                let titleBlockView = TitleBlockView()
-//                titleBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                titleBlockView.configure(title: "Section \(i)")
-//                
-//                let listBlockView1 = ListBlockView()
-//                listBlockView1.translatesAutoresizingMaskIntoConstraints = false
-//                listBlockView1.configure(iconName: "active_toggle_icon", title: "Title 1", subtitle: "Subtitle 1")
-//                
-//                let listBlockView2 = ListBlockView()
-//                listBlockView2.translatesAutoresizingMaskIntoConstraints = false
-//                listBlockView2.configure(iconName: "active_toggle_icon", title: "Title 2", subtitle: "Subtitle 2")
-//                
-//                let listBlockView3 = ListBlockView()
-//                listBlockView3.translatesAutoresizingMaskIntoConstraints = false
-//                listBlockView3.configure(iconName: "active_toggle_icon", title: "Title 3", subtitle: "Subtitle 3 Subtitle 3 Subtitle 3 Subtitle 3 Subtitle 3")
-//                
-//                stackViewBlockView.configure(views: [titleBlockView, listBlockView1, listBlockView2, listBlockView3])
-//                
-//                stackView.addArrangedSubview(stackViewBlockView)
-//
-//            }
-//            else if i == 3 {
-//                
-//                let stackViewBlockView = StackViewBlockView()
-//                stackViewBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                
-//                let titleBlockView = TitleBlockView()
-//                titleBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                titleBlockView.configure(title: "Section \(i)")
-//                
-//                let descriptionBlockView = DescriptionBlockView()
-//                descriptionBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                descriptionBlockView.configure(description: "A little setback? No worries. If your bet doesn't go as planned, our Replay feature is here to give you a second chance! Enjoy 10% of your stake back as soon as all selections on your ticket are closed, directly added as game credit.")
-//                
-//                stackViewBlockView.configure(views: [titleBlockView, descriptionBlockView])
-//                
-//                stackView.addArrangedSubview(stackViewBlockView)
-//                
-//            }
-//            else if i == 4 {
-//                let videoSectionView = VideoSectionView()
-//                videoSectionView.translatesAutoresizingMaskIntoConstraints = false
-//                if let url = URL(string: "https://cms.gomademo.com/storage/169/01JNRDMSE04BYQ3RV9N4F8K2N2.mp4") {
-//                    videoSectionView.configure(videoURL: url)
-//                }
-//                
-//                stackView.addArrangedSubview(videoSectionView)
-//
-//            }
-//            else {
-//                let stackViewBlockView = StackViewBlockView()
-//                stackViewBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                
-//                let titleBlockView = TitleBlockView()
-//                titleBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                titleBlockView.configure(title: "Section \(i)")
-//                
-//                let descriptionBlockView = DescriptionBlockView()
-//                descriptionBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                descriptionBlockView.configure(description: "A little setback? No worries. If your bet doesn't go as planned, our Replay feature is here to give you a second chance! Enjoy 10% of your stake back as soon as all selections on your ticket are closed, directly added as game credit.")
-//                
-//                let imageBlockView = ImageBlockView()
-//                imageBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                imageBlockView.configure(imageName: "betsson_mobile_banner")
-//                
-//                let actionButtonBlockView = ActionButtonBlockView()
-//                actionButtonBlockView.translatesAutoresizingMaskIntoConstraints = false
-//                actionButtonBlockView.configure(title: "Action", actionName: "openAction2")
-//                
-//                actionButtonBlockView.tappedActionButtonAction = { [weak self] actionName in
-//                    print("CTA ACTION: \(actionName)")
-//                }
-//                
-//                stackViewBlockView.configure(views: [imageBlockView, titleBlockView, descriptionBlockView, actionButtonBlockView])
-//                       
-//                stackView.addArrangedSubview(stackViewBlockView)
-//            }
-//            
-//            self.stackView.addArrangedSubview(stackView)
-//        }
+        if let terms = staticPage.terms {
+            self.setupTerms(terms: terms)
+            self.stackViewBottomConstraint.isActive = false
+            self.termsContainerBottomConstraint.isActive = true
+
+            let termsToggleTap = UITapGestureRecognizer(target: self, action: #selector(didTapToggleButton))
+            self.termsView.addGestureRecognizer(termsToggleTap)
+            
+            self.isTermsCollapsed = true
+        }
+        else {
+            self.termsContainerView.isHidden = true
+            self.stackViewBottomConstraint.isActive = true
+            self.termsContainerBottomConstraint.isActive = false
+        }
     }
     
-    private func setupTerms() {
+    private func setupTerms(terms: TermItem) {
         
         let label = self.termsDescriptionLabel
         
-        var termsText = ""
-        
-        for term in self.viewModel.promotion.staticPage.terms {
-            termsText.append("• \(term.label)\n")
+        if terms.displayType == .bulletedList,
+           let listItem = terms.bulletedListItems {
+            var termsText = ""
+            
+            for item in listItem {
+                termsText.append("• \(item.text)\n")
+            }
+            
+            label.text = termsText
+            label.textAlignment = .left
+            label.numberOfLines = 0
+            
+            let text = termsText
+            let attributedString = NSMutableAttributedString(string: text)
+            let fullRange = (text as NSString).range(of: termsText)
+            var range = (text as NSString).range(of: "•")
+            
+            let paragraphStyle = NSMutableParagraphStyle()
+            
+            paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+            paragraphStyle.lineSpacing = 2
+            paragraphStyle.alignment = .left
+            
+            attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+            attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: fullRange)
+            
+            while range.location != NSNotFound {
+                attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
+                range = (text as NSString).range(of: "•", range: NSRange(location: range.location + 1, length: text.count - range.location - 1))
+            }
+            
+            attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+            
+            label.attributedText = attributedString
         }
-        
-        label.text = termsText
-        label.textAlignment = .left
-        label.numberOfLines = 0
-
-        let text = termsText
+        else if terms.displayType == .richText {
+            self.setupAttributedText(text: terms.richText ?? "", label: label)
+        }
+    }
+    
+    private func setupAttributedText(text: String, label: UILabel) {
         let attributedString = NSMutableAttributedString(string: text)
-        let fullRange = (text as NSString).range(of: termsText)
-        var range = (text as NSString).range(of: "•")
-
         let paragraphStyle = NSMutableParagraphStyle()
-
         paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
         paragraphStyle.lineSpacing = 2
-        paragraphStyle.alignment = .left
-
-        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
-        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: fullRange)
-
-        while range.location != NSNotFound {
-            attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
-            range = (text as NSString).range(of: "•", range: NSRange(location: range.location + 1, length: text.count - range.location - 1))
+        
+        // Apply base attributes
+        attributedString.addAttribute(.foregroundColor,
+                                    value: UIColor.App.textPrimary,
+                                    range: NSRange(location: 0, length: text.count))
+        attributedString.addAttribute(.font,
+                                    value: AppFont.with(type: .regular, size: 14),
+                                    range: NSRange(location: 0, length: text.count))
+        
+        // Find and style links in format [TEXT](URL)
+        let pattern = "\\[(.*?)\\]\\((.*?)\\)"
+        if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
+            let nsString = text as NSString
+            let matches = regex.matches(in: text, options: [], range: NSRange(location: 0, length: nsString.length))
+            
+            // Process matches in reverse to avoid invalidating ranges
+            for match in matches.reversed() {
+                let fullRange = match.range
+                let textRange = match.range(at: 1)
+                let urlRange = match.range(at: 2)
+                
+                let linkText = nsString.substring(with: textRange)
+                let urlString = nsString.substring(with: urlRange)
+                
+                // Replace the [TEXT](URL) with just TEXT
+                attributedString.replaceCharacters(in: fullRange, with: linkText)
+                
+                // Style the link text
+                let linkRange = NSRange(location: fullRange.location, length: linkText.count)
+                attributedString.addAttribute(.foregroundColor,
+                                           value: UIColor.App.highlightPrimary,
+                                           range: linkRange)
+                attributedString.addAttribute(.font,
+                                           value: AppFont.with(type: .bold, size: 14),
+                                           range: linkRange)
+                attributedString.addAttribute(.link,
+                                           value: urlString,
+                                           range: linkRange)
+            }
         }
-
-        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
-
+        
+        attributedString.addAttribute(.paragraphStyle,
+                                    value: paragraphStyle,
+                                    range: NSRange(location: 0, length: attributedString.length))
+        
         label.attributedText = attributedString
+        label.isUserInteractionEnabled = true
+        
+        // Add tap gesture recognizer if not already added
+        if label.gestureRecognizers?.contains(where: { $0 is UITapGestureRecognizer }) != true {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOnLabel(_:)))
+            label.addGestureRecognizer(tapGesture)
+        }
     }
     
     private func openAction(actionName: String) {
@@ -572,6 +608,79 @@ class PromotionDetailViewController: UIViewController {
     
     @objc private func didTapToggleButton() {
         self.isTermsCollapsed = !self.isTermsCollapsed
+    }
+    
+    @objc private func handleTapOnLabel(_ gesture: UITapGestureRecognizer) {
+        guard let label = gesture.view as? UILabel,
+              let attributedText = label.attributedText else { return }
+        
+        // Create text storage, layout manager, and text container
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: CGSize(width: label.bounds.width, height: CGFloat.greatestFiniteMagnitude))
+        let textStorage = NSTextStorage(attributedString: attributedText)
+        
+        // Configure text container
+        textContainer.lineFragmentPadding = 0
+        textContainer.lineBreakMode = label.lineBreakMode
+        textContainer.maximumNumberOfLines = label.numberOfLines
+        
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        
+        // Get touch location
+        let locationOfTouchInLabel = gesture.location(in: label)
+        
+        // Account for text alignment and line spacing
+        let textBoundingRect = layoutManager.usedRect(for: textContainer)
+        
+        // Calculate vertical offset based on label's content alignment
+        var textOffset = CGPoint.zero
+        
+        // Adjust for vertical alignment
+        let labelHeight = label.bounds.height
+        if textBoundingRect.height < labelHeight {
+            textOffset.y = (labelHeight - textBoundingRect.height) * 0.5
+        }
+        
+        // Adjust for horizontal alignment (text alignment)
+        let labelWidth = label.bounds.width
+        if textBoundingRect.width < labelWidth {
+            switch label.textAlignment {
+            case .center:
+                textOffset.x = (labelWidth - textBoundingRect.width) * 0.5
+            case .right:
+                textOffset.x = labelWidth - textBoundingRect.width
+            default:
+                break
+            }
+        }
+        
+        // Apply the offset to get the correct touch location in text container coordinates
+        let locationOfTouchInTextContainer = CGPoint(
+            x: locationOfTouchInLabel.x - textOffset.x,
+            y: locationOfTouchInLabel.y - textOffset.y
+        )
+        
+        // Get the character index at touch location
+        let characterIndex = layoutManager.characterIndex(
+            for: locationOfTouchInTextContainer,
+            in: textContainer,
+            fractionOfDistanceBetweenInsertionPoints: nil
+        )
+        
+        // Check if the touch is within the bounds of the text
+        if characterIndex < textStorage.length {
+            // Find URL attribute at the touch location
+            attributedText.enumerateAttribute(.link,
+                                            in: NSRange(location: 0, length: attributedText.length)) { value, range, stop in
+                if NSLocationInRange(characterIndex, range),
+                   let urlString = value as? String,
+                   let url = URL(string: urlString) {
+                    UIApplication.shared.open(url)
+                    stop.pointee = true
+                }
+            }
+        }
     }
 }
 
@@ -676,7 +785,46 @@ extension PromotionDetailViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 0
         return label
+    }
+    
+    private static func createEmptyStateBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createEmptyStateImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "my_tickets_logged_off_icon")
+        return imageView
+    }
+
+    private static func createEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = AppFont.with(type: .bold, size: 22)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("promotion_not_found")
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }
+    
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
     }
 
     private static func createBottomSafeAreaView() -> UIView {
@@ -729,9 +877,17 @@ extension PromotionDetailViewController {
         self.termsView.addSubview(self.termsToggleButton)
 
         self.termsContainerView.addSubview(self.termsDescriptionLabel)
+        
+        self.view.addSubview(self.emptyStateBaseView)
+
+        self.emptyStateBaseView.addSubview(self.emptyStateImageView)
+        self.emptyStateBaseView.addSubview(self.emptyStateLabel)
+        
+        self.view.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.view.addSubview(self.bottomSafeAreaView)
-        
 
         self.initConstraints()
     }
@@ -819,6 +975,34 @@ extension PromotionDetailViewController {
             self.termsDescriptionLabel.leadingAnchor.constraint(equalTo: self.termsContainerView.leadingAnchor),
             self.termsDescriptionLabel.trailingAnchor.constraint(equalTo: self.termsContainerView.trailingAnchor),
             self.termsDescriptionLabel.topAnchor.constraint(equalTo: self.termsView.bottomAnchor, constant: 5)
+        ])
+        
+        // Empty state view
+        NSLayoutConstraint.activate([
+            self.emptyStateBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.emptyStateBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyStateBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.emptyStateBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+
+            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateBaseView.topAnchor, constant: 45),
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
+            self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 120),
+
+            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateBaseView.leadingAnchor, constant: 35),
+            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateBaseView.trailingAnchor, constant: -35),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 24)
+        ])
+        
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
         
         self.stackViewBottomConstraint =

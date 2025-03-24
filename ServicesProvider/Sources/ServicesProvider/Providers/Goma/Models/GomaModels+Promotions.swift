@@ -356,7 +356,8 @@ extension GomaModels {
         let listDisplayImageUrl: String
         let startDate: String?
         let endDate: String?
-        let staticPage: StaticPage
+        let staticPageSlug: String?
+        let staticPage: StaticPage?
 
         enum CodingKeys: String, CodingKey {
             case id = "id"
@@ -371,6 +372,7 @@ extension GomaModels {
             case listDisplayImageUrl = "list_display_image_url"
             case startDate = "start_date"
             case endDate = "end_date"
+            case staticPageSlug = "static_page_slug"
             case staticPage = "static_page"
         }
     }
@@ -378,7 +380,6 @@ extension GomaModels {
     struct StaticPage: Codable {
         let title: String
         let slug: String
-        let headerTitle: String?
         let headerImageUrl: String?
         let isActive: Bool
         let usedForPromotions: Bool
@@ -388,12 +389,11 @@ extension GomaModels {
         let startDate: String?
         let endDate: String?
         let sections: [SectionBlock]
-        let terms: [TermItem]
+        let terms: TermItem?
 
         enum CodingKeys: String, CodingKey {
             case title = "title"
             case slug = "slug"
-            case headerTitle
             case headerImageUrl = "header_image_url"
             case isActive = "is_active"
             case usedForPromotions = "used_for_promotions"
@@ -403,7 +403,7 @@ extension GomaModels {
             case startDate = "start_date"
             case endDate = "end_date"
             case sections = "sections"
-            case terms = "terms"
+            case terms = "terms_and_conditions"
         }
     }
 
@@ -496,11 +496,15 @@ extension GomaModels {
     }
 
     struct TermItem: Codable {
-        let label: String
-        let sortOrder: Int
+        let displayType: String
+        let richText: String?
+        let bulletedListItems: [BulletedListItem]?
+        let sortOrder: Int?
 
         enum CodingKeys: String, CodingKey {
-            case label
+            case displayType = "display_type"
+            case richText = "rich_text"
+            case bulletedListItems = "bulleted_list_items"
             case sortOrder = "sort_order"
         }
     }

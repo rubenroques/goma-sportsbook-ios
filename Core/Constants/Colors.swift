@@ -195,6 +195,14 @@ extension UIColor {
         static var iconSportsHeroCard: UIColor {
             return UIColor(named: "iconSportsHeroCard") ?? Self.textPrimary
         }
+        
+        static var boostedOddsGradient1: UIColor {
+            return UIColor(named: "boostedOddsGradient1") ?? Self.boostedOddsGradient1
+        }
+        
+        static var boostedOddsGradient2: UIColor {
+            return UIColor(named: "boostedOddsGradient2") ?? Self.boostedOddsGradient2
+        }
 
         static func validateThemeColors() -> [UIColor] {
             return [

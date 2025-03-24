@@ -25,171 +25,6 @@ class PromotionsViewModel {
         
         self.isLoadingPublisher.send(true)
         
-        // Mock promotions
-//        let promotions: [PromotionInfo] = [
-//                PromotionInfo(
-//                    id: 3,
-//                    title: "promo 2",
-//                    slug: "promo-2",
-//                    sortOrder: 1,
-//                    platform: "all",
-//                    status: "published",
-//                    userType: "all",
-//                    listDisplayNote: "Note 123",
-//                    listDisplayDescription: "Description 123",
-//                    listDisplayImageUrl: "https://cms.gomademo.com/storage/198/01JPA2GABR9BWFGBB9XNSASZRN.png",
-//                    startDate: "2025-03-14T10:16:00.000000Z",
-//                    endDate: "2026-03-14T10:16:00.000000Z",
-//                    staticPage: StaticPage(
-//                        title: "Static Page 2",
-//                        slug: "static-page-2",
-//                        headerTitle: "Promo 1",
-//                        headerImageUrl: "https://cms.gomademo.com/storage/200/01JPAG0DJ9VM8HJ0NV8568B08X.png",
-//                        isActive: true,
-//                        usedForPromotions: true,
-//                        platform: "all",
-//                        status: "published",
-//                        userType: "all",
-//                        startDate: "2025-03-10T20:12:00.000000Z",
-//                        endDate: "2026-03-10T20:12:00.000000Z",
-//                        sections: [
-//                            SectionBlock(
-//                                type: "banner",
-//                                sortOrder: 1,
-//                                isActive: true,
-//                                banner: BannerBlock(
-//                                    bannerLinkUrl: nil,
-//                                    bannerType: "image",
-//                                    bannerLinkTarget: "_blank",
-//                                    imageUrl: "https://cms.gomademo.com/storage/192/01JPA2DH3NTDVR6DPN5S0MHYY3.png"),
-//                                text: nil,
-//                                list: nil),
-//                            SectionBlock(
-//                                type: "text",
-//                                sortOrder: 2,
-//                                isActive: true,
-//                                banner: nil,
-//                                text: TextBlock(
-//                                    sectionHighlighted: true,
-//                                    contentBlocks: [
-//                                        TextContentBlock(
-//                                            title: "Text Section Title Text 1",
-//                                            blockType: "title",
-//                                            description: nil,
-//                                            image: nil,
-//                                            video: nil,
-//                                            buttonURL: nil,
-//                                            buttonText: nil,
-//                                            buttonTarget: nil,
-//                                            bulletedListItems: nil
-//                                        ),
-//                                        TextContentBlock(
-//                                            title: nil,
-//                                            blockType: "description",
-//                                            description: "Text Section Title Description 1",
-//                                            image: nil,
-//                                            video: nil,
-//                                            buttonURL: nil,
-//                                            buttonText: nil,
-//                                            buttonTarget: nil,
-//                                            bulletedListItems: nil
-//                                        ),
-//                                        TextContentBlock(
-//                                            title: nil,
-//                                            blockType: "image",
-//                                            description: nil,
-//                                            image: "https://cms.gomademo.com/storage/193/01JPA2DHFVRMXKRMY4MNA69PHN.png",
-//                                            video: nil,
-//                                            buttonURL: nil,
-//                                            buttonText: nil,
-//                                            buttonTarget: nil,
-//                                            bulletedListItems: nil
-//                                        ),
-//                                        TextContentBlock(
-//                                            title: nil,
-//                                            blockType: "video",
-//                                            description: nil,
-//                                            image: nil,
-//                                            video: "https://cms.gomademo.com/storage/194/01JPA2DHGXC8GRN78XEYDVAJ07.mp4",
-//                                            buttonURL: nil,
-//                                            buttonText: nil,
-//                                            buttonTarget: nil,
-//                                            bulletedListItems: nil
-//                                        ),
-//                                        TextContentBlock(
-//                                            title: nil,
-//                                            blockType: "button",
-//                                            description: nil,
-//                                            image: nil,
-//                                            video: nil,
-//                                            buttonURL: "https://www.google.com",
-//                                            buttonText: "Button 1",
-//                                            buttonTarget: "_blank",
-//                                            bulletedListItems: nil
-//                                        ),
-//                                        TextContentBlock(
-//                                            title: nil,
-//                                            blockType: "bulleted_list",
-//                                            description: nil,
-//                                            image: nil,
-//                                            video: nil,
-//                                            buttonURL: nil,
-//                                            buttonText: nil,
-//                                            buttonTarget: nil,
-//                                            bulletedListItems: [
-//                                                BulletedListItem(text: "Text Section - Bullet List item 1"),
-//                                                BulletedListItem(text: "Text Section - Bullet List item 2"),
-//                                                BulletedListItem(text: "Text Section - Bullet List item 3")
-//                                            ]
-//                                        )
-//                                    ],
-//                                    itemIcon: nil
-//                                ),
-//                                list: nil
-//                            ),
-//                            SectionBlock(
-//                                type: "list",
-//                                sortOrder: 3,
-//                                isActive: true,
-//                                banner: nil,
-//                                text: nil,
-//                                list: ListBlock(
-//                                    title: "List Section Title 1",
-//                                    genericListItemsIcon: "https://cms.gomademo.com/storage/195/01JPA2DHW9XHNASQ93Y8650C7F.png",
-//                                    items: [
-//                                        TextBlock(
-//                                            sectionHighlighted: false, contentBlocks: [
-//                                                TextContentBlock(title: "List Section - Item 1 - Title 1", blockType: "title", description: nil, image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
-//                                                TextContentBlock(title: nil, blockType: "description", description: "List Section - Item 1 - Title 1", image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
-//                                                TextContentBlock(title: nil, blockType: "image", description: nil, image: "https://cms.gomademo.com/storage/196/01JPA2DJ2J8PWJ9W7WE059Y5H5.png", video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
-//                                                TextContentBlock(title: nil, blockType: "video", description: nil, image: nil, video: "https://cms.gomademo.com/storage/197/01JPA2DJ3KAKRSR82M0QJBDKMG.mp4", buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: nil),
-//                                                TextContentBlock(title: nil, blockType: "button", description: nil, image: nil, video: nil, buttonURL: "https://www.google.com", buttonText: "List Section - Item 1 - Button 1", buttonTarget: "_blank", bulletedListItems: nil),
-//                                                TextContentBlock(title: nil, blockType: "bulleted_list", description: nil, image: nil, video: nil, buttonURL: nil, buttonText: nil, buttonTarget: nil, bulletedListItems: [
-//                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list"),
-//                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list"),
-//                                                    BulletedListItem(text: "List Section - Item 1 - Bullet list")
-//                                                ])
-//                                            ],
-//                                        itemIcon: nil
-//                                        )
-//                                    ]
-//                                )
-//                            )
-//                        ],
-//                        terms: [
-//                            TermItem(label: "term 1", sortOrder: 1),
-//                            TermItem(label: "term 2", sortOrder: 2),
-//                            TermItem(label: "term 3", sortOrder: 3),
-//                            TermItem(label: "term 4", sortOrder: 4)
-//                        ]
-//                    )
-//                )
-//            ]
-//        
-//        self.promotions = promotions
-//        
-//        self.isLoadingPublisher.send(false)
-        
         Env.servicesProvider.getPromotions()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -241,6 +76,9 @@ class PromotionsViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var emptyStateBaseView: UIView = Self.createEmptyStateBaseView()
+    private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
+    private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
@@ -250,6 +88,13 @@ class PromotionsViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
+    // MARK: Public properties
+    var isEmptyState: Bool = false {
+        didSet {
+            self.emptyStateBaseView.isHidden = !isEmptyState
+        }
+    }
+    
     // MARK: Lifetime and cycle
     init(viewModel: PromotionsViewModel) {
 
@@ -310,6 +155,10 @@ class PromotionsViewController: UIViewController {
 
         self.tableView.backgroundColor = .clear
         
+        self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.emptyStateLabel.textColor = UIColor.App.textPrimary
+        
         self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.loadingActivityIndicatorView.color = UIColor.lightGray
 
@@ -328,6 +177,8 @@ class PromotionsViewController: UIViewController {
                 else {
                     self?.hideLoading()
                     self?.tableView.reloadData()
+                    
+                    self?.isEmptyState = viewModel.promotions.isEmpty ? true : false
                 }
             })
             .store(in: &cancellables)
@@ -443,6 +294,30 @@ extension PromotionsViewController {
         tableView.allowsSelection = false
         return tableView
     }
+    
+    private static func createEmptyStateBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createEmptyStateImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "my_tickets_logged_off_icon")
+        return imageView
+    }
+
+    private static func createEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = AppFont.with(type: .bold, size: 22)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("no_promotions_available")
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }
 
     private static func createBottomSafeAreaView() -> UIView {
         let view = UIView()
@@ -471,6 +346,11 @@ extension PromotionsViewController {
         self.navigationView.addSubview(self.titleLabel)
         
         self.view.addSubview(self.tableView)
+        
+        self.view.addSubview(self.emptyStateBaseView)
+
+        self.emptyStateBaseView.addSubview(self.emptyStateImageView)
+        self.emptyStateBaseView.addSubview(self.emptyStateLabel)
 
         self.view.addSubview(self.bottomSafeAreaView)
         self.view.addSubview(self.loadingBaseView)
@@ -515,6 +395,23 @@ extension PromotionsViewController {
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
+        ])
+        
+        // Empty state view
+        NSLayoutConstraint.activate([
+            self.emptyStateBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.emptyStateBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyStateBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.emptyStateBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+
+            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateBaseView.topAnchor, constant: 45),
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
+            self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 120),
+
+            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateBaseView.leadingAnchor, constant: 35),
+            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateBaseView.trailingAnchor, constant: -35),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 24)
         ])
         
         NSLayoutConstraint.activate([

@@ -20,7 +20,8 @@ struct PromotionInfo: Codable {
     let listDisplayImageUrl: String
     let startDate: Date?
     let endDate: Date?
-    let staticPage: StaticPage
+    let staticPageSlug: String?
+    let staticPage: StaticPage?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -35,6 +36,7 @@ struct PromotionInfo: Codable {
         case listDisplayImageUrl = "list_display_image_url"
         case startDate = "start_date"
         case endDate = "end_date"
+        case staticPageSlug = "static_page_slug"
         case staticPage = "static_page"
     }
 }
@@ -42,7 +44,6 @@ struct PromotionInfo: Codable {
 struct StaticPage: Codable {
     let title: String
     let slug: String
-    let headerTitle: String?
     let headerImageUrl: String?
     let isActive: Bool
     let usedForPromotions: Bool
@@ -52,12 +53,11 @@ struct StaticPage: Codable {
     let startDate: Date?
     let endDate: Date?
     let sections: [SectionBlock]
-    let terms: [TermItem]
+    let terms: TermItem?
 
     enum CodingKeys: String, CodingKey {
         case title = "title"
         case slug = "slug"
-        case headerTitle
         case headerImageUrl = "header_image_url"
         case isActive = "is_active"
         case usedForPromotions = "used_for_promotions"
@@ -67,12 +67,12 @@ struct StaticPage: Codable {
         case startDate = "start_date"
         case endDate = "end_date"
         case sections = "sections"
-        case terms = "terms"
+        case terms = "terms_and_conditions"
     }
 }
 
 struct SectionBlock: Codable {
-    let type: String
+    let type: SectionPromoType?
     let sortOrder: Int
     let isActive: Bool
     let banner: BannerBlock?
@@ -91,7 +91,7 @@ struct SectionBlock: Codable {
 
 struct BannerBlock: Codable {
     let bannerLinkUrl: String?
-    let bannerType: String
+    let bannerType: BannerPromoType?
     let bannerLinkTarget: String?
     let imageUrl: String?
     
@@ -117,7 +117,7 @@ struct TextBlock: Codable {
 
 struct TextContentBlock: Codable {
     let title: String?
-    let blockType: String
+    let blockType: BlockPromoType?
     let description: String?
     let image: String?
     let video: String?
@@ -160,11 +160,94 @@ struct BulletedListItem: Codable {
 }
 
 struct TermItem: Codable {
-    let label: String
-    let sortOrder: Int
+    let displayType: TermsDisplayType?
+    let richText: String?
+    let bulletedListItems: [BulletedListItem]?
+    let sortOrder: Int?
 
     enum CodingKeys: String, CodingKey {
-        case label
+        case displayType = "display_type"
+        case richText = "rich_text"
+        case bulletedListItems = "bulleted_list_items"
         case sortOrder = "sort_order"
+    }
+}
+
+enum SectionPromoType: Codable {
+    case text
+    case list
+    case banner
+    
+    init?(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "text":
+            self = .text
+        case "list":
+            self = .list
+        case "banner":
+            self = .banner
+        default:
+            return nil
+        }
+    }
+}
+
+enum BlockPromoType: Codable {
+    case title
+    case description
+    case image
+    case video
+    case button
+    case bulletedList
+    
+    init?(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "title":
+            self = .title
+        case "description":
+            self = .description
+        case "image":
+            self = .image
+        case "video":
+            self = .video
+        case "button":
+            self = .button
+        case "bulletedList":
+            self = .bulletedList
+        default:
+            return nil
+        }
+    }
+}
+
+enum BannerPromoType: Codable {
+    case image
+    case video
+    
+    init?(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "image":
+            self = .image
+        case "video":
+            self = .video
+        default:
+            return nil
+        }
+    }
+}
+
+enum TermsDisplayType: Codable {
+    case richText
+    case bulletedList
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        case "rich_text":
+            self = .richText
+        case "bulleted_list":
+            self = .bulletedList
+        default:
+            return nil
+        }
     }
 }

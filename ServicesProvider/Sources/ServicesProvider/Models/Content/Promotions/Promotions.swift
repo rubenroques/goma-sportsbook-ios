@@ -20,7 +20,8 @@ public struct PromotionInfo: Codable {
     public let listDisplayImageUrl: String
     public let startDate: Date?
     public let endDate: Date?
-    public let staticPage: StaticPage
+    public let staticPageSlug: String?
+    public let staticPage: StaticPage?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -35,6 +36,7 @@ public struct PromotionInfo: Codable {
         case listDisplayImageUrl = "list_display_image_url"
         case startDate = "start_date"
         case endDate = "end_date"
+        case staticPageSlug = "static_page_slug"
         case staticPage = "static_page"
     }
 }
@@ -42,7 +44,6 @@ public struct PromotionInfo: Codable {
 public struct StaticPage: Codable {
     public let title: String
     public let slug: String
-    public let headerTitle: String?
     public let headerImageUrl: String?
     public let isActive: Bool
     public let usedForPromotions: Bool
@@ -52,12 +53,11 @@ public struct StaticPage: Codable {
     public let startDate: Date?
     public let endDate: Date?
     public let sections: [SectionBlock]
-    public let terms: [TermItem]
+    public let terms: TermItem?
 
     enum CodingKeys: String, CodingKey {
         case title = "title"
         case slug = "slug"
-        case headerTitle
         case headerImageUrl = "header_image_url"
         case isActive = "is_active"
         case usedForPromotions = "used_for_promotions"
@@ -67,12 +67,12 @@ public struct StaticPage: Codable {
         case startDate = "start_date"
         case endDate = "end_date"
         case sections = "sections"
-        case terms = "terms"
+        case terms = "terms_and_conditions"
     }
 }
 
 public struct SectionBlock: Codable {
-    public let type: String
+    public let type: SectionPromoType?
     public let sortOrder: Int
     public let isActive: Bool
     public let banner: BannerBlock?
@@ -91,7 +91,7 @@ public struct SectionBlock: Codable {
 
 public struct BannerBlock: Codable {
     public let bannerLinkUrl: String?
-    public let bannerType: String
+    public let bannerType: BannerPromoType?
     public let bannerLinkTarget: String?
     public let imageUrl: String?
     
@@ -117,7 +117,7 @@ public struct TextBlock: Codable {
 
 public struct TextContentBlock: Codable {
     public let title: String?
-    public let blockType: String
+    public let blockType: BlockPromoType?
     public let description: String?
     public let image: String?
     public let video: String?
@@ -160,11 +160,94 @@ public struct BulletedListItem: Codable {
 }
 
 public struct TermItem: Codable {
-    public let label: String
-    public let sortOrder: Int
+    public let displayType: TermsDisplayType?
+    public let richText: String?
+    public let bulletedListItems: [BulletedListItem]?
+    public let sortOrder: Int?
 
     enum CodingKeys: String, CodingKey {
-        case label
+        case displayType = "display_type"
+        case richText = "rich_text"
+        case bulletedListItems = "bulleted_list_items"
         case sortOrder = "sort_order"
+    }
+}
+
+public enum SectionPromoType: Codable {
+    case text
+    case list
+    case banner
+    
+    init?(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "text":
+            self = .text
+        case "list":
+            self = .list
+        case "banner":
+            self = .banner
+        default:
+            return nil
+        }
+    }
+}
+
+public enum BlockPromoType: Codable {
+    case title
+    case description
+    case image
+    case video
+    case button
+    case bulletedList
+    
+    init?(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "title":
+            self = .title
+        case "description":
+            self = .description
+        case "image":
+            self = .image
+        case "video":
+            self = .video
+        case "button":
+            self = .button
+        case "bulletedList":
+            self = .bulletedList
+        default:
+            return nil
+        }
+    }
+}
+
+public enum BannerPromoType: Codable {
+    case image
+    case video
+    
+    init?(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "image":
+            self = .image
+        case "video":
+            self = .video
+        default:
+            return nil
+        }
+    }
+}
+
+public enum TermsDisplayType: Codable {
+    case richText
+    case bulletedList
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        case "rich_text":
+            self = .richText
+        case "bulleted_list":
+            self = .bulletedList
+        default:
+            return nil
+        }
     }
 }

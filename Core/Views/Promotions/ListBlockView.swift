@@ -11,6 +11,7 @@ class ListBlockView: UIView {
 
     // MARK: Private properties
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
+    private lazy var defaultIconView: UIView = Self.createDefaultIconView()
     private lazy var stackView: UIStackView = Self.createStackView()
 
     // MARK: Lifetime and cycle
@@ -35,12 +36,16 @@ class ListBlockView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        self.defaultIconView.layer.cornerRadius = self.defaultIconView.frame.width / 2
+        
     }
     
     func setupWithTheme() {
         self.backgroundColor = .clear
         
         self.iconImageView.backgroundColor = .clear
+        
+        self.defaultIconView.backgroundColor = UIColor.App.highlightPrimary
         
         self.stackView.backgroundColor = .clear
     }
@@ -50,6 +55,9 @@ class ListBlockView: UIView {
         
         if let imageUrl = URL(string: iconName) {
             self.iconImageView.kf.setImage(with: imageUrl)
+        }
+        else {
+            self.defaultIconView.isHidden = false
         }
         
         for viewItem in views {
@@ -73,6 +81,13 @@ extension ListBlockView {
         return imageView
     }
     
+    private static func createDefaultIconView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+    
     private static func createStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -84,6 +99,7 @@ extension ListBlockView {
     func setupSubviews() {
         
         self.addSubview(self.iconImageView)
+        self.addSubview(self.defaultIconView)
         self.addSubview(self.stackView)
         
         self.initConstraints()
@@ -94,9 +110,14 @@ extension ListBlockView {
         NSLayoutConstraint.activate([
             
             self.iconImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            self.iconImageView.heightAnchor.constraint(equalToConstant: 30),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 40),
+            self.iconImageView.heightAnchor.constraint(equalToConstant: 40),
             self.iconImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            
+            self.defaultIconView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
+            self.defaultIconView.widthAnchor.constraint(equalToConstant: 40),
+            self.defaultIconView.heightAnchor.constraint(equalToConstant: 40),
+            self.defaultIconView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             
             self.stackView.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 10),
             self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),

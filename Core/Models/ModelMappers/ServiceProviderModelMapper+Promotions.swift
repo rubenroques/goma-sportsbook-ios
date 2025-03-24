@@ -14,17 +14,25 @@ extension ServiceProviderModelMapper {
         
         let staticPage = self.staticPage(fromInternalStaticPage: promotionInfo.staticPage)
         
-        return PromotionInfo(id: promotionInfo.id, title: promotionInfo.title, slug: promotionInfo.slug, sortOrder: promotionInfo.sortOrder, platform: promotionInfo.platform, status: promotionInfo.status, userType: promotionInfo.userType, listDisplayNote: promotionInfo.listDisplayNote, listDisplayDescription: promotionInfo.listDisplayDescription, listDisplayImageUrl: promotionInfo.listDisplayImageUrl, startDate: promotionInfo.startDate, endDate: promotionInfo.endDate, staticPage: staticPage)
+        return PromotionInfo(id: promotionInfo.id, title: promotionInfo.title, slug: promotionInfo.slug, sortOrder: promotionInfo.sortOrder, platform: promotionInfo.platform, status: promotionInfo.status, userType: promotionInfo.userType, listDisplayNote: promotionInfo.listDisplayNote, listDisplayDescription: promotionInfo.listDisplayDescription, listDisplayImageUrl: promotionInfo.listDisplayImageUrl, startDate: promotionInfo.startDate, endDate: promotionInfo.endDate, staticPageSlug: promotionInfo.staticPageSlug, staticPage: staticPage)
     }
     
-    static func staticPage(fromInternalStaticPage staticPage: ServicesProvider.StaticPage) -> StaticPage {
+    static func staticPage(fromInternalStaticPage staticPage: ServicesProvider.StaticPage?) -> StaticPage? {
         
-        let sections = staticPage.sections.map { self.sectionBlock(fromInternalSectionBlock: $0)
-        }
-        let terms = staticPage.terms.map { self.termItem(fromInternalTermItem: $0)
+        if let staticPage {
+            let sections = staticPage.sections.map { self.sectionBlock(fromInternalSectionBlock: $0)
+            }
+            
+            var terms: TermItem? = nil
+            
+            if let staticPageTerms = staticPage.terms {
+                terms = self.termItem(fromInternalTermItem: staticPageTerms)
+            }
+            
+            return StaticPage(title: staticPage.title, slug: staticPage.slug, headerImageUrl: staticPage.headerImageUrl, isActive: staticPage.isActive, usedForPromotions: staticPage.usedForPromotions, platform: staticPage.platform, status: staticPage.status, userType: staticPage.userType, startDate: staticPage.startDate, endDate: staticPage.endDate, sections: sections, terms: terms)
         }
         
-        return StaticPage(title: staticPage.title, slug: staticPage.slug, headerTitle: staticPage.headerTitle, headerImageUrl: staticPage.headerImageUrl, isActive: staticPage.isActive, usedForPromotions: staticPage.usedForPromotions, platform: staticPage.platform, status: staticPage.status, userType: staticPage.userType, startDate: staticPage.startDate, endDate: staticPage.endDate, sections: sections, terms: terms)
+        return nil
     }
     
     static func sectionBlock(fromInternalSectionBlock section: ServicesProvider.SectionBlock) -> SectionBlock {
@@ -36,7 +44,7 @@ extension ServiceProviderModelMapper {
         }
         
         return SectionBlock(
-            type: section.type,
+            type: self.sectionPromoType(fromInternalSectionPromoType: section.type),
             sortOrder: section.sortOrder,
             isActive: section.isActive,
             banner: section.banner.map { bannerBlock(fromInternalBannerBlock: $0)
@@ -45,15 +53,45 @@ extension ServiceProviderModelMapper {
             list: listBlock
         )
     }
+    
+    static func sectionPromoType(fromInternalSectionPromoType sectionPromoType: ServicesProvider.SectionPromoType?) -> SectionPromoType? {
+        
+        if let sectionPromoType {
+            switch sectionPromoType {
+            case .text:
+                return .text
+            case .list:
+                return .list
+            case .banner:
+                return.banner
+            }
+        }
+        
+        return nil
+    }
 
     static func bannerBlock(fromInternalBannerBlock banner: ServicesProvider.BannerBlock) -> BannerBlock {
         
         return BannerBlock(
             bannerLinkUrl: banner.bannerLinkUrl,
-            bannerType: banner.bannerType,
+            bannerType: self.bannerPromoType(fromInternalBannerPromoType: banner.bannerType),
             bannerLinkTarget: banner.bannerLinkTarget,
             imageUrl: banner.imageUrl
         )
+    }
+    
+    static func bannerPromoType(fromInternalBannerPromoType bannerPromoType: ServicesProvider.BannerPromoType?) -> BannerPromoType? {
+        
+        if let bannerPromoType {
+            switch bannerPromoType {
+            case .image:
+                return .image
+            case .video:
+                return .video
+            }
+        }
+        
+        return nil
     }
 
     static func textBlock(fromInternalTextBlock text: ServicesProvider.TextBlock) -> TextBlock {
@@ -74,7 +112,7 @@ extension ServiceProviderModelMapper {
         
         return TextContentBlock(
             title: content.title,
-            blockType: content.blockType,
+            blockType: self.blockPromoType(fromInternalBlockPromoType: content.blockType),
             description: content.description,
             image: content.image,
             video: content.video,
@@ -83,6 +121,28 @@ extension ServiceProviderModelMapper {
             buttonTarget: content.buttonTarget,
             bulletedListItems: bulletedListItems
         )
+    }
+    
+    static func blockPromoType(fromInternalBlockPromoType blockPromoType: ServicesProvider.BlockPromoType?) -> BlockPromoType? {
+        
+        if let blockPromoType {
+            switch blockPromoType {
+            case .title:
+                return .title
+            case .description:
+                return .description
+            case .image:
+                return .image
+            case .video:
+                return .video
+            case .button:
+                return .button
+            case .bulletedList:
+                return .bulletedList
+            }
+        }
+        
+        return nil
     }
 
     static func bulletedListItem(fromInternalBulletedListItem item: ServicesProvider.BulletedListItem) -> BulletedListItem {
@@ -98,11 +158,26 @@ extension ServiceProviderModelMapper {
             items: items
         )
     }
-
+    
     static func termItem(fromInternalTermItem term: ServicesProvider.TermItem) -> TermItem {
-        return TermItem(
-            label: term.label,
-            sortOrder: term.sortOrder
-        )
+        
+        let bulletedListItems = term.bulletedListItems?.map { self.bulletedListItem(fromInternalBulletedListItem: $0)
+        }
+        
+        return TermItem(displayType: self.termsDisplayType(fromInternalTermsDisplayType: term.displayType), richText: term.richText, bulletedListItems: bulletedListItems, sortOrder: term.sortOrder)
+    }
+    
+    static func termsDisplayType(fromInternalTermsDisplayType termsDisplayType: ServicesProvider.TermsDisplayType?) -> TermsDisplayType? {
+        
+        if let termsDisplayType {
+            switch termsDisplayType {
+            case .richText:
+                return .richText
+            case .bulletedList:
+                return .bulletedList
+            }
+        }
+        
+        return nil
     }
 }

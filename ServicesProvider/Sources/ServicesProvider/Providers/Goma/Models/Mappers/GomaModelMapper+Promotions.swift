@@ -194,27 +194,35 @@ extension GomaModelMapper {
     
     static func promotionInfo(fromInternalPromotionInfo promotionInfo: GomaModels.PromotionInfo) -> PromotionInfo {
         
-        let staticPage = self.staticPage(fromInternalStaticPage: promotionInfo.staticPage)
+        let staticPage = self.staticPage(fromInternalStaticPage: promotionInfo.staticPage ?? nil)
         
         let startDate = GomaAPIProvider.parseGomaDateString(promotionInfo.startDate ?? "")
         
         let endDate = GomaAPIProvider.parseGomaDateString(promotionInfo.endDate ?? "")
         
-        return PromotionInfo(id: promotionInfo.id, title: promotionInfo.title, slug: promotionInfo.slug, sortOrder: promotionInfo.sortOrder, platform: promotionInfo.platform, status: promotionInfo.status, userType: promotionInfo.userType, listDisplayNote: promotionInfo.listDisplayNote, listDisplayDescription: promotionInfo.listDisplayDescription, listDisplayImageUrl: promotionInfo.listDisplayImageUrl, startDate: startDate, endDate: endDate, staticPage: staticPage)
+        return PromotionInfo(id: promotionInfo.id, title: promotionInfo.title, slug: promotionInfo.slug, sortOrder: promotionInfo.sortOrder, platform: promotionInfo.platform, status: promotionInfo.status, userType: promotionInfo.userType, listDisplayNote: promotionInfo.listDisplayNote, listDisplayDescription: promotionInfo.listDisplayDescription, listDisplayImageUrl: promotionInfo.listDisplayImageUrl, startDate: startDate, endDate: endDate, staticPageSlug: promotionInfo.staticPageSlug, staticPage: staticPage)
     }
     
-    static func staticPage(fromInternalStaticPage staticPage: GomaModels.StaticPage) -> StaticPage {
+    static func staticPage(fromInternalStaticPage staticPage: GomaModels.StaticPage?) -> StaticPage? {
         
-        let sections = staticPage.sections.map { self.sectionBlock(fromInternalSectionBlock: $0)
+        if let staticPage {
+            let sections = staticPage.sections.map { self.sectionBlock(fromInternalSectionBlock: $0)
+            }
+            
+            var terms: TermItem? = nil
+            
+            if let staticPageTerms = staticPage.terms {
+                terms = self.termItem(fromInternalTermItem: staticPageTerms)
+            }
+            
+            let startDate = GomaAPIProvider.parseGomaDateString(staticPage.startDate ?? "")
+            
+            let endDate = GomaAPIProvider.parseGomaDateString(staticPage.endDate ?? "")
+            
+            return StaticPage(title: staticPage.title, slug: staticPage.slug, headerImageUrl: staticPage.headerImageUrl, isActive: staticPage.isActive, usedForPromotions: staticPage.usedForPromotions, platform: staticPage.platform, status: staticPage.status, userType: staticPage.userType, startDate: startDate, endDate: endDate, sections: sections, terms: terms)
         }
-        let terms = staticPage.terms.map { self.termItem(fromInternalTermItem: $0)
-        }
         
-        let startDate = GomaAPIProvider.parseGomaDateString(staticPage.startDate ?? "")
-        
-        let endDate = GomaAPIProvider.parseGomaDateString(staticPage.endDate ?? "")
-        
-        return StaticPage(title: staticPage.title, slug: staticPage.slug, headerTitle: staticPage.headerTitle, headerImageUrl: staticPage.headerImageUrl, isActive: staticPage.isActive, usedForPromotions: staticPage.usedForPromotions, platform: staticPage.platform, status: staticPage.status, userType: staticPage.userType, startDate: startDate, endDate: endDate, sections: sections, terms: terms)
+        return nil
     }
     
     static func sectionBlock(fromInternalSectionBlock section: GomaModels.SectionBlock) -> SectionBlock {
@@ -226,7 +234,7 @@ extension GomaModelMapper {
         }
         
         return SectionBlock(
-            type: section.type,
+            type: SectionPromoType(rawValue: section.type),
             sortOrder: section.sortOrder,
             isActive: section.isActive,
             banner: section.banner.map { bannerBlock(fromInternalBannerBlock: $0)
@@ -240,7 +248,7 @@ extension GomaModelMapper {
         
         return BannerBlock(
             bannerLinkUrl: banner.bannerLinkUrl,
-            bannerType: banner.bannerType,
+            bannerType: BannerPromoType(rawValue: banner.bannerType),
             bannerLinkTarget: banner.bannerLinkTarget,
             imageUrl: banner.imageUrl
         )
@@ -264,7 +272,7 @@ extension GomaModelMapper {
         
         return TextContentBlock(
             title: content.title,
-            blockType: content.blockType,
+            blockType: BlockPromoType(rawValue: content.blockType),
             description: content.description,
             image: content.image,
             video: content.video,
@@ -290,9 +298,10 @@ extension GomaModelMapper {
     }
 
     static func termItem(fromInternalTermItem term: GomaModels.TermItem) -> TermItem {
-        return TermItem(
-            label: term.label,
-            sortOrder: term.sortOrder
-        )
+        
+        let bulletedListItems = term.bulletedListItems?.map { self.bulletedListItem(fromInternalBulletedListItem: $0)
+        }
+        
+        return TermItem(displayType: TermsDisplayType(rawValue: term.displayType), richText: term.richText, bulletedListItems: bulletedListItems, sortOrder: term.sortOrder)
     }
 }
