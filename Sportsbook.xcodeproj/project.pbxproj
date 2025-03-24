@@ -7760,6 +7760,17 @@
 		CE612A982D8F003900F911CF /* MatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A8F2D8F003900F911CF /* MatchInfoView.swift */; };
 		CE612A992D8F003900F911CF /* MatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A8F2D8F003900F911CF /* MatchInfoView.swift */; };
 		CE612A9A2D8F003900F911CF /* MatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A8F2D8F003900F911CF /* MatchInfoView.swift */; };
+		CE612A9D2D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612A9E2D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612A9F2D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612AA02D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612AA12D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612AA22D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612AA32D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612AA42D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612AA52D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612AA62D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
+		CE612AA72D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */; };
 		CE6257AF2D5A16D7009C11D2 /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = CE6257AE2D5A16D7009C11D2 /* Adjust */; };
 		CE6257B12D5A1747009C11D2 /* AdresseFrancaise in Frameworks */ = {isa = PBXBuildFile; productRef = CE6257B02D5A1747009C11D2 /* AdresseFrancaise */; };
 		CE6257B32D5A1747009C11D2 /* CountrySelectionFeature in Frameworks */ = {isa = PBXBuildFile; productRef = CE6257B22D5A1747009C11D2 /* CountrySelectionFeature */; };
@@ -11562,6 +11573,7 @@
 		CE315ED52D00B3FA0080D900 /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
 		CE544FC92D07029900AA24CA /* first_deposit_8.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = first_deposit_8.json; sourceTree = "<group>"; };
 		CE612A8F2D8F003900F911CF /* MatchInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchInfoView.swift; sourceTree = "<group>"; };
+		CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOutcomesLineView.swift; sourceTree = "<group>"; };
 		CE6257E32D5A17B7009C11D2 /* avatar1-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-dark.json"; sourceTree = "<group>"; };
 		CE6257E42D5A17B7009C11D2 /* avatar1-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-light.json"; sourceTree = "<group>"; };
 		CE6257E52D5A17B7009C11D2 /* avatar2-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar2-dark.json"; sourceTree = "<group>"; };
@@ -15599,6 +15611,14 @@
 			path = Animations;
 			sourceTree = "<group>";
 		};
+		CE612A9C2D91645F00F911CF /* MarketOutcomesLine */ = {
+			isa = PBXGroup;
+			children = (
+				CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */,
+			);
+			path = MarketOutcomesLine;
+			sourceTree = "<group>";
+		};
 		CE6257F02D5A17B7009C11D2 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
@@ -15895,6 +15915,7 @@
 		CEAB09862D77588D00541098 /* Match */ = {
 			isa = PBXGroup;
 			children = (
+				CE612A9C2D91645F00F911CF /* MarketOutcomesLine */,
 				CEAB097C2D77588D00541098 /* MatchLine */,
 				CEAB09802D77588D00541098 /* MatchWidget */,
 				CEAB09852D77588D00541098 /* Odds */,
@@ -19560,6 +19581,7 @@
 				450B7A3628F58574009229E3 /* HomeFilterOptions.swift in Sources */,
 				CE7E80102D794C1D00A5558A /* DeveloperSettingsViewController.swift in Sources */,
 				A9A1B2BF2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
+				CE612AA52D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEB739E72D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				450B7A3728F58574009229E3 /* Aggregator.swift in Sources */,
 				CE7E804C2D7A368300A5558A /* PreviewUIView.swift in Sources */,
@@ -20460,6 +20482,7 @@
 				457CBB74282D27D000ED0F00 /* HomeFilterOptions.swift in Sources */,
 				CE7E80142D794C1D00A5558A /* DeveloperSettingsViewController.swift in Sources */,
 				457CBB75282D27D000ED0F00 /* Aggregator.swift in Sources */,
+				CE612AA22D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				457CBB76282D27D000ED0F00 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				457CBB77282D27D000ED0F00 /* BonusActiveCellViewModel.swift in Sources */,
 				CE7E80452D7A368300A5558A /* PreviewUIView.swift in Sources */,
@@ -20790,6 +20813,7 @@
 				457CBCEF282D2CD100ED0F00 /* HomeFilterViewController.swift in Sources */,
 				457CBCF0282D2CD100ED0F00 /* Bootstrap.swift in Sources */,
 				CEEFDEB32D8C247000630F7E /* BaseMatchCardViewModel.swift in Sources */,
+				CE612A9F2D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEEFDEB42D8C247000630F7E /* BoostedOddsCardViewModel.swift in Sources */,
 				A90229B628B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				457CBCF2282D2CD100ED0F00 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
@@ -21994,6 +22018,7 @@
 				4589C8F7282024E400243547 /* Aggregator.swift in Sources */,
 				CE7E80172D794C1D00A5558A /* DeveloperSettingsViewController.swift in Sources */,
 				A9A1B2C02A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
+				CE612AA12D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEB739F02D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				4589C8F8282024E400243547 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CE7E80472D7A368300A5558A /* PreviewUIView.swift in Sources */,
@@ -22762,6 +22787,7 @@
 				45A33254298976BA008181E9 /* PolicyLinkView.swift in Sources */,
 				CE7E80122D794C1D00A5558A /* DeveloperSettingsViewController.swift in Sources */,
 				45A33256298976BA008181E9 /* HomeFilterOptions.swift in Sources */,
+				CE612AA32D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEB739E02D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				A9A1B2BE2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				CE7E804E2D7A368300A5558A /* PreviewUIView.swift in Sources */,
@@ -23530,6 +23556,7 @@
 				A91A05BC29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				CE7E80152D794C1D00A5558A /* DeveloperSettingsViewController.swift in Sources */,
 				45A6BD4628246A7500D9B416 /* CompetitionDetailsViewController.swift in Sources */,
+				CE612AA02D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				A986D34628CB473700AF95D7 /* TipsCellViewModel.swift in Sources */,
 				45A6BD4728246A7500D9B416 /* MyFavoritesViewController.swift in Sources */,
 				CE7E80462D7A368300A5558A /* PreviewUIView.swift in Sources */,
@@ -24298,6 +24325,7 @@
 				45F6BD0B2AB3732C00C81DE1 /* PolicyLinkView.swift in Sources */,
 				CE7E800E2D794C1D00A5558A /* DeveloperSettingsViewController.swift in Sources */,
 				45F6BD0C2AB3732C00C81DE1 /* HomeFilterOptions.swift in Sources */,
+				CE612AA62D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEB739EF2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				45F6BD0D2AB3732C00C81DE1 /* UserConsentType.swift in Sources */,
 				CE7E804B2D7A368300A5558A /* PreviewUIView.swift in Sources */,
@@ -24643,6 +24671,7 @@
 				455AE12F2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */,
 				A9C3411228F9A74A0055360B /* Cashout.swift in Sources */,
 				CEEFDEB12D8C247000630F7E /* BaseMatchCardViewModel.swift in Sources */,
+				CE612A9E2D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEEFDEB22D8C247000630F7E /* BoostedOddsCardViewModel.swift in Sources */,
 				457C9F2A2A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				450FC4012A2B2589000DB866 /* BoostedArrowView.swift in Sources */,
@@ -25847,6 +25876,7 @@
 				CE12A3872D31347E0022BDF7 /* UserConsentType.swift in Sources */,
 				CE7E80162D794C1D00A5558A /* DeveloperSettingsViewController.swift in Sources */,
 				CE12A3882D31347E0022BDF7 /* Aggregator.swift in Sources */,
+				CE612AA42D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEB739ED2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				CE12A3892D31347E0022BDF7 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CE7E80492D7A368300A5558A /* PreviewUIView.swift in Sources */,
@@ -26672,6 +26702,7 @@
 				CEA5688D2D5A58D800696793 /* TipsTableViewCell.swift in Sources */,
 				CEA5688E2D5A58D800696793 /* ViewContext.swift in Sources */,
 				CEA5688F2D5A58D800696793 /* RankingsViewModel.swift in Sources */,
+				CE612A9D2D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEA568902D5A58D800696793 /* ModalTransitionPresentationController.swift in Sources */,
 				CEA568912D5A58D800696793 /* CashbackInfoView.swift in Sources */,
 				CEA568922D5A58D800696793 /* DepositWebViewController.swift in Sources */,
@@ -27380,6 +27411,7 @@
 				CEB5D66D2D88BC4D00B9D73F /* HomeFilterOptions.swift in Sources */,
 				CEB5D66E2D88BC4D00B9D73F /* UserConsentType.swift in Sources */,
 				CEB5D66F2D88BC4D00B9D73F /* DeveloperSettingsViewController.swift in Sources */,
+				CE612AA72D91645F00F911CF /* MarketOutcomesLineView.swift in Sources */,
 				CEB5D6702D88BC4D00B9D73F /* Aggregator.swift in Sources */,
 				CEB5D6712D88BC4D00B9D73F /* PreviewModelsHelper.swift in Sources */,
 				CEB5D6722D88BC4D00B9D73F /* OutrightMarketDetailsViewModel.swift in Sources */,
