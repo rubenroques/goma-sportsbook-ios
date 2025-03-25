@@ -24,8 +24,6 @@ enum GomaGamingService {
     case addFavorites(favorites: String)
     case removeFavorite(favorite: String)
     case matchStats(matchId: String)
-
-    case getClientSettings
     
     case getNotificationsUserSettings
     case postNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings)
@@ -58,8 +56,10 @@ enum GomaGamingService {
     case notificationsCounter(type: String)
     // swiftlint:disable enum_case_associated_values_count
     case featuredTips(betType: String? = nil,
-                      totalOddsMin: String? = nil, totalOddsMax: String? = nil,
-                      friends: Bool? = nil, followers: Bool? = nil,
+                      totalOddsMin: String? = nil,
+                      totalOddsMax: String? = nil,
+                      friends: Bool? = nil,
+                      followers: Bool? = nil,
                       topTips: Bool? = nil,
                       userIds: [String]? = nil,
                       page: Int? = nil)
@@ -110,9 +110,6 @@ extension GomaGamingService: Endpoint {
             return "/api/betting/\(apiVersion)/events/\(matchId)/stats/detail"
         case .removeFavorite:
             return "/api/favorites/\(apiVersion)"
-
-        case .getClientSettings:
-            return "/api/settings/\(apiVersion)/user"
             
         case .getNotificationsUserSettings:
             return "/api/notifications/\(apiVersion)/user/settings"
@@ -201,8 +198,6 @@ extension GomaGamingService: Endpoint {
                 .suggestedBets, .addFavorites, .matchStats, .sendSupportTicket:
             return nil
         
-        case .getClientSettings:
-            return nil
         case  .getNotificationsUserSettings, .postNotificationsUserSettings, .getBettingUserSettings, .postBettingUserSettings:
             return nil
         
@@ -369,10 +364,6 @@ extension GomaGamingService: Endpoint {
             return .post
         case .removeFavorite:
             return .delete
-        
-        // Settings goma client
-        case .getClientSettings:
-            return .get
         
         // Settings app user
         case  .getNotificationsUserSettings, .getBettingUserSettings:

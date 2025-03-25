@@ -9,8 +9,8 @@ import Foundation
 
 struct PopUpDetails: Codable {
 
-    let id: Int
-    let type: Int
+    let id: String
+    let type: String
     let title, subtitle, textTile, text: String?
     let promoButtonText: String?
     let closeButtonText: String?

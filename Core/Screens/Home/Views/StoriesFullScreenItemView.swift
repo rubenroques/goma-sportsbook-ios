@@ -24,11 +24,11 @@ class StoriesFullScreenItemViewModel {
     }
 
     var title: String {
-        return storyCellViewModel.title
+        return storyCellViewModel.buttonTitle
     }
 
     var externalLinkURL: URL? {
-        let linkString = self.storyCellViewModel.link
+        let linkString = self.storyCellViewModel.ctaUrl
         return URL(string: "\(TargetVariables.clientBaseUrl)\(linkString)")
     }
 
@@ -43,17 +43,17 @@ class StoriesFullScreenItemViewModel {
         self.storyCellViewModel = storyCellViewModel
         self.contentType = .empty
 
-        if let fileType = storyCellViewModel.contentString.split(separator: ".").last {
+        if let fileType = storyCellViewModel.contentMediaUrl.split(separator: ".").last {
 
             let fileTypeString = String(fileType)
 
             if self.supportedImageTypes.contains(fileTypeString) {
-                if let contentUrl = URL(string: storyCellViewModel.contentString) {
+                if let contentUrl = URL(string: storyCellViewModel.contentMediaUrl) {
                     self.contentType = .image(sourceUrl: contentUrl)
                 }
             }
             else if self.supportedVideoTypes.contains(fileTypeString) {
-                if let contentUrl = URL(string: storyCellViewModel.contentString) {
+                if let contentUrl = URL(string: storyCellViewModel.contentMediaUrl) {
                     self.contentType = .video(sourceUrl: contentUrl)
                 }
             }

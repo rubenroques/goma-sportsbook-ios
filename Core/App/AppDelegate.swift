@@ -177,7 +177,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
         //
         #if DEBUG
-        let allColors = UIColor.App.validateThemeColors()
+        // let allColors = UIColor.App.validateThemeColors()
         // AppFont.printFonts()
         #endif
         //

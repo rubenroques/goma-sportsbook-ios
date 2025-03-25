@@ -14,7 +14,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     // Define the array mapping sections to content types
     private var contentTypes: [HomeViewModel.Content] {
         switch TargetVariables.homeTemplateBuilder {
-        case .backendDynamic, .clientBackendManaged, .cmsManaged:
+        case .clientBackendManaged, .cmsManaged:
             return []
         case .dummyWidgetShowcase(widgets: let widgets):
             return widgets
@@ -113,12 +113,8 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
                 }
                 else {
                     var readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
-                    let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
-                                                                  imageName: promotionalStory.imageUrl,
-                                                                  title: promotionalStory.title,
-                                                                  link: promotionalStory.linkUrl,
-                                                                  contentString: promotionalStory.bodyText,
-                                                                  read: readStory)
+                    let storyViewModel = StoriesItemCellViewModel(promotionalStory: promotionalStory,
+                                                                  isRead: readStory)
 
                     storiesViewModels.append(storyViewModel)
 
@@ -319,20 +315,15 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     }
 
     func fetchPromotionalStories() {
-
         let cancellable = Env.servicesProvider.getPromotionalTopStories()
+            .map(ServiceProviderModelMapper.promotionalStories(fromPromotionalStories:))
             .receive(on: DispatchQueue.main)
-            .sink { _ in
+            .sink { completions in
                 //
             } receiveValue: { [weak self] promotionalStories in
-                let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
-                    let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
-                    return promotionalStory
-                })
-                self?.promotionalStories = mappedPromotionalStories
+                self?.promotionalStories = promotionalStories
                 self?.refreshPublisher.send()
             }
-
         self.addCancellable(cancellable)
     }
 
@@ -725,7 +716,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
         }
 
         switch contentType {
-        case .userProfile:
+        case .alertBannersLine:
             return self.alertsArray.isEmpty ? 0 : 1
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1

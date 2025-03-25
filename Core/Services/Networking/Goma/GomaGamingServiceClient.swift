@@ -162,12 +162,6 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestBusinessInstanceSettings(deviceId: String) -> AnyPublisher<BusinessInstanceSettingsResponse, NetworkError> {
-        let endpoint = GomaGamingService.getClientSettings
-        let requestPublisher: AnyPublisher<BusinessInstanceSettingsResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
-        return requestPublisher
-    }
-
     // Social
     func addFriends(deviceId: String, userIds: [String]) -> AnyPublisher<NetworkResponse<AddFriendResponse>, NetworkError> {
         let endpoint = GomaGamingService.addFriend(userIds: userIds)

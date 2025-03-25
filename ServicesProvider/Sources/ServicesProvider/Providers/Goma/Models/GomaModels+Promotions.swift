@@ -320,6 +320,8 @@ extension GomaModels {
 
         /// Icon URL for the story thumbnail
         let iconUrl: String?
+        
+        let backgroundImageUrl: String?
 
         /// Coding keys for JSON mapping
         private enum CodingKeys: String, CodingKey {
@@ -335,6 +337,7 @@ extension GomaModels {
             case userType = "user_type"
             case mediaUrl = "media_url"
             case iconUrl = "icon_url"
+            case backgroundImageUrl = "background_url"
         }
     }
 

@@ -1,5 +1,5 @@
 //
-//  ClientManagedHomeViewTemplateDataSource.swift
+//  StaticHomeViewTemplateDataSource.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 24/05/2023.
@@ -9,11 +9,11 @@ import Foundation
 import Combine
 import ServicesProvider
 
-class ClientManagedHomeViewTemplateDataSource {
+class StaticHomeViewTemplateDataSource {
 
     // Define the array mapping sections to content types
     private let contentTypes: [HomeViewModel.Content] = [
-        .userProfile, // AlertBanners
+        .alertBannersLine, // AlertBanners
         .bannerLine, // PromotionBanners
         .quickSwipeStack, // MatchBanners
         .promotionalStories, // PromotionStories - instagram style stories
@@ -85,13 +85,9 @@ class ClientManagedHomeViewTemplateDataSource {
                     storiesViewModels.append(storyViewModel)
                 }
                 else {
-                    var readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
-                    let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
-                                                                  imageName: promotionalStory.imageUrl,
-                                                                  title: promotionalStory.title,
-                                                                  link: promotionalStory.linkUrl,
-                                                                  contentString: promotionalStory.bodyText,
-                                                                  read: readStory)
+                    var readStory = UserDefaults.checkStoryInReadInstaStoriesArray(promotionalStory.id)
+                    let storyViewModel = StoriesItemCellViewModel(promotionalStory: promotionalStory,
+                                                                  isRead: readStory)
 
                     storiesViewModels.append(storyViewModel)
 
@@ -292,20 +288,15 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func fetchPromotionalStories() {
-
         let cancellable = Env.servicesProvider.getPromotionalTopStories()
+            .map(ServiceProviderModelMapper.promotionalStories(fromPromotionalStories:))
             .receive(on: DispatchQueue.main)
-            .sink { _ in
+            .sink { completions in
                 //
             } receiveValue: { [weak self] promotionalStories in
-                let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
-                    let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
-                    return promotionalStory
-                })
-                self?.promotionalStories = mappedPromotionalStories
+                self?.promotionalStories = promotionalStories
                 self?.refreshPublisher.send()
             }
-
         self.addCancellable(cancellable)
     }
 
@@ -664,7 +655,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
 }
 
-extension ClientManagedHomeViewTemplateDataSource {
+extension StaticHomeViewTemplateDataSource {
 
     private func addCancellable(_ cancellable: AnyCancellable) {
         self.cancellablesLock.lock()
@@ -679,7 +670,7 @@ extension ClientManagedHomeViewTemplateDataSource {
     }
 }
 
-extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
+extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     var refreshRequestedPublisher: AnyPublisher<Void, Never> {
         return self.refreshPublisher
@@ -703,7 +694,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
 
         switch contentType {
-        case .userProfile:
+        case .alertBannersLine:
             return self.alertsArray.isEmpty ? 0 : 1
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1
@@ -726,7 +717,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .promotedBetslips:
             return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
-            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+            if (Env.businessSettingsSocket.clientSettings.featuredCompetition?.id) != nil {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
             }
             else {
@@ -1154,22 +1145,4 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
         return nil
     }
-
-}
-
-extension ClientManagedHomeViewTemplateDataSource {
-
-    static func appendToReadInstaStoriesArray(_ newStory: String) {
-        let key = "readInstaStoriesArray"
-        var existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
-        existingStories.append(newStory)
-        UserDefaults.standard.set(existingStories, forKey: key)
-    }
-
-    static func checkStoryInReadInstaStoriesArray(_ storyToCheck: String) -> Bool {
-        let key = "readInstaStoriesArray"
-        let existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
-        return existingStories.contains(storyToCheck)
-    }
-
 }
