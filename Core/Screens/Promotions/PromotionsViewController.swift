@@ -159,8 +159,7 @@ class PromotionsViewController: UIViewController {
 
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
         
-        self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-        self.loadingActivityIndicatorView.color = UIColor.lightGray
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
     }
     
