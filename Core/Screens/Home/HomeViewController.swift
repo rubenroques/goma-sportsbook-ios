@@ -823,7 +823,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .quickSwipeStack:
 
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: QuickSwipeStackTableViewCell.identifier) as? QuickSwipeStackTableViewCell,
+                let cell = tableView.dequeueCellType(QuickSwipeStackTableViewCell.self),
                 let viewModel = self.viewModel.quickSwipeStackViewModel()
             else {
                 return UITableViewCell()
@@ -837,7 +837,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         case .makeOwnBetCallToAction:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: MakeYourBetTableViewCell.identifier) as? MakeYourBetTableViewCell
+                let cell = tableView.dequeueCellType(MakeYourBetTableViewCell.self)
             else {
                 return UITableViewCell()
             }
@@ -851,7 +851,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
                 if indexPath.row == 0 {
                     guard
-                        let cell = tableView.dequeueReusableCell(withIdentifier: PromotedCompetitionTableViewCell.identifier) as? PromotedCompetitionTableViewCell
+                        let cell = tableView.dequeueCellType(PromotedCompetitionTableViewCell.self)
                     else {
                         return UITableViewCell()
                     }
@@ -868,7 +868,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 else {
                     guard
-                        let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell,
+                        let cell = tableView.dequeueCellType(TopCompetitionsLineTableViewCell.self),
                         let viewModel = self.viewModel.topCompetitionsLineCellViewModel(forSection: indexPath.section)
                     else {
                         return UITableViewCell()
@@ -885,7 +885,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 guard
-                    let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell,
+                    let cell = tableView.dequeueCellType(TopCompetitionsLineTableViewCell.self),
                     let viewModel = self.viewModel.topCompetitionsLineCellViewModel(forSection: indexPath.section)
                 else {
                     return UITableViewCell()
@@ -939,7 +939,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         case .promotionalStories:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: StoriesLineTableViewCell.identifier) as? StoriesLineTableViewCell,
+                let cell = tableView.dequeueCellType(StoriesLineTableViewCell.self),
                 let storyLineViewModel = self.viewModel.storyLineViewModel()
             else {
                 return UITableViewCell()
@@ -955,7 +955,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         case .promotedSportSection:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
+                let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                 let viewModel = self.viewModel.matchLineTableCellViewModel(forSection: indexPath.section, forIndex: indexPath.row)
             else {
                 return UITableViewCell()
@@ -976,7 +976,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         case .supplementaryEvents:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
+                let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                 let viewModel = self.viewModel.matchLineTableCellViewModel(forSection: indexPath.section, forIndex: indexPath.row)
             else {
                 return UITableViewCell()
