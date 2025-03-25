@@ -1184,6 +1184,8 @@
 "increasing_limit_warning_text" = "Vous êtes sur le point d'augmenter la limite de {} de votre compte. Ces changements mettront 48 heures à être appliqués. Souhaitez-vous appliquer ces modifications?";
 
 "current_limit_info" = "Il s'agit de la valeur actuelle de votre {limitType}.";
+"current_limit_deposit_info" = "Montant max. déposable sur 7 jours glissants.";
+"current_limit_wager_info" = "Montant max. jouable sur 7 jours glissants.";
 
 "limit_update_error_message" = "La limite de {limitType} n'a pas pu être mise à jour. Veuillez contacter le support.";
 

@@ -634,7 +634,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 //            else {
 //                alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("deposit").lowercased())
 //            }
-            alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("deposit").lowercased())
+            alertMessage = localized("current_limit_deposit_info")
         }
         else if alertType == "wagering" {
 
@@ -644,7 +644,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 //            else {
 //                alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("betting").lowercased())
 //            }
-            alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("betting").lowercased())
+            alertMessage = localized("current_limit_wager_info")
         }
         else if alertType == "loss" {
 
