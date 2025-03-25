@@ -626,35 +626,9 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
             } receiveValue: { [weak self] liveEvents in
                 self?.highlightedLiveMatches = liveEvents
                 self?.refreshPublisher.send()
-
-                let eventsIds = liveEvents.compactMap({ return $0.trackableReference })
-                self?.waitUserToTrackImpressionForEvents(eventsIds: eventsIds)
             }
 
         self.addCancellable(cancellable)
-    }
-
-    private func waitUserToTrackImpressionForEvents(eventsIds: [String]) {
-        self.pendingUserTrackRequest?.cancel()
-
-        self.pendingUserTrackRequest = Env.userSessionStore.userProfilePublisher
-            .compactMap({ $0?.userIdentifier })
-            .first()
-            .sink { [weak self] userIdentifier in
-                self?.trackImpressionForEvents(eventsIds: eventsIds, userId: userIdentifier)
-            }
-    }
-
-    private func trackImpressionForEvents(eventsIds: [String], userId: String) {
-
-        Env.servicesProvider.trackEvent(.impressionsEvents(eventsIds: eventsIds), userIdentifer: userId)
-            .sink { _ in
-                //
-            } receiveValue: {
-                //
-            }
-            .store(in: &self.cancellables)
-
     }
 
     private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {

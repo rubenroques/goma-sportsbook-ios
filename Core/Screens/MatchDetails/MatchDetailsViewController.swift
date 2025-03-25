@@ -354,7 +354,7 @@ class MatchDetailsViewController: UIViewController {
         self.marketsNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
 
         self.view.transitionId = "SeeMoreToMatchDetails"
-        
+
         self.homeTeamLabel.text = ""
         self.awayTeamLabel.text = ""
 
@@ -447,7 +447,6 @@ class MatchDetailsViewController: UIViewController {
             self.chipsTypeView.topAnchor.constraint(equalTo: self.marketTypesBaseView.topAnchor),
             self.chipsTypeView.bottomAnchor.constraint(equalTo: self.marketTypesBaseView.bottomAnchor),
         ])
-
 
         self.marketGroupsPagedViewController.delegate = self
         self.marketGroupsPagedViewController.dataSource = self
@@ -684,7 +683,7 @@ class MatchDetailsViewController: UIViewController {
         }
 
         self.marketGroupsPagedBaseView.backgroundColor = .clear
-        
+
         // Market List CollectionView
         self.chipsTypeView.backgroundColor = UIColor.App.pillNavigation
         self.marketTypesBaseView.backgroundColor = UIColor.App.pillNavigation

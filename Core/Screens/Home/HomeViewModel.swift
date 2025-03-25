@@ -109,7 +109,7 @@ class HomeViewModel {
             .sink { [weak self] _ in
                 self?.refreshPublisher.send()
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
 
     func refresh() {
