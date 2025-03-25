@@ -603,7 +603,7 @@ class HomeViewController: UIViewController {
     private func markStoryRead(id: String) {
 
         // Save story
-        ClientManagedHomeViewTemplateDataSource.appendToReadInstaStoriesArray(id)
+        UserDefaults.appendToReadInstaStoriesArray(id)
 
         // Refresh view models
         if var storyLineViewModel = self.viewModel.storyLineViewModel() {
@@ -612,23 +612,11 @@ class HomeViewController: UIViewController {
 
             for storyCellViewModel in storyLineViewModel.storiesViewModels {
                 if storyCellViewModel.id == id {
-                    let updatedStory = StoriesItemCellViewModel(id: storyCellViewModel.id,
-                                                                imageName: storyCellViewModel.imageName,
-                                                                title: storyCellViewModel.title,
-                                                                link: storyCellViewModel.link,
-                                                                contentString: storyCellViewModel.contentString,
-                                                                read: true)
-
+                    let updatedStory = storyCellViewModel.copy(isRead: true)
                     updatedStoriesViewModels.append(updatedStory)
                 }
                 else {
-                    let updatedStory = StoriesItemCellViewModel(id: storyCellViewModel.id,
-                                                                imageName: storyCellViewModel.imageName,
-                                                                title: storyCellViewModel.title,
-                                                                link: storyCellViewModel.link,
-                                                                contentString: storyCellViewModel.contentString,
-                                                                read: storyCellViewModel.read)
-
+                    let updatedStory = storyCellViewModel.copy(isRead: storyCellViewModel.isRead)
                     updatedStoriesViewModels.append(updatedStory)
                 }
             }

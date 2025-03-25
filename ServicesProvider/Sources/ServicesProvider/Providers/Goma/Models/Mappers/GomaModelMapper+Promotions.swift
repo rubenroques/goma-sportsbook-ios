@@ -133,7 +133,8 @@ extension GomaModelMapper {
             endDate: story.endDate,
             userType: story.userType,
             mediaUrl: story.mediaUrl,
-            iconUrl: story.iconUrl)
+            iconUrl: story.iconUrl,
+            backgroundImageUrl: story.backgroundImageUrl)
     }
 
     // MARK: - News

@@ -7730,6 +7730,18 @@
 		CE2E0F142D3995D100488EF5 /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = CE2E0F122D3995D100488EF5 /* replay_sucess.json */; };
 		CE315EDA2D00B3FA0080D900 /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = CE315ED52D00B3FA0080D900 /* replay_sucess.json */; };
 		CE315EDD2D00B3FA0080D900 /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = CE315ED52D00B3FA0080D900 /* replay_sucess.json */; };
+		CE3575732D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE3575742D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE3575752D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE3575762D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE3575772D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE3575782D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE3575792D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE35757A2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE35757B2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE35757C2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE35757D2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
+		CE35757E2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */; };
 		CE544FCA2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCB2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCC2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
@@ -11449,6 +11461,7 @@
 		CE25A5FC2D42940E00B748D6 /* ChipCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE2E0F122D3995D100488EF5 /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
 		CE315ED52D00B3FA0080D900 /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
+		CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Promotional.swift"; sourceTree = "<group>"; };
 		CE544FC92D07029900AA24CA /* first_deposit_8.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = first_deposit_8.json; sourceTree = "<group>"; };
 		CE6257E32D5A17B7009C11D2 /* avatar1-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-dark.json"; sourceTree = "<group>"; };
 		CE6257E42D5A17B7009C11D2 /* avatar1-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-light.json"; sourceTree = "<group>"; };
@@ -12314,6 +12327,7 @@
 				A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */,
 				658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */,
 				459EF26F2BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift */,
+				CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */,
 				CE9A37BB2D824750006B6176 /* ServiceProviderModelMapper+Banner.swift */,
 			);
 			path = ModelMappers;
@@ -19495,6 +19509,7 @@
 				450B7A6728F58574009229E3 /* AddFriendCellViewModel.swift in Sources */,
 				450B7A6828F58574009229E3 /* Debounce.swift in Sources */,
 				45644F9F2C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				CE3575762D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				450B7A6928F58574009229E3 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				450B7A6B28F58574009229E3 /* ConversationsViewController.swift in Sources */,
 				450B7A6C28F58574009229E3 /* WithdrawResponse.swift in Sources */,
@@ -19676,6 +19691,7 @@
 				A9DF8E3128E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				A9B946CC28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				A9A1B2C52A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
+				CE35757D2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				A9A7B52D29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				A986D35228CB47A900AF95D7 /* TipsViewModel.swift in Sources */,
 				A9FB6D6928C65EF100E3FE58 /* RankingsListViewController.swift in Sources */,
@@ -20384,6 +20400,7 @@
 				457CBB9B282D27D000ED0F00 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				A92548152A28F84D0056F832 /* IdentificationDocsViewController.swift in Sources */,
 				45B6E235284151E5001B570C /* EditGroupAddUserViewController.swift in Sources */,
+				CE35757B2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				457CBB9D282D27D000ED0F00 /* ConversationsViewController.swift in Sources */,
 				A9958C7329705D62001474E2 /* DocumentView.swift in Sources */,
 				CE16F2802D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
@@ -21013,6 +21030,7 @@
 				CE7E80022D79494B00A5558A /* UserDefaults+DeveloperMode.swift in Sources */,
 				457CBDF7282D2CD100ED0F00 /* CGFloat+Extensions.swift in Sources */,
 				457CBDF8282D2CD100ED0F00 /* SportGroupViewModel.swift in Sources */,
+				CE35757C2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				457CBDF9282D2CD100ED0F00 /* BonusAvailableTableViewCell.swift in Sources */,
 				457CBDFA282D2CD100ED0F00 /* MyFavoritesViewModel.swift in Sources */,
 				A9A207DF283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */,
@@ -21896,6 +21914,7 @@
 				4589C91B282024E400243547 /* Debounce.swift in Sources */,
 				4589C91C282024E400243547 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45644FA12C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				CE3575792D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				4589C9DF2820279500243547 /* TargetVariables.swift in Sources */,
 				4589C91D282024E400243547 /* ConversationsViewController.swift in Sources */,
 				4589C91E282024E400243547 /* WithdrawResponse.swift in Sources */,
@@ -22653,6 +22672,7 @@
 				45A33288298976BA008181E9 /* AddFriendCellViewModel.swift in Sources */,
 				45A33289298976BA008181E9 /* Debounce.swift in Sources */,
 				45644FA52C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				CE3575732D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				45A3328A298976BA008181E9 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45A3328B298976BA008181E9 /* ConversationsViewController.swift in Sources */,
 				45A3328C298976BA008181E9 /* WithdrawResponse.swift in Sources */,
@@ -23410,6 +23430,7 @@
 				45A6BD7228246A7500D9B416 /* FriendsListViewModel.swift in Sources */,
 				45A6BD7328246A7500D9B416 /* Debounce.swift in Sources */,
 				45644FA42C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				CE3575772D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				45A6BD7428246A7500D9B416 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45A6BD7528246A7500D9B416 /* ConversationsViewController.swift in Sources */,
 				459874BC2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
@@ -24167,6 +24188,7 @@
 				45F6BD492AB3732C00C81DE1 /* AddFriendCellViewModel.swift in Sources */,
 				45F6BD4A2AB3732C00C81DE1 /* Debounce.swift in Sources */,
 				45644FA02C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				CE3575742D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				45F6BD4B2AB3732C00C81DE1 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45F6BD4C2AB3732C00C81DE1 /* ConversationsViewController.swift in Sources */,
 				45F6BD4D2AB3732C00C81DE1 /* WithdrawResponse.swift in Sources */,
@@ -24811,6 +24833,7 @@
 				A9C3425028F9A74A0055360B /* BonusSwitchTableViewCell.swift in Sources */,
 				CE7E800B2D79494B00A5558A /* UserDefaults+DeveloperMode.swift in Sources */,
 				A9C3425128F9A74A0055360B /* FriendProfileViewController.swift in Sources */,
+				CE35757A2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				A9C3425228F9A74A0055360B /* CompetitionFilterRowViewModel.swift in Sources */,
 				A9C3425428F9A74A0055360B /* SearchTextField.swift in Sources */,
 				A9C3425528F9A74A0055360B /* FeaturedTipCollectionViewCell.swift in Sources */,
@@ -25694,6 +25717,7 @@
 				CE12A3CB2D31347E0022BDF7 /* Debounce.swift in Sources */,
 				CE12A3CC2D31347E0022BDF7 /* OpenStatsButton.swift in Sources */,
 				CE12A3CD2D31347E0022BDF7 /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				CE3575752D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				CE12A3CE2D31347E0022BDF7 /* ConversationsViewController.swift in Sources */,
 				CE12A3CF2D31347E0022BDF7 /* WithdrawResponse.swift in Sources */,
 				CE12A3D02D31347E0022BDF7 /* NavigationCardView.swift in Sources */,
@@ -26443,6 +26467,7 @@
 				CEA568952D5A58D800696793 /* ExtraDocsViewModel.swift in Sources */,
 				CEA568962D5A58D800696793 /* MessageDetailViewController.swift in Sources */,
 				CEA568972D5A58D800696793 /* TitleTextFieldView.swift in Sources */,
+				CE3575782D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				CEA568982D5A58D800696793 /* ActivationAlert.swift in Sources */,
 				CEA568992D5A58D800696793 /* AddFriendCellViewModel.swift in Sources */,
 				CEA5689A2D5A58D800696793 /* FriendsListViewModel.swift in Sources */,
@@ -27205,6 +27230,7 @@
 				CEB5D6B62D88BC4D00B9D73F /* AddFriendCellViewModel.swift in Sources */,
 				CEB5D6B72D88BC4D00B9D73F /* Debounce.swift in Sources */,
 				CEB5D6B82D88BC4D00B9D73F /* OpenStatsButton.swift in Sources */,
+				CE35757E2D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift in Sources */,
 				CEB5D6B92D88BC4D00B9D73F /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				CEB5D6BA2D88BC4D00B9D73F /* ConversationsViewController.swift in Sources */,
 				CEB5D6BB2D88BC4D00B9D73F /* WithdrawResponse.swift in Sources */,

@@ -78,12 +78,8 @@ class CMSManagedHomeViewTemplateDataSource {
                 }
                 else {
                     let readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
-                    let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
-                                                                  imageName: promotionalStory.imageUrl,
-                                                                  title: promotionalStory.title,
-                                                                  link: promotionalStory.linkUrl,
-                                                                  contentString: promotionalStory.bodyText,
-                                                                  read: readStory)
+                    let storyViewModel = StoriesItemCellViewModel(promotionalStory: promotionalStory,
+                                                                  isRead: readStory)
 
                     storiesViewModels.append(storyViewModel)
 
@@ -399,17 +395,13 @@ class CMSManagedHomeViewTemplateDataSource {
     }
 
     func fetchPromotionalStories() {
-
-        let cancellable = Env.servicesProvider.getPromotionalTopStories()
+        let cancellable = Env.servicesProvider.getStories()
+            .map(ServiceProviderModelMapper.promotionalStories(fromServiceProviderStories:))
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                //
+            .sink { completion in
+                
             } receiveValue: { [weak self] promotionalStories in
-                let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
-                    let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
-                    return promotionalStory
-                })
-                self?.promotionalStories = mappedPromotionalStories
+                self?.promotionalStories = promotionalStories
                 self?.refreshPublisher.send()
             }
 

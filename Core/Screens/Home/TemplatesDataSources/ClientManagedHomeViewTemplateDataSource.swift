@@ -85,13 +85,9 @@ class ClientManagedHomeViewTemplateDataSource {
                     storiesViewModels.append(storyViewModel)
                 }
                 else {
-                    var readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
-                    let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
-                                                                  imageName: promotionalStory.imageUrl,
-                                                                  title: promotionalStory.title,
-                                                                  link: promotionalStory.linkUrl,
-                                                                  contentString: promotionalStory.bodyText,
-                                                                  read: readStory)
+                    var readStory = UserDefaults.checkStoryInReadInstaStoriesArray(promotionalStory.id)
+                    let storyViewModel = StoriesItemCellViewModel(promotionalStory: promotionalStory,
+                                                                  isRead: readStory)
 
                     storiesViewModels.append(storyViewModel)
 
@@ -292,20 +288,15 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func fetchPromotionalStories() {
-
         let cancellable = Env.servicesProvider.getPromotionalTopStories()
+            .map(ServiceProviderModelMapper.promotionalStories(fromPromotionalStories:))
             .receive(on: DispatchQueue.main)
-            .sink { _ in
+            .sink { completions in
                 //
             } receiveValue: { [weak self] promotionalStories in
-                let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
-                    let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
-                    return promotionalStory
-                })
-                self?.promotionalStories = mappedPromotionalStories
+                self?.promotionalStories = promotionalStories
                 self?.refreshPublisher.send()
             }
-
         self.addCancellable(cancellable)
     }
 
@@ -1154,22 +1145,4 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
         return nil
     }
-
-}
-
-extension ClientManagedHomeViewTemplateDataSource {
-
-    static func appendToReadInstaStoriesArray(_ newStory: String) {
-        let key = "readInstaStoriesArray"
-        var existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
-        existingStories.append(newStory)
-        UserDefaults.standard.set(existingStories, forKey: key)
-    }
-
-    static func checkStoryInReadInstaStoriesArray(_ storyToCheck: String) -> Bool {
-        let key = "readInstaStoriesArray"
-        let existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
-        return existingStories.contains(storyToCheck)
-    }
-
 }

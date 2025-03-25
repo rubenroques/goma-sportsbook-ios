@@ -21,7 +21,7 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
 
     var selectedItemAction: (String) -> Void = { _ in }
 
-    private let cellHeight: CGFloat = 118
+    private let cellHeight: CGFloat = 122
 
     private var collectionView: UICollectionView!
 
@@ -51,7 +51,7 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
         self.contentView.backgroundColor = .clear
 
         self.collectionView.backgroundView?.backgroundColor = .clear
-        self.collectionView.backgroundColor = UIColor.App.backgroundTertiary
+        self.collectionView.backgroundColor = .clear
     }
 
     private func setupCollectionView() {
@@ -72,11 +72,11 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
         self.contentView.addSubview(self.collectionView)
 
         NSLayoutConstraint.activate([
-            self.collectionView.heightAnchor.constraint(equalToConstant: self.cellHeight),
+            self.collectionView.heightAnchor.constraint(equalToConstant: self.cellHeight - 4),
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+            self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 1),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -3)
         ])
     }
 

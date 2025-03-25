@@ -504,8 +504,17 @@ struct UserWallet {
 struct PromotionalStory {
 
     let id: String
-    let title: String
-    let imageUrl: String
-    let linkUrl: String
-    let bodyText: String
+    // The title of the button story cell
+    let buttonTitle: String
+    // The small icon in the button story cell
+    let buttonIconUrl: String
+    // The (optional) background image in th button story cell
+    let buttonBackgroungImageUrl: String?
+    // The media content that will show in the fullscreen
+    let contentMediaUrl: String
+    // the link (internal or external) of the full screen bottom button
+    let ctaUrl: String
+    // the link (internal or external) of the full screen bottom button
+    let ctaText: String
+    
 }
