@@ -464,7 +464,7 @@ enum SportTypeInfo: CaseIterable {
         case "VBL": self = .volleyball
         case "21": self = .wintersports
         case "WAT": self = .waterPolo
-        case "23": self = .motorRacing
+        case "MCG": self = .motorRacing
         case "HRR": self = .horseRacing
         case "25": self = .fighting
         case "CRK": self = .cricket
