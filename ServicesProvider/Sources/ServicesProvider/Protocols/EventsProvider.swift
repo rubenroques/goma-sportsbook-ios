@@ -62,7 +62,7 @@ protocol EventsProvider: Connector {
     //
     func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
 
-    func getMarketGroups(forEvent: Event) -> AnyPublisher<[MarketGroup], Never>
+    func getMarketGroups(forEvent event: Event, includeMixMatchGroup: Bool, includeAllMarketsGroup: Bool) -> AnyPublisher<[MarketGroup], Never>
 
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
 
@@ -84,9 +84,6 @@ protocol EventsProvider: Connector {
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError>
 
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>
-
-    func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError>
-    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
 
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>
 
@@ -130,8 +127,9 @@ protocol EventsProvider: Connector {
     func getNews() -> AnyPublisher<[News], ServiceProviderError>
     func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError>
     func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError>
-    func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError>
     
+    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
+        
     func getPromotedEventsBySport() -> AnyPublisher<[SportType: Events], ServiceProviderError>
     func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError>
     func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError>

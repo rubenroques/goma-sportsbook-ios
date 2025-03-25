@@ -27,6 +27,8 @@ class ChipsTypeView: UIView {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceHorizontal = true
+        
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
         collectionView.register(ChipCollectionViewCell.self,
                                                 forCellWithReuseIdentifier: ChipCollectionViewCell.identifier)
         collectionView.register(ListBackgroundCollectionViewCell.self,
@@ -144,7 +146,7 @@ extension ChipsTypeView: UICollectionViewDelegate, UICollectionViewDataSource {
             let tab = viewModel.tab(at: indexPath.item),
             let cell = collectionView.dequeueCellType(ChipCollectionViewCell.self, indexPath: indexPath)
         else {
-            fatalError()
+            return UICollectionViewCell()
         }
         
         if case .backgroungImage = tab {

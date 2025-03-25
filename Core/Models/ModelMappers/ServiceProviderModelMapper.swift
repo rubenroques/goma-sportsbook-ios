@@ -369,7 +369,6 @@ extension ServiceProviderModelMapper {
     }
     
     static func competitions(fromSportCompetitions sportCompetitions: [SportCompetition]) -> [Competition] {
-        
         let competitions = sportCompetitions.map({ sportCompetition in
             let competition = Competition(id: sportCompetition.id,
                                           name: sportCompetition.name,
@@ -378,15 +377,9 @@ extension ServiceProviderModelMapper {
                                           outrightMarkets: [])
             return competition
         })
-        
         return competitions
     }
     
-    static func promotionalStory(fromPromotionalStory promotionalStory: ServicesProvider.PromotionalStory) -> PromotionalStory {
-        
-        return PromotionalStory(id: promotionalStory.id, title: promotionalStory.title, imageUrl: promotionalStory.imageUrl, linkUrl: promotionalStory.linkUrl, bodyText: promotionalStory.bodyText )
-    }
-
     static func suggestedBetslips(fromPromotedBetslips promotedBetslips: [PromotedBetslip]) -> [SuggestedBetslip] {
         return promotedBetslips.map(Self.suggestedBetslip(fromPromotedBetslip:))
     }

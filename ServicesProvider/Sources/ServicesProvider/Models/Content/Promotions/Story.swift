@@ -47,6 +47,9 @@ public struct Story: Identifiable, Equatable, Hashable, Codable {
     /// Icon URL for the story thumbnail
     public let iconUrl: String?
 
+    /// Icon URL for the story thumbnail
+    public let backgroundImageUrl: String?
+    
     /// Coding keys for JSON mapping
     private enum CodingKeys: String, CodingKey {
         case id
@@ -61,5 +64,6 @@ public struct Story: Identifiable, Equatable, Hashable, Codable {
         case userType = "user_type"
         case mediaUrl = "media_url"
         case iconUrl = "icon_url"
+        case backgroundImageUrl = "background_url"
     }
 }

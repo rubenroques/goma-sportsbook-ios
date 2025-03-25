@@ -23,7 +23,7 @@ class CMSManagedHomeViewTemplateDataSource {
     // ALERTS
     // New model
     private var alerts = HomeAlerts()
-    
+
     // User Alert
     private var alertsArray: [ActivationAlert] = []
 
@@ -77,13 +77,9 @@ class CMSManagedHomeViewTemplateDataSource {
                     storiesViewModels.append(storyViewModel)
                 }
                 else {
-                    var readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
-                    let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
-                                                                  imageName: promotionalStory.imageUrl,
-                                                                  title: promotionalStory.title,
-                                                                  link: promotionalStory.linkUrl,
-                                                                  contentString: promotionalStory.bodyText,
-                                                                  read: readStory)
+                    let readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
+                    let storyViewModel = StoriesItemCellViewModel(promotionalStory: promotionalStory,
+                                                                  isRead: readStory)
 
                     storiesViewModels.append(storyViewModel)
 
@@ -159,7 +155,7 @@ class CMSManagedHomeViewTemplateDataSource {
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
     var heroCardWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
 
-    var highlightedLiveMatchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
+    var highlightedLiveMatchLineCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
     var marketWidgetContainerTableViewModelCache: [String: MarketWidgetContainerTableViewModel] = [:]
 
@@ -184,9 +180,10 @@ class CMSManagedHomeViewTemplateDataSource {
         // Banners are associated with profile publisher
         let profileCancellable = Env.userSessionStore.userProfilePublisher
             .removeDuplicates()
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.fetchBanners()
+                self?.refreshData()
             }
 
         self.addCancellable(profileCancellable)
@@ -231,7 +228,7 @@ class CMSManagedHomeViewTemplateDataSource {
     private func mapWidgetToContentType(_ widget: HomeWidget) -> HomeViewModel.Content? {
         switch widget {
         case .alertBanners:
-            return .userProfile
+            return .alertBannersLine
         case .banners:
             return .bannerLine
         case .carouselEvents:
@@ -262,7 +259,7 @@ class CMSManagedHomeViewTemplateDataSource {
     // Set default content types in case of failure
     private func setDefaultContentTypes() {
         self.contentTypes = [
-            .userProfile, // AlertBanners
+            .alertBannersLine, // AlertBanners
             .bannerLine, // PromotionBanners
             .quickSwipeStack, // MatchBanners
             .promotionalStories, // PromotionStories - instagram style stories
@@ -280,7 +277,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
     func refreshTemplate() {
         // First refresh the home template
-        fetchHomeTemplate()
+        self.fetchHomeTemplate()
     }
 
     func refreshData() {
@@ -298,11 +295,11 @@ class CMSManagedHomeViewTemplateDataSource {
 
         self.cachedFeaturedTipLineViewModel = nil
 
-        self.highlightedLiveMatchLineTableCellViewModelCache = [:]
+        self.highlightedLiveMatchLineCellViewModelCache = [:]
 
         // Only fetch data for widgets that are present in contentTypes
         if self.contentTypes.contains(.quickSwipeStack) {
-            self.fetchQuickSwipeMatches()
+            self.fetchCarouselMatches()
         }
 
         if self.contentTypes.contains(.highlightedMatches) || self.contentTypes.contains(.highlightedBoostedOddsMatches) {
@@ -337,7 +334,7 @@ class CMSManagedHomeViewTemplateDataSource {
             self.fetchHeroMatches()
         }
 
-        if self.contentTypes.contains(.userProfile) {
+        if self.contentTypes.contains(.alertBannersLine) {
             self.fetchAlerts()
         }
 
@@ -352,25 +349,36 @@ class CMSManagedHomeViewTemplateDataSource {
 
     // User alerts
     func fetchAlerts() {
-
-        let alertsCancellable = Env.userSessionStore.userKnowYourCustomerStatusPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] kycStatus in
+        let kycPublisher = Env.userSessionStore.userKnowYourCustomerStatusPublisher
+            .map { kycStatus -> [ActivationAlert] in
                 if kycStatus == .request {
-                    let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
-                                                                   description: localized("document_validation_required_description"),
-                                                                   linkLabel: localized("complete_your_verification"),
-                                                                   alertType: .documents)
-                    self?.alertsArray = [uploadDocumentsAlertData]
+                    let uploadDocumentsAlertData = ActivationAlert(
+                        title: localized("document_validation_required"),
+                        description: localized("document_validation_required_description"),
+                        linkLabel: localized("complete_your_verification"),
+                        alertType: .documents
+                    )
+                    return [uploadDocumentsAlertData]
                 }
-                else {
-                    self?.alertsArray = []
-                }
+                return []
+            }
+
+        let serverAlertsPublisher = Env.servicesProvider.getAlertBanner()
+            .map { alertBanner -> [ActivationAlert] in
+                guard let alertBanner = alertBanner else { return [] }
+                let serverAlert = ServiceProviderModelMapper.activationAlert(fromAlertBanner: alertBanner)
+                return [serverAlert]
+            }
+            .replaceError(with: [])
+
+        let combinedCancellable = Publishers.CombineLatest(kycPublisher, serverAlertsPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] kycAlerts, serverAlerts in
+                self?.alertsArray = kycAlerts + serverAlerts
                 self?.refreshPublisher.send()
-            })
+            }
 
-        self.addCancellable(alertsCancellable)
-
+        self.addCancellable(combinedCancellable)
     }
 
     // User alerts
@@ -402,25 +410,21 @@ class CMSManagedHomeViewTemplateDataSource {
     }
 
     func fetchPromotionalStories() {
-
-        let cancellable = Env.servicesProvider.getPromotionalTopStories()
+        let cancellable = Env.servicesProvider.getStories()
+            .map(ServiceProviderModelMapper.promotionalStories(fromServiceProviderStories:))
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                //
+            .sink { completion in
+                
             } receiveValue: { [weak self] promotionalStories in
-                let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
-                    let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
-                    return promotionalStory
-                })
-                self?.promotionalStories = mappedPromotionalStories
+                self?.promotionalStories = promotionalStories
                 self?.refreshPublisher.send()
             }
 
         self.addCancellable(cancellable)
     }
 
-    func fetchQuickSwipeMatches() {
-        let cancellable = Env.servicesProvider.getPromotionalSlidingTopEvents()
+    func fetchCarouselMatches() {
+        let cancellable = Env.servicesProvider.getCarouselEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
@@ -467,7 +471,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
     func fetchHighlightMatches() {
 
-        let imageMatches = Env.servicesProvider.getTopImageCardEvents()
+        let imageMatches = Env.servicesProvider.getTopImageEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
@@ -837,7 +841,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
 
         switch contentType {
-        case .userProfile:
+        case .alertBannersLine:
             return self.alertsArray.isEmpty ? 0 : 1
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1
@@ -1260,12 +1264,12 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return nil
         }
 
-        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineTableCellViewModelCache[match.id] {
+        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineCellViewModelCache[match.id] {
             return matchLineTableCellViewModel
         }
         else {
             let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match, status: .live)
-            self.highlightedLiveMatchLineTableCellViewModelCache[match.id] = matchLineTableCellViewModel
+            self.highlightedLiveMatchLineCellViewModelCache[match.id] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }
 

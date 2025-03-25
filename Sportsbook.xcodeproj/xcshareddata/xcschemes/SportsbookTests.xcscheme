@@ -36,6 +36,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "45A3302B298976BA008181E9"
+            BuildableName = "Betsson.app"
+            BlueprintName = "Betsson PROD"
+            ReferencedContainer = "container:Sportsbook.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

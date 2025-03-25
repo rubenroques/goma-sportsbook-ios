@@ -264,6 +264,21 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
+    static func appendToReadInstaStoriesArray(_ newStory: String) {
+        let key = "readInstaStoriesArray"
+        var existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
+        existingStories.append(newStory)
+        UserDefaults.standard.set(existingStories, forKey: key)
+    }
+
+    static func checkStoryInReadInstaStoriesArray(_ storyToCheck: String) -> Bool {
+        let key = "readInstaStoriesArray"
+        let existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
+        return existingStories.contains(storyToCheck)
+    }
+}
+
+extension UserDefaults {
     func set<Element: Codable>(codable value: Element, forKey key: String) {
         let encodedData = try? JSONEncoder().encode(value)
         UserDefaults.standard.setValue(encodedData, forKey: key)

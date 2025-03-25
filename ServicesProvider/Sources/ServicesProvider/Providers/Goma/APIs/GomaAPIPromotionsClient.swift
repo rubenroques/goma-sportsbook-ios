@@ -52,7 +52,6 @@ class GomaAPIPromotionsClient {
                 self?.cache.cacheInitialDump(initialDump)
             })
             .eraseToAnyPublisher()
-
         return publisher
     }
 
@@ -88,7 +87,7 @@ class GomaAPIPromotionsClient {
     /// - Returns: A publisher with the decoded response or error
     func alertBanner() -> AnyPublisher<GomaModels.AlertBanner, ServiceProviderError> {
         let endpoint = GomaAPIPromotionsSchema.alertBanner
-        if let cachedData = self.cache.getCachedInitialDump(), let alertBanner = cachedData.homeWidgetContent.alertBanner {
+        if let cachedData = self.cache.getCachedInitialDump(), let alertBanner = cachedData.getAlertBanner() {
             return Just(alertBanner)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
@@ -101,7 +100,7 @@ class GomaAPIPromotionsClient {
     /// - Returns: A publisher with the decoded response or error
     func banners() -> AnyPublisher<GomaModels.Banners, ServiceProviderError> {
         let endpoint = GomaAPIPromotionsSchema.banners
-        if let cachedData = self.cache.getCachedInitialDump(), let banners = cachedData.homeWidgetContent.banners {
+        if let cachedData = self.cache.getCachedInitialDump(), let banners = cachedData.getBanners() {
             return Just(banners)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
@@ -112,9 +111,9 @@ class GomaAPIPromotionsClient {
 
     /// Get carousel events (formerly sport banners)
     /// - Returns: A publisher with the decoded response or error
-    func carouselEvents() -> AnyPublisher<GomaModels.CarouselEvents, ServiceProviderError> {
+    func carouselEventPointers() -> AnyPublisher<GomaModels.CarouselEventPointers, ServiceProviderError> {
         let endpoint = GomaAPIPromotionsSchema.sportBanners
-        if let cachedData = self.cache.getCachedInitialDump(), let carouselEvents = cachedData.homeWidgetContent.carouselEvents {
+        if let cachedData = self.cache.getCachedInitialDump(), let carouselEvents = cachedData.homeWidgetPointers?.carouselEventPointers {
             return Just(carouselEvents)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
@@ -132,8 +131,20 @@ class GomaAPIPromotionsClient {
 
     func topImageCardPointers() -> AnyPublisher<GomaModels.TopImageCardPointers, ServiceProviderError> {
         // First check if we have a valid cached version
-        if let cachedData = self.cache.getCachedInitialDump(), let topImageCardPointers = cachedData.homeWidgetContent.topImageCardPointers {
+        if let cachedData = self.cache.getCachedInitialDump(), let topImageCardPointers = cachedData.homeWidgetPointers?.topImageCardPointers {
             return Just(topImageCardPointers)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+
+        let endpoint = GomaAPIPromotionsSchema.topImageCards
+        return self.connector.request(endpoint)
+    }
+    
+    func topImageEvents() -> AnyPublisher<GomaModels.Events, ServiceProviderError> {
+        // First check if we have a valid cached version
+        if let cachedData = self.cache.getCachedInitialDump(), let topImageEvents = cachedData.homeWidgetContent?.topImageEvents {
+            return Just(topImageEvents)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
         }
@@ -146,7 +157,7 @@ class GomaAPIPromotionsClient {
     /// - Returns: A publisher with the decoded response or error
     func heroCards() -> AnyPublisher<GomaModels.HeroCardPointers, ServiceProviderError> {
         // First check if we have a valid cached version
-        if let cachedData = self.cache.getCachedInitialDump(), let heroCardPointers = cachedData.homeWidgetContent.heroCardPointers {
+        if let cachedData = self.cache.getCachedInitialDump(), let heroCardPointers = cachedData.homeWidgetPointers?.heroCardPointers {
             return Just(heroCardPointers)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
@@ -175,9 +186,9 @@ class GomaAPIPromotionsClient {
 
     /// Get pro betting choices
     /// - Returns: A publisher with the decoded response or error
-    func proChoices() -> AnyPublisher<GomaModels.ProChoiceCardPointers, ServiceProviderError> {
+    func proChoicePointers() -> AnyPublisher<GomaModels.ProChoiceCardPointers, ServiceProviderError> {
         let endpoint = GomaAPIPromotionsSchema.proChoices
-        if let cachedData = self.cache.getCachedInitialDump(), let proChoiceCardPointers = cachedData.homeWidgetContent.proChoiceCardPointers {
+        if let cachedData = self.cache.getCachedInitialDump(), let proChoiceCardPointers = cachedData.homeWidgetPointers?.proChoiceCardPointers {
             return Just(proChoiceCardPointers)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
@@ -185,10 +196,24 @@ class GomaAPIPromotionsClient {
         
         return self.connector.request(endpoint)
     }
+    
+    /// Get pro betting choices
+    /// - Returns: A publisher with the decoded response or error
+    func proChoices() -> AnyPublisher<GomaModels.Events, ServiceProviderError> {
+        let endpoint = GomaAPIPromotionsSchema.proChoices
+        return self.connector.request(endpoint)
+    }
 
     /// Get top competitions
     /// - Returns: A publisher with the decoded response or error
-    func topCompetitions() -> AnyPublisher<GomaModels.TopCompetitionPointers, ServiceProviderError> {
+    func topCompetitionPointers() -> AnyPublisher<GomaModels.TopCompetitionPointers, ServiceProviderError> {
+        let endpoint = GomaAPIPromotionsSchema.topCompetitions
+        return self.connector.request(endpoint)
+    }
+    
+    /// Get top competitions
+    /// - Returns: A publisher with the decoded response or error
+    func topCompetitions() -> AnyPublisher<GomaModels.Competitions, ServiceProviderError> {
         let endpoint = GomaAPIPromotionsSchema.topCompetitions
         return self.connector.request(endpoint)
     }
@@ -201,3 +226,5 @@ class GomaAPIPromotionsClient {
     }
 
 }
+
+

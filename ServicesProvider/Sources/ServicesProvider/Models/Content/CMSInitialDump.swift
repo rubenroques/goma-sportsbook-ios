@@ -13,7 +13,10 @@ public struct CMSInitialDump: Codable, Equatable, Hashable {
     public let homeTemplate: HomeTemplate
 
     /// All promotional content
-    public let homeWidgetContent: HomeWidgetContent
+    public let homeWidgetContent: HomeWidgetContent?
+    
+    /// All promotional pointers
+    public let homeWidgetPointers: HomeWidgetPointers?
 
 }
 
@@ -26,7 +29,59 @@ public struct HomeWidgetContent: Codable, Equatable, Hashable {
     public let banners: Banners?
 
     /// Sport-specific banners
-    public let carouselEvents: CarouselEvents?
+    public let carouselEvents: Events?
+
+    /// Highlighted events with custom images
+    public let topImageEvents: Events?
+
+    /// Expert betting picks
+    public let proChoiceEvents: Events?
+
+    /// Boosted odds promotions
+    public let boostedOddsEvents: Events?
+
+    /// Featured hero card promotions
+    public let heroCardEvents: Events?
+
+    /// Promotional stories
+    public let stories: Stories?
+
+    /// News items
+    public let news: NewsItems?
+    
+    init(alertBanner: AlertBanner?,
+         banners: Banners?,
+         carouselEvents: Events?,
+         topImageEvents: Events?,
+         proChoiceEvents: Events?,
+         boostedOddsEvents: Events?,
+         heroCardEvents: Events?,
+         stories: Stories?,
+         news: NewsItems?) {
+        self.alertBanner = alertBanner
+        self.banners = banners
+        self.carouselEvents = carouselEvents
+        self.topImageEvents = topImageEvents
+        self.proChoiceEvents = proChoiceEvents
+        self.boostedOddsEvents = boostedOddsEvents
+        self.heroCardEvents = heroCardEvents
+        self.stories = stories
+        self.news = news
+    }
+
+}
+
+
+/// Contains all promotional content grouped by type
+public struct HomeWidgetPointers: Codable, Equatable, Hashable {
+    /// Alert banner at the top of the app
+    public let alertBanner: AlertBanner?
+
+    /// Promotional banners
+    public let banners: Banners?
+
+    /// Sport-specific banners
+    public let carouselEventPointers: CarouselEventPointers?
 
     /// Highlighted events with custom images
     public let topImageCardPointers: TopImageCardPointers?
@@ -48,7 +103,7 @@ public struct HomeWidgetContent: Codable, Equatable, Hashable {
     
     init(alertBanner: AlertBanner?,
          banners: Banners?,
-         carouselEvents: CarouselEvents?,
+         carouselEventPointers: CarouselEventPointers?,
          topImageCardPointers: TopImageCardPointers?,
          proChoiceCardPointers: ProChoiceCardPointers?,
          boostedOddsBanners: BoostedOddsPointers?,
@@ -57,7 +112,7 @@ public struct HomeWidgetContent: Codable, Equatable, Hashable {
          news: NewsItems?) {
         self.alertBanner = alertBanner
         self.banners = banners
-        self.carouselEvents = carouselEvents
+        self.carouselEventPointers = carouselEventPointers
         self.topImageCardPointers = topImageCardPointers
         self.proChoiceCardPointers = proChoiceCardPointers
         self.boostedOddsBanners = boostedOddsBanners
@@ -85,4 +140,17 @@ public struct TopImageCardPointer: Codable, Equatable, Hashable {
         self.eventMarketId = eventMarketId
         self.imageUrl = imageUrl
     }
+}
+
+public typealias BoostedOddsEvents = [BoostedOddsEvent]
+
+public struct BoostedOddsEvent: Codable {
+    
+    public var id: Int
+    public var name: String?
+    public var imageUrl: String?
+    public var ctaUrl: String?
+    public var event: Event
+    public var boostedOddMarket: Market
+
 }

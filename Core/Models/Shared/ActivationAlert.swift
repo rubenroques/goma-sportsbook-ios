@@ -12,12 +12,14 @@ struct ActivationAlert {
     var description: String
     var linkLabel: String
     var alertType: ActivationAlertType
+    var ctaUrl: String?  // Add optional ctaUrl for server alerts
 }
 
 enum ActivationAlertType {
     case email
     case profile
     case documents
+    case server  // New case for server-side alerts
 }
 
 typealias HomeAlerts = [HomeAlert]

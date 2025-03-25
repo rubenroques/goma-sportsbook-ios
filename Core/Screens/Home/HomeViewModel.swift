@@ -10,7 +10,6 @@ import Combine
 import OrderedCollections
 
 enum HomeTemplateBuilderType {
-    case backendDynamic(clientTemplateKey: String)
     case clientBackendManaged
     case dummyWidgetShowcase(widgets: [HomeViewModel.Content] )
     case cmsManaged
@@ -20,13 +19,14 @@ class HomeViewModel {
 
     enum Content: Hashable, Codable {
         
+        //Updated naming:
+        case alertBannersLine
+        
+        // Legacy
         case userMessage
         case userFavorites
         case bannerLine
         case suggestedBets
-        case sportGroup(Sport)
-
-        case userProfile
         case footerBanner
 
         case promotedBetslips
@@ -52,14 +52,17 @@ class HomeViewModel {
         case highlightedMarketProChoices
         case videoNewsLine
 
+        
         var identifier: String {
             switch self {
+            case .alertBannersLine: return "userProfile"
+                
+            //
             case .userMessage: return "userMessage"
             case .userFavorites: return "userFavorites"
             case .bannerLine: return "bannerLine"
             case .suggestedBets: return "suggestedBets"
-            case .sportGroup(let sport): return "sport[\(sport)]"
-            case .userProfile: return "userProfile"
+            
             case .promotedBetslips: return "promotedBetslips"
             case .footerBanner: return "footerBanner"
 
@@ -94,20 +97,12 @@ class HomeViewModel {
 
     // MARK: - Life Cycle
     init() {
-
         switch TargetVariables.homeTemplateBuilder {
-        case .backendDynamic: // provided by our backend
-            if let homeFeedTemplate = Env.appSession.homeFeedTemplate {
-                self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(homeFeedTemplate: homeFeedTemplate)
-            }
-            else {
-                fatalError("homeFeedTemplate or homeTemplateKey not found for client with homeTemplateBuilder = backendDynamic")
-            }
-        case .clientBackendManaged: // provided by the client backend
-            self.homeViewTemplateDataSource = ClientManagedHomeViewTemplateDataSource()
-        case .dummyWidgetShowcase: // hardcoded
+        case .clientBackendManaged: // Hardcoded
+            self.homeViewTemplateDataSource = StaticHomeViewTemplateDataSource()
+        case .dummyWidgetShowcase: // Hardcoded with dummy data on some sections
             self.homeViewTemplateDataSource = DummyWidgetShowcaseHomeViewTemplateDataSource()
-        case .cmsManaged: // provided by GOMA CMS
+        case .cmsManaged: // Provided by GOMA CMS
             self.homeViewTemplateDataSource = CMSManagedHomeViewTemplateDataSource()
         }
 
@@ -129,6 +124,7 @@ extension HomeViewModel {
     func numberOfSections() -> Int {
         return self.homeViewTemplateDataSource.numberOfSections()
     }
+    
     func numberOfRows(forSectionIndex section: Int) -> Int {
         return self.homeViewTemplateDataSource.numberOfRows(forSectionIndex: section)
     }

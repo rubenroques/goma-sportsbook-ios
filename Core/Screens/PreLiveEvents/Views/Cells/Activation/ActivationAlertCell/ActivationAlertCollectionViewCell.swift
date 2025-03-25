@@ -152,6 +152,13 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
             self.containerView.setNeedsLayout()
             self.containerView.layoutIfNeeded()
         }
+        else if alertType == .server {
+            // For server alerts, we use the standard styling without the KYC expiration view
+            self.kycExpireView.isHidden = true
+            
+            self.containerView.setNeedsLayout()
+            self.containerView.layoutIfNeeded()
+        }
     }
 
     func setText(title: String, info: String, linkText: String) {

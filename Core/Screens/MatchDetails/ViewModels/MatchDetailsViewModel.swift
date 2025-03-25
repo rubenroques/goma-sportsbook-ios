@@ -317,9 +317,14 @@ class MatchDetailsViewModel: NSObject {
         // Request the remaining marketGroups details
         self.matchGroupsCancellable = matchDetailsReceivedPublisher
             .flatMap({ (event: ServicesProvider.Event) -> AnyPublisher<[MarketGroup], Never> in
-                return Env.servicesProvider.getMarketGroups(forEvent: event)
-                        .map(Self.convertMarketGroups(_:))
-                        .eraseToAnyPublisher()
+                let includeMixMatchGroup = TargetVariables.hasFeatureEnabled(feature: .mixMatch)
+                return Env.servicesProvider
+                    .getMarketGroups(
+                        forEvent: event,
+                        includeMixMatchGroup: includeMixMatchGroup,
+                        includeAllMarketsGroup: true)
+                    .map(Self.convertMarketGroups(_:))
+                    .eraseToAnyPublisher()
             })
             .sink { [weak self] completion in
                 if case .failure = completion {

@@ -78,7 +78,6 @@ struct FirebaseClientSettings: Codable {
         #if DEBUG
         var simulateMaintenanceMode = false
         if simulateMaintenanceMode {
-            print("[MaintenanceDebug] Using debug override for maintenance mode")
             self.isOnMaintenance = true
             self.maintenanceReason = "[DEBUG] App is under maintenance for testing purposes"
         }

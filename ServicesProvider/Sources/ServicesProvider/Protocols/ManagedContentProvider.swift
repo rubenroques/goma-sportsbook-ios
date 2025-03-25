@@ -40,8 +40,12 @@ protocol ManagedContentProvider: Connector {
 
     /// Retrieves sport-specific promotional banners
     /// - Returns: Publisher that emits an array of sport banners
-    func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError>
+    func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError>
 
+    /// Retrieves sport-specific promotional banners
+    /// - Returns: Publisher that emits an array of sport banners
+    func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError>
+    
     // MARK: - Boosted Odds
 
     /// Retrieves boosted odds banners
@@ -70,7 +74,7 @@ protocol ManagedContentProvider: Connector {
 
     /// Retrieves top image card events
     /// - Returns: Publisher that emits an array of top image card events
-    func getTopImageCardEvents() -> AnyPublisher<Events, ServiceProviderError>
+    func getTopImageEvents() -> AnyPublisher<Events, ServiceProviderError>
 
     // MARK: - Stories
 

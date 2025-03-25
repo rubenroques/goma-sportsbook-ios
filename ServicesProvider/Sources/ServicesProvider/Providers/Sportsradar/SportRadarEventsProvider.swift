@@ -16,9 +16,6 @@ class SportRadarEventsProvider: EventsProvider {
     private var socketConnector: SportRadarSocketConnector
     private var restConnector: SportRadarRestConnector
 
-    // Property to determine if MixMatch feature is enabled
-    var isMixMatchEnabled: Bool = false
-
     var sessionCoordinator: SportRadarSessionCoordinator
 
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
@@ -862,8 +859,12 @@ extension SportRadarEventsProvider {
 //
 extension SportRadarEventsProvider {
 
-    func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
-
+    public func getMarketGroups(
+        forEvent event: Event,
+        includeMixMatchGroup hasMixMatchGroup: Bool,
+        includeAllMarketsGroup hasAllMarketsGroup: Bool
+    ) -> AnyPublisher<[MarketGroup], Never>
+    {
         let fallbackMarketGroup = [MarketGroup.init(type: "0",
                                                     id: "0",
                                                     groupKey: "All Markets",
@@ -879,7 +880,12 @@ extension SportRadarEventsProvider {
 
         return requestPublisher
             .flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
-                let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
+                let marketGroups = self.processMarketFilters(
+                    marketFilter: marketFilters,
+                    match: event,
+                    includeMixMatchGroup: hasMixMatchGroup,
+                    includeAllMarketsGroup: hasAllMarketsGroup
+                )
                 return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             })
             .replaceError(with: fallbackMarketGroup)
@@ -1616,7 +1622,13 @@ extension SportRadarEventsProvider {
         return uniqueSportsArray
     }
 
-    private func processMarketFilters(marketFilter: MarketFilter, match: Event) -> [MarketGroup] {
+    private func processMarketFilters(
+        marketFilter: MarketFilter,
+        match: Event,
+        includeMixMatchGroup hasMixMatchGroup: Bool,
+        includeAllMarketsGroup hasAllMarketsGroup: Bool
+    ) -> [MarketGroup]
+    {
 
         var eventMarkets: [MarketGroupPointer] = []
         var marketGroups: OrderedDictionary<String, MarketGroup> = [:]
@@ -1796,7 +1808,7 @@ extension SportRadarEventsProvider {
         })
 
         // Only create the MixMatch market group if the feature is enabled
-        if self.isMixMatchEnabled {
+        if hasMixMatchGroup {
             let betBuilderMarketGroup = MarketGroup(type: "MixMatch",
                                                     id: "99",
                                                     groupKey: "99",

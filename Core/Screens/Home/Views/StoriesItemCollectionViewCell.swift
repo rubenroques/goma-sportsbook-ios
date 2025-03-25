@@ -9,14 +9,64 @@ import Foundation
 import UIKit
 
 struct StoriesItemCellViewModel {
-
-    var id: String
-    var imageName: String
-    var title: String
-    var link: String
-    var contentString: String
-    var read: Bool
-
+    
+    let id: String
+    // The title of the button story cell
+    let buttonTitle: String
+    // The small icon in the button story cell
+    let buttonIconUrl: String
+    // The (optional) background image in th button story cell
+    let buttonBackgroungImageUrl: String?
+    // The media content that will show in the fullscreen
+    let contentMediaUrl: String
+    // the link (internal or external) of the full screen bottom button
+    let ctaUrl: String
+    // the link (internal or external) of the full screen bottom button
+    let ctaText: String
+    // marks if the story is read
+    var isRead: Bool
+    
+    init(promotionalStory: PromotionalStory, isRead: Bool) {
+        self.id = promotionalStory.id
+        self.buttonTitle = promotionalStory.buttonTitle
+        self.buttonIconUrl = promotionalStory.buttonIconUrl
+        self.buttonBackgroungImageUrl = promotionalStory.buttonBackgroungImageUrl
+        self.contentMediaUrl = promotionalStory.contentMediaUrl
+        self.ctaUrl = promotionalStory.ctaUrl
+        self.ctaText = promotionalStory.ctaText
+        self.isRead = isRead
+    }
+    
+    init(id: String,
+         buttonTitle: String,
+         buttonIconUrl: String,
+         buttonBackgroungImageUrl: String?,
+         contentMediaUrl: String,
+         ctaUrl: String,
+         ctaText: String,
+         isRead: Bool) {
+        self.id = id
+        self.buttonTitle = buttonTitle
+        self.buttonIconUrl = buttonIconUrl
+        self.buttonBackgroungImageUrl = buttonBackgroungImageUrl
+        self.contentMediaUrl = contentMediaUrl
+        self.ctaUrl = ctaUrl
+        self.ctaText = ctaText
+        self.isRead = isRead
+    }
+    
+    func copy(isRead: Bool) -> StoriesItemCellViewModel {
+        return StoriesItemCellViewModel(
+            id: self.id,
+            buttonTitle: self.buttonTitle,
+            buttonIconUrl: self.buttonIconUrl,
+            buttonBackgroungImageUrl: self.buttonBackgroungImageUrl,
+            contentMediaUrl: self.contentMediaUrl,
+            ctaUrl: self.ctaUrl,
+            ctaText: self.ctaText,
+            isRead: isRead)
+    }
+    
 }
 
 class StoriesItemCollectionViewCell: UICollectionViewCell {
@@ -91,7 +141,7 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
 
     var isRead: Bool = false {
         didSet {
-            self.viewModel?.read = isRead
+            self.viewModel?.isRead = isRead
 
             if isRead {
                 self.newPillBaseView.isHidden = true
@@ -211,15 +261,11 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
     func configureWithViewModel(viewModel: StoriesItemCellViewModel) {
         self.viewModel = viewModel
 
-        if let url = URL(string: viewModel.imageName) {
+        if let url = URL(string: viewModel.buttonIconUrl) {
             self.imageView.kf.setImage(with: url)
         }
 
-        // self.imageView.image = UIImage(named: viewModel.imageName)
-        self.label.text = viewModel.title
-
-//        self.imageView.image = UIImage(named: "avatar3")
-//        self.label.text = "Promotions"
+        self.label.text = viewModel.buttonTitle
 
         self.gradientBorderView.isHidden = true
         self.backgroundGradientView.isHidden = false
@@ -229,7 +275,7 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
         self.newPillBaseView.backgroundColor = UIColor.App.highlightSecondary.withAlphaComponent(0.6)
         self.newPillForegroundView.backgroundColor = UIColor.App.highlightSecondary
 
-        if viewModel.read {
+        if viewModel.isRead {
             self.newPillBaseView.isHidden = true
         }
         else {

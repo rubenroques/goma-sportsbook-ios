@@ -22,7 +22,6 @@ class Bootstrap {
     }
 
     func boot() {
-        print("[MaintenanceDebug] Bootstrap boot")
         self.environment = Env
 
         guard let environment = self.environment else { return }
@@ -36,10 +35,8 @@ class Bootstrap {
         }
 
         // Prepare the router for boot
-        print("[MaintenanceDebug] Bootstrap setSupportedLanguages")
         self.setSupportedLanguages()
         
-        print("[MaintenanceDebug] Bootstrap businessSettingsSocket maintenanceModePublisher")
         self.bootTriggerCancelable = environment.businessSettingsSocket.maintenanceModePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] maintenanceModeType in
@@ -65,7 +62,6 @@ class Bootstrap {
     }
     
     func connectServiceProvider() {
-        print("[MaintenanceDebug] Bootstrap connectServiceProvider called")
 
         guard let environment = self.environment else { return }
 
@@ -95,6 +91,7 @@ class Bootstrap {
                 environment.favoritesManager.getUserFavorites()
             })
             .store(in: &self.cancellables)
+
     }
     
 }

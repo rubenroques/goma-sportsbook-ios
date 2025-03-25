@@ -44,7 +44,7 @@ class SplashViewController: UIViewController {
         self.isLoadingBootDataSubscription = Publishers.CombineLatest(
             Env.sportsStore.activeSportsPublisher,
             Env.servicesProvider.preFetchHomeContent())
-            .map({ loadableContent, _ -> Bool in
+            .map({ loadableContent, preFetchedHomeContent -> Bool in
                 switch loadableContent { // isLoading?
                 case .loading, .idle:
                     // we need to wait for the request result

@@ -107,8 +107,8 @@ import ServicesProvider
  - `createEmptyUserWallet()` - Empty wallet with zero balance
 
  ### Promotional Content
- - `createPromotionalStory()` - Single promotional story
- - `createPromotionalStories()` - Collection of promotional stories
+ - `createPromotionalStory()` - Single promotional story  [missing]
+ - `createPromotionalStories()` - Collection of promotional stories [missing]
 
 
  ## Usage Example:
@@ -709,47 +709,10 @@ struct PreviewModelsHelper {
     }
 
     // MARK: - Promotional Stories
-
-    /// Creates a mock promotional story
-    static func createPromotionalStory() -> PromotionalStory {
-        return PromotionalStory(
-            id: "promo1",
-            title: "Welcome Bonus",
-            imageUrl: "https://example.com/promo1.jpg",
-            linkUrl: "https://example.com/welcome-bonus",
-            bodyText: "Get a 100% match on your first deposit up to £100!"
-        )
-    }
-
-    /// Creates a collection of mock promotional stories
-    static func createPromotionalStories() -> [PromotionalStory] {
-        return [
-            PromotionalStory(
-                id: "promo1",
-                title: "Welcome Bonus",
-                imageUrl: "https://example.com/promo1.jpg",
-                linkUrl: "https://example.com/welcome-bonus",
-                bodyText: "Get a 100% match on your first deposit up to £100!"
-            ),
-            PromotionalStory(
-                id: "promo2",
-                title: "Premier League Special",
-                imageUrl: "https://example.com/promo2.jpg",
-                linkUrl: "https://example.com/premier-league-special",
-                bodyText: "Enhanced odds on all Premier League matches this weekend!"
-            ),
-            PromotionalStory(
-                id: "promo3",
-                title: "Refer a Friend",
-                imageUrl: "https://example.com/promo3.jpg",
-                linkUrl: "https://example.com/refer-friend",
-                bodyText: "Refer a friend and both get £20 in free bets!"
-            )
-        ]
-    }
-
+    // MISSING
+    
     // MARK: - BannerInfo
-    // LISSING
+    // MISSING
 
     // MARK: - Tennis Match
 

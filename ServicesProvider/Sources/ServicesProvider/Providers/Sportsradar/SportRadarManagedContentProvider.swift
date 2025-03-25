@@ -45,7 +45,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
                     self?.connectionStateSubject.send(.disconnected)
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
 
     // MARK: - ManagedContentProvider Implementation
@@ -65,10 +65,58 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
         return self.gomaManagedContentProvider.getBanners()
     }
 
-    func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError> {
-        return self.gomaManagedContentProvider.getCarouselEvents()
+    func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError> {
+        return self.gomaManagedContentProvider.getCarouselEventPointers()
     }
 
+    func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
+        let requestPublisher = self.getCarouselEventPointers()
+        return requestPublisher
+            .flatMap({ topImageCardPointers -> AnyPublisher<Events, ServiceProviderError> in
+
+                var headlineItemsImages: [String: String] = [:]
+
+                topImageCardPointers.forEach({ pointer in
+                    if let imageURL = pointer.imageUrl {
+                        headlineItemsImages[pointer.eventMarketId] = imageURL
+                    }
+                })
+                let marketIds: [String] = topImageCardPointers.map({ item in return item.eventMarketId }).compactMap({ $0 })
+
+                let publishers: [AnyPublisher<Event?, Never>] = marketIds.map(self.eventsProvider.getEventForMarket(withId:))
+                let finalPublisher = Publishers.MergeMany(publishers)
+                    .collect()
+                    .map({ (events: [Event?]) -> Events in
+                        return events.compactMap({ $0 })
+                    })
+                    .map({ events -> Events in // Configure the image of each market
+                        for event in events {
+                            let firstMarketId = event.markets.first?.id ?? ""
+                            event.promoImageURL =  headlineItemsImages[firstMarketId]
+                        }
+
+                        let cleanedEvents = events.compactMap({ $0 })
+
+                        // create a dictionary from cleanedEvents using marketId as a key
+                        var eventDict: [String: Event] = [:]
+                        cleanedEvents.forEach({ event in
+                            let firstMarketId = event.markets.first?.id ?? ""
+                            eventDict[firstMarketId] = event
+                        })
+
+                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
+                        let orderedEvents = topImageCardPointers.compactMap { eventDict[$0.eventMarketId] }
+                        return orderedEvents
+                    })
+                    .eraseToAnyPublisher()
+
+                return finalPublisher
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+    }
+    
     func getBoostedOddsPointers() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
         return self.gomaManagedContentProvider.getBoostedOddsPointers()
     }
@@ -216,7 +264,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
         return self.gomaManagedContentProvider.getTopImageCardPointers()
     }
     
-    func getTopImageCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
+    func getTopImageEvents() -> AnyPublisher<Events, ServiceProviderError> {
         let requestPublisher = self.getTopImageCardPointers()
         return requestPublisher
             .flatMap({ topImageCardPointers -> AnyPublisher<Events, ServiceProviderError> in
@@ -461,3 +509,5 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
         self.gomaManagedContentProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
     }
 }
+
+

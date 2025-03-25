@@ -14,7 +14,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     // Define the array mapping sections to content types
     private var contentTypes: [HomeViewModel.Content] {
         switch TargetVariables.homeTemplateBuilder {
-        case .backendDynamic, .clientBackendManaged, .cmsManaged:
+        case .clientBackendManaged, .cmsManaged:
             return []
         case .dummyWidgetShowcase(widgets: let widgets):
             return widgets
@@ -113,12 +113,8 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
                 }
                 else {
                     var readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
-                    let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
-                                                                  imageName: promotionalStory.imageUrl,
-                                                                  title: promotionalStory.title,
-                                                                  link: promotionalStory.linkUrl,
-                                                                  contentString: promotionalStory.bodyText,
-                                                                  read: readStory)
+                    let storyViewModel = StoriesItemCellViewModel(promotionalStory: promotionalStory,
+                                                                  isRead: readStory)
 
                     storiesViewModels.append(storyViewModel)
 
@@ -278,7 +274,24 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
             })
 
         self.addCancellable(alertsCancellable)
-
+        
+        // Fetch server-side alert banners
+        let serverAlertsCancellable = Env.servicesProvider.getAlertBanner()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                // Handle completion if needed
+            }, receiveValue: { [weak self] alertBanner in
+                guard let alertBanner = alertBanner else { return }
+                
+                // Create an ActivationAlert from the server AlertBanner using the mapper
+                let serverAlert = ServiceProviderModelMapper.activationAlert(fromAlertBanner: alertBanner)
+                
+                // Add the server alert to the existing alerts
+                self?.alertsArray.append(serverAlert)
+                self?.refreshPublisher.send()
+            })
+        
+        self.addCancellable(serverAlertsCancellable)
     }
 
     // User alerts
@@ -309,25 +322,20 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     }
 
     func fetchPromotionalStories() {
-
         let cancellable = Env.servicesProvider.getPromotionalTopStories()
+            .map(ServiceProviderModelMapper.promotionalStories(fromPromotionalStories:))
             .receive(on: DispatchQueue.main)
-            .sink { _ in
+            .sink { completions in
                 //
             } receiveValue: { [weak self] promotionalStories in
-                let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
-                    let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
-                    return promotionalStory
-                })
-                self?.promotionalStories = mappedPromotionalStories
+                self?.promotionalStories = promotionalStories
                 self?.refreshPublisher.send()
             }
-
         self.addCancellable(cancellable)
     }
 
     func fetchQuickSwipeMatches() {
-        let cancellable = Env.servicesProvider.getPromotionalSlidingTopEvents()
+        let cancellable = Env.servicesProvider.getCarouselEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
@@ -374,7 +382,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
     func fetchHighlightMatches() {
 
-        let imageMatches = Env.servicesProvider.getTopImageCardEvents()
+        let imageMatches = Env.servicesProvider.getTopImageEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
@@ -715,7 +723,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
         }
 
         switch contentType {
-        case .userProfile:
+        case .alertBannersLine:
             return self.alertsArray.isEmpty ? 0 : 1
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1

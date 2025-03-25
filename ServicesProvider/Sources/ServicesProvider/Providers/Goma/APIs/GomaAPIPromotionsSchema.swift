@@ -24,6 +24,7 @@ enum GomaAPIPromotionsSchema {
     case news(pageIndex: Int, pageSize: Int)
     case proChoices
     case topCompetitions
+    
     // Initial Dump
     case initialDump
 }
@@ -93,7 +94,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
         // Common headers for all API requests
         return [
             "Accept": "application/json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "App-Origin": "ios"
         ]
     }
 

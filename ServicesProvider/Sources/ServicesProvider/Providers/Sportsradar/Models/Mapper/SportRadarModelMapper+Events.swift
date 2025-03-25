@@ -252,21 +252,19 @@ extension SportRadarModelMapper {
                       marketId: internalBanner.marketId)
     }
 
-    static func promotionalStoriesResponse(fromInternalPromotionalStoriesResponse internalPromotionalStoriesResponse: SportRadarModels.PromotionalStoriesResponse) -> PromotionalStoriesResponse {
-
+    static func promotionalStoriesResponse(
+        fromInternalPromotionalStoriesResponse internalPromotionalStoriesResponse: SportRadarModels.PromotionalStoriesResponse
+    ) -> PromotionalStoriesResponse {
         let promotionalStories = internalPromotionalStoriesResponse.promotionalStories.map({ promotionalStory -> PromotionalStory in
-
             let mappedPromotionalStory = Self.promotionalStory(fromInternalPromotionalStory: promotionalStory)
-
             return mappedPromotionalStory
-
         })
-
         return PromotionalStoriesResponse(promotionalStories: promotionalStories)
-
     }
 
-    static func promotionalStory(fromInternalPromotionalStory internalPromotionalStory: SportRadarModels.PromotionalStory) -> PromotionalStory {
+    static func promotionalStory(
+        fromInternalPromotionalStory internalPromotionalStory: SportRadarModels.PromotionalStory
+    ) -> PromotionalStory {
         return PromotionalStory(id: internalPromotionalStory.id,
                                 title: internalPromotionalStory.title,
                                 imageUrl: internalPromotionalStory.imageUrl,
@@ -276,7 +274,9 @@ extension SportRadarModelMapper {
     }
 
     // Favorites
-    static func favoritesListResponse(fromInternalFavoritesListResponse internalFavoritesListResponse: SportRadarModels.FavoritesListResponse) -> FavoritesListResponse {
+    static func favoritesListResponse(
+        fromInternalFavoritesListResponse internalFavoritesListResponse: SportRadarModels.FavoritesListResponse
+    ) -> FavoritesListResponse {
 
         let favoritesList = internalFavoritesListResponse.favoritesList.map({ favoriteList -> FavoriteList in
             let favoriteList = Self.favoriteList(fromInternalFavoriteList: favoriteList)

@@ -25,4 +25,14 @@ extension ServiceProviderModelMapper {
         )
     }
 
-} 
+    static func activationAlert(fromAlertBanner alertBanner: AlertBanner) -> ActivationAlert {
+        return ActivationAlert(
+            title: alertBanner.title,
+            description: alertBanner.subtitle ?? "",
+            linkLabel: alertBanner.ctaText ?? localized("see_more"),
+            alertType: .server,
+            ctaUrl: alertBanner.ctaUrl
+        )
+    }
+
+}

@@ -1612,11 +1612,11 @@ extension PreLiveEventsViewController {
 
             // Empty State Labels
             firstTextFieldEmptyStateLabel.topAnchor.constraint(equalTo: emptyStateImage.bottomAnchor, constant: 12),
-            firstTextFieldEmptyStateLabel.leadingAnchor.constraint(equalTo: emptyStateContentView.leadingAnchor, constant: -22),
+            firstTextFieldEmptyStateLabel.leadingAnchor.constraint(equalTo: emptyStateContentView.leadingAnchor, constant: 22),
             firstTextFieldEmptyStateLabel.trailingAnchor.constraint(equalTo: emptyStateContentView.trailingAnchor, constant: -22),
 
             secondTextFieldEmptyStateLabel.topAnchor.constraint(equalTo: firstTextFieldEmptyStateLabel.bottomAnchor, constant: 12),
-            secondTextFieldEmptyStateLabel.leadingAnchor.constraint(equalTo: emptyStateContentView.leadingAnchor, constant: -22),
+            secondTextFieldEmptyStateLabel.leadingAnchor.constraint(equalTo: emptyStateContentView.leadingAnchor, constant: 22),
             secondTextFieldEmptyStateLabel.trailingAnchor.constraint(equalTo: emptyStateContentView.trailingAnchor, constant: -22),
 
             // Empty State Button

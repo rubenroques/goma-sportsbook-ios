@@ -16,8 +16,7 @@ extension GomaModelMapper {
     }
 
     static func events(fromInternalEvents internalEvents: [GomaModels.Event]) -> Events {
-        let events = internalEvents.map(Self.event(fromInternalEvent:))
-        return events
+        return internalEvents.map(Self.event(fromInternalEvent:))
     }
 
     static func event(fromInternalEvent internalEvent: GomaModels.Event) -> Event {
@@ -78,7 +77,7 @@ extension GomaModelMapper {
                           matchTime: internalEvent.matchTime,
                           activePlayerServing: nil,
                           boostedMarket: nil,
-                          promoImageURL: internalEvent.metaDetails?.imageUrl,
+                          promoImageURL: internalEvent.imageUrl ?? internalEvent.metaDetails?.imageUrl,
                           scores: internalEvent.scores)
 
         return event
@@ -155,7 +154,52 @@ extension GomaModelMapper {
                        customBetAvailableMarket: nil)
     }
 
+}
 
+extension GomaModelMapper {
+    // Extra events generator
+    
+    // Carousel
+    static func events(fromInternalCarouselEvents internalCarouselEvents: GomaModels.CarouselEvents) -> Events {
+        let events = internalCarouselEvents.map(Self.event(fromInternalCarouselEvent:))
+        return events
+    }
+    
+    static func event(fromInternalCarouselEvent internalCarouselEvent: GomaModels.CarouselEvent) -> Event {
+        var imageEvent = internalCarouselEvent.event
+        imageEvent.imageUrl = internalCarouselEvent.imageUrl
+        return Self.event(fromInternalEvent: imageEvent)
+    }
+    
+    
+    // Hero
+    static func events(fromInternalHeroCardEvents internalHeroCardEvents: GomaModels.HeroCardEvents) -> Events {
+        let events = internalHeroCardEvents.map(Self.event(fromInternalHeroCardEvent:))
+        return events
+    }
+    
+    static func event(fromInternalHeroCardEvent heroCardEvent: GomaModels.HeroCardEvent) -> Event {
+        let mappedEvent = Self.event(fromInternalEvent: heroCardEvent.event)
+        mappedEvent.promoImageURL = heroCardEvent.imageUrl
+        return mappedEvent
+    }
+    
+    // Boosted
+    static func events(fromInternalBoostedOddsEvents internalBoostedOddsEvents: GomaModels.BoostedOddsEvents) -> Events {
+        let events = internalBoostedOddsEvents.map(Self.event(fromInternalBoostedOddsEvent:))
+        return events
+    }
+ 
+    static func event(fromInternalBoostedOddsEvent boostedEvent: GomaModels.BoostedOddsEvent) -> Event {
+        let mappedEvent = Self.event(fromInternalEvent: boostedEvent.event)
+        let mappedBoostedMarket = Self.market(fromInternalMarket: boostedEvent.boostedOddMarket)
+        mappedEvent.promoImageURL = boostedEvent.imageUrl
+        mappedEvent.boostedMarket = mappedBoostedMarket
+        mappedEvent.oldMainMarketId = boostedEvent.event.markets.first?.identifier
+        return mappedEvent
+    }
+    
+    
 }
 
 extension GomaModelMapper {
@@ -253,6 +297,7 @@ extension GomaModelMapper {
 
 // Stats
 extension GomaModelMapper {
+    
     static func stats(fromInternalStats internalStats: GomaModels.Stats) -> Stats {
         return Stats(homeParticipant: Self.participantStats(fromInternalParticipantStats: internalStats.homeParticipant),
                      awayParticipant: Self.participantStats(fromInternalParticipantStats: internalStats.awayParticipant))
@@ -267,20 +312,5 @@ extension GomaModelMapper {
                                 over: internalParticipantStats.over,
                                 under: internalParticipantStats.under)
     }
-    
-    static func event(fromInternalHeroCardEvent heroCardEvent: GomaModels.HeroCardEvents) -> Event {
-        let mappedEvent = Self.event(fromInternalEvent: heroCardEvent.event)
-        mappedEvent.promoImageURL = heroCardEvent.imageUrl
-        return mappedEvent
-    }
-    
-    static func event(fromInternalBoostedEvent boostedEvent: GomaModels.BoostedEvent) -> Event {
-        let mappedEvent = Self.event(fromInternalEvent: boostedEvent.event)
-        let mappedBoostedMarket = Self.market(fromInternalMarket: boostedEvent.boostedMarket)
-        mappedEvent.promoImageURL = boostedEvent.imageUrl
-        mappedEvent.boostedMarket = mappedBoostedMarket
-        mappedEvent.oldMainMarketId = boostedEvent.event.markets.first?.identifier
-        return mappedEvent
-    }
-    
+  
 }

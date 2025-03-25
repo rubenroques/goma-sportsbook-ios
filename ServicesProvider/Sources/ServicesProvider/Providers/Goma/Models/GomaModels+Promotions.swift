@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 extension GomaModels {
 
@@ -168,8 +169,8 @@ extension GomaModels {
         }
     }
 
-    typealias CarouselEvents = [CarouselEvent]
-    struct CarouselEvent: Identifiable, Equatable, Hashable, Codable {
+    typealias CarouselEventPointers = [CarouselEventPointer]
+    struct CarouselEventPointer: Identifiable, Equatable, Hashable, Codable {
 
         let id: Int
         let eventId: String
@@ -319,6 +320,8 @@ extension GomaModels {
 
         /// Icon URL for the story thumbnail
         let iconUrl: String?
+        
+        let backgroundImageUrl: String?
 
         /// Coding keys for JSON mapping
         private enum CodingKeys: String, CodingKey {
@@ -334,6 +337,7 @@ extension GomaModels {
             case userType = "user_type"
             case mediaUrl = "media_url"
             case iconUrl = "icon_url"
+            case backgroundImageUrl = "background_url"
         }
     }
 

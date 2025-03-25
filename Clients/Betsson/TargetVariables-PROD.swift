@@ -149,7 +149,7 @@ extension TargetVariables {
                 selfExclusionService: "https://interdictiondejeux.anj.fr",
                 gamblingHabitsApp: "https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1" // used
             ),
-            
+
             socialMedia: URLEndpoint.SocialMedia(
                 facebook: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR",
                 twitter: "https://twitter.com/BetssonFrance",

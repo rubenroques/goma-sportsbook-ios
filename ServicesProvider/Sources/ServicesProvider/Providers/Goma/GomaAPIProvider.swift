@@ -24,9 +24,11 @@ class GomaAPIProvider {
     var isProviderEnabled: Bool = false
 
     init(deviceIdentifier: String) {
-
         self.connector = GomaConnector(deviceIdentifier: deviceIdentifier)
-
+    }
+    
+    init(connector: GomaConnector) {
+        self.connector = connector
     }
 
 }
@@ -1080,7 +1082,7 @@ extension GomaAPIProvider: EventsProvider {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
 
-    func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
+    func getMarketGroups(forEvent event: Event, includeMixMatchGroup: Bool, includeAllMarketsGroup: Bool) -> AnyPublisher<[MarketGroup], Never> {
         let defaultMarketGroup = [MarketGroup.init(type: "0",
                                                    id: "0",
                                                    groupKey: "All Markets",
@@ -1227,27 +1229,6 @@ extension GomaAPIProvider: EventsProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
-        // TODO: SP MErge - it should have been replaced
-        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-//        let endpoint = GomaAPIClient.getEventsBanners
-//        let publisher: AnyPublisher<[GomaModels.EventMetadataPointer], ServiceProviderError> = self.connector.request(endpoint)
-//        return publisher.map({ metadataPointers in
-//            return metadataPointers.map(GomaModelMapper.eventMetadataPointer(fromInternalEventMetadataPointer:))
-//        }).eraseToAnyPublisher()
-    }
-
-    func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError> {
-        // TODO: SP MErge - it should have been replaced
-        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-//        let endpoint = GomaAPIClient.getEventsBanners
-//        let publisher: AnyPublisher<[GomaModels.SportAssociatedEventBanner], ServiceProviderError> = self.connector.request(endpoint)
-//        return publisher.map({ eventBanners in
-//            let convertedEvents = GomaModelMapper.events(fromSportAssociatedEventBanners: eventBanners)
-//            return convertedEvents
-//        }).eraseToAnyPublisher()
-    }
-
     func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
         // TODO: SP MErge - it should have been replaced
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
@@ -1268,18 +1249,6 @@ extension GomaAPIProvider: EventsProvider {
         }).eraseToAnyPublisher()
     }
 
-    func getHeroCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
-
-        let endpoint = GomaAPISchema.getHeroCards
-        let publisher: AnyPublisher<[GomaModels.HeroCardEvents], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.print("getHeroCards").map({ heroCardEvents in
-            let convertedEvents = heroCardEvents.map({
-                return GomaModelMapper.event(fromInternalHeroCardEvent: $0)
-            })
-            return convertedEvents
-        }).eraseToAnyPublisher()
-    }
-
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
@@ -1289,13 +1258,6 @@ extension GomaAPIProvider: EventsProvider {
         let endpoint = GomaAPISchema.getPopularEvents
         let publisher: AnyPublisher<[GomaModels.PopularEvent], ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ popularEvents in
-//            let allEvents = popularEvents.flatMap { $0.events }
-//
-//            let convertedEvents = GomaModelMapper.events(fromInternalEvents: allEvents)
-//
-//            let groupedEvents: [SportType: Events] = convertedEvents.reduce(into: [:]) { dict, event in
-//                dict[event.sport, default: []].append(event)
-//            }
 
             var groupedEvents: [SportType: Events] = [:]
 
@@ -1309,7 +1271,17 @@ extension GomaAPIProvider: EventsProvider {
 
                 let convertedEvents = GomaModelMapper.events(fromInternalEvents: popularEvent.events)
 
-                var newSportType = SportType(name: eventTitle, numericId: nil, alphaId: nil, iconId: nil, showEventCategory: false, numberEvents: popularEvent.events.count, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: 0)
+                var newSportType = SportType(
+                    name: eventTitle,
+                    numericId: nil,
+                    alphaId: nil,
+                    iconId: nil,
+                    showEventCategory: false,
+                    numberEvents: popularEvent.events.count,
+                    numberOutrightEvents: 0,
+                    numberOutrightMarkets: 0,
+                    numberLiveEvents: 0
+                )
                 if let sportType = convertedEvents.first?.sport,
                    eventTitle == sportType.name {
                     newSportType = sportType
@@ -1325,25 +1297,6 @@ extension GomaAPIProvider: EventsProvider {
 
     func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-    }
-
-    func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
-
-        let endpoint = GomaAPISchema.getFeaturedCompetitions
-        let publisher: AnyPublisher<[GomaModels.Competition], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ competitions in
-            return GomaModelMapper.topCompetitionsPointers(fromCompetitions: competitions)
-        }).eraseToAnyPublisher()
-
-//        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-    }
-
-    func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
-        let endpoint = GomaAPISchema.getFeaturedCompetitions
-        let publisher: AnyPublisher<[GomaModels.Competition], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ competitions in
-            return GomaModelMapper.topCompetitions(fromCompetitions: competitions)
-        }).eraseToAnyPublisher()
     }
 
     func getEventDetails(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError> {
@@ -1441,7 +1394,7 @@ extension GomaAPIProvider: EventsProvider {
 
         let publisher: AnyPublisher<GomaModels.FeaturedTipsPagedResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ featuredTipsResponse in
-            return GomaModelMapper.featuredTips(fromInternaFeaturedTips: featuredTipsResponse.featuredTips)
+            return GomaModelMapper.featuredTips(fromInternalFeaturedTips: featuredTipsResponse.featuredTips)
         }).eraseToAnyPublisher()
     }
 
@@ -1493,6 +1446,11 @@ extension GomaAPIProvider: BettingProvider {
     }
 
     func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError> {
+        
+        if betTicketSelections.isEmpty {
+            return Just([]).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+        }
+        
         var argumentSelections: [GomaAPISchema.ArgumentModels.BetSelection] = []
         for betTicketSelection in betTicketSelections {
             if let eventId = betTicketSelection.eventId, let outcomeId = betTicketSelection.outcomeId {

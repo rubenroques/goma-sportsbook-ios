@@ -34,10 +34,9 @@ class Environment {
             client = ServicesProvider.Client(providerType: .everymatrix, configuration: servicesProviderConfiguration)
         case .sportradar:
             client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
+        case .goma:
+            client = ServicesProvider.Client(providerType: .goma, configuration: servicesProviderConfiguration)
         }
-
-        // Set feature flags
-        client.setMixMatchFeatureEnabled(TargetVariables.hasFeatureEnabled(feature: .mixMatch))
 
         return client
     }()
@@ -63,6 +62,14 @@ class Environment {
     }
 
     let urlSchemaManager: URLSchemaManager = URLSchemaManager()
+
+    /// URL provider for accessing dynamic URLs
+    lazy var linksProvider: LinksProviderProtocol = {
+        return LinksProviderFactory.createURLProvider(
+            initialLinks: TargetVariables.links,
+            servicesProvider: self.servicesProvider
+        )
+    }()
 
     // Sumsub keys
     let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"
@@ -91,7 +98,6 @@ extension Environment {
         return Bundle.main.bundleIdentifier ?? "com.goma.sportsbook"
     }
 }
-
 
 /**
     NEW SERVICESPROVIDER INIT LOGIC. CONFIG BUILD
