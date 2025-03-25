@@ -369,6 +369,7 @@ struct AlertBannerInfo {
     var userType: String?
 }
 
+
 struct Country: Codable, Hashable {
     var name: String
     var capital: String?

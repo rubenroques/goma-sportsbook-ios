@@ -14,7 +14,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     // Define the array mapping sections to content types
     private var contentTypes: [HomeViewModel.Content] {
         switch TargetVariables.homeTemplateBuilder {
-        case .backendDynamic, .clientBackendManaged, .cmsManaged:
+        case .clientBackendManaged, .cmsManaged:
             return []
         case .dummyWidgetShowcase(widgets: let widgets):
             return widgets
@@ -716,7 +716,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
         }
 
         switch contentType {
-        case .userProfile:
+        case .alertBannersLine:
             return self.alertsArray.isEmpty ? 0 : 1
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1

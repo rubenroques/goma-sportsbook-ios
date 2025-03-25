@@ -148,7 +148,7 @@ class CMSManagedHomeViewTemplateDataSource {
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
     var heroCardWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
 
-    var highlightedLiveMatchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
+    var highlightedLiveMatchLineCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
     var marketWidgetContainerTableViewModelCache: [String: MarketWidgetContainerTableViewModel] = [:]
 
@@ -219,7 +219,7 @@ class CMSManagedHomeViewTemplateDataSource {
     private func mapWidgetToContentType(_ widget: HomeWidget) -> HomeViewModel.Content? {
         switch widget {
         case .alertBanners:
-            return .userProfile
+            return .alertBannersLine
         case .banners:
             return .bannerLine
         case .carouselEvents:
@@ -250,7 +250,7 @@ class CMSManagedHomeViewTemplateDataSource {
     // Set default content types in case of failure
     private func setDefaultContentTypes() {
         self.contentTypes = [
-            .userProfile, // AlertBanners
+            .alertBannersLine, // AlertBanners
             .bannerLine, // PromotionBanners
             .quickSwipeStack, // MatchBanners
             .promotionalStories, // PromotionStories - instagram style stories
@@ -284,7 +284,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
         self.cachedFeaturedTipLineViewModel = nil
 
-        self.highlightedLiveMatchLineTableCellViewModelCache = [:]
+        self.highlightedLiveMatchLineCellViewModelCache = [:]
 
         // Only fetch data for widgets that are present in contentTypes
         if self.contentTypes.contains(.quickSwipeStack) {
@@ -323,7 +323,7 @@ class CMSManagedHomeViewTemplateDataSource {
             self.fetchHeroMatches()
         }
 
-        if self.contentTypes.contains(.userProfile) {
+        if self.contentTypes.contains(.alertBannersLine) {
             self.fetchAlerts()
         }
 
@@ -800,7 +800,7 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
 
         switch contentType {
-        case .userProfile:
+        case .alertBannersLine:
             return self.alertsArray.isEmpty ? 0 : 1
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1
@@ -1204,12 +1204,12 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return nil
         }
 
-        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineTableCellViewModelCache[match.id] {
+        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineCellViewModelCache[match.id] {
             return matchLineTableCellViewModel
         }
         else {
             let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match, status: .live)
-            self.highlightedLiveMatchLineTableCellViewModelCache[match.id] = matchLineTableCellViewModel
+            self.highlightedLiveMatchLineCellViewModelCache[match.id] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }
 

@@ -1,5 +1,5 @@
 //
-//  ClientManagedHomeViewTemplateDataSource.swift
+//  StaticHomeViewTemplateDataSource.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 24/05/2023.
@@ -9,11 +9,11 @@ import Foundation
 import Combine
 import ServicesProvider
 
-class ClientManagedHomeViewTemplateDataSource {
+class StaticHomeViewTemplateDataSource {
 
     // Define the array mapping sections to content types
     private let contentTypes: [HomeViewModel.Content] = [
-        .userProfile, // AlertBanners
+        .alertBannersLine, // AlertBanners
         .bannerLine, // PromotionBanners
         .quickSwipeStack, // MatchBanners
         .promotionalStories, // PromotionStories - instagram style stories
@@ -655,7 +655,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
 }
 
-extension ClientManagedHomeViewTemplateDataSource {
+extension StaticHomeViewTemplateDataSource {
 
     private func addCancellable(_ cancellable: AnyCancellable) {
         self.cancellablesLock.lock()
@@ -670,7 +670,7 @@ extension ClientManagedHomeViewTemplateDataSource {
     }
 }
 
-extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
+extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     var refreshRequestedPublisher: AnyPublisher<Void, Never> {
         return self.refreshPublisher
@@ -694,7 +694,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
 
         switch contentType {
-        case .userProfile:
+        case .alertBannersLine:
             return self.alertsArray.isEmpty ? 0 : 1
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1
@@ -717,7 +717,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .promotedBetslips:
             return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
-            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+            if (Env.businessSettingsSocket.clientSettings.featuredCompetition?.id) != nil {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
             }
             else {
