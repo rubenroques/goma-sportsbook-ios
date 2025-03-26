@@ -580,7 +580,7 @@ class StaticHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
 
-        let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+        var homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
 
         self.highlightedLiveMatches = []
 
@@ -999,10 +999,6 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
         self.storiesLineViewModel = viewModel
-    }
-
-    func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
-        return nil
     }
 
     func favoriteMatch(forIndex index: Int) -> Match? {

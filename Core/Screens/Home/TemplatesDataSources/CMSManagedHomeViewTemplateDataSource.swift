@@ -994,10 +994,6 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         self.storiesLineViewModel = viewModel
     }
 
-    func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
-        return nil
-    }
-
     func favoriteMatch(forIndex index: Int) -> Match? {
         return nil
     }

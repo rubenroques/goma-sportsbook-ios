@@ -162,10 +162,6 @@ extension HomeViewModel {
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
         self.homeViewTemplateDataSource.setStoryLineViewModel(viewModel: viewModel)
     }
-
-    func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
-        return self.homeViewTemplateDataSource.sportGroupViewModel(forSection: section)
-    }
     
     func favoriteMatch(forIndex index: Int) -> Match? {
         return self.homeViewTemplateDataSource.favoriteMatch(forIndex: index)

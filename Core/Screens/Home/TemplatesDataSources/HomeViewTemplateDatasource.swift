@@ -29,7 +29,6 @@ protocol HomeViewTemplateDataSource {
     func alertsArrayViewModel() -> [ActivationAlert]
     func bannerLineViewModel() -> BannerLineCellViewModel?
     func storyLineViewModel() -> StoriesLineCellViewModel?
-    func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel?
     func favoriteMatch(forIndex index: Int) -> Match?
     func featuredTipLineViewModel() -> FeaturedTipLineViewModel?
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel?
