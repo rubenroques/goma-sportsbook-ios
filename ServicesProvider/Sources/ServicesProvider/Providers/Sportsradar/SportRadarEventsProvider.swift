@@ -2064,8 +2064,7 @@ extension SportRadarEventsProvider {
 
     func getRecommendedBetBuilders(eventId: String, multibetsCount: Int, selectionsCount: Int, userId: String?) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> {
         
-        let eventId2 = "sr:match:55623919"
-        let endpoint = VaixAPIClient.recommendedBetBuilders(eventId: eventId2, multibetsCount: multibetsCount, selectionsCount: selectionsCount, userId: userId)
+        let endpoint = VaixAPIClient.recommendedBetBuilders(eventId: eventId, multibetsCount: multibetsCount, selectionsCount: selectionsCount, userId: userId)
 
         let requestPublisher: AnyPublisher<SportRadarModels.RecommendedBetBuildersResponse, ServiceProviderError> = self.restConnector.request(endpoint)
 
