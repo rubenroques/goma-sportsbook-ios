@@ -25,6 +25,7 @@ protocol HomeViewTemplateDataSource {
 
     func contentType(forSection section: Int) -> HomeViewModel.Content?
 
+    // Basic ViewModels
     func alertsArrayViewModel() -> [ActivationAlert]
     func bannerLineViewModel() -> BannerLineCellViewModel?
     func storyLineViewModel() -> StoriesLineCellViewModel?
@@ -33,20 +34,20 @@ protocol HomeViewTemplateDataSource {
     func featuredTipLineViewModel() -> FeaturedTipLineViewModel?
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel?
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel?
-
     func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel?
-    func highlightedMatchViewModel(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel?
+    
+    // Highlights ViewModels
+    func highlightedMatchesViewModel(forIndex index: Int) -> MatchWidgetContainerTableViewModel?
+    func highlightedBoostedMatchesViewModel(forIndex index: Int) -> MatchWidgetContainerTableViewModel?
+    func highlightedMarketViewModel(forIndex index: Int) -> MarketWidgetContainerTableViewModel?
 
-    func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel?
-
+    // Live Matches ViewModels
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel?
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel?
+    
+    // Other ViewModels
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel?
-
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel)
-
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel?
-
     func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel?
-
 }
