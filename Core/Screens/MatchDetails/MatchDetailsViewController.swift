@@ -1321,6 +1321,7 @@ extension MatchDetailsViewController {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 10 // Will be updated in viewDidLayoutSubviews
         imageView.layer.borderWidth = 0.5
+        imageView.clipsToBounds = true
         return imageView
     }
 
