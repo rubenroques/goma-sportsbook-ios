@@ -1,5 +1,5 @@
 //
-//  MatchWidgetCollectionViewCell+Configuration.swift
+//  ClassicMatchWidgetCollectionViewCell+Configuration.swift
 //  Sportsbook
 //
 //  Created by Refactoring on 2024.
@@ -10,7 +10,7 @@ import Combine
 import ServicesProvider
 
 // MARK: - Configuration Methods
-extension MatchWidgetCollectionViewCell {
+extension ClassicMatchWidgetCollectionViewCell {
 
     // MARK: - ViewModel Configuration
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
@@ -57,16 +57,6 @@ extension MatchWidgetCollectionViewCell {
             }
             .store(in: &self.cancellables)
 
-        // Bind promo image
-        viewModel.promoImageURLPublisher
-            .compactMap({ $0 })
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] promoImageURL in
-                self?.backgroundImageView.kf.setImage(with: promoImageURL)
-                self?.topImageView.kf.setImage(with: promoImageURL)
-            }
-            .store(in: &self.cancellables)
-
         // Bind cashback status
         viewModel.canHaveCashbackPublisher
             .removeDuplicates()
@@ -105,29 +95,6 @@ extension MatchWidgetCollectionViewCell {
                     self?.showSeeAllView()
                 }
 
-            }
-            .store(in: &self.cancellables)
-
-        viewModel.outrightNamePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] outrightName in
-                self?.outrightNameLabel.text = outrightName
-            }
-            .store(in: &self.cancellables)
-
-        // Bind boosted odds data
-        viewModel.boostedOddsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] boostedOddsInfo in
-                self?.oldTitleBoostedOddLabel.text = boostedOddsInfo.title
-                self?.oldValueBoostedOddLabel.text = boostedOddsInfo.oldValue
-
-                self?.newTitleBoostedOddLabel.text = boostedOddsInfo.title
-                self?.newValueBoostedOddLabel.text = boostedOddsInfo.newValue
-
-                if let attributedString = boostedOddsInfo.oldValueAttributed {
-                    self?.oldValueBoostedOddLabel.attributedText = attributedString
-                }
             }
             .store(in: &self.cancellables)
 
@@ -249,42 +216,9 @@ extension MatchWidgetCollectionViewCell {
 
     // MARK: - Helper UI Methods
 
-    private func configureMixMatch(_ isCustomBetAvailable: Bool, widgetType: MatchWidgetType) {
-        if widgetType == .topImageWithMixMatch {
-            if isCustomBetAvailable {
-                self.mixMatchContainerView.isHidden = false
-                self.bottomSeeAllMarketsContainerView.isHidden = true
-            } else {
-                self.mixMatchContainerView.isHidden = true
-                self.bottomSeeAllMarketsContainerView.isHidden = false
-            }
-        }
-        else if widgetType == .topImage {
-            self.mixMatchContainerView.isHidden = true
-            self.bottomSeeAllMarketsContainerView.isHidden = false
-        }
-    }
-
-    // MARK: - Configure Boosted UI
-    func configureBoostedOutcomeUI(_ isBoostedOutcomeSelected: Bool?) {
-        if self.viewModel?.matchWidgetType != .boosted {
-            return
-        }
-
-        self.boostedOddBarView.isHidden = false
-        self.homeBaseView.isHidden = true
-        self.drawBaseView.isHidden = true
-        self.awayBaseView.isHidden = true
-
-        if let isSelected = isBoostedOutcomeSelected {
-            self.isBoostedOutcomeButtonSelected = isSelected
-        }
-    }
 
     // MARK: - Configure Outcomes UI
     func configureOutcomesUI(_ outcomes: [OutcomePresentation]) {
-        // Hide boosted odds bar since we're showing regular odds
-        self.boostedOddBarView.isHidden = true
 
         // Configure left (home) outcome if available
         if let leftOutcome = outcomes.first(where: { $0.position == .left }) {
@@ -326,17 +260,14 @@ extension MatchWidgetCollectionViewCell {
     // MARK: - Helper Methods
     func setHomeOddValueLabel(toText text: String) {
         self.homeOddValueLabel.text = text
-        self.homeNewBoostedOddValueLabel.text = text
     }
 
     func setDrawOddValueLabel(toText text: String) {
         self.drawOddValueLabel.text = text
-        self.drawNewBoostedOddValueLabel.text = text
     }
 
     func setAwayOddValueLabel(toText text: String) {
         self.awayOddValueLabel.text = text
-        self.awayNewBoostedOddValueLabel.text = text
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -354,9 +285,6 @@ extension MatchWidgetCollectionViewCell {
 
         // Reset view model
         self.viewModel = nil
-
-        self.mixMatchContainerView.isHidden = true
-        self.bottomSeeAllMarketsContainerView.isHidden = true
 
         self.cancellables.removeAll()
 
@@ -381,16 +309,12 @@ extension MatchWidgetCollectionViewCell {
         self.isMiddleOutcomeButtonSelected = false
         self.isRightOutcomeButtonSelected = false
 
-        self.isBoostedOutcomeButtonSelected = false
-
         self.oddsStackView.alpha = 1.0
         self.oddsStackView.isHidden = false
 
         self.homeBaseView.alpha = 1.0
         self.drawBaseView.alpha = 1.0
         self.awayBaseView.alpha = 1.0
-
-        self.outrightNameBaseView.isHidden = true
 
         self.adjustDesignToCardHeightStyle()
 
@@ -401,8 +325,6 @@ extension MatchWidgetCollectionViewCell {
         self.setHomeOddValueLabel(toText: "")
         self.setDrawOddValueLabel(toText: "")
         self.setAwayOddValueLabel(toText: "")
-
-        self.outrightNameLabel.text = ""
 
         // Reset live indicators
         self.hideLiveTipView()
@@ -418,7 +340,6 @@ extension MatchWidgetCollectionViewCell {
 
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
-        self.outrightBaseView.isHidden = true
 
         self.setupWithTheme()
     }

@@ -1,5 +1,5 @@
 //
-//  MatchWidgetCollectionViewCell.swift
+//  PreLiveMatchWidgetCollectionViewCell.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 20/03/2025
@@ -11,7 +11,7 @@ import LinkPresentation
 import Combine
 import ServicesProvider
 
-class MatchWidgetCollectionViewCell: UICollectionViewCell {
+class PreLiveMatchWidgetCollectionViewCell : UICollectionViewCell {
     // MARK: - Debug
     var debugUUID = UUID()
 

@@ -1,5 +1,5 @@
 //
-//  MatchWidgetCollectionViewCell.swift
+//  ClassicMatchWidgetCollectionViewCell.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 20/03/2025
@@ -11,9 +11,7 @@ import LinkPresentation
 import Combine
 import ServicesProvider
 
-class MatchWidgetCollectionViewCell: UICollectionViewCell {
-    // MARK: - Debug
-    var debugUUID = UUID()
+class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
 
     // MARK: - Properties
     // Custom UI components are moved to Factory extension
@@ -31,10 +29,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     // Content views
     lazy var mainContentBaseView: UIView = self.createMainContentBaseView()
-    
-    // Outright
-    lazy var outrightNameBaseView: UIView = self.createOutrightNameBaseView()
-    lazy var outrightNameLabel: UILabel = self.createOutrightNameLabel()
 
     // Odds views
     lazy var oddsStackView: UIStackView = self.createOddsStackView()
@@ -47,26 +41,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var awayBaseView: UIView = self.createAwayBaseView()
     lazy var awayOddTitleLabel: UILabel = self.createAwayOddTitleLabel()
     lazy var awayOddValueLabel: UILabel = self.createAwayOddValueLabel()
-
-    // Outright views
-    lazy var outrightBaseView: UIView = self.createOutrightBaseView()
-    lazy var outrightSeeLabel: UILabel = self.createOutrightSeeLabel()
-
-    // Boosted odds views
-    lazy var homeBoostedOddValueBaseView: UIView = self.createHomeBoostedOddValueBaseView()
-    lazy var homeNewBoostedOddValueLabel: UILabel = self.createNewTitleBoostedOddLabel()
-    lazy var homeBoostedOddArrowView: BoostedArrowView = self.createHomeBoostedOddArrowView()
-    lazy var homeOldBoostedOddValueLabel: UILabel = self.createOldTitleBoostedOddLabel()
-    //
-    lazy var drawBoostedOddValueBaseView: UIView = self.createDrawBoostedOddValueBaseView()
-    lazy var drawNewBoostedOddValueLabel: UILabel = self.createNewTitleBoostedOddLabel()
-    lazy var drawBoostedOddArrowView: BoostedArrowView = self.createDrawBoostedOddArrowView()
-    lazy var drawOldBoostedOddValueLabel: UILabel = self.createOldTitleBoostedOddLabel()
-    //
-    lazy var awayBoostedOddValueBaseView: UIView = self.createAwayBoostedOddValueBaseView()
-    lazy var awayNewBoostedOddValueLabel: UILabel = self.createNewTitleBoostedOddLabel()
-    lazy var awayBoostedOddArrowView: BoostedArrowView = self.createAwayBoostedOddArrowView()
-    lazy var awayOldBoostedOddValueLabel: UILabel = self.createOldTitleBoostedOddLabel()
 
     // Odds change indicators
     lazy var homeUpChangeOddValueImage: UIImageView = self.createHomeUpChangeOddValueImage()
@@ -82,12 +56,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var seeAllBaseView: UIView = self.createSeeAllBaseView()
     lazy var seeAllLabel: UILabel = self.createSeeAllLabel()
 
-    // Image views
-    lazy var backgroundImageView: UIImageView = self.createBackgroundImageView()
-    lazy var topImageBaseView: UIView = self.createTopImageBaseView()
-    lazy var topImageView: UIImageView = self.createTopImageView()
-    lazy var boostedOddBottomLineView: UIView = self.createBoostedOddBottomLineView()
-
     // Border views
     lazy var gradientBorderView: GradientBorderView = self.createGradientBorderView()
     lazy var liveGradientBorderView: GradientBorderView = self.createLiveGradientBorderView()
@@ -101,43 +69,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // New MatchInfoView component
     lazy var matchInfoView: MatchInfoView = self.createMatchInfoView()
 
-    // Bottom action views
-    lazy var bottomSeeAllMarketsContainerView: UIView = self.createBottomSeeAllMarketsContainerView()
-    lazy var bottomSeeAllMarketsBaseView: UIView = self.createBottomSeeAllMarketsBaseView()
-    lazy var bottomSeeAllMarketsLabel: UILabel = self.createBottomSeeAllMarketsLabel()
-    lazy var bottomSeeAllMarketsArrowIconImageView: UIImageView = self.createBottomSeeAllMarketsArrowIconImageView()
-
-    // Mix match views
-    lazy var mixMatchContainerView: UIView = self.createMixMatchContainerView()
-    lazy var mixMatchBaseView: UIView = self.createMixMatchBaseView()
-    lazy var mixMatchBackgroundImageView: UIImageView = self.createMixMatchBackgroundImageView()
-    lazy var mixMatchIconImageView: UIImageView = self.createMixMatchIconImageView()
-    lazy var mixMatchLabel: UILabel = self.createMixMatchLabel()
-    lazy var mixMatchNavigationIconImageView: UIImageView = self.createMixMatchNavigationIconImageView()
-
-    // Boosted odds views
-    lazy var boostedOddBarView: UIView = self.createBoostedOddBarView()
-    lazy var boostedOddBarStackView: UIStackView = self.createBoostedOddBarStackView()
-    lazy var oldValueBoostedButtonContainerView: UIView = self.createOldValueBoostedButtonContainerView()
-    lazy var oldValueBoostedButtonView: UIView = self.createOldValueBoostedButtonView()
-    lazy var oldTitleBoostedOddLabel: UILabel = self.createOldTitleBoostedOddLabel()
-    lazy var oldValueBoostedOddLabel: UILabel = self.createOldValueBoostedOddLabel()
-    lazy var arrowSpacerView: UIView = self.createArrowSpacerView()
-    lazy var newValueBoostedButtonContainerView: UIView = self.createNewValueBoostedButtonContainerView()
-    lazy var newValueBoostedButtonView: UIView = self.createNewValueBoostedButtonView()
-    lazy var newTitleBoostedOddLabel: UILabel = self.createNewTitleBoostedOddLabel()
-    lazy var newValueBoostedOddLabel: UILabel = self.createNewValueBoostedOddLabel()
-
-    lazy var boostedOddBottomLineAnimatedGradientView: GradientView = self.createBoostedOddBottomLineAnimatedGradientView()
-    
     // Separator views
     lazy var topSeparatorAlphaLineView: FadingView = self.createTopSeparatorAlphaLineView()
-
-    // Boosted corner views
-    lazy var boostedTopRightCornerBaseView: UIView = self.createBoostedTopRightCornerBaseView()
-    lazy var boostedTopRightCornerLabel: UILabel = self.createBoostedTopRightCornerLabel()
-    lazy var boostedTopRightCornerImageView: UIImageView = self.createBoostedTopRightCornerImageView()
-    lazy var boostedBackgroungImageView: UIImageView = UIImageView()
 
     // Layout constraints (previously IBOutlets)
     lazy var topMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
@@ -154,9 +87,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // Business logic properties
     var viewModel: MatchWidgetCellViewModel?
 
-    static var normalCellHeight: CGFloat = 162
-    static var smallCellHeight: CGFloat = 92
-
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback
@@ -168,8 +98,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     var unselectedOutcome: ((Match, Market, Outcome) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
-    var tappedMatchOutrightWidgetAction: ((Competition) -> Void)?
-    var tappedMixMatchAction: ((Match) -> Void)?
 
     var leftOddButtonSubscriber: AnyCancellable?
     var middleOddButtonSubscriber: AnyCancellable?
@@ -198,12 +126,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     var isRightOutcomeButtonSelected: Bool = false {
         didSet {
             self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
-        }
-    }
-
-    var isBoostedOutcomeButtonSelected: Bool = false {
-        didSet {
-            self.isBoostedOutcomeButtonSelected ? self.selectBoostedOddButton() : self.deselectBoostedOddButton()
         }
     }
 

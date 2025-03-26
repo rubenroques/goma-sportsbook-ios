@@ -1,5 +1,5 @@
 //
-//  MatchWidgetCollectionViewCell+Factory.swift
+//  ClassicMatchWidgetCollectionViewCell+Factory.swift
 //  Sportsbook
 //
 //  Created by Refactoring on 2024.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Factory Methods
-extension MatchWidgetCollectionViewCell {
+extension ClassicMatchWidgetCollectionViewCell {
 
     // MARK: - Base Views
     func createBaseView() -> UIView {
@@ -30,6 +30,12 @@ extension MatchWidgetCollectionViewCell {
         let headerView = MatchHeaderView()
         headerView.translatesAutoresizingMaskIntoConstraints = false
         return headerView
+    }
+
+    func createMatchInfoView() -> MatchInfoView {
+        let view = MatchInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     // MARK: - Border Views
@@ -59,12 +65,6 @@ extension MatchWidgetCollectionViewCell {
         return liveGradientBorderView
     }
     
-    func createBoostedOddBottomLineAnimatedGradientView() -> GradientView {
-        let boostedOddBottomLineAnimatedGradientView = GradientView()
-        boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
-        return boostedOddBottomLineAnimatedGradientView
-    }
-
     // MARK: - Odd Button Views
     func createHomeBaseView() -> UIView {
         let view = UIView()
@@ -240,124 +240,11 @@ extension MatchWidgetCollectionViewCell {
         return label
     }
 
-    // MARK: - Outright Views
-    func createOutrightBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 4.5
-        view.backgroundColor = UIColor.App.backgroundSecondary
-        return view
-    }
-
-    func createOutrightNameBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        return view
-    }
-
-    func createOutrightNameLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 14)
-        label.textAlignment = .center
-        label.numberOfLines = 2
-        return label
-    }
-
-    func createOutrightSeeLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .semibold, size: 12)
-        label.textAlignment = .center
-        label.text = localized("view_competition_markets")
-        return label
-    }
-
-    // MARK: - Image Views
-    func createTopImageBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        view.clipsToBounds = true
-        return view
-    }
-
-    func createTopImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "soccer_banner_dummy")
-        return imageView
-    }
-
-    func createBackgroundImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.backgroundColor = .black
-        imageView.image = UIImage(named: "soccer_banner_dummy")
-        return imageView
-    }
-
     // MARK: - Main Content View
     func createMainContentBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
-        return view
-    }
-
-    // MARK: - Boosted Odd Views
-    func createHomeBoostedOddValueBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundSecondary
-        view.isHidden = true
-        return view
-    }
-
-    func createDrawBoostedOddValueBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundSecondary
-        view.isHidden = true
-        return view
-    }
-
-    func createAwayBoostedOddValueBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundSecondary
-        view.isHidden = true
-        return view
-    }
-
-    func createHomeBoostedOddArrowView() -> BoostedArrowView {
-        let arrowView = BoostedArrowView()
-        arrowView.translatesAutoresizingMaskIntoConstraints = false
-        return arrowView
-    }
-
-    func createDrawBoostedOddArrowView() -> BoostedArrowView {
-        let arrowView = BoostedArrowView()
-        arrowView.translatesAutoresizingMaskIntoConstraints = false
-        return arrowView
-    }
-
-    func createAwayBoostedOddArrowView() -> BoostedArrowView {
-        let arrowView = BoostedArrowView()
-        arrowView.translatesAutoresizingMaskIntoConstraints = false
-        return arrowView
-    }
-
-    func createBoostedOddBottomLineView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        view.isHidden = true
         return view
     }
 
@@ -370,31 +257,6 @@ extension MatchWidgetCollectionViewCell {
         fadingView.endPoint = CGPoint(x: 1.0, y: 0.5)
         fadingView.fadeLocations = [0.0, 0.42, 0.58, 1.0]
         return fadingView
-    }
-
-    // MARK: - Boosted Corner Views
-    func createBoostedTopRightCornerBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        return view
-    }
-
-    func createBoostedTopRightCornerLabel() -> UILabel {
-        let label = UILabel()
-        label.font = AppFont.with(type: .bold, size: 10)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.App.textPrimary
-        return label
-    }
-
-    func createBoostedTopRightCornerImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "boosted_odd_promotional")
-        imageView.contentMode = .scaleAspectFit
-        return imageView
     }
 
     func createTopRightInfoIconsStackView() -> UIStackView {
@@ -451,11 +313,73 @@ extension MatchWidgetCollectionViewCell {
         return imageView
     }
 
-    // MARK: - Match Info View
-    func createMatchInfoView() -> MatchInfoView {
-        let view = MatchInfoView()
+    // MARK: - Team and Score Views
+    func createDetailedScoreView() -> ScoreView {
+        let scoreView = ScoreView(sportCode: "", score: [:])
+        scoreView.translatesAutoresizingMaskIntoConstraints = false
+        return scoreView
+    }
+
+    func createHomeNameLabel() -> UILabel {
+        let label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+
+    func createAwayNameLabel() -> UILabel {
+        let label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+
+    func createHomeServingIndicatorView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = UIColor.App.highlightPrimary
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+
+    func createAwayServingIndicatorView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = UIColor.App.highlightPrimary
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    // MARK: - Date and Time Views
+    func createDateLabel() -> UILabel {
+        let label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 11)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+
+    func createTimeLabel() -> UILabel {
+        let label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+
+    func createMatchTimeStatusLabel() -> UILabel {
+        let label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 11)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+
+    // MARK: - Pill Views
+    func createMarketNamePillLabelView() -> PillLabelView {
+        let marketNamePillLabelView = PillLabelView()
+        marketNamePillLabelView.translatesAutoresizingMaskIntoConstraints = false
+        return marketNamePillLabelView
     }
 
     // MARK: - Bottom Action Views

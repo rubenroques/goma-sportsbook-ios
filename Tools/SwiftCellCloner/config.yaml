@@ -17,12 +17,17 @@ output:
 # and the files will be cloned with the case name prefixed to the base class name
 # Extension files will be automatically found and processed
 target_cases:
-  - Boosted
-  - Live
   - PreLive
-  - TopImage
-  - BackgroundImage
-  - ClassicLive
-  - ClassicPreLive
-  - Outright
-  - OutrightTopImage
+  - Classic
+
+
+  # - Boosted
+  # - Live
+  # - PreLive
+  # - TopImage
+  # - BackgroundImage
+  # - Classic
+  # - ClassicLive
+  # - ClassicPreLive
+  # - Outright
+  # - OutrightTopImage
