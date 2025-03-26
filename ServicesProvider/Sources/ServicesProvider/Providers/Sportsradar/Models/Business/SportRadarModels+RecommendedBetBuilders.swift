@@ -88,7 +88,7 @@ extension SportRadarModels {
         var count: Int
         var period: String?
         var quote: Double
-        var outcomeType: String
+        var outcomeType: String?
         var marketName: String?
         var marketTypeName: String
         var outcomeId: Int
@@ -126,7 +126,7 @@ extension SportRadarModels {
             self.count = try container.decode(Int.self, forKey: SportRadarModels.BetBuilderSelection.CodingKeys.count)
             self.period = try container.decodeIfPresent(String.self, forKey: SportRadarModels.BetBuilderSelection.CodingKeys.period)
             self.quote = try container.decode(Double.self, forKey: SportRadarModels.BetBuilderSelection.CodingKeys.quote)
-            self.outcomeType = try container.decode(String.self, forKey: SportRadarModels.BetBuilderSelection.CodingKeys.outcomeType)
+            self.outcomeType = try container.decodeIfPresent(String.self, forKey: SportRadarModels.BetBuilderSelection.CodingKeys.outcomeType)
             self.marketName = try container.decodeIfPresent(String.self, forKey: SportRadarModels.BetBuilderSelection.CodingKeys.marketName)
             self.marketTypeName = try container.decode(String.self, forKey: SportRadarModels.BetBuilderSelection.CodingKeys.marketTypeName)
             self.outcomeId = try container.decode(Int.self, forKey: SportRadarModels.BetBuilderSelection.CodingKeys.outcomeId)

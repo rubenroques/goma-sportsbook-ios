@@ -56,7 +56,7 @@ extension SportRadarModelMapper {
 
         // Determine outcome name based on the type (similar to promoted betslips)
         let outcomeName: String
-        switch selection.outcomeType.lowercased() {
+        switch selection.outcomeType?.lowercased() {
         case "home":
             outcomeName = (eventInfo.participants.first ?? "")
         case "draw":
@@ -64,7 +64,7 @@ extension SportRadarModelMapper {
         case "away":
             outcomeName = (eventInfo.participants.last ?? "")
         default:
-            outcomeName = selection.outcomeType
+            outcomeName = selection.outcomeType ?? ""
         }
 
         // Extract home and away participant IDs if available
