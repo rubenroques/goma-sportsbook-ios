@@ -86,6 +86,10 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         self.viewModel = viewModel
         self.nameLabel.text = viewModel.sportName
 
+        if let sportName = viewModel.sportName,
+            sportName.contains("Moto") {
+            print("HERE!")
+        }
         if let sportIconName = viewModel.sportIconName, let sportIconImage = UIImage(named: sportIconName) {
             self.iconImageView.image = sportIconImage
         }

@@ -94,18 +94,15 @@ class FloatingShortcutsView: UIView {
             })
             .store(in: &cancellables)
         
-        Env.betslipManager.bettingTicketsPublisher
+        Env.betslipManager.betslipValuePublisher
             .receive(on: DispatchQueue.main)
             .dropFirst()
-            .map({ orderedSet -> Double in
-                let newArray = orderedSet.map { $0.decimalOdd }
-                let multiple: Double = newArray.reduce(1.0, *)
-                return multiple
+            .map({ value -> Double in
+                return value.odd
             })
-            .filter({ $0 > 1 })
             .removeDuplicates()
-            .sink(receiveValue: { [weak self] multiplier in
-                self?.triggerFlipperAnimation(withValue: multiplier)
+            .sink(receiveValue: { [weak self] oddValue in
+                self?.triggerFlipperAnimation(withValue: oddValue)
             })
             .store(in: &cancellables)
 

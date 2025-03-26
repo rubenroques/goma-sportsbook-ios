@@ -976,7 +976,6 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 extension SportRadarEventsProvider {
 
     func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
-
         let fallbackMarketGroup = [MarketGroup.init(type: "0",
                                                     id: "0",
                                                     groupKey: "All Markets",
@@ -996,7 +995,30 @@ extension SportRadarEventsProvider {
             })
             .replaceError(with: fallbackMarketGroup)
             .eraseToAnyPublisher()
+    }
+    
+    func getMarketGroups(forPreLiveEvent event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.marketsFilterPreLive
+        let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.restConnector.request(endpoint)
 
+        return requestPublisher
+            .flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
+                let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
+                return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+    }
+    
+    func getMarketGroups(forLiveEvent event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.marketsFilterLive
+        let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
+                let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
+                return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
     }
 
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {

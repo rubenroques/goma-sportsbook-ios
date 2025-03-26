@@ -420,9 +420,26 @@ class MatchDetailsViewModel: NSObject {
         // Request the remaining marketGroups details
         self.matchGroupsCancellable = matchDetailsReceivedPublisher
             .flatMap({ (event: ServicesProvider.Event) -> AnyPublisher<[MarketGroup], Never> in
-                return Env.servicesProvider.getMarketGroups(forEvent: event)
+
+                switch event.status {
+                case .notStarted, .unknown, .ended, .none:
+                    return Env.servicesProvider.getMarketGroups(forPreLiveEvent: event)
+                        .catch { _ in
+                            // Fallback to generic method if specific method fails
+                            return Env.servicesProvider.getMarketGroups(forEvent: event)
+                        }
                         .map(Self.convertMarketGroups(_:))
                         .eraseToAnyPublisher()
+                case .inProgress:
+                    return Env.servicesProvider.getMarketGroups(forLiveEvent: event)
+                        .catch { _ in
+                            // Fallback to generic method if specific method fails
+                            return Env.servicesProvider.getMarketGroups(forEvent: event)
+                        }
+                        .map(Self.convertMarketGroups(_:))
+                        .eraseToAnyPublisher()
+                }
+                
             })
             .sink { [weak self] completion in
                 if case .failure = completion {

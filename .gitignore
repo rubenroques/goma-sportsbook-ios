@@ -119,3 +119,4 @@ Scripts/APIDocAnalyzer/venv
 ServicesProvider/swagger/node_modules
 
 .llm_context/
+.cursorignore

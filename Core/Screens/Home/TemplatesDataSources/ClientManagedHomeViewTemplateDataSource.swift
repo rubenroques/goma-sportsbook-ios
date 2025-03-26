@@ -26,11 +26,11 @@ class ClientManagedHomeViewTemplateDataSource {
         .topCompetitionsShortcuts, // TopCompetitionsMobile
         .featuredTips, // SuggestedBets
     ]
-    
+
     private var fixedSections: Int {
         return self.contentTypes.count
     }
-    
+
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -78,7 +78,7 @@ class ClientManagedHomeViewTemplateDataSource {
             self.refreshPublisher.send()
         }
     }
-    
+
     //
     private var promotionalStories: [PromotionalStory] = [] {
         didSet {
@@ -135,7 +135,7 @@ class ClientManagedHomeViewTemplateDataSource {
         case multiplesPerLineByType
     }
     private var highlightsPresentationMode = HighlightsPresentationMode.multiplesPerLineByType
-    
+
     private var highlightsVisualImageMatches: [Match]  = []
     private var highlightsVisualImageOutrights: [Match] = []
     private var highlightsBoostedMatches: [Match] = []
@@ -171,7 +171,7 @@ class ClientManagedHomeViewTemplateDataSource {
     //
     //
     private var topCompetitionsLineCellViewModel: TopCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: [])
-    
+
     private var highlightedLiveMatches: [Match] = []
 
     private var highlightedMarkets: [HighlightedContent<Market>] = []
@@ -179,12 +179,15 @@ class ClientManagedHomeViewTemplateDataSource {
     //
     private var pendingUserTrackRequest: AnyCancellable?
 
+    // Track the current banners fetch operation
+    private var currentBannersFetchCancellable: AnyCancellable?
+
     private let cancellablesLock = NSLock()
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
         self.refreshData()
-        
+
         // Banners are associated with profile publisher
         let profileCancellable = Env.userSessionStore.userProfilePublisher
             .removeDuplicates()
@@ -192,9 +195,9 @@ class ClientManagedHomeViewTemplateDataSource {
             .sink { [weak self] _ in
                 self?.fetchBanners()
             }
-    
+
         self.addCancellable(profileCancellable)
-        
+
         // Alerts are associated with KYC publisher
         self.fetchAlerts()
     }
@@ -212,9 +215,9 @@ class ClientManagedHomeViewTemplateDataSource {
         self.highlightedMarkets = []
 
         self.cachedFeaturedTipLineViewModel = nil
-        
+
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
-        
+
         self.fetchQuickSwipeMatches()
         self.fetchHighlightMatches()
         self.fetchHighlightMarkets()
@@ -224,7 +227,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchPromotionalStories()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
-        
+
         self.fetchHeroMatches()
     }
 
@@ -247,25 +250,29 @@ class ClientManagedHomeViewTemplateDataSource {
                 }
                 self?.refreshPublisher.send()
             })
-            
+
         self.addCancellable(alertsCancellable)
 
     }
 
     // User alerts
     func fetchBanners() {
+        // Cancel any previous fetch operation
+        self.currentBannersFetchCancellable?.cancel()
+
         let cancellable = Env.servicesProvider.getPromotionalTopBanners()
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 //
             } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
                 guard let self = self else { return }
-                
+
                 var displayBanners = promotionalBanners
-                
+
                 if Env.userSessionStore.isUserLogged() {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDIN" }
-                } else {
+                }
+                else {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDOFF" }
                 }
                 self.banners = displayBanners.map { promotionalBanner in
@@ -282,7 +289,10 @@ class ClientManagedHomeViewTemplateDataSource {
                 }
                 self.refreshPublisher.send()
             }
-        
+
+        // Store reference to the current operation
+        self.currentBannersFetchCancellable = cancellable
+
         // Store the cancellable in a thread-safe manner
         self.addCancellable(cancellable)
     }
@@ -293,6 +303,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 //
+                //
             } receiveValue: { [weak self] promotionalStories in
                 let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
                     let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
@@ -301,7 +312,7 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.promotionalStories = mappedPromotionalStories
                 self?.refreshPublisher.send()
             }
-        
+
         self.addCancellable(cancellable)
     }
 
@@ -315,7 +326,7 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.quickSwipeStackMatches = matches
                 self?.refreshPublisher.send()
             })
-        
+
         self.addCancellable(cancellable)
     }
 
@@ -326,13 +337,13 @@ class ClientManagedHomeViewTemplateDataSource {
         case .onePerLine:
             return self.highlightsVisualImageMatches.count +
                 self.highlightsVisualImageOutrights.count
-            
+
         case .multiplesPerLineByType:
             return (self.highlightsVisualImageMatches.isNotEmpty ? 1 : 0) +
                 (self.highlightsVisualImageOutrights.isNotEmpty ? 1 : 0)
         }
     }
-    
+
     func highlightsBoostedOddsMatchesNumberOfRows() -> Int {
         switch self.highlightsPresentationMode {
         case .onePerLine:
@@ -357,7 +368,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
-        
+
         let boostedMatches = Env.servicesProvider.getHighlightedBoostedEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
@@ -395,17 +406,17 @@ class ClientManagedHomeViewTemplateDataSource {
                     }
                 }
             }
-     
+
             self?.highlightsVisualImageMatches = imageMatches.filter({
                 $0.homeParticipant.name != "" && $0.awayParticipant.name != ""
             })
-            
+
             self?.highlightsVisualImageOutrights = imageMatches.filter({
                 $0.homeParticipant.name == "" && $0.awayParticipant.name == ""
             })
-            
+
             self?.highlightsBoostedMatches = boostedMatches
-            
+
             self?.refreshPublisher.send()
         })
 
@@ -441,13 +452,13 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func fetchHeroMatches() {
-        
+
         let cancellable = Env.servicesProvider.getHeroGameEvent()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .compactMap({ $0 })
             .sink(receiveCompletion: { _ in
-                 
+
             }, receiveValue: { [weak self] heroMatches in
                 self?.heroMatches = heroMatches
                 self?.refreshPublisher.send()
@@ -508,16 +519,16 @@ class ClientManagedHomeViewTemplateDataSource {
 
                 let topCompetitionIds = convertedCompetitions.map { $0.id }
                 Env.favoritesManager.topCompetitionIds = topCompetitionIds
-                
+
                 if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
-                    
+
                     if convertedCompetitions.contains(where: {
                         $0.id == featuredCompetitionId
                     }) {
                         let filteredConvertedCOmpetitions = convertedCompetitions.filter( {
                             $0.id != featuredCompetitionId
                         })
-                        
+
                         self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: filteredConvertedCOmpetitions)
                     }
                     else {
@@ -573,12 +584,12 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func fetchHighlightedLiveMatches() {
-        
+
         let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
 
         self.highlightedLiveMatches = []
-        
-        var userId: String? = nil
+
+        var userId: String?
         if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
             userId = loggedUserId
         }
@@ -598,17 +609,17 @@ class ClientManagedHomeViewTemplateDataSource {
             } receiveValue: { [weak self] liveEvents in
                 self?.highlightedLiveMatches = liveEvents
                 self?.refreshPublisher.send()
-                
+
                 let eventsIds = liveEvents.compactMap({ return $0.trackableReference })
                 self?.waitUserToTrackImpressionForEvents(eventsIds: eventsIds)
             }
 
         self.addCancellable(cancellable)
     }
-    
+
     private func waitUserToTrackImpressionForEvents(eventsIds: [String]) {
         self.pendingUserTrackRequest?.cancel()
-        
+
         self.pendingUserTrackRequest = Env.userSessionStore.userProfilePublisher
             .compactMap({ $0?.userIdentifier })
             .first()
@@ -616,19 +627,20 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.trackImpressionForEvents(eventsIds: eventsIds, userId: userIdentifier)
             }
     }
-    
+
     private func trackImpressionForEvents(eventsIds: [String], userId: String) {
-        
-        Env.servicesProvider.trackEvent(.impressionsEvents(eventsIds: eventsIds), userIdentifer: userId)
+
+        let cancellable = Env.servicesProvider.trackEvent(.impressionsEvents(eventsIds: eventsIds), userIdentifer: userId)
             .sink { _ in
                 //
             } receiveValue: {
                 //
             }
-            .store(in: &self.cancellables)
-        
+
+        // Use thread-safe method instead of direct access
+        self.addCancellable(cancellable)
     }
-    
+
     private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
         let croppedSection = section - self.fixedSections
         if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
@@ -655,7 +667,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
         self.addCancellable(cancellable)
     }
-    
+
 }
 
 extension ClientManagedHomeViewTemplateDataSource {
@@ -720,7 +732,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .featuredTips:
             return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
-            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+            if (Env.businessSettingsSocket.clientSettings.featuredCompetition?.id) != nil {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
             } else {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
@@ -835,7 +847,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
-        
+
         // Check if the section index is within the bounds of the array
         if let sectionType = self.contentTypes[safe: section] {
             return sectionType
@@ -850,7 +862,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
         return nil
     }
-
 
     // Content type ViewModels methods
     func alertsArrayViewModel() -> [ActivationAlert] {
@@ -911,9 +922,9 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
 
     }
-    
+
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
-                
+
         if let match = self.heroMatches[safe: index] {
             let id = match.id
             if let matchWidgetCellViewModel = self.heroCardWidgetCellViewModelCache[id] {
@@ -938,7 +949,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightedMatchViewModelHorizontal(forSection: section, forIndex: index)
         }
     }
-    
+
     private func highlightedMatchViewModelVertical(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
         // Each highlight match has it's own line
         guard
@@ -947,18 +958,18 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return nil
         }
         let highlightsOutrightsMatchesIndex = index-self.highlightsVisualImageMatches.count
-        
+
         switch contentType {
         case .highlightedMatches:
             if let match = self.highlightsVisualImageMatches[safe: index] {
                 var type = MatchWidgetType.topImage
-                
+
                 if match.markets.first?.customBetAvailable ?? false {
                     type = .topImageWithMixMatch
                 }
-                
+
                 let id = match.id + type.rawValue
-                
+
                 if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
                     return matchWidgetContainerTableViewModel
                 }
@@ -979,7 +990,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                     return matchWidgetContainerTableViewModel
                 }
             }
-            
+
         case .highlightedBoostedOddsMatches:
             if let match = self.highlightsBoostedMatches[safe: index] {
                 let id = match.id + MatchWidgetType.boosted.rawValue
@@ -995,10 +1006,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         default:
             return nil
         }
-        
+
         return nil
     }
-    
+
     private func highlightedMatchViewModelHorizontal(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
         // There is a line for each highlight type (image, boosted, outrightImage)
         // Each match card for each type will show as a horizontal scroll
@@ -1007,7 +1018,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         else {
             return nil
         }
-        
+
         var ids = ""
         var viewModels: [MatchWidgetCellViewModel] = []
         switch (index, contentType) {
@@ -1019,7 +1030,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                 }
                 return match.id + type.rawValue
             }.joined(separator: "-")
-            
+
             viewModels = self.highlightsVisualImageMatches.map { match in
                 var type = MatchWidgetType.topImage
                 if match.markets.first?.customBetAvailable ?? false {
@@ -1027,12 +1038,12 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                 }
                 return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
             }
-        
+
         case (1, .highlightedMatches):
             var type = MatchWidgetType.topImageOutright
             ids = self.highlightsVisualImageOutrights.map { $0.id + type.rawValue }.joined(separator: "-")
             viewModels = self.highlightsVisualImageOutrights.map { match in
-                
+
                 return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
             }
         case (0, .highlightedBoostedOddsMatches):
@@ -1044,7 +1055,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         default:
             return nil
         }
-        
+
         if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[ids] {
             return matchWidgetContainerTableViewModel
         }
@@ -1053,7 +1064,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             self.matchWidgetContainerTableViewModelCache[ids] = matchWidgetContainerTableViewModel
             return matchWidgetContainerTableViewModel
         }
-        
+
     }
 
     //
@@ -1095,13 +1106,13 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     //
     // Live match
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
-        
+
         guard
             let match = self.highlightedLiveMatches[safe: index]
         else {
             return nil
         }
-        
+
         if let matchLineTableCellViewModel = self.highlightedLiveMatchLineTableCellViewModelCache[match.id] {
             return matchLineTableCellViewModel
         }
@@ -1112,11 +1123,11 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
 
     }
-    
+
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         var matchId: String?
         var match: Match?
-        
+
         switch section {
         case 0..<self.fixedSections:
             ()
@@ -1124,13 +1135,13 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             match = self.promotedMatch(forSection: section, forIndex: index)
             matchId = match?.id
         }
-        
+
         guard
             let matchIdValue = matchId
         else {
             return nil
         }
-        
+
         if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[matchIdValue] {
             return matchLineTableCellViewModel
         }
@@ -1141,11 +1152,11 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
         return nil
     }
-    
+
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
         return self.topCompetitionsLineCellViewModel
     }
-    
+
     func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
         return nil
     }
@@ -1153,7 +1164,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 }
 
 extension ClientManagedHomeViewTemplateDataSource {
-    
+
     static func appendToReadInstaStoriesArray(_ newStory: String) {
         let key = "readInstaStoriesArray"
         var existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
@@ -1166,5 +1177,5 @@ extension ClientManagedHomeViewTemplateDataSource {
         let existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
         return existingStories.contains(storyToCheck)
     }
-    
+
 }

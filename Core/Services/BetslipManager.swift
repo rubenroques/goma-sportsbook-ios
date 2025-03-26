@@ -10,53 +10,83 @@ import Combine
 import OrderedCollections
 import ServicesProvider
 
+/// Represents the current value of the betslip with different calculation methods
+/// - simple: Basic multiplication of all ticket odds
+/// - specialOffer: Value calculated using BetBuilder API
+enum BetslipValue: Equatable {
+    case simple(odds: Double)
+    case specialOffer(odds: Double)
+
+    var odd: Double {
+        switch self {
+        case .simple(let odds):
+            return odds
+        case .specialOffer(let odds):
+            return odds
+        }
+    }
+}
+
 class BetslipManager: NSObject {
-    
+
     var allowedBetTypesPublisher = CurrentValueSubject< LoadableContent<[BetType]>, Never>.init( .idle )
     var systemTypesAvailablePublisher = CurrentValueSubject<LoadableContent<[SystemBetType]>, Never> .init(.idle)
-    
+
     var allBetTypes = [ServicesProvider.BetType]()
     var newBetsPlacedPublisher = PassthroughSubject<Void, Never>.init()
     var bettingTicketsPublisher: CurrentValueSubject<[BettingTicket], Never>
-    
+
+    /// Publisher for the current value of the betslip
+    /// Updates automatically when tickets are added/removed or when odds change
+    /// Values can be either:
+    /// - .simple(odds: Double): Basic multiplication of all ticket odds
+    /// - .specialOffer(odds: Double): Value calculated using BetBuilder API
+    var betslipValuePublisher: AnyPublisher<BetslipValue, Never> {
+        return betslipValueSubject
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    private var betslipValueSubject = CurrentValueSubject<BetslipValue, Never>(.simple(odds: 0.0))
+
     private var bettingTicketsDictionaryPublisher: CurrentValueSubject<OrderedDictionary<String, BettingTicket>, Never>
     private var bettingTicketPublisher: [String: CurrentValueSubject<BettingTicket, Never>]
-    
+
     private var serviceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
     private var bettingTicketsCancellables: [String: AnyCancellable] = [:]
-    
+
     // BetBuilder
     var betBuilderProcessor: BetBuilderProcessor = BetBuilderProcessor()
-    
+
     var betBuilderTransformer: BetBuilderTransformer = BetBuilderTransformer()
-    
+
     private var cancellables: Set<AnyCancellable> = []
-    
+
     override init() {
         self.bettingTicketsPublisher = .init([])
         self.bettingTicketsDictionaryPublisher = .init([:])
         self.bettingTicketPublisher = [:]
-        
+
         super.init()
     }
-    
+
     func start() {
         var cachedBetslipTicketsDictionary: OrderedDictionary<String, BettingTicket> = [:]
         for ticket in UserDefaults.standard.cachedBetslipTickets {
             cachedBetslipTicketsDictionary[ticket.id] = ticket
         }
         self.bettingTicketsDictionaryPublisher.send(cachedBetslipTicketsDictionary)
-        
+
         Env.servicesProvider.eventsConnectionStatePublisher
             .filter({ $0 == .connected })
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
-                
+
             }, receiveValue: { [weak self] _ in
                 self?.reconnectBettingTicketsUpdates()
             })
             .store(in: &self.cancellables)
-        
+
         self.bettingTicketsDictionaryPublisher
             .map({ dictionary -> [BettingTicket] in
                 return Array.init(dictionary.values)
@@ -65,14 +95,14 @@ class BetslipManager: NSObject {
                 self?.bettingTicketsPublisher.send(tickets)
             }
             .store(in: &self.cancellables)
-        
+
         self.bettingTicketsPublisher
             .removeDuplicates()
             .sink { tickets in
                 UserDefaults.standard.cachedBetslipTickets = tickets
             }
             .store(in: &self.cancellables)
-        
+
         self.bettingTicketsPublisher
             .removeDuplicates(by: { left, right in
                 left.map(\.id) == right.map(\.id)
@@ -81,7 +111,7 @@ class BetslipManager: NSObject {
                 self?.refreshBetBuilderPotentialReturn()
             }
             .store(in: &cancellables)
-        
+
         self.bettingTicketsPublisher
             .removeDuplicates(by: { left, right in
                 left.map(\.id) == right.map(\.id)
@@ -92,66 +122,73 @@ class BetslipManager: NSObject {
             })
             .store(in: &self.cancellables)
 
+        // Subscribe to ticket changes to update the betslip value
+        self.bettingTicketsPublisher
+            .removeDuplicates()
+            .sink { [weak self] tickets in
+                self?.updateBetslipValue(tickets)
+            }
+            .store(in: &self.cancellables)
     }
-    
+
     func addBettingTicket(_ bettingTicket: BettingTicket) {
         self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = bettingTicket
         self.subscribeBettingTicketPublisher(bettingTicket: bettingTicket)
     }
-    
+
     func removeBettingTicket(_ bettingTicket: BettingTicket) {
         self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = nil
         self.unsubscribeBettingTicketPublisher(withId: bettingTicket.id)
     }
-    
+
     func removeBettingTicket(withId id: String) {
         self.bettingTicketsDictionaryPublisher.value[id] = nil
         self.unsubscribeBettingTicketPublisher(withId: id)
     }
-    
+
     func hasBettingTicket(_ bettingTicket: BettingTicket) -> Bool {
         return self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] != nil
     }
-    
+
     func hasBettingTicket(withId id: String) -> Bool {
         return self.bettingTicketsDictionaryPublisher.value[id] != nil
     }
-    
+
     func clearAllBettingTickets() {
         for bettingTicket in self.bettingTicketsDictionaryPublisher.value.values {
             self.unsubscribeBettingTicketPublisher(withId: bettingTicket.id)
         }
         self.bettingTicketsDictionaryPublisher.send([:])
     }
-    
+
     private func reconnectBettingTicketsUpdates() {
         for bettingTicket in self.bettingTicketsPublisher.value {
             self.subscribeBettingTicketPublisher(bettingTicket: bettingTicket)
         }
     }
-    
+
     private func unsubscribeBettingTicketPublisher(withId id: String) {
         // Cancel the subscription
         self.serviceProviderSubscriptions[id] = nil
-        
+
         // Cancel combine
         if let subscriber = self.bettingTicketsCancellables[id] {
             subscriber.cancel()
             self.bettingTicketsCancellables.removeValue(forKey: id)
         }
-        
+
         self.bettingTicketPublisher.removeValue(forKey: id)
     }
-    
+
     private func subscribeBettingTicketPublisher(bettingTicket: BettingTicket) {
-        
+
         if let publisher = self.bettingTicketPublisher[bettingTicket.id] {
             publisher.send(bettingTicket)
         }
         else {
             self.bettingTicketPublisher[bettingTicket.id] = .init(bettingTicket)
         }
-        
+
         let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId, onEventId: bettingTicket.matchId)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
@@ -178,9 +215,9 @@ class BetslipManager: NSObject {
                 }
             }
         self.bettingTicketsCancellables[bettingTicket.id] = bettingTicketSubscriber
-        
+
     }
-    
+
     private func disableBettingTicket(_ bettingTicket: BettingTicket) {
         if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] {
             let newAvailablity = false
@@ -201,14 +238,14 @@ class BetslipManager: NSObject {
                                                       date: bettingTicket.date,
                                                       odd: bettingTicket.odd,
                                                       isFromBetBuilderMarket: bettingTicket.isFromBetBuilderMarket)
-            
+
             self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
             self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
         }
     }
-    
+
     private func updateBettingTickets(ofMarket market: Market) {
-        
+
         for outcome in market.outcomes {
             if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.id] {
                 let newAvailablity = market.isAvailable
@@ -236,33 +273,38 @@ class BetslipManager: NSObject {
             }
         }
     }
-    
+
     func bettingTicketPublisher(withId id: String) -> AnyPublisher<BettingTicket, Never>? {
         if let bettingTicketPublisher = self.bettingTicketPublisher[id] {
             return bettingTicketPublisher.eraseToAnyPublisher()
         }
         return nil
     }
-    
+
     func getBettingTickets() -> [BettingTicket] {
         return self.bettingTicketsPublisher.value
     }
-    
+
+    // Method to get the current betslip value
+    func getCurrentBetslipValue() -> BetslipValue {
+        return self.betslipValueSubject.value
+    }
+
 }
 
 //
 extension BetslipManager {
-    
+
     func refreshAllowedBetTypes() {
         self.requestAllowedBetTypes(withBettingTickets: self.bettingTicketsPublisher.value)
     }
-    
+
     func requestAllowedBetTypes(withBettingTickets bettingTickets: [BettingTicket]) {
-        
+
         self.allowedBetTypesPublisher.send(LoadableContent.loading)
         self.systemTypesAvailablePublisher.send(LoadableContent.loading)
         self.allBetTypes = []
-        
+
         let betTicketSelections: [ServicesProvider.BetTicketSelection] = bettingTickets.map { bettingTicket -> ServicesProvider.BetTicketSelection in
             let convertedOdd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
@@ -276,22 +318,22 @@ extension BetslipManager {
                                                                          sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
-        
+
         Env.servicesProvider.getAllowedBetTypes(withBetTicketSelections: betTicketSelections)
             .sink { [weak self] completion in
-                
+
                 switch completion {
                 case .failure:
                     self?.allowedBetTypesPublisher.send(LoadableContent.failed)
                 case .finished:
                     ()
                 }
-                
+
                 print("getAllowedBetTypes completion \(completion)")
-                
+
             } receiveValue: { [weak self] allowedBetTypes in
                 let betTypes = allowedBetTypes.map { betType in
-                    
+
                     if let allBetTypes = self?.allBetTypes {
                         if !allBetTypes.contains(where: {
                             $0.code == betType.code
@@ -299,16 +341,16 @@ extension BetslipManager {
                             self?.allBetTypes.append(betType)
                         }
                     }
-                    
+
                     switch betType.grouping {
                     case .single: return BetType.single(identifier: betType.code)
                     case .multiple: return BetType.multiple(identifier: betType.code)
                     case .system: return BetType.system(identifier: betType.code, name: betType.name)
                     }
-                    
+
                 }
                 self?.allowedBetTypesPublisher.send( LoadableContent.loaded(betTypes) )
-                
+
                 var systemBetTypes: [SystemBetType] = []
                 allowedBetTypes.forEach { betType in
                     switch betType.grouping {
@@ -319,19 +361,20 @@ extension BetslipManager {
                     default: ()
                     }
                 }
-                
                 self?.systemTypesAvailablePublisher.send(.loaded(systemBetTypes))
-                
             }
             .store(in: &self.cancellables)
     }
-    
+
+    //
+    // MARK: - Place Bets
+    //
     func placeMultipleBet(withBettingTickets bettingTickets: [BettingTicket]) {
-        
+
     }
-    
+
     func placeQuickBet(bettingTicket: BettingTicket, amount: Double, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
-        
+
         let convertedOdd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
         let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
                                                                      eventName: "",
@@ -342,29 +385,29 @@ extension BetslipManager {
                                                                      odd: convertedOdd,
                                                                      stake: amount,
                                                                      sportIdCode: bettingTicket.sportIdCode)
-        
+
         let betTicket = ServicesProvider.BetTicket(tickets: [betTicketSelection],
                                                    stake: amount,
                                                    betGroupingType: .single(identifier: "S"))
-        
+
         let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance)
             .mapError({ error in
                 switch error {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
-                    
+
                     if message.contains("bet_error") {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
+
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
-                    
+
                     if message.contains("bet_error") {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
+
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
@@ -373,23 +416,23 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
-                    
+
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
                         ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
                     })
-                    
+
                     var betType = localized("single")
-                    
+
                     if let type = placedBetEntry.type {
                         let allowedBetTypes = self.allBetTypes
-                        
+
                         if let betTypeFound = allowedBetTypes.filter({
                             $0.code == type
                         }).first {
                             betType = betTypeFound.name
                         }
                     }
-                    
+
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
@@ -397,7 +440,7 @@ extension BetslipManager {
                                                            type: betType,
                                                            maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries,
                                                            betslipId: placedBetsResponse.identifier)
-                    
+
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -409,10 +452,10 @@ extension BetslipManager {
                 }
             })
             .eraseToAnyPublisher()
-        
+
         return publisher
     }
-    
+
     func placeSingleBets(amounts: [String: Double], useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         var betTickets: [ServicesProvider.BetTicket] = []
         for singleTicket in self.bettingTicketsPublisher.value {
@@ -427,36 +470,36 @@ extension BetslipManager {
                                                                          odd: convertedOdd,
                                                                          stake: stake,
                                                                          sportIdCode: singleTicket.sportIdCode)
-            
+
             let betTicket = ServicesProvider.BetTicket(tickets: [betTicketSelection],
                                                        stake: stake,
                                                        betGroupingType: .single(identifier: "S"))
             betTickets.append(betTicket)
         }
-        
+
         let publisher =  Env.servicesProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance)
             .mapError({ error in
                 switch error {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
-                    
+
                     if message.contains("bet_error") {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
+
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
-                    
+
                     if message.contains("bet_error") {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
+
                     return BetslipErrorType.betPlacementDetailedError(message: message)
-                    
+
                 case .betNeedsUserConfirmation(let betDetails):
                     return BetslipErrorType.betNeedsUserConfirmation(betDetails: betDetails)
-                    
+
                 default:
                     return BetslipErrorType.betPlacementError
                 }
@@ -464,23 +507,23 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
-                    
+
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
                         ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
                     })
-                    
+
                     var betType = "Single"
-                    
+
                     if let type = placedBetEntry.type {
                         let allowedBetTypes = self.allBetTypes
-                        
+
                         if let betTypeFound = allowedBetTypes.filter({
                             $0.code == type
                         }).first {
                             betType = betTypeFound.name
                         }
                     }
-                    
+
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
@@ -488,7 +531,7 @@ extension BetslipManager {
                                                            type: betType,
                                                            maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries,
                                                            betslipId: placedBetsResponse.identifier)
-                    
+
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -500,18 +543,18 @@ extension BetslipManager {
                 }
             })
             .eraseToAnyPublisher()
-        
+
         return publisher
     }
-    
+
     func placeMultipleBet(withStake stake: Double, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
-        
+
         guard
             self.bettingTicketsPublisher.value.isNotEmpty
         else {
             return Fail(error: BetslipErrorType.emptyBetslip).eraseToAnyPublisher()
         }
-        
+
         let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
@@ -525,7 +568,7 @@ extension BetslipManager {
                                                                          sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
-        
+
         var multipleBetIdentifier = "A"
         if case let .loaded(allowedBetTypes) =  self.allowedBetTypesPublisher.value {
             allowedBetTypes.forEach { betType in
@@ -537,7 +580,7 @@ extension BetslipManager {
                 }
             }
         }
-        
+
         let betTicket = BetTicket.init(tickets: betTicketSelections, stake: stake, betGroupingType: BetGroupingType.multiple(identifier: multipleBetIdentifier))
         let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance)
             .mapError({ error in
@@ -545,11 +588,11 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
-                    
+
                     if message.contains("bet_error") {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
+
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
                     if message.contains("bet_error") {
@@ -565,32 +608,32 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
-                    
+
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
                         ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
                     })
-                    
+
                     var betType = "Multiple"
-                    
+
                     if let type = placedBetEntry.type {
                         let allowedBetTypes = self.allBetTypes
-                        
+
                         if let betTypeFound = allowedBetTypes.filter({
                             $0.code == type
                         }).first {
                             betType = betTypeFound.name
                         }
                     }
-                    
+
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            amount: placedBetEntry.totalStake,
                                                            type: betType,
                                                            maxWinning: placedBetEntry.potentialReturn,
-                                                           selections: betslipPlaceEntries, 
+                                                           selections: betslipPlaceEntries,
                                                            betslipId: placedBetsResponse.identifier)
-                    
+
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -602,18 +645,18 @@ extension BetslipManager {
                 }
             })
             .eraseToAnyPublisher()
-        
+
         return publisher
     }
-    
+
     func placeSystemBet(withStake stake: Double, systemBetType: SystemBetType, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
-        
+
         guard
             self.bettingTicketsPublisher.value.isNotEmpty
         else {
             return Fail(error: BetslipErrorType.emptyBetslip).eraseToAnyPublisher()
         }
-        
+
         let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
@@ -626,11 +669,11 @@ extension BetslipManager {
                                                                          stake: stake, sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
-        
+
         let betTicket = BetTicket.init(tickets: betTicketSelections,
                                        stake: stake,
                                        betGroupingType: BetGroupingType.system(identifier: systemBetType.id, name: systemBetType.name ?? ""))
-        
+
         let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance)
             .mapError({ error in
                 switch error {
@@ -657,23 +700,23 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
-                    
+
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
                         ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
                     })
-                    
+
                     var betType = "System"
-                    
+
                     if let type = placedBetEntry.type {
                         let allowedBetTypes = self.allBetTypes
-                        
+
                         if let betTypeFound = allowedBetTypes.filter({
                             $0.code == type
                         }).first {
                             betType = betTypeFound.name
                         }
                     }
-                    
+
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
@@ -681,7 +724,7 @@ extension BetslipManager {
                                                            type: betType,
                                                            maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries,
                                                            betslipId: placedBetsResponse.identifier)
-                    
+
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -693,19 +736,94 @@ extension BetslipManager {
                 }
             })
             .eraseToAnyPublisher()
-        
+
         return publisher
     }
+    //
+    //
+
+    // MARK: - Calculates
+    //
+    // Method to update the betslip value
+    private func updateBetslipValue(_ tickets: [BettingTicket]) {
+        // If no tickets, reset to 0
+        if tickets.isEmpty {
+            self.betslipValueSubject.send(.simple(odds: 1.0))
+            return
+        }
+
+        // If there's only one ticket, we use simple value with the ticket's odd
+        if tickets.count == 1 {
+            let simpleOdd = tickets[0].decimalOdd
+            self.betslipValueSubject.send(.simple(odds: simpleOdd))
+            return
+        }
+
+        // Check if all tickets have the same matchId (required for BetBuilder)
+        let allTicketsFromSameMatch = Set(tickets.map(\.matchId)).count == 1
+
+        // If all tickets are from the same match, try to use BetBuilder calculation
+        if allTicketsFromSameMatch {
+            // Try to calculate special offer using BetBuilder
+            self.requestBetBuilderPotentialReturn(withSkateAmount: 1.0)
+                .sink { completion in
+                    switch completion {
+                    case .failure:
+                        // If BetBuilder calculation fails, fallback to multiple bet calculation
+                        self.calculateSimpleOddsUsingMultiple(tickets)
+                    case .finished:
+                        // Completion handled in receiveValue
+                        break
+                    }
+                } receiveValue: { betBuilderCalculateResponse in
+                    switch betBuilderCalculateResponse {
+                    case .valid(let potentialReturn, _):
+                        // Use special offer value if available
+                        self.betslipValueSubject.send(.specialOffer(odds: potentialReturn.totalOdd))
+                    case .invalid:
+                        // Fallback to multiple bet calculation
+                        self.calculateSimpleOddsUsingMultiple(tickets)
+                    }
+                }
+                .store(in: &self.cancellables)
+        } else {
+            // If tickets are from different matches, just use multiple bet calculation
+            self.calculateSimpleOddsUsingMultiple(tickets)
+        }
+    }
+
+    // Helper method to calculate simple odds using multiple bet calculation
+    private func calculateSimpleOddsUsingMultiple(_ tickets: [BettingTicket]) {
+        self.requestMultipleBetPotentialReturn(withSkateAmount: 1.0)
+            .sink { completion in
+                switch completion {
+                case .failure:
+                    // If multiple bet calculation fails, fallback to basic multiplication
+                    let simpleOdds = tickets.reduce(1.0) { result, ticket in
+                        return result * ticket.decimalOdd
+                    }
+                    self.betslipValueSubject.send(.simple(odds: simpleOdds))
+                case .finished:
+                    break
+                }
+            } receiveValue: { betPotentialReturn in
+                // Calculate total odds from potential return
+                let totalOdds = betPotentialReturn.potentialReturn / betPotentialReturn.totalStake
+                self.betslipValueSubject.send(.simple(odds: totalOdds))
+            }
+            .store(in: &self.cancellables)
+    }
+
     
     func requestSimpleBetPotentialReturn(withSkateAmount amounts: [String: Double]) -> AnyPublisher<BetPotencialReturn, Never> {
-        
+
         let ticketSelections = self.bettingTicketsPublisher.value
             .map { (ticket: BettingTicket) in
-                
+
                 let stake = amounts[ticket.id] ?? 1.0
-                
+
                 let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: ticket.odd)
-                
+
                 return ServicesProvider.BetTicketSelection(identifier: ticket.id,
                                                            eventName: "",
                                                            homeTeamName: "",
@@ -716,19 +834,19 @@ extension BetslipManager {
                                                            stake: stake,
                                                            sportIdCode: ticket.sportIdCode)
             }
-        
+
         let betTicket = ServicesProvider.BetTicket(tickets: ticketSelections,
                                                    stake: nil,
                                                    betGroupingType: BetGroupingType.single(identifier: "S"))
-        
+
         return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)
             .map({ betslipPotentialReturn in
-                
+
                 return BetPotencialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
                                           totalStake: betslipPotentialReturn.totalStake,
                                           numberOfBets: betslipPotentialReturn.numberOfBets,
                                           totalOdd: 1)
-                
+
             })
             .replaceError(with: nil)
             .replaceNil(with: BetPotencialReturn(potentialReturn: 0,
@@ -736,11 +854,11 @@ extension BetslipManager {
                                                  numberOfBets: 0,
                                                  totalOdd: 1))
             .eraseToAnyPublisher()
-        
+
     }
-    
+
     func requestMultipleBetPotentialReturn(withSkateAmount stake: Double) -> AnyPublisher<BetPotencialReturn, BetslipErrorType> {
-        
+
         let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
@@ -754,7 +872,7 @@ extension BetslipManager {
                                                                          sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
-        
+
         var multipleBetIdentifier = "A"
         if case let .loaded(allowedBetTypes) =  self.allowedBetTypesPublisher.value {
             allowedBetTypes.forEach { betType in
@@ -766,7 +884,7 @@ extension BetslipManager {
                 }
             }
         }
-        
+
         var processedStake = stake
         if stake == 0.0 {
             processedStake = 1.0
@@ -774,7 +892,7 @@ extension BetslipManager {
         let betTicket = BetTicket.init(tickets: betTicketSelections,
                                        stake: processedStake,
                                        betGroupingType: BetGroupingType.multiple(identifier: multipleBetIdentifier))
-        
+
         return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)
             .map({ betslipPotentialReturn in
                 return BetPotencialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
@@ -787,9 +905,9 @@ extension BetslipManager {
             })
             .eraseToAnyPublisher()
     }
-    
+
     func requestSystemBetPotentialReturn(withSkateAmount stake: Double, systemBetType: SystemBetType) -> AnyPublisher<BetPotencialReturn, BetslipErrorType> {
-        
+
         let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
@@ -803,16 +921,16 @@ extension BetslipManager {
                                                                          sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
-        
+
         var processedStake = stake
         if stake == 0.0 {
             processedStake = 1.0
         }
-        
+
         let betTicket = BetTicket.init(tickets: betTicketSelections,
                                        stake: processedStake,
                                        betGroupingType: BetGroupingType.system(identifier: systemBetType.id, name: systemBetType.name ?? ""))
-        
+
         return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)
             .map({ betslipPotentialReturn in
                 return BetPotencialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
@@ -825,14 +943,14 @@ extension BetslipManager {
             })
             .eraseToAnyPublisher()
     }
-    
+
     func requestCalculateCashback(stakeValue stake: Double) -> AnyPublisher<CashbackResult, BetslipErrorType> {
-        
+
         let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
-            
+
             // let bet = bettingTicket
-            
+
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
                                                                          eventName: bettingTicket.matchId,
                                                                          homeTeamName: "",
@@ -844,7 +962,7 @@ extension BetslipManager {
                                                                          sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
-        
+
         var multipleBetIdentifier = "A"
         if case let .loaded(allowedBetTypes) =  self.allowedBetTypesPublisher.value {
             allowedBetTypes.forEach { betType in
@@ -856,19 +974,19 @@ extension BetslipManager {
                 }
             }
         }
-        
+
         let betTicket = BetTicket.init(tickets: betTicketSelections,
                                        stake: stake,
                                        betGroupingType: BetGroupingType.multiple(identifier: multipleBetIdentifier))
-        
+
         return Env.servicesProvider.calculateCashback(forBetTicket: betTicket)
             .mapError({ _ in
                 return BetslipErrorType.invalidStake
             })
             .eraseToAnyPublisher()
     }
-    
-    // BetBuilder
+
+    // MARK: - BetBuilder
     //
     func refreshBetBuilderPotentialReturn() {
         let tickets = self.getBettingTickets()
@@ -894,26 +1012,26 @@ extension BetslipManager {
                 .store(in: &self.cancellables)
         }
     }
-    
+
     func requestBetBuilderPotentialReturn(withSkateAmount stake: Double) -> AnyPublisher<BetBuilderCalculateResponse, BetslipErrorType> {
-        
+
         let ticketsToIgnore = self.betBuilderProcessor.ticketsToIgnore
         let tickets = self.bettingTicketsPublisher.value.filter { !ticketsToIgnore.contains($0) }
-        
+
         guard
             tickets.isNotEmpty
         else  {
             return Fail(error: BetslipErrorType.emptyBetslip)
                 .eraseToAnyPublisher()
         }
-        
+
         guard
             tickets.count >  1
         else  {
             return Fail(error: BetslipErrorType.insufficientSelections)
                 .eraseToAnyPublisher()
         }
-        
+
         let betTicketSelections = tickets.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
@@ -927,18 +1045,18 @@ extension BetslipManager {
                                                                          sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
-        
+
         let betTicket = BetTicket(tickets: betTicketSelections,
                                   stake: stake,
                                   betGroupingType: BetGroupingType.multiple(identifier: ""))
-        
+
         return Env.servicesProvider.calculateBetBuilderPotentialReturn(forBetTicket: betTicket)
             .map({ betslipPotentialReturn in
                 let potencialReturn = BetPotencialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
                                                          totalStake: stake,
                                                          numberOfBets: 1,
                                                          totalOdd: betslipPotentialReturn.calculatedOdds)
-                
+
                 return BetBuilderCalculateResponse.valid(potentialReturn: potencialReturn, tickets: tickets)
             })
             .catch { error -> AnyPublisher<BetBuilderCalculateResponse, BetslipErrorType> in
@@ -947,11 +1065,11 @@ extension BetslipManager {
                     return Just(BetBuilderCalculateResponse.invalid(tickets: tickets))
                         .setFailureType(to: BetslipErrorType.self)
                         .eraseToAnyPublisher()
-                    
+
                 case .forbidden:
                     return Fail(error: BetslipErrorType.forbiddenRequest)
                         .eraseToAnyPublisher()
-                    
+
                 case .errorMessage(let message):
                     if message.contains("bet_error") {
                         return Fail(error: BetslipErrorType.betPlacementDetailedError(message: localized(message)))
@@ -976,33 +1094,33 @@ extension BetslipManager {
                 }
             }
             .handleEvents(receiveOutput: { [weak self] betBuilderCalculateResponse in
-                
+
                 switch betBuilderCalculateResponse {
                 case .valid(let potentialReturn, let tickets):
                     self?.betBuilderProcessor.processValidTickets(tickets)
                     self?.betBuilderProcessor.calculatedOddForValidTickets = potentialReturn.totalOdd
-                    
+
                 case .invalid(let invalidTickets):
                     self?.betBuilderProcessor.processInvalidTickets(invalidTickets)
                 }
             })
             .eraseToAnyPublisher()
     }
-    
+
     func placeBetBuilderBetValidTickets(stake: Double) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         guard
             self.betBuilderProcessor.hasValidTickets
         else {
             return Fail(error: BetslipErrorType.noValidSelectionsFound).eraseToAnyPublisher()
         }
-        
+
         let validTickets = self.betBuilderProcessor.validTickets
         let validOdd = self.betBuilderProcessor.calculatedOddForValidTickets
         return self.placeBetBuilderBet(withTickets: validTickets, stake: stake, calculatedOdd: validOdd)
     }
-    
+
     func placeBetBuilderBet(withTickets tickets: [BettingTicket], stake: Double, calculatedOdd: Double) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
-        
+
         let betTicketSelections = tickets.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
@@ -1016,9 +1134,9 @@ extension BetslipManager {
                                                                          sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
-        
+
         let betTicket = BetTicket.init(tickets: betTicketSelections, stake: stake, betGroupingType: BetGroupingType.multiple(identifier: ""))
-        
+
         let publisher =  Env.servicesProvider.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
             .mapError({ error in
                 switch error {
@@ -1045,11 +1163,11 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
-                    
+
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
                         ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
                     })
-                    
+
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
@@ -1057,7 +1175,7 @@ extension BetslipManager {
                                                            type: placedBetEntry.type ?? "",
                                                            maxWinning: placedBetEntry.potentialReturn,
                                                            selections: betslipPlaceEntries, betslipId: placedBetsResponse.identifier)
-                    
+
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -1069,9 +1187,9 @@ extension BetslipManager {
                 }
             })
             .eraseToAnyPublisher()
-        
+
         return publisher
     }
-    
-    
+
+
 }
