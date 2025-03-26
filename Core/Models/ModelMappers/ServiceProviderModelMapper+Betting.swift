@@ -248,6 +248,19 @@ extension ServiceProviderModelMapper {
     
     static func bettingTicket(fromRecommendedBetbuilderSelection recommendedBetbuilderSelection: RecommendedBetBuilderSelection) -> BettingTicket {
         
-        return BettingTicket(id: recommendedBetbuilderSelection.outcomeId, outcomeId: recommendedBetbuilderSelection.outcomeId, marketId: recommendedBetbuilderSelection.marketId, matchId: recommendedBetbuilderSelection.eventId, decimalOdd: recommendedBetbuilderSelection.odd, isAvailable: true, matchDescription: recommendedBetbuilderSelection.eventName, marketDescription: recommendedBetbuilderSelection.marketName, outcomeDescription: recommendedBetbuilderSelection.outcomeName ?? "", homeParticipantName: recommendedBetbuilderSelection.participants[0], awayParticipantName: recommendedBetbuilderSelection.participants[1], sportIdCode: recommendedBetbuilderSelection.sportId)
+        return BettingTicket(
+            id: recommendedBetbuilderSelection.outcomeId,
+            outcomeId: recommendedBetbuilderSelection.outcomeId,
+            marketId: recommendedBetbuilderSelection.marketId,
+            matchId: recommendedBetbuilderSelection.eventId,
+            decimalOdd: recommendedBetbuilderSelection.odd,
+            isAvailable: true,
+            matchDescription: recommendedBetbuilderSelection.eventName,
+            marketDescription: recommendedBetbuilderSelection.marketName,
+            outcomeDescription: recommendedBetbuilderSelection.outcomeName ?? "",
+            homeParticipantName: recommendedBetbuilderSelection.participants[0],
+            awayParticipantName: recommendedBetbuilderSelection.participants[1],
+            sportIdCode: recommendedBetbuilderSelection.sportId
+        )
     }
 }
