@@ -66,7 +66,7 @@ struct TargetVariables: SportsbookTarget {
             // .highlightedMarketProChoices, // Pro Choices Markets
             .highlightedBoostedOddsMatches, // Boosted Odds
             .topCompetitionsShortcuts, // TopCompetitionsMobile
-            .featuredTips, // SuggestedBets
+            .promotedBetslips, // SuggestedBets
         ])
     }
 

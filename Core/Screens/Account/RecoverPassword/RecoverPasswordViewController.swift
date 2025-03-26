@@ -123,7 +123,7 @@ class RecoverPasswordViewController: UIViewController {
                 guard let self = self else { return }
                 if emailText != "" {
 
-                    if emailText.isValidEmailAddress() {
+                    if self.isValidEmailAddress(emailText) {
                         self.emailTextField.hideTipAndError()
                         self.proceedButton.isEnabled = true
                     }
@@ -154,11 +154,11 @@ class RecoverPasswordViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-//    private func isValidEmailAddress(_ email: String) -> Bool {
-//        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-//        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
-//        return emailPred.evaluate(with: email)
-//    }
+    private func isValidEmailAddress(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
+    }
 
     // MARK: Actions
     @objc func didTapBackButton() {

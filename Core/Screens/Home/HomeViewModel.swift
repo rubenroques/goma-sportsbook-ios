@@ -127,6 +127,7 @@ extension HomeViewModel {
     func title(forSection section: Int) -> String? {
         return self.homeViewTemplateDataSource.title(forSection: section)
     }
+    
     func iconName(forSection section: Int) -> String? {
         return self.homeViewTemplateDataSource.iconName(forSection: section)
     }
@@ -134,6 +135,7 @@ extension HomeViewModel {
     func shouldShowTitle(forSection section: Int) -> Bool {
         return self.homeViewTemplateDataSource.shouldShowTitle(forSection: section)
     }
+    
     func shouldShowFooter(forSection section: Int) -> Bool {
         return self.homeViewTemplateDataSource.shouldShowFooter(forSection: section)
     }
@@ -142,6 +144,8 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.contentType(forSection: section)
     }
 
+    // MARK: - Basic ViewModels
+    
     func alertsArrayViewModel() -> [ActivationAlert] {
         return self.homeViewTemplateDataSource.alertsArrayViewModel()
     }
@@ -157,10 +161,7 @@ extension HomeViewModel {
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
         self.homeViewTemplateDataSource.setStoryLineViewModel(viewModel: viewModel)
     }
-
-    func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
-        return self.homeViewTemplateDataSource.sportGroupViewModel(forSection: section)
-    }
+    
     func favoriteMatch(forIndex index: Int) -> Match? {
         return self.homeViewTemplateDataSource.favoriteMatch(forIndex: index)
     }
@@ -181,10 +182,22 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.quickSwipeStackViewModel()
     }
 
-    func highlightedMatchViewModel(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
-        return self.homeViewTemplateDataSource.highlightedMatchViewModel(forSection: section, forIndex: index)
+    // MARK: - Highlights ViewModels
+    
+    func highlightedMatchesViewModel(forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
+        return self.homeViewTemplateDataSource.highlightedMatchesViewModel(forIndex: index)
+    }
+    
+    func highlightedBoostedMatchesViewModel(forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
+        return self.homeViewTemplateDataSource.highlightedBoostedMatchesViewModel(forIndex: index)
+    }
+    
+    func highlightedMarketViewModel(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
+        return self.homeViewTemplateDataSource.highlightedMarketViewModel(forIndex: index)
     }
 
+    // MARK: - Live Matches ViewModels
+    
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return self.homeViewTemplateDataSource.highlightedLiveMatchLineTableCellViewModel(forSection: section, forIndex: index)
     }
@@ -193,16 +206,14 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.matchLineTableCellViewModel(forSection: section, forIndex: index)
     }
 
+    // MARK: - Other ViewModels
+    
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
         return self.homeViewTemplateDataSource.topCompetitionsLineCellViewModel(forSection: section)
     }
 
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
         return self.homeViewTemplateDataSource.heroCardMatchViewModel(forIndex: index)
-    }
-
-    func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
-        return self.homeViewTemplateDataSource.highlightedMarket(forIndex: index)
     }
 
     func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {

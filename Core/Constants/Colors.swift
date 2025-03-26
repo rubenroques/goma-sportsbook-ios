@@ -10,7 +10,6 @@ import UIKit
 extension UIColor {
 
     // Colors file is localed on each Client "ThemeColors.xcassets" file
-
     struct App {
 
         static let backgroundPrimary: UIColor = UIColor(named: "backgroundPrimary")!

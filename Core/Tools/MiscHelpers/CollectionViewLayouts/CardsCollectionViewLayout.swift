@@ -102,7 +102,7 @@ class QuickSwipeStackCollectionViewLayout: UICollectionViewLayout {
 
         attributes.zIndex = maximumVisibleItems - indexPath.row + minVisibleIndex
 
-        var currentIndex = indexPath.row - minVisibleIndex
+        let currentIndex = indexPath.row - minVisibleIndex
         switch currentIndex {
         case 0:
             attributes.alpha = 1.0
