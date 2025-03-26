@@ -79,7 +79,7 @@ class SportRadarRestConnector {
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
-                // print("ServiceProvider-NetworkManager Error \(error)")
+                print("ServiceProvider-NetworkManager Error: \(error)")
                 
                 if "\(error)" == "emptyData" {
                     return ServiceProviderError.emptyData
