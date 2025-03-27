@@ -65,6 +65,9 @@ extension VaixAPIClient: Endpoint {
             query.append(URLQueryItem(name:"format", value:"orako"))
             query.append(URLQueryItem(name:"count", value:"\(multibetsCount)"))
             query.append(URLQueryItem(name:"length", value:"\(selectionsCount)"))
+            query.append(URLQueryItem(name:"filters", value:"status:in:not_started,live"))
+            query.append(URLQueryItem(name:"to_offset", value:"7d"))
+            query.append(URLQueryItem(name:"from_offset", value:"-5h"))
 
             if let userId {
                 let userIdFormat = "om\(userId)-eur"

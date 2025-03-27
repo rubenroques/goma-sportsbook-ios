@@ -75,6 +75,8 @@ extension UIColor {
         static let buttonActiveHoverPrimary = UIColor(named: "buttonActiveHoverPrimary")!
         static let buttonDisablePrimary = UIColor(named: "buttonDisablePrimary")!
         static let buttonTextDisablePrimary = UIColor(named: "buttonTextDisablePrimary")!
+        
+        static let buttonTextDisableSecondary = UIColor(named: "buttonTextDisableSecondary")!
 
         static let buttonBackgroundSecondary = UIColor(named: "buttonBackgroundSecondary")!
         static let buttonActiveHoverSecondary = UIColor(named: "buttonActiveHoverSecondary")!

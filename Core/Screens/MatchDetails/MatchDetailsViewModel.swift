@@ -230,106 +230,106 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &self.cancellables)
 
-//        self.matchCurrentValueSubject
-//            .compactMap { (loadableContent: LoadableContent<Match>) -> String? in
-//                switch loadableContent {
-//                case .loaded(let match):
-//                    return match.trackableReference
-//                case .loading, .failed, .idle:
-//                    return nil
-//                }
-//            }
-//            .removeDuplicates()
-//            // Explicitly provide return type to help compiler choose the right flatMap overload
-//            .flatMap( { (matchTrackableReference: String) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> in
-//                return Env.servicesProvider.getRecommendedBetBuilders(eventId: matchTrackableReference, multibetsCount: 5, selectionsCount: 3, userId: nil)
-//                    .eraseToAnyPublisher()
-//            })
-//            .catch { error -> AnyPublisher<RecommendedBetBuilders, Never> in
-//                print("Error retrieving data: \(error)")
-//                let emptyValue = RecommendedBetBuilders(recommendations: [])
-//                return Just(emptyValue).eraseToAnyPublisher()
-//            }
-//            .sink { recommendedBetBuilders in
-//                
-//                let filterRecommendedBetBuilders = recommendedBetBuilders.recommendations
-//                    .filter { $0.selections.count >= 3 }
-//                    .uniqued { builder1, builder2 in
-//                        guard builder1.selections.count == builder2.selections.count else {
-//                            return false
-//                        }
-//                        
-//                        let sortedSelections1 = builder1.selections.sorted { $0.outcomeId < $1.outcomeId }
-//                        let sortedSelections2 = builder2.selections.sorted { $0.outcomeId < $1.outcomeId }
-//                        
-//                        return zip(sortedSelections1, sortedSelections2).allSatisfy { sel1, sel2 in
-//                            sel1.eventId == sel2.eventId &&
-//                            sel1.marketId == sel2.marketId &&
-//                            sel1.outcomeId == sel2.outcomeId
-//                        }
-//                    }
-//                
-//                self.recommendedBetBuilders.send(filterRecommendedBetBuilders)
-//            }
-//            .store(in: &self.cancellables)
+        self.matchCurrentValueSubject
+            .compactMap { (loadableContent: LoadableContent<Match>) -> String? in
+                switch loadableContent {
+                case .loaded(let match):
+                    return match.trackableReference
+                case .loading, .failed, .idle:
+                    return nil
+                }
+            }
+            .removeDuplicates()
+            // Explicitly provide return type to help compiler choose the right flatMap overload
+            .flatMap( { (matchTrackableReference: String) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> in
+                return Env.servicesProvider.getRecommendedBetBuilders(eventId: matchTrackableReference, multibetsCount: 5, selectionsCount: 3, userId: nil)
+                    .eraseToAnyPublisher()
+            })
+            .catch { error -> AnyPublisher<RecommendedBetBuilders, Never> in
+                print("Error retrieving data: \(error)")
+                let emptyValue = RecommendedBetBuilders(recommendations: [])
+                return Just(emptyValue).eraseToAnyPublisher()
+            }
+            .sink { recommendedBetBuilders in
+                
+                let filterRecommendedBetBuilders = recommendedBetBuilders.recommendations
+                    .filter { $0.selections.count >= 3 }
+                    .uniqued { builder1, builder2 in
+                        guard builder1.selections.count == builder2.selections.count else {
+                            return false
+                        }
+                        
+                        let sortedSelections1 = builder1.selections.sorted { $0.outcomeId < $1.outcomeId }
+                        let sortedSelections2 = builder2.selections.sorted { $0.outcomeId < $1.outcomeId }
+                        
+                        return zip(sortedSelections1, sortedSelections2).allSatisfy { sel1, sel2 in
+                            sel1.eventId == sel2.eventId &&
+                            sel1.marketId == sel2.marketId &&
+                            sel1.outcomeId == sel2.outcomeId
+                        }
+                    }
+                
+                self.recommendedBetBuilders.send(filterRecommendedBetBuilders)
+            }
+            .store(in: &self.cancellables)
 
-        Publishers.CombineLatest(
-            self.matchCurrentValueSubject
-                .compactMap { (loadableContent: LoadableContent<Match>) -> String? in
-                    switch loadableContent {
-                    case .loaded(let match):
-                        return match.trackableReference
-                    case .loading, .failed, .idle:
-                        return nil
-                    }
-                }
-                .removeDuplicates(),
-            Env.userSessionStore.userProfilePublisher
-                .map { profile -> String? in
-                    return profile?.userIdentifier
-                }
-        )
-        .map { trackableReference, userId -> RecommendedBetBuildersParams in
-            return RecommendedBetBuildersParams(
-                trackableReference: trackableReference,
-                userId: userId
-            )
-        }
-        .flatMap { params -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> in
-            return Env.servicesProvider.getRecommendedBetBuilders(
-                eventId: params.trackableReference,
-                multibetsCount: 5,
-                selectionsCount: 3,
-                userId: params.userId
-            )
-            .eraseToAnyPublisher()
-        }
-        .catch { error -> AnyPublisher<RecommendedBetBuilders, Never> in
-            print("Error retrieving data: \(error)")
-            let emptyValue = RecommendedBetBuilders(recommendations: [])
-            return Just(emptyValue).eraseToAnyPublisher()
-        }
-        .sink { recommendedBetBuilders in
-            let filterRecommendedBetBuilders = recommendedBetBuilders.recommendations
-                .filter { $0.selections.count >= 3 }
-                .uniqued { builder1, builder2 in
-                    guard builder1.selections.count == builder2.selections.count else {
-                        return false
-                    }
-                    
-                    let sortedSelections1 = builder1.selections.sorted { $0.outcomeId < $1.outcomeId }
-                    let sortedSelections2 = builder2.selections.sorted { $0.outcomeId < $1.outcomeId }
-                    
-                    return zip(sortedSelections1, sortedSelections2).allSatisfy { sel1, sel2 in
-                        sel1.eventId == sel2.eventId &&
-                        sel1.marketId == sel2.marketId &&
-                        sel1.outcomeId == sel2.outcomeId
-                    }
-                }
-            
-            self.recommendedBetBuilders.send(filterRecommendedBetBuilders)
-        }
-        .store(in: &self.cancellables)
+//        Publishers.CombineLatest(
+//            self.matchCurrentValueSubject
+//                .compactMap { (loadableContent: LoadableContent<Match>) -> String? in
+//                    switch loadableContent {
+//                    case .loaded(let match):
+//                        return match.trackableReference
+//                    case .loading, .failed, .idle:
+//                        return nil
+//                    }
+//                }
+//                .removeDuplicates(),
+//            Env.userSessionStore.userProfilePublisher
+//                .map { profile -> String? in
+//                    return profile?.userIdentifier
+//                }
+//        )
+//        .map { trackableReference, userId -> RecommendedBetBuildersParams in
+//            return RecommendedBetBuildersParams(
+//                trackableReference: trackableReference,
+//                userId: userId
+//            )
+//        }
+//        .flatMap { params -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> in
+//            return Env.servicesProvider.getRecommendedBetBuilders(
+//                eventId: params.trackableReference,
+//                multibetsCount: 5,
+//                selectionsCount: 3,
+//                userId: params.userId
+//            )
+//            .eraseToAnyPublisher()
+//        }
+//        .catch { error -> AnyPublisher<RecommendedBetBuilders, Never> in
+//            print("Error retrieving data: \(error)")
+//            let emptyValue = RecommendedBetBuilders(recommendations: [])
+//            return Just(emptyValue).eraseToAnyPublisher()
+//        }
+//        .sink { recommendedBetBuilders in
+//            let filterRecommendedBetBuilders = recommendedBetBuilders.recommendations
+//                .filter { $0.selections.count >= 3 }
+//                .uniqued { builder1, builder2 in
+//                    guard builder1.selections.count == builder2.selections.count else {
+//                        return false
+//                    }
+//                    
+//                    let sortedSelections1 = builder1.selections.sorted { $0.outcomeId < $1.outcomeId }
+//                    let sortedSelections2 = builder2.selections.sorted { $0.outcomeId < $1.outcomeId }
+//                    
+//                    return zip(sortedSelections1, sortedSelections2).allSatisfy { sel1, sel2 in
+//                        sel1.eventId == sel2.eventId &&
+//                        sel1.marketId == sel2.marketId &&
+//                        sel1.outcomeId == sel2.outcomeId
+//                    }
+//                }
+//            
+//            self.recommendedBetBuilders.send(filterRecommendedBetBuilders)
+//        }
+//        .store(in: &self.cancellables)
         
     }
 

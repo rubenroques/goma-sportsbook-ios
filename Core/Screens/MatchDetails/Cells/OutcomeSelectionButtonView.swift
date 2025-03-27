@@ -31,6 +31,8 @@ class OutcomeSelectionButtonView: NibView {
     var currentOdd: OddFormat?
     var currentOddDecimalValue: Double?
     var isAvailableForBet: Bool?
+    
+    var cancellables = Set<AnyCancellable>()
 
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
@@ -218,6 +220,24 @@ class OutcomeSelectionButtonView: NibView {
                 }
             })
 
+        // Betting ticket tracker
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingTickets in
+                
+                guard let self = self else { return }
+                
+                if bettingTickets.contains(where: {
+                    $0.id == outcome.id
+                }) {
+                    self.isOutcomeButtonSelected = true
+                }
+                else {
+                    self.isOutcomeButtonSelected = false
+                }
+                
+            })
+            .store(in: &cancellables)
     }
 
     func selectButton() {

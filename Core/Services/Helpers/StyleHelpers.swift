@@ -42,6 +42,31 @@ class StyleHelper {
         button.layer.masksToBounds = true
         button.backgroundColor = .clear
     }
+    
+    static func styleButtonWithTheme(button: UIButton,
+                                     titleColor: UIColor,
+                                     titleDisabledColor: UIColor,
+                                     backgroundColor: UIColor,
+                                     backgroundDisabledColor: UIColor, backgroundHighlightedColor: UIColor,
+                                     withBorder: Bool = false,
+                                     borderColor: UIColor? = nil) {
+        button.setTitleColor(titleColor, for: .normal)
+        button.setTitleColor(titleColor.withAlphaComponent(0.7), for: .highlighted)
+        button.setTitleColor(titleDisabledColor, for: .disabled)
+        
+        button.setBackgroundColor(backgroundColor, for: .normal)
+        button.setBackgroundColor(backgroundDisabledColor, for: .disabled)
+        button.setBackgroundColor(backgroundHighlightedColor, for: .highlighted)
+        
+        if withBorder {
+            button.layer.borderWidth = 2
+            button.layer.borderColor = borderColor?.cgColor
+        }
+        
+        button.layer.cornerRadius = CornerRadius.button
+        button.layer.masksToBounds = true
+        button.backgroundColor = .clear
+    }
 
     static func cardsStyleActive() -> CardsStyle {
         return UserDefaults.standard.cardsStyle

@@ -288,4 +288,22 @@ class MarketGroupDetailsStore {
         return self.firstMarketCache
     }
     
+    func getMarketById(marketId: String) -> Market? {
+        // First check if the requested market is our cached first market
+        if let firstMarket = self.firstMarketCache, firstMarket.id == marketId {
+            return firstMarket
+        }
+        
+        // Search through all market groups to find the market ID
+        for (_, marketIds) in marketsForGroup {
+            if marketIds.contains(marketId) {
+                // We found the market ID in this group, but we don't have the actual Market object
+                // We would need to maintain a cache of Market objects to return it
+                // For now, we can only confirm the market ID exists
+                return nil
+            }
+        }
+        
+        return nil
+    }
 }
