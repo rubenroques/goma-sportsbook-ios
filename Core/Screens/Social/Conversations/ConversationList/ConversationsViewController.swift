@@ -15,19 +15,19 @@ class ConversationsViewController: UIViewController {
     private lazy var tableViewHeader: UIView = Self.createTableViewHeader()
     private lazy var searchBar: UISearchBar = Self.createSearchBar()
 
+    private lazy var messagesLabel: UILabel = Self.createMessagesLabel()
     private lazy var newGroupButton: UIButton = Self.createNewGroupButton()
-    private lazy var newMessageButton: UIButton = Self.createNewMessageButton()
     private lazy var headerSeparatorLineView: UIView = Self.createHeaderSeparatorLineView()
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
-    private lazy var emptyStateSubtitleLabel: UILabel = Self.createEmptyStateSubtitleLabel()
+    private lazy var emptyStateAddFriendButton: UIButton = Self.createEmptyStateAddFriendButton()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
 
     private var viewModel: ConversationsViewModel
     private var cancellables = Set<AnyCancellable>()
-
+    
     // MARK: Public Properties
     var isEmptyState: Bool = false {
         didSet {
@@ -68,10 +68,13 @@ class ConversationsViewController: UIViewController {
 
         self.tableView.register(PreviewChatTableViewCell.self,
                                 forCellReuseIdentifier: PreviewChatTableViewCell.identifier)
+        self.tableView.register(AIAssistantUITableViewCell.self,
+                                forCellReuseIdentifier: AIAssistantUITableViewCell.identifier)
 
         self.newGroupButton.addTarget(self, action: #selector(didTapNewGroupButton), for: .primaryActionTriggered)
+        
+        self.emptyStateAddFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
 
-        self.newMessageButton.addTarget(self, action: #selector(didTapNewMessageButton), for: .primaryActionTriggered)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
@@ -85,6 +88,11 @@ class ConversationsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -92,38 +100,37 @@ class ConversationsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.tableViewHeader.backgroundColor = UIColor.App.backgroundPrimary
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableViewHeader.backgroundColor = UIColor.App.backgroundSecondary
+        self.tableView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.newMessageButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
-        self.newGroupButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.newGroupButton.setTitleColor(UIColor.App.highlightTertiary, for: .normal)
 
         self.headerSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyStateView.backgroundColor = UIColor.App.backgroundSecondary
         self.emptyStateImageView.backgroundColor = .clear
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
-        self.emptyStateSubtitleLabel.textColor = UIColor.App.textPrimary
+        
+        StyleHelper.styleButtonWithTheme(button: self.emptyStateAddFriendButton, titleColor: UIColor.App.buttonTextTertiary, titleDisabledColor: UIColor.App.buttonTextDisableTertiary, backgroundColor: UIColor.App.buttonBackgroundTertiary, backgroundHighlightedColor: UIColor.App.buttonBackgroundTertiary,
+                                         withBorder: true,
+                                         borderColor: UIColor.App.buttonBorderTertiary)
 
-        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
-        if let image = self.newMessageButton.imageView?.image?.withRenderingMode(.alwaysTemplate) {
-            self.newMessageButton.setImage(image, for: .normal)
-            self.newMessageButton.tintColor = UIColor.App.highlightPrimary
-        }
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.setupSearchBar()
 
     }
 
     // MARK: Functions
-    private func showConversationDetail(conversationData: ConversationData) {
+    private func showConversationDetail(conversationData: ConversationData, isChatAssistant: Bool = false) {
         
         let conversationDetailViewModel = ConversationDetailViewModel(chatId: conversationData.id)
 
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+        
+        conversationDetailViewController.isChatAssistant = isChatAssistant
 
         conversationDetailViewController.shouldCloseChat = { [weak self] in
             self?.needsRefetchData()
@@ -148,23 +155,23 @@ class ConversationsViewController: UIViewController {
         self.searchBar.backgroundImage = UIImage()
         self.searchBar.tintColor = .white
         self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+        self.searchBar.backgroundImage = UIColor.App.backgroundSecondary.image()
         self.searchBar.placeholder = localized("search")
 
         self.searchBar.delegate = self
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.backgroundColor = UIColor.App.inputBackground
             textfield.textColor = UIColor.App.textPrimary
             textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle,
-                                                                              NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
+                                                                              NSAttributedString.Key.font: AppFont.with(type: .regular, size: 14)])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.inputTextTitle
+                glassIconView.tintColor = UIColor.App.iconSecondary
             }
         }
     }
@@ -216,12 +223,8 @@ extension ConversationsViewController {
         self.navigationController?.pushViewController(newGroupViewController, animated: true)
     }
 
-    @objc func didTapNewMessageButton() {
-//        let newMessageViewModel = NewMesssageViewModel()
-//        let newMessageViewController = NewMessageViewController(viewModel: newMessageViewModel)
-//
-//        self.navigationController?.pushViewController(newMessageViewController, animated: true)
-
+    @objc func didTapAddFriendButton() {
+        
         let addFriendsViewModel = AddFriendViewModel()
 
         let addFriendsViewController = AddFriendViewController(viewModel: addFriendsViewModel)
@@ -250,26 +253,52 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if let cellData = self.viewModel.conversationsPublisher.value[safe: indexPath.row],
+           let cellGroupUsers = cellData.groupUsers,
+           cellGroupUsers.contains(where: {$0.id == 1}) && cellGroupUsers.count < 3 {
+            
+            guard
+                let cell = tableView.dequeueCellType(AIAssistantUITableViewCell.self)
+            else {
+                fatalError()
+            }
+            
+            let cellViewModel = PreviewChatCellViewModel(cellData: cellData)
+            cell.configure(withViewModel: cellViewModel)
+            
+            cell.didTapConversationAction = { [weak self] conversationData in
+                self?.showConversationDetail(conversationData: conversationData, isChatAssistant: true)
+            }
+            
+            return cell
+        }
+        
         guard
             let cell = tableView.dequeueCellType(PreviewChatTableViewCell.self)
         else {
             fatalError()
         }
-
+        
         if let cellData = self.viewModel.conversationsPublisher.value[safe: indexPath.row] {
             let cellViewModel = PreviewChatCellViewModel(cellData: cellData)
             cell.configure(withViewModel: cellViewModel)
+            
+            if indexPath.row == self.viewModel.conversationsPublisher.value.count - 1 {
+                cell.hasSeparatorLine = false
+            }
         }
-
+        
         cell.didTapConversationAction = { [weak self] conversationData in
             self?.showConversationDetail(conversationData: conversationData)
         }
-
+        
         cell.removeChatroomAction = { [weak self] chatroomId in
             self?.viewModel.removeChatroom(chatroomId: chatroomId)
         }
-
+        
         return cell
+        
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -278,6 +307,98 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        let muteAction = UIContextualAction(style: .normal,
+                                        title: localized("mute")) { [weak self] action, view, completionHandler in
+            self?.handleMuteAction()
+            completionHandler(true)
+        }
+
+        if let cellViewModel = self.viewModel.conversationsPublisher.value[safe: indexPath.row] {
+            // TODO: Add logic to mute
+//            if cellViewModel.notificationsEnabled {
+//                muteAction.title = "Mute"
+//            }
+//            else {
+//                muteAction.title = "Unmute"
+//            }
+            
+        }
+
+        muteAction.image = createActionImage(title: localized("mute"), imageName: "mute_channel_icon")
+
+        muteAction.backgroundColor = UIColor.App.alertWarning
+
+        let deleteAction = UIContextualAction(style: .normal,
+                                              title: localized("delete")) { [weak self] action, view, completionHandler in
+            if let cellData = self?.viewModel.conversationsPublisher.value[safe: indexPath.row] {
+                self?.handleDeleteAction(chatroomId: cellData.id)
+                completionHandler(true)
+            }
+
+        }
+        
+        deleteAction.image = createActionImage(title: localized("delete"), imageName: "trash_simple_icon")
+
+        deleteAction.backgroundColor = UIColor.App.alertError
+
+        let swipeActionCofiguration = UISwipeActionsConfiguration(actions: [deleteAction, muteAction])
+
+        swipeActionCofiguration.performsFirstActionWithFullSwipe = false
+
+        return swipeActionCofiguration
+
+    }
+
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    private func handleMuteAction() {
+        print("Muted!")
+        // TODO: Implement mute action
+    }
+
+    private func handleDeleteAction(chatroomId: Int) {
+        self.viewModel.removeChatroom(chatroomId: chatroomId)
+    }
+    
+    func createActionImage(title: String, imageName: String) -> UIImage {
+        let size = CGSize(width: 60, height: 60)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        
+        return renderer.image { context in
+            // Background color
+            UIColor.clear.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            
+            // Draw the icon
+            if let icon = UIImage(named: imageName) {
+                let iconSize = CGSize(width: 25, height: 25)
+                let iconOrigin = CGPoint(x: (size.width - iconSize.width) / 2, y: 10) // Centered horizontally, near top
+                icon.draw(in: CGRect(origin: iconOrigin, size: iconSize))
+            }
+            
+            // Draw the title
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .center
+
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: AppFont.with(type: .semibold, size: 12),
+                .foregroundColor: UIColor.App.buttonTextSecondary,
+                .paragraphStyle: paragraphStyle
+            ]
+            
+            let titleRect = CGRect(x: 0, y: 40, width: size.width, height: 20)
+            title.draw(in: titleRect, withAttributes: attributes)
+        }
     }
 }
 
@@ -334,21 +455,21 @@ extension ConversationsViewController {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }
+    
+    private static func createMessagesLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("messages")
+        label.font = AppFont.with(type: .bold, size: 18)
+        return label
+    }
 
     private static func createNewGroupButton() -> UIButton {
         let newGroupButton = UIButton(type: .custom)
         newGroupButton.setTitle(localized("new_group"), for: .normal)
-        newGroupButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
+        newGroupButton.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         newGroupButton.translatesAutoresizingMaskIntoConstraints = false
         return newGroupButton
-    }
-
-    private static func createNewMessageButton() -> UIButton {
-        let addFriendButton = UIButton(type: .custom)
-        addFriendButton.setTitle(localized("add_friends"), for: .normal)
-        addFriendButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
-        addFriendButton.translatesAutoresizingMaskIntoConstraints = false
-        return addFriendButton
     }
 
     private static func createHeaderSeparatorLineView() -> UIView {
@@ -374,7 +495,7 @@ extension ConversationsViewController {
     private static func createEmptyStateImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "add_friend_empty_icon")
+        imageView.image = UIImage(named: "no_friends_icon")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -382,21 +503,20 @@ extension ConversationsViewController {
     private static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("time_to_add_friends")
+        label.text = localized("you_still_havent_added_friends")
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .bold, size: 20)
+        label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .center
         return label
     }
 
-    private static func createEmptyStateSubtitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("add_some_friends_start_chatting")
-        label.numberOfLines = 0
-        label.font = AppFont.with(type: .semibold, size: 16)
-        label.textAlignment = .center
-        return label
+    private static func createEmptyStateAddFriendButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("add_friends"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 17)
+        button.contentEdgeInsets = UIEdgeInsets(top: 15.0, left: 30.0, bottom: 15.0, right: 30.0)
+        return button
     }
 
     private static func createLoadingBaseView() -> UIView {
@@ -416,9 +536,9 @@ extension ConversationsViewController {
     private func setupSubviews() {
 
         self.tableViewHeader.addSubview(self.searchBar)
+        self.tableViewHeader.addSubview(self.messagesLabel)
         self.tableViewHeader.addSubview(self.newGroupButton)
-        self.tableViewHeader.addSubview(self.newMessageButton)
-        self.tableViewHeader.addSubview(self.headerSeparatorLineView)
+//        self.tableViewHeader.addSubview(self.headerSeparatorLineView)
 
         self.view.addSubview(self.tableView)
 
@@ -428,7 +548,7 @@ extension ConversationsViewController {
 
         self.emptyStateView.addSubview(self.emptyStateImageView)
         self.emptyStateView.addSubview(self.emptyStateLabel)
-        self.emptyStateView.addSubview(self.emptyStateSubtitleLabel)
+        self.emptyStateView.addSubview(self.emptyStateAddFriendButton)
 
         self.view.addSubview(self.loadingBaseView)
 
@@ -445,18 +565,18 @@ extension ConversationsViewController {
             self.searchBar.leadingAnchor.constraint(equalTo: self.tableViewHeader.leadingAnchor, constant: 14),
             self.searchBar.topAnchor.constraint(equalTo: self.tableViewHeader.topAnchor, constant: 1),
 
-            self.tableViewHeader.bottomAnchor.constraint(equalTo: self.headerSeparatorLineView.bottomAnchor, constant: 0),
-            self.tableViewHeader.leadingAnchor.constraint(equalTo: self.headerSeparatorLineView.leadingAnchor, constant: -23),
-            self.tableViewHeader.trailingAnchor.constraint(equalTo: self.headerSeparatorLineView.trailingAnchor, constant: 23),
-            self.headerSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+//            self.tableViewHeader.bottomAnchor.constraint(equalTo: self.headerSeparatorLineView.bottomAnchor, constant: 0),
+//            self.tableViewHeader.leadingAnchor.constraint(equalTo: self.headerSeparatorLineView.leadingAnchor, constant: -23),
+//            self.tableViewHeader.trailingAnchor.constraint(equalTo: self.headerSeparatorLineView.trailingAnchor, constant: 23),
+//            self.headerSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
-            self.newGroupButton.leadingAnchor.constraint(equalTo: self.tableViewHeader.leadingAnchor, constant: 23),
+            self.messagesLabel.leadingAnchor.constraint(equalTo: self.tableViewHeader.leadingAnchor, constant: 23),
+            self.messagesLabel.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
+            self.messagesLabel.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 10),
+
+            self.newGroupButton.trailingAnchor.constraint(equalTo: self.tableViewHeader.trailingAnchor, constant: -23),
             self.newGroupButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
-            self.newGroupButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 10),
-
-            self.newMessageButton.trailingAnchor.constraint(equalTo: self.tableViewHeader.trailingAnchor, constant: -23),
-            self.newMessageButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
-            self.newMessageButton.centerYAnchor.constraint(equalTo: self.newGroupButton.centerYAnchor)
+            self.newGroupButton.centerYAnchor.constraint(equalTo: self.messagesLabel.centerYAnchor)
         ])
 
         // Table view
@@ -471,21 +591,20 @@ extension ConversationsViewController {
         NSLayoutConstraint.activate([
             self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.emptyStateView.topAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: 8),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 4),
             self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 20),
-            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 103),
-            self.emptyStateImageView.heightAnchor.constraint(equalTo: self.emptyStateImageView.widthAnchor),
-            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),
+            self.emptyStateImageView.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 75),
+            self.emptyStateImageView.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -75),
 
             self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 67),
             self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -67),
-            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 37),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 22),
 
-            self.emptyStateSubtitleLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 67),
-            self.emptyStateSubtitleLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -67),
-            self.emptyStateSubtitleLabel.topAnchor.constraint(equalTo: self.emptyStateLabel.bottomAnchor, constant: 16)
+            self.emptyStateAddFriendButton.topAnchor.constraint(equalTo: self.emptyStateLabel.bottomAnchor, constant: 24),
+            self.emptyStateAddFriendButton.heightAnchor.constraint(equalToConstant: 50),
+            self.emptyStateAddFriendButton.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor)
         ])
 
         // Loading Screen
@@ -511,7 +630,8 @@ struct ConversationData {
     var timestamp: Int?
     var lastMessageUser: String?
     var isLastMessageSeen: Bool
-    var groupUsers: [GomaFriend]?
+    var groupUsers: [UserFriend]?
+    var avatar: String?
 }
 
 enum ConversationType {

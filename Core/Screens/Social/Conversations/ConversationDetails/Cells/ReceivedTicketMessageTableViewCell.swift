@@ -14,8 +14,11 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
     private lazy var iconBaseView: UIView = Self.createIconBaseView()
+    private lazy var iconInnerView: UIView = Self.createIconInnerView()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
-    private lazy var messageContainerView: UIView = Self.createMessageContainerView()
+//    private lazy var messageContainerView: UIView = Self.createMessageContainerView()
+    private lazy var messageContainerView: ChatBubbleView = Self.createMessageContainerView()
+
     private lazy var ticketBaseStackView: UIStackView = Self.createTicketBaseStackView()
     private lazy var userStackView: UIStackView = Self.createUserStackView()
     private lazy var usernameLabel: UILabel = Self.createUsernameLabel()
@@ -23,12 +26,14 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
     private lazy var userStateView: UIView = Self.createUserStateView()
     private lazy var messageLabel: UILabel = Self.createMessageLabel()
     private lazy var messageDateLabel: UILabel = Self.createMessageDateLabel()
-    private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
+//    private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
 
     private var ticketInMessageView: ChatTicketInMessageView?
     private var ticketStateInMessageView: ChatTicketStateInMessageView?
 
     private var cancellables = Set<AnyCancellable>()
+    
+    private let dateFormatter = DateFormatter()
 
     // MARK: Public Properties
     var showUserState: Bool = false {
@@ -53,35 +58,45 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
+        
+        self.iconInnerView.layer.cornerRadius = self.iconInnerView.frame.size.width / 2
+        self.iconInnerView.clipsToBounds = true
+        
         self.iconImageView.layer.cornerRadius = self.iconImageView.frame.height / 2
 
         self.userStateView.layer.cornerRadius = self.userStateView.frame.height / 2
 
-        self.setBubbleTailTriangle()
+//        self.setBubbleTailTriangle()
     }
 
     func setupWithTheme() {
 
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.iconBaseView.backgroundColor = UIColor.App.backgroundTertiary
-        self.iconImageView.backgroundColor = UIColor.App.backgroundTertiary
+        self.iconBaseView.backgroundColor = .clear
+        self.iconBaseView.layer.borderColor = UIColor.App.highlightTertiary.cgColor
 
-        self.messageContainerView.backgroundColor = UIColor.App.backgroundTertiary
+        self.iconImageView.backgroundColor = .clear
+
+//        self.messageContainerView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.userStackView.backgroundColor = .clear
         self.usernameLabel.textColor = UIColor.App.textPrimary
         self.userStateBaseView.backgroundColor = .clear
         self.userStateView.backgroundColor = UIColor.App.alertSuccess
 
-        self.messageLabel.textColor = UIColor.App.textSecondary
-        self.messageDateLabel.textColor = UIColor.App.textDisablePrimary
+        self.messageLabel.textColor = UIColor.App.textPrimary
+        self.messageDateLabel.textColor = UIColor.App.textSecondary
 
-        self.topBubbleTailView.backgroundColor = .clear
+//        self.topBubbleTailView.backgroundColor = .clear
         self.ticketBaseStackView.backgroundColor = .clear
 
         self.ticketInMessageView?.setupWithTheme()
@@ -89,23 +104,38 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
     }
 
     // MARK: Functions
-    func setupMessage(messageData: MessageData, username: String, chatroomId: Int) {
+    func setupMessage(messageData: MessageData, username: String, avatarName: String? = nil, chatroomId: Int) {
         self.messageLabel.text = messageData.text
 
         if messageData.text.isEmpty {
             self.messageLabel.text = localized("chat_empty_shared_ticket_others").replacingOccurrences(of: "{name}", with: "\(username)")
         }
         
-        self.messageDateLabel.text = messageData.date
+        self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
 
-        self.usernameLabel.text = username
+        if let date = dateFormatter.date(from: messageData.date) {
+            dateFormatter.dateFormat = "HH:mm"
+            let timeString = dateFormatter.string(from: date)
+            self.messageDateLabel.text = timeString
+        }
+        else {
+            self.messageDateLabel.text = messageData.date
+        }
 
+        self.usernameLabel.text = username.isEmpty ? localized("username") : username
+
+        if let avatarName {
+            self.iconImageView.image = UIImage(named: avatarName)
+        }
+        
         self.ticketBaseStackView.removeAllArrangedSubviews()
         if let attachment = messageData.attachment {
             let ticket = BetHistoryEntry(sharedBetTicket: attachment.content)
             let betSelectionCellViewModel = BetSelectionCellViewModel(ticket: ticket)
 
-            if ticket.status == "OPEN" {
+            let ticketStatus = ticket.status?.lowercased()
+
+            if ticketStatus == "open" || ticketStatus == "pending" {
                 self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
                                                                    shouldShowButton: true)
 
@@ -122,7 +152,7 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
             }
         }
 
-        self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
+        self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundPrimary
 
         if let onlineUsersPublisher = Env.gomaSocialClient.onlineUsersPublisher() {
 
@@ -155,21 +185,22 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
         }
     }
 
-    private func setBubbleTailTriangle() {
-        let heightWidth = self.topBubbleTailView.frame.width
-        let path = CGMutablePath()
-
-        path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: heightWidth/2, y: heightWidth/2))
-        path.addLine(to: CGPoint(x: heightWidth, y: 0))
-        path.addLine(to: CGPoint(x: 0, y: 0))
-
-        let shape = CAShapeLayer()
-        shape.path = path
-        shape.fillColor = UIColor.App.backgroundTertiary.cgColor
-
-        self.topBubbleTailView.layer.insertSublayer(shape, at: 0)
-    }
+//    private func setBubbleTailTriangle() {
+//        let viewWidth = self.topBubbleTailView.frame.width
+//        let viewheight = self.topBubbleTailView.frame.height
+//        let path = CGMutablePath()
+//
+//        path.move(to: CGPoint(x: 0, y: 0))
+//        path.addLine(to: CGPoint(x: (viewWidth/2)-3, y: viewheight))
+//        path.addLine(to: CGPoint(x: viewWidth, y: 0))
+//        path.addLine(to: CGPoint(x: 0, y: 0))
+//
+//        let shape = CAShapeLayer()
+//        shape.path = path
+//        shape.fillColor = UIColor.App.backgroundTertiary.cgColor
+//
+//        self.topBubbleTailView.layer.insertSublayer(shape, at: 0)
+//    }
 
 }
 
@@ -178,21 +209,37 @@ extension ReceivedTicketMessageTableViewCell {
     private static func createIconBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.borderWidth = 2
+        return view
+    }
+    
+    private static func createIconInnerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
     private static func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "my_account_profile_icon")
+        imageView.image = UIImage(named: "empty_user_image")
         imageView.contentMode = .scaleToFill
+        imageView.clipsToBounds = true
         return imageView
     }
 
-    private static func createMessageContainerView() -> UIView {
-        let view = UIView()
+//    private static func createMessageContainerView() -> UIView {
+//        let view = UIView()
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.layer.cornerRadius = CornerRadius.message
+//        return view
+//    }
+    private static func createMessageContainerView() -> ChatBubbleView {
+        let view = ChatBubbleView()
+        view.backgroundColors = [UIColor.App.backgroundTertiary]
+        view.useGradient = false
+        view.isReceivedMessage = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = CornerRadius.view
         return view
     }
 
@@ -218,7 +265,7 @@ extension ReceivedTicketMessageTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = localized("username")
-        label.font = AppFont.with(type: .semibold, size: 16)
+        label.font = AppFont.with(type: .bold, size: 16)
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }
@@ -242,7 +289,7 @@ extension ReceivedTicketMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit."
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 16)
+        label.font = AppFont.with(type: .regular, size: 16)
         return label
     }
 
@@ -265,7 +312,9 @@ extension ReceivedTicketMessageTableViewCell {
 
         self.contentView.addSubview(self.iconBaseView)
 
-        self.iconBaseView.addSubview(self.iconImageView)
+        self.iconBaseView.addSubview(self.iconInnerView)
+
+        self.iconInnerView.addSubview(self.iconImageView)
 
         self.contentView.addSubview(self.messageContainerView)
 
@@ -282,9 +331,9 @@ extension ReceivedTicketMessageTableViewCell {
 
         self.messageContainerView.addSubview(self.messageDateLabel)
 
-        self.contentView.addSubview(self.topBubbleTailView)
-
-        self.contentView.bringSubviewToFront(self.topBubbleTailView)
+//        self.contentView.addSubview(self.topBubbleTailView)
+//
+//        self.contentView.bringSubviewToFront(self.topBubbleTailView)
 
         self.initConstraints()
 
@@ -297,13 +346,18 @@ extension ReceivedTicketMessageTableViewCell {
         NSLayoutConstraint.activate([
             self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
             self.iconBaseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
-            self.iconBaseView.widthAnchor.constraint(equalToConstant: 24),
+            self.iconBaseView.widthAnchor.constraint(equalToConstant: 28),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
+            
+            self.iconInnerView.widthAnchor.constraint(equalToConstant: 28),
+            self.iconInnerView.heightAnchor.constraint(equalTo: self.iconInnerView.widthAnchor),
+            self.iconInnerView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
+            self.iconInnerView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
 
-            self.iconImageView.leadingAnchor.constraint(equalTo: self.iconBaseView.leadingAnchor, constant: 3),
-            self.iconImageView.trailingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: -3),
-            self.iconImageView.topAnchor.constraint(equalTo: self.iconBaseView.topAnchor, constant: 3),
-            self.iconImageView.bottomAnchor.constraint(equalTo: self.iconBaseView.bottomAnchor, constant: -3),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 23),
+            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
+            self.iconImageView.centerXAnchor.constraint(equalTo: self.iconInnerView.centerXAnchor),
+            self.iconImageView.centerYAnchor.constraint(equalTo: self.iconInnerView.centerYAnchor),
 
             self.messageContainerView.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 10),
             self.messageContainerView.trailingAnchor.constraint(greaterThanOrEqualTo: self.contentView.trailingAnchor, constant: -60),
@@ -312,7 +366,7 @@ extension ReceivedTicketMessageTableViewCell {
         ])
 
         NSLayoutConstraint.activate([
-            self.userStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 15),
+            self.userStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 25),
             self.userStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -15),
             self.userStackView.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor, constant: 5),
             self.userStackView.heightAnchor.constraint(equalToConstant: 20),
@@ -328,25 +382,25 @@ extension ReceivedTicketMessageTableViewCell {
         ])
 
         NSLayoutConstraint.activate([
-            self.messageLabel.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 15),
+            self.messageLabel.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 25),
             self.messageLabel.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -15),
             self.messageLabel.topAnchor.constraint(equalTo: self.userStackView.bottomAnchor, constant: 8),
 
-            self.ticketBaseStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor),
+            self.ticketBaseStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 10),
             self.ticketBaseStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor),
             self.ticketBaseStackView.topAnchor.constraint(equalTo: self.messageLabel.bottomAnchor, constant: 8),
 
-            self.messageDateLabel.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 15),
+            self.messageDateLabel.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 25),
             self.messageDateLabel.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -15),
             self.messageDateLabel.topAnchor.constraint(equalTo: self.ticketBaseStackView.bottomAnchor, constant: 8),
             self.messageDateLabel.bottomAnchor.constraint(equalTo: self.messageContainerView.bottomAnchor, constant: -10)
         ])
 
-        NSLayoutConstraint.activate([
-            self.topBubbleTailView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: -5),
-            self.topBubbleTailView.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor),
-            self.topBubbleTailView.widthAnchor.constraint(equalToConstant: 10),
-            self.topBubbleTailView.heightAnchor.constraint(equalTo: self.topBubbleTailView.widthAnchor)
-        ])
+//        NSLayoutConstraint.activate([
+//            self.topBubbleTailView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: -6),
+//            self.topBubbleTailView.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor),
+//            self.topBubbleTailView.widthAnchor.constraint(equalToConstant: 20),
+//            self.topBubbleTailView.heightAnchor.constraint(equalToConstant: 18)
+//        ])
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SocketIO
 
 class ConversationsViewModel {
     
@@ -22,6 +23,8 @@ class ConversationsViewModel {
     private var conversationLastMessageList: [Int: ChatMessage] = [:]
     private var chatPage: Int = 1
 
+    var searchQuery: String = ""
+    
     init() {
 
         self.setupPublishers()
@@ -50,7 +53,7 @@ class ConversationsViewModel {
     private func getConversations() {
         self.isLoadingPublisher.send(true)
 
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
+        Env.servicesProvider.getChatrooms()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -62,17 +65,44 @@ class ConversationsViewModel {
                     ()
                 }
 
-            }, receiveValue: { [weak self] response in
-                if let chatrooms = response.data {
-
-                    self?.checkForNewChatrooms(chatroomsData: chatrooms)
-                    // self?.storeChatrooms(chatroomsData: chatrooms)
-
-                    Env.gomaSocialClient.unreadMessagesState.send(false)
-                }
-
+            }, receiveValue: { [weak self] chatroomsData in
+                
+                let mappedChatroomsData = chatroomsData.map({
+                    return ServiceProviderModelMapper.chatroomData(fromServiceProviderChatroomData: $0)
+                })
+                
+                self?.checkForNewChatrooms(chatroomsData: mappedChatroomsData)
+                // self?.storeChatrooms(chatroomsData: chatrooms)
+                
+                Env.gomaSocialClient.unreadMessagesState.send(false)
+                
+                
             })
             .store(in: &cancellables)
+        
+//        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("CHATROOMS ERROR: \(error)")
+//                    self?.isLoadingPublisher.send(false)
+//                    self?.dataNeedsReload.send()
+//                case .finished:
+//                    ()
+//                }
+//
+//            }, receiveValue: { [weak self] response in
+//                if let chatrooms = response.data {
+//
+//                    self?.checkForNewChatrooms(chatroomsData: chatrooms)
+//                    // self?.storeChatrooms(chatroomsData: chatrooms)
+//
+//                    Env.gomaSocialClient.unreadMessagesState.send(false)
+//                }
+//
+//            })
+//            .store(in: &cancellables)
     }
 
     private func checkForNewChatrooms(chatroomsData: [ChatroomData]) {
@@ -82,12 +112,19 @@ class ConversationsViewModel {
             !storedChatrooms.contains($0.chatroom.id)
         })
 
+        // TODO: Enable after socket is setup
+//        if missingChatroom.isNotEmpty {
+//            Env.gomaSocialClient.forceRefresh()
+//        }
+//        else {
+//            self.storeChatrooms(chatroomsData: chatroomsData)
+//        }
+        
         if missingChatroom.isNotEmpty {
-            Env.gomaSocialClient.forceRefresh()
+            Env.gomaSocialClient.refreshChatroomsList()
         }
-        else {
-            self.storeChatrooms(chatroomsData: chatroomsData)
-        }
+        
+        self.storeChatrooms(chatroomsData: chatroomsData)
     }
 
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
@@ -100,8 +137,19 @@ class ConversationsViewModel {
                 self.setupGroupChatroomData(chatroomData: chatroomData)
             }
         }
+        
+        let sortConversations = self.conversationsPublisher.value.sorted { (conversation1, conversation2) -> Bool in
+            if let conversation1 = conversation1.groupUsers, conversation1.contains(where: { $0.id == 1 }) && conversation1.count < 3 {
+                return true // Place data1 first if it contains the target user
+            } else if let conversation2 = conversation2.groupUsers, conversation2.contains(where: { $0.id == 1 }) && conversation2.count < 3 {
+                return false // Place data2 first if it contains the target user
+            } else {
+                return false // Maintain the original order if neither data1 nor data2 contains the target user
+            }
+        }
 
-        self.initialConversations = self.conversationsPublisher.value
+//        self.initialConversations = self.conversationsPublisher.value
+        self.initialConversations = sortConversations
 
         self.setupSocketListeners()
 
@@ -133,9 +181,9 @@ class ConversationsViewModel {
 
                 readMessagesPublisher
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] _ in
+                    .sink(receiveValue: { [weak self] usersResponse in
 
-                            // self?.updateConversationReadStatus(chatroomId: chatroomId)
+                            //self?.updateConversationReadStatus(chatroomId: chatroomId)
                             self?.updateConversationDetail(chatroomId: chatroomId)
 
                     })
@@ -147,7 +195,8 @@ class ConversationsViewModel {
 
     private func updateConversationDetail(chatroomId: Int) {
 
-        guard let userLoggedId = Env.gomaNetworkClient.getCurrentToken()?.userId else {return}
+//        guard let userLoggedId = Env.gomaNetworkClient.getCurrentToken()?.userId else {return}
+        guard let userLoggedId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier else {return}
 
         for (index, conversation) in self.conversationsPublisher.value.enumerated() {
             if conversation.id == chatroomId {
@@ -176,7 +225,8 @@ class ConversationsViewModel {
                                                                date: self.getFormattedDate(timestamp: lastMessage.date),
                                                                timestamp: lastMessage.date,
                                                                lastMessageUser: lastMessage.fromUser,
-                                                               isLastMessageSeen: isLastMessageRead, groupUsers: conversation.groupUsers)
+                                                               isLastMessageSeen: isLastMessageRead, groupUsers: conversation.groupUsers,
+                                                               avatar: conversation.avatar)
 
                     self.initialConversations[index] = newConversationData
 
@@ -187,40 +237,67 @@ class ConversationsViewModel {
             }
 
         }
-
-        let sortedConversations = self.conversationsPublisher.value.sorted {
-            if let firstTimestamp = $0.timestamp, let secondTimestamp = $1.timestamp {
-                return firstTimestamp > secondTimestamp
+        
+        if let firstConversation = self.conversationsPublisher.value.first {
+            
+            var restOfConversations = Array(self.conversationsPublisher.value.dropFirst())
+            
+            var sortedConversations = self.conversationsPublisher.value.sorted {
+                if let firstTimestamp = $0.timestamp, let secondTimestamp = $1.timestamp {
+                    return firstTimestamp > secondTimestamp
+                }
+                else {
+                    return $0.timestamp ?? 0 > $1.timestamp ?? 1
+                }
+                
+            }
+            // Check if first conversation is GOMA AI Assitant
+            if let firstGroupUsers = firstConversation.groupUsers,
+               firstGroupUsers.contains(where: {$0.id == 1})  && firstGroupUsers.count < 3 {
+                
+                let sortedRestOfConversations = restOfConversations.sorted {
+                    if let firstTimestamp = $0.timestamp, let secondTimestamp = $1.timestamp {
+                        return firstTimestamp > secondTimestamp
+                    } else {
+                        return $0.timestamp ?? 0 > $1.timestamp ?? 1
+                    }
+                }
+                
+                self.conversationsPublisher.value = [firstConversation] + sortedRestOfConversations
+                
+                self.initialConversations = self.conversationsPublisher.value
             }
             else {
-                return $0.timestamp ?? 0 > $1.timestamp ?? 1
+                self.conversationsPublisher.value = sortedConversations
+                self.initialConversations = self.conversationsPublisher.value
+
             }
-
         }
-
-        self.conversationsPublisher.value = sortedConversations
     }
 
     private func setupIndividualChatroomData(chatroomData: ChatroomData) {
         var loggedUsername = ""
         var chatroomName = ""
-        var chatroomUsers: [GomaFriend] = []
+        var chatroomUsers: [UserFriend] = []
+        var avatar: String? = nil
 
         for user in chatroomData.users {
             chatroomUsers.append(user)
         }
 
         for user in chatroomData.users {
-            if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+            if let loggedUserIdString = Env.userSessionStore.userProfilePublisher.value?.userIdentifier,
+                let loggedUserId = Int(loggedUserIdString) {
                 if user.id != loggedUserId {
                     chatroomName = user.username
+                    avatar = user.avatar
                 }
                 else {
                     loggedUsername = user.username
                 }
             }
         }
-
+        
         let conversationData = ConversationData(id: chatroomData.chatroom.id,
                                                 conversationType: .user,
                                                 name: chatroomName,
@@ -229,7 +306,7 @@ class ConversationsViewModel {
                                                 timestamp: chatroomData.chatroom.creationTimestamp,
                                                 lastMessageUser: loggedUsername,
                                                 isLastMessageSeen: false,
-                                                groupUsers: chatroomUsers)
+                                                groupUsers: chatroomUsers, avatar: avatar)
 
         self.conversationsPublisher.value.append(conversationData)
     }
@@ -237,7 +314,7 @@ class ConversationsViewModel {
     private func setupGroupChatroomData(chatroomData: ChatroomData) {
         var loggedUsername = ""
         let chatroomName = chatroomData.chatroom.name
-        var chatroomUsers: [GomaFriend] = []
+        var chatroomUsers: [UserFriend] = []
 
         if let loggedUser = Env.userSessionStore.loggedUserProfile {
             loggedUsername = loggedUser.username
@@ -261,7 +338,14 @@ class ConversationsViewModel {
 
     func filterSearch(searchQuery: String) {
 
-        let filteredUsers = self.initialConversations.filter({ $0.name.localizedCaseInsensitiveContains(searchQuery)})
+        self.searchQuery = searchQuery
+        
+        let filteredUsers = self.initialConversations
+            .filter { conversation in
+                guard let groupUsers = conversation.groupUsers else { return true }
+                return !groupUsers.contains { $0.id == 1 }
+            }
+            .filter({ $0.name.localizedCaseInsensitiveContains(searchQuery)})
 
         self.conversationsPublisher.value = filteredUsers
 
@@ -275,10 +359,19 @@ class ConversationsViewModel {
 
         self.dataNeedsReload.send()
     }
+    
+    func resetSearchUsers() {
+
+        self.searchQuery = ""
+
+        self.conversationsPublisher.value = []
+
+        self.dataNeedsReload.send()
+    }
 
     func removeChatroom(chatroomId: Int) {
 
-        Env.gomaNetworkClient.deleteGroup(deviceId: Env.deviceId, chatroomId: chatroomId)
+        Env.servicesProvider.deleteGroup(id: chatroomId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -292,6 +385,20 @@ class ConversationsViewModel {
                 self?.refetchConversations()
             })
             .store(in: &cancellables)
+//        Env.gomaNetworkClient.deleteGroup(deviceId: Env.deviceId, chatroomId: chatroomId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("DELETE GROUP ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] response in
+//                print("DELETE GROUP GOMA: \(response)")
+//                self?.refetchConversations()
+//            })
+//            .store(in: &cancellables)
     }
 
     func refetchConversations() {

@@ -181,9 +181,9 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestFriends(deviceId: String) -> AnyPublisher<NetworkResponse<[GomaFriend]>, NetworkError> {
+    func requestFriends(deviceId: String) -> AnyPublisher<NetworkResponse<[UserFriend]>, NetworkError> {
         let endpoint = GomaGamingService.listFriends
-        let requestPublisher: AnyPublisher<NetworkResponse<[GomaFriend]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        let requestPublisher: AnyPublisher<NetworkResponse<[UserFriend]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 

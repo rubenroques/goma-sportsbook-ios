@@ -10,23 +10,28 @@ import UIKit
 class SentMessageTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
-    private lazy var messageContainerView: UIView = Self.createMessageContainerView()
+//    private lazy var messageContainerView: UIView = Self.createMessageContainerView()
+    private lazy var messageContainerView: ChatBubbleView = Self.createMessageContainerView()
     private lazy var messageLabel: UILabel = Self.createMessageLabel()
     private lazy var dateStackView: UIStackView = Self.createDateStackView()
     private lazy var messageDateLabel: UILabel = Self.createMessageDateLabel()
     private lazy var messageStateBaseView: UIView = Self.createMessageStateBaseView()
     private lazy var messageStateImageView: UIImageView = Self.createMessageStateImageView()
-    private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
+//    private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
+
+    private let dateFormatter = DateFormatter()
 
     // MARK: Public Properties
     var isMessageSeen: Bool = false {
         didSet {
             if isMessageSeen {
-                self.messageStateImageView.image = UIImage(named: "seen_message_icon")
+                self.messageStateImageView.image = UIImage(named: "seen_message_icon")?.withRenderingMode(.alwaysTemplate)
             }
             else {
-                self.messageStateImageView.image = UIImage(named: "sent_message_icon")
+                self.messageStateImageView.image = UIImage(named: "sent_message_icon")?.withRenderingMode(.alwaysTemplate)
             }
+            
+            self.messageStateImageView.setTintColor(color: UIColor.App.highlightTertiary)
         }
     }
 
@@ -46,31 +51,35 @@ class SentMessageTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.messageContainerView.layer.borderWidth = 1
-        self.messageContainerView.layer.borderColor = UIColor.App.backgroundTertiary.cgColor
-
-        self.setBubbleTailTriangle()
+//        self.messageContainerView.layer.borderWidth = 1
+//        self.messageContainerView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+//
+//        self.setBubbleTailTriangle()
 
     }
 
     func setupWithTheme() {
 
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.messageContainerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.messageContainerView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.messageLabel.textColor = UIColor.App.textSecondary
+        self.messageLabel.textColor = UIColor.App.buttonTextSecondary
 
         self.dateStackView.backgroundColor = .clear
 
-        self.messageDateLabel.textColor = UIColor.App.textDisablePrimary
+        self.messageDateLabel.textColor = UIColor.App.textSecondary
 
         self.messageStateBaseView.backgroundColor = .clear
 
-        self.topBubbleTailView.backgroundColor = .clear
+//        self.topBubbleTailView.backgroundColor = .clear
     }
 
     // MARK: Functions
@@ -78,7 +87,16 @@ class SentMessageTableViewCell: UITableViewCell {
     func setupMessage(messageData: MessageData) {
         self.messageLabel.text = messageData.text
 
-        self.messageDateLabel.text = messageData.date
+        self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+
+        if let date = dateFormatter.date(from: messageData.date) {
+            dateFormatter.dateFormat = "HH:mm"
+            let timeString = dateFormatter.string(from: date)
+            self.messageDateLabel.text = timeString
+        }
+        else {
+            self.messageDateLabel.text = messageData.date
+        }
 
         if messageData.type == .sentNotSeen {
             self.isMessageSeen = false
@@ -95,32 +113,40 @@ class SentMessageTableViewCell: UITableViewCell {
         }
     }
 
-    private func setBubbleTailTriangle() {
-        let heightWidth = self.topBubbleTailView.frame.width - 1
-        let path = CGMutablePath()
-
-        path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: heightWidth, y: 0))
-        path.addLine(to: CGPoint(x: heightWidth/2, y: heightWidth/2))
-        // No need for \ triangle line to stroke
-        // path.addLine(to: CGPoint(x: 0, y: 0))
-
-        let shape = CAShapeLayer()
-        shape.path = path
-        shape.fillColor = UIColor.App.backgroundPrimary.cgColor
-        shape.strokeColor = UIColor.App.backgroundTertiary.cgColor
-
-        self.topBubbleTailView.layer.insertSublayer(shape, at: 0)
-    }
+//    private func setBubbleTailTriangle() {
+//        let viewWidth = self.topBubbleTailView.frame.width
+//        let viewheight = self.topBubbleTailView.frame.height
+//        let path = CGMutablePath()
+//
+//        path.move(to: CGPoint(x: 0, y: 0))
+//        path.addLine(to: CGPoint(x: viewWidth, y: 0))
+//        path.addLine(to: CGPoint(x: (viewWidth/2)+3, y: viewheight))
+//        // No need for \ triangle line to stroke
+//        // path.addLine(to: CGPoint(x: 0, y: 0))
+//
+//        let shape = CAShapeLayer()
+//        shape.path = path
+//        shape.fillColor = UIColor.App.backgroundSecondary.cgColor
+//        shape.strokeColor = UIColor.App.backgroundBorder.cgColor
+//
+//        self.topBubbleTailView.layer.insertSublayer(shape, at: 0)
+//    }
 
 }
 
 extension SentMessageTableViewCell {
 
-    private static func createMessageContainerView() -> UIView {
-        let view = UIView()
+//    private static func createMessageContainerView() -> UIView {
+//        let view = UIView()
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.layer.cornerRadius = CornerRadius.message
+//        return view
+//    }
+    private static func createMessageContainerView() -> ChatBubbleView {
+        let view = ChatBubbleView()
+        view.backgroundColors = [UIColor.App.messageGradient1, UIColor.App.messageGradient2]
+        view.useGradient = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = CornerRadius.view
         return view
     }
 
@@ -140,7 +166,7 @@ extension SentMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 16)
+        label.font = AppFont.with(type: .regular, size: 16)
         return label
     }
 
@@ -164,7 +190,8 @@ extension SentMessageTableViewCell {
     private static func createMessageStateImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "sent_message_icon")
+        imageView.image = UIImage(named: "sent_message_icon")?.withRenderingMode(.alwaysTemplate)
+        imageView.setTintColor(color: UIColor.App.highlightTertiary)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -188,9 +215,9 @@ extension SentMessageTableViewCell {
 
         self.messageStateBaseView.addSubview(self.messageStateImageView)
 
-        self.contentView.addSubview(self.topBubbleTailView)
-
-        self.contentView.bringSubviewToFront(self.topBubbleTailView)
+//        self.contentView.addSubview(self.topBubbleTailView)
+//
+//        self.contentView.bringSubviewToFront(self.topBubbleTailView)
 
         self.initConstraints()
 
@@ -215,7 +242,7 @@ extension SentMessageTableViewCell {
             self.messageLabel.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor, constant: 10),
 
             self.dateStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 15),
-            self.dateStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -15),
+            self.dateStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -25),
             self.dateStackView.topAnchor.constraint(equalTo: self.messageLabel.bottomAnchor, constant: 8),
             self.dateStackView.bottomAnchor.constraint(equalTo: self.messageContainerView.bottomAnchor, constant: -10),
             self.dateStackView.heightAnchor.constraint(equalToConstant: 25),
@@ -228,11 +255,11 @@ extension SentMessageTableViewCell {
 
         ])
 
-        NSLayoutConstraint.activate([
-            self.topBubbleTailView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: 5),
-            self.topBubbleTailView.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor, constant: 0.5),
-            self.topBubbleTailView.widthAnchor.constraint(equalToConstant: 10),
-            self.topBubbleTailView.heightAnchor.constraint(equalTo: self.topBubbleTailView.widthAnchor)
-        ])
+//        NSLayoutConstraint.activate([
+//            self.topBubbleTailView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: 6),
+//            self.topBubbleTailView.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor, constant: 0.65),
+//            self.topBubbleTailView.widthAnchor.constraint(equalToConstant: 20),
+//            self.topBubbleTailView.heightAnchor.constraint(equalToConstant: 18)
+//        ])
     }
 }

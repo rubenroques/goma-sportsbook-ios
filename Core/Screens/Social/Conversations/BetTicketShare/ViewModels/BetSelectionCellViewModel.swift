@@ -55,7 +55,7 @@ class BetSelectionCellViewModel {
 
     var returnString: String {
         let currencyFormatter = CurrencyFormater()
-        let returnValue = currencyFormatter.currencyTypeFormatting(string: "\(self.ticket.overallBetReturns ?? 0.0)")
+        let returnValue = currencyFormatter.currencyTypeFormatting(string: "\(self.ticket.maxWinning ?? 0.0)")
         return returnValue
     }
 }

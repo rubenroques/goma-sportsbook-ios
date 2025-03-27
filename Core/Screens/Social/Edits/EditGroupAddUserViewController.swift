@@ -76,6 +76,13 @@ class EditGroupAddUserViewController: UIViewController {
 
     }
 
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+
+        super.viewDidLayoutSubviews()
+
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -83,13 +90,13 @@ class EditGroupAddUserViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
@@ -98,15 +105,15 @@ class EditGroupAddUserViewController: UIViewController {
 
         self.setupSearchBarStyle()
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = .clear
 
-        self.addFriendBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.addFriendBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         StyleHelper.styleButton(button: self.addFriendButton)
 
         self.addFriendSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
     }
 
@@ -118,11 +125,11 @@ class EditGroupAddUserViewController: UIViewController {
         self.searchBar.backgroundImage = UIImage()
         self.searchBar.tintColor = .white
         self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+        self.searchBar.backgroundImage = UIColor.App.backgroundSecondary.image()
         self.searchBar.placeholder = localized("search")
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.backgroundColor = UIColor.App.inputBackground
             textfield.textColor = UIColor.App.textPrimary
             textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_friend"),
@@ -132,7 +139,7 @@ class EditGroupAddUserViewController: UIViewController {
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.inputTextTitle
+                glassIconView.tintColor = UIColor.App.iconSecondary
             }
         }
 
@@ -347,7 +354,7 @@ extension EditGroupAddUserViewController {
         let button = UIButton.init(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("close"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
         return button
     }
 

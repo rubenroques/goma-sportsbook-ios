@@ -18,6 +18,8 @@ protocol PrivilegedAccessManager {
 
     var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> { get }
+    
+    var accessToken: String? { get }
 
     var hasSecurityQuestions: Bool { get }
 
@@ -128,7 +130,7 @@ protocol PrivilegedAccessManager {
     func updateUserNotifications(settings: UserNotificationsSettings) -> AnyPublisher<Bool, ServiceProviderError>
 
     func getFriendRequests() -> AnyPublisher<[FriendRequest], ServiceProviderError>
-    func getFriends() -> AnyPublisher<[GomaFriend], ServiceProviderError>
+    func getFriends() -> AnyPublisher<[UserFriend], ServiceProviderError>
     func addFriends(userIds: [String], request: Bool) -> AnyPublisher<AddFriendResponse, ServiceProviderError>
     func removeFriend(userId: Int) -> AnyPublisher<String, ServiceProviderError>
     func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError>

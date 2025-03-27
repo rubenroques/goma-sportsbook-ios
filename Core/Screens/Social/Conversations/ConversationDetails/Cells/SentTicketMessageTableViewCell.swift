@@ -12,29 +12,37 @@ class SentTicketMessageTableViewCell: UITableViewCell {
     var didTapBetNowAction: ((BetSelectionCellViewModel) -> Void) = { _ in }
 
     // MARK: Private Properties
-    private lazy var messageContainerView: UIView = Self.createMessageContainerView()
+//    private lazy var messageContainerView: UIView = Self.createMessageContainerView()
+    private lazy var messageContainerView: ChatBubbleView = Self.createMessageContainerView()
+
     private lazy var messageLabel: UILabel = Self.createMessageLabel()
     private lazy var ticketBaseStackView: UIStackView = Self.createTicketBaseStackView()
     private lazy var dateStackView: UIStackView = Self.createDateStackView()
     private lazy var messageDateLabel: UILabel = Self.createMessageDateLabel()
     private lazy var messageStateBaseView: UIView = Self.createMessageStateBaseView()
     private lazy var messageStateImageView: UIImageView = Self.createMessageStateImageView()
-    private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
+//    private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
 
     private var ticketInMessageView: ChatTicketInMessageView?
     private var ticketStateInMessageView: ChatTicketStateInMessageView?
+    
+    private let dateFormatter = DateFormatter()
+
     // MARK: Public Properties
     var isMessageSeen: Bool = false {
         didSet {
             if isMessageSeen {
-                self.messageStateImageView.image = UIImage(named: "seen_message_icon")
+                self.messageStateImageView.image = UIImage(named: "seen_message_icon")?.withRenderingMode(.alwaysTemplate)
             }
             else {
-                self.messageStateImageView.image = UIImage(named: "sent_message_icon")
+                self.messageStateImageView.image = UIImage(named: "sent_message_icon")?.withRenderingMode(.alwaysTemplate)
             }
+            
+            self.messageStateImageView.setTintColor(color: UIColor.App.highlightTertiary)
+
         }
     }
-
+    
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -63,27 +71,28 @@ class SentTicketMessageTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.messageContainerView.layer.borderWidth = 1
-        self.messageContainerView.layer.borderColor = UIColor.App.backgroundTertiary.cgColor
+//        self.messageContainerView.layer.borderWidth = 1
+//        self.messageContainerView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
 
-        self.setBubbleTailTriangle()
+//        self.setBubbleTailTriangle()
+        
     }
 
     func setupWithTheme() {
 
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.messageContainerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.messageContainerView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.messageLabel.textColor = UIColor.App.textSecondary
+        self.messageLabel.textColor = UIColor.App.buttonTextSecondary
 
         self.dateStackView.backgroundColor = .clear
 
-        self.messageDateLabel.textColor = UIColor.App.textDisablePrimary
+        self.messageDateLabel.textColor = UIColor.App.textSecondary
 
         self.messageStateBaseView.backgroundColor = .clear
 
-        self.topBubbleTailView.backgroundColor = .clear
+//        self.topBubbleTailView.backgroundColor = .clear
 
         self.ticketBaseStackView.backgroundColor = .clear
 
@@ -100,7 +109,16 @@ class SentTicketMessageTableViewCell: UITableViewCell {
             self.messageLabel.text = localized("chat_empty_shared_ticket_self")
         }
         
-        self.messageDateLabel.text = messageData.date
+        self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+
+        if let date = dateFormatter.date(from: messageData.date) {
+            dateFormatter.dateFormat = "HH:mm"
+            let timeString = dateFormatter.string(from: date)
+            self.messageDateLabel.text = timeString
+        }
+        else {
+            self.messageDateLabel.text = messageData.date
+        }
 
         if messageData.type == .sentNotSeen {
             self.isMessageSeen = false
@@ -113,10 +131,12 @@ class SentTicketMessageTableViewCell: UITableViewCell {
         if let attachment = messageData.attachment {
             let ticket = BetHistoryEntry(sharedBetTicket: attachment.content)
             let betSelectionCellViewModel = BetSelectionCellViewModel(ticket: ticket)
+            
+            let ticketStatus = ticket.status?.lowercased()
 
-            if ticket.status == "OPEN" {
+            if ticketStatus == "open" || ticketStatus == "pending"  {
                 self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
-                                                                   shouldShowButton: false)
+                                                                   shouldShowButton: true)
 
                 self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
                     self?.didTapBetNowAction(viewModel)
@@ -131,7 +151,7 @@ class SentTicketMessageTableViewCell: UITableViewCell {
 
         }
 
-        self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
+        self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundPrimary
     }
 
     func isReversedCell(isReversed: Bool) {
@@ -140,32 +160,41 @@ class SentTicketMessageTableViewCell: UITableViewCell {
         }
     }
 
-    private func setBubbleTailTriangle() {
-        let heightWidth = self.topBubbleTailView.frame.width - 1
-        let path = CGMutablePath()
-
-        path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: heightWidth, y: 0))
-        path.addLine(to: CGPoint(x: heightWidth/2, y: heightWidth/2))
-        // No need for \ triangle line to stroke
-        // path.addLine(to: CGPoint(x: 0, y: 0))
-
-        let shape = CAShapeLayer()
-        shape.path = path
-        shape.fillColor = UIColor.App.backgroundPrimary.cgColor
-        shape.strokeColor = UIColor.App.backgroundTertiary.cgColor
-
-        self.topBubbleTailView.layer.insertSublayer(shape, at: 0)
-    }
+//    private func setBubbleTailTriangle() {
+//        let viewWidth = self.topBubbleTailView.frame.width
+//        let viewheight = self.topBubbleTailView.frame.height
+//        let path = CGMutablePath()
+//
+//        path.move(to: CGPoint(x: 0, y: 0))
+//        path.addLine(to: CGPoint(x: viewWidth, y: 0))
+//        path.addLine(to: CGPoint(x: (viewWidth/2)+3, y: viewheight))
+//        // No need for \ triangle line to stroke
+//        // path.addLine(to: CGPoint(x: 0, y: 0))
+//
+//        let shape = CAShapeLayer()
+//        shape.path = path
+//        shape.fillColor = UIColor.App.backgroundSecondary.cgColor
+//        shape.strokeColor = UIColor.App.backgroundBorder.cgColor
+//
+//        self.topBubbleTailView.layer.insertSublayer(shape, at: 0)
+//    }
 
 }
 
 extension SentTicketMessageTableViewCell {
 
-    private static func createMessageContainerView() -> UIView {
-        let view = UIView()
+//    private static func createMessageContainerView() -> UIView {
+//        let view = UIView()
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.layer.cornerRadius = CornerRadius.message
+//        return view
+//    }
+    
+    private static func createMessageContainerView() -> ChatBubbleView {
+        let view = ChatBubbleView()
+        view.backgroundColors = [UIColor.App.messageGradient1, UIColor.App.messageGradient2]
+        view.useGradient = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = CornerRadius.view
         return view
     }
 
@@ -194,7 +223,7 @@ extension SentTicketMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 16)
+        label.font = AppFont.with(type: .regular, size: 16)
         return label
     }
 
@@ -218,7 +247,8 @@ extension SentTicketMessageTableViewCell {
     private static func createMessageStateImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "sent_message_icon")
+        imageView.image = UIImage(named: "sent_message_icon")?.withRenderingMode(.alwaysTemplate)
+        imageView.setTintColor(color: UIColor.App.highlightTertiary)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -244,9 +274,11 @@ extension SentTicketMessageTableViewCell {
 
         self.messageStateBaseView.addSubview(self.messageStateImageView)
 
-        self.contentView.addSubview(self.topBubbleTailView)
-
-        self.contentView.bringSubviewToFront(self.topBubbleTailView)
+//        self.contentView.addSubview(self.topBubbleTailView)
+//
+//        self.contentView.bringSubviewToFront(self.topBubbleTailView)
+        
+        self.contentView
 
         self.initConstraints()
 
@@ -271,11 +303,11 @@ extension SentTicketMessageTableViewCell {
             self.messageLabel.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor, constant: 10),
 
             self.ticketBaseStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor),
-            self.ticketBaseStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor),
+            self.ticketBaseStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -10),
             self.ticketBaseStackView.topAnchor.constraint(equalTo: self.messageLabel.bottomAnchor, constant: 8),
 
             self.dateStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 15),
-            self.dateStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -15),
+            self.dateStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -25),
             self.dateStackView.topAnchor.constraint(equalTo: self.ticketBaseStackView.bottomAnchor, constant: 8),
             self.dateStackView.bottomAnchor.constraint(equalTo: self.messageContainerView.bottomAnchor, constant: -10),
             self.dateStackView.heightAnchor.constraint(equalToConstant: 25),
@@ -287,11 +319,11 @@ extension SentTicketMessageTableViewCell {
             self.messageStateImageView.trailingAnchor.constraint(equalTo: self.messageStateBaseView.trailingAnchor)
         ])
 
-        NSLayoutConstraint.activate([
-            self.topBubbleTailView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: 5),
-            self.topBubbleTailView.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor, constant: 0.5),
-            self.topBubbleTailView.widthAnchor.constraint(equalToConstant: 10),
-            self.topBubbleTailView.heightAnchor.constraint(equalTo: self.topBubbleTailView.widthAnchor)
-        ])
+//        NSLayoutConstraint.activate([
+//            self.topBubbleTailView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: 6),
+//            self.topBubbleTailView.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor, constant: 0.65),
+//            self.topBubbleTailView.widthAnchor.constraint(equalToConstant: 20),
+//            self.topBubbleTailView.heightAnchor.constraint(equalToConstant: 18)
+//        ])
     }
 }

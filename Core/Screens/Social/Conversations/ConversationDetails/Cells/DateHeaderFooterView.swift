@@ -39,8 +39,8 @@ class DateHeaderFooterView: UITableViewHeaderFooterView {
     }
 
     func setupWithTheme() {
-        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.titleLabel.textColor = UIColor.App.textDisablePrimary
+        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.titleLabel.textColor = UIColor.App.textSecondary
     }
 
     // MARK: Functions
@@ -71,7 +71,7 @@ extension DateHeaderFooterView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
         label.text = ""
-        label.font = AppFont.with(type: .bold, size: 9)
+        label.font = AppFont.with(type: .medium, size: 12)
         label.textAlignment = .center
         return label
     }

@@ -86,6 +86,13 @@ class AddContactViewController: UIViewController {
         self.isEmptySearch = false
     }
 
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+
+        super.viewDidLayoutSubviews()
+
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -93,13 +100,13 @@ class AddContactViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.backButton.backgroundColor = .clear
 
@@ -112,9 +119,9 @@ class AddContactViewController: UIViewController {
 
         self.tableSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = .clear
 
-        self.addFriendBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.addFriendBaseView.backgroundColor = .clear
 
         StyleHelper.styleButton(button: self.addFriendButton)
 
@@ -191,11 +198,11 @@ class AddContactViewController: UIViewController {
         self.searchBar.backgroundImage = UIImage()
         self.searchBar.tintColor = .white
         self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+        self.searchBar.backgroundImage = UIColor.App.backgroundSecondary.image()
         self.searchBar.placeholder = localized("search")
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.backgroundColor = UIColor.App.inputBackground
             textfield.textColor = UIColor.App.textPrimary
             textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_contact"),
@@ -205,7 +212,7 @@ class AddContactViewController: UIViewController {
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.inputTextTitle
+                glassIconView.tintColor = UIColor.App.iconSecondary
             }
         }
     }

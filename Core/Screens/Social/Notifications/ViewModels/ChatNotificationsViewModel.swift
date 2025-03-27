@@ -31,13 +31,33 @@ class ChatNotificationsViewModel {
 
     init() {
         self.getFriendRequests()
-        self.getChatNotifications()
+//        self.getChatNotifications()
     }
 
     private func getFriendRequests() {
         self.isLoadingPublisher.send(true)
 
-        Env.gomaNetworkClient.getFriendsRequests(deviceId: Env.deviceId)
+//        Env.gomaNetworkClient.getFriendsRequests(deviceId: Env.deviceId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("FRIEND REQUEST ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//
+//                self?.isLoadingPublisher.send(false)
+//
+//            }, receiveValue: { [weak self] response in
+//                if let friendRequests = response.data {
+//                    self?.friendRequestsPublisher.value = friendRequests
+//                }
+//
+//            })
+//            .store(in: &cancellables)
+        
+        Env.servicesProvider.getFriendRequests()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -47,101 +67,132 @@ class ChatNotificationsViewModel {
                     ()
                 }
 
-                self?.isLoadingPublisher.send(false)
+//                self?.isLoadingPublisher.send(false)
+                self?.getChatNotifications()
 
-            }, receiveValue: { [weak self] response in
-                if let friendRequests = response.data {
-                    self?.friendRequestsPublisher.value = friendRequests
-                }
+            }, receiveValue: { [weak self] friendRequests in
+                
+                let mappedFriendRequests = friendRequests.map({
+                    
+                    return ServiceProviderModelMapper.friendRequest(fromServiceProviderFriendRequest: $0)
+                })
+                
+                // TEST
+//                let friendRequest1 = FriendRequest(id: 1, name: "Test 1", username: "Test 1")
+//                let friendRequest2 = FriendRequest(id: 2, name: "Test 2", username: "Test 2")
+//
+//                self?.friendRequestsPublisher.value = [friendRequest1, friendRequest2]
+               
+                self?.friendRequestsPublisher.value = mappedFriendRequests
+                
+
+                
 
             })
             .store(in: &cancellables)
     }
 
     private func getChatNotifications() {
-        self.isLoadingPublisher.send(true)
+        
+        var notificationsTest = [ChatNotification]()
+        
+        for i in 0...5 {
+            let notificationUser = NotificationUser(id: i, notificationId: i, userId: i, read: i < 2 ? 0 : 1, createdAt: "", updatedAt: "")
+            
+            let chatNotification = ChatNotification(id: i, title: "Test \(i)", text: "Test \(i) accepted your request", type: "friend", subType: "request", processed: 0, notificationUsers: [notificationUser])
+            
+            notificationsTest.append(chatNotification)
 
-        Env.gomaNetworkClient.requestNotifications(deviceId: Env.deviceId, type: .chat, page: self.page)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("CHAT NOTIFICATIONS ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-
-                self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] response in
-                if let chatNotifications = response.data {
-
-                    self?.chatNotificationsPublisher.value = chatNotifications
-
-                    if chatNotifications.count < 10 {
-                        self?.notificationsHasNextPage = false
-                    }
-                    else {
-                        self?.notificationsHasNextPage = true
-                    }
-                }
-            })
-            .store(in: &cancellables)
+        }
+        
+        self.chatNotificationsPublisher.send(notificationsTest)
+        
+        self.isLoadingPublisher.send(false)
+//
+//        Env.gomaNetworkClient.requestNotifications(deviceId: Env.deviceId, type: .chat, page: self.page)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("CHAT NOTIFICATIONS ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//
+//                self?.isLoadingPublisher.send(false)
+//
+//            }, receiveValue: { [weak self] response in
+//                if let chatNotifications = response.data {
+//
+//                    self?.chatNotificationsPublisher.value = chatNotifications
+//
+//                    if chatNotifications.count < 10 {
+//                        self?.notificationsHasNextPage = false
+//                    }
+//                    else {
+//                        self?.notificationsHasNextPage = true
+//                    }
+//                }
+//            })
+//            .store(in: &cancellables)
     }
 
     func markNotificationsAsRead() {
 
-        Env.gomaNetworkClient.setAllNotificationRead(deviceId: Env.deviceId, notificationType: .chat)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("CHAT NOTIF ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] _ in
-                self?.updateChatNotificationsStatus()
-            })
-            .store(in: &cancellables)
+        self.updateChatNotificationsStatus()
+//        Env.gomaNetworkClient.setAllNotificationRead(deviceId: Env.deviceId, notificationType: .chat)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("CHAT NOTIF ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] _ in
+//                self?.updateChatNotificationsStatus()
+//            })
+//            .store(in: &cancellables)
 
     }
 
     func approveFriendRequest(friendRequestId: Int) {
 
-        Env.gomaNetworkClient.approveFriendRequest(deviceId: Env.deviceId, userId: "\(friendRequestId)")
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("APPROVE FRIEND REQUEST ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] _ in
-                self?.updateFriendRequests(friendRequestId: friendRequestId)
-                Env.gomaSocialClient.forceRefresh()
-
-            })
-            .store(in: &cancellables)
+        self.updateFriendRequests(friendRequestId: friendRequestId)
+//        Env.gomaNetworkClient.approveFriendRequest(deviceId: Env.deviceId, userId: "\(friendRequestId)")
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("APPROVE FRIEND REQUEST ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] response in
+//                self?.updateFriendRequests(friendRequestId: friendRequestId)
+//                Env.gomaSocialClient.forceRefresh()
+//
+//            })
+//            .store(in: &cancellables)
 
     }
 
     func rejectFriendRequest(friendRequestId: Int) {
 
-        Env.gomaNetworkClient.rejectFriendRequest(deviceId: Env.deviceId, userId: "\(friendRequestId)")
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("REJECT FRIEND REQUEST ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] _ in
-                self?.updateFriendRequests(friendRequestId: friendRequestId)
-            })
-            .store(in: &cancellables)
+        self.updateFriendRequests(friendRequestId: friendRequestId)
+//        Env.gomaNetworkClient.rejectFriendRequest(deviceId: Env.deviceId, userId: "\(friendRequestId)")
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("REJECT FRIEND REQUEST ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] response in
+//                self?.updateFriendRequests(friendRequestId: friendRequestId)
+//            })
+//            .store(in: &cancellables)
 
     }
 
@@ -213,6 +264,8 @@ class ChatNotificationsViewModel {
         })
 
         self.friendRequestsPublisher.send(friendRequestsUpdated)
+        
+        self.shouldReloadData?()
     }
 
     func notificationViewModel(forIndex index: Int) -> UserNotificationCellViewModel? {

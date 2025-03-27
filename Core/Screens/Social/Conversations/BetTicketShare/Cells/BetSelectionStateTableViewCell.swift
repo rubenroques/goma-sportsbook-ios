@@ -14,12 +14,15 @@ class BetSelectionStateTableViewCell: UITableViewCell {
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var topStateView: UIView = Self.createTopStateView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var dateLabel: UILabel = Self.createDateLabel()
+    private lazy var betIdLabel: UILabel = Self.createBetIdLabel()
     private lazy var checkboxBaseView: UIView = Self.createCheckboxBaseView()
     private lazy var checkboxImageView: UIImageView = Self.createCheckboxImageView()
     private lazy var ticketsStackView: UIStackView = Self.createTicketsStackView()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
     private lazy var bottomStateView: UIView = Self.createBottomStateView()
+
     private lazy var bottomTitlesStackView: UIStackView = Self.createBottomTitlesStackView()
     private lazy var totalOddTitleLabel: UILabel = Self.createTotalOddTitleLabel()
     private lazy var betAmountTitleLabel: UILabel = Self.createBetAmountTitleLabel()
@@ -38,7 +41,7 @@ class BetSelectionStateTableViewCell: UITableViewCell {
     var didTapCheckboxAction: ((BetSelectionCellViewModel) -> Void)?
     var didTapUncheckboxAction: ((BetSelectionCellViewModel) -> Void)?
 
-    var betState: BetState = .draw {
+    var betState: BetState = .open {
         didSet {
             switch betState {
             case .won:
@@ -50,6 +53,9 @@ class BetSelectionStateTableViewCell: UITableViewCell {
             case .draw:
                 self.topStateView.backgroundColor = UIColor.App.myTicketsOther
                 self.bottomStateView.backgroundColor = UIColor.App.myTicketsOther
+            case .open:
+                self.topStateView.backgroundColor = UIColor.App.backgroundPrimary
+                self.bottomStateView.backgroundColor = UIColor.App.backgroundPrimary
             }
         }
     }
@@ -93,7 +99,7 @@ class BetSelectionStateTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.baseView.clipsToBounds = true
-        self.baseView.layer.cornerRadius = CornerRadius.view
+        self.baseView.layer.cornerRadius = CornerRadius.button
 
         self.ticketsStackView.layoutIfNeeded()
         self.ticketsStackView.layoutSubviews()
@@ -101,31 +107,36 @@ class BetSelectionStateTableViewCell: UITableViewCell {
 
     // MARK: Layout and Theme
     func setupWithTheme() {
-        self.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.backgroundColor = UIColor.App.backgroundPrimary
+        self.backgroundView?.backgroundColor = .clear
+        self.backgroundColor = .clear
 
-        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topStateView.backgroundColor = UIColor.App.backgroundSecondary
+        self.topStateView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
+        self.dateLabel.textColor = UIColor.App.textSecondary
+        
+        self.betIdLabel.textColor = UIColor.App.textSecondary
+        
         self.checkboxBaseView.backgroundColor = .clear
         self.checkboxImageView.backgroundColor = .clear
         self.ticketsStackView.backgroundColor = .clear
-        self.separatorLineView.backgroundColor = UIColor.App.buttonTextPrimary
+        
+        self.separatorLineView.backgroundColor = UIColor.App.buttonTextSecondary
 
-        self.bottomStateView.backgroundColor = UIColor.App.backgroundSecondary
+        self.bottomStateView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.bottomTitlesStackView.backgroundColor = .clear
-        self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
-        self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
-        self.possibleWinningTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.totalOddTitleLabel.textColor = UIColor.App.buttonTextSecondary
+        self.betAmountTitleLabel.textColor = UIColor.App.buttonTextSecondary
+        self.possibleWinningTitleLabel.textColor = UIColor.App.buttonTextSecondary
 
         self.bottomValuesStackView.backgroundColor = .clear
-        self.totalOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-        self.betAmountValueLabel.textColor = UIColor.App.buttonTextPrimary
-        self.possibleWinningValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.totalOddValueLabel.textColor = UIColor.App.buttonTextSecondary
+        self.betAmountValueLabel.textColor = UIColor.App.buttonTextSecondary
+        self.possibleWinningValueLabel.textColor = UIColor.App.buttonTextSecondary
     }
 
     // MARK: Functions
@@ -138,35 +149,35 @@ class BetSelectionStateTableViewCell: UITableViewCell {
                 self?.isCheckboxSelected = selected
             }
             .store(in: &cancellables)
+        
+        let betHistoryEntry = viewModel.ticket
 
-        if viewModel.ticket.type == "SINGLE" {
-            self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-").capitalized)"
-        }
-        else if viewModel.ticket.type == "MULTIPLE" {
-            self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-").capitalized)"
-        }
-        else if viewModel.ticket.type == "SYSTEM" {
-            self.titleLabel.text = localized("system") +
-            " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-").capitalized)"
-        }
-        else if viewModel.ticket.type?.lowercased() == "mix_match" && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
-            self.titleLabel.text = localized("mix-match")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
-        }
-        else {
-            self.titleLabel.text = String([viewModel.ticket.type, viewModel.ticket.localizedBetStatus]
-                .compactMap({ $0 })
-                .map({ $0.capitalized })
-                .joined(separator: " - "))
+        self.titleLabel.text = String([betHistoryEntry.type, betHistoryEntry.systemBetType, betHistoryEntry.localizedBetStatus]
+            .compactMap({ $0 })
+            .filter({ !$0.isEmpty })
+            .map({ $0.capitalized })
+            .joined(separator: " - "))
+        
+        if let date = betHistoryEntry.placedDate {
+            self.dateLabel.text = SocialMyTicketTableViewCell.dateFormatter.string(from: date)
         }
 
-        if viewModel.ticket.status == "WON" {
-            self.betState = .won
+        self.betIdLabel.text = "\(localized("bet_id")): \(betHistoryEntry.betId)"
+
+        if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
+            self.totalOddValueLabel.text = oddValue == 0.0 ? "-" : OddFormatter.formatOdd(withValue: oddValue)
         }
-        else if viewModel.ticket.status == "LOST" {
-            self.betState = .lost
+
+        if let betAmount = betHistoryEntry.totalBetAmount,
+           let betAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betAmount)) {
+            self.betAmountValueLabel.text = betAmountString
         }
-        else {
-            self.betState = .draw
+
+        //
+        self.possibleWinningTitleLabel.text = localized("possible_winnings")
+        if let maxWinnings = betHistoryEntry.maxWinning,
+           let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+            self.possibleWinningValueLabel.text = maxWinningsString
         }
 
         self.setupTicketStackView()
@@ -183,6 +194,43 @@ class BetSelectionStateTableViewCell: UITableViewCell {
         }
         else {
             self.possibleWinningValueLabel.text = viewModel.possibleWinningString
+        }
+        
+        if let status = betHistoryEntry.status?.uppercased() {
+            switch status {
+            case "WON":
+                self.betState = .won
+                self.possibleWinningTitleLabel.text = localized("return_text")  // Titulo
+                if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.possibleWinningValueLabel.text = maxWinningsString
+                }
+            case "LOST":
+                self.betState = .lost
+                self.possibleWinningTitleLabel.text = localized("possible_winnings") // Titulo
+                if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.possibleWinningValueLabel.text = maxWinningsString
+                }
+            case "DRAW":
+                self.betState = .draw
+                self.possibleWinningTitleLabel.text = localized("return_text")  // Titulo
+                if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.possibleWinningValueLabel.text = maxWinningsString
+                }
+            case "OPEN":
+                self.betState = .open
+                
+                self.possibleWinningTitleLabel.text = localized("possible_winnings") // Titulo
+                
+                if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.possibleWinningValueLabel.text = maxWinningsString
+                }
+            default:
+                ()
+            }
         }
     }
 
@@ -251,6 +299,28 @@ extension BetSelectionStateTableViewCell {
         label.textAlignment = .left
         return label
     }
+    
+    private static func createDateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "01/01/2000, 18:00"
+        label.font = AppFont.with(type: .medium, size: 10)
+        label.textAlignment = .left
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        return label
+    }
+    
+    private static func createBetIdLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Bet ID: 012345"
+        label.font = AppFont.with(type: .medium, size: 10)
+        label.textAlignment = .left
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        return label
+    }
 
     private static func createCheckboxBaseView() -> UIView {
         let view = UIView()
@@ -270,7 +340,7 @@ extension BetSelectionStateTableViewCell {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 20
+        stackView.spacing = 15
         stackView.distribution = .equalSpacing
         return stackView
     }
@@ -374,6 +444,10 @@ extension BetSelectionStateTableViewCell {
         self.baseView.addSubview(self.topStateView)
 
         self.baseView.addSubview(self.titleLabel)
+        
+        self.baseView.addSubview(self.dateLabel)
+        
+        self.baseView.addSubview(self.betIdLabel)
 
         self.checkboxBaseView.addSubview(self.checkboxImageView)
 
@@ -416,6 +490,13 @@ extension BetSelectionStateTableViewCell {
             self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -50),
             self.titleLabel.topAnchor.constraint(equalTo: self.topStateView.bottomAnchor, constant: 10),
+            
+            self.dateLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 14),
+            self.dateLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 8),
+            
+            self.betIdLabel.leadingAnchor.constraint(equalTo: self.dateLabel.trailingAnchor, constant: 10),
+            self.betIdLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -14),
+            self.betIdLabel.centerYAnchor.constraint(equalTo: self.dateLabel.centerYAnchor),
 
             self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -5),
             self.checkboxBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 5),
@@ -431,8 +512,8 @@ extension BetSelectionStateTableViewCell {
         // Stackview
         NSLayoutConstraint.activate([
             self.ticketsStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
-            self.ticketsStackView.trailingAnchor.constraint(equalTo: self.checkboxBaseView.leadingAnchor),
-            self.ticketsStackView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15),
+            self.ticketsStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
+            self.ticketsStackView.topAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 15),
             self.ticketsStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30)
         ])
 
@@ -441,7 +522,7 @@ extension BetSelectionStateTableViewCell {
 
             self.bottomStateView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.bottomStateView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.bottomStateView.topAnchor.constraint(equalTo: self.ticketsStackView.bottomAnchor),
+            self.bottomStateView.topAnchor.constraint(equalTo: self.ticketsStackView.bottomAnchor, constant: 15),
             self.bottomStateView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
             self.bottomStateView.heightAnchor.constraint(equalToConstant: 60),
 
@@ -477,4 +558,5 @@ enum BetState {
     case won
     case lost
     case draw
+    case open
 }

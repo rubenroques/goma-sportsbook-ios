@@ -66,7 +66,7 @@ class BetSelectionTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.baseView.layer.cornerRadius = CornerRadius.view
+        self.baseView.layer.cornerRadius = CornerRadius.button
 
         self.ticketsStackView.layoutIfNeeded()
         self.ticketsStackView.layoutSubviews()
@@ -74,8 +74,8 @@ class BetSelectionTableViewCell: UITableViewCell {
 
     // MARK: Layout and Theme
     func setupWithTheme() {
-        self.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.backgroundColor = UIColor.App.backgroundPrimary
+        self.backgroundView?.backgroundColor = .clear
+        self.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
@@ -90,20 +90,17 @@ class BetSelectionTableViewCell: UITableViewCell {
     }
 
     // MARK: Functions
-    func configure(withViewModel viewModel: BetSelectionCellViewModel) {
+    func configure(withViewModel viewModel: BetSelectionCellViewModel, withCountryCodes countryCodes: [String]? = nil) {
         self.viewModel = viewModel
 
         if viewModel.ticket.type?.uppercased() == "SINGLE" {
-            self.titleLabel.text = localized("single")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
+            self.titleLabel.text = localized("single")+" - \(viewModel.ticket.localizedBetStatus)"
         }
         else if viewModel.ticket.type?.uppercased() == "MULTIPLE" {
-            self.titleLabel.text = localized("multiple")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
+            self.titleLabel.text = localized("multiple")+" - \(viewModel.ticket.localizedBetStatus)"
         }
         else if viewModel.ticket.type?.uppercased() == "SYSTEM" {
-            self.titleLabel.text = localized("system") + " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(viewModel.ticket.localizedBetStatus.capitalized)"
-        }
-        else if viewModel.ticket.type?.lowercased() == "mix_match" && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
-            self.titleLabel.text = localized("mix-match")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
+            self.titleLabel.text = localized("system") + " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(viewModel.ticket.localizedBetStatus)"
         }
         else {
             self.titleLabel.text = String([viewModel.ticket.type, viewModel.ticket.localizedBetStatus]

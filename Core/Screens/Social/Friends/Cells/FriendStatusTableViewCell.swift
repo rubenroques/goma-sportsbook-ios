@@ -74,22 +74,26 @@ class FriendStatusTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.size.width / 2
+        
         self.iconInnerView.layer.cornerRadius = self.iconInnerView.frame.size.width / 2
+        self.iconInnerView.clipsToBounds = true
+
         self.photoImageView.layer.cornerRadius = self.photoImageView.frame.size.width / 2
+        
         self.statusView.layer.cornerRadius = self.statusView.frame.size.width / 2
     }
 
     func setupWithTheme() {
-        self.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.backgroundColor = UIColor.App.backgroundPrimary
+        self.backgroundView?.backgroundColor = UIColor.App.backgroundSecondary
+        self.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.iconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.iconBaseView.backgroundColor = .clear
         self.iconBaseView.layer.borderWidth = 2
         self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
 
-        self.iconInnerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.iconInnerView.backgroundColor = .clear
 
-        self.photoImageView.backgroundColor = UIColor.App.backgroundSecondary
+        self.photoImageView.backgroundColor = .clear
 
         self.nameLabel.textColor = UIColor.App.textPrimary
         self.statusView.backgroundColor = .systemGreen
@@ -111,6 +115,10 @@ class FriendStatusTableViewCell: UITableViewCell {
         self.notificationsEnabled = viewModel.notificationsEnabled
 
         self.notificationEnabledButton.isHidden = true
+        
+        if let avatar = viewModel.friend.avatar {
+            self.photoImageView.image = UIImage(named: avatar)
+        }
 
         viewModel.isOnlinePublisher
             .sink(receiveValue: { [weak self] isOnline in
@@ -139,13 +147,13 @@ class FriendStatusTableViewCell: UITableViewCell {
 
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        let removeFriendAction: UIAlertAction = UIAlertAction(title: "Remove friend", style: .default) { [weak self] _ in
+        let removeFriendAction: UIAlertAction = UIAlertAction(title: "Remove friend", style: .default) { [weak self] _ -> Void in
             print("REMOVE FRIEND ID: \(friendId)")
             self?.removeFriendAction?(friendId)
         }
         actionSheetController.addAction(removeFriendAction)
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {
@@ -186,7 +194,7 @@ extension FriendStatusTableViewCell {
     private static func createPhotoImageView() -> UIImageView {
         let photoImageView = UIImageView()
         photoImageView.translatesAutoresizingMaskIntoConstraints = false
-        photoImageView.image = UIImage(named: "my_account_profile_icon")
+        photoImageView.image = UIImage(named: "empty_user_image")
         photoImageView.contentMode = .scaleAspectFit
         return photoImageView
     }
@@ -264,20 +272,20 @@ extension FriendStatusTableViewCell {
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 
-            self.iconBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 24),
+            self.iconBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 25),
             self.iconBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
 
-            self.iconInnerView.widthAnchor.constraint(equalToConstant: 37),
+            self.iconInnerView.widthAnchor.constraint(equalToConstant: 40),
             self.iconInnerView.heightAnchor.constraint(equalTo: self.iconInnerView.widthAnchor),
             self.iconInnerView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
             self.iconInnerView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
 
-            self.photoImageView.widthAnchor.constraint(equalToConstant: 25),
+            self.photoImageView.widthAnchor.constraint(equalToConstant: 35),
             self.photoImageView.heightAnchor.constraint(equalTo: self.photoImageView.widthAnchor),
             self.photoImageView.centerXAnchor.constraint(equalTo: self.iconInnerView.centerXAnchor),
-            self.photoImageView.centerYAnchor.constraint(equalTo: self.iconInnerView.centerYAnchor),
+            self.photoImageView.centerYAnchor.constraint(equalTo: self.iconInnerView.centerYAnchor, constant: 3),
 
             self.nameLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 15),
             self.nameLabel.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),

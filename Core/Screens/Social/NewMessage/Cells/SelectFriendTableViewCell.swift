@@ -18,6 +18,7 @@ class SelectFriendTableViewCell: UITableViewCell {
     private lazy var userStateView: UIView = Self.createUserStateView()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
+
     // MARK: Public Properties
     var viewModel: SelectFriendCellViewModel?
 

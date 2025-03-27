@@ -17,6 +17,8 @@ class AddFriendCellViewModel {
     var phones: [String]
     var isCheckboxSelected: Bool
     var isOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    
+    var didAddFriend: ((FriendAlertType) -> Void)?
 
     init(userContact: UserContact) {
         self.userContact = userContact
@@ -59,5 +61,27 @@ class AddFriendCellViewModel {
                 })
                 .store(in: &cancellables)
         }
+    }
+    
+    func addFriendFromId(id: String) {
+        
+        Env.servicesProvider.addFriends(userIds: [id])
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("ADD FRIEND ERROR: \(error)")
+                    self?.didAddFriend?(.error)
+                case .finished:
+                    print("ADD FRIEND FINISHED")
+                }
+
+            }, receiveValue: { [weak self] addFriendResponse in
+                print("ADD FRIEND GOMA: \(addFriendResponse)")
+                
+                self?.didAddFriend?(.success)
+            })
+            .store(in: &cancellables)
+    
     }
 }

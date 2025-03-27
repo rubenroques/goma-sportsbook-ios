@@ -165,6 +165,9 @@ public class Client {
         self.eventsProvider?.reconnectIfNeeded()
     }
 
+    public func getAcessToken() -> String? {
+        return self.privilegedAccessManager?.accessToken
+    }
 }
 
 extension Client {
@@ -1943,6 +1946,210 @@ extension Client {
         return managedContentProvider.getTopCompetitions()
     }
 
+}
+
+// Social endpoints
+extension Client {
+    
+    public func getFollowees() -> AnyPublisher<[Follower], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getFollowees()
+    }
+    
+    public func getTotalFollowees() -> AnyPublisher<Int, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getTotalFollowees()
+    }
+    
+    public func getFollowers() -> AnyPublisher<[Follower], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getFollowers()
+    }
+    
+    public func getTotalFollowers() -> AnyPublisher<Int, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getTotalFollowers()
+    }
+    
+    public func addFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.addFollowee(userId: userId)
+    }
+    
+    public func removeFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.removeFollowee(userId: userId)
+    }
+    
+    public func getTipsRankings(type: String? = nil, followers: Bool? = nil) -> AnyPublisher<[TipRanking], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getTipsRankings(type: type, followers: followers)
+    }
+    
+    public func getUserProfileInfo(userId: String) -> AnyPublisher<UserProfileInfo, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getUserProfileInfo(userId: userId)
+    }
+    
+    public func getFriendRequests() -> AnyPublisher<[FriendRequest], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getFriendRequests()
+    }
+    
+    public func getFriends() -> AnyPublisher<[UserFriend], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getFriends()
+    }
+    
+    public func addFriends(userIds: [String], request: Bool = false) -> AnyPublisher<AddFriendResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.addFriends(userIds: userIds, request: request)
+    }
+    
+    public func removeFriend(userId: Int) -> AnyPublisher<String, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.removeFriend(userId: userId)
+    }
+    
+    public func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getChatrooms()
+    }
+    
+    public func addGroup(name: String, userIds: [String]) -> AnyPublisher<ChatroomId, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.addGroup(name: name, userIds: userIds)
+    }
+    
+    public func deleteGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.deleteGroup(id: id)
+    }
+    
+    public func editGroup(id: Int, name: String) -> AnyPublisher<String, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.editGroup(id: id, name: name)
+    }
+    
+    public func leaveGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.deleteGroup(id: id)
+    }
+    
+    public func addUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.addUsersToGroup(groupId: groupId, userIds: userIds)
+    }
+    
+    public func removeUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.removeUsersToGroup(groupId: groupId, userIds: userIds)
+    }
+    
+    public func searchUserWithCode(code: String) -> AnyPublisher<SearchUser, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.searchUserWithCode(code: code)
+    }
 }
 
 extension Client {

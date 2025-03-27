@@ -17,7 +17,7 @@ class PreviewChatTableViewCell: UITableViewCell {
     private lazy var initialLabel: UILabel = Self.createInitialLabel()
     private lazy var nameLineStackView: UIStackView = Self.createNameLineStackView()
     private lazy var nameLabel: UILabel = Self.createNameLabel()
-    // private lazy var numberMessagesLabel: UILabel = Self.createNumberMessagesLabel()
+    //private lazy var numberMessagesLabel: UILabel = Self.createNumberMessagesLabel()
     private lazy var userStateBaseView: UIView = Self.createUserStateBaseView()
     private lazy var userStateView: UIView = Self.createUserStateView()
     private lazy var messageLineStackView: UIStackView = Self.createMessageLineStackView()
@@ -28,6 +28,8 @@ class PreviewChatTableViewCell: UITableViewCell {
 
     private var viewModel: PreviewChatCellViewModel?
     private var cancellables = Set<AnyCancellable>()
+    
+    private let dateFormatter = DateFormatter()
 
     var didTapConversationAction: ((ConversationData) -> Void)?
     var removeChatroomAction: ((Int) -> Void)?
@@ -36,24 +38,30 @@ class PreviewChatTableViewCell: UITableViewCell {
         didSet {
             if isSeen {
                 self.dateLabel.textColor = UIColor.App.textSecondary
-                self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.buttonBackgroundSecondary.cgColor
-                self.nameLabel.font = AppFont.with(type: .semibold, size: 16)
+                self.messageLabel.font = AppFont.with(type: .regular, size: 14)
             }
             else {
                 self.dateLabel.textColor = UIColor.App.highlightPrimary
-                self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-                self.nameLabel.font = AppFont.with(type: .bold, size: 16)
+                self.messageLabel.font = AppFont.with(type: .bold, size: 14)
             }
 
-            if self.messageLabel.text != "" {
-                self.feedbackImageView.isHidden = !isSeen
-            }
-            else {
-                self.feedbackImageView.isHidden = true
-            }
+//            if self.messageLabel.text != "" {
+//                self.feedbackImageView.isHidden = !isSeen
+//            }
+//            else {
+//                self.feedbackImageView.isHidden = true
+//            }
+            self.feedbackImageView.isHidden = true
 
+        }
+    }
+    
+    var isDefaultMessage: Bool = false {
+        didSet {
+            
+            if isDefaultMessage {
+                self.messageLabel.font = AppFont.with(type: .italic, size: 14)
+            }
         }
     }
 
@@ -73,6 +81,12 @@ class PreviewChatTableViewCell: UITableViewCell {
                 self.photoImageView.isHidden = false
                 self.initialLabel.isHidden = true
             }
+        }
+    }
+    
+    var hasSeparatorLine: Bool = true {
+        didSet {
+            self.separatorLineView.isHidden = !hasSeparatorLine
         }
     }
 
@@ -100,6 +114,8 @@ class PreviewChatTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.viewModel = nil
+        
+        self.hasSeparatorLine = true
     }
 
     override func layoutSubviews() {
@@ -108,6 +124,7 @@ class PreviewChatTableViewCell: UITableViewCell {
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.size.width / 2
 
         self.iconInnerView.layer.cornerRadius = self.iconInnerView.frame.size.width / 2
+        self.iconInnerView.clipsToBounds = true
 
         self.photoImageView.layer.cornerRadius = self.photoImageView.frame.size.width / 2
 
@@ -116,42 +133,46 @@ class PreviewChatTableViewCell: UITableViewCell {
     }
 
     func setupWithTheme() {
-        self.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.backgroundColor = UIColor.App.backgroundPrimary
+        self.backgroundView?.backgroundColor = UIColor.App.backgroundSecondary
+        self.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.baseView.backgroundColor = .clear
 
-        self.iconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.iconBaseView.backgroundColor = .clear
+        self.iconBaseView.layer.borderColor = UIColor.App.highlightTertiary.cgColor
+        
+        self.iconInnerView.backgroundColor = .clear
 
-        self.iconInnerView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.photoImageView.backgroundColor = UIColor.App.backgroundPrimary
+        self.photoImageView.backgroundColor = .clear
 
         self.initialLabel.textColor = UIColor.App.textSecondary
 
-        self.feedbackImageView.backgroundColor = UIColor.App.backgroundPrimary
-        self.messageLineStackView.backgroundColor = UIColor.App.backgroundPrimary
-        self.nameLineStackView.backgroundColor = UIColor.App.backgroundPrimary
+        self.feedbackImageView.backgroundColor = .clear
+        self.messageLineStackView.backgroundColor = .clear
+        self.nameLineStackView.backgroundColor = .clear
 
         self.nameLabel.textColor = UIColor.App.textPrimary
 
-        self.userStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.userStateBaseView.backgroundColor = .clear
 
         self.userStateView.backgroundColor = UIColor.App.alertSuccess
 
-        self.messageLabel.textColor = UIColor.App.textPrimary
+        self.messageLabel.textColor = UIColor.App.textSecondary
         self.dateLabel.textColor = UIColor.App.textSecondary
 
-        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLineSecondary
     }
 
     func configure(withViewModel viewModel: PreviewChatCellViewModel) {
         self.viewModel = viewModel
 
-        // TEST
         self.nameLabel.text = viewModel.cellData.name
-
+        
         self.messageLabel.text = viewModel.cellData.lastMessage
+        
+        if let avatar = viewModel.cellData.avatar {
+            self.photoImageView.image = UIImage(named: avatar)
+        }
 
         if viewModel.cellData.conversationType == .user {
             self.isGroup = false
@@ -160,10 +181,31 @@ class PreviewChatTableViewCell: UITableViewCell {
             self.isGroup = true
             self.initialLabel.text = viewModel.getGroupInitials(text: viewModel.cellData.name)
         }
+        
+        if let timestampInt = viewModel.cellData.timestamp {
+            let date = Date(timeIntervalSince1970: TimeInterval(timestampInt))
+            let calendar = Calendar.current
 
-        self.dateLabel.text = viewModel.cellData.date
+            let dateFormatter = DateFormatter()
+            
+            if calendar.isDateInToday(date) {
+                dateFormatter.dateFormat = "HH:mm"
+                self.dateLabel.text = dateFormatter.string(from: date)
+                
+            } else if calendar.isDateInYesterday(date) {
+                self.dateLabel.text = "Yesterday"
+                
+            } else {
+                dateFormatter.dateFormat = "dd/MM"
+                self.dateLabel.text = dateFormatter.string(from: date)
+            }
+        } else {
+            self.dateLabel.text = viewModel.cellData.date
+        }
 
         self.isSeen = viewModel.cellData.isLastMessageSeen
+        
+        self.isDefaultMessage = viewModel.cellData.lastMessage.contains("Hello! I just added") ? true : false
 
         // self.isOnline = false
 
@@ -196,13 +238,13 @@ class PreviewChatTableViewCell: UITableViewCell {
         // TEST
         if chatroomType == .group {
 
-            let removeChatroomAction: UIAlertAction = UIAlertAction(title: "Remove chatroom", style: .default) { [weak self] _ in
+            let removeChatroomAction: UIAlertAction = UIAlertAction(title: "Remove chatroom", style: .default) { [weak self] _ -> Void in
                 self?.removeChatroomAction?(chatroomId)
             }
             actionSheetController.addAction(removeChatroomAction)
         }
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {
@@ -227,6 +269,7 @@ extension PreviewChatTableViewCell {
     private static func createIconBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.borderWidth = 2
         return view
     }
 
@@ -239,7 +282,7 @@ extension PreviewChatTableViewCell {
     private static func createPhotoImageView() -> UIImageView {
         let photoImageView = UIImageView()
         photoImageView.translatesAutoresizingMaskIntoConstraints = false
-        photoImageView.image = UIImage(named: "my_account_profile_icon")
+        photoImageView.image = UIImage(named: "empty_user_image")
         photoImageView.contentMode = .scaleAspectFit
         return photoImageView
     }
@@ -296,7 +339,8 @@ extension PreviewChatTableViewCell {
     private static func createFeedbackImageView() -> UIImageView {
         let feedbackImageView = UIImageView()
         feedbackImageView.translatesAutoresizingMaskIntoConstraints = false
-        feedbackImageView.image = UIImage(named: "seen_message_icon")
+        feedbackImageView.image = UIImage(named: "seen_message_icon")?.withRenderingMode(.alwaysTemplate)
+        feedbackImageView.setTintColor(color: UIColor.App.highlightTertiary)
         feedbackImageView.contentMode = .scaleAspectFit
         return feedbackImageView
     }
@@ -364,17 +408,17 @@ extension PreviewChatTableViewCell {
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 
-            self.iconBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 24),
+            self.iconBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 25),
             self.iconBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
 
-            self.iconInnerView.widthAnchor.constraint(equalToConstant: 37),
+            self.iconInnerView.widthAnchor.constraint(equalToConstant: 40),
             self.iconInnerView.heightAnchor.constraint(equalTo: self.iconInnerView.widthAnchor),
             self.iconInnerView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
             self.iconInnerView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
 
-            self.photoImageView.widthAnchor.constraint(equalToConstant: 25),
+            self.photoImageView.widthAnchor.constraint(equalToConstant: 35),
             self.photoImageView.heightAnchor.constraint(equalTo: self.photoImageView.widthAnchor),
             self.photoImageView.centerXAnchor.constraint(equalTo: self.iconInnerView.centerXAnchor),
             self.photoImageView.centerYAnchor.constraint(equalTo: self.iconInnerView.centerYAnchor),
@@ -395,7 +439,7 @@ extension PreviewChatTableViewCell {
             self.userStateView.centerYAnchor.constraint(equalTo: self.userStateBaseView.centerYAnchor),
 
             self.dateLabel.leadingAnchor.constraint(equalTo: self.nameLineStackView.trailingAnchor, constant: 8),
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -24),
+            self.dateLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -25),
             self.dateLabel.centerYAnchor.constraint(equalTo: self.nameLineStackView.centerYAnchor),
 
             self.feedbackImageView.widthAnchor.constraint(equalToConstant: 20),

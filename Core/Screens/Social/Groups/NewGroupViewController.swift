@@ -18,10 +18,15 @@ class NewGroupViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var closeButton: UIButton = Self.createCloseButton()
     private lazy var searchBar: UISearchBar = Self.createSearchBar()
+    private lazy var headerTitleLabel: UILabel = Self.createHeaderTitleLabel()
+    private lazy var headerSubtitleLabel: UILabel = Self.createHeaderSubtitleLabel()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var nextBaseView: UIView = Self.createNextBaseView()
     private lazy var nextButton: UIButton = Self.createNextButton()
     private lazy var nextSeparatorLineView: UIView = Self.createNextSeparatorLineView()
+    
+    private lazy var alphabetCollectionView: UICollectionView = Self.createAlphabetCollectionView()
+    
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
@@ -29,6 +34,8 @@ class NewGroupViewController: UIViewController {
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
 
     private var cancellables = Set<AnyCancellable>()
+    
+    private let alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     // MARK: Public Properties
     var viewModel: NewGroupViewModel
@@ -72,9 +79,16 @@ class NewGroupViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(NewGroupHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: NewGroupHeaderFooterView.identifier)
-        self.tableView.register(AddFriendTableViewCell.self,
-                                forCellReuseIdentifier: AddFriendTableViewCell.identifier)
+//        self.tableView.register(NewGroupHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: NewGroupHeaderFooterView.identifier)
+        self.tableView.register(ListTitleHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ListTitleHeaderFooterView.identifier)
+
+        self.tableView.register(GroupFriendTableViewCell.self,
+                                forCellReuseIdentifier: GroupFriendTableViewCell.identifier)
+        
+        self.alphabetCollectionView.delegate = self
+        self.alphabetCollectionView.dataSource = self
+        
+        self.alphabetCollectionView.register(LetterCollectionViewCell.self, forCellWithReuseIdentifier: LetterCollectionViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
@@ -93,6 +107,13 @@ class NewGroupViewController: UIViewController {
         }
     }
 
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+
+        super.viewDidLayoutSubviews()
+
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -100,13 +121,13 @@ class NewGroupViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.backButton.backgroundColor = .clear
 
@@ -116,22 +137,26 @@ class NewGroupViewController: UIViewController {
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.setupSearchBarStyle()
+        
+        self.headerTitleLabel.textColor = UIColor.App.textPrimary
+        
+        self.headerSubtitleLabel.textColor = UIColor.App.textSecondary
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.nextBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.nextBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         StyleHelper.styleButton(button: self.nextButton)
 
         self.nextSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyStateView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.emptyStateImageView.backgroundColor = .clear
 
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
 
-        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
     }
 
@@ -176,11 +201,11 @@ class NewGroupViewController: UIViewController {
         self.searchBar.backgroundImage = UIImage()
         self.searchBar.tintColor = .white
         self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+        self.searchBar.backgroundImage = UIColor.App.backgroundSecondary.image()
         self.searchBar.placeholder = localized("search")
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.backgroundColor = UIColor.App.inputBackground
             textfield.textColor = UIColor.App.textPrimary
             textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_username"),
@@ -190,8 +215,12 @@ class NewGroupViewController: UIViewController {
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.inputTextTitle
+                glassIconView.tintColor = UIColor.App.iconSecondary
             }
+            
+            textfield.layer.borderWidth = 1
+            textfield.layer.borderColor = UIColor.App.separatorLineSecondary.cgColor
+            textfield.layer.cornerRadius = 10
         }
 
     }
@@ -213,12 +242,12 @@ class NewGroupViewController: UIViewController {
 
     @objc func didTapNextButton() {
         var selectedUsers: [UserContact] = []
-        if let loggedUser = Env.userSessionStore.loggedUserProfile,
-           let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
-            let adminUser = UserContact(id: "\(loggedUserId)", username: loggedUser.username, phones: [])
-
-            selectedUsers.append(adminUser)
-        }
+//        if let loggedUser = Env.userSessionStore.loggedUserProfile,
+//           let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+//            let adminUser = UserContact(id: "\(loggedUserId)", username: loggedUser.username, phones: [], avatar: loggedUser.avatarName)
+//
+//            selectedUsers.append(adminUser)
+//        }
 
         selectedUsers.append(contentsOf: self.viewModel.selectedUsers) 
 
@@ -289,80 +318,144 @@ extension NewGroupViewController: UISearchBarDelegate {
 extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return self.viewModel.listUsersPublisher.value.keys.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.usersPublisher.value.count
+//        return self.viewModel.usersPublisher.value.count
+            let keys = Array(self.viewModel.listUsersPublisher.value.keys)
+            
+            let keyForSection = keys[section]
+            
+            return self.viewModel.listUsersPublisher.value[keyForSection]?.count ?? 0
+
     }
 
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//
+//        guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
+//        else {
+//            fatalError()
+//        }
+//
+//        if let userContact = self.viewModel.usersPublisher.value[safe: indexPath.row] {
+//
+//            if let cellViewModel = self.viewModel.cachedFriendCellViewModels[userContact.id] {
+//              
+//                cell.configure(viewModel: cellViewModel)
+//
+//                cell.didTapCheckboxAction = { [weak self] in
+//                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+//                }
+//            }
+//            else {
+//                let cellViewModel = AddFriendCellViewModel(userContact: userContact)
+//                self.viewModel.cachedFriendCellViewModels[userContact.id] = cellViewModel
+//              
+//                cell.configure(viewModel: cellViewModel)
+//
+//                cell.didTapCheckboxAction = { [weak self] in
+//                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+//                }
+//            }
+//
+//        }
+//
+//        if indexPath.row == self.viewModel.usersPublisher.value.count - 1 {
+//            cell.hasSeparatorLine = false
+//        }
+//
+//        return cell
+//    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
-        else {
-            fatalError()
+        guard let cell = tableView.dequeueCellType(GroupFriendTableViewCell.self) else {
+            fatalError("Failed to dequeue GroupFriendTableViewCell")
         }
 
-        if let userContact = self.viewModel.usersPublisher.value[safe: indexPath.row] {
+        // Get the key for the current section
+        let keys = Array(self.viewModel.listUsersPublisher.value.keys)
+        let keyForSection = keys[indexPath.section]
+
+        // Get the UserContact array for this section key
+        if let usersInSection = self.viewModel.listUsersPublisher.value[keyForSection],
+           let userContact = usersInSection[safe: indexPath.row] {
+            
+            // Determine the corner type for the cell
+            let cornerType: RoundCornerType
+            if usersInSection.count == 1 {
+                cornerType = .all
+            } else if indexPath.row == 0 {
+                cornerType = .top
+            } else if indexPath.row == usersInSection.count - 1 {
+                cornerType = .bottom
+            } else {
+                cornerType = .none
+            }
+            
+            cell.roundCornerType = cornerType
 
             if let cellViewModel = self.viewModel.cachedFriendCellViewModels[userContact.id] {
-                // TEST
-//                if indexPath.row % 2 == 0 {
-//                    cellViewModel.isOnline = true
-//                }
                 cell.configure(viewModel: cellViewModel)
-
                 cell.didTapCheckboxAction = { [weak self] in
                     self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
                 }
-            }
-            else {
+            } else {
                 let cellViewModel = AddFriendCellViewModel(userContact: userContact)
                 self.viewModel.cachedFriendCellViewModels[userContact.id] = cellViewModel
-                // TEST
-//                if indexPath.row % 2 == 0 {
-//                    cellViewModel.isOnline = true
-//                }
                 cell.configure(viewModel: cellViewModel)
-
                 cell.didTapCheckboxAction = { [weak self] in
                     self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
                 }
             }
 
+            if indexPath.row == usersInSection.count - 1 {
+                cell.hasSeparatorLine = false
+            } else {
+                cell.hasSeparatorLine = true
+            }
         }
-
-        if indexPath.row == self.viewModel.usersPublisher.value.count - 1 {
-            cell.hasSeparatorLine = false
-        }
-
+                
         return cell
     }
 
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//
+//        guard
+//            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: NewGroupHeaderFooterView.identifier) as? NewGroupHeaderFooterView
+//        else {
+//            fatalError()
+//        }
+//
+//        headerView.configureHeader(title: localized("add_friends_to_group"),
+//                                   subtitle: localized("select_at_least_2_friends"))
+//
+//        return headerView
+//
+//    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
-        guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: NewGroupHeaderFooterView.identifier) as? NewGroupHeaderFooterView
-        else {
-            fatalError()
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ListTitleHeaderFooterView.identifier) as? ListTitleHeaderFooterView else {
+            fatalError("Failed to dequeue ListTitleHeaderFooterView")
         }
 
-        headerView.configureHeader(title: localized("add_friends_to_group"),
-                                   subtitle: localized("select_at_least_2_friends"))
+        let keys = Array(self.viewModel.listUsersPublisher.value.keys)
+        let titleForSection = keys[section]
+
+        headerView.configureHeader(title: titleForSection)
 
         return headerView
-
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-       return 70
+       return 62
 
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        return 70
+        return 62
 
     }
 
@@ -385,6 +478,40 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
         return 0
     }
 
+}
+
+extension NewGroupViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.alphabet.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard
+            let cell = collectionView.dequeueCellType(LetterCollectionViewCell.self, indexPath: indexPath)
+        else {
+            fatalError()
+        }
+        
+        cell.configure(title: String(self.alphabet[indexPath.row]))
+        
+        return cell
+    }
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 15, height: 15)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedLetter = self.alphabet[indexPath.item]
+        
+        if let section = self.viewModel.listUsersPublisher.value.keys.sorted().firstIndex(of: String(selectedLetter)) {
+            let indexPath = IndexPath(row: 0, section: section)
+            self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+        }
+    }
 }
 
 //
@@ -442,6 +569,24 @@ extension NewGroupViewController {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }
+    
+    private static func createHeaderTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 18)
+        label.textAlignment = .left
+        label.text = localized("create_a_group")
+        return label
+    }
+    
+    private static func createHeaderSubtitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .left
+        label.text = localized("select_2_friends_for_group")
+        return label
+    }
 
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
@@ -461,6 +606,7 @@ extension NewGroupViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("next"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         return button
     }
 
@@ -468,6 +614,19 @@ extension NewGroupViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+    
+    private static func createAlphabetCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+        return collectionView
     }
 
     private static func createEmptyStateView() -> UIView {
@@ -519,8 +678,14 @@ extension NewGroupViewController {
         self.navigationView.addSubview(self.closeButton)
 
         self.view.addSubview(self.searchBar)
+        
+        self.view.addSubview(self.headerTitleLabel)
+        
+        self.view.addSubview(self.headerSubtitleLabel)
 
         self.view.addSubview(self.tableView)
+        
+        self.view.addSubview(self.alphabetCollectionView)
 
         self.view.addSubview(self.nextBaseView)
 
@@ -537,6 +702,8 @@ extension NewGroupViewController {
         self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.view.addSubview(self.bottomSafeAreaView)
+        
+        self.view.bringSubviewToFront(self.alphabetCollectionView)
 
         self.initConstraints()
     }
@@ -579,10 +746,22 @@ extension NewGroupViewController {
 
         // Searchbar
         NSLayoutConstraint.activate([
-            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
-            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8),
+            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8),
             self.searchBar.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
             self.searchBar.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        // Header
+        NSLayoutConstraint.activate([
+            self.headerTitleLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.headerTitleLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+            self.headerTitleLabel.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 10),
+            
+            self.headerSubtitleLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.headerSubtitleLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+            self.headerSubtitleLabel.topAnchor.constraint(equalTo: self.headerTitleLabel.bottomAnchor, constant: 5)
+            
         ])
 
         // Tableview
@@ -590,8 +769,19 @@ extension NewGroupViewController {
 
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 4),
+            self.tableView.topAnchor.constraint(equalTo: self.headerSubtitleLabel.bottomAnchor, constant: 15),
             self.tableView.bottomAnchor.constraint(equalTo: self.nextBaseView.topAnchor)
+        ])
+        
+        // Alphabet Collection View
+        
+        NSLayoutConstraint.activate([
+            self.alphabetCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.alphabetCollectionView.topAnchor.constraint(greaterThanOrEqualTo: self.view.topAnchor, constant: 50),
+            self.alphabetCollectionView.bottomAnchor.constraint(lessThanOrEqualTo: self.view.bottomAnchor, constant: -50),
+            self.alphabetCollectionView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            self.alphabetCollectionView.widthAnchor.constraint(equalToConstant: 15),
+            self.alphabetCollectionView.heightAnchor.constraint(equalToConstant: CGFloat(15*self.alphabet.count))
         ])
 
         // Add Friend Button View

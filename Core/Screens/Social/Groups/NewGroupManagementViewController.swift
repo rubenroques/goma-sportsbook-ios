@@ -23,6 +23,7 @@ class NewGroupManagementViewController: UIViewController {
     private lazy var newGroupIconLabel: UILabel = Self.createNewGroupIconLabel()
     private lazy var textFieldBaseView: UIView = Self.createTextFieldBaseView()
     private lazy var newGroupTextField: UITextField = Self.createNewGroupTextField()
+    private lazy var addMembersButton: UIButton = Self.createAddMembersButton()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var startNewGroupBaseView: UIView = Self.createStartNewGroupBaseView()
     private lazy var startNewGroupButton: UIButton = Self.createStartNewGroupButton()
@@ -60,12 +61,14 @@ class NewGroupManagementViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
-        self.tableView.register(GroupUserManagementTableViewCell.self,
-                                forCellReuseIdentifier: GroupUserManagementTableViewCell.identifier)
+        self.tableView.register(GroupFriendManagementTableViewCell.self,
+                                forCellReuseIdentifier: GroupFriendManagementTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+        
+        self.addMembersButton.addTarget(self, action: #selector(didTapAddMembersButton), for: .primaryActionTriggered)
 
         self.startNewGroupButton.addTarget(self, action: #selector(didTapStartNewGroupButton), for: .primaryActionTriggered)
 
@@ -73,6 +76,17 @@ class NewGroupManagementViewController: UIViewController {
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
+        
+        self.newGroupTextField.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] groupName in
+                
+                if let groupName {
+                    
+                    self?.startNewGroupButton.isEnabled = groupName.isEmpty ? false : true
+                }
+            })
+            .store(in: &cancellables)
 
     }
 
@@ -84,7 +98,9 @@ class NewGroupManagementViewController: UIViewController {
         self.newGroupIconBaseView.layer.cornerRadius = self.newGroupIconBaseView.frame.height / 2
 
         self.newGroupIconInnerView.layer.cornerRadius = self.newGroupIconInnerView.frame.height / 2
-
+        
+        self.textFieldBaseView.layer.cornerRadius = CornerRadius.view
+        self.textFieldBaseView.clipsToBounds = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -94,13 +110,13 @@ class NewGroupManagementViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.backButton.backgroundColor = .clear
 
@@ -109,21 +125,25 @@ class NewGroupManagementViewController: UIViewController {
         self.closeButton.backgroundColor = .clear
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.startNewGroupBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.startNewGroupBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.newGroupIconBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.newGroupIconBaseView.backgroundColor = UIColor.App.highlightTertiary
 
-        self.newGroupIconInnerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.newGroupIconInnerView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.newGroupIconLabel.textColor = UIColor.App.backgroundOdds
+        self.newGroupIconLabel.textColor = UIColor.App.highlightTertiary
 
-        self.textFieldBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.textFieldBaseView.backgroundColor = UIColor.App.inputBackground
 
-        self.newGroupTextField.backgroundColor = UIColor.App.backgroundSecondary
+        self.newGroupTextField.backgroundColor = UIColor.App.inputBackground
+        
+        self.addMembersButton.backgroundColor = .clear
+        self.addMembersButton.setTitleColor(UIColor.App.highlightTertiary, for: .normal)
+        self.addMembersButton.tintColor = UIColor.App.highlightTertiary
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.startNewGroupBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.startNewGroupBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         StyleHelper.styleButton(button: self.startNewGroupButton)
 
@@ -137,6 +157,8 @@ class NewGroupManagementViewController: UIViewController {
         let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatroomId)
 
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+        
+        conversationDetailViewController.isChatAssistant = false
 
         self.chatListNeedReload?()
 
@@ -169,6 +191,12 @@ class NewGroupManagementViewController: UIViewController {
             self.navigationController?.popViewController(animated: true)
         }
     }
+    
+    @objc func didTapAddMembersButton() {
+
+        self.navigationController?.popViewController(animated: true)
+
+    }
 
     @objc func didTapStartNewGroupButton() {
 
@@ -178,8 +206,8 @@ class NewGroupManagementViewController: UIViewController {
         for user in self.viewModel.users {
             userIds.append(user.id)
         }
-
-        Env.gomaNetworkClient.addGroup(deviceId: Env.deviceId, userIds: userIds, groupName: groupName)
+        
+        Env.servicesProvider.addGroup(name: groupName, userIds: userIds)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -188,26 +216,56 @@ class NewGroupManagementViewController: UIViewController {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] response in
-                print("ADD GROUP GOMA: \(response)")
-
-                if let chatroomId = response.data?.id {
-                    self?.newChatroomId = chatroomId
-                    self?.newChatroomName = groupName
-
-                    Env.gomaSocialClient.forceRefresh()
-
-                    if let isSharedTicket = self?.isSharedTicketNewGroup,
-                       !isSharedTicket {
-                        self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
-                    }
-                    else {
-                        self?.shareChatroomsNeedReload?()
-                        self?.navigationController?.popToRootViewController(animated: true)
-                    }
+            }, receiveValue: { [weak self] chatroomId in
+                print("ADD GROUP GOMA: \(chatroomId)")
+                
+                self?.newChatroomId = chatroomId.id
+                self?.newChatroomName = groupName
+                
+                //Env.gomaSocialClient.forceRefresh()
+                Env.gomaSocialClient.refreshChatroomsList()
+                
+                if let isSharedTicket = self?.isSharedTicketNewGroup,
+                   !isSharedTicket {
+                    self?.showConversationDetail(chatroomId: chatroomId.id, groupName: groupName)
                 }
+                else {
+                    self?.shareChatroomsNeedReload?()
+                    self?.navigationController?.popToRootViewController(animated: true)
+                }
+                
             })
             .store(in: &cancellables)
+
+//        Env.gomaNetworkClient.addGroup(deviceId: Env.deviceId, userIds: userIds, groupName: groupName)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("ADD GROUP ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] response in
+//                print("ADD GROUP GOMA: \(response)")
+//
+//                if let chatroomId = response.data?.id {
+//                    self?.newChatroomId = chatroomId
+//                    self?.newChatroomName = groupName
+//
+//                    Env.gomaSocialClient.forceRefresh()
+//
+//                    if let isSharedTicket = self?.isSharedTicketNewGroup,
+//                       !isSharedTicket {
+//                        self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
+//                    }
+//                    else {
+//                        self?.shareChatroomsNeedReload?()
+//                        self?.navigationController?.popToRootViewController(animated: true)
+//                    }
+//                }
+//            })
+//            .store(in: &cancellables)
     }
 
     @objc func didTapBackground() {
@@ -231,7 +289,7 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let cell = tableView.dequeueCellType(GroupUserManagementTableViewCell.self)
+        guard let cell = tableView.dequeueCellType(GroupFriendManagementTableViewCell.self)
         else {
             fatalError()
         }
@@ -268,6 +326,20 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
             }
         }
 
+        // Determine the corner type for the cell
+        let cornerType: RoundCornerType
+        if self.viewModel.users.count == 1 {
+            cornerType = .all
+        } else if indexPath.row == 0 {
+            cornerType = .top
+        } else if indexPath.row == self.viewModel.users.count - 1  {
+            cornerType = .bottom
+        } else {
+            cornerType = .none
+        }
+        
+        cell.roundCornerType = cornerType
+        
         if indexPath.row == self.viewModel.users.count - 1 {
             cell.hasSeparatorLine = false
         }
@@ -424,9 +496,24 @@ extension NewGroupManagementViewController {
     private static func createNewGroupTextField() -> UITextField {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = localized("group_name")
-        textField.layer.cornerRadius = CornerRadius.view
+//        textField.placeholder = localized("group_name")
+        textField.attributedPlaceholder = NSAttributedString(
+            string: localized("group_name"),
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.inputTextTitle]
+        )
+        textField.layer.cornerRadius = CornerRadius.button
         return textField
+    }
+    
+    private static func createAddMembersButton() -> UIButton {
+        let button = UIButton.init(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(named: "deposit_plus_icon")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.setTitle(localized("add_members"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
+        button.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), imageTitlePadding: 2)
+        return button
     }
 
     private static func createTableView() -> UITableView {
@@ -447,6 +534,7 @@ extension NewGroupManagementViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("start_group_chat"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         return button
     }
 
@@ -478,6 +566,8 @@ extension NewGroupManagementViewController {
 
         self.textFieldBaseView.addSubview(self.newGroupTextField)
 
+        self.view.addSubview(self.addMembersButton)
+        
         self.view.addSubview(self.tableView)
 
         self.view.addSubview(self.startNewGroupBaseView)
@@ -534,14 +624,19 @@ extension NewGroupManagementViewController {
             self.newGroupInfoBaseView.heightAnchor.constraint(equalToConstant: 70),
 
             self.newGroupIconBaseView.leadingAnchor.constraint(equalTo: self.newGroupInfoBaseView.leadingAnchor, constant: 25),
-            self.newGroupIconBaseView.widthAnchor.constraint(equalToConstant: 40),
+            self.newGroupIconBaseView.widthAnchor.constraint(equalToConstant: 43),
             self.newGroupIconBaseView.heightAnchor.constraint(equalTo: self.newGroupIconBaseView.widthAnchor),
             self.newGroupIconBaseView.centerYAnchor.constraint(equalTo: self.newGroupInfoBaseView.centerYAnchor),
 
-            self.newGroupIconInnerView.widthAnchor.constraint(equalToConstant: 37),
-            self.newGroupIconInnerView.heightAnchor.constraint(equalTo: self.newGroupIconInnerView.widthAnchor),
-            self.newGroupIconInnerView.centerXAnchor.constraint(equalTo: self.newGroupIconBaseView.centerXAnchor),
-            self.newGroupIconInnerView.centerYAnchor.constraint(equalTo: self.newGroupIconBaseView.centerYAnchor),
+//            self.newGroupIconInnerView.widthAnchor.constraint(equalToConstant: 37),
+//            self.newGroupIconInnerView.heightAnchor.constraint(equalTo: self.newGroupIconInnerView.widthAnchor),
+//            self.newGroupIconInnerView.centerXAnchor.constraint(equalTo: self.newGroupIconBaseView.centerXAnchor),
+//            self.newGroupIconInnerView.centerYAnchor.constraint(equalTo: self.newGroupIconBaseView.centerYAnchor),
+            
+            self.newGroupIconInnerView.leadingAnchor.constraint(equalTo: self.newGroupIconBaseView.leadingAnchor, constant: 2),
+            self.newGroupIconInnerView.trailingAnchor.constraint(equalTo: self.newGroupIconBaseView.trailingAnchor, constant: -2),
+            self.newGroupIconInnerView.topAnchor.constraint(equalTo: self.newGroupIconBaseView.topAnchor, constant: 2),
+            self.newGroupIconInnerView.bottomAnchor.constraint(equalTo: self.newGroupIconBaseView.bottomAnchor, constant: -2),
 
             self.newGroupIconLabel.leadingAnchor.constraint(equalTo: self.newGroupIconInnerView.leadingAnchor, constant: 4),
             self.newGroupIconLabel.trailingAnchor.constraint(equalTo: self.newGroupIconInnerView.trailingAnchor, constant: -4),
@@ -550,12 +645,16 @@ extension NewGroupManagementViewController {
             self.textFieldBaseView.leadingAnchor.constraint(equalTo: self.newGroupIconBaseView.trailingAnchor, constant: 8),
             self.textFieldBaseView.trailingAnchor.constraint(equalTo: self.newGroupInfoBaseView.trailingAnchor, constant: -25),
             self.textFieldBaseView.centerYAnchor.constraint(equalTo: self.newGroupInfoBaseView.centerYAnchor),
-            self.textFieldBaseView.heightAnchor.constraint(equalToConstant: 50),
+            self.textFieldBaseView.heightAnchor.constraint(equalToConstant: 40),
 
             self.newGroupTextField.leadingAnchor.constraint(equalTo: self.textFieldBaseView.leadingAnchor, constant: 10),
             self.newGroupTextField.trailingAnchor.constraint(equalTo: self.textFieldBaseView.trailingAnchor, constant: -10),
             self.newGroupTextField.topAnchor.constraint(equalTo: self.textFieldBaseView.topAnchor, constant: 5),
-            self.newGroupTextField.bottomAnchor.constraint(equalTo: self.textFieldBaseView.bottomAnchor, constant: -5)
+            self.newGroupTextField.bottomAnchor.constraint(equalTo: self.textFieldBaseView.bottomAnchor, constant: -5),
+            
+            self.addMembersButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
+            self.addMembersButton.topAnchor.constraint(equalTo: self.textFieldBaseView.bottomAnchor, constant: 14),
+            self.addMembersButton.heightAnchor.constraint(equalToConstant: 20)
 
         ])
 
@@ -564,7 +663,7 @@ extension NewGroupManagementViewController {
 
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.newGroupInfoBaseView.bottomAnchor, constant: 16),
+            self.tableView.topAnchor.constraint(equalTo: self.addMembersButton.bottomAnchor, constant: 10),
             self.tableView.bottomAnchor.constraint(equalTo: self.startNewGroupBaseView.topAnchor)
         ])
 

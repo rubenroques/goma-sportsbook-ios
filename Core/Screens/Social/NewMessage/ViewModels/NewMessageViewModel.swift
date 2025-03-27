@@ -70,7 +70,7 @@ class NewMesssageViewModel {
 
     }
 
-    private func processFriendsData(friends: [GomaFriend]) {
+    private func processFriendsData(friends: [UserFriend]) {
 
         for friend in friends {
             let user = UserContact(id: "\(friend.id)", username: friend.username, phones: [])
@@ -127,7 +127,7 @@ class NewMesssageViewModel {
     func getConversationData(userId: String) -> ConversationData {
         var chatroomId = 0
         var chatroomUsername = ""
-        var chatroomUsers: [GomaFriend] = []
+        var chatroomUsers: [UserFriend] = []
 
         for chatroomData in self.individualChatrooms {
             for user in chatroomData.users {

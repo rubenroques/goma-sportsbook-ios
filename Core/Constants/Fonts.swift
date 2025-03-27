@@ -10,6 +10,7 @@ struct AppFont {
         case bold
         case semibold
         case heavy
+        case italic = "Italic"
 
         private var sizeName: String {
             switch self {
@@ -20,6 +21,7 @@ struct AppFont {
             case .semibold: return "Medium" // Roboto not supported semi bold
             case .bold: return "Bold" // Roboto-Bold
             case .heavy: return "Bold" // Roboto-Black
+            case .italic: return "Italic"
             }
         }
 

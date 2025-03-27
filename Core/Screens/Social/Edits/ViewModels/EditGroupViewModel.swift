@@ -41,17 +41,23 @@ class EditGroupViewModel {
         if let groupUsers = self.conversationData.groupUsers {
 
             // Sort for admin first
+//            let sortedGroupUsers = groupUsers.sorted {
+//                if let userAdminFirst = $0.isAdmin, let userAdminSecond = $1.isAdmin {
+//                    if userAdminFirst > userAdminSecond {
+//                        return true
+//                    }
+//                }
+//                return false
+//            }
             let sortedGroupUsers = groupUsers.sorted {
                 if let userAdminFirst = $0.isAdmin, let userAdminSecond = $1.isAdmin {
-                    if userAdminFirst > userAdminSecond {
-                        return true
-                    }
+                    return userAdminFirst && !userAdminSecond
                 }
                 return false
             }
 
             for user in sortedGroupUsers {
-                let userContact = UserContact(id: "\(user.id)", username: user.username, phones: [])
+                let userContact = UserContact(id: "\(user.id)", username: user.username, phones: [], avatar: user.avatar)
                 self.users.append(userContact)
             }
         }
@@ -70,9 +76,8 @@ class EditGroupViewModel {
         // self.isLoadingPublisher.send(true)
 
         let chatroomId = self.conversationData.id
-        let groupName = groupName
 
-        Env.gomaNetworkClient.editGroup(deviceId: Env.deviceId, chatroomId: chatroomId, groupName: groupName)
+        Env.servicesProvider.editGroup(id: chatroomId, name: groupName)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -83,18 +88,36 @@ class EditGroupViewModel {
                 }
                 // self?.isLoadingPublisher.send(false)
 
-            }, receiveValue: { [weak self] _ in
+            }, receiveValue: { [weak self] response in
                 self?.groupNamePublisher.value = groupName
                 self?.isGroupEdited = true
                 self?.editGroupFinished.send()
             })
             .store(in: &cancellables)
+        
+//        Env.gomaNetworkClient.editGroup(deviceId: Env.deviceId, chatroomId: chatroomId, groupName: groupName)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("EDIT GROUP ERROR: \(error)")
+//                case .finished:
+//                    print("EDIT GROUP FINISHED")
+//                }
+//                // self?.isLoadingPublisher.send(false)
+//
+//            }, receiveValue: { [weak self] response in
+//                self?.groupNamePublisher.value = groupName
+//                self?.isGroupEdited = true
+//                self?.editGroupFinished.send()
+//            })
+//            .store(in: &cancellables)
     }
 
     func removeUser(userId: String, userIndex: Int) {
         let chatroomId = self.conversationData.id
 
-        Env.gomaNetworkClient.removeUser(deviceId: Env.deviceId, chatroomId: chatroomId, userId: userId)
+        Env.servicesProvider.removeUsersToGroup(groupId: chatroomId, userIds: [userId])
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -105,7 +128,7 @@ class EditGroupViewModel {
                     print("REMOVE USER FINISHED")
                 }
 
-            }, receiveValue: { [weak self] _ in
+            }, receiveValue: { [weak self] response in
                 self?.isGroupEdited = true
                 self?.users.remove(at: userIndex)
                 self?.cachedUserCellViewModels[userId] = nil
@@ -119,6 +142,31 @@ class EditGroupViewModel {
                 }
             })
             .store(in: &cancellables)
+//        Env.gomaNetworkClient.removeUser(deviceId: Env.deviceId, chatroomId: chatroomId, userId: userId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("REMOVE USER ERROR: \(error)")
+//                    self?.showErrorAlert.send()
+//                case .finished:
+//                    print("REMOVE USER FINISHED")
+//                }
+//
+//            }, receiveValue: { [weak self] response in
+//                self?.isGroupEdited = true
+//                self?.users.remove(at: userIndex)
+//                self?.cachedUserCellViewModels[userId] = nil
+//
+//                if let users = self?.users,
+//                   users.isEmpty {
+//                    self?.shouldCloseChat.send(true)
+//                }
+//                else {
+//                    self?.needReloadData.send()
+//                }
+//            })
+//            .store(in: &cancellables)
 
     }
 
@@ -128,7 +176,7 @@ class EditGroupViewModel {
 
     func leaveGroup() {
 
-        Env.gomaNetworkClient.leaveGroup(deviceId: Env.deviceId, chatroomId: self.getChatroomId())
+        Env.servicesProvider.leaveGroup(id: self.getChatroomId())
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -142,6 +190,21 @@ class EditGroupViewModel {
                 self?.hasLeftGroupPublisher.send(true)
             })
             .store(in: &cancellables)
+        
+//        Env.gomaNetworkClient.leaveGroup(deviceId: Env.deviceId, chatroomId: self.getChatroomId())
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("LEAVE GROUP ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] response in
+//                print("LEAVE GROUP GOMA: \(response)")
+//                self?.hasLeftGroupPublisher.send(true)
+//            })
+//            .store(in: &cancellables)
     }
 
     func getGroupInitials(text: String) -> String {
@@ -189,7 +252,7 @@ class EditGroupViewModel {
 
     func getAdminUserId() -> Int {
 
-        if let groupUsers = self.conversationData.groupUsers, let userAdmin = groupUsers.first(where: { $0.isAdmin == 1 }) {
+        if let groupUsers = self.conversationData.groupUsers, let userAdmin = groupUsers.first(where: { $0.isAdmin ?? false }) {
             return userAdmin.id
         }
 

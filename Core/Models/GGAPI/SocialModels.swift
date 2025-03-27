@@ -7,23 +7,25 @@
 
 import Foundation
 
-struct GomaFriend: Decodable {
+struct UserFriend: Decodable {
     let id: Int
     let name: String?
     let username: String
-    let isAdmin: Int?
+    let avatar: String?
+    let isAdmin: Bool?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
         case username = "username"
+        case avatar = "avatar"
         case isAdmin = "is_admin"
     }
 }
 
 struct ChatroomData: Decodable {
     let chatroom: Chatroom
-    let users: [GomaFriend]
+    let users: [UserFriend]
 
     enum CodingKeys: String, CodingKey {
         case chatroom = "chat_room"
@@ -82,6 +84,7 @@ struct MessageData {
     var timestamp: Int
     var userId: String?
     var attachment: SharedBetTicketAttachment?
+    var prompts: [String]?
 }
 
 enum MessageType {
@@ -104,6 +107,35 @@ struct ChatMessagesResponse: Decodable {
     }
 }
 
+extension KeyedDecodingContainer {
+    func decodeStringOrInt(forKey key: Key) throws -> String {
+        do {
+            // Try to decode the value as String
+            return try self.decode(String.self, forKey: key)
+        } catch DecodingError.typeMismatch {
+            // If decoding as String fails, try to decode as Int
+            let intValue = try self.decode(Int.self, forKey: key)
+            // Convert the Int value to String
+            return String(intValue)
+        }
+    }
+    
+    func decodeStringOrDouble(forKey key: Key) throws -> Double {
+        do {
+            // Try to decode the value as Double
+            return try self.decode(Double.self, forKey: key)
+        } catch DecodingError.typeMismatch {
+            // If decoding as Double fails, try to decode as String
+            let stringValue = try self.decode(String.self, forKey: key)
+            // Convert the String value to Double
+            guard let doubleValue = Double(stringValue) else {
+                throw DecodingError.dataCorruptedError(forKey: key, in: self, debugDescription: "Failed to convert \(stringValue) to Double.")
+            }
+            return doubleValue
+        }
+    }
+}
+
 struct ChatMessage: Decodable, Hashable {
     
     var fromUser: String
@@ -112,6 +144,7 @@ struct ChatMessage: Decodable, Hashable {
     var attachment: SharedBetTicketAttachment?
     var toChatroom: Int
     var date: Int
+    var isPrompt: Bool?
 
     enum CodingKeys: String, CodingKey {
         case fromUser = "fromUser"
@@ -120,19 +153,24 @@ struct ChatMessage: Decodable, Hashable {
         case attachment = "attachment"
         case toChatroom = "toChatroom"
         case date = "date"
+        case isPrompt = "isPrompt"
     }
 
     init(from decoder: Decoder) throws {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.fromUser = try container.decode(String.self, forKey: .fromUser)
+//        self.fromUser = try container.decode(String.self, forKey: .fromUser)
+        self.fromUser = try container.decodeStringOrInt(forKey: .fromUser)
+        
         self.message = try container.decode(String.self, forKey: .message)
         self.toChatroom = try container.decode(Int.self, forKey: .toChatroom)
         self.date = try container.decode(Int.self, forKey: .date)
 
         self.attachment = try? container.decode(SharedBetTicketAttachment.self, forKey: .attachment)
         self.repliedMessage = try? container.decode(String.self, forKey: .repliedMessage)
+        
+        self.isPrompt = try? container.decode(Bool.self, forKey: .isPrompt)
     }
     
 }
@@ -144,6 +182,27 @@ struct ChatUsersResponse: Decodable {
     enum CodingKeys: String, CodingKey {
         case users = "users"
         case messageId = "message_id"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.messageId = try container.decode(Int.self, forKey: .messageId)
+        
+        var usersContainer = try container.nestedUnkeyedContainer(forKey: .users)
+        var tempUsers: [String] = []
+        
+        while !usersContainer.isAtEnd {
+            if let stringValue = try? usersContainer.decode(String.self) {
+                tempUsers.append(stringValue)
+            } else if let intValue = try? usersContainer.decode(Int.self) {
+                tempUsers.append(String(intValue))
+            } else {
+                throw DecodingError.dataCorruptedError(in: usersContainer, debugDescription: "Unsupported type in users array")
+            }
+        }
+        
+        self.users = tempUsers
     }
 }
 
@@ -239,6 +298,7 @@ struct SocialAppInfo {
     var name: String
     var urlScheme: String
     var urlShare: String
+
 }
 
 struct InAppMessage: Decodable {
@@ -277,38 +337,16 @@ struct InAppMessage: Decodable {
 struct FeaturedTip: Decodable {
     var betId: String
     var selections: [FeaturedTipSelection]?
-    var type: String
+    var type: String?
     var systemBetType: String?
-    var status: String
-    var statusLabel: String
+    var status: String?
+    var statusLabel: String?
     var placedDate: String?
     var userId: String?
     var username: String
-    var totalOdds: String
+    var totalOdds: Double
+    var avatar: String?
 
-    init(betId: String,
-         selections: [FeaturedTipSelection]? = nil,
-         type: String,
-         systemBetType: String? = nil,
-         status: String,
-         statusLabel: String,
-         placedDate: String? = nil,
-         userId: String? = nil,
-         username: String,
-         totalOdds: String)
-    {
-        self.betId = betId
-        self.selections = selections
-        self.type = type
-        self.systemBetType = systemBetType
-        self.status = status
-        self.statusLabel = statusLabel
-        self.placedDate = placedDate
-        self.userId = userId
-        self.username = username
-        self.totalOdds = totalOdds
-    }
-    
     enum CodingKeys: String, CodingKey {
 
         case betId = "betId"
@@ -321,85 +359,114 @@ struct FeaturedTip: Decodable {
         case userId = "user_id"
         case username = "user_name"
         case totalOdds = "total_odds"
+        case avatar = "avatar"
     }
+    
+    init(betId: String,
+         selections: [FeaturedTipSelection]? = nil,
+         type: String? = nil,
+         systemBetType: String? = nil,
+         status: String? = nil,
+         statusLabel: String? = nil,
+         placedDate: String? = nil,
+         userId: String? = nil,
+         username: String,
+         totalOdds: Double,
+         avatar: String? = nil) {
+        self.betId = betId
+        self.selections = selections
+        self.type = type
+        self.systemBetType = systemBetType
+        self.status = status
+        self.statusLabel = statusLabel
+        self.placedDate = placedDate
+        self.userId = userId
+        self.username = username
+        self.totalOdds = totalOdds
+        self.avatar = avatar
+    }
+    
 }
 
 class FeaturedTipSelection: Decodable {
     var outcomeId: String
-    var status: String
+    var status: String?
     var sportId: String
     var sportName: String
-    var sportParentName: String
-    var venueId: String
-    var venueName: String
+    var sportParentName: String?
+    var sportIconId: String?
+    var venueId: String?
+    var venueName: String?
     var eventId: String
     var eventName: String
+    var marketId: String?
     var bettingTypeId: String
     var bettingTypeName: String
     var betName: String
-    var odds: String
+    var odd: Double
     var extraSelectionInfo: ExtraSelectionInfo
-    
-    var oddValue: OddFormat
-    
-    init(outcomeId: String,
-         status: String,
-         sportId: String,
-         sportName: String,
-         sportParentName: String,
-         venueId: String,
-         venueName: String,
-         eventId: String,
-         eventName: String,
-         bettingTypeId: String,
-         bettingTypeName: String,
-         betName: String,
-         odds: String,
-         extraSelectionInfo: ExtraSelectionInfo,
-         oddValue: OddFormat) 
-    {
-        self.outcomeId = outcomeId
-        self.status = status
-        self.sportId = sportId
-        self.sportName = sportName
-        self.sportParentName = sportParentName
-        self.venueId = venueId
-        self.venueName = venueName
-        self.eventId = eventId
-        self.eventName = eventName
-        self.bettingTypeId = bettingTypeId
-        self.bettingTypeName = bettingTypeName
-        self.betName = betName
-        self.odds = odds
-        self.extraSelectionInfo = extraSelectionInfo
-        self.oddValue = oddValue
-    }
-    
+
     enum CodingKeys: String, CodingKey {
         case outcomeId = "outcomeId"
         case status = "status"
         case sportId = "sportId"
         case sportName = "sportName"
         case sportParentName = "sportParentName"
+        case sportIconId = "sportIconId"
         case venueId = "venueId"
         case venueName = "venueName"
         case eventId = "eventId"
         case eventName = "eventName"
+        case marketId = "marketId"
         case bettingTypeId = "bettingTypeId"
         case bettingTypeName = "bettingTypeName"
         case betName = "betName"
-        case odds = "odds"
+        case odd = "odd"
         case extraSelectionInfo = "extraSelectionInfo"
-        case oddValue = "oddValue"
     }
+
+    init(outcomeId: String,
+         status: String? = nil,
+         sportId: String,
+         sportName: String,
+         sportParentName: String? = nil,
+         sportIconId: String? = nil,
+         venueId: String? = nil,
+         venueName: String? = nil,
+         eventId: String,
+         eventName: String,
+         marketId: String? = nil,
+         bettingTypeId: String,
+         bettingTypeName: String,
+         betName: String,
+         odd: Double,
+         extraSelectionInfo: ExtraSelectionInfo) {
+        self.outcomeId = outcomeId
+        self.status = status
+        self.sportId = sportId
+        self.sportName = sportName
+        self.sportParentName = sportParentName
+        self.sportIconId = sportIconId
+        self.venueId = venueId
+        self.venueName = venueName
+        self.eventId = eventId
+        self.eventName = eventName
+        self.marketId = marketId
+        self.bettingTypeId = bettingTypeId
+        self.bettingTypeName = bettingTypeName
+        self.betName = betName
+        self.odd = odd
+        self.extraSelectionInfo = extraSelectionInfo
+    }
+    
 }
 
-struct ExtraSelectionInfo: Decodable {
+struct ExtraSelectionInfo: Codable, Hashable {
 
-    var bettingOfferId: String
+    var bettingOfferId: Int
     var marketName: String
     var outcomeEntity: OutcomeEntity
-    
+
     enum CodingKeys: String, CodingKey {
         case bettingOfferId = "bettingOfferId"
         case marketName = "marketName"
@@ -407,11 +474,11 @@ struct ExtraSelectionInfo: Decodable {
     }
 }
 
-struct OutcomeEntity: Decodable {
+struct OutcomeEntity: Codable, Hashable {
 
-    var id: String
+    var id: Int
     var statusId: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case statusId = "statusId"
@@ -423,28 +490,34 @@ struct RankingTip: Decodable {
     var username: String
     var userId: Int
     var result: Double
+    var avatar: String?
+    var code: String?
+    var anonymous: Bool?
 
     enum CodingKeys: String, CodingKey {
         case position = "position"
         case username = "user_name"
         case userId = "user_id"
         case result = "result"
+        case avatar = "avatar"
+        case code = "code"
+        case anonymous = "anonymous"
     }
 }
 
 struct Follower: Decodable {
     var id: Int
-    // var userId: Int
+    //var userId: Int
     var name: String
-    // var userFollowerId: Int
-    // var nameFollower: String
+    //var userFollowerId: Int
+    //var nameFollower: String
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
-        // case userId = "user_id"
+        //case userId = "user_id"
         case name = "name"
-        // case userFollowerId = "user_follower_id"
-        // case nameFollower = "name_follower"
+        //case userFollowerId = "user_follower_id"
+        //case nameFollower = "name_follower"
     }
 
 }
@@ -458,13 +531,16 @@ struct UsersFollowedResponse: Decodable {
 }
 
 struct UserProfileInfo: Decodable {
-
+    var name: String
+    var avatar: String?
     var following: Int
     var followers: Int
     var rankings: UserProfileRanking
     var sportsPerc: [UserProfileSportsData]
 
     enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case avatar = "avatar"
         case following = "following"
         case followers = "followers"
         case rankings = "rankings"
@@ -488,10 +564,12 @@ struct UserProfileRanking: Decodable {
 struct UserProfileSportsData: Decodable {
     var sportId: Int
     var percentage: Double
+    var sportIdIcon: String
 
     enum CodingKeys: String, CodingKey {
         case sportId = "sport_id"
         case percentage = "percentage"
+        case sportIdIcon = "sport_id_icon"
     }
 }
 

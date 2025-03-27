@@ -48,6 +48,13 @@ class ChatSettingsViewController: UIViewController {
 
     }
 
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+
+        super.viewDidLayoutSubviews()
+
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -55,13 +62,13 @@ class ChatSettingsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.backButton.backgroundColor = .clear
 
@@ -70,15 +77,15 @@ class ChatSettingsViewController: UIViewController {
         self.closeButton.backgroundColor = .clear
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.topStackView.backgroundColor = UIColor.App.backgroundSecondary
+        self.topStackView.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.bottomStackView.backgroundColor = UIColor.App.backgroundSecondary
+        self.bottomStackView.backgroundColor = UIColor.App.backgroundTertiary
 
     }
 
     // MARK: Functions
     private func setupTopStackView() {
-        let sendMessagesView = SettingsRowView()
+        let sendMessagesView = SettingsTitleView()
         sendMessagesView.setTitle(title: localized("who_send_messages"))
 
         let friendsView = SettingsRadioRowView()
@@ -101,11 +108,11 @@ class ChatSettingsViewController: UIViewController {
     }
 
     private func setupBottomStackView() {
-        let groupsView = SettingsRowView()
+        let groupsView = SettingsTitleView()
         groupsView.setTitle(title: localized("who_add_groups"))
 
         let peopleFollowView = SettingsRadioRowView()
-        peopleFollowView.setTitle(title: localized("only_people_follow"))
+        peopleFollowView.setTitle(title: localized("only_friends"))
         peopleFollowView.viewId = 1
         peopleFollowView.hasSeparatorLineView = true
         self.viewModel.groupsRadioButtonViews.append(peopleFollowView)
@@ -194,7 +201,7 @@ extension ChatSettingsViewController {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.distribution = .fillEqually
+        stackView.distribution = .equalSpacing
         stackView.layer.cornerRadius = CornerRadius.button
         return stackView
     }
@@ -203,7 +210,7 @@ extension ChatSettingsViewController {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.distribution = .fillEqually
+        stackView.distribution = .equalSpacing
         stackView.layer.cornerRadius = CornerRadius.button
         return stackView
     }

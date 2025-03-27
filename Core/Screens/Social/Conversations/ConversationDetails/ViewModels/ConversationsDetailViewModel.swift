@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import Kingfisher
 import OrderedCollections
+import ServicesProvider
 
 class ConversationDetailViewModel: NSObject {
 
@@ -29,6 +30,8 @@ class ConversationDetailViewModel: NSObject {
     var isLoadingConversationPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingSharedBetPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var onlineUsersCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
+    
+    var isAIMessageLoading: CurrentValueSubject<Bool, Never> = .init(false)
     
     var ticketAddedToBetslipAction: ((Bool) -> Void)?
     
@@ -58,6 +61,7 @@ class ConversationDetailViewModel: NSObject {
         
         super.init()
 
+
         self.setupConversationInfo()
         self.startSocketListening()
 
@@ -66,45 +70,52 @@ class ConversationDetailViewModel: NSObject {
 
     // MARK: Functions
     private func setupPublishers() {
-//        Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
-//            .sink { [weak self] hasGomaUserSession, socketConnected in
-//                if hasGomaUserSession && socketConnected {
-//
-//                    if let chatId = self?.conversationId {
-//                        self?.requestChatroomDetails(withId: String(chatId))
-//                    }
-//                }
-//            }
-//            .store(in: &cancellables)
+        Publishers.CombineLatest(Env.userSessionStore.userProfilePublisher, Env.gomaSocialClient.socketConnectedPublisher)
+            .sink { [weak self] userProfile, socketConnected in
+                if userProfile != nil && socketConnected {
+
+                    if let chatId = self?.conversationId {
+                        self?.requestChatroomDetails(withId: String(chatId))
+                    }
+                }
+            }
+            .store(in: &cancellables)
+        
+//        self.requestChatroomDetails(withId: String(self.conversationId))
+        
     }
 
     func requestChatroomDetails(withId id: String) {
            
         self.isLoadingConversationPublisher.send(true)
         
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: 0)
+        Env.servicesProvider.getChatrooms()
             .compactMap({ chatrooms in
-                return chatrooms.data?
+                return chatrooms
                     .filter({ chatroom in
                         String(chatroom.chatroom.id) == id
                     })
                     .first
             })
             .map({ chatroomData -> ConversationData in
-                if chatroomData.chatroom.type == ChatroomType.individual.identifier {
-                    return self.createIndividualConversationData(fromChatroomData: chatroomData)
+                
+                let mappedChatroomData = ServiceProviderModelMapper.chatroomData(fromServiceProviderChatroomData: chatroomData)
+                
+                if mappedChatroomData.chatroom.type == ChatroomType.individual.identifier {
+                    return self.createIndividualConversationData(fromChatroomData: mappedChatroomData)
                 }
                 else {
-                    return self.createGroupConversationData(fromChatroomData: chatroomData)
+                    return self.createGroupConversationData(fromChatroomData: mappedChatroomData)
                 }
+                
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    Logger.log("SocketSocialDebug: getChatrooms failure \(error)")
+                    print("SocketSocialDebug: getChatrooms failure \(error)")
                 case .finished:
-                    Logger.log("SocketSocialDebug: getChatrooms finished")
+                    print("SocketSocialDebug: getChatrooms finished")
                 }
                 self.isLoadingConversationPublisher.send(false)
             }, receiveValue: { [weak self] conversationData in
@@ -115,6 +126,40 @@ class ConversationDetailViewModel: NSObject {
 
             })
             .store(in: &cancellables)
+        
+//        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: 0)
+//            .compactMap({ chatrooms in
+//                return chatrooms.data?
+//                    .filter({ chatroom in
+//                        String(chatroom.chatroom.id) == id
+//                    })
+//                    .first
+//            })
+//            .map({ chatroomData -> ConversationData in
+//                if chatroomData.chatroom.type == ChatroomType.individual.identifier {
+//                    return self.createIndividualConversationData(fromChatroomData: chatroomData)
+//                }
+//                else {
+//                    return self.createGroupConversationData(fromChatroomData: chatroomData)
+//                }
+//            })
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("SocketSocialDebug: getChatrooms failure \(error)")
+//                case .finished:
+//                    print("SocketSocialDebug: getChatrooms finished")
+//                }
+//                self.isLoadingConversationPublisher.send(false)
+//            }, receiveValue: { [weak self] conversationData in
+//                self?.conversationData = conversationData
+//                
+//                self?.setupConversationInfo()
+//                self?.startSocketListening()
+//
+//            })
+//            .store(in: &cancellables)
         
     }
     
@@ -142,7 +187,7 @@ class ConversationDetailViewModel: NSObject {
                     guard let self = self else {return}
 
                     if let onlineUsersChat = onlineUsersResponse[self.conversationId],
-                       let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                       let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
                         if onlineUsersChat.users.contains("\(loggedUserId)") && onlineUsersChat.users.count > 1 {
                             self.isChatOnlinePublisher.send(true)
                         }
@@ -167,6 +212,8 @@ class ConversationDetailViewModel: NSObject {
                 .store(in: &cancellables)
         }
 
+        // TEST
+        self.setupMessagesPublishers()
     }
 
     private func setupMessagesPublishers() {
@@ -187,7 +234,7 @@ class ConversationDetailViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] chatMessage in
 
-                if let conversationId = self?.conversationId,
+                if let conversationId = self?.conversationId ,
                    let updatedMessage = chatMessage {
                     guard let self = self else {return}
 
@@ -195,6 +242,11 @@ class ConversationDetailViewModel: NSObject {
                         self.updateChatMessages(newMessage: updatedMessage)
                         self.shouldScrollToLastMessage.send()
                         Env.gomaSocialClient.clearNewMessage(chatroomId: conversationId)
+                    }
+                    
+                    if self.isAIMessageLoading.value,
+                       updatedMessage.fromUser == "1" {
+                        self.isAIMessageLoading.send(false)
                     }
 
                 }
@@ -220,7 +272,11 @@ class ConversationDetailViewModel: NSObject {
 
         guard let conversationData = self.conversationData else { return }
         
+        #if DEBUG
+        self.titlePublisher.value = "\(conversationData.name)-\(conversationData.id)"
+        #else
         self.titlePublisher.value = conversationData.name
+        #endif
         
         if conversationData.conversationType == .user {
             self.usersPublisher.value = "\(conversationData.name.lowercased())"
@@ -249,6 +305,20 @@ class ConversationDetailViewModel: NSObject {
     func getConversationData() -> ConversationData? {
         return self.conversationData
     }
+    
+    func getAvatarForUserId(userId: String) -> String? {
+        
+        if let userIdInt = Int(userId),
+           let groupUsers = self.conversationData?.groupUsers {
+            
+            return groupUsers.filter({
+                $0.id == userIdInt
+            }).first?.avatar
+            
+        }
+        
+        return nil
+    }
 
     private func getGroupInitials(text: String) -> String {
         var initials = ""
@@ -274,7 +344,7 @@ class ConversationDetailViewModel: NSObject {
 
         guard var newConversationData = self.conversationData else { return }
         
-        var newConversationGroupUsers: [GomaFriend] = []
+        var newConversationGroupUsers: [UserFriend] = []
         newConversationData.name = groupInfo.name
 
         for newUser in groupInfo.users {
@@ -285,7 +355,7 @@ class ConversationDetailViewModel: NSObject {
                 }
                 else {
                     if let userId = Int(newUser.id) {
-                        let newGomaFriend = GomaFriend(id: userId, name: newUser.username, username: newUser.username, isAdmin: 0)
+                        let newGomaFriend = UserFriend(id: userId, name: newUser.username, username: newUser.username, avatar: nil, isAdmin: false)
                         newConversationGroupUsers.append(newGomaFriend)
                     }
 
@@ -322,26 +392,42 @@ class ConversationDetailViewModel: NSObject {
         // in subsequent calls os the publisher
         var messages: [MessageData] = []
         
-        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else { return [] }
+        guard let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier else { return [] }
 
         for message in chatMessages {
             let formattedDate = self.getFormattedDate(date: message.date)
+            
+            var text = message.message
+            
+            var prompts: [String]? = nil
+            
+            if let isPrompt = message.isPrompt,
+               isPrompt {
+                text = localized("chat_ai_suggestions_title")
+                
+                let messagePrompts = message.message.components(separatedBy: "\n")
+                
+                prompts = messagePrompts
+            }
+            
             if "\(loggedUserId)" == message.fromUser {
                 let messageData = MessageData(type: .sentNotSeen,
-                                              text: message.message,
+                                              text: text,
                                               date: formattedDate,
                                               timestamp: message.date,
                                               userId: message.fromUser,
-                                              attachment: message.attachment)
+                                              attachment: message.attachment,
+                prompts: prompts)
                 messages.append(messageData)
             }
             else {
                 let messageData = MessageData(type: .receivedOnline,
-                                              text: message.message,
+                                              text: text,
                                               date: formattedDate,
                                               timestamp: message.date,
                                               userId: message.fromUser,
-                                              attachment: message.attachment)
+                                              attachment: message.attachment,
+                prompts: prompts)
                 messages.append(messageData)
             }
         }
@@ -356,7 +442,7 @@ class ConversationDetailViewModel: NSObject {
     private func updateChatMessages(newMessage: ChatMessage?) {
 
         guard
-            let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+            let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier,
             let message = newMessage
         else {
             return
@@ -379,7 +465,7 @@ class ConversationDetailViewModel: NSObject {
         self.messages = sortedTimestampMessages
 
         self.sortAllMessages()
-
+        
         self.dataNeedsReload.send()
     }
 
@@ -438,13 +524,22 @@ class ConversationDetailViewModel: NSObject {
 
     }
 
-    func addMessage(message: MessageData) {
+    func addMessage(message: MessageData, toAI: Bool = false) {
         
         guard let conversationData = self.conversationData else { return }
         
-        Env.gomaSocialClient.sendMessage(chatroomId: conversationData.id,
-                                         message: message.text,
-                                         attachment: nil)
+        if toAI {
+            self.isAIMessageLoading.send(true)
+            
+            Env.gomaSocialClient.sendAIMessage(chatroomId: conversationData.id,
+                                               message: message.text,
+                                               attachment: nil)
+        }
+        else {
+            Env.gomaSocialClient.sendMessage(chatroomId: conversationData.id,
+                                             message: message.text,
+                                             attachment: nil)
+        }
         
         self.sortAllMessages()
     }
@@ -512,18 +607,21 @@ extension ConversationDetailViewModel {
     private func createIndividualConversationData(fromChatroomData chatroomData: ChatroomData) -> ConversationData {
         var loggedUsername = ""
         var chatroomName = ""
-        var chatroomUsers: [GomaFriend] = []
+        var chatroomUsers: [UserFriend] = []
         var userId = ""
+        var avatar: String? = nil
 
         for user in chatroomData.users {
             chatroomUsers.append(user)
         }
 
         for user in chatroomData.users {
-            if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+            if let loggedUserIdString = Env.userSessionStore.userProfilePublisher.value?.userIdentifier,
+            let loggedUserId = Int(loggedUserIdString) {
                 if user.id != loggedUserId {
                     chatroomName = user.username
                     userId = "\(user.id)"
+                    avatar = user.avatar
                 }
                 else {
                     loggedUsername = user.username
@@ -541,7 +639,7 @@ extension ConversationDetailViewModel {
                                                 timestamp: chatroomData.chatroom.creationTimestamp,
                                                 lastMessageUser: loggedUsername,
                                                 isLastMessageSeen: false,
-                                                groupUsers: chatroomUsers)
+                                                groupUsers: chatroomUsers, avatar: avatar)
 
         return conversationData
     }
@@ -549,7 +647,7 @@ extension ConversationDetailViewModel {
     private func createGroupConversationData(fromChatroomData chatroomData: ChatroomData) -> ConversationData {
         var loggedUsername = ""
         let chatroomName = chatroomData.chatroom.name
-        var chatroomUsers: [GomaFriend] = []
+        var chatroomUsers: [UserFriend] = []
 
         if let loggedUser = Env.userSessionStore.loggedUserProfile {
             loggedUsername = loggedUser.username
@@ -578,6 +676,67 @@ extension ConversationDetailViewModel {
     func addBetTicketToBetslip(withBetToken betToken: String) {
         // TODO: Get bet details from token
         // TODO: Add to betslip
+        
+        Env.servicesProvider.getSocialSharedTicket(shareId: betToken)
+            .retry(2)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("SOCIAL SHARED TICKET ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] socialBet in
+                print("SOCIAL SHARED TICKET RESPONSE: \(socialBet)")
+                for selection in socialBet.selections {
+                    let market = ServiceProviderModelMapper.market(fromServiceProviderBetSelection: selection)
+                    if let outcome = market.outcomes.first {
+                        self?.addBettingTicket(betSelection: selection, market: market, outcome: outcome)
+                    }
+                }
+                
+                self?.ticketAddedToBetslipAction?(true)
+            })
+            .store(in: &self.cancellables)
+    }
+    
+    private func addBettingTicket(betSelection: BetSelection, market: Market, outcome: Outcome) {
+        
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSz"
+//        let matchDate = dateFormatter.date(from: market.startDate ?? "")
+        
+        let sport = ServiceProviderModelMapper.sport(fromServiceProviderSportType: betSelection.sportType)
+        
+        let match = Match(id: market.eventId ?? "",
+                          competitionId: "",
+                          competitionName: "",
+                          homeParticipant: Participant(id: "", name: market.homeParticipant ?? ""),
+                          awayParticipant: Participant(id: "", name: market.awayParticipant ?? ""),
+                          date: market.startDate,
+                          sport: sport,
+                          sportIdCode: "",
+                          numberTotalOfMarkets: 1,
+                          markets: [market],
+                          rootPartId: "",
+                          status: .unknown)
+        
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+        
+        if !Env.betslipManager.hasBettingTicket(bettingTicket) {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+        }
+        
+    }
+    
+    func addBettingTicketsToBetslip(bettingTickets: [BettingTicket]) {
+        
+        for bettingTicket in bettingTickets {
+            if !Env.betslipManager.hasBettingTicket(bettingTicket) {
+                Env.betslipManager.addBettingTicket(bettingTicket)
+            }
+        }
     }
 
 }

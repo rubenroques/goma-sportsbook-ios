@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 class FriendStatusCellViewModel {
-    var friend: GomaFriend
+    var friend: UserFriend
     var name: String?
     var id: Int
     var username: String
@@ -18,7 +18,7 @@ class FriendStatusCellViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(friend: GomaFriend) {
+    init(friend: UserFriend) {
         self.friend = friend
 
         self.id = friend.id

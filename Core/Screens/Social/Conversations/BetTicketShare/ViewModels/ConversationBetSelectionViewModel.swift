@@ -23,15 +23,17 @@ class ConversationBetSelectionViewModel {
     var hasTicketSelectedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
     var selectedTicket: BetSelectionCellViewModel?
 
-    var isLoadingOpened: CurrentValueSubject<Bool, Never> = .init(true)
-    var isLoadingResolved: CurrentValueSubject<Bool, Never> = .init(true)
-    var isLoadingWon: CurrentValueSubject<Bool, Never> = .init(true)
+//    var isLoadingOpened: CurrentValueSubject<Bool, Never> = .init(true)
+//    var isLoadingResolved: CurrentValueSubject<Bool, Never> = .init(true)
+//    var isLoadingWon: CurrentValueSubject<Bool, Never> = .init(true)
 
-    var openedTicketsPublisher: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    private var openedTicketsPublisher: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     private var resolvedTicketsPublisher: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     private var wonTicketsPublisher: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    private var allTicketsPublisher: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
 
     var isLoadingSharedBetPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isLoadingTickets: CurrentValueSubject<Bool, Never> = .init(true)
 
     var messageSentAction: (() -> Void)?
 
@@ -43,12 +45,13 @@ class ConversationBetSelectionViewModel {
 
     private var locationsCodesDictionary: [String: String] = [:]
 
-    private let recordsPerPage = 30
+    private let recordsPerPage = 20
     private var openedTicketsPage = 0
     private var resolvedTicketsPage = 0
     private var wonTicketsPage = 0
+    private var allTicketsPage = 0
 
-    var isLoading: AnyPublisher<Bool, Never>
+//    var isLoading: AnyPublisher<Bool, Never>
 
     // MARK: Lifetime and Cycle
     init(conversationData: ConversationData, ticketType: MyTicketsType = .opened) {
@@ -56,14 +59,14 @@ class ConversationBetSelectionViewModel {
 
         self.myTicketsTypePublisher.send(ticketType)
 
-        self.isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
-            .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
-                return isLoadingResolved || isLoadingOpened || isLoadingWon
-            })
-            .eraseToAnyPublisher()
+//        self.isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
+//            .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
+//                return isLoadingResolved || isLoadingOpened || isLoadingWon
+//            })
+//            .eraseToAnyPublisher()
 
         self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
-
+        
         self.setupPublishers()
         
         self.setupConversationInfo()
@@ -74,11 +77,11 @@ class ConversationBetSelectionViewModel {
     init(ticketType: MyTicketsType = .opened) {
         self.myTicketsTypePublisher.send(ticketType)
 
-        self.isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
-            .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
-                return isLoadingResolved || isLoadingOpened || isLoadingWon
-            })
-            .eraseToAnyPublisher()
+//        self.isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
+//            .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
+//                return isLoadingResolved || isLoadingOpened || isLoadingWon
+//            })
+//            .eraseToAnyPublisher()
 
         self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
 
@@ -98,17 +101,39 @@ class ConversationBetSelectionViewModel {
 
     private func setupPublishers() {
 
-        self.isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
-            .map { [weak self] myTicketsType, isLoadingResolved, isLoadingOpened, isLoadingWon in
+//        self.isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
+//            .map { [weak self] myTicketsType, isLoadingResolved, isLoadingOpened, isLoadingWon in
+//                switch myTicketsType {
+//                case .resolved:
+//                    if isLoadingResolved { return false }
+//                    return self?.resolvedTicketsPublisher.value.isEmpty ?? false
+//                case .opened:
+//                    if isLoadingOpened { return false }
+//                    return self?.openedTicketsPublisher.value.isEmpty ?? false
+//                case .won:
+//                    if isLoadingWon { return false }
+//                    return self?.wonTicketsPublisher.value.isEmpty ?? false
+//                case .all:
+//                    if isLoadingWon { return false }
+//                    return self?.allTicketsPublisher.value.isEmpty ?? false
+//                }
+//            }
+//            .eraseToAnyPublisher()
+        
+        self.isTicketsEmptyPublisher = Publishers.CombineLatest(myTicketsTypePublisher, isLoadingTickets)
+            .map { [weak self] myTicketsType, isLoadingTickets in
                 switch myTicketsType {
+//                case .all:
+//                    if isLoadingTickets { return false }
+//                    return self?.allTicketsPublisher.value.isEmpty ?? false
                 case .resolved:
-                    if isLoadingResolved { return false }
+                    if isLoadingTickets { return false }
                     return self?.resolvedTicketsPublisher.value.isEmpty ?? false
                 case .opened:
-                    if isLoadingOpened { return false }
+                    if isLoadingTickets { return false }
                     return self?.openedTicketsPublisher.value.isEmpty ?? false
                 case .won:
-                    if isLoadingWon { return false }
+                    if isLoadingTickets { return false }
                     return self?.wonTicketsPublisher.value.isEmpty ?? false
                 }
             }
@@ -131,11 +156,64 @@ class ConversationBetSelectionViewModel {
 
     func clearData() {
         self.openedTicketsPublisher.value = []
+        self.resolvedTicketsPublisher.value = []
+        self.wonTicketsPublisher.value = []
+        self.allTicketsPublisher.value = []
+        
+        self.cachedCellViewModels = [:]
+        
         self.reloadData()
     }
 
     func reloadData() {
         self.dataNeedsReload.send()
+    }
+    
+    func processBettingHistory(betHistoryEntries: [BetHistoryEntry]) {
+
+        switch self.myTicketsTypePublisher.value {
+        case .opened:
+            if self.openedTicketsPublisher.value.isEmpty {
+                self.openedTicketsPublisher.send(betHistoryEntries)
+            }
+            else {
+                var nextTickets = self.openedTicketsPublisher.value
+                nextTickets.append(contentsOf: betHistoryEntries)
+                self.openedTicketsPublisher.send(nextTickets)
+            }
+        case .resolved:
+            if self.resolvedTicketsPublisher.value.isEmpty {
+                self.resolvedTicketsPublisher.send(betHistoryEntries)
+            }
+            else {
+                var nextTickets = self.resolvedTicketsPublisher.value
+                nextTickets.append(contentsOf: betHistoryEntries)
+                self.resolvedTicketsPublisher.send(nextTickets)
+            }
+        case .won:
+            if self.wonTicketsPublisher.value.isEmpty {
+                self.wonTicketsPublisher.send(betHistoryEntries)
+            }
+            else {
+                var nextTickets = self.wonTicketsPublisher.value
+                nextTickets.append(contentsOf: betHistoryEntries)
+                self.wonTicketsPublisher.send(nextTickets)
+            }
+//        case .all:
+//            if self.allTicketsPublisher.value.isEmpty {
+//                self.allTicketsPublisher.send(betHistoryEntries)
+//            }
+//            else {
+//                var nextTickets = self.allTicketsPublisher.value
+//                nextTickets.append(contentsOf: betHistoryEntries)
+//                self.allTicketsPublisher.send(nextTickets)
+//            }
+        default:
+            ()
+        }
+
+        //self.listStatePublisher.send(.loaded)
+        self.reloadData()
     }
 
     func requestNextPage() {
@@ -149,29 +227,137 @@ class ConversationBetSelectionViewModel {
         case .won:
             wonTicketsPage += 1
             self.loadWonTickets(page: wonTicketsPage)
+//        case .all:
+//            allTicketsPage += 1
+//            self.loadAllTickets(page: allTicketsPage)
         }
     }
 
     func refresh() {
+        self.clearData()
+
+        self.resolvedTicketsPage = 0
         self.openedTicketsPage = 0
-        self.loadOpenedTickets(page: 0)
+        self.wonTicketsPage = 0
+        self.allTicketsPage = 0
+        
+        switch self.myTicketsTypePublisher.value {
+        case .opened:
+            self.loadOpenedTickets(page: self.openedTicketsPage)
+        case .resolved:
+            self.loadResolvedTickets(page: self.resolvedTicketsPage)
+        case .won:
+            self.loadWonTickets(page: self.wonTicketsPage)
+//        case .all:
+//            self.loadAllTickets(page: self.allTicketsPage)
+        }
     }
 
     func initialLoadMyTickets() {
-        self.loadOpenedTickets(page: 0)
-        self.loadResolvedTickets(page: 0)
-        self.loadWonTickets(page: 0)
+        
+        switch self.myTicketsTypePublisher.value {
+        case .opened:
+            self.loadOpenedTickets(page: self.openedTicketsPage)
+        case .resolved:
+            self.loadResolvedTickets(page: self.resolvedTicketsPage)
+        case .won:
+            self.loadWonTickets(page: self.wonTicketsPage)
+//        case .all:
+//            self.loadAllTickets(page: self.allTicketsPage)
+        }
     }
 
     func loadOpenedTickets(page: Int) {
-        // TODO: ServiceProvider get My Bets
+        
+        self.isLoadingTickets.send(true)
+
+        Env.servicesProvider.getOpenBetsHistory(pageIndex: page)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case let .failure(error) = completion {
+                    print("loadOpenedTickets error \(error)")
+                    self?.clearData()
+                }
+                self?.isLoadingTickets.send(false)
+            } receiveValue: { [weak self] bettingHistory in
+                guard let self = self else { return }
+
+                let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+                
+                if let bettingHistoryEntries = bettingHistoryResponse.betList {
+                    self.processBettingHistory(betHistoryEntries: bettingHistoryEntries)
+                }
+                else {
+                    self.reloadData()
+                }
+                
+//                self.openedTicketsPublisher.value = bettingHistoryResponse.betList ?? []
+//                self.reloadData()
+                
+            }
+            .store(in: &cancellables)
     }
 
     func loadResolvedTickets(page: Int) {
-        // TODO: ServiceProvider get My Bets
+        self.isLoadingTickets.send(true)
+        
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case let .failure(error) = completion {
+                    print("loadResolvedTickets error \(error)")
+                    self?.clearData()
+                }
+                self?.isLoadingTickets.send(false)
+            } receiveValue: { [weak self] bettingHistory in
+                guard let self = self else { return }
+
+                let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+                
+                if let bettingHistoryEntries = bettingHistoryResponse.betList {
+                    self.processBettingHistory(betHistoryEntries: bettingHistoryEntries)
+                }
+                else {
+                    self.reloadData()
+                }
+//                self.resolvedTicketsPublisher.value = bettingHistoryResponse.betList ?? []
+//                self.reloadData()
+                
+            }
+            .store(in: &cancellables)
     }
 
     func loadWonTickets(page: Int) {
+        
+        self.isLoadingTickets.send(true)
+        
+        Env.servicesProvider.getWonBetsHistory(pageIndex: page)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case let .failure(error) = completion {
+                    print("loadOpenedTickets error \(error)")
+                    self?.clearData()
+                }
+                self?.isLoadingTickets.send(false)
+            } receiveValue: { [weak self] bettingHistory in
+                guard let self = self else { return }
+
+                let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+                
+                if let bettingHistoryEntries = bettingHistoryResponse.betList {
+                    self.processBettingHistory(betHistoryEntries: bettingHistoryEntries)
+                }
+                else {
+                    self.reloadData()
+                }
+                
+//                self.wonTicketsPublisher.value = bettingHistoryResponse.betList ?? []
+//                self.reloadData()
+                
+            }
+            .store(in: &cancellables)    }
+    
+    func loadAllTickets(page: Int) {
         // TODO: ServiceProvider get My Bets
     }
 
@@ -197,7 +383,7 @@ class ConversationBetSelectionViewModel {
 
     func sendMessage(message: String) {
 
-        var selectedBetSelectionCellViewModel: BetSelectionCellViewModel?
+        var selectedBetSelectionCellViewModel: BetSelectionCellViewModel? = nil
 
         for cellViewModel in self.cachedCellViewModels.values {
             if cellViewModel.isCheckboxSelectedPublisher.value {
@@ -211,35 +397,6 @@ class ConversationBetSelectionViewModel {
         else {
             return
         }
-
-//        self.isLoadingSharedBetPublisher.send(true)
-//
-//        let betTokenRoute = em .getSharedBetTokens(betId: viewModelValue.id)
-//
-//        Env. em .manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    self?.isLoadingSharedBetPublisher.send(false)
-//                case .finished:
-//                    ()
-//                }
-//            },
-//            receiveValue: { [weak self] betToken in
-//                guard let self = self else { return }
-//
-//                let attachment = self.generateAttachmentString(viewModel: viewModelValue,
-//                                                               withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
-//
-//                Env.gomaSocialClient.sendMessage(chatroomId: self.conversationData?.id ?? 0,
-//                                                 message: message,
-//                                                 attachment: attachment)
-//
-//                self.isLoadingSharedBetPublisher.send(false)
-//                self.messageSentAction?()
-//            })
-//            .store(in: &cancellables)
 
     }
 

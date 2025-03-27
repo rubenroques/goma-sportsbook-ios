@@ -605,16 +605,16 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
         }).eraseToAnyPublisher()
     }
 
-    func getFriends() -> AnyPublisher<[GomaFriend], ServiceProviderError> {
+    func getFriends() -> AnyPublisher<[UserFriend], ServiceProviderError> {
 
         let endpoint: GomaAPISchema = GomaAPISchema.getFriends
 
-        let publisher: AnyPublisher<GomaModels.GomaResponse<[GomaModels.GomaFriend]>, ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<GomaModels.GomaResponse<[GomaModels.UserFriend]>, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.map({ response in
 
             let userFriends = response.data.map({
-                return GomaModelMapper.userFriend(fromGomaFriend: $0)
+                return GomaModelMapper.userFriend(fromUserFriend: $0)
             })
 
             return userFriends

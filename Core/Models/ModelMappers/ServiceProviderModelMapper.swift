@@ -235,6 +235,31 @@ extension ServiceProviderModelMapper {
         return nil
     }
     
+    static func market(fromServiceProviderBetSelection betSelection: BetSelection) -> Market {
+        
+        let oddFormat = Self.oddFormat(fromServiceProviderOddFormat: betSelection.odd)
+        let bettingOffer = BettingOffer(id: betSelection.outcomeId ?? "", odd: oddFormat, statusId: "", isLive: false, isAvailable: true)
+        
+        let outcome = Outcome(id: betSelection.outcomeId ?? "",
+                              codeName: betSelection.outcomeName,
+                              typeName: betSelection.outcomeName,
+                              translatedName: betSelection.outcomeName,
+                              bettingOffer: bettingOffer)
+        
+        return Market(id: betSelection.marketId ?? "",
+                      typeId: "",
+                      name: betSelection.marketName,
+                      nameDigit1: nil,
+                      nameDigit2: nil,
+                      nameDigit3: nil,
+                      eventPartId: nil,
+                      bettingTypeId: nil,
+                      outcomes: [outcome],
+                      homeParticipant: betSelection.homeTeamName,
+                      awayParticipant: betSelection.awayTeamName,
+                      eventId: betSelection.eventId, outcomesOrder: .none)
+    }
+    
     // Outcome
     static func outcomes(fromServiceProviderOutcomes outcomes: [ServicesProvider.Outcome], marketName: String) -> [Outcome] {
         return outcomes.map { outcome in

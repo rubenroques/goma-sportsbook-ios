@@ -29,11 +29,9 @@ class TipsCellViewModel {
     }
 
     func getTotalOdds() -> String {
-        if let oddsDouble = Double(self.featuredTip.totalOdds) {
-            let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
-            return "\(oddFormatted)"
-        }
-        return ""
+        let oddsDouble = Double(self.featuredTip.totalOdds)
+        let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
+        return "\(oddFormatted)"
     }
 
     func getNumberSelections() -> String {
@@ -63,7 +61,7 @@ class TipsCellViewModel {
                                        outcomeId: selection.outcomeId,
                                        marketId: selection.bettingTypeId,
                                        matchId: selection.eventId,
-                                       decimalOdd: Double(selection.odds) ?? 0.0,
+                                       decimalOdd: Double(selection.odd),
                                        isAvailable: true,
                                        matchDescription: selection.eventName,
                                        marketDescription: selection.extraSelectionInfo.marketName,

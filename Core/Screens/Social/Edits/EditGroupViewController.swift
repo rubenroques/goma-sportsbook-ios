@@ -110,7 +110,8 @@ class EditGroupViewController: UIViewController {
             .assign(to: \.isEnabled, on: self.editButton)
             .store(in: &cancellables)
 
-        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+        if let loggedUserIdString = Env.userSessionStore.userProfilePublisher.value?.userIdentifier,
+           let loggedUserId = Int(loggedUserIdString),
            loggedUserId != self.viewModel.getAdminUserId() {
             self.newGroupTextField.isUserInteractionEnabled = false
             self.newGroupTextField.textColor = UIColor.App.textDisablePrimary
@@ -126,6 +127,10 @@ class EditGroupViewController: UIViewController {
         self.newGroupIconBaseView.layer.cornerRadius = self.newGroupIconBaseView.frame.height / 2
 
         self.newGroupIconInnerView.layer.cornerRadius = self.newGroupIconInnerView.frame.height / 2
+        
+        self.textFieldBaseView.layer.cornerRadius = CornerRadius.view
+        self.textFieldBaseView.clipsToBounds = true
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -135,13 +140,13 @@ class EditGroupViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
@@ -156,23 +161,23 @@ class EditGroupViewController: UIViewController {
 
         self.newGroupIconBaseView.backgroundColor = UIColor.App.backgroundOdds
 
-        self.newGroupIconInnerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.newGroupIconInnerView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.newGroupIconLabel.textColor = UIColor.App.backgroundOdds
 
-        self.textFieldBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.textFieldBaseView.backgroundColor = UIColor.App.inputBackground
 
-        self.newGroupTextField.backgroundColor = UIColor.App.backgroundSecondary
+        self.newGroupTextField.backgroundColor = UIColor.App.inputBackground
 
         self.newGroupLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = .clear
 
         self.leaveButton.backgroundColor = .clear
         self.leaveButton.tintColor = UIColor.App.inputError
         self.leaveButton.setTitleColor(UIColor.App.inputError, for: .normal)
 
-        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
     }
 
@@ -469,7 +474,8 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
                 }
 
-                if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+                if let loggedUserIdString = Env.userSessionStore.userProfilePublisher.value?.userIdentifier,
+                   let loggedUserId = Int(loggedUserIdString),
                    loggedUserId == self.viewModel.getAdminUserId() {
 
                     cell.didTapDeleteAction = { [weak self] in
@@ -585,6 +591,7 @@ extension EditGroupViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("save"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         button.contentMode = .scaleAspectFit
         return button
     }
@@ -637,7 +644,6 @@ extension EditGroupViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = localized("group_name")
-        textField.layer.cornerRadius = CornerRadius.view
         return textField
     }
 
@@ -754,9 +760,8 @@ extension EditGroupViewController {
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -60),
 
-            self.editButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -10),
-            self.editButton.widthAnchor.constraint(equalToConstant: 40),
-            self.editButton.heightAnchor.constraint(equalTo: self.editButton.widthAnchor),
+            self.editButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -25),
+            self.editButton.heightAnchor.constraint(equalToConstant: 40),
             self.editButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor)
         ])
 
