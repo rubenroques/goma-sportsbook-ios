@@ -1082,7 +1082,11 @@ extension GomaAPIProvider: EventsProvider {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
 
-    func getMarketGroups(forEvent event: Event, includeMixMatchGroup: Bool, includeAllMarketsGroup: Bool) -> AnyPublisher<[MarketGroup], Never> {
+    func getMarketGroups(
+        forEvent event: Event,
+        includeMixMatchGroup: Bool,
+        includeAllMarketsGroup: Bool
+    ) -> AnyPublisher<[MarketGroup], Never> {
         let defaultMarketGroup = [MarketGroup.init(type: "0",
                                                    id: "0",
                                                    groupKey: "All Markets",

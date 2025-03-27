@@ -147,7 +147,6 @@ class BaseMatchCardViewModel {
             return WidgetAppearance(
                 widgetType: type,
                 isLive: isLive,
-                isLiveCard: isLiveCard,
                 shouldHideNormalGradient: shouldHideNormalGradient,
                 shouldHideLiveGradient: shouldHideLiveGradient
             )
@@ -155,7 +154,6 @@ class BaseMatchCardViewModel {
         .removeDuplicates { lhs, rhs in
             return lhs.widgetType == rhs.widgetType &&
                    lhs.isLive == rhs.isLive &&
-                   lhs.isLiveCard == rhs.isLiveCard &&
                    lhs.shouldHideNormalGradient == rhs.shouldHideNormalGradient &&
                    lhs.shouldHideLiveGradient == rhs.shouldHideLiveGradient
         }

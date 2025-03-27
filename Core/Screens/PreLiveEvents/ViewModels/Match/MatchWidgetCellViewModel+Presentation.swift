@@ -15,7 +15,6 @@ import ServicesProvider
 struct WidgetAppearance {
     let widgetType: MatchWidgetType
     let isLive: Bool
-    let isLiveCard: Bool
     let shouldHideNormalGradient: Bool
     let shouldHideLiveGradient: Bool
 }
@@ -107,7 +106,6 @@ extension MatchWidgetCellViewModel {
             return WidgetAppearance(
                 widgetType: type,
                 isLive: isLive,
-                isLiveCard: isLiveCard,
                 shouldHideNormalGradient: shouldHideNormalGradient,
                 shouldHideLiveGradient: shouldHideLiveGradient
             )
@@ -115,7 +113,6 @@ extension MatchWidgetCellViewModel {
         .removeDuplicates { lhs, rhs in
             return lhs.widgetType == rhs.widgetType &&
                    lhs.isLive == rhs.isLive &&
-                   lhs.isLiveCard == rhs.isLiveCard &&
                    lhs.shouldHideNormalGradient == rhs.shouldHideNormalGradient &&
                    lhs.shouldHideLiveGradient == rhs.shouldHideLiveGradient
         }

@@ -154,9 +154,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // Business logic properties
     var viewModel: MatchWidgetCellViewModel?
 
-    static var normalCellHeight: CGFloat = 162
-    static var smallCellHeight: CGFloat = 92
-
+    static var cellHeight: CGFloat = 162
+    
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback

@@ -27,17 +27,11 @@ enum MatchWidgetStatus: String, CaseIterable {
 
 class MatchWidgetCellViewModel {
 
-    //
-    //
-    // @Published private(set) var match: Match // Full match, with markets and live data
-
-    // Replace @Published with a Curren@PubtValueSubject
-    private let matchSubject: CurrentValueSubject<Match, Never> // You'll need a default Match for initialization
+    private let matchSubject: CurrentValueSubject<Match, Never>
     var matchPublisher: AnyPublisher<Match, Never> {
         return matchSubject.eraseToAnyPublisher()
     }
 
-    // Add a property to access the current value directly
     private(set) var match: Match {
         get { matchSubject.value }
         set { matchSubject.send(newValue) }
@@ -565,7 +559,7 @@ class MatchWidgetCellViewModel {
                 marketName: marketName
             )
 
-            self.matchInfoViewModel.setDisplayMode(.horizontal) // (.vertical)
+            self.matchInfoViewModel.setDisplayMode(.vertical)
         }
         .store(in: &self.cancellables)
         //

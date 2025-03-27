@@ -208,50 +208,10 @@ extension ClassicMatchWidgetCollectionViewCell {
         }
     }
 
-    @objc func didTapBoostedOddButton() {
-        guard
-            let match = self.viewModel?.match,
-            let market = match.markets.first,
-            let outcome = market.outcomes.first
-        else {
-            return
-        }
-
-        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
-
-        if Env.betslipManager.hasBettingTicket(bettingTicket) {
-            Env.betslipManager.removeBettingTicket(bettingTicket)
-            self.isBoostedOutcomeButtonSelected = false
-        }
-        else {
-            Env.betslipManager.addBettingTicket(bettingTicket)
-
-            let generator = UINotificationFeedbackGenerator()
-            generator.notificationOccurred(.success)
-
-            self.isBoostedOutcomeButtonSelected = true
-        }
-    }
-
     // MARK: - Card Interactions
     @objc func didTapMatchView() {
         if let viewModel = self.viewModel {
-            let match = viewModel.match
-            if viewModel.matchWidgetType == .topImageOutright {
-                if let competition = match.competitionOutright {
-                    self.tappedMatchOutrightWidgetAction?(competition)
-                }
-            }
-            else {
-                self.tappedMatchWidgetAction?(match)
-            }
-        }
-    }
-
-    @objc func didTapMixMatch() {
-        if let viewModel = self.viewModel {
-            let match = viewModel.match
-            self.tappedMixMatchAction?(match)
+            self.tappedMatchWidgetAction?(viewModel.match)
         }
     }
 

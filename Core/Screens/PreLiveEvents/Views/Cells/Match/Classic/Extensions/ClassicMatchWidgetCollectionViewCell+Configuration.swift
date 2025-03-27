@@ -17,11 +17,8 @@ extension ClassicMatchWidgetCollectionViewCell {
         self.cancelSubscriptions()
         self.viewModel = viewModel
 
-
         // Additional configuration...
         guard let viewModel = self.viewModel else { return }
-
-        self.adjustDesignToCardHeightStyle()
 
         // Setup MatchInfoView with data from viewModel
         self.matchInfoView.configure(with: viewModel.matchInfoViewModel)
@@ -36,23 +33,11 @@ extension ClassicMatchWidgetCollectionViewCell {
                 if appearance.isLive {
                     self?.gradientBorderView.isHidden = appearance.shouldHideNormalGradient
                     self?.liveGradientBorderView.isHidden = appearance.shouldHideLiveGradient
-
-                    if appearance.isLiveCard {
-                        self?.drawAsLiveCard()
-                    } else {
-                        self?.drawAsPreLiveCard()
-                    }
+                    self?.showLiveTipView()
                 } else {
                     self?.gradientBorderView.isHidden = appearance.shouldHideNormalGradient
                     self?.liveGradientBorderView.isHidden = appearance.shouldHideLiveGradient
-                    self?.drawAsPreLiveCard()
-                }
-
-                // Set widget type-specific styles
-                self?.drawForMatchWidgetType(appearance.widgetType)
-
-                if appearance.widgetType == .topImageOutright {
-                    self?.showOutrightLayout()
+                    self?.hideLiveTipView()
                 }
             }
             .store(in: &self.cancellables)
@@ -73,22 +58,14 @@ extension ClassicMatchWidgetCollectionViewCell {
                 // Handle market presentation
                 if let market = marketPresentation.market {
                     self?.oddsStackView.alpha = 1.0
-
-                    if marketPresentation.widgetType == .boosted {
-                        self?.configureBoostedOutcomeUI(marketPresentation.boostedOutcome)
-                    } else {
-                        self?.configureOutcomesUI(marketPresentation.outcomes)
-                    }
+                    
+                    self?.configureOutcomesUI(marketPresentation.outcomes)
 
                     if marketPresentation.isMarketAvailable {
                         self?.showMarketButtons()
                     } else {
                         self?.showSuspendedView()
                     }
-
-                    // Configure Mix Match visibility
-                    self?.configureMixMatch(marketPresentation.isCustomBetAvailable,
-                                          widgetType: marketPresentation.widgetType)
                 } else {
                     // Hide outcome buttons if we don't have any market
                     self?.oddsStackView.alpha = 0.2
@@ -315,8 +292,6 @@ extension ClassicMatchWidgetCollectionViewCell {
         self.homeBaseView.alpha = 1.0
         self.drawBaseView.alpha = 1.0
         self.awayBaseView.alpha = 1.0
-
-        self.adjustDesignToCardHeightStyle()
 
         self.homeOddTitleLabel.text = ""
         self.drawOddTitleLabel.text = ""

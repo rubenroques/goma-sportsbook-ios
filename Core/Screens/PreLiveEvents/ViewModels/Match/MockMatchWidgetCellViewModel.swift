@@ -169,12 +169,11 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
     
     /// Publisher for widget appearance
     var widgetAppearancePublisher: AnyPublisher<WidgetAppearance, Never> {
-        return Publishers.CombineLatest3(
+        return Publishers.CombineLatest(
             self.matchWidgetStatusPublisher,
-            self.matchWidgetTypePublisher,
-            self.isLiveCardPublisher
+            self.matchWidgetTypePublisher
         )
-        .map { status, type, isLiveCard -> WidgetAppearance in
+        .map { status, type -> WidgetAppearance in
             let isLive = status == .live
             
             // Determine gradient visibility based on widget type and status
@@ -193,7 +192,6 @@ class MockMatchWidgetCellViewModel: MatchWidgetCellViewModelProtocol {
             return WidgetAppearance(
                 widgetType: type,
                 isLive: isLive,
-                isLiveCard: isLiveCard,
                 shouldHideNormalGradient: shouldHideNormalGradient,
                 shouldHideLiveGradient: shouldHideLiveGradient
             )

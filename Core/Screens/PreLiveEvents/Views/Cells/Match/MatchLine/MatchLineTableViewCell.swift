@@ -11,14 +11,6 @@ import ServicesProvider
 
 class MatchLineTableViewCell: UITableViewCell {
 
-    //
-    private var debugUUID = UUID()
-    //
-
-    private var viewModel: MatchLineTableCellViewModel?
-
-    var matchStatsViewModel: MatchStatsViewModel?
-
     // MARK: - UI Components
     private lazy var collectionBaseView: UIView = Self.createCollectionBaseView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
@@ -66,6 +58,10 @@ class MatchLineTableViewCell: UITableViewCell {
         }
     }
 
+    private var viewModel: MatchLineTableCellViewModel?
+
+    var matchStatsViewModel: MatchStatsViewModel?
+    
     private var cancellables: Set<AnyCancellable> = []
 
     // MARK: - Initialization
@@ -104,6 +100,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
+        self.collectionView.register(ClassicMatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: ClassicMatchWidgetCollectionViewCell.identifier)
+        
         self.collectionView.register(MatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.collectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
@@ -190,29 +188,16 @@ class MatchLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: MatchLineTableCellViewModel) {
         self.viewModel = viewModel
 
-        // let matchDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
-        // print("BlinkDebug line (\(self.debugUUID.uuidString)) configure(withViewModel \(matchDesc)")
-
-//        self.loadingView.stopAnimating()
-//        self.setupWithMatch(viewModel.match)
-
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
 
-        self.matchInfoPublisher = viewModel.$match
+        self.matchInfoPublisher = viewModel.matchPublisher
             .removeDuplicates(by: { [weak self] oldMatch, newMatch in
-
-                // let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
-                // let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-                // print("BlinkDebug Line comparing \(oldMatchDesc) <> \(newMatchDesc)")
-
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
-                    // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) ignoring")
                     return true
                 }
                 else {
-                    // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) not ignoring:\(visuallySimilar.1 ?? "")")
                     return false
                 }
             })
@@ -223,8 +208,6 @@ class MatchLineTableViewCell: UITableViewCell {
                 case .failure: ()
                 }
             } receiveValue: { [weak self] match in
-                // let matchDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
-                // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) collectionView.reloadData requested \(matchDesc)")
                 self?.setupWithMatch(match)
                 self?.loadingView.stopAnimating()
             }
@@ -233,49 +216,6 @@ class MatchLineTableViewCell: UITableViewCell {
     private func setupWithMatch(_ newMatch: Match) {
         self.match = newMatch
         self.collectionView.reloadData()
-        return
-
-        // TODO: Implement diffable updates
-        // currently some cells appear with old data from previous VM
-        //
-        /*
-        guard
-            let currentMatch = self.match
-        else {
-
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch reload all \(matchDesc)")
-
-            // If no self.match was found it should refresh all sections
-            self.match = newMatch
-            self.collectionView.reloadData()
-            return
-        }
-
-        // We have a match already
-
-        // if Match.visuallySimilar(lhs: newMatch, rhs: currentMatch).0 {
-        if
-            newMatch.id == currentMatch.id &&
-            newMatch.status == currentMatch.status &&
-            newMatch.markets.first == currentMatch.markets.first {
-
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            let oldMatchDesc = "[\(currentMatch.id) \(currentMatch.homeParticipant.name) vs \(currentMatch.awayParticipant.name)]"
-
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch reload sec markest \(matchDesc) <> \(oldMatchDesc)")
-
-            self.match = newMatch
-            self.collectionView.reloadSections(IndexSet(integer: 1)) // reload secundary markets
-        }
-        else {
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch match diff reload all \(matchDesc)")
-
-            self.match = newMatch
-            self.collectionView.reloadData()
-        }
-         */
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -521,12 +461,12 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         case 0:
             guard
                 let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
+                // let cell = collectionView.dequeueCellType(ClassicMatchWidgetCollectionViewCell.self, indexPath: indexPath)
             else {
                 fatalError()
             }
 
             if let cellViewModel = self.viewModel?.matchWidgetCellViewModel {
-                // print("BlinkDebug line (\(self.debugUUID.uuidString)) viewModel for cell found")
                 cell.configure(withViewModel: cellViewModel)
             }
             else {
@@ -545,10 +485,12 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 self?.didLongPressOdd?(bettingTicket)
             }
 
+            /*
             cell.tappedMixMatchAction = { [weak self] match in
                 self?.tappedMixMatchAction?(match)
             }
-
+            */
+            
             cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
             return cell

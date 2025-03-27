@@ -14,11 +14,7 @@ import ServicesProvider
 class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
 
     // MARK: - Properties
-    // Custom UI components are moved to Factory extension
-    let backgroundImageGradientLayer = CAGradientLayer()
-    let backgroundImageBorderGradientLayer = CAGradientLayer()
-    let backgroundImageBorderShapeLayer = CAShapeLayer()
-    
+
     // Programmatically created views - defined in Factory extension
     // Base views
     lazy var baseView: UIView = self.createBaseView()
@@ -72,17 +68,7 @@ class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
     // Separator views
     lazy var topSeparatorAlphaLineView: FadingView = self.createTopSeparatorAlphaLineView()
 
-    // Layout constraints (previously IBOutlets)
-    lazy var topMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var bottomMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var leadingMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var trailingMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var headerHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var buttonsHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var marketBottomConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var marketTopConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var marketHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var participantsBottomConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    static var cellHeight: CGFloat = 92
 
     // Business logic properties
     var viewModel: MatchWidgetCellViewModel?
@@ -132,10 +118,6 @@ class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
     var cachedCardsStyle: CardsStyle?
     var cancellables: Set<AnyCancellable> = []
 
-    // Team elements stack views
-    lazy var homeElementsStackView: UIStackView = self.createHomeElementsStackView()
-    lazy var awayElementsStackView: UIStackView = self.createAwayElementsStackView()
-
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -158,13 +140,11 @@ class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        adjustDesignToCardHeightStyle()
-        setupWithTheme()
+        self.setupWithTheme()
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        setupLayoutSubviews()
     }
 
     override func prepareForReuse() {
@@ -181,81 +161,17 @@ class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 9
 
-        // hide non normal widget style elements
-        self.backgroundImageView.isHidden = true
-
-        self.topImageBaseView.layer.masksToBounds = true
-        self.topImageBaseView.isHidden = true
-
-        self.boostedOddBottomLineView.isHidden = true
-        self.boostedTopRightCornerBaseView.isHidden = true
-
-        self.mixMatchContainerView.isHidden = true
-
-        self.bottomSeeAllMarketsContainerView.isHidden = true
-
-        self.topImageView.contentMode = .scaleAspectFill
-
         self.suspendedBaseView.layer.borderWidth = 1
-
-        // Create a gradient layer on top of the image
-        let finalColor = UIColor.App.highlightSecondaryContrast.withAlphaComponent(0.3)
-        let initialColor = UIColor.App.highlightSecondaryContrast.withAlphaComponent(1.0)
-
-        self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
-        self.backgroundImageGradientLayer.colors = [initialColor.cgColor, finalColor.cgColor]
-        self.backgroundImageGradientLayer.locations = [0.0, 1.0]
-        self.backgroundImageGradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0) // bottom
-        self.backgroundImageGradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0) // top
-        self.backgroundImageView.layer.addSublayer(self.backgroundImageGradientLayer)
 
         // Setup fonts
         self.setupFonts()
 
-        // Hide boosted odds views
-        self.homeBoostedOddValueBaseView.isHidden = true
-        self.drawBoostedOddValueBaseView.isHidden = true
-        self.awayBoostedOddValueBaseView.isHidden = true
-
-        self.homeOldBoostedOddValueLabel.text = "-"
-        self.drawOldBoostedOddValueLabel.text = "-"
-        self.awayOldBoostedOddValueLabel.text = "-"
-
         // Setup view properties
         self.setupViewProperties()
-
-        // Hide non-normal widget style elements
-        self.backgroundImageView.isHidden = true
-        self.topImageBaseView.isHidden = true
-        self.boostedOddBottomLineView.isHidden = true
-        self.boostedTopRightCornerBaseView.isHidden = true
-        self.mixMatchContainerView.isHidden = true
-        self.bottomSeeAllMarketsContainerView.isHidden = true
         self.mainContentBaseView.isHidden = false
-
-        // Set up content modes and masking
-        self.topImageBaseView.layer.masksToBounds = true
-        self.topImageView.contentMode = .scaleAspectFill
-
-        // Set up initial UI element states
-        self.boostedOddBottomLineAnimatedGradientView.colors = [
-            (UIColor.init(hex: 0xFF6600), NSNumber(0.0)),
-            (UIColor.init(hex: 0xFEDB00), NSNumber(1.0))
-        ]
-        self.boostedOddBottomLineAnimatedGradientView.startPoint = CGPoint(x: 0.0, y: 0.5)
-        self.boostedOddBottomLineAnimatedGradientView.endPoint = CGPoint(x: 1.0, y: 0.5)
 
         // Set up suspendedBaseView
         self.suspendedBaseView.layer.borderWidth = 1
-
-        // Hide boosted odds views
-        self.homeBoostedOddValueBaseView.isHidden = true
-        self.drawBoostedOddValueBaseView.isHidden = true
-        self.awayBoostedOddValueBaseView.isHidden = true
-
-        self.homeOldBoostedOddValueLabel.text = "-"
-        self.drawOldBoostedOddValueLabel.text = "-"
-        self.awayOldBoostedOddValueLabel.text = "-"
 
         // Reset odd change indicators
         self.homeUpChangeOddValueImage.alpha = 0.0
@@ -264,9 +180,6 @@ class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
         self.drawDownChangeOddValueImage.alpha = 0.0
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
-
-        // Setup buttons and views
-        self.outrightNameBaseView.backgroundColor = .clear
 
         self.oddsStackView.backgroundColor = .clear
         self.homeBaseView.backgroundColor = .clear
@@ -283,7 +196,6 @@ class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
         self.awayBaseView.layer.cornerRadius = 4.5
 
         self.seeAllBaseView.layer.cornerRadius = 4.5
-        self.outrightBaseView.layer.cornerRadius = 4.5
 
         // Clear text labels
         self.homeOddTitleLabel.text = ""
@@ -311,10 +223,6 @@ class ClassicMatchWidgetCollectionViewCell : UICollectionViewCell {
         self.oddsStackView.isHidden = false
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
-        self.outrightBaseView.isHidden = true
-
-        // Set outright label
-        self.outrightSeeLabel.text = localized("view_competition_markets")
 
         // Gradient borders
         self.gradientBorderView.isHidden = true

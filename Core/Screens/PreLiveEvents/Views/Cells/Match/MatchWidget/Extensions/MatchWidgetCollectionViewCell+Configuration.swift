@@ -36,12 +36,7 @@ extension MatchWidgetCollectionViewCell {
                 if appearance.isLive {
                     self?.gradientBorderView.isHidden = appearance.shouldHideNormalGradient
                     self?.liveGradientBorderView.isHidden = appearance.shouldHideLiveGradient
-
-                    if appearance.isLiveCard {
-                        self?.drawAsLiveCard()
-                    } else {
-                        self?.drawAsPreLiveCard()
-                    }
+                    self?.drawAsLiveCard()
                 } else {
                     self?.gradientBorderView.isHidden = appearance.shouldHideNormalGradient
                     self?.liveGradientBorderView.isHidden = appearance.shouldHideLiveGradient

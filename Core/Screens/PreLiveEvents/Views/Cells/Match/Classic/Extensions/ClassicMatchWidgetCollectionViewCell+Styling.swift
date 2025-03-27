@@ -92,35 +92,6 @@ extension ClassicMatchWidgetCollectionViewCell {
         }
     }
 
-    // MARK: - Widget Type Layout
-    func drawForMatchWidgetType(_ matchWidgetType: MatchWidgetType) {
-        switch matchWidgetType {
-        case .normal:
-            setupNormalWidgetLayout()
-        case .topImage, .topImageWithMixMatch:
-            setupTopImageWidgetLayout()
-        
-        }
-
-        self.setupWithTheme()
-    }
-
-    private func setupNormalWidgetLayout() {
-        self.mainContentBaseView.isHidden = false
-
-        self.baseView.layer.borderWidth = 0
-        self.baseView.layer.borderColor = nil
-
-        switch StyleHelper.cardsStyleActive() {
-        case .small:
-            self.bottomMarginSpaceConstraint.constant = -8
-            self.topMarginSpaceConstraint.constant = 8
-        case .normal:
-            self.bottomMarginSpaceConstraint.constant = -12
-            self.topMarginSpaceConstraint.constant = 11
-        }
-    }
-
     // MARK: - View State Management
     func showMarketButtons() {
         self.oddsStackView.isHidden = false

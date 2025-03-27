@@ -10,21 +10,31 @@ import Combine
 import ServicesProvider
 
 class MatchLineTableCellViewModel {
-    
-//    var match2: Match {
-//        return match2Subject.value
-//    }
-//    
-//    private var match2Subject: CurrentValueSubject<Match, Never>
-//    private var match2Publisher: AnyPublisher<Match, Never> {
-//        return match2Subject.eraseToAnyPublisher()
-//    }
-    
-    @Published private(set) var match: Match
-    @Published private(set) var matchWidgetCellViewModel: MatchWidgetCellViewModel
-    
-    @Published private(set) var status: MatchWidgetStatus = .unknown
-    
+
+    private var matchSubject: CurrentValueSubject<Match, Never>
+    public var matchPublisher: AnyPublisher<Match, Never> {
+        return self.matchSubject.eraseToAnyPublisher()
+    }
+    var match: Match {
+        return self.matchSubject.value
+    }
+
+    private var matchWidgetCellViewModelSubject: CurrentValueSubject<MatchWidgetCellViewModel, Never>
+    public var matchWidgetCellViewModelPublisher: AnyPublisher<MatchWidgetCellViewModel, Never> {
+        return self.matchWidgetCellViewModelSubject.eraseToAnyPublisher()
+    }
+    var matchWidgetCellViewModel: MatchWidgetCellViewModel {
+        return self.matchWidgetCellViewModelSubject.value
+    }
+
+    private var statusSubject: CurrentValueSubject<MatchWidgetStatus, Never>
+    public var statusPublisher: AnyPublisher<MatchWidgetStatus, Never> {
+        return self.statusSubject.eraseToAnyPublisher()
+    }
+    var status: MatchWidgetStatus {
+        return self.statusSubject.value
+    }
+
     private var secundaryMarketsSubscription: ServicesProvider.Subscription?
     private var secundaryMarketsPublisher: AnyCancellable?
     
@@ -32,10 +42,10 @@ class MatchLineTableCellViewModel {
 
     //
     init(match: Match, status: MatchWidgetStatus = .unknown) {
-        self.status = status
+        self.statusSubject = .init(status)
         
-        self.match = match
-        self.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: status)
+        self.matchSubject = .init(match)
+        self.matchWidgetCellViewModelSubject = .init(MatchWidgetCellViewModel(match: match, matchWidgetStatus: status))
         
         self.observeMatchValues()
         self.loadEventDetails()
@@ -43,25 +53,18 @@ class MatchLineTableCellViewModel {
     
     private func observeMatchValues() {
 
-        self.$match
+        self.matchPublisher
             .removeDuplicates(by: { oldMatch, newMatch in
-                
-                // let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
-                // let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-                // print("BlinkDebug >LineVC - comparing \(oldMatchDesc) to \(newMatchDesc)")
-                      
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
-                    // print("BlinkDebug >LineVC - ignoring")
                     return true
                 }
                 else {
-                    // print("BlinkDebug >LineVC - not ignoring due to diff:\(visuallySimilar.1 ?? "")")
                     return false
                 }
             })
             .sink { [weak self] match in
-                self?.matchWidgetCellViewModel.updateWithMatch(match)
+                self?.matchWidgetCellViewModelSubject.value.updateWithMatch(match)
             }
             .store(in: &self.cancellables)
     }
@@ -72,10 +75,10 @@ class MatchLineTableCellViewModel {
     
     //
     private func loadEventDetails() {
-        if self.match.status.isLive {
+        if self.matchSubject.value.status.isLive {
             self.loadLiveEventDetails(matchId: match.id)
         }
-        else if self.status == .live {
+        else if self.statusSubject.value == .live {
             self.loadLiveEventDetails(matchId: match.id)
         }
         else {
@@ -118,11 +121,11 @@ extension MatchLineTableCellViewModel {
                 
                 if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
                     oldMatch.markets = finalMarkets
-                    self?.match = oldMatch
+                    self?.matchSubject.send(oldMatch)
                 }
                 else {
                     newMatch.markets = finalMarkets
-                    self?.match = newMatch
+                    self?.matchSubject.send(newMatch)
                 }
                 
             case .disconnected:
@@ -161,11 +164,11 @@ extension MatchLineTableCellViewModel {
             // the event come has no markets.
             if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
                 oldMatch.markets = finalMarkets
-                self?.match = oldMatch
+                self?.matchSubject.send(oldMatch)
             }
             else {
                 newMatch.markets = finalMarkets
-                self?.match = newMatch
+                self?.matchSubject.send(newMatch)
             }
         }
     }
@@ -328,10 +331,8 @@ extension Outcome: VisuallySimilar {
 
 extension BettingOffer: VisuallySimilar {
     static func visuallySimilar(lhs: Self, rhs: BettingOffer) -> (Bool, String?) {
-        var equalValue = lhs.id == rhs.id
-        
+        let equalValue = lhs.id == rhs.id
         if !equalValue { return (false, "BettingOffer id diff") }
-            
         return (equalValue, nil)
     }
 }

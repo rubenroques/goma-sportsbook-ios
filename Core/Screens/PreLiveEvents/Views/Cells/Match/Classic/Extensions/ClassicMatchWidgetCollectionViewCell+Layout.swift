@@ -13,14 +13,14 @@ extension ClassicMatchWidgetCollectionViewCell {
     func setupFonts() {
         self.suspendedLabel.font = AppFont.with(type: .bold, size: 13)
         self.seeAllLabel.font = AppFont.with(type: .bold, size: 13)
-        // Odd value labels
-        self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 13)
-        self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
-        self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
-        // Odd title labels
+
         self.homeOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
         self.drawOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
         self.awayOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        
+        self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 12)
     }
 
     func setupViewProperties() {
@@ -114,7 +114,9 @@ extension ClassicMatchWidgetCollectionViewCell {
         self.mainContentBaseView.addSubview(self.seeAllBaseView)
         self.seeAllBaseView.addSubview(self.seeAllLabel)
 
-
+        //
+        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
+        
         // Add odds stack view
         self.mainContentBaseView.addSubview(self.oddsStackView)
 
@@ -187,8 +189,7 @@ extension ClassicMatchWidgetCollectionViewCell {
         // Initialize constraints
         self.initConstraints()
 
-        // Setup redesign interface
-        self.createRedesignInterface()
+        
 
     }
 
@@ -210,25 +211,16 @@ extension ClassicMatchWidgetCollectionViewCell {
             self.baseStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor)
         ])
 
-        // Header line constraints
-        self.headerHeightConstraint = self.matchHeaderView.heightAnchor.constraint(equalToConstant: 17)
-        self.headerHeightConstraint.isActive = true
-
-        self.topMarginSpaceConstraint = self.matchHeaderView.topAnchor.constraint(equalTo: self.mainContentBaseView.topAnchor, constant: 12)
-        self.leadingMarginSpaceConstraint = self.matchHeaderView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 12)
-
         NSLayoutConstraint.activate([
-            self.topMarginSpaceConstraint,
-            self.leadingMarginSpaceConstraint,
+            self.matchHeaderView.heightAnchor.constraint(equalToConstant: 12),
+            self.matchHeaderView.topAnchor.constraint(equalTo: self.mainContentBaseView.topAnchor, constant: 8),
+            self.matchHeaderView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 8),
             self.matchHeaderView.trailingAnchor.constraint(equalTo: self.topRightInfoIconsStackView.leadingAnchor, constant: -4)
         ])
 
-        // Odds stack view constraints
-        self.buttonsHeightConstraint = self.oddsStackView.heightAnchor.constraint(equalToConstant: 40)
-        self.buttonsHeightConstraint.isActive = true
-
-        self.bottomMarginSpaceConstraint = self.oddsStackView.bottomAnchor.constraint(equalTo: self.mainContentBaseView.bottomAnchor, constant: -12)
-        self.trailingMarginSpaceConstraint = self.oddsStackView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -12)
+        NSLayoutConstraint.activate([
+            self.oddsStackView.heightAnchor.constraint(equalToConstant: 27)
+        ])
 
         // Set up constraints for the matchInfoView
         NSLayoutConstraint.activate([
@@ -241,8 +233,8 @@ extension ClassicMatchWidgetCollectionViewCell {
         //
         NSLayoutConstraint.activate([
             self.oddsStackView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 12),
-            self.bottomMarginSpaceConstraint,
-            self.trailingMarginSpaceConstraint
+            self.oddsStackView.bottomAnchor.constraint(equalTo: self.mainContentBaseView.bottomAnchor, constant: -8),
+            self.oddsStackView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -8)
         ])
 
         // Home odds constraints
@@ -351,38 +343,7 @@ extension ClassicMatchWidgetCollectionViewCell {
         ])
     }
 
-    func setupLayoutSubviews() {
-        self.backgroundImageBorderGradientLayer.frame = self.baseView.bounds
-        self.backgroundImageBorderShapeLayer.path = UIBezierPath(roundedRect: self.baseView.bounds,
-                                                                 cornerRadius: 9).cgPath
-    }
-
     // MARK: - Card State Adjustments
-    func drawAsLiveCard() {
-        self.showLiveTipView()
-
-        switch StyleHelper.cardsStyleActive() {
-        case .small:
-            self.adjustMarketNameView(isShown: false)
-        case .normal:
-            self.adjustMarketNameView(isShown: true)
-        }
-
-        if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
-            self.bottomMarginSpaceConstraint.constant = -12
-        }
-    }
-
-    func drawAsPreLiveCard() {
-        self.hideLiveTipView()
-
-        self.adjustMarketNameView(isShown: false)
-
-        if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
-            self.bottomMarginSpaceConstraint.constant = -12
-        }
-    }
-    
     func showLiveTipView() {
         self.liveTipView.isHidden = false
         // to create a negative spacing to the cashback, make it closer
@@ -393,42 +354,6 @@ extension ClassicMatchWidgetCollectionViewCell {
         self.liveTipView.isHidden = true
         // cashback icon has a container view to give it space to the trailling superview
         self.topRightInfoIconsStackView.spacing = 0
-    }
-
-    private func adjustMarketNameView(isShown: Bool) {
-        if isShown {
-            self.marketTopConstraint.constant = 8
-            self.marketBottomConstraint.constant = -10
-            self.marketHeightConstraint.constant = 15
-        }
-        else {
-            self.marketTopConstraint.constant = 0
-            self.marketBottomConstraint.constant = 0
-            self.marketHeightConstraint.constant = 0
-        }
-
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-    }
-
-    func adjustDesignToSmallCardHeightStyle() {
-        self.topMarginSpaceConstraint.constant = 8
-        self.bottomMarginSpaceConstraint.constant = -8
-        self.leadingMarginSpaceConstraint.constant = 8
-        self.trailingMarginSpaceConstraint.constant = -8
-        
-        self.headerHeightConstraint.constant = 12
-        self.buttonsHeightConstraint.constant = 27
-
-        self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 12)
-        self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 12)
-        self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 12)
-    }
-
-    // MARK: - Create Redesign Interface
-    func createRedesignInterface() {
-
-        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
     }
 
 }
