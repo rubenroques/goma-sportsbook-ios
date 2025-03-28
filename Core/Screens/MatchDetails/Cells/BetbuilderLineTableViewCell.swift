@@ -50,7 +50,6 @@ class BetbuilderLineTableViewCell: UITableViewCell {
         
         self.viewModel = nil
         
-        self.cancellables.removeAll()
     }
     
     private func commonInit() {
@@ -90,6 +89,7 @@ class BetbuilderLineTableViewCell: UITableViewCell {
         
         self.presentationMode = presentationMode
         
+        self.collectionView.reloadData()
     }
     
     func setupPublishers() {

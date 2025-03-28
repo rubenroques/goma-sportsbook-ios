@@ -181,6 +181,9 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
         self.viewModel = nil
         
         self.isBetbuilderSelected = false
+        
+        self.cancellables.removeAll()
+
     }
     
     // MARK: Layout and theme
