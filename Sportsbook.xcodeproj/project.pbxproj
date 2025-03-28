@@ -5537,6 +5537,17 @@
 		65CD19DA2D94738900CA23E0 /* SettingsTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19D12D94738900CA23E0 /* SettingsTitleView.swift */; };
 		65CD19DB2D94738900CA23E0 /* SettingsTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19D12D94738900CA23E0 /* SettingsTitleView.swift */; };
 		65CD19DC2D94738900CA23E0 /* SettingsTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19D12D94738900CA23E0 /* SettingsTitleView.swift */; };
+		65CD19DE2D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19DF2D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E02D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E12D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E22D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E32D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E42D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E52D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E62D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E72D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65CD19E82D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
 		65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884172C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
@@ -11247,6 +11258,7 @@
 		65CD19AD2D946FE900CA23E0 /* FriendRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestView.swift; sourceTree = "<group>"; };
 		65CD19C52D94707800CA23E0 /* SocialMyTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMyTicketTableViewCell.swift; sourceTree = "<group>"; };
 		65CD19D12D94738900CA23E0 /* SettingsTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTitleView.swift; sourceTree = "<group>"; };
+		65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipViewModel.swift; sourceTree = "<group>"; };
 		65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		65F8841D2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetitionDetailRootViewController.swift; sourceTree = "<group>"; };
 		65F884272C1C43D300A56983 /* BannerTournamentTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTournamentTableViewHeader.swift; sourceTree = "<group>"; };
@@ -12531,6 +12543,7 @@
 		454E0A932732BF4600794E0C /* Betslip */ = {
 			isa = PBXGroup;
 			children = (
+				65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */,
 				454E0A942732C01B00794E0C /* BetslipViewController.swift */,
 				454E0A952732C01B00794E0C /* BetslipViewController.xib */,
 				457F49682737F8EB0047169D /* PreSubmission */,
@@ -19608,6 +19621,7 @@
 				65CD18752D9469EA00CA23E0 /* FriendStatusCellViewModel.swift in Sources */,
 				65CD18762D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD18772D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
+				65CD19E52D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD18782D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD18792D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD187A2D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -20509,6 +20523,7 @@
 				65CD16D72D9469EA00CA23E0 /* FriendStatusCellViewModel.swift in Sources */,
 				65CD16D82D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD16D92D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
+				65CD19E12D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD16DA2D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD16DB2D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD16DC2D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -21394,6 +21409,7 @@
 				45C10F5728772DA700037BBE /* ModalTransitionPresentationController.swift in Sources */,
 				457CBE3E282D2CD100ED0F00 /* TransactionsHistoryViewController.swift in Sources */,
 				457CBE3F282D2CD100ED0F00 /* TitleTextFieldView.swift in Sources */,
+				65CD19E02D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				A9B331E928904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				457CBE40282D2CD100ED0F00 /* ActivationAlert.swift in Sources */,
 				459EF2772BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift in Sources */,
@@ -22053,6 +22069,7 @@
 				65CD17612D9469EA00CA23E0 /* FriendStatusCellViewModel.swift in Sources */,
 				65CD17622D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD17632D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
+				65CD19E42D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD17642D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD17652D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD17662D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -22826,6 +22843,7 @@
 				65CD18FF2D9469EA00CA23E0 /* FriendStatusCellViewModel.swift in Sources */,
 				65CD19002D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD19012D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
+				65CD19E22D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD19022D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD19032D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD19042D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -23599,6 +23617,7 @@
 				65CD16922D9469EA00CA23E0 /* FriendStatusCellViewModel.swift in Sources */,
 				65CD16932D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD16942D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
+				65CD19E32D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD16952D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD16962D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD16972D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -24372,6 +24391,7 @@
 				65CD19442D9469EA00CA23E0 /* FriendStatusCellViewModel.swift in Sources */,
 				65CD19452D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD19462D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
+				65CD19E82D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD19472D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD19482D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD19492D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -25272,6 +25292,7 @@
 				A9C342B828F9A74A0055360B /* TipsTableViewCell.swift in Sources */,
 				A9C342B928F9A74A0055360B /* ViewContext.swift in Sources */,
 				A9C04C362A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
+				65CD19DF2D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				A9C342BA28F9A74A0055360B /* RankingsViewModel.swift in Sources */,
 				A9C342BB28F9A74A0055360B /* ModalTransitionPresentationController.swift in Sources */,
 				45970A042C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
@@ -25931,6 +25952,7 @@
 				65CD18302D9469EA00CA23E0 /* FriendStatusCellViewModel.swift in Sources */,
 				65CD18312D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD18322D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
+				65CD19DE2D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD18332D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD18342D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD18352D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -26378,6 +26400,7 @@
 				CE7E80292D7A145E00A5558A /* MatchWidgetCellViewModel+Protocol.swift in Sources */,
 				CEA566C92D5A58D800696793 /* NetworkError.swift in Sources */,
 				CEDB596D2D80DA8600D0C0C3 /* HorizontalMatchInfoView.swift in Sources */,
+				65CD19E72D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				CEB73A0C2D7687E5009C4E0F /* InnerScrollDragDirection.swift in Sources */,
 				CEA566CB2D5A58D800696793 /* FullRegisterAddressCountryViewController.swift in Sources */,
 				CEA566CC2D5A58D800696793 /* FilterFavoritesViewController.swift in Sources */,
@@ -27474,6 +27497,7 @@
 				65CD17EB2D9469EA00CA23E0 /* FriendStatusCellViewModel.swift in Sources */,
 				65CD17EC2D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD17ED2D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
+				65CD19E62D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD17EE2D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD17EF2D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD17F02D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,

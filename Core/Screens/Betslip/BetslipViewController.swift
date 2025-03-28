@@ -40,23 +40,23 @@ class BetslipViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     var willDismissAction: (() -> Void)?
+    
+    var viewModel: BetslipViewModel
 
-    var startScreen: StartScreen
+    init(viewModel: BetslipViewModel) {
 
-    init(startScreen: StartScreen = .bets) {
-
-        self.startScreen = startScreen
+        self.viewModel = viewModel
         
-        switch startScreen {
+        switch viewModel.startScreen {
         case .sharedBet:
             ()
         default:
             if Env.betslipManager.bettingTicketsPublisher.value.isEmpty {
-                self.startScreen = .myTickets(.opened, "")
+                self.viewModel.startScreen = .myTickets(.opened, "")
             }
         }
 
-        switch self.startScreen {
+        switch self.viewModel.startScreen {
         case .myTickets(let type, _):
             switch type {
             case .opened, .won:
@@ -68,7 +68,7 @@ class BetslipViewController: UIViewController {
             self.myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 0))
         }
 
-        switch self.startScreen {
+        switch self.viewModel.startScreen {
         case .sharedBet(let token):
             self.preSubmissionBetslipViewController = PreSubmissionBetslipViewController(viewModel: PreSubmissionBetslipViewModel(sharedBetToken: token))
         default:
@@ -79,7 +79,7 @@ class BetslipViewController: UIViewController {
 
         self.viewControllerTabDataSource = TitleTabularDataSource(with: self.viewControllers)
 
-        switch self.startScreen {
+        switch self.viewModel.startScreen {
         case .bets, .sharedBet:
             self.viewControllerTabDataSource.initialPage = 0
         case .myTickets:

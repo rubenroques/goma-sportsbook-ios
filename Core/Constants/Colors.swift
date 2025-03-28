@@ -89,6 +89,8 @@ extension UIColor {
         static let buttonActiveHoverTertiary = UIColor(named: "buttonActiveHoverTertiary")!
 
         static let buttonBorderTertiary = UIColor(named: "buttonBorderTertiary")!
+        
+        static let buttonBorderDisableTertiary = UIColor(named: "buttonBorderDisableTertiary")!
 
         static let bubblesPrimary = UIColor(named: "bubblesPrimary")!
 

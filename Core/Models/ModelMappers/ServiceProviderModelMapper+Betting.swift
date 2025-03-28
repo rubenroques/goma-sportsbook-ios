@@ -243,4 +243,26 @@ extension ServiceProviderModelMapper {
                                         marketName: bettingTicket.marketDescription,
                                         betName: bettingTicket.outcomeDescription)
     }
+    
+    static func bettingTicket(fromBetHistoryEntry betHistoryEntry: BetHistoryEntry) -> [BettingTicket] {
+        guard let selections = betHistoryEntry.selections else { return [] }
+        
+        var tickets: [BettingTicket] = []
+        
+        for selection in selections {
+        
+            let matchDescription = "\(selection.homeParticipantName ?? "") x \(selection.awayParticipantName ?? "")"
+            let marketDescription = selection.marketName ?? ""
+            let outcomeDescription = selection.betName ?? ""
+            
+            tickets.append(
+                BettingTicket(id: selection.outcomeId, outcomeId: selection.outcomeId, marketId: selection.bettingTypeId ?? "", matchId: selection.eventId ?? "", decimalOdd: selection.priceValue ?? 1.0, isAvailable: true, matchDescription: matchDescription, marketDescription: marketDescription, outcomeDescription: outcomeDescription, homeParticipantName: selection.homeParticipantName, awayParticipantName: selection.awayParticipantName, sportIdCode: selection.sportId)
+
+            )
+            
+        }
+        
+        return tickets
+        
+    }
 }

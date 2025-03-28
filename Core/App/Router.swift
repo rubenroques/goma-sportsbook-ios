@@ -456,8 +456,11 @@ class Router {
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
+        
+        let betslipViewModel = BetslipViewModel(startScreen: .myTickets(ticketType, ticketId))
 
-        let betslipViewController = BetslipViewController.init(startScreen: .myTickets(ticketType, ticketId))
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
+        
         let navigationViewController = Router.navigationController(with: betslipViewController)
         self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
     }
@@ -466,8 +469,11 @@ class Router {
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
+        
+        let betslipViewModel = BetslipViewModel()
 
-        let betslipViewController = BetslipViewController()
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
+        
         let navigationViewController = Router.navigationController(with: betslipViewController)
         self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
     }

@@ -542,7 +542,10 @@ extension MyFavoritesViewController {
     }
     
     func openBetslipModal() {
-        let betslipViewController = BetslipViewController()
+        let betslipViewModel = BetslipViewModel()
+
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
+        
         betslipViewController.willDismissAction = { [weak self] in
             self?.tableView.reloadData()
         }

@@ -979,7 +979,10 @@ class RootViewController: UIViewController {
     }
 
     func openBetslipModal() {
-        let betslipViewController = BetslipViewController()
+        let betslipViewModel = BetslipViewModel()
+        
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
+        
         betslipViewController.willDismissAction = { [weak self] in
             self?.reloadChildViewControllersData()
         }
@@ -987,7 +990,9 @@ class RootViewController: UIViewController {
     }
 
     func openBetslipModalWithShareData(ticketToken: String) {
-        let betslipViewController = BetslipViewController(startScreen: .sharedBet(ticketToken))
+        let betslipViewModel = BetslipViewModel(startScreen: .sharedBet(ticketToken))
+
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
 
         betslipViewController.willDismissAction = { [weak self] in
             self?.reloadChildViewControllersData()
