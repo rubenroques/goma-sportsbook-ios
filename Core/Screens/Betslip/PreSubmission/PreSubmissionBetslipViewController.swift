@@ -2507,6 +2507,12 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     @IBAction private func didTapSpinWheelButton() {
+        // Only proceed if the feature is enabled
+        guard TargetVariables.hasFeatureEnabled(feature: .spinWheel) else {
+            Logger.log("SpinWheel feature is disabled, button tap ignored.")
+            return
+        }
+
         if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
             let spinWheelWebViewModel = SpinWheelViewModel(url: url)
             let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)

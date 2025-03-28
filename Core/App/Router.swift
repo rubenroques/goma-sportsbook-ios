@@ -927,10 +927,16 @@ class Router {
 
     // SpinWheel Screen
     func showSpinWheel(url: URL) {
+        // Only show if the feature is enabled
+        guard TargetVariables.hasFeatureEnabled(feature: .spinWheel) else {
+            Logger.log("SpinWheel feature is disabled, not showing.")
+            return
+        }
+
         let viewModel = SpinWheelViewModel(url: url)
         let spinWheelViewController = SpinWheelViewController(viewModel: viewModel)
         spinWheelViewController.modalPresentationStyle = .fullScreen
-        
+
         self.rootViewController?.present(spinWheelViewController, animated: true, completion: nil)
     }
 
@@ -1031,10 +1037,16 @@ enum AppSharedState {
 // Add this extension to make SpinWheel accessible from RootViewController
 extension RootViewController {
     func openSpinWheel(url: URL) {
+        // Only show if the feature is enabled
+        guard TargetVariables.hasFeatureEnabled(feature: .spinWheel) else {
+            Logger.log("SpinWheel feature is disabled, not showing.")
+            return
+        }
+
         let viewModel = SpinWheelViewModel(url: url)
         let spinWheelViewController = SpinWheelViewController(viewModel: viewModel)
         spinWheelViewController.modalPresentationStyle = .fullScreen
-        
+
         self.present(spinWheelViewController, animated: true, completion: nil)
     }
 }
