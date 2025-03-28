@@ -18,8 +18,6 @@ output:
 # Extension files will be automatically found and processed
 target_cases:
   - PreLive
-  - Classic
-
 
   # - Boosted
   # - Live

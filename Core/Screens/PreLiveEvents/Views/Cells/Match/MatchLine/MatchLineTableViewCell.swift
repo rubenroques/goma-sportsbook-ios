@@ -102,6 +102,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.collectionView.register(ClassicMatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: ClassicMatchWidgetCollectionViewCell.identifier)
         
+        self.collectionView.register(PreLiveMatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: PreLiveMatchWidgetCollectionViewCell.identifier)
+        
         self.collectionView.register(MatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.collectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
@@ -460,7 +462,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         switch indexPath.section {
         case 0:
             guard
-                let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
+                let cell = collectionView.dequeueCellType(PreLiveMatchWidgetCollectionViewCell.self, indexPath: indexPath)
+                // let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
                 // let cell = collectionView.dequeueCellType(ClassicMatchWidgetCollectionViewCell.self, indexPath: indexPath)
             else {
                 fatalError()

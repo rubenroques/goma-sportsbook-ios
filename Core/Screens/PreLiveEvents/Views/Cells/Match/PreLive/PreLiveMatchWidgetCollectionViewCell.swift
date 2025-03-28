@@ -1,5 +1,5 @@
 //
-//  MatchWidgetCollectionViewCell.swift
+//  PreLiveMatchWidgetCollectionViewCell.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 20/03/2025
@@ -11,16 +11,14 @@ import LinkPresentation
 import Combine
 import ServicesProvider
 
-class MatchWidgetCollectionViewCell: UICollectionViewCell {
-    // MARK: - Debug
-    var debugUUID = UUID()
+class PreLiveMatchWidgetCollectionViewCell : UICollectionViewCell {
 
     // MARK: - Properties
     // Custom UI components are moved to Factory extension
     let backgroundImageGradientLayer = CAGradientLayer()
     let backgroundImageBorderGradientLayer = CAGradientLayer()
     let backgroundImageBorderShapeLayer = CAShapeLayer()
-    
+
     // Programmatically created views - defined in Factory extension
     // Base views
     lazy var baseView: UIView = self.createBaseView()
@@ -31,7 +29,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     // Content views
     lazy var mainContentBaseView: UIView = self.createMainContentBaseView()
-    
+
     // Outright
     lazy var outrightNameBaseView: UIView = self.createOutrightNameBaseView()
     lazy var outrightNameLabel: UILabel = self.createOutrightNameLabel()
@@ -91,7 +89,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // Border views
     lazy var gradientBorderView: GradientBorderView = self.createGradientBorderView()
     lazy var liveGradientBorderView: GradientBorderView = self.createLiveGradientBorderView()
-    
+
     lazy var topRightInfoIconsStackView: UIStackView = self.createTopRightInfoIconsStackView()
     lazy var liveTipView: UIView = self.createLiveTipView()
     lazy var liveTipLabel: UILabel = self.createLiveTipLabel()
@@ -129,7 +127,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var newValueBoostedOddLabel: UILabel = self.createNewValueBoostedOddLabel()
 
     lazy var boostedOddBottomLineAnimatedGradientView: GradientView = self.createBoostedOddBottomLineAnimatedGradientView()
-    
+
     // Separator views
     lazy var topSeparatorAlphaLineView: FadingView = self.createTopSeparatorAlphaLineView()
 
@@ -140,18 +138,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var boostedBackgroungImageView: UIImageView = UIImageView()
 
     // Layout constraints (previously IBOutlets)
-    lazy var topMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var bottomMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var leadingMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var trailingMarginSpaceConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var headerHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    lazy var buttonsHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    
 
     // Business logic properties
     var viewModel: MatchWidgetCellViewModel?
 
     static var cellHeight: CGFloat = 162
-    
+
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback
@@ -202,7 +195,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    var cachedCardsStyle: CardsStyle?
     var cancellables: Set<AnyCancellable> = []
 
     // Team elements stack views
@@ -231,7 +223,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        adjustDesignToCardHeightStyle()
         setupWithTheme()
     }
 

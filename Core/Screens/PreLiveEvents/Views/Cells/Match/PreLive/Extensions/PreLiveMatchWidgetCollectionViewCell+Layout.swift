@@ -1,5 +1,5 @@
 //
-//  MatchWidgetCollectionViewCell+Layout.swift
+//  PreLiveMatchWidgetCollectionViewCell+Layout.swift
 //  Sportsbook
 //
 //  Created by Refactoring on 2024.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Layout Methods
-extension MatchWidgetCollectionViewCell {
+extension PreLiveMatchWidgetCollectionViewCell {
 
     func setupFonts() {
         self.suspendedLabel.font = AppFont.with(type: .bold, size: 13)
@@ -279,30 +279,20 @@ extension MatchWidgetCollectionViewCell {
             self.topImageView.trailingAnchor.constraint(equalTo: self.topImageBaseView.trailingAnchor, constant: -2)
         ])
 
-        // Header line constraints
-        self.headerHeightConstraint = self.matchHeaderView.heightAnchor.constraint(equalToConstant: 17)
-        self.headerHeightConstraint.isActive = true
-
-        self.topMarginSpaceConstraint = self.matchHeaderView.topAnchor.constraint(equalTo: self.mainContentBaseView.topAnchor, constant: 12)
-        self.leadingMarginSpaceConstraint = self.matchHeaderView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 12)
-
+        // Header line constraints - fixed values from normal style
         NSLayoutConstraint.activate([
-            self.topMarginSpaceConstraint,
-            self.leadingMarginSpaceConstraint,
+            self.matchHeaderView.heightAnchor.constraint(equalToConstant: 17),
+            self.matchHeaderView.topAnchor.constraint(equalTo: self.mainContentBaseView.topAnchor, constant: 12),
+            self.matchHeaderView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 12),
             self.matchHeaderView.trailingAnchor.constraint(equalTo: self.topRightInfoIconsStackView.leadingAnchor, constant: -4)
         ])
 
-        // Odds stack view constraints
-        self.buttonsHeightConstraint = self.oddsStackView.heightAnchor.constraint(equalToConstant: 40)
-        self.buttonsHeightConstraint.isActive = true
-
-        self.bottomMarginSpaceConstraint = self.oddsStackView.bottomAnchor.constraint(equalTo: self.mainContentBaseView.bottomAnchor, constant: -12)
-        self.trailingMarginSpaceConstraint = self.oddsStackView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -12)
-
+        // Odds stack view constraints - fixed values from normal style
         NSLayoutConstraint.activate([
+            self.oddsStackView.heightAnchor.constraint(equalToConstant: 40),
             self.oddsStackView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 12),
-            self.bottomMarginSpaceConstraint,
-            self.trailingMarginSpaceConstraint
+            self.oddsStackView.bottomAnchor.constraint(equalTo: self.mainContentBaseView.bottomAnchor, constant: -12),
+            self.oddsStackView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -12)
         ])
 
         // Home odds constraints
@@ -521,18 +511,10 @@ extension MatchWidgetCollectionViewCell {
     // MARK: - Card State Adjustments
     func drawAsLiveCard() {
         self.showLiveTipView()
-
-        if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
-            self.bottomMarginSpaceConstraint.constant = -12
-        }
     }
 
     func drawAsPreLiveCard() {
         self.hideLiveTipView()
-
-        if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
-            self.bottomMarginSpaceConstraint.constant = -12
-        }
     }
 
     func showLiveTipView() {
@@ -545,74 +527,6 @@ extension MatchWidgetCollectionViewCell {
         self.liveTipView.isHidden = true
         // cashback icon has a container view to give it space to the trailling superview
         self.topRightInfoIconsStackView.spacing = 0
-    }
-
-    // MARK: - Card Layout Style
-    func adjustDesignToCardHeightStyle() {
-        guard let matchWidgetType = self.viewModel?.matchWidgetType else { return }
-
-        if matchWidgetType != .normal {
-            if self.cachedCardsStyle == .small {
-                self.cachedCardsStyle = .normal
-
-                self.adjustDesignToNormalCardHeightStyle()
-
-                self.setNeedsLayout()
-                self.layoutIfNeeded()
-            }
-            return
-        }
-
-        // Avoid calling redraw and layout if the style is the same.
-        if self.cachedCardsStyle == StyleHelper.cardsStyleActive() {
-            return
-        }
-
-        self.cachedCardsStyle = StyleHelper.cardsStyleActive()
-
-        switch StyleHelper.cardsStyleActive() {
-        case .small:
-            self.adjustDesignToSmallCardHeightStyle()
-        case .normal:
-            self.adjustDesignToNormalCardHeightStyle()
-        }
-
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-    }
-
-    func adjustDesignToSmallCardHeightStyle() {
-        self.topMarginSpaceConstraint.constant = 8
-        self.bottomMarginSpaceConstraint.constant = -8
-        self.leadingMarginSpaceConstraint.constant = 8
-        self.trailingMarginSpaceConstraint.constant = -8
-
-        self.headerHeightConstraint.constant = 12
-        self.buttonsHeightConstraint.constant = 27
-
-        self.outrightNameLabel.font = AppFont.with(type: .bold, size: 13)
-        self.outrightNameLabel.numberOfLines = 2
-
-        self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 12)
-        self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 12)
-        self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 12)
-    }
-
-    func adjustDesignToNormalCardHeightStyle() {
-        self.topMarginSpaceConstraint.constant = 11
-        self.bottomMarginSpaceConstraint.constant = -12
-        self.leadingMarginSpaceConstraint.constant = 12
-        self.trailingMarginSpaceConstraint.constant = -12
-
-        self.headerHeightConstraint.constant = 17
-        self.buttonsHeightConstraint.constant = 40
-
-        self.outrightNameLabel.font = AppFont.with(type: .bold, size: 14)
-        self.outrightNameLabel.numberOfLines = 3
-
-        self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 13)
-        self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
-        self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
     // MARK: - Create Redesign Interface
