@@ -172,7 +172,6 @@ extension PromotionsWebViewController: WKNavigationDelegate {
     }
 }
 
-
 extension PromotionsWebViewController: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {

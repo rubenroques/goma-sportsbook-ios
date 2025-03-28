@@ -8270,6 +8270,26 @@
 		CE6258102D5A19CA009C11D2 /* StoriesFullScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CE91482A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift */; };
 		CE6258112D5A19CA009C11D2 /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
 		CE6258122D5A19CA009C11D2 /* StoriesLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC4052A2E1E33000DB866 /* StoriesLineTableViewCell.swift */; };
+		CE896D562D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D572D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D5A2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D5B2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D5E2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D5F2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D622D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D632D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D662D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D672D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D6A2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D6B2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D6E2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D6F2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D722D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D732D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D762D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D772D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
+		CE896D7A2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
+		CE896D7B2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
 		CE9D9CA62D2C37E70077A78D /* AdresseFrancaise in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CA52D2C37E70077A78D /* AdresseFrancaise */; };
 		CE9D9CB02D2C37E70077A78D /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CAF2D2C37E70077A78D /* Lottie */; };
 		CE9D9CB22D2C37E70077A78D /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CB12D2C37E70077A78D /* IdensicMobileSDK */; };
@@ -10267,6 +10287,8 @@
 		CE6257EE2D5A17B7009C11D2 /* avatar6-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-light.json"; sourceTree = "<group>"; };
 		CE6257EF2D5A17B7009C11D2 /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
 		CE6257F12D5A17B7009C11D2 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinWheelViewController.swift; sourceTree = "<group>"; };
+		CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinWheelViewModel.swift; sourceTree = "<group>"; };
 		CEA565AF2D5A308800696793 /* DummyWidgetShowcaseHomeViewTemplateDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyWidgetShowcaseHomeViewTemplateDataSource.swift; sourceTree = "<group>"; };
 		CEA5699C2D5A58D800696793 /* ATP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA5699E2D5A59C500696793 /* avatar1-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-dark.json"; sourceTree = "<group>"; };
@@ -11817,6 +11839,7 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				CE896D532D8C5C85009981BB /* SpinWheel */,
 				A9C7190F2A5EEA57005EB891 /* RecruitFriend */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Root */,
@@ -14309,6 +14332,15 @@
 				CE6257EF2D5A17B7009C11D2 /* replay_sucess.json */,
 			);
 			path = Animations;
+			sourceTree = "<group>";
+		};
+		CE896D532D8C5C85009981BB /* SpinWheel */ = {
+			isa = PBXGroup;
+			children = (
+				CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */,
+				CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */,
+			);
+			path = SpinWheel;
 			sourceTree = "<group>";
 		};
 		CEA569AB2D5A59C500696793 /* Animations */ = {
@@ -17046,6 +17078,8 @@
 				450B790E28F58574009229E3 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				450B790F28F58574009229E3 /* PopUpDetails.swift in Sources */,
 				450B791028F58574009229E3 /* RunningPlatform.swift in Sources */,
+				CE896D622D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D632D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				450B791128F58574009229E3 /* AppModels.swift in Sources */,
 				450B791228F58574009229E3 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				450B791328F58574009229E3 /* HeadToHeadCardStatsView.swift in Sources */,
@@ -17912,6 +17946,8 @@
 				457CBA87282D27D000ED0F00 /* MyTicketTableViewCell.swift in Sources */,
 				457CBA88282D27D000ED0F00 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				457CBA89282D27D000ED0F00 /* SportMatchLineViewModel.swift in Sources */,
+				CE896D562D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D572D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				457CBA8A282D27D000ED0F00 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				A9A207E5283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */,
 				A9B6305B29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
@@ -18936,6 +18972,8 @@
 				A91A645D2A7A5CB3002A6984 /* MyGamesRootViewController.swift in Sources */,
 				653A384A2D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */,
 				6547C8872C63DBF00041409C /* CustomPageControl.swift in Sources */,
+				CE896D762D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D772D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				457CBDEE282D2CD100ED0F00 /* SearchTextField.swift in Sources */,
 				457CBDEF282D2CD100ED0F00 /* BettingHistoryViewModel.swift in Sources */,
 				A92548042A28AB300056F832 /* DocumentsRootViewController.swift in Sources */,
@@ -19382,6 +19420,8 @@
 				4589C815282024E400243547 /* PopUpDetails.swift in Sources */,
 				4589C816282024E400243547 /* RunningPlatform.swift in Sources */,
 				4589C817282024E400243547 /* AppModels.swift in Sources */,
+				CE896D5E2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D5F2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				4589C818282024E400243547 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				4589C819282024E400243547 /* HeadToHeadCardStatsView.swift in Sources */,
 				4589C81A282024E400243547 /* AppearanceViewModel.swift in Sources */,
@@ -20118,6 +20158,8 @@
 				45A33124298976BA008181E9 /* PopUpDetails.swift in Sources */,
 				45A33125298976BA008181E9 /* RunningPlatform.swift in Sources */,
 				45A33126298976BA008181E9 /* AppModels.swift in Sources */,
+				CE896D662D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D672D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				45A33127298976BA008181E9 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				45A33128298976BA008181E9 /* HeadToHeadCardStatsView.swift in Sources */,
 				45A33129298976BA008181E9 /* AppearanceViewModel.swift in Sources */,
@@ -20854,6 +20896,8 @@
 				45A6BC6A28246A7500D9B416 /* CompetitionFilterTableViewCell.swift in Sources */,
 				A98EC7E8288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				45A6BC6B28246A7500D9B416 /* EmailVerificationViewController.swift in Sources */,
+				CE896D722D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D732D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				45A6BC6C28246A7500D9B416 /* SuggestedBetTableViewCell.swift in Sources */,
 				45A6BC6D28246A7500D9B416 /* Optional+Extensions.swift in Sources */,
 				A91A645B2A7A5CB3002A6984 /* MyGamesRootViewController.swift in Sources */,
@@ -21590,6 +21634,8 @@
 				45F6BBC32AB3732C00C81DE1 /* RunningPlatform.swift in Sources */,
 				45F6BBC42AB3732C00C81DE1 /* AppModels.swift in Sources */,
 				45F6BBC52AB3732C00C81DE1 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
+				CE896D6A2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D6B2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				45F6BBC62AB3732C00C81DE1 /* HeadToHeadCardStatsView.swift in Sources */,
 				45F6BBC72AB3732C00C81DE1 /* AppearanceViewModel.swift in Sources */,
 				45F6BBC82AB3732C00C81DE1 /* ChatTicketStateInMessageView.swift in Sources */,
@@ -22622,6 +22668,8 @@
 				459874BB2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				653A38482D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */,
 				459EF2742BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift in Sources */,
+				CE896D6E2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D6F2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				A9C3424928F9A74A0055360B /* Snapshot.swift in Sources */,
 				45ECD77A2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				A9C3424A28F9A74A0055360B /* InternalBrowserViewController.swift in Sources */,
@@ -23068,6 +23116,8 @@
 				CE12A22A2D31347E0022BDF7 /* PopUpDetails.swift in Sources */,
 				CE12A22B2D31347E0022BDF7 /* RunningPlatform.swift in Sources */,
 				CE12A22C2D31347E0022BDF7 /* AppModels.swift in Sources */,
+				CE896D5A2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D5B2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				CE12A22D2D31347E0022BDF7 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				CE12A22E2D31347E0022BDF7 /* HeadToHeadCardStatsView.swift in Sources */,
 				CE12A22F2D31347E0022BDF7 /* AppearanceViewModel.swift in Sources */,
@@ -23804,6 +23854,8 @@
 				CEA566F22D5A58D800696793 /* NewGroupHeaderFooterView.swift in Sources */,
 				CEA566F32D5A58D800696793 /* EmailVerificationViewController.swift in Sources */,
 				CEA566F42D5A58D800696793 /* SuggestedBetTableViewCell.swift in Sources */,
+				CE896D7A2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */,
+				CE896D7B2D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */,
 				CEA566F52D5A58D800696793 /* Optional+Extensions.swift in Sources */,
 				CEA566F62D5A58D800696793 /* MyGamesRootViewController.swift in Sources */,
 				CEA566F72D5A58D800696793 /* GenericAvatarWarningViewController.swift in Sources */,
@@ -24999,7 +25051,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.34;
+				MARKETING_VERSION = 1.0.36;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Betsson Notif Ext - Development";
@@ -25038,7 +25090,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.34;
+				MARKETING_VERSION = 1.0.36;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc fr.betsson.ios.app.betssonNotificationsService";
