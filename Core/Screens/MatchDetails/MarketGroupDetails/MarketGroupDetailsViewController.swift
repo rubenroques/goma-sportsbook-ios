@@ -262,7 +262,20 @@ class MarketGroupDetailsViewController: UIViewController {
                             $0.id == bettingTicket.outcomeId
                         }).first
                         
-                        let newBettingTicket = BettingTicket(id: bettingTicket.id, outcomeId: bettingTicket.outcomeId, marketId: bettingTicket.marketId, matchId: bettingTicket.matchId, decimalOdd: bettingTicket.decimalOdd, isAvailable: bettingTicket.isAvailable, matchDescription: bettingTicket.matchDescription, marketDescription: marketFound.name, outcomeDescription: outcomeFound?.translatedName ?? bettingTicket.outcomeDescription, homeParticipantName: bettingTicket.homeParticipantName, awayParticipantName: bettingTicket.awayParticipantName, sportIdCode: bettingTicket.sportIdCode)
+                        let newBettingTicket = BettingTicket(
+                            id: bettingTicket.id,
+                            outcomeId: bettingTicket.outcomeId,
+                            marketId: bettingTicket.marketId,
+                            matchId: bettingTicket.matchId,
+                            decimalOdd: bettingTicket.decimalOdd,
+                            isAvailable: bettingTicket.isAvailable,
+                            matchDescription: bettingTicket.matchDescription,
+                            marketDescription: marketFound.name,
+                            outcomeDescription: outcomeFound?.translatedName ?? bettingTicket.outcomeDescription,
+                            homeParticipantName: bettingTicket.homeParticipantName,
+                            awayParticipantName: bettingTicket.awayParticipantName,
+                            sportIdCode: bettingTicket.sportIdCode
+                        )
                         
                         mappedBettingTickets.append(newBettingTicket)
                     }
@@ -296,7 +309,20 @@ class MarketGroupDetailsViewController: UIViewController {
                             $0.id == bettingTicket.outcomeId
                         }).first
                         
-                        let newBettingTicket = BettingTicket(id: bettingTicket.id, outcomeId: bettingTicket.outcomeId, marketId: bettingTicket.marketId, matchId: bettingTicket.matchId, decimalOdd: bettingTicket.decimalOdd, isAvailable: bettingTicket.isAvailable, matchDescription: bettingTicket.matchDescription, marketDescription: marketFound.name, outcomeDescription: outcomeFound?.translatedName ?? bettingTicket.outcomeDescription, homeParticipantName: bettingTicket.homeParticipantName, awayParticipantName: bettingTicket.awayParticipantName, sportIdCode: bettingTicket.sportIdCode)
+                        let newBettingTicket = BettingTicket(
+                            id: bettingTicket.id,
+                            outcomeId: bettingTicket.outcomeId,
+                            marketId: bettingTicket.marketId,
+                            matchId: bettingTicket.matchId,
+                            decimalOdd: bettingTicket.decimalOdd,
+                            isAvailable: bettingTicket.isAvailable,
+                            matchDescription: bettingTicket.matchDescription,
+                            marketDescription: marketFound.name,
+                            outcomeDescription: outcomeFound?.translatedName ?? bettingTicket.outcomeDescription,
+                            homeParticipantName: bettingTicket.homeParticipantName,
+                            awayParticipantName: bettingTicket.awayParticipantName,
+                            sportIdCode: bettingTicket.sportIdCode
+                        )
                         
                         mappedBettingTickets.append(newBettingTicket)
                     }
