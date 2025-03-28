@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BetbuilderLineCellViewModel {
     
@@ -24,6 +25,8 @@ class BetbuilderLineTableViewCell: UITableViewCell {
     private let cellHeight: CGFloat = 124
 
     var viewModel: BetbuilderLineCellViewModel?
+    
+    var cancellables = Set<AnyCancellable>()
 
     var presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode = .multiplesPerLineByType
 
@@ -33,6 +36,8 @@ class BetbuilderLineTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
+        
+        self.setupPublishers()
     }
 
     @available(iOS, unavailable)
@@ -42,6 +47,10 @@ class BetbuilderLineTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        self.viewModel = nil
+        
+        self.cancellables.removeAll()
     }
     
     private func commonInit() {
@@ -80,9 +89,23 @@ class BetbuilderLineTableViewCell: UITableViewCell {
         self.viewModel = viewModel
         
         self.presentationMode = presentationMode
-
-        self.collectionView.reloadData()
         
+    }
+    
+    func setupPublishers() {
+        
+        Env.betslipManager.bettingTicketsPublisher
+            .removeDuplicates()
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingTickets in
+                
+                guard let self = self else { return }
+                
+                self.collectionView.reloadData()
+                
+            })
+            .store(in: &cancellables)
     }
 }
 

@@ -191,7 +191,18 @@ extension MarketGroupDetailsViewModel {
         var betSelections = [BettingTicket]()
         
         for i in 0..<min(titles.count, subtitles.count) {
-            let ticket = BettingTicket(id: "", outcomeId: "", marketId: "", matchId: "", decimalOdd: 0.0, isAvailable: true, matchDescription: "", marketDescription: subtitles[i], outcomeDescription: titles[i], homeParticipantName: nil, awayParticipantName: nil, sportIdCode: nil)
+            let ticket = BettingTicket(id: "",
+                                       outcomeId: "",
+                                       marketId: "",
+                                       matchId: "",
+                                       decimalOdd: 0.0,
+                                       isAvailable: true,
+                                       matchDescription: "",
+                                       marketDescription: subtitles[i],
+                                       outcomeDescription: titles[i],
+                                       homeParticipantName: nil,
+                                       awayParticipantName: nil,
+                                       sportIdCode: nil)
             betSelections.append(ticket)
         }
         

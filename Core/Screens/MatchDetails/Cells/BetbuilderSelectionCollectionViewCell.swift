@@ -15,13 +15,19 @@ class BetbuilderSelectionCellViewModel {
         
     var totalOdd: CurrentValueSubject<Double, Never> = .init(0.0)
     
+    var isBetbuilderSelectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    
+    private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
+    
     // MARK: Private properties
     private var cancellables = Set<AnyCancellable>()
     
     init(betSelections: [BettingTicket]) {
         self.betSelections = betSelections
         
-        self.requestBetBuilderTotalOdd()
+        self.subscribeOutcomes()
+        
+        self.setupPublishers()
     }
     
     func requestBetBuilderTotalOdd() {
@@ -43,6 +49,70 @@ class BetbuilderSelectionCellViewModel {
             })
             .store(in: &cancellables)
                 
+    }
+    
+    func subscribeOutcomes() {
+        for betSelection in self.betSelections {
+            self.oddUpdatesPublisher[betSelection.outcomeId] = Env.servicesProvider
+                .subscribeToEventOnListsOutcomeUpdates(withId: betSelection.outcomeId)
+                .compactMap({ $0 })
+                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+//                .map(\.bettingOffer)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure:
+                        break
+                    }
+                }, receiveValue: { [weak self] (updatedOutcome: Outcome) in
+                    
+                    let updatedBettingOffer = updatedOutcome.bettingOffer
+                    
+                    self?.updateSelection(outcomeId: betSelection.outcomeId, odd: updatedBettingOffer.decimalOdd)
+                    
+                })
+            
+        }
+    }
+    
+    func setupPublishers() {
+        
+        Env.betslipManager.bettingTicketsPublisher
+            .removeDuplicates()
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingTickets in
+                
+                guard let self = self else { return }
+                
+                let allSelectionsPresent = self.betSelections.allSatisfy { betSelection in
+                    bettingTickets.contains { bettingTicket in
+                        betSelection.id == bettingTicket.id
+                    }
+                }
+                
+                let isBetbuilderSelected = allSelectionsPresent
+                
+                self.isBetbuilderSelectedSubject.send(isBetbuilderSelected)
+                
+            })
+            .store(in: &cancellables)
+    }
+    
+    func updateSelection(outcomeId: String, odd: Double) {
+        
+        var betSelections = self.betSelections
+        if let index = betSelections.firstIndex(where: { $0.outcomeId == outcomeId }) {
+            var newBettingTicket = betSelections[index]
+            newBettingTicket.odd = .decimal(odd: odd)
+            betSelections[index] = newBettingTicket
+        }
+        self.betSelections = betSelections
+        
+        self.requestBetBuilderTotalOdd()
+        
     }
 }
 
@@ -77,7 +147,6 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
     
     private var viewModel: BetbuilderSelectionCellViewModel?
     
-    private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
     private var cancellables = Set<AnyCancellable>()
     
     private var isBetbuilderSelected: Bool = false {
@@ -91,7 +160,7 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    
+        
     // MARK: Lifetime and cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -108,7 +177,10 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
+        
+        self.viewModel = nil
+        
+        self.isBetbuilderSelected = false
     }
     
     // MARK: Layout and theme
@@ -165,7 +237,12 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
         self.firstStepLinkView.backgroundColor = UIColor.App.highlightPrimary
         self.secondStepLinkView.backgroundColor = UIColor.App.highlightPrimary
         
-        StyleHelper.styleButtonWithTheme(button: self.actionButton, titleColor: UIColor.App.buttonTextPrimary, titleDisabledColor: UIColor.App.buttonTextDisableSecondary, backgroundColor: UIColor.App.backgroundOdds, backgroundDisabledColor: UIColor.App.backgroundDisabledOdds, backgroundHighlightedColor: UIColor.App.backgroundOdds)
+        StyleHelper.styleButtonWithTheme(button: self.actionButton,
+                                         titleColor: UIColor.App.buttonTextPrimary,
+                                         titleDisabledColor: UIColor.App.buttonTextDisableSecondary,
+                                         backgroundColor: UIColor.App.backgroundOdds,
+                                         backgroundDisabledColor: UIColor.App.backgroundDisabledOdds,
+                                         backgroundHighlightedColor: UIColor.App.backgroundOdds)
 
     }
     
@@ -210,67 +287,36 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
             })
             .store(in: &cancellables)
         
-        Env.betslipManager.bettingTicketsPublisher
+        viewModel.isBetbuilderSelectedSubject
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] bettingTickets in
-                
-                guard let self = self else { return }
-                
-                let allSelectionsPresent = viewModel.betSelections.allSatisfy { betSelection in
-                    bettingTickets.contains { bettingTicket in
-                        betSelection.id == bettingTicket.id
-                    }
-                }
-                
-                self.isBetbuilderSelected = allSelectionsPresent
-                
+            .sink(receiveValue: { [weak self] isBetbuilderSelected in
+                self?.isBetbuilderSelected = isBetbuilderSelected
             })
             .store(in: &cancellables)
         
-        for betSelection in viewModel.betSelections {
-            self.oddUpdatesPublisher[betSelection.outcomeId] = Env.servicesProvider
-                .subscribeToEventOnListsOutcomeUpdates(withId: betSelection.outcomeId)
-                .compactMap({ $0 })
-                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
-//                .map(\.bettingOffer)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure:
-                        break
-                    }
-                }, receiveValue: { [weak self] (updatedOutcome: Outcome) in
-                    
-                    let updatedBettingOffer = updatedOutcome.bettingOffer
-                    
-                    self?.updateSelection(outcomeId: betSelection.outcomeId, odd: updatedBettingOffer.decimalOdd)
-                    
-                })
-            
-        }
-    }
-    
-    func updateSelection(outcomeId: String, odd: Double) {
-        
-        if let viewModel = self.viewModel {
-            var betSelections = viewModel.betSelections
-            if let index = betSelections.firstIndex(where: { $0.outcomeId == outcomeId }) {
-                var newBettingTicket = betSelections[index]
-                newBettingTicket.odd = .decimal(odd: odd)
-                betSelections[index] = newBettingTicket
-            }
-            viewModel.betSelections = betSelections
-            
-            viewModel.requestBetBuilderTotalOdd()
-        }
+//        Env.betslipManager.bettingTicketsPublisher
+//            .removeDuplicates()
+//            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] bettingTickets in
+//                
+//                guard let self = self else { return }
+//                
+//                let allSelectionsPresent = viewModel.betSelections.allSatisfy { betSelection in
+//                    bettingTickets.contains { bettingTicket in
+//                        betSelection.id == bettingTicket.id
+//                    }
+//                }
+//                                
+//                self.isBetbuilderSelected = allSelectionsPresent
+//                
+//            })
+//            .store(in: &cancellables)
         
     }
     
     // MARK: Action
     @objc private func didTapActionButton() {
-        print("ACTION BETBUILDER!")
         
         if let bettingTickets = self.viewModel?.betSelections {
             
@@ -281,6 +327,7 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                     }
                     
                 }
+                
             }
             else {
                 for bettingTicket in bettingTickets {
@@ -289,9 +336,11 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                     }
                     
                 }
+                
             }
             
         }
+        
     }
 }
 
