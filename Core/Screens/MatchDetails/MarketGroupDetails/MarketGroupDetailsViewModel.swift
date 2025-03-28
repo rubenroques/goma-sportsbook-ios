@@ -38,7 +38,8 @@ class MarketGroupDetailsViewModel {
         self.marketGroupId = marketGroupId
         self.store = store
         
-        if TargetVariables.hasPopularBetbuilder && marketGroupId == "Popular" {
+        // Force expand Popular bet builder group
+        if TargetVariables.hasFeatureEnabled(feature: .popularBetBuilder) && marketGroupId == "Popular" {
             self.hasPopularBetbuilder = true
         }
         else {
@@ -58,34 +59,6 @@ class MarketGroupDetailsViewModel {
             }
             .store(in: &cancellables)
         
-//        self.createPopularBetbuilderDummyContent()
-    }
-    
-    func createPopularBetbuilderDummyContent() {
-        // Create sample betbuilder options for demonstration
-        let betSelections1 = createSampleBetSelections(
-            titles: ["Doumbia, Kamory 2+", "Stade Rennas Football Club (0:3)", "Stade Rennas Football Club ou Match nul"],
-            subtitles: ["Buts du joueur (Remboursé si remplaçant)", "Handicap", "1er buteur"]
-        )
-        
-        let betSelections2 = createSampleBetSelections(
-            titles: ["Match nul", "Plus de 2.5 buts", "Les deux équipes marquent"],
-            subtitles: ["Résultat du match", "Total de buts", "Les deux équipes marquent"]
-        )
-        
-        let betSelections3 = createSampleBetSelections(
-            titles: ["Moins de 10.5 corners", "Stade Rennas gagne", "Doumbia marque"],
-            subtitles: ["Total de corners", "Résultat du match", "Buteur"]
-        )
-        
-        // Create view models for each betbuilder option
-        let betbuilderOptions = [
-            BetbuilderSelectionCellViewModel(betSelections: betSelections1),
-            BetbuilderSelectionCellViewModel(betSelections: betSelections2),
-            BetbuilderSelectionCellViewModel(betSelections: betSelections3)
-        ]
-        
-        self.betbuilderCellViewModels = betbuilderOptions
     }
     
     func getViewModelForPopularBetbuilder(withIndex index: Int? = nil) -> [BetbuilderSelectionCellViewModel] {
@@ -100,7 +73,10 @@ class MarketGroupDetailsViewModel {
         return self.betbuilderCellViewModels
     }
     
-    func getBetbuilderLineCellViewModel(withIndex index: Int, presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode) -> BetbuilderLineCellViewModel {
+    func getBetbuilderLineCellViewModel(
+        withIndex index: Int, presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode
+    ) -> BetbuilderLineCellViewModel
+    {
         
         switch presentationMode {
         case .onePerLine:
@@ -186,26 +162,4 @@ extension MarketGroupDetailsViewModel {
         return self.marketGroupOrganizersPublisher.value[safe: row]
     }
 
-    // Helper method to create sample bet selections
-    private func createSampleBetSelections(titles: [String], subtitles: [String]) -> [BettingTicket] {
-        var betSelections = [BettingTicket]()
-        
-        for i in 0..<min(titles.count, subtitles.count) {
-            let ticket = BettingTicket(id: "",
-                                       outcomeId: "",
-                                       marketId: "",
-                                       matchId: "",
-                                       decimalOdd: 0.0,
-                                       isAvailable: true,
-                                       matchDescription: "",
-                                       marketDescription: subtitles[i],
-                                       outcomeDescription: titles[i],
-                                       homeParticipantName: nil,
-                                       awayParticipantName: nil,
-                                       sportIdCode: nil)
-            betSelections.append(ticket)
-        }
-        
-        return betSelections
-    }
 }

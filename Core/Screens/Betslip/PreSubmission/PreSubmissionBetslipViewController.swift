@@ -101,6 +101,8 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var placeBetSendButtonBaseView: UIView!
     @IBOutlet private weak var placeBetButton: UIButton!
 
+    @IBOutlet private weak var spinWheelButton: UIButton!
+    
     @IBOutlet private weak var secondaryPlaceBetBaseView: UIView!
 
     @IBOutlet private weak var secondaryPlaceBetButtonsBaseView: UIView!
@@ -1394,7 +1396,17 @@ class PreSubmissionBetslipViewController: UIViewController {
                                                object: nil)
 
         self.placeBetButton.isEnabled = false
+        
+        self.spinWheelButton.setTitle("Turnoyer!", for: .normal)
+        self.spinWheelButton.titleLabel?.font = AppFont.with(type: .bold, size: 18)
 
+        // Spin Wheel
+        if TargetVariables.features.contains(.spinWheel) {
+            self.spinWheelButton.isHidden = false
+        }
+        else {
+            self.spinWheelButton.isHidden = true
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -1639,6 +1651,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.cashbackInfoMultipleValueLabel.textColor = UIColor.App.textPrimary
 
         self.cashbackCoinAnimationView.backgroundColor = .clear
+        
+        // Spin Wheel
+        StyleHelper.styleButton(button: self.spinWheelButton)
+        self.spinWheelButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+
     }
 
     private func setupFonts() {
@@ -2489,6 +2506,21 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.addAmountValue(50.0)
     }
 
+    @IBAction private func didTapSpinWheelButton() {
+        // Only proceed if the feature is enabled
+        guard TargetVariables.hasFeatureEnabled(feature: .spinWheel) else {
+            Logger.log("SpinWheel feature is disabled, button tap ignored.")
+            return
+        }
+
+        if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
+            let spinWheelWebViewModel = SpinWheelViewModel(url: url)
+            let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)
+            spinWheelWebViewController.modalPresentationStyle = .fullScreen
+            self.present(spinWheelWebViewController, animated: true)
+        }
+    }
+    
 }
 
 extension PreSubmissionBetslipViewController {

@@ -60,7 +60,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback]
+        return [.cashback, .popularBetBuilder]
     }
 
     static var shouldUserBlurEffectTabBar: Bool {
@@ -110,10 +110,6 @@ struct TargetVariables: SportsbookTarget {
 
     static var localizationOverrides: [String: String] {
         return [:]
-    }
-    
-    static var hasPopularBetbuilder: Bool {
-        return true
     }
     
     static var popularBetbuilderPresentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode {
