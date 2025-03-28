@@ -115,4 +115,9 @@ struct TargetVariables: SportsbookTarget {
     static var popularBetbuilderPresentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode {
         return .multiplesPerLineByType
     }
+    
+    static var supportedSportCodesForBetbuilder: [String] {
+        return ["FBL", "BSK", "TNS"]
+    }
+    
 }

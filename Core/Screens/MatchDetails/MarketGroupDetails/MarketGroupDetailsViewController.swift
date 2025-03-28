@@ -332,7 +332,8 @@ class MarketGroupDetailsViewController: UIViewController {
         
         self.viewModel.betbuilderLineCellViewModels = betbuilderLineCellViewModels
         
-        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder && !self.viewModel.betbuilderLineCellViewModels.isEmpty
+        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder &&
+        !self.viewModel.betbuilderLineCellViewModels.isEmpty && self.viewModel.shouldShowPopularBetbuilderForSport()
         
         self.reloadTableView()
     }

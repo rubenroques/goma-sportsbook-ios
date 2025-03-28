@@ -111,9 +111,34 @@ class MarketGroupDetailsViewModel {
     
     func shouldShowPopularBetbuilderForSport() -> Bool {
         
-        let sportIdCode = match.sport.alphaId
+        let sportCodes = TargetVariables.supportedSportCodesForBetbuilder
         
-        let matchStatus = match.status
+        let sportIdCode = self.match.sport.alphaId ?? ""
+        
+        let matchStatus = self.match.status
+        
+        let isBetbuilderSportAllowed = sportCodes.contains(sportIdCode)
+        
+        if isBetbuilderSportAllowed {
+            
+            if sportIdCode == "FBL" {
+                if matchStatus.isPreLive || matchStatus.isLive {
+                    return true
+                }
+            }
+            else if sportIdCode == "BSK" {
+                if matchStatus.isPreLive || matchStatus.isLive {
+                    return true
+                }
+            }
+            else if sportIdCode == "TNS" {
+                if matchStatus.isLive {
+                    return true
+                }
+            }
+            
+            return false
+        }
         
         return false
     }

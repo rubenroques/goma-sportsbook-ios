@@ -116,4 +116,7 @@ struct TargetVariables: SportsbookTarget {
         return .multiplesPerLineByType
     }
 
+    static var supportedSportCodesForBetbuilder: [String] {
+        return ["FBL", "BSK", "TNS"]
+    }
 }
