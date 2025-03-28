@@ -88,21 +88,26 @@ class FloatingShortcutsView: UIView {
             .map(\.count)
             .dropFirst()
             .removeDuplicates()
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipValue in
                 self?.triggerCoinAnimation(withValue: betslipValue)
             })
             .store(in: &cancellables)
         
-        Env.betslipManager.betslipValuePublisher
+        Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .dropFirst()
-            .map({ value -> Double in
-                return value.odd
+            .map({ orderedSet -> Double in
+                let newArray = orderedSet.map { $0.decimalOdd }
+                let multiple: Double = newArray.reduce(1.0, *)
+                return multiple
             })
+            .filter({ $0 >= 1 })
             .removeDuplicates()
-            .sink(receiveValue: { [weak self] oddValue in
-                self?.triggerFlipperAnimation(withValue: oddValue)
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] multiplier in
+                self?.triggerFlipperAnimation(withValue: multiplier)
             })
             .store(in: &cancellables)
 
@@ -118,7 +123,6 @@ class FloatingShortcutsView: UIView {
                 }
             })
             .store(in: &cancellables)
-        
     }
 
     func setupWithTheme() {

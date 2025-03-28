@@ -240,13 +240,14 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
         self.firstStepLinkView.backgroundColor = UIColor.App.highlightPrimary
         self.secondStepLinkView.backgroundColor = UIColor.App.highlightPrimary
         
-        StyleHelper.styleButtonWithTheme(button: self.actionButton,
-                                         titleColor: UIColor.App.buttonTextPrimary,
-                                         titleDisabledColor: UIColor.App.buttonTextDisableSecondary,
-                                         backgroundColor: UIColor.App.backgroundOdds,
-                                         backgroundDisabledColor: UIColor.App.backgroundDisabledOdds,
-                                         backgroundHighlightedColor: UIColor.App.backgroundOdds)
-
+        StyleHelper.styleButtonWithTheme(
+            button: self.actionButton,
+            titleColor: UIColor.App.buttonTextPrimary,
+            titleDisabledColor: UIColor.App.buttonTextDisableSecondary,
+            backgroundColor: UIColor.App.backgroundOdds,
+            backgroundDisabledColor: UIColor.App.backgroundDisabledOdds,
+            backgroundHighlightedColor: UIColor.App.backgroundOdds
+        )
     }
     
     // MARK: Functions
@@ -328,7 +329,6 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                     if Env.betslipManager.hasBettingTicket(bettingTicket) {
                         Env.betslipManager.removeBettingTicket(bettingTicket)
                     }
-                    
                 }
                 
             }
