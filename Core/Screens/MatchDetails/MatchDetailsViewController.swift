@@ -775,6 +775,7 @@ class MatchDetailsViewController: UIViewController {
                 case let .loaded(marketGroups):
                     self?.showMarkets()
                     self?.reloadMarketGroupDetails(marketGroups)
+                    self?.reloadRecommendedBetbuilders()
                 case .failed:
                     self?.showMarketsNotAvailableView()
                     self?.reloadMarketGroupDetails([])
@@ -1009,6 +1010,14 @@ class MatchDetailsViewController: UIViewController {
         for marketGroupsViewController in marketGroupsViewControllers {
             (marketGroupsViewController as? MarketGroupDetailsViewController)?.reloadContent()
         }
+    }
+    
+    func reloadRecommendedBetbuilders() {
+        
+        let recommendedBetbuilder = self.viewModel.recommendedBetBuilders.value
+        
+        self.configureRecommendedBetBuilder(recommendedBetBuilder: recommendedBetbuilder)
+        
     }
 
     func scrollToMarketDetailViewController(atIndex index: Int) {

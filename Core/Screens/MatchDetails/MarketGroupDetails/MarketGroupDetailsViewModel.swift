@@ -133,6 +133,17 @@ class MarketGroupDetailsViewModel {
         return self.store.firstMarket()
     }
     
+    func getMarketById(marketId: String) -> Market? {
+        // First check if the market is in the availableMarkets array
+        if let market = availableMarkets.first(where: { $0.id == marketId }) {
+            return market
+        }
+                
+        // If not found in availableMarkets, check in the match's markets
+        return match.markets.first(where: {
+            $0.id == marketId
+        })
+    }
 }
 
 extension MarketGroupDetailsViewModel {

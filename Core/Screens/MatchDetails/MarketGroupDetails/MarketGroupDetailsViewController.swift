@@ -75,7 +75,7 @@ class MarketGroupDetailsViewController: UIViewController {
         
         self.presentationMode = TargetVariables.popularBetbuilderPresentationMode
         
-        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder && !self.viewModel.betbuilderLineCellViewModels.isEmpty
+//        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder && !self.viewModel.betbuilderLineCellViewModels.isEmpty
 
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
@@ -252,11 +252,29 @@ class MarketGroupDetailsViewController: UIViewController {
                     return ServiceProviderModelMapper.bettingTicket(fromRecommendedBetbuilderSelection: $0)
                 })
                 
-                let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: bettingTickets)
+                var mappedBettingTickets = [BettingTicket]()
                 
-                let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: [betbuilderCellViewModel])
+                for bettingTicket in bettingTickets {
+                    
+                    if let marketFound = self.viewModel.getMarketById(marketId: bettingTicket.marketId) {
+                        
+                        let outcomeFound = marketFound.outcomes.filter({
+                            $0.id == bettingTicket.outcomeId
+                        }).first
+                        
+                        let newBettingTicket = BettingTicket(id: bettingTicket.id, outcomeId: bettingTicket.outcomeId, marketId: bettingTicket.marketId, matchId: bettingTicket.matchId, decimalOdd: bettingTicket.decimalOdd, isAvailable: bettingTicket.isAvailable, matchDescription: bettingTicket.matchDescription, marketDescription: marketFound.name, outcomeDescription: outcomeFound?.translatedName ?? bettingTicket.outcomeDescription, homeParticipantName: bettingTicket.homeParticipantName, awayParticipantName: bettingTicket.awayParticipantName, sportIdCode: bettingTicket.sportIdCode)
+                        
+                        mappedBettingTickets.append(newBettingTicket)
+                    }
+                }
                 
-                betbuilderLineCellViewModels.append(betbuilderLineCellViewModel)
+                if mappedBettingTickets.count == 3 {
+                    let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: mappedBettingTickets)
+                    
+                    let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: [betbuilderCellViewModel])
+                    
+                    betbuilderLineCellViewModels.append(betbuilderLineCellViewModel)
+                }
             }
         case .multiplesPerLineByType:
             
@@ -268,14 +286,34 @@ class MarketGroupDetailsViewController: UIViewController {
                     return ServiceProviderModelMapper.bettingTicket(fromRecommendedBetbuilderSelection: $0)
                 })
                 
-                let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: bettingTickets)
+                var mappedBettingTickets = [BettingTicket]()
                 
-                betbuilderSelectionCellViewModels.append(betbuilderCellViewModel)
+                for bettingTicket in bettingTickets {
+                    
+                    if let marketFound = self.viewModel.getMarketById(marketId: bettingTicket.marketId) {
+                        
+                        let outcomeFound = marketFound.outcomes.filter({
+                            $0.id == bettingTicket.outcomeId
+                        }).first
+                        
+                        let newBettingTicket = BettingTicket(id: bettingTicket.id, outcomeId: bettingTicket.outcomeId, marketId: bettingTicket.marketId, matchId: bettingTicket.matchId, decimalOdd: bettingTicket.decimalOdd, isAvailable: bettingTicket.isAvailable, matchDescription: bettingTicket.matchDescription, marketDescription: marketFound.name, outcomeDescription: outcomeFound?.translatedName ?? bettingTicket.outcomeDescription, homeParticipantName: bettingTicket.homeParticipantName, awayParticipantName: bettingTicket.awayParticipantName, sportIdCode: bettingTicket.sportIdCode)
+                        
+                        mappedBettingTickets.append(newBettingTicket)
+                    }
+                }
+                
+                if mappedBettingTickets.count == 3 {
+                    let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: mappedBettingTickets)
+                    
+                    betbuilderSelectionCellViewModels.append(betbuilderCellViewModel)
+                }
             }
             
-            let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: betbuilderSelectionCellViewModels)
-            
-            betbuilderLineCellViewModels.append(betbuilderLineCellViewModel)
+            if betbuilderSelectionCellViewModels.isNotEmpty {
+                let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: betbuilderSelectionCellViewModels)
+                
+                betbuilderLineCellViewModels.append(betbuilderLineCellViewModel)
+            }
         }
         
         self.viewModel.betbuilderLineCellViewModels = betbuilderLineCellViewModels

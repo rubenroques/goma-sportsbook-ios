@@ -165,8 +165,7 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
         self.firstStepLinkView.backgroundColor = UIColor.App.highlightPrimary
         self.secondStepLinkView.backgroundColor = UIColor.App.highlightPrimary
         
-        StyleHelper.styleButton(button: self.actionButton)
-        self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
+        StyleHelper.styleButtonWithTheme(button: self.actionButton, titleColor: UIColor.App.buttonTextPrimary, titleDisabledColor: UIColor.App.buttonTextDisableSecondary, backgroundColor: UIColor.App.backgroundOdds, backgroundDisabledColor: UIColor.App.backgroundDisabledOdds, backgroundHighlightedColor: UIColor.App.backgroundOdds)
 
     }
     
@@ -202,9 +201,11 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                 
                 if totalOdd > 0.0 {
                     self?.actionButton.setTitle("\(totalOdd)", for: .normal)
+                    self?.actionButton.isEnabled = true
                 }
                 else {
                     self?.actionButton.setTitle("-.-", for: .normal)
+                    self?.actionButton.isEnabled = false
                 }
             })
             .store(in: &cancellables)
@@ -231,7 +232,7 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                 .subscribeToEventOnListsOutcomeUpdates(withId: betSelection.outcomeId)
                 .compactMap({ $0 })
                 .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
-                .map(\.bettingOffer)
+//                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     switch completion {
@@ -240,7 +241,9 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                     case .failure:
                         break
                     }
-                }, receiveValue: { [weak self] (updatedBettingOffer: BettingOffer) in
+                }, receiveValue: { [weak self] (updatedOutcome: Outcome) in
+                    
+                    let updatedBettingOffer = updatedOutcome.bettingOffer
                     
                     self?.updateSelection(outcomeId: betSelection.outcomeId, odd: updatedBettingOffer.decimalOdd)
                     
