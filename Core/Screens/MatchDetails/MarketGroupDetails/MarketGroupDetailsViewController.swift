@@ -70,22 +70,14 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
         self.tableView.register(BetbuilderLineTableViewCell.self, forCellReuseIdentifier: BetbuilderLineTableViewCell.identifier)
         self.tableView.register(IconTitleHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: IconTitleHeaderFooterView.identifier)
-
-//        self.tableView.bounces = false
         
         self.presentationMode = TargetVariables.popularBetbuilderPresentationMode
-        
-//        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder && !self.viewModel.betbuilderLineCellViewModels.isEmpty
 
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.showLoading()
 
         self.bind(toViewModel: self.viewModel)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -105,10 +97,6 @@ class MarketGroupDetailsViewController: UIViewController {
         self.view.backgroundColor = .clear
 
         self.tableView.backgroundColor = .clear
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
     }
 
     // MARK: - Bindings

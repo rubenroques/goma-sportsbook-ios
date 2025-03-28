@@ -38,7 +38,8 @@ class MarketGroupDetailsViewModel {
         self.marketGroupId = marketGroupId
         self.store = store
         
-        if TargetVariables.hasPopularBetbuilder && marketGroupId == "Popular" {
+        // Force expand Popular bet builder group
+        if TargetVariables.hasFeatureEnabled(feature: .popularBetBuilder) && marketGroupId == "Popular" {
             self.hasPopularBetbuilder = true
         }
         else {

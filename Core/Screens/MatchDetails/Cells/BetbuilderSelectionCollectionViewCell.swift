@@ -285,7 +285,6 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                     if Env.betslipManager.hasBettingTicket(bettingTicket) {
                         Env.betslipManager.removeBettingTicket(bettingTicket)
                     }
-                    
                 }
             }
             else {
