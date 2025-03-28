@@ -132,6 +132,15 @@ class MarketGroupDetailsViewModel {
         }
         
     }
+    
+    func shouldShowPopularBetbuilderForSport() -> Bool {
+        
+        let sportIdCode = match.sport.alphaId
+        
+        let matchStatus = match.status
+        
+        return false
+    }
 
     func fetchMarketGroupDetails() {
         self.storeMarketGroupDetailsFromMarkets(markets: self.availableMarkets)
