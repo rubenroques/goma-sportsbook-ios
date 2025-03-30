@@ -6692,6 +6692,83 @@
 		CE0C6CEF2D56716000EAD26B /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CE0C6CEE2D56716000EAD26B /* Lottie */; };
 		CE0C6CF12D56716000EAD26B /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE0C6CF02D56716000EAD26B /* PhraseSDK */; };
 		CE0C6CF32D56716000EAD26B /* SwiftPrettyPrint in Frameworks */ = {isa = PBXBuildFile; productRef = CE0C6CF22D56716000EAD26B /* SwiftPrettyPrint */; };
+		CE10E7B32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7B42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7B52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7B62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7B72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7B82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7B92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7BA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7BB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7BC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7BD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7BE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7BF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7C02D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7C12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7C22D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7C32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7C42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7C52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7C62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7C72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7C82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7C92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7CA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7CB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7CC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7CD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7CE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7CF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7D02D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7D12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7D22D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7D32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7D42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7D52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7D62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7D72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7D82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7D92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7DA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7DB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7DC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7DD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7DE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7DF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7E02D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7E12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7E22D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7E32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7E42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7E52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7E62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7E72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7E82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7E92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7EA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7EB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7EC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7ED2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7EE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7EF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7F02D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7F12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7F22D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7F32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7F42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7F52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7F62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7F72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7F82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE10E7F92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		CE10E7FA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE10E7FB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE10E7FC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE10E7FD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE10E7FE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE10E7FF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */; };
 		CE12A0E42D2D992C0022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E32D2D992C0022BDF7 /* Media.xcassets */; };
 		CE12A0E62D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
 		CE12A0E72D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
@@ -7607,6 +7684,314 @@
 		CE544FCF2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FD02D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FD12D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
+		CE5B548A2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B548B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B548C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B548D2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B548E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B548F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54902D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54912D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54922D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B54932D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54942D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54952D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54962D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54972D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54982D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B54992D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B549A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B549B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B549C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B549D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B549E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B549F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54A02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54A12D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54A22D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54A32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54A42D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54A52D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B54A62D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54A72D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54A82D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54A92D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54AA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54AB2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54AC2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54AD2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54AE2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B54AF2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54B02D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54B12D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54B22D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54B32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54B42D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B54B52D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54B62D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54B72D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54B82D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54B92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B54BA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54BB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54BC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54BD2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54BE2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54BF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54C02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54C12D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B54C22D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54C32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54C42D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54C52D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54C62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54C72D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54C82D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54C92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54CA2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B54CB2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54CC2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54CD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54CE2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54CF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54D02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B54D12D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54D22D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54D32D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54D42D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54D52D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B54D62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54D72D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54D82D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54D92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54DA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54DB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54DC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54DD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B54DE2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54DF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54E02D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54E12D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54E22D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54E32D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54E42D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54E52D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54E62D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B54E72D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54E82D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54E92D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54EA2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54EB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54EC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B54ED2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54EE2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54EF2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54F02D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54F12D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B54F22D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54F32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54F42D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54F52D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B54F62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54F72D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B54F82D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54F92D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B54FA2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B54FB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B54FC2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54FD2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B54FE2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B54FF2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55002D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55012D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55022D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55032D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55042D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55052D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55062D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55072D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55082D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55092D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B550A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B550B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B550C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B550D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B550E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B550F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55102D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55112D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55122D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55132D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55142D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55152D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B55162D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55172D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55182D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55192D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B551A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B551B2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B551C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B551D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B551E2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B551F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55202D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55212D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55222D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55232D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55242D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55252D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55262D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55272D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55282D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55292D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B552A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B552B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B552C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B552D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B552E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B552F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55302D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55312D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B55322D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55332D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55342D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55352D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55362D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55372D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55382D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55392D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B553A2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B553B2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B553C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B553D2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B553E2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B553F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55402D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55412D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55422D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55432D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55442D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55452D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B55462D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55472D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55482D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55492D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B554A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B554B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B554C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B554D2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B554E2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B554F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55502D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55512D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55522D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55532D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55542D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55552D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55562D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55572D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55582D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55592D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B555A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B555B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B555C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B555D2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B555E2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B555F2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55602D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55612D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B55622D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55632D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55642D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55652D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55672D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55692D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B556A2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B556B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B556C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B556D2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B556E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B556F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55702D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55712D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55722D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55732D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55742D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55752D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55762D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55772D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55782D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55792D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B557A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B557B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B557C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B557D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B557E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B557F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55802D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55812D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55822D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55832D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55842D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55852D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B55862D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55872D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55892D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B558A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B558B2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B558C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B558D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B558E2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B558F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55902D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55912D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55922D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55932D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55942D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55952D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55962D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55972D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55982D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55992D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B559A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B559B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B559C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B559D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B559E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B559F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55A02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55A12D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
+		CE5B55A22D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55A32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55A42D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55A52D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55A62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55A72D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55A82D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55A92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55AA2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55AB2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55AC2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55AD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55AE2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55AF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55B02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */; };
+		CE5B55B12D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55B22D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55B32D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55B42D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */; };
+		CE5B55B52D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */; };
+		CE5B55B62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55B72D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */; };
+		CE5B55B82D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55B92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */; };
+		CE5B55BA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */; };
+		CE5B55BB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */; };
+		CE5B55BC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */; };
+		CE5B55BD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */; };
 		CE5D22382D93FEC30001B1E4 /* ViewModelCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D22372D93FEC30001B1E4 /* ViewModelCache.swift */; };
 		CE5D22392D93FEC30001B1E4 /* ViewModelCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D22372D93FEC30001B1E4 /* ViewModelCache.swift */; };
 		CE5D223A2D93FEC30001B1E4 /* ViewModelCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5D22372D93FEC30001B1E4 /* ViewModelCache.swift */; };
@@ -10605,13 +10990,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		6550BFB22D67706800270C58 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 455A0C4826BD902C00EC572D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 45F6BAA72AB3732C00C81DE1;
-			remoteInfo = "Betsson UAT";
-		};
 		655E20002B21E8A500C95337 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 455A0C4826BD902C00EC572D /* Project object */;
@@ -11104,7 +11482,6 @@
 		6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardSecondaryMarketCollectionViewCell.swift; sourceTree = "<group>"; };
 		6547C87F2C63DBF00041409C /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		6547C8882C650BA50041409C /* CustomPageIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageIndicator.swift; sourceTree = "<group>"; };
-		6550BFAE2D67706800270C58 /* RegisterFlowUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RegisterFlowUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		655E1FFD2B21E8A500C95337 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		655E1FFF2B21E8A500C95337 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -11545,6 +11922,13 @@
 		CE0C6CD12D56377800EAD26B /* avatar5-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar5-light.json"; sourceTree = "<group>"; };
 		CE0C6CD22D56377800EAD26B /* avatar6-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-dark.json"; sourceTree = "<group>"; };
 		CE0C6CD32D56377800EAD26B /* avatar6-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-light.json"; sourceTree = "<group>"; };
+		CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiveMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
+		CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiveMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
+		CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiveMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
+		CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiveMatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
+		CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiveMatchWidgetCollectionViewCell+Layout.swift"; sourceTree = "<group>"; };
+		CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LiveMatchWidgetCollectionViewCell+Styling.swift"; sourceTree = "<group>"; };
+		CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE12A0E32D2D992C0022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE12A0E52D2D99B60022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Gradients.xcassets; sourceTree = "<group>"; };
@@ -11564,6 +11948,34 @@
 		CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Promotional.swift"; sourceTree = "<group>"; };
 		CE35757F2D92B3F5009E0029 /* NSLayoutConstraint+Priority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Priority.swift"; sourceTree = "<group>"; };
 		CE544FC92D07029900AA24CA /* first_deposit_8.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = first_deposit_8.json; sourceTree = "<group>"; };
+		CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
+		CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
+		CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
+		CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
+		CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Layout.swift"; sourceTree = "<group>"; };
+		CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Styling.swift"; sourceTree = "<group>"; };
+		CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundImageMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BoostedMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
+		CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BoostedMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
+		CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BoostedMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
+		CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BoostedMatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
+		CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BoostedMatchWidgetCollectionViewCell+Layout.swift"; sourceTree = "<group>"; };
+		CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BoostedMatchWidgetCollectionViewCell+Styling.swift"; sourceTree = "<group>"; };
+		CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoostedMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OutrightMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
+		CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OutrightMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
+		CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OutrightMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
+		CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OutrightMatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
+		CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OutrightMatchWidgetCollectionViewCell+Layout.swift"; sourceTree = "<group>"; };
+		CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OutrightMatchWidgetCollectionViewCell+Styling.swift"; sourceTree = "<group>"; };
+		CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TopImageMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
+		CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TopImageMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
+		CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TopImageMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
+		CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TopImageMatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
+		CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TopImageMatchWidgetCollectionViewCell+Layout.swift"; sourceTree = "<group>"; };
+		CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TopImageMatchWidgetCollectionViewCell+Styling.swift"; sourceTree = "<group>"; };
+		CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopImageMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE5D22372D93FEC30001B1E4 /* ViewModelCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelCache.swift; sourceTree = "<group>"; };
 		CE5D22462D9403160001B1E4 /* ViewModelCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelCacheTests.swift; sourceTree = "<group>"; };
 		CE612A8F2D8F003900F911CF /* MatchInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchInfoView.swift; sourceTree = "<group>"; };
@@ -12053,13 +12465,6 @@
 				45C10F232C652AC500D187A1 /* FirebaseDatabase in Frameworks */,
 				45C10F3C2C652AC500D187A1 /* IdensicMobileSDK in Frameworks */,
 				45C10F202C652AC500D187A1 /* FirebaseAnalytics in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6550BFAB2D67706800270C58 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12620,7 +13025,6 @@
 				655E1FFB2B21E8A500C95337 /* NotificationsService.appex */,
 				CE12A4C02D31347E0022BDF7 /* SportRadar PROD.app */,
 				CEA5699C2D5A58D800696793 /* ATP.app */,
-				6550BFAE2D67706800270C58 /* RegisterFlowUnitTests.xctest */,
 				CEB5D7B32D88BC4D00B9D73F /* PMU.app */,
 			);
 			name = Products;
@@ -15527,6 +15931,28 @@
 			path = SmallToolTipView;
 			sourceTree = "<group>";
 		};
+		CE10E7B02D97D3B900DEAA12 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CE10E7AA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift */,
+				CE10E7AB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift */,
+				CE10E7AC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift */,
+				CE10E7AD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift */,
+				CE10E7AE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift */,
+				CE10E7AF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CE10E7B22D97D3B900DEAA12 /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				CE10E7B02D97D3B900DEAA12 /* Extensions */,
+				CE10E7B12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift */,
+			);
+			path = Live;
+			sourceTree = "<group>";
+		};
 		CE12A4C82D3135200022BDF7 /* Misc-PROD */ = {
 			isa = PBXGroup;
 			children = (
@@ -15602,6 +16028,94 @@
 				CE2E0F122D3995D100488EF5 /* replay_sucess.json */,
 			);
 			path = Animations;
+			sourceTree = "<group>";
+		};
+		CE5B546C2D99A2DF006837C4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */,
+				CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */,
+				CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */,
+				CE5B54692D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift */,
+				CE5B546A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift */,
+				CE5B546B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CE5B546E2D99A2DF006837C4 /* BackgroundImage */ = {
+			isa = PBXGroup;
+			children = (
+				CE5B546C2D99A2DF006837C4 /* Extensions */,
+				CE5B546D2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift */,
+			);
+			path = BackgroundImage;
+			sourceTree = "<group>";
+		};
+		CE5B54752D99A2DF006837C4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */,
+				CE5B54702D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift */,
+				CE5B54712D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift */,
+				CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */,
+				CE5B54732D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift */,
+				CE5B54742D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CE5B54772D99A2DF006837C4 /* Boosted */ = {
+			isa = PBXGroup;
+			children = (
+				CE5B54752D99A2DF006837C4 /* Extensions */,
+				CE5B54762D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift */,
+			);
+			path = Boosted;
+			sourceTree = "<group>";
+		};
+		CE5B547E2D99A2DF006837C4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CE5B54782D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift */,
+				CE5B54792D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift */,
+				CE5B547A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift */,
+				CE5B547B2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift */,
+				CE5B547C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift */,
+				CE5B547D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CE5B54802D99A2DF006837C4 /* Outright */ = {
+			isa = PBXGroup;
+			children = (
+				CE5B547E2D99A2DF006837C4 /* Extensions */,
+				CE5B547F2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift */,
+			);
+			path = Outright;
+			sourceTree = "<group>";
+		};
+		CE5B54872D99A2DF006837C4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CE5B54812D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift */,
+				CE5B54822D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift */,
+				CE5B54832D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift */,
+				CE5B54842D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift */,
+				CE5B54852D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift */,
+				CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CE5B54892D99A2DF006837C4 /* TopImage */ = {
+			isa = PBXGroup;
+			children = (
+				CE5B54872D99A2DF006837C4 /* Extensions */,
+				CE5B54882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift */,
+			);
+			path = TopImage;
 			sourceTree = "<group>";
 		};
 		CE5D22472D9403160001B1E4 /* Helpers */ = {
@@ -15938,6 +16452,11 @@
 		CEAB09862D77588D00541098 /* Match */ = {
 			isa = PBXGroup;
 			children = (
+				CE5B546E2D99A2DF006837C4 /* BackgroundImage */,
+				CE5B54772D99A2DF006837C4 /* Boosted */,
+				CE5B54802D99A2DF006837C4 /* Outright */,
+				CE5B54892D99A2DF006837C4 /* TopImage */,
+				CE10E7B22D97D3B900DEAA12 /* Live */,
 				CE794C1A2D95E17100275FDF /* PreLive */,
 				CED5D8D92D944B7100429306 /* Classic */,
 				CE612A9C2D91645F00F911CF /* MarketOutcomesLine */,
@@ -16653,26 +17172,6 @@
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6550BFAD2D67706800270C58 /* RegisterFlowUnitTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6550BFB62D67706800270C58 /* Build configuration list for PBXNativeTarget "RegisterFlowUnitTests" */;
-			buildPhases = (
-				6550BFAA2D67706800270C58 /* Sources */,
-				6550BFAB2D67706800270C58 /* Frameworks */,
-				6550BFAC2D67706800270C58 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6550BFB32D67706800270C58 /* PBXTargetDependency */,
-			);
-			name = RegisterFlowUnitTests;
-			packageProductDependencies = (
-			);
-			productName = RegisterFlowUnitTests;
-			productReference = 6550BFAE2D67706800270C58 /* RegisterFlowUnitTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		655E1FFA2B21E8A500C95337 /* NotificationsService */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 655E20032B21E8A500C95337 /* Build configuration list for PBXNativeTarget "NotificationsService" */;
@@ -16941,10 +17440,6 @@
 						CreatedOnToolsVersion = 12.5.1;
 						TestTargetID = 45A3302B298976BA008181E9;
 					};
-					6550BFAD2D67706800270C58 = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = 45F6BAA72AB3732C00C81DE1;
-					};
 					655E1FFA2B21E8A500C95337 = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
@@ -16997,7 +17492,6 @@
 				A9C3407E28F9A74A0055360B /* GomaSportRadar */,
 				457CB9C5282D27D000ED0F00 /* EveryMatrix */,
 				457CBC6C282D2CD100ED0F00 /* Crocobet */,
-				6550BFAD2D67706800270C58 /* RegisterFlowUnitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -18136,13 +18630,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6550BFAC2D67706800270C58 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		655E1FF92B21E8A500C95337 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -19080,6 +19567,34 @@
 				450B788028F58574009229E3 /* Constants.swift in Sources */,
 				450B788228F58574009229E3 /* ConversationsDetailViewModel.swift in Sources */,
 				450B788328F58574009229E3 /* DocumentPickerView.swift in Sources */,
+				CE5B54C22D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54C32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54C42D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54C52D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54C62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54C72D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54C82D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54C92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54CA2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54CB2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54CC2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54CD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54CE2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54CF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54D02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54D12D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54D22D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54D32D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54D42D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54D52D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54D62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54D72D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54D82D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54D92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54DA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54DB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54DC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54DD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				450B788428F58574009229E3 /* NSAttributedString+Extensions.swift in Sources */,
 				450B788528F58574009229E3 /* BettingHistoryRootViewController.swift in Sources */,
 				450B788628F58574009229E3 /* DepositViewModel.swift in Sources */,
@@ -19611,6 +20126,13 @@
 				45372F5C29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				450B7A1D28F58574009229E3 /* SearchTitleSectionHeaderView.swift in Sources */,
 				450B7A1E28F58574009229E3 /* EmptyCardTableViewCell.swift in Sources */,
+				CE10E7E42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7E52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7E62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7E72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7E82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7E92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7EA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEA667552D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				450B7A2028F58574009229E3 /* AddFriendViewController.swift in Sources */,
 				653A37CB2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
@@ -19879,6 +20401,34 @@
 				457CBA22282D27D000ED0F00 /* ResultsHeaderFooterView.swift in Sources */,
 				45B6E24528415268001B570C /* SelectFriendTableViewCell.swift in Sources */,
 				457CBA23282D27D000ED0F00 /* EMMatch.swift in Sources */,
+				CE5B554E2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B554F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55502D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55512D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55522D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55532D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55542D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55552D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55562D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55572D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55582D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55592D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B555A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B555B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B555C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B555D2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B555E2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B555F2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55602D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55612D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55622D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55632D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55642D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55652D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55672D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55692D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				457CBA24282D27D000ED0F00 /* RecentSearchRowView.swift in Sources */,
 				457CBA25282D27D000ED0F00 /* OddViewPosition.swift in Sources */,
 				457CBA26282D27D000ED0F00 /* FilterSliderInfoView.swift in Sources */,
@@ -20410,6 +20960,13 @@
 				A93FE2092A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				457CBB64282D27D000ED0F00 /* NetworkModels.swift in Sources */,
 				457CBB65282D27D000ED0F00 /* RootViewController.swift in Sources */,
+				CE10E7BA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7BB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7BC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7BD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7BE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7BF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7C02D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEA667542D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				A9BA041D2A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				457CBB67282D27D000ED0F00 /* SportType.swift in Sources */,
@@ -20872,6 +21429,34 @@
 				457CBD33282D2CD100ED0F00 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				457CBD34282D2CD100ED0F00 /* PopUpDetails.swift in Sources */,
 				A9A207E6283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */,
+				CE5B55322D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55332D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55342D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55352D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55362D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55372D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55382D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55392D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B553A2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B553B2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B553C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B553D2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B553E2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B553F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55402D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55412D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55422D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55432D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55442D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55452D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55462D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55472D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55482D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55492D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B554A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B554B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B554C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B554D2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				A9DF8E0628DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
 				CE9A37C52D824750006B6176 /* ServiceProviderModelMapper+Banner.swift in Sources */,
 				A90C373629C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
@@ -21204,6 +21789,13 @@
 				457CBE10282D2CD100ED0F00 /* NewGroupViewModel.swift in Sources */,
 				A98708A728D3441800F27348 /* RankingCellViewModel.swift in Sources */,
 				6561B6172C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
+				CE10E7CF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7D02D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7D12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7D22D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7D32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7D42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7D52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				457CBE11282D2CD100ED0F00 /* SegmentControlItemView.swift in Sources */,
 				45C10F8728772DA700037BBE /* UIViewController+Shift.swift in Sources */,
 				457CBE12282D2CD100ED0F00 /* AppearanceViewController.swift in Sources */,
@@ -21435,6 +22027,34 @@
 				4589C7A3282024E400243547 /* Constants.swift in Sources */,
 				4589C7A5282024E400243547 /* ConversationsDetailViewModel.swift in Sources */,
 				4589C7A6282024E400243547 /* DocumentPickerView.swift in Sources */,
+				CE5B54DE2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54DF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54E02D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54E12D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54E22D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54E32D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54E42D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54E52D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54E62D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54E72D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54E82D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54E92D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54EA2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54EB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54EC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54ED2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54EE2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54EF2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54F02D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54F12D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54F22D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54F32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54F42D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54F52D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54F62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54F72D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54F82D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54F92D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				4589C7A7282024E400243547 /* NSAttributedString+Extensions.swift in Sources */,
 				4589C7A8282024E400243547 /* BettingHistoryRootViewController.swift in Sources */,
 				4589C7A9282024E400243547 /* DepositViewModel.swift in Sources */,
@@ -21966,6 +22586,13 @@
 				45372F5D29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				4589C8E2282024E400243547 /* EmptyCardTableViewCell.swift in Sources */,
 				4589C8E4282024E400243547 /* AddFriendViewController.swift in Sources */,
+				CE10E7C82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7C92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7CA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7CB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7CC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7CD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7CE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEA667532D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				4589C8E5282024E400243547 /* GroupUserManagementCellViewModel.swift in Sources */,
 				653A37CA2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
@@ -22214,6 +22841,34 @@
 				45A33091298976BA008181E9 /* Constants.swift in Sources */,
 				45A33093298976BA008181E9 /* ConversationsDetailViewModel.swift in Sources */,
 				45A33094298976BA008181E9 /* DocumentPickerView.swift in Sources */,
+				CE5B548A2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B548B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B548C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B548D2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B548E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B548F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54902D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54912D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54922D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54932D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54942D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54952D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54962D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54972D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54982D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54992D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B549A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B549B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B549C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B549D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B549E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B549F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54A02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54A12D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54A22D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54A32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54A42D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54A52D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				45A33095298976BA008181E9 /* NSAttributedString+Extensions.swift in Sources */,
 				45A33096298976BA008181E9 /* BettingHistoryRootViewController.swift in Sources */,
 				45A33097298976BA008181E9 /* DepositViewModel.swift in Sources */,
@@ -22745,6 +23400,13 @@
 				45372F5B29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				45A3323C298976BA008181E9 /* SearchTitleSectionHeaderView.swift in Sources */,
 				45A3323E298976BA008181E9 /* EmptyCardTableViewCell.swift in Sources */,
+				CE10E7F92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7FA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7FB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7FC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7FD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7FE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7FF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEA667582D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				45A33240298976BA008181E9 /* AddFriendViewController.swift in Sources */,
 				653A37C42D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
@@ -22993,6 +23655,34 @@
 				A9DD89F82A57144D00D3A5FE /* SubjectType.swift in Sources */,
 				A9B331BD288EF21300D097F0 /* MessagesViewController.swift in Sources */,
 				45A6BBF628246A7500D9B416 /* DepositViewModel.swift in Sources */,
+				CE5B55A22D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55A32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55A42D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55A52D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55A62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55A72D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55A82D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55A92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55AA2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55AB2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55AC2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55AD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55AE2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55AF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55B02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55B12D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55B22D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55B32D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55B42D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55B52D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55B62D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55B72D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55B82D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55B92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55BA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55BB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55BC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55BD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				A9863ED6286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
 				4521F0932CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				45A6BBF728246A7500D9B416 /* UserSession.swift in Sources */,
@@ -23524,6 +24214,13 @@
 				45A6BD3728246A7500D9B416 /* GamesNotificationViewModel.swift in Sources */,
 				45A6BD3828246A7500D9B416 /* SearchTitleSectionHeaderView.swift in Sources */,
 				CEA6675A2D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
+				CE10E7F22D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7F32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7F42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7F52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7F62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7F72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7F82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				A99CC2F42A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				45A6BD3928246A7500D9B416 /* EmptyCardTableViewCell.swift in Sources */,
 				45A6BD3B28246A7500D9B416 /* AddFriendViewController.swift in Sources */,
@@ -23772,6 +24469,34 @@
 				45F6BB2D2AB3732C00C81DE1 /* Constants.swift in Sources */,
 				45F6BB2E2AB3732C00C81DE1 /* ConversationsDetailViewModel.swift in Sources */,
 				45F6BB2F2AB3732C00C81DE1 /* DocumentPickerView.swift in Sources */,
+				CE5B54FA2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54FB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54FC2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54FD2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54FE2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54FF2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55002D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55012D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55022D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55032D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55042D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55052D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55062D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55072D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55082D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55092D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B550A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B550B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B550C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B550D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B550E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B550F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55102D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55112D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55122D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55132D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55142D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55152D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				45F6BB302AB3732C00C81DE1 /* NSAttributedString+Extensions.swift in Sources */,
 				45F6BB312AB3732C00C81DE1 /* BettingHistoryRootViewController.swift in Sources */,
 				45F6BB322AB3732C00C81DE1 /* DepositViewModel.swift in Sources */,
@@ -24303,6 +25028,13 @@
 				45F6BCF32AB3732C00C81DE1 /* ServiceProviderModelMapper.swift in Sources */,
 				45F6BCF42AB3732C00C81DE1 /* OddOutcomesSortingHelper.swift in Sources */,
 				45F6BCF52AB3732C00C81DE1 /* SearchTitleSectionHeaderView.swift in Sources */,
+				CE10E7D62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7D72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7D82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7D92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7DA2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7DB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7DC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEA667592D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				45F6BCF72AB3732C00C81DE1 /* EmptyCardTableViewCell.swift in Sources */,
 				653A37C92D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
@@ -24456,13 +25188,6 @@
 				45F6BD772AB3732C00C81DE1 /* BettingOffer.swift in Sources */,
 				45F6BD782AB3732C00C81DE1 /* SmoothProgressBarView.swift in Sources */,
 				45F6BD792AB3732C00C81DE1 /* MyGamesTypeList.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6550BFAA2D67706800270C58 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -24780,6 +25505,34 @@
 				45ECD7592A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				A9C3415E28F9A74A0055360B /* FeaturedTipDetailsViewController.swift in Sources */,
 				A9C3415F28F9A74A0055360B /* BonusHistoryTableViewCell.swift in Sources */,
+				CE5B54A62D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54A72D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54A82D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54A92D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54AA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54AB2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54AC2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54AD2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54AE2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54AF2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54B02D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54B12D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54B22D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54B32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54B42D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54B52D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54B62D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54B72D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54B82D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B54B92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B54BA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54BB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B54BC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54BD2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B54BE2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B54BF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B54C02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B54C12D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				A9BA041B2A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				CE9A37C32D824750006B6176 /* ServiceProviderModelMapper+Banner.swift in Sources */,
 				A9C3416028F9A74A0055360B /* BetSelectionStateTableViewCell.swift in Sources */,
@@ -25112,6 +25865,13 @@
 				A9C3427B28F9A74A0055360B /* NetworkModels.swift in Sources */,
 				A9C3427C28F9A74A0055360B /* RootViewController.swift in Sources */,
 				A9C3427E28F9A74A0055360B /* SportType.swift in Sources */,
+				CE10E7B32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7B42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7B52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7B62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7B72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7B82D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7B92D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				A9C3427F28F9A74A0055360B /* UIViewController+Shift.swift in Sources */,
 				4566339929DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A9C3428028F9A74A0055360B /* EditContactViewController.swift in Sources */,
@@ -25343,6 +26103,34 @@
 				CE12A18B2D31347E0022BDF7 /* Constants.swift in Sources */,
 				CE12A18C2D31347E0022BDF7 /* ConversationsDetailViewModel.swift in Sources */,
 				CE12A18D2D31347E0022BDF7 /* DocumentPickerView.swift in Sources */,
+				CE5B55862D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55872D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55882D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55892D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B558A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B558B2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B558C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B558D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B558E2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B558F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55902D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55912D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55922D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55932D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55942D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55952D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55962D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55972D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55982D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55992D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B559A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B559B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B559C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B559D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B559E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B559F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55A02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55A12D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				CE12A18E2D31347E0022BDF7 /* NSAttributedString+Extensions.swift in Sources */,
 				CE12A18F2D31347E0022BDF7 /* BettingHistoryRootViewController.swift in Sources */,
 				CE12A1902D31347E0022BDF7 /* DepositViewModel.swift in Sources */,
@@ -25874,6 +26662,13 @@
 				CE12A36E2D31347E0022BDF7 /* SearchTitleSectionHeaderView.swift in Sources */,
 				CE12A3712D31347E0022BDF7 /* EmptyCardTableViewCell.swift in Sources */,
 				CE12A3722D31347E0022BDF7 /* AddFriendViewController.swift in Sources */,
+				CE10E7DD2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7DE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7DF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7E02D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7E12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7E22D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7E32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEA667572D84A9F900C74895 /* LinksManagementService+Mocks.swift in Sources */,
 				CE12A3732D31347E0022BDF7 /* BetslipProxyWebViewController.swift in Sources */,
 				653A37C82D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
@@ -26121,6 +26916,13 @@
 				CEA5664C2D5A58D800696793 /* RadioButton.swift in Sources */,
 				CEA5664D2D5A58D800696793 /* Constants.swift in Sources */,
 				CEA5664E2D5A58D800696793 /* ConversationsDetailViewModel.swift in Sources */,
+				CE10E7EB2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7EC2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7ED2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7EE2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7EF2D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7F02D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7F12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEA5664F2D5A58D800696793 /* DocumentPickerView.swift in Sources */,
 				CEA566502D5A58D800696793 /* NSAttributedString+Extensions.swift in Sources */,
 				CEA566512D5A58D800696793 /* BettingHistoryRootViewController.swift in Sources */,
@@ -26511,6 +27313,34 @@
 				CED5D8E32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CED5D8E42D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CED5D8E52D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55162D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55172D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55182D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55192D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B551A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B551B2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B551C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B551D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B551E2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B551F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55202D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55212D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55222D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55232D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55242D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55252D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55262D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55272D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55282D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55292D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B552A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B552B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B552C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B552D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B552E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B552F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55302D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55312D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				CED5D8E92D944B7100429306 /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CED5D8EB2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CED5D8EE2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -26898,6 +27728,34 @@
 				CEB5D4562D88BC4D00B9D73F /* Constants.swift in Sources */,
 				CEB5D4572D88BC4D00B9D73F /* ConversationsDetailViewModel.swift in Sources */,
 				CEB5D4582D88BC4D00B9D73F /* DocumentPickerView.swift in Sources */,
+				CE5B556A2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B556B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B556C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B556D2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B556E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B556F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55702D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55712D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55722D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55732D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55742D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55752D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B55762D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55772D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55782D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B55792D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B557A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B557B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B557C2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE5B557D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				CE5B557E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B557F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CE5B55802D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55812D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE5B55822D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5B55832D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE5B55842D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE5B55852D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
 				CEB5D4592D88BC4D00B9D73F /* NSAttributedString+Extensions.swift in Sources */,
 				CEB5D45A2D88BC4D00B9D73F /* BettingHistoryRootViewController.swift in Sources */,
 				CEB5D45B2D88BC4D00B9D73F /* DepositViewModel.swift in Sources */,
@@ -27429,6 +28287,13 @@
 				CEB5D6542D88BC4D00B9D73F /* OddOutcomesSortingHelper.swift in Sources */,
 				CEB5D6552D88BC4D00B9D73F /* SearchTitleSectionHeaderView.swift in Sources */,
 				CEB5D6562D88BC4D00B9D73F /* EmptyCardTableViewCell.swift in Sources */,
+				CE10E7C12D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
+				CE10E7C22D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				CE10E7C32D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				CE10E7C42D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE10E7C52D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE10E7C62D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE10E7C72D97D3B900DEAA12 /* LiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEB5D6572D88BC4D00B9D73F /* AddFriendViewController.swift in Sources */,
 				CEB5D6582D88BC4D00B9D73F /* LinksManagementService+Mocks.swift in Sources */,
 				CEB5D6592D88BC4D00B9D73F /* BetslipProxyWebViewController.swift in Sources */,
@@ -27588,11 +28453,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		6550BFB32D67706800270C58 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 45F6BAA72AB3732C00C81DE1 /* Betsson UAT */;
-			targetProxy = 6550BFB22D67706800270C58 /* PBXContainerItemProxy */;
-		};
 		655E20012B21E8A500C95337 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 655E1FFA2B21E8A500C95337 /* NotificationsService */;
@@ -28282,60 +29142,6 @@
 			};
 			name = Release;
 		};
-		6550BFB42D67706800270C58 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103602;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = QN2DYX5K4M;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.RegisterFlowUnitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson UAT.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson UAT";
-			};
-			name = Debug;
-		};
-		6550BFB52D67706800270C58 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103602;
-				DEVELOPMENT_TEAM = QN2DYX5K4M;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.RegisterFlowUnitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson UAT.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson UAT";
-			};
-			name = Release;
-		};
 		655E20042B21E8A500C95337 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -28753,15 +29559,6 @@
 			buildConfigurations = (
 				45F6BE352AB3732C00C81DE1 /* Debug */,
 				45F6BE362AB3732C00C81DE1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6550BFB62D67706800270C58 /* Build configuration list for PBXNativeTarget "RegisterFlowUnitTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6550BFB42D67706800270C58 /* Debug */,
-				6550BFB52D67706800270C58 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

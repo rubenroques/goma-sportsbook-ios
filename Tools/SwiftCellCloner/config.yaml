@@ -3,7 +3,7 @@
 
 source:
   # Path to the source Swift file (main class file)
-  swift_file: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/MatchWidgetCollectionViewCell.swift"
+  swift_file: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Core/Screens/PreLiveEvents/Views/Cells/Match/Base/MatchWidgetCollectionViewCell.swift"
 
   # Base class name to be replaced
   base_class_name: "MatchWidgetCollectionViewCell"
@@ -17,15 +17,15 @@ output:
 # and the files will be cloned with the case name prefixed to the base class name
 # Extension files will be automatically found and processed
 target_cases:
-  - PreLive
+  #- Live
 
-  # - Boosted
+  - Boosted
   # - Live
   # - PreLive
-  # - TopImage
-  # - BackgroundImage
+  - TopImage
+  - BackgroundImage
   # - Classic
   # - ClassicLive
   # - ClassicPreLive
-  # - Outright
+  - Outright
   # - OutrightTopImage

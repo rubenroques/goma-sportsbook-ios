@@ -1,5 +1,5 @@
 //
-//  PreLiveMatchWidgetCollectionViewCell.swift
+//  TopImageMatchWidgetCollectionViewCell.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 20/03/2025
@@ -11,7 +11,7 @@ import LinkPresentation
 import Combine
 import ServicesProvider
 
-class PreLiveMatchWidgetCollectionViewCell : UICollectionViewCell {
+class TopImageMatchWidgetCollectionViewCell : UICollectionViewCell {
 
     // MARK: - Properties
     // Custom UI components are moved to Factory extension
@@ -135,7 +135,7 @@ class PreLiveMatchWidgetCollectionViewCell : UICollectionViewCell {
     lazy var boostedBackgroungImageView: UIImageView = UIImageView()
 
     // Layout constraints (previously IBOutlets)
-    
+
 
     // Business logic properties
     var viewModel: MatchWidgetCellViewModel?

@@ -1,5 +1,5 @@
 //
-//  PreLiveMatchWidgetCollectionViewCell+Configuration.swift
+//  TopImageMatchWidgetCollectionViewCell+Configuration.swift
 //  Sportsbook
 //
 //  Created by Refactoring on 2024.
@@ -10,7 +10,7 @@ import Combine
 import ServicesProvider
 
 // MARK: - Configuration Methods
-extension PreLiveMatchWidgetCollectionViewCell {
+extension TopImageMatchWidgetCollectionViewCell {
 
     // MARK: - ViewModel Configuration
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {

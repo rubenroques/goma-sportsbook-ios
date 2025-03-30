@@ -1,5 +1,5 @@
 //
-//  PreLiveMatchWidgetCollectionViewCell+Styling.swift
+//  TopImageMatchWidgetCollectionViewCell+Styling.swift
 //  Sportsbook
 //
 //  Created by Refactoring on 2024.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Styling Methods
-extension PreLiveMatchWidgetCollectionViewCell {
+extension TopImageMatchWidgetCollectionViewCell {
 
     // MARK: - Theme Setup
     func setupWithTheme() {

@@ -1,5 +1,5 @@
 //
-//  PreLiveMatchWidgetCollectionViewCell+Layout.swift
+//  BoostedMatchWidgetCollectionViewCell+Layout.swift
 //  Sportsbook
 //
 //  Created by Refactoring on 2024.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Layout Methods
-extension PreLiveMatchWidgetCollectionViewCell {
+extension BoostedMatchWidgetCollectionViewCell {
 
     func setupFonts() {
         self.suspendedLabel.font = AppFont.with(type: .bold, size: 13)

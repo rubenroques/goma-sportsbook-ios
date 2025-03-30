@@ -1,5 +1,5 @@
 //
-//  PreLiveMatchWidgetCollectionViewCell+Factory.swift
+//  BoostedMatchWidgetCollectionViewCell+Factory.swift
 //  Sportsbook
 //
 //  Created by Refactoring on 2024.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Factory Methods
-extension PreLiveMatchWidgetCollectionViewCell {
+extension BoostedMatchWidgetCollectionViewCell {
 
     // MARK: - Base Views
     func createBaseView() -> UIView {
