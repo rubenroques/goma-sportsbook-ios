@@ -81,7 +81,6 @@ class BetbuilderSelectionCellViewModel {
         
         Env.betslipManager.bettingTicketsPublisher
             .removeDuplicates()
-            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingTickets in
                 
@@ -157,6 +156,15 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
             else {
                 self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
 
+            }
+            
+            if isBetbuilderSelected {
+                self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+                self.actionButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+            }
+            else {
+                self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
+                self.actionButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
             }
         }
     }
@@ -248,6 +256,10 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
             backgroundDisabledColor: UIColor.App.backgroundDisabledOdds,
             backgroundHighlightedColor: UIColor.App.backgroundOdds
         )
+        
+        self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
+        self.actionButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        
     }
     
     // MARK: Functions
@@ -297,26 +309,7 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                 self?.isBetbuilderSelected = isBetbuilderSelected
             })
             .store(in: &cancellables)
-        
-//        Env.betslipManager.bettingTicketsPublisher
-//            .removeDuplicates()
-//            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] bettingTickets in
-//                
-//                guard let self = self else { return }
-//                
-//                let allSelectionsPresent = viewModel.betSelections.allSatisfy { betSelection in
-//                    bettingTickets.contains { bettingTicket in
-//                        betSelection.id == bettingTicket.id
-//                    }
-//                }
-//                                
-//                self.isBetbuilderSelected = allSelectionsPresent
-//                
-//            })
-//            .store(in: &cancellables)
-        
+
     }
     
     // MARK: Action

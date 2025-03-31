@@ -15,6 +15,13 @@ extension SportRadarModelMapper {
         // Try get the internal sport id by alpha code or name if it fails
         var sportTypeId = ""
 
+        if sportRadarSportType.numericId == "928" {
+            print("motogp")
+        }
+        if sportRadarSportType.alphaId == "928" {
+            print("motogp")
+        }
+        
         if let sportAlphaId = sportRadarSportType.alphaId {
             sportTypeId = SportTypeInfo.init(alphaCode: sportAlphaId)?.id ?? ""
         }

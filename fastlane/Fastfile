@@ -5,6 +5,12 @@ Dotenv.load('.env')
 
 ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 
+# --- Start: Added Variables ---
+XCODEPROJ_PATH = "Sportsbook.xcodeproj"
+# Consider moving this sensitive URL to your .env file (e.g., ENV['DISCORD_WEBHOOK_URL'])
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1356283170596585635/_mbemzxXvNy71qlqYuzxxOuWvm0kfOfnxdv3BttrJfs1g5asnY444AfR1qPhpXIucsYa"
+# --- End: Added Variables ---
+
 # Verify Apple credentials are set
 unless ENV["FASTLANE_USER"] && ENV["FASTLANE_PASSWORD"]
   UI.important "⚠️  Fastlane credentials not found in environment variables"
@@ -58,7 +64,7 @@ end
 platform :ios do
 
   desc "Print environment variables and arguments"
-  lane :test do |options|
+  lane :test_env do |options|
     UI.message "🔍 Printing Environment Variables:"
     UI.message "--------------------------------"
     ENV.sort.each do |key, value|
@@ -78,8 +84,7 @@ platform :ios do
 
   desc "Update build number"
   lane :version_bump do
-    # Get current build number
-    current_build = get_build_number(xcodeproj: "Sportsbook.xcodeproj")
+    current_build = get_build_number(xcodeproj: XCODEPROJ_PATH)
     puts "Current build number (CURRENT_PROJECT_VERSION): #{current_build}"
 
     # Prompt for new build number using UI.input
@@ -97,7 +102,7 @@ platform :ios do
     # Update build number
     increment_build_number(
       build_number: new_build,
-      xcodeproj: "Sportsbook.xcodeproj",
+      xcodeproj: XCODEPROJ_PATH,
       skip_info_plist: true
     )
 
@@ -106,8 +111,7 @@ platform :ios do
 
   desc "Update marketing version"
   lane :marketing_version_bump do
-    # Get current version
-    current_version = get_version_number(xcodeproj: "Sportsbook.xcodeproj")
+    current_version = get_version_number(xcodeproj: XCODEPROJ_PATH)
     puts "Current version (MARKETING_VERSION): #{current_version}"
 
     # Prompt for new version using UI.input
@@ -119,7 +123,7 @@ platform :ios do
     # Update version
     increment_version_number(
       version_number: new_version,
-      xcodeproj: "Sportsbook.xcodeproj"
+      xcodeproj: XCODEPROJ_PATH
     )
 
     puts "Version updated to: #{new_version}"
@@ -261,13 +265,67 @@ platform :ios do
     UI.success "✅ Distribution completed successfully!"
   end
 
-  # Existing lanes with improved error handling
+  # --- Start: Private Helper Lane for Discord Notification ---
+  private_lane :_notify_discord do |options|
+    begin
+      env_name = options[:env_name]
+      bundle_id_key = options[:bundle_id_key]
+      emoji = options[:emoji]
+      title_prefix = options[:title_prefix]
+      target_name = options[:target_name]
+
+      UI.message("Sending Discord notification for #{env_name}...")
+
+      current_version = get_version_number(xcodeproj: XCODEPROJ_PATH, target: target_name)
+      current_build = get_build_number(xcodeproj: XCODEPROJ_PATH, target: target_name)
+      bundle_id = BUNDLE_ID_MAPPING[bundle_id_key]["main_app"]
+      today_date = Time.now.strftime('%Y-%m-%d')
+
+      # Format Release Notes
+      raw_notes = options[:release_notes]
+      if raw_notes && !raw_notes.strip.empty?
+        release_notes_text = raw_notes.split(';')
+                                      .map { |note| "- #{note.strip}" }
+                                      .join("\n")
+      else
+        release_notes_text = "No release notes provided."
+      end
+
+      discord_notifier(
+        webhook_url: DISCORD_WEBHOOK_URL,
+        success: true,
+        title: "#{emoji} Betsson #{title_prefix} Build Deployed",
+        description: release_notes_text,
+        fields: [
+          { name: "Version", value: current_version, inline: true },
+          { name: "Build", value: current_build, inline: true },
+          { name: "Date", value: today_date, inline: true },
+          { name: "Bundle ID (#{env_name})", value: bundle_id, inline: false }
+        ]
+      )
+      UI.success("Discord notification sent for #{env_name}.")
+    rescue => ex
+      UI.error("Discord notification for #{env_name} failed: #{ex}")
+    end
+  end
+  # --- End: Private Helper Lane for Discord Notification ---
+
   lane :betsson_uat do |options|
     distribute_to_firebase(
       app_scheme: "Betsson UAT",
       environment: "UAT",
       release_notes: options[:release_notes],
       verbose: options[:verbose]
+    )
+
+    # Call the helper lane for notification
+    _notify_discord(
+      env_name: "UAT",
+      bundle_id_key: "BETSSON_UAT",
+      emoji: "🔸",
+      title_prefix: "UAT",
+      target_name: "Betsson UAT",
+      release_notes: options[:release_notes]
     )
   end
 
@@ -278,10 +336,21 @@ platform :ios do
       release_notes: options[:release_notes],
       verbose: options[:verbose]
     )
+
+    # Call the helper lane for notification
+    _notify_discord(
+      env_name: "PROD",
+      bundle_id_key: "BETSSON_PROD",
+      emoji: "🟠",
+      title_prefix: "PROD",
+      target_name: "Betsson PROD",
+      release_notes: options[:release_notes]
+    )
   end
 
   lane :betsson do |options|
     version_bump
+
     betsson_uat(
       release_notes: options[:release_notes],
       verbose: options[:verbose]
@@ -291,5 +360,124 @@ platform :ios do
       verbose: options[:verbose]
     )
   end
+
+  # --- Start: Dry Run Test Lane ---
+  desc "Dry run of the betsson lane: prints info without building, distributing, or notifying."
+  lane :test do |options|
+    UI.header("🚀 Starting Betsson Dry Run 🚀")
+
+    # --- Simulate version_bump ---
+    UI.header("Simulating: version_bump")
+    begin
+      # Fetch current build number (no need to prompt in dry run)
+      target_for_version_check = "Betsson UAT" # Build number should be consistent
+      current_build = get_build_number(xcodeproj: XCODEPROJ_PATH, target: target_for_version_check)
+      UI.message("Current build number (#{target_for_version_check}): #{current_build}")
+      UI.important("Dry Run: Skipping actual prompt and build number increment.")
+      # Note: In a real run, version_bump would prompt and potentially change current_build.
+      # For dry run, we'll use the fetched current numbers below.
+    rescue => ex
+      UI.error("Dry Run: Failed to get current build number: #{ex}")
+      current_build = "[DRY RUN ERROR]"
+    end
+    UI.message("---")
+
+    # --- Simulate betsson_uat ---
+    UI.header("Simulating: betsson_uat distribution and notification")
+    begin
+      uat_target = "Betsson UAT"
+      uat_env = "UAT"
+      uat_id_key = "BETSSON_UAT"
+      uat_emoji = "🧪"
+      uat_title = "UAT"
+      uat_firebase_app_id = ENV["#{uat_id_key}_FIREBASE_APP_ID"] || "[UAT Firebase App ID not found in .env]"
+      uat_firebase_groups = ENV["FIREBASE_#{uat_env}_DISTRIBUTION_GROUPS"] || "ios-internal"
+
+      # Get info (using current numbers as bump was skipped)
+      current_version = get_version_number(xcodeproj: XCODEPROJ_PATH, target: uat_target)
+      # Use build number fetched earlier
+      bundle_id = BUNDLE_ID_MAPPING[uat_id_key]["main_app"]
+      today_date = Time.now.strftime('%Y-%m-%d')
+
+      # Format release notes
+      raw_notes = options[:release_notes]
+      if raw_notes && !raw_notes.strip.empty?
+        release_notes_text = raw_notes.split(';').map { |note| "- #{note.strip}" }.join("\n")
+      else
+        release_notes_text = "No release notes provided."
+      end
+
+      UI.message("Firebase Distribution (Dry Run):")
+      UI.message("  App ID: #{uat_firebase_app_id}")
+      UI.message("  Groups: #{uat_firebase_groups}")
+      UI.message("  Release Notes:\n#{release_notes_text.gsub(/^/, '    ')}") # Indent notes
+      UI.important("Dry Run: Skipping actual call to distribute_to_firebase.")
+      UI.message("---")
+
+      UI.message("Discord Notification (Dry Run):")
+      UI.message("  Webhook: #{DISCORD_WEBHOOK_URL}")
+      UI.message("  Title: #{uat_emoji} Betsson #{uat_title} Build Deployed")
+      UI.message("  Description:\n#{release_notes_text.gsub(/^/, '    ')}") # Indent notes
+      UI.message("  Fields:")
+      UI.message("    Version: #{current_version}")
+      UI.message("    Build: #{current_build}")
+      UI.message("    Date: #{today_date}")
+      UI.message("    Bundle ID (#{uat_env}): #{bundle_id}")
+      UI.important("Dry Run: Skipping actual call to _notify_discord.")
+
+    rescue => ex
+      UI.error("Dry Run Simulation Error (UAT): #{ex}")
+    end
+    UI.message("---")
+
+    # --- Simulate betsson_prod ---
+    UI.header("Simulating: betsson_prod distribution and notification")
+    begin
+      prod_target = "Betsson PROD"
+      prod_env = "PROD"
+      prod_id_key = "BETSSON_PROD"
+      prod_emoji = "✅"
+      prod_title = "PROD"
+      prod_firebase_app_id = ENV["#{prod_id_key}_FIREBASE_APP_ID"] || "[PROD Firebase App ID not found in .env]"
+      prod_firebase_groups = ENV["FIREBASE_#{prod_env}_DISTRIBUTION_GROUPS"] || "ios-internal"
+
+      # Get info (using current numbers as bump was skipped)
+      current_version = get_version_number(xcodeproj: XCODEPROJ_PATH, target: prod_target)
+      # Use build number fetched earlier
+      bundle_id = BUNDLE_ID_MAPPING[prod_id_key]["main_app"]
+      today_date = Time.now.strftime('%Y-%m-%d')
+
+      # Format release notes (same as UAT for this dry run)
+      raw_notes = options[:release_notes]
+      if raw_notes && !raw_notes.strip.empty?
+        release_notes_text = raw_notes.split(';').map { |note| "- #{note.strip}" }.join("\n")
+      else
+        release_notes_text = "No release notes provided."
+      end
+
+      UI.message("Firebase Distribution (Dry Run):")
+      UI.message("  App ID: #{prod_firebase_app_id}")
+      UI.message("  Groups: #{prod_firebase_groups}")
+      UI.message("  Release Notes:\n#{release_notes_text.gsub(/^/, '    ')}") # Indent notes
+      UI.important("Dry Run: Skipping actual call to distribute_to_firebase.")
+      UI.message("---")
+
+      UI.message("Discord Notification (Dry Run):")
+      UI.message("  Webhook: #{DISCORD_WEBHOOK_URL}")
+      UI.message("  Title: #{prod_emoji} Betsson #{prod_title} Build Deployed")
+      UI.message("  Description:\n#{release_notes_text.gsub(/^/, '    ')}") # Indent notes
+      UI.message("  Fields:")
+      UI.message("    Version: #{current_version}")
+      UI.message("    Build: #{current_build}")
+      UI.message("    Date: #{today_date}")
+      UI.message("    Bundle ID (#{prod_env}): #{bundle_id}")
+      UI.important("Dry Run: Skipping actual call to _notify_discord.")
+
+    rescue => ex
+      UI.error("Dry Run Simulation Error (PROD): #{ex}")
+    end
+    UI.success("🏁 Betsson Dry Run Finished 🏁")
+  end
+  # --- End: Dry Run Test Lane ---
 
 end

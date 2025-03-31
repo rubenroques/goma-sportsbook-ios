@@ -121,14 +121,15 @@ class SimpleCompetitionDetailsViewModel {
     }
 
     private func processCompetitionMatches(matches: [Match], competitionInfo: SportCompetitionInfo) {
-        let newCompetition = Competition(id: competitionInfo.id,
-                                       name: competitionInfo.name,
-                                       matches: matches,
-                                       venue: matches.first?.venue,
-                                       sport: nil,
-                                       numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
-                                       competitionInfo: competitionInfo)
-
+        let newCompetition = Competition(
+            id: competitionInfo.id,
+            name: competitionInfo.name,
+            matches: matches,
+            venue: matches.first?.venue,
+            sport: self.sport,
+            numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+            competitionInfo: competitionInfo)
+        
         self.competitionSubject.send(newCompetition)
     }
 
@@ -166,7 +167,7 @@ class SimpleCompetitionDetailsViewModel {
                                          name: competitionInfo.name,
                                          matches: [],
                                          venue: outrightCompetition.venue,
-                                         sport: nil,
+                                         sport: self.sport,
                                          numberOutrightMarkets: numberOutrightMarkets,
                                          competitionInfo: competitionInfo)
         self.competitionSubject.send(newCompetition)

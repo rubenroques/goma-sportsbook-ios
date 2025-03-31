@@ -105,6 +105,7 @@ class ChipCollectionViewCell: UICollectionViewCell {
         case .backgroungImage(let title, let iconName, let imageName):
             self.hasBackgroundStyle = true
             self.titleLabel.text = title
+            self.titleLabel.textColor = UIColor.App.buttonTextPrimary
             self.iconImageView.image = UIImage(named: iconName)
             self.iconImageView.isHidden = false
             self.backgroundImageView.image = UIImage(named: imageName)

@@ -178,6 +178,10 @@ class AnonymousSideMenuViewController: UIViewController {
         self.menusStackView.addArrangedSubview(recruitFriendView)
         self.menusStackView.addArrangedSubview(supportView)
         
+        #if DEBUG
+        self.menusStackView.addArrangedSubview(settingsView)
+        #endif
+        
     }
 
     // MARK: - Actions

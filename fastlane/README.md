@@ -55,6 +55,14 @@ Setup certificates and provisioning profiles
 
 Build and distribute to Firebase
 
+### ios _notify_discord
+
+```sh
+[bundle exec] fastlane ios _notify_discord
+```
+
+
+
 ### ios betsson_uat
 
 ```sh

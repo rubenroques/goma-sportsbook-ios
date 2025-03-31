@@ -33,6 +33,7 @@ class BetbuilderLineTableViewCell: UITableViewCell {
     // MARK: Lifetime and cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
