@@ -108,6 +108,40 @@ class MarketGroupDetailsViewModel {
         }
         
     }
+    
+    func shouldShowPopularBetbuilderForSport() -> Bool {
+        
+        let sportCodes = TargetVariables.supportedSportCodesForBetbuilder
+        
+        let sportIdCode = self.match.sport.alphaId ?? ""
+        
+        let matchStatus = self.match.status
+        
+        let isBetbuilderSportAllowed = sportCodes.contains(sportIdCode)
+        
+        if isBetbuilderSportAllowed {
+            
+            if sportIdCode == "FBL" {
+                if matchStatus.isPreLive || matchStatus.isLive {
+                    return true
+                }
+            }
+            else if sportIdCode == "BSK" {
+                if matchStatus.isPreLive || matchStatus.isLive {
+                    return true
+                }
+            }
+            else if sportIdCode == "TNS" {
+                if matchStatus.isLive {
+                    return true
+                }
+            }
+            
+            return false
+        }
+        
+        return false
+    }
 
     func fetchMarketGroupDetails() {
         self.storeMarketGroupDetailsFromMarkets(markets: self.availableMarkets)
