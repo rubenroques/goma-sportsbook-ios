@@ -68,7 +68,7 @@ extension VaixAPIClient: Endpoint {
             query.append(URLQueryItem(name:"filters", value:"status:in:not_started,live"))
             query.append(URLQueryItem(name:"to_offset", value:"7d"))
             query.append(URLQueryItem(name:"from_offset", value:"-5h"))
-//            query.append(URLQueryItem(name:"location", value:"betbuilder_eventpage"))
+            query.append(URLQueryItem(name:"location", value:"betbuilder_eventpage"))
 
             if let userId {
                 let userIdFormat = "om\(userId)-eur"
