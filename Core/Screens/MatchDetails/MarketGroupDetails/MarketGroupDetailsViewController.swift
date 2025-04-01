@@ -78,6 +78,14 @@ class MarketGroupDetailsViewController: UIViewController {
         self.showLoading()
 
         self.bind(toViewModel: self.viewModel)
+        
+        // Notification to hide invalid betbuilders
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(handleHideBetbuilderLineCell(_:)),
+//            name: NSNotification.Name("HideBetbuilderLineCell"),
+//            object: nil
+//        )
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -332,10 +340,37 @@ class MarketGroupDetailsViewController: UIViewController {
         
         self.viewModel.betbuilderLineCellViewModels = betbuilderLineCellViewModels
         
+        self.checkBetbuilderAvailability()
+    }
+    
+//    @objc private func handleHideBetbuilderLineCell(_ notification: Notification) {
+//        if let viewModel = notification.userInfo?["cellViewModel"] as? BetbuilderLineCellViewModel,
+//           let index = self.viewModel.betbuilderLineCellViewModels.firstIndex(where: { $0 === viewModel }) {
+//            self.viewModel.betbuilderLineCellViewModels.remove(at: index)
+//            
+//            self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder &&
+//            !self.viewModel.betbuilderLineCellViewModels.isEmpty && self.viewModel.shouldShowPopularBetbuilderForSport()
+//            
+//            self.reloadTableView()
+//        }
+//    }
+    
+    private func hideBetbuilderLineCell(viewModel: BetbuilderLineCellViewModel) {
+        
+           if let index = self.viewModel.betbuilderLineCellViewModels.firstIndex(where: { $0 === viewModel }) {
+            self.viewModel.betbuilderLineCellViewModels.remove(at: index)
+            
+               self.checkBetbuilderAvailability()
+        }
+    }
+    
+    private func checkBetbuilderAvailability() {
+        
         self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder &&
         !self.viewModel.betbuilderLineCellViewModels.isEmpty && self.viewModel.shouldShowPopularBetbuilderForSport()
         
         self.reloadTableView()
+        
     }
     
     func getMarketGroupId() -> String {
@@ -378,6 +413,10 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             let viewModel = self.viewModel.getBetbuilderLineCellViewModel(withIndex: indexPath.row, presentationMode: self.presentationMode)
             
             cell.configure(withViewModel: viewModel, presentationMode: self.presentationMode)
+            
+            cell.shouldHideBetbuilderLine = { [weak self] cellViewModel in
+                self?.hideBetbuilderLineCell(viewModel: cellViewModel)
+            }
             
             return cell
         }

@@ -16,6 +16,7 @@ class BetbuilderSelectionCellViewModel {
     var totalOdd: CurrentValueSubject<Double, Never> = .init(0.0)
     
     var isBetbuilderSelectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var isBetbuilderInvalid: CurrentValueSubject<Bool, Never> = .init(false)
     
     private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
     
@@ -42,6 +43,7 @@ class BetbuilderSelectionCellViewModel {
                     print("BetBuilder Total Odd finished")
                 case .failure(let error):
                     print("BetBuilder Total Odd failure \(error)")
+                    self?.isBetbuilderInvalid.send(true)
                 }
             }, receiveValue: { [weak self] betBuilderCalculateResponse in
                 
@@ -98,6 +100,7 @@ class BetbuilderSelectionCellViewModel {
                 
             })
             .store(in: &cancellables)
+        
     }
     
     func updateSelection(outcomeId: String, odd: Double) {
@@ -150,24 +153,19 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
     
     private var isBetbuilderSelected: Bool = false {
         didSet {
-            if isBetbuilderSelected {
-                self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-            }
-            else {
-                self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
-
-            }
             
             if isBetbuilderSelected {
-                self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-                self.actionButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+                self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary.resolvedColor(with: self.traitCollection), for: .normal)
+                self.actionButton.setTitleColor(UIColor.App.buttonTextPrimary.resolvedColor(with: self.traitCollection), for: .normal)
             }
             else {
-                self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
-                self.actionButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+                self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds.resolvedColor(with: self.traitCollection), for: .normal)
+                self.actionButton.setTitleColor(UIColor.App.textPrimary.resolvedColor(with: self.traitCollection), for: .normal)
             }
         }
     }
+    
+    var shouldHideBetbuilderSelection: (() -> Void)?
         
     // MARK: Lifetime and cycle
     override init(frame: CGRect) {
@@ -250,15 +248,15 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
         
         StyleHelper.styleButtonWithTheme(
             button: self.actionButton,
-            titleColor: UIColor.App.buttonTextPrimary,
-            titleDisabledColor: UIColor.App.buttonTextDisableSecondary,
-            backgroundColor: UIColor.App.backgroundOdds,
-            backgroundDisabledColor: UIColor.App.backgroundDisabledOdds,
-            backgroundHighlightedColor: UIColor.App.backgroundOdds
+            titleColor: UIColor.App.textPrimary.resolvedColor(with: self.traitCollection),
+            titleDisabledColor: UIColor.App.buttonTextDisableSecondary.resolvedColor(with: self.traitCollection),
+            backgroundColor: UIColor.App.backgroundOdds.resolvedColor(with: self.traitCollection),
+            backgroundDisabledColor: UIColor.App.backgroundDisabledOdds.resolvedColor(with: self.traitCollection),
+            backgroundHighlightedColor: UIColor.App.backgroundOdds.resolvedColor(with: self.traitCollection)
         )
         
-        self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
-        self.actionButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+//        self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
+//        self.actionButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         
     }
     
@@ -307,6 +305,16 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isBetbuilderSelected in
                 self?.isBetbuilderSelected = isBetbuilderSelected
+            })
+            .store(in: &cancellables)
+        
+        viewModel.isBetbuilderInvalid
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isBetbuilderInvalid in
+                
+                if isBetbuilderInvalid {
+                    self?.shouldHideBetbuilderSelection?()
+                }
             })
             .store(in: &cancellables)
 

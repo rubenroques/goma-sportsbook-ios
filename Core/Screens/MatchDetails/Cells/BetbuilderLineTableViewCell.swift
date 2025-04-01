@@ -29,6 +29,8 @@ class BetbuilderLineTableViewCell: UITableViewCell {
     var cancellables = Set<AnyCancellable>()
 
     var presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode = .multiplesPerLineByType
+    
+    var shouldHideBetbuilderLine: ((BetbuilderLineCellViewModel) -> Void)?
 
     // MARK: Lifetime and cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -113,7 +115,6 @@ class BetbuilderLineTableViewCell: UITableViewCell {
 extension BetbuilderLineTableViewCell: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // Return the number of items in your collection view
         return self.viewModel?.betBuilderOptions.count ?? 0
     }
 
@@ -126,6 +127,26 @@ extension BetbuilderLineTableViewCell: UICollectionViewDataSource, UICollectionV
         }
         
         cell.configure(viewModel: cellViewModel)
+        
+        cell.shouldHideBetbuilderSelection = { [weak self] in
+                guard let self = self, let viewModel = self.viewModel else { return }
+                
+                if let index = viewModel.betBuilderOptions.firstIndex(where: { $0 === cellViewModel }) {
+                    viewModel.betBuilderOptions.remove(at: index)
+                    
+                    self.collectionView.reloadData()
+                    
+                    if viewModel.betBuilderOptions.isEmpty {
+//                        NotificationCenter.default.post(
+//                            name: NSNotification.Name("HideBetbuilderLineCell"),
+//                            object: nil,
+//                            userInfo: ["cellViewModel": viewModel]
+//                        )
+                        self.shouldHideBetbuilderLine?(viewModel)
+                    }
+                    
+                }
+            }
 
         return cell
     }
