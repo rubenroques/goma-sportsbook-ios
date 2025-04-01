@@ -137,11 +137,6 @@ extension BetbuilderLineTableViewCell: UICollectionViewDataSource, UICollectionV
                     self.collectionView.reloadData()
                     
                     if viewModel.betBuilderOptions.isEmpty {
-//                        NotificationCenter.default.post(
-//                            name: NSNotification.Name("HideBetbuilderLineCell"),
-//                            object: nil,
-//                            userInfo: ["cellViewModel": viewModel]
-//                        )
                         self.shouldHideBetbuilderLine?(viewModel)
                     }
                     
