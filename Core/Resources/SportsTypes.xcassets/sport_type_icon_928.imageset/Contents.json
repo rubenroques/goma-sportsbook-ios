@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "motoLight.png",
+      "filename" : "23 motosports light.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "motoDark.png",
+      "filename" : "23 motosports dark.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "motoLight@2x.png",
+      "filename" : "23 motosports light@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "motoDark@2x.png",
+      "filename" : "23 motosports dark@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "motoLight@3x.png",
+      "filename" : "23 motosports light@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "motoDark@3x.png",
+      "filename" : "23 motosports dark@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
