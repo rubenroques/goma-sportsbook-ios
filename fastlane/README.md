@@ -15,10 +15,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios test
+### ios test_env
 
 ```sh
-[bundle exec] fastlane ios test
+[bundle exec] fastlane ios test_env
 ```
 
 Print environment variables and arguments
@@ -55,14 +55,6 @@ Setup certificates and provisioning profiles
 
 Build and distribute to Firebase
 
-### ios _notify_discord
-
-```sh
-[bundle exec] fastlane ios _notify_discord
-```
-
-
-
 ### ios betsson_uat
 
 ```sh
@@ -86,6 +78,14 @@ Build and distribute to Firebase
 ```
 
 
+
+### ios test
+
+```sh
+[bundle exec] fastlane ios test
+```
+
+Dry run of the betsson lane: prints info without building, distributing, or notifying.
 
 ----
 
