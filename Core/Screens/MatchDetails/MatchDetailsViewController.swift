@@ -815,11 +815,11 @@ class MatchDetailsViewController: UIViewController {
 
                     self?.statsCollectionView.reloadData()
 
-                    self?.loadingSpinnerViewController.view.isHidden = true
-                    self?.loadingSpinnerViewController.stopAnimating()
+//                    self?.loadingSpinnerViewController.view.isHidden = true
+//                    self?.loadingSpinnerViewController.stopAnimating()
                 case .failed:
-                    self?.loadingSpinnerViewController.view.isHidden = true
-                    self?.loadingSpinnerViewController.stopAnimating()
+//                    self?.loadingSpinnerViewController.view.isHidden = true
+//                    self?.loadingSpinnerViewController.stopAnimating()
 
                     self?.showMatchNotAvailableView()
                 }
@@ -948,6 +948,21 @@ class MatchDetailsViewController: UIViewController {
             }
 
         }
+        
+        self.viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                
+                if isLoading {
+                    self?.loadingSpinnerViewController.view.isHidden = false
+                    self?.loadingSpinnerViewController.startAnimating()
+                }
+                else {
+                    self?.loadingSpinnerViewController.view.isHidden = true
+                    self?.loadingSpinnerViewController.stopAnimating()
+                }
+            })
+            .store(in: &cancellables)
 
     }
 
@@ -964,7 +979,7 @@ class MatchDetailsViewController: UIViewController {
     }
 
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
-
+        
         guard let match = self.viewModel.match else {
             return
         }
