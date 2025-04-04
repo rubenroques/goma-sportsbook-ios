@@ -114,6 +114,8 @@ class MatchDetailsViewModel: NSObject {
     var shouldShowTabTooltip: (() -> Void)?
 
     var showMixMatchDefault: Bool = false
+    
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
@@ -335,6 +337,8 @@ class MatchDetailsViewModel: NSObject {
 
     private func getMatchDetails() {
         print("MatchDetailsViewModel forceRefreshData")
+        
+        self.isLoadingPublisher.send(true)
 
         self.matchDetailsSubscription = nil
         self.liveDataSubscription = nil
@@ -362,11 +366,12 @@ class MatchDetailsViewModel: NSObject {
                     case .resourceUnavailableOrDeleted: // This match is no longer available
                         self?.matchCurrentValueSubject.send(.failed)
                         self?.marketGroupsState.send(.failed)
-
+                        self?.isLoadingPublisher.send(false)
                     default:
                         print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
                         self?.matchCurrentValueSubject.send(.failed)
                         self?.marketGroupsState.send(.failed)
+                        self?.isLoadingPublisher.send(false)
                     }
                 }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
@@ -381,7 +386,8 @@ class MatchDetailsViewModel: NSObject {
                         return
                     }
                     self.matchCurrentValueSubject.send(.loaded(match))
-
+                    self.isLoadingPublisher.send(false)
+                    
                 case .disconnected:
                     print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
                 }
