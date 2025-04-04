@@ -1031,7 +1031,9 @@ class MatchDetailsViewController: UIViewController {
         
         let recommendedBetbuilder = self.viewModel.recommendedBetBuilders.value
         
-        self.configureRecommendedBetBuilder(recommendedBetBuilder: recommendedBetbuilder)
+        if recommendedBetbuilder.isNotEmpty {
+            self.configureRecommendedBetBuilder(recommendedBetBuilder: recommendedBetbuilder)
+        }
         
     }
 
