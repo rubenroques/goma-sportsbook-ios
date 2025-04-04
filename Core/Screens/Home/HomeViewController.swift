@@ -692,6 +692,18 @@ class HomeViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
+    
+    private func openWebView(urlString: String) {
+        
+        if let url = URL(string: urlString) {
+            
+            let promotionsWebViewModel = PromotionsWebViewModel()
+            
+            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+            
+            self.present(promotionsWebViewController, animated: true)
+        }
+    }
 
     private func showBetSucess(bettingTicket: BettingTicket, betPlacedDetails: [BetPlacedDetails]) {
 
@@ -745,11 +757,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
 
-            cell.didTapBannerViewAction = { [weak self] presentationType, specialAction in
+            cell.didTapBannerViewAction = { [weak self] presentationType, specialAction, locationUrl in
                 switch presentationType {
                 case .image:
-                    // self?.openBonusView()
-                    self?.openPromotionsView(specialAction: specialAction)
+                    if let locationUrl,
+                        let specialAction {
+                        if specialAction == .register {
+                            self?.openPromotionsView(specialAction: specialAction)
+                        }
+                        else {
+                            self?.openWebView(urlString: locationUrl)
+                        }
+                    }
+                    else {
+                        self?.openPromotionsView(specialAction: nil)
+                    }
                 case .match(let matchId):
                     self?.openMatchDetails(matchId: matchId)
                 case .externalMatch(let matchId, _, _, _):

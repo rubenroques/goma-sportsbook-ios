@@ -58,7 +58,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     var completeMatch: Match?
 
-    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType, BannerSpecialAction?) -> Void)?
+    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType, BannerSpecialAction?, String?) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private var leftOutcome: Outcome?
@@ -671,10 +671,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     @objc func didTapBannerView() {
         if let presentationType = self.viewModel?.presentationType {
             if let specialAction = self.viewModel?.specialAction {
-                self.didTapBannerViewAction?(presentationType, specialAction)
+                self.didTapBannerViewAction?(presentationType, specialAction, self.viewModel?.location)
             }
             else {
-                self.didTapBannerViewAction?(presentationType, nil)
+                self.didTapBannerViewAction?(presentationType, nil, self.viewModel?.location)
             }
 
         }
