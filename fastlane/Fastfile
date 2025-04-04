@@ -276,8 +276,8 @@ platform :ios do
 
       UI.message("Sending Discord notification for #{env_name}...")
 
-      current_version = get_version_number(xcodeproj: XCODEPROJ_PATH, target: target_name)
-      current_build = get_build_number(xcodeproj: XCODEPROJ_PATH, target: target_name)
+      current_version = get_version_number(xcodeproj: XCODEPROJ_PATH)
+      current_build = get_build_number(xcodeproj: XCODEPROJ_PATH)
       bundle_id = BUNDLE_ID_MAPPING[bundle_id_key]["main_app"]
       today_date = Time.now.strftime('%Y-%m-%d')
 
