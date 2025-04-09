@@ -12137,6 +12137,7 @@
 		CEDB59732D814F8F00D0C0C3 /* VerticalMatchInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalMatchInfoView.swift; sourceTree = "<group>"; };
 		CEE502CF2D66A609001B0342 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
 		CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelHelperTests.swift; sourceTree = "<group>"; };
+		CEEF30B72DA595780021DAF8 /* EveryMatrixAPIClient */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EveryMatrixAPIClient; sourceTree = "<group>"; };
 		CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
@@ -12993,6 +12994,7 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				CEEF30B72DA595780021DAF8 /* EveryMatrixAPIClient */,
 				4593DD142CBF2EAF00C52C42 /* GomaAssets */,
 				451ABD6D29CC755B0062641F /* HeaderTextField */,
 				45BB5542298351CD00684F83 /* AdresseFrancaise */,
