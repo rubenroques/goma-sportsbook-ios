@@ -52,7 +52,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var serviceProviderType: ServiceProviderType {
-        return .sportradar
+        return .goma
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {
@@ -60,7 +60,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback, .legalAgeWarning, .mixMatch]
+        return [.cashback, .legalAgeWarning, .mixMatch, .chat]
     }
 
     static var shouldUserBlurEffectTabBar: Bool {
@@ -84,7 +84,8 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var clientBaseUrl: String {
-        return "https://goma-uat.betsson.fr"
+//        return "https://goma-uat.betsson.fr"
+        return "https://sportsbook.gomagaming.com"
     }
 
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {

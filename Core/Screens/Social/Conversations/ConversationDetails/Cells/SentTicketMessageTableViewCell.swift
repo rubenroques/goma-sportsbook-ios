@@ -134,7 +134,7 @@ class SentTicketMessageTableViewCell: UITableViewCell {
             
             let ticketStatus = ticket.status?.lowercased()
 
-            if ticketStatus == "open" || ticketStatus == "pending"  {
+            if ticketStatus == "open" || ticketStatus == "opened" || ticketStatus == "pending"  {
                 self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
                                                                    shouldShowButton: true)
 

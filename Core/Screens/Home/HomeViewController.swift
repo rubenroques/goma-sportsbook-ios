@@ -287,6 +287,37 @@ class HomeViewController: UIViewController {
         self.tableView.setContentOffset(topOffset, animated: true)
 
     }
+    
+    func openChatAssistant() {
+        if Env.userSessionStore.isUserLogged() {
+            guard let chatId = Env.gomaSocialClient.getChatAssistant() else { return }
+            
+            let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
+            let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+            
+            conversationDetailViewController.isChatAssistant = true
+            
+//            let socialViewController = SocialViewController(viewModel: SocialViewModel())
+            let socialViewController = ChatListViewController()
+            
+            let navigationViewController = Router.navigationController(with: socialViewController)
+            navigationViewController.pushViewController(conversationDetailViewController, animated: false)
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+        else {
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openChatAssistant()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)        }
+    }
 
     public func openBetSwipe() {
         self.openBetSwipeWebView()

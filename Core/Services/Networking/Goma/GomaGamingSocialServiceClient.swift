@@ -201,6 +201,7 @@ class GomaGamingSocialServiceClient {
 
         // Start the Socket
 //        guard let jwtToken = Env.gomaNetworkClient.getCurrentToken() else { return }
+        
         guard let jwtToken = Env.servicesProvider.getAcessToken() else { return }
 
 //        let configs = SocketIOClientConfiguration.init(arrayLiteral: .log(false),

@@ -34,6 +34,7 @@ enum GomaModels {
         let avatar: String?
         let createdAt: String?
         let updatedAt: String?
+        let token: String?
         
         enum CodingKeys: String, CodingKey {
             case id = "id"
@@ -47,16 +48,29 @@ enum GomaModels {
             case avatar = "avatar"
             case createdAt = "created_at"
             case updatedAt = "updated_at"
+            case token = "token"
             
         }
     }
     
     struct LoginResponse: Codable {
-        let token: String
-        let userData: BasicRegisterResponse
+        let message: String?
+        let data: LoginData
         
         enum CodingKeys: String, CodingKey {
+            case message = "message"
+            case data = "data"
+        }
+    }
+    
+    struct LoginData: Codable {
+        let token: String
+        let expires: Int?
+        let userData: BasicRegisterResponse
+
+        enum CodingKeys: String, CodingKey{
             case token = "token"
+            case expires = "expires_at"
             case userData = "user"
         }
     }

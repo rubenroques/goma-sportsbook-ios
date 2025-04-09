@@ -1565,6 +1565,7 @@ extension SportRadarPrivilegedAccessManager {
     }
 
     func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError> {
+        
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 

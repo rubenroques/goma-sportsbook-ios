@@ -35,11 +35,11 @@ struct GomaModelMapper {
     }
     
     static func loginResponse(fromInternalLoginResponse loginResponse: GomaModels.LoginResponse) -> LoginResponse {
-            let userProfile = UserProfile(userIdentifier: "\(loginResponse.userData.id)",
+        let userProfile = UserProfile(userIdentifier: "\(loginResponse.data.userData.id)",
                                         sessionKey: "",
-                                        username: loginResponse.userData.username,
-                                        email: loginResponse.userData.email,
-                                        firstName: loginResponse.userData.name,
+                                      username: loginResponse.data.userData.username,
+                                      email: loginResponse.data.userData.email,
+                                      firstName: loginResponse.data.userData.name,
                                         middleName: nil,  // Added
                                         lastName: nil,
                                         birthDate: Date(),
@@ -57,8 +57,8 @@ struct GomaModelMapper {
                                         mobilePhone: nil,
                                         mobileCountryCode: nil,
                                         mobileLocalNumber: nil,
-                                        avatarName: loginResponse.userData.avatar,
-                                        godfatherCode: loginResponse.userData.code,
+                                      avatarName: loginResponse.data.userData.avatar,
+                                      godfatherCode: loginResponse.data.userData.code,
                                         placeOfBirth: nil,
                                         additionalStreetLine: nil,
                                         emailVerificationStatus: .verified,
@@ -69,7 +69,7 @@ struct GomaModelMapper {
                                         kycExpiryDate: nil,      // Added
                                         currency: nil)
             
-        let mappedLoginResponse = LoginResponse(token: loginResponse.token,
+        let mappedLoginResponse = LoginResponse(token: loginResponse.data.token,
                                                 userProfile: userProfile)
         
         return mappedLoginResponse

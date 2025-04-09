@@ -186,7 +186,11 @@ class SocialUserQRCodeViewController: UIViewController {
         
         self.qrCodeSubtitleLabel.textColor = UIColor.App.textPrimary
         
-        StyleHelper.styleButtonWithTheme(button: self.shareButton, titleColor: UIColor.App.buttonTextPrimary, titleDisabledColor: UIColor.App.buttonTextPrimary, backgroundColor: UIColor.App.buttonBackgroundPrimary, backgroundHighlightedColor: UIColor.App.buttonBackgroundPrimary)
+        StyleHelper.styleButtonWithTheme(button: self.shareButton,
+                                         titleColor: UIColor.App.buttonTextPrimary,
+                                         titleDisabledColor: UIColor.App.buttonTextPrimary,
+                                         backgroundColor: UIColor.App.buttonBackgroundPrimary,
+                                         backgroundHighlightedColor: UIColor.App.buttonBackgroundPrimary)
         
         self.scanFriendBaseView.backgroundColor = .clear
 

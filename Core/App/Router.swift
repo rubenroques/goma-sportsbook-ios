@@ -897,7 +897,8 @@ class Router {
                 self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
             }
 
-            let socialViewController = SocialViewController(viewModel: SocialViewModel())
+//            let socialViewController = SocialViewController(viewModel: SocialViewModel())
+            let socialViewController = ChatListViewController()
 
             let navigationViewController = Router.navigationController(with: socialViewController)
             navigationViewController.pushViewController(viewController, animated: false)

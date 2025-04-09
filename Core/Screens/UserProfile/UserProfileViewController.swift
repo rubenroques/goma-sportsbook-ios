@@ -44,12 +44,12 @@ class UserProfileViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public properties
-    var hasFollowOption: Bool = true {
-        didSet {
-            self.followButton.isHidden = !hasFollowOption
-            self.unfollowButton.isHidden = hasFollowOption
-        }
-    }
+//    var hasFollowOption: Bool = true {
+//        didSet {
+//            self.followButton.isHidden = !hasFollowOption
+//            self.unfollowButton.isHidden = hasFollowOption
+//        }
+//    }
 
     var hasFriendOption: Bool = true {
         didSet {
@@ -73,6 +73,7 @@ class UserProfileViewController: UIViewController {
 
     var shouldCloseChat: (() -> Void)?
     var shouldReloadChatList: (() -> Void)?
+    var shouldShowLogin: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: UserProfileViewModel) {
@@ -80,6 +81,7 @@ class UserProfileViewController: UIViewController {
         self.viewModel = viewModel
 
         self.userInfoViewController = UserProfileInfoViewController(viewModel: UserProfileInfoViewModel(userId: self.viewModel.getUserId()))
+        
         self.userTipsViewController = UserProfileTipsViewController(viewModel: UserProfileTipsViewModel(userId: self.viewModel.getUserId()))
 
         self.viewControllers = [self.userInfoViewController, self.userTipsViewController]
@@ -108,10 +110,8 @@ class UserProfileViewController: UIViewController {
 
         self.setupWithTheme()
 
-        self.hasFollowOption = true
-
         self.hasFriendOption = true
-
+        
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
@@ -128,6 +128,10 @@ class UserProfileViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.userTipsViewController.shouldShowLogin = { [weak self] in
+            self?.shouldShowLogin?()
+            self?.navigationController?.popViewController(animated: true)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -182,7 +186,13 @@ class UserProfileViewController: UIViewController {
 
         self.addFriendButton.backgroundColor = .clear
 
-        self.chatButton.backgroundColor = .clear
+        StyleHelper.styleButtonWithTheme(button: self.chatButton,
+                                         titleColor: UIColor.App.buttonTextTertiary,
+                                         titleDisabledColor: UIColor.App.buttonTextDisableTertiary,
+                                         backgroundColor: UIColor.App.buttonBackgroundTertiary,
+                                         backgroundHighlightedColor: UIColor.App.buttonBackgroundTertiary,
+                                         withBorder: true,
+                                         borderColor: UIColor.App.buttonBorderTertiary)
 
         self.moreOptionsButton.backgroundColor = .clear
 
@@ -191,21 +201,22 @@ class UserProfileViewController: UIViewController {
         self.userImageView.backgroundColor = .clear
         self.userImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
 
-        self.usernameLabel.textColor = UIColor.App.textPrimary
+        self.usernameLabel.textColor = UIColor.App.highlightPrimary
 
-        self.followersValueLabel.textColor = UIColor.App.textPrimary
+        self.followersValueLabel.textColor = UIColor.App.textSecondary
 
-        self.followersLabel.textColor = UIColor.App.textSecondary
+        self.followersLabel.textColor = UIColor.App.textPrimary
 
-        self.followingValueLabel.textColor = UIColor.App.textPrimary
+        self.followingValueLabel.textColor = UIColor.App.textSecondary
 
-        self.followingLabel.textColor = UIColor.App.textSecondary
+        self.followingLabel.textColor = UIColor.App.textPrimary
 
         self.userInfoTabsContainerView.backgroundColor = .clear
 
         self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
         self.tabViewController.textColor = UIColor.App.textPrimary
+//        self.tabViewController.textIdleColor = UIColor.App.textSecondary
         self.tabViewController.separatorBarColor = UIColor.App.separatorLine
 
     }
@@ -213,8 +224,8 @@ class UserProfileViewController: UIViewController {
     // MARK: Functions
     private func configure() {
         self.usernameLabel.text = self.viewModel.userBasicInfo.username
-
-        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+            
+        if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier,
            "\(loggedUserId)" == self.viewModel.userBasicInfo.userId {
             self.isLoggedUser = true
         }
@@ -235,12 +246,12 @@ class UserProfileViewController: UIViewController {
     // MARK: Binding
     private func bind(toViewModel viewModel: UserProfileViewModel) {
 
-        viewModel.isFollowingUser
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isFollowing in
-                self?.hasFollowOption = !isFollowing
-            })
-            .store(in: &cancellables)
+//        viewModel.isFollowingUser
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] isFollowing in
+//                self?.hasFollowOption = !isFollowing
+//            })
+//            .store(in: &cancellables)
 
         if !self.isChatProfile {
             viewModel.isFriendUser
@@ -281,6 +292,20 @@ class UserProfileViewController: UIViewController {
                     if let userProfileInfo = viewModel.userProfileInfo {
 
                         self?.userInfoViewController.getViewModel().setUserProfileInfoState(userProfileState: .loaded, userProfileInfo: userProfileInfo)
+                        
+                        // Avatar
+                        if let avatar = userProfileInfo.avatar {
+                            if let avatarImage = UIImage(named: avatar) {
+                                self?.userImageView.image = avatarImage
+                            }
+                            else {
+                                self?.userImageView.image = UIImage(named: "my_account_profile_icon")
+                            }
+                        }
+                        else {
+                            self?.userImageView.image = UIImage(named: "my_account_profile_icon")
+                        }
+                        
                     }
                 case .failed:
                     self?.userInfoViewController.getViewModel().setUserProfileInfoState(userProfileState: .failed)
@@ -312,11 +337,17 @@ class UserProfileViewController: UIViewController {
     }
 
     @objc func didTapFollowButton() {
-        self.viewModel.followUser()
+        if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+            self.viewModel.followUser()
+        }
+        else {
+            self.shouldShowLogin?()
+            self.navigationController?.popToRootViewController(animated: true)
+        }
     }
 
     @objc func didTapUnfollowButton() {
-        self.viewModel.deleteFollowUser()
+        self.viewModel.unfollowUser()
     }
 
     @objc func didTapAddFriendButton() {
@@ -325,11 +356,12 @@ class UserProfileViewController: UIViewController {
 
     @objc func didTapChatButton() {
 
-        if let chatId = self.viewModel.userConnection?.chatRoomId {
+        if let chatId = self.viewModel.userChatroomId {
             let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
 
             let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
 
+            conversationDetailViewController.isChatAssistant = false
             conversationDetailViewController.cameFromProfile = true
 
             self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
@@ -342,23 +374,23 @@ class UserProfileViewController: UIViewController {
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         if self.viewModel.isFriendUser.value {
-            let unfriendUserAction: UIAlertAction = UIAlertAction(title: localized("unfriend"), style: .default) { [weak self] _ in
+            let unfriendUserAction: UIAlertAction = UIAlertAction(title: localized("unfriend"), style: .default) { [weak self] _ -> Void in
                 self?.viewModel.unfriendUser()
             }
             actionSheetController.addAction(unfriendUserAction)
         }
 
-        let blockUserAction: UIAlertAction = UIAlertAction(title: localized("block_user"), style: .default) { _ in
+        let blockUserAction: UIAlertAction = UIAlertAction(title: localized("block_user"), style: .default) { _ -> Void in
             // NOT YET AVAILABLE
         }
         actionSheetController.addAction(blockUserAction)
 
-        let reportUserAction: UIAlertAction = UIAlertAction(title: localized("report"), style: .default) { _ in
+        let reportUserAction: UIAlertAction = UIAlertAction(title: localized("report"), style: .default) { _ -> Void in
             // NOT YET AVAILABLE
         }
         actionSheetController.addAction(reportUserAction)
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {
@@ -470,9 +502,9 @@ extension UserProfileViewController {
     private static func createChatButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "user_chat_icon"), for: .normal)
-        button.contentMode = .scaleAspectFit
+        button.setTitle(localized("message"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
+        button.contentEdgeInsets = UIEdgeInsets(top: 5.0, left: 15.0, bottom: 5.0, right: 15.0)
         return button
     }
 
@@ -503,7 +535,7 @@ extension UserProfileViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Username"
-        label.font = AppFont.with(type: .bold, size: 18)
+        label.font = AppFont.with(type: .bold, size: 22)
         return label
     }
 
@@ -511,7 +543,7 @@ extension UserProfileViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "0"
-        label.font = AppFont.with(type: .semibold, size: 11)
+        label.font = AppFont.with(type: .bold, size: 11)
         return label
     }
 
@@ -527,7 +559,7 @@ extension UserProfileViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "0"
-        label.font = AppFont.with(type: .semibold, size: 11)
+        label.font = AppFont.with(type: .bold, size: 11)
         return label
     }
 
@@ -559,13 +591,14 @@ extension UserProfileViewController {
 
         self.userProfileActionsStackView.addArrangedSubview(self.followActionsStackView)
 
-        self.followActionsStackView.addArrangedSubview(self.followButton)
-        self.followActionsStackView.addArrangedSubview(self.unfollowButton)
+//        self.followActionsStackView.addArrangedSubview(self.followButton)
+//        self.followActionsStackView.addArrangedSubview(self.unfollowButton)
+        self.followActionsStackView.addArrangedSubview(self.chatButton)
+
 
         self.userProfileActionsStackView.addArrangedSubview(self.friendActionsStackView)
 
         self.friendActionsStackView.addArrangedSubview(self.addFriendButton)
-        self.friendActionsStackView.addArrangedSubview(self.chatButton)
 
         self.navigationView.addSubview(self.moreOptionsButton)
 
@@ -612,17 +645,10 @@ extension UserProfileViewController {
             self.userProfileActionsStackView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -15),
             self.userProfileActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
-            self.followButton.widthAnchor.constraint(equalToConstant: 81),
-            self.followButton.heightAnchor.constraint(equalToConstant: 29),
-
-            self.unfollowButton.widthAnchor.constraint(equalToConstant: 81),
-            self.unfollowButton.heightAnchor.constraint(equalToConstant: 29),
+            self.chatButton.heightAnchor.constraint(equalToConstant: 32),
 
             self.addFriendButton.widthAnchor.constraint(equalToConstant: 32),
             self.addFriendButton.heightAnchor.constraint(equalToConstant: 32),
-
-            self.chatButton.widthAnchor.constraint(equalToConstant: 32),
-            self.chatButton.heightAnchor.constraint(equalToConstant: 32),
 
             self.moreOptionsButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor),
             self.moreOptionsButton.widthAnchor.constraint(equalToConstant: 40),
@@ -635,11 +661,11 @@ extension UserProfileViewController {
             self.userTopInfoView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.userTopInfoView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
 
-            self.userImageView.leadingAnchor.constraint(equalTo: self.userTopInfoView.leadingAnchor, constant: 33),
-            self.userImageView.widthAnchor.constraint(equalToConstant: 52),
+            self.userImageView.leadingAnchor.constraint(equalTo: self.userTopInfoView.leadingAnchor, constant: 16),
+            self.userImageView.widthAnchor.constraint(equalToConstant: 51),
             self.userImageView.heightAnchor.constraint(equalTo: self.userImageView.widthAnchor),
             self.userImageView.topAnchor.constraint(equalTo: self.userTopInfoView.topAnchor, constant: 15),
-            self.userImageView.bottomAnchor.constraint(equalTo: self.userTopInfoView.bottomAnchor, constant: -40),
+            self.userImageView.bottomAnchor.constraint(equalTo: self.userTopInfoView.bottomAnchor, constant: -10),
 
             self.usernameLabel.leadingAnchor.constraint(equalTo: self.userImageView.trailingAnchor, constant: 11),
             self.usernameLabel.trailingAnchor.constraint(equalTo: self.userTopInfoView.trailingAnchor, constant: -33),

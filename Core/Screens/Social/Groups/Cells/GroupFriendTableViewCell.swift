@@ -265,7 +265,7 @@ extension GroupFriendTableViewCell {
     private static func createCheckboxImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "checkbox_unselected_icon")
+        imageView.image = UIImage(named: "checkbox_unselected_2_icon")
         imageView.contentMode = .scaleToFill
         return imageView
     }

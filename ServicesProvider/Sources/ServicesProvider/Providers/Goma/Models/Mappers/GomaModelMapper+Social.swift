@@ -37,7 +37,7 @@ extension GomaModelMapper {
     
     static func userSportsData(fromUserSportsData userSportsData: GomaModels.UserProfileSportsData) -> UserProfileSportsData {
         
-        return UserProfileSportsData(sportId: userSportsData.sportId, percentage: userSportsData.percentage, sportIdIcon: userSportsData.sportIdIcon)
+        return UserProfileSportsData(sportId: userSportsData.sportId, percentage: userSportsData.percentage, sportIdIcon: userSportsData.sportIdIcon ?? "")
     }
     
     static func friendRequest(fromFriendRequest friendRequest: GomaModels.FriendRequest) -> FriendRequest {

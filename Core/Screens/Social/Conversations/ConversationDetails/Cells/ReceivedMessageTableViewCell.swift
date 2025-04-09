@@ -160,7 +160,7 @@ class ReceivedMessageTableViewCell: UITableViewCell {
         }
         
         if isAssistantMessage {
-            self.iconImageView.image = UIImage(named: "goma_icon")
+            self.iconImageView.image = UIImage(named: "ai_assistant_icon")
 //            self.avatarCenterConstraint.constant = 0
         }
 

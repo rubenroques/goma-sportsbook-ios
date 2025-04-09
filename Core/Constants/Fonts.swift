@@ -10,7 +10,7 @@ struct AppFont {
         case bold
         case semibold
         case heavy
-        case italic = "Italic"
+        case italic
 
         private var sizeName: String {
             switch self {

@@ -42,7 +42,6 @@ class ConversationDetailViewController: UIViewController {
     private lazy var messageViewToTableConstraint: NSLayoutConstraint = Self.createMessageViewToTableConstraint()
     private lazy var messageViewToListLoadingConstraint: NSLayoutConstraint = Self.createMessageViewToListLoadingConstraint()
 
-
     private var viewModel: ConversationDetailViewModel
 
     private var cancellables = Set<AnyCancellable>()
@@ -250,7 +249,7 @@ class ConversationDetailViewController: UIViewController {
                 
                 if let isChatAssistant = self?.isChatAssistant,
                     isChatAssistant {
-                    self?.iconUserImageView.image = UIImage(named: "goma_icon")
+                    self?.iconUserImageView.image = UIImage(named: "ai_assistant_icon")
                 }
                 else if let avatar = viewModel.getConversationData()?.avatar {
                     self?.iconUserImageView.image = UIImage(named: avatar)
@@ -601,7 +600,11 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                         
                         let isAssistantMessage = self.isChatAssistant
                         
-                        cell.setupMessage(messageData: messageData, username: username, avatarName: self.viewModel.getAvatarForUserId(userId: userId) ,chatroomId: self.viewModel.conversationId, isAssistantMessage: isAssistantMessage)
+                        cell.setupMessage(messageData: messageData,
+                                          username: username,
+                                          avatarName: self.viewModel.getAvatarForUserId(userId: userId) ,
+                                          chatroomId: self.viewModel.conversationId,
+                                          isAssistantMessage: isAssistantMessage)
                         
                         cell.shouldSendPromptMessage = { [weak self] text in
                             self?.sendPromptMessage(message: text)

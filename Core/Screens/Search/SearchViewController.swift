@@ -398,7 +398,7 @@ class SearchViewController: UIViewController {
 
     func openChatModal() {
         if Env.userSessionStore.isUserLogged() {
-            let socialViewController = SocialViewController()
+            let socialViewController = ChatListViewController()
             self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
         }
         else {

@@ -87,7 +87,7 @@ extension AIAssistantUITableViewCell {
     private static func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "goma_icon")
+        imageView.image = UIImage(named: "ai_assistant_icon")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

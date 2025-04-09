@@ -176,7 +176,11 @@ class ChatListViewController: UIViewController {
         self.emptyStateImageView.backgroundColor = .clear
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
         
-        StyleHelper.styleButtonWithTheme(button: self.emptyStateAddFriendButton, titleColor: UIColor.App.buttonTextTertiary, titleDisabledColor: UIColor.App.buttonTextDisableTertiary, backgroundColor: UIColor.App.buttonBackgroundTertiary, backgroundHighlightedColor: UIColor.App.buttonBackgroundTertiary,
+        StyleHelper.styleButtonWithTheme(button: self.emptyStateAddFriendButton,
+                                         titleColor: UIColor.App.buttonTextTertiary,
+                                         titleDisabledColor: UIColor.App.buttonTextDisableTertiary,
+                                         backgroundColor: UIColor.App.buttonBackgroundTertiary,
+                                         backgroundHighlightedColor: UIColor.App.buttonBackgroundTertiary,
                                          withBorder: true,
                                          borderColor: UIColor.App.buttonBorderTertiary)
 

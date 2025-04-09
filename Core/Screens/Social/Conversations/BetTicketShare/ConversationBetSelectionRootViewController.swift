@@ -107,7 +107,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
         self.ticketTypePagedViewController.delegate = self
         self.ticketTypePagedViewController.dataSource = self
 
-        self.ticketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
+        self.ticketTypesCollectionView.register(ListTypeCollectionViewCell.self,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
 
         self.ticketTypesCollectionView.delegate = self

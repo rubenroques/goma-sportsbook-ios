@@ -136,7 +136,7 @@ extension GomaModels {
     struct UserProfileSportsData: Codable {
         var sportId: Int
         var percentage: Double
-        var sportIdIcon: String
+        var sportIdIcon: String?
 
         enum CodingKeys: String, CodingKey {
             case sportId = "sport_id"

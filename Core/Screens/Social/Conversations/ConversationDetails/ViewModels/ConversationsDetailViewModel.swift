@@ -61,7 +61,6 @@ class ConversationDetailViewModel: NSObject {
         
         super.init()
 
-
         self.setupConversationInfo()
         self.startSocketListening()
 

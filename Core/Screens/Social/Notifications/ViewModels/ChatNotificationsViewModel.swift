@@ -99,7 +99,13 @@ class ChatNotificationsViewModel {
         for i in 0...5 {
             let notificationUser = NotificationUser(id: i, notificationId: i, userId: i, read: i < 2 ? 0 : 1, createdAt: "", updatedAt: "")
             
-            let chatNotification = ChatNotification(id: i, title: "Test \(i)", text: "Test \(i) accepted your request", type: "friend", subType: "request", processed: 0, notificationUsers: [notificationUser])
+            let chatNotification = ChatNotification(id: i,
+                                                    title: "Test \(i)",
+                                                    text: "Test \(i) accepted your request",
+                                                    type: "friend",
+                                                    subType: "request",
+                                                    processed: 0,
+                                                    notificationUsers: [notificationUser])
             
             notificationsTest.append(chatNotification)
 
