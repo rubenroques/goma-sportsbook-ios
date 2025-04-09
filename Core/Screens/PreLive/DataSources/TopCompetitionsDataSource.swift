@@ -65,6 +65,7 @@ class TopCompetitionsDataSource: NSObject {
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
     private var sportSubject: CurrentValueSubject<Sport, Never>
+    private var orderedTopCompetitionsIds: [String] = []
 
     private var topCompetitionsIdentifiersSubject: CurrentValueSubject<[String: [String]], Never> = .init([:])
     private var collapsedCompetitionsSections: Set<Int> = []
@@ -181,11 +182,10 @@ extension TopCompetitionsDataSource {
 extension TopCompetitionsDataSource {
 
     private func fetchTopCompetitionsMatches() {
-
         self.activeNetworkRequestCount += 1
-
         let currentSportName = self.sportSubject.value.name.lowercased().replacingOccurrences(of: " ", with: "-")
         let competitionIds = self.topCompetitionsIdentifiersSubject.value[currentSportName] ?? []
+        self.orderedTopCompetitionsIds = competitionIds
 
         let competitionsMatchesPublishers = self.requestForTopCompetitionsMatchesWithIds(competitionIds)
         Publishers.MergeMany(competitionsMatchesPublishers)
@@ -227,14 +227,17 @@ extension TopCompetitionsDataSource {
 
     private func processTopCompetitionsInfo(_ selectedTopCompetitionsInfo: [String: SportCompetitionInfo]) {
 
-        let competitionInfos = selectedTopCompetitionsInfo.map({ $0.value }).filter({
-            $0.marketGroups.isNotEmpty
-        })
+        let sortedCompetitionInfos = self.orderedTopCompetitionsIds.compactMap { id -> SportCompetitionInfo? in
+            if let info = selectedTopCompetitionsInfo[id], info.marketGroups.isNotEmpty {
+                return info
+            }
+            return nil
+        }
 
         self.competitionsMatchesSubscriptions = [:]
         self.allCompetitionsSubject.send([])
 
-        for competitionInfo in competitionInfos {
+        for competitionInfo in sortedCompetitionInfos {
             if let marketGroup = competitionInfo.marketGroups.filter({ $0.name.lowercased().contains("main") }).first {
                 self.subscribeTopCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
             }
@@ -276,17 +279,26 @@ extension TopCompetitionsDataSource {
     }
 
     private func processCompetitionMatches(matches: [Match], competitionInfo: SportCompetitionInfo) {
+        // Prevent duplicate insertion
+        if self.allCompetitionsSubject.value.contains(where: { $0.id == competitionInfo.id }) {
+            return
+        }
 
         let newCompetition = Competition(id: competitionInfo.id,
-                                         name: competitionInfo.name,
-                                         matches: matches,
-                                         venue: matches.first?.venue,
-                                         sport: nil,
-                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
-                                         competitionInfo: competitionInfo)
+                                           name: competitionInfo.name,
+                                           matches: matches,
+                                           venue: matches.first?.venue,
+                                           sport: nil,
+                                           numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+                                           competitionInfo: competitionInfo)
 
+        // Append the new competition and then sort the array based on the order specified in orderedTopCompetitionsIds
         self.allCompetitionsSubject.value.append(newCompetition)
-
+        self.allCompetitionsSubject.value.sort { comp1, comp2 in
+            let idx1 = self.orderedTopCompetitionsIds.firstIndex(of: comp1.id) ?? 0
+            let idx2 = self.orderedTopCompetitionsIds.firstIndex(of: comp2.id) ?? 0
+            return idx1 < idx2
+        }
     }
 
     private func subscribeTopCompetitionOutright(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
@@ -322,9 +334,8 @@ extension TopCompetitionsDataSource {
 
     private func processTopCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
 
-        guard
-            !self.allCompetitionsSubject.value.contains(where: { $0.id == competitionInfo.id })
-        else {
+        // Prevent duplicate insertion
+        if self.allCompetitionsSubject.value.contains(where: { $0.id == competitionInfo.id }) {
             return
         }
 
@@ -339,7 +350,11 @@ extension TopCompetitionsDataSource {
                                          competitionInfo: competitionInfo)
 
         self.allCompetitionsSubject.value.append(newCompetition)
-
+        self.allCompetitionsSubject.value.sort { comp1, comp2 in
+            let idx1 = self.orderedTopCompetitionsIds.firstIndex(of: comp1.id) ?? 0
+            let idx2 = self.orderedTopCompetitionsIds.firstIndex(of: comp2.id) ?? 0
+            return idx1 < idx2
+        }
     }
 
 }
