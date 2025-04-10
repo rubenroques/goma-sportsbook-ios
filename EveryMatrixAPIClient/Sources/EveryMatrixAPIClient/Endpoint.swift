@@ -7,16 +7,36 @@
 
 import Foundation
 
-protocol Endpoint {
+/// Protocol defining an API endpoint
+public protocol Endpoint {
+    /// Base URL for the API
     var url: String { get }
+    
+    /// Path component of the endpoint
     var endpoint: String { get }
-    var query: [URLQueryItem]? { get }
-    var headers: HTTP.Headers? { get }
-    var cachePolicy: URLRequest.CachePolicy { get }
+    
+    /// HTTP method for the endpoint
     var method: HTTP.Method { get }
+    
+    /// Query parameters for the endpoint
+    var query: [URLQueryItem]? { get }
+    
+    /// HTTP headers for the endpoint
+    var headers: HTTP.Headers? { get }
+    
+    /// Request body for the endpoint
     var body: Data? { get }
+    
+    /// Cache policy for the request
+    var cachePolicy: URLRequest.CachePolicy { get }
+    
+    /// Timeout interval for the request
     var timeout: TimeInterval { get }
+    
+    /// Whether the request requires a session key
     var requireSessionKey: Bool { get }
+    
+    /// Optional comment for the endpoint
     var comment: String? { get }
 }
 
