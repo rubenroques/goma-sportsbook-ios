@@ -14,3 +14,4 @@ struct FailableDecodable<Base: Decodable>: Decodable {
         self.base = try? container.decode(Base.self)
     }
 }
+

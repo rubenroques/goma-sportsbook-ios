@@ -68,8 +68,9 @@ class VerticalMatchInfoViewModel {
 
 class VerticalMatchInfoView: UIView {
     
+    private static let height: CGFloat = 80
+
     // MARK: Private Properties
-    private lazy var topSeparatorAlphaLineView: FadingView = Self.createTopSeparatorAlphaLineView()
     private lazy var detailedScoreView: ScoreView = Self.createDetailedScoreView()
     private lazy var homeNameLabel: UILabel = Self.createHomeNameLabel()
     private lazy var awayNameLabel: UILabel = Self.createAwayNameLabel()
@@ -105,10 +106,16 @@ class VerticalMatchInfoView: UIView {
         self.setupWithTheme()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+       
+        self.awayServingIndicatorView.layer.cornerRadius = self.awayServingIndicatorView.frame.height / 2
+        self.homeServingIndicatorView.layer.cornerRadius = self.homeServingIndicatorView.frame.height / 2
+    }
+    
     // MARK: Theme Setup
     private func setupWithTheme() {
-        self.backgroundColor = UIColor.App.backgroundCards
-        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
+        self.backgroundColor = UIColor.clear
         
         self.homeNameLabel.textColor = UIColor.App.textPrimary
         self.awayNameLabel.textColor = UIColor.App.textPrimary
@@ -122,7 +129,7 @@ class VerticalMatchInfoView: UIView {
         
         self.detailedScoreView.setupWithTheme()
     }
-    
+        
     // MARK: Configuration
     func configure(with viewModel: VerticalMatchInfoViewModel) {
         self.viewModel = viewModel
@@ -137,7 +144,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind home team name
         viewModel.homeTeamNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.homeNameLabel.text = name
             }
@@ -145,7 +152,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind away team name
         viewModel.awayTeamNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.awayNameLabel.text = name
             }
@@ -153,7 +160,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind display state
         viewModel.displayStatePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 switch state {
                 case .preLive(let date, let time):
@@ -180,7 +187,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind serving indicator
         viewModel.servingIndicatorPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] indicator in
                 switch indicator {
                 case .none:
@@ -198,7 +205,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind detailed score
         viewModel.detailedScorePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] scoreData in
                 self?.detailedScoreView.sportCode = scoreData.sportCode
                 self?.detailedScoreView.updateScores(scoreData.score)
@@ -207,7 +214,7 @@ class VerticalMatchInfoView: UIView {
         
         // Bind market name
         viewModel.marketNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] marketName in
                 self?.marketNamePillLabelView.title = marketName
                 self?.marketNamePillLabelView.isHidden = marketName.isEmpty
@@ -315,10 +322,8 @@ extension VerticalMatchInfoView {
         return stackView
     }
     
-    
     // MARK: Layout Setup
     private func setupSubviews() {
-        self.addSubview(self.topSeparatorAlphaLineView)
         self.addSubview(self.detailedScoreView)
         
         self.homeElementsStackView.addArrangedSubview(self.homeNameLabel)
@@ -353,11 +358,6 @@ extension VerticalMatchInfoView {
     
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.topSeparatorAlphaLineView.heightAnchor.constraint(equalToConstant: 1),
-            self.topSeparatorAlphaLineView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4),
-            
             self.detailedScoreView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
             self.detailedScoreView.topAnchor.constraint(equalTo: self.topAnchor, constant: 13),
             
@@ -393,9 +393,9 @@ extension VerticalMatchInfoView {
             self.marketNamePillLabelView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4),
             
             self.matchTimeStatusNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.marketNamePillLabelView.trailingAnchor, constant: 5),
-            
-            // Minimum height constraint
-            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 70)
+
+            //TODO: This should grow for teams with pong names
+            self.heightAnchor.constraint(equalToConstant: Self.height)
         ])
         
         self.marketNamePillLabelView.setContentCompressionResistancePriority(UILayoutPriority(990), for: .horizontal)
@@ -421,23 +421,31 @@ extension VerticalMatchInfoView {
             view.backgroundColor = .systemGray6
             return view
         }
-        .frame(width: 300, height: 70)
+        .frame(width: 300, height: 80)
         
         PreviewUIView {
+            let scores = ["1": Score.set(index: 0, home: 30, away: 45),
+              "2a": Score.set(index: 1, home: 23, away: 40),
+            "2b": Score.set(index: 2, home: 15, away: 40),
+            "2c": Score.set(index: 3, home: 40, away: 40),
+              "3": Score.gamePart(home: 15, away: 10),
+              "4": Score.matchFull(home: 60, away: 70)]
+             
+            
             let view = VerticalMatchInfoView()
             let viewModel = VerticalMatchInfoViewModel(
                 homeTeamName: "Djokovic",
                 awayTeamName: "Nadal",
                 displayState: .live(matchTimeStatus: "3rd Set"),
                 servingIndicator: .away,
-                detailedScore: ("TNS", [:]),
+                detailedScore: ("TNS", scores),
                 marketName: "Match Winner"
             )
             view.configure(with: viewModel)
             view.backgroundColor = UIColor.systemGray6
             return view
         }
-        .frame(width: 300, height: 70)
+        .frame(width: 300, height: 80)
         
     }
 }
@@ -458,7 +466,7 @@ extension VerticalMatchInfoView {
         view.backgroundColor = UIColor.systemGray6
         return view
     }
-    .frame(width: 300, height: 70)
+    .frame(width: 300, height: 80)
 }
 
 @available(iOS 17.0, *)
@@ -477,7 +485,7 @@ extension VerticalMatchInfoView {
         view.backgroundColor = UIColor.systemGray6
         return view
     }
-    .frame(width: 300, height: 70)
+    .frame(width: 300, height: 80)
 }
 
 @available(iOS 17.0, *)
@@ -496,25 +504,31 @@ extension VerticalMatchInfoView {
         view.backgroundColor = UIColor.systemGray6
         return view
     }
-    .frame(width: 300, height: 770)
+    .frame(width: 300, height: 80)
 }
 
 @available(iOS 17.0, *)
 #Preview("VerticalMatchInfoView - Tennis with Serving") {
     PreviewUIView {
+
+       let scores = ["1": Score.set(index: 0, home: 30, away: 45),
+         "2": Score.set(index: 1, home: 23, away: 40),
+         "3": Score.gamePart(home: 15, away: 10),
+         "4": Score.matchFull(home: 60, away: 70)]
+        
+        
         let view = VerticalMatchInfoView()
         let viewModel = VerticalMatchInfoViewModel(
-            homeTeamName: "Djokovic",
-            awayTeamName: "Nadal",
-            displayState: .live(matchTimeStatus: "3rd Set"),
+            homeTeamName: "Djokovic Djokovic Djokovic Djokovic Djokovic ",
+            awayTeamName: "Nadal Nadal Nadal Nadal Nadal Nadal Nadal ",
+            displayState: .live(matchTimeStatus: "3rd Set 3rd Set 3rd Set 3rd Set Set 3rd Set Set 3rd Set Set 3rd Set"),
             servingIndicator: .away,
-            detailedScore: ("TNS", [:]),
-            marketName: "Match Winner"
+            detailedScore: ("TNS", scores),
+            marketName: "Match Winner Match Winner Match Winner"
         )
         view.configure(with: viewModel)
         view.backgroundColor = UIColor.systemGray6
         return view
     }
-    .frame(width: 300, height: 70)
+    .frame(width: 300, height: 80)
 }
-

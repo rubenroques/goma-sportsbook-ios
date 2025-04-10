@@ -11,14 +11,6 @@ import ServicesProvider
 
 class MatchLineTableViewCell: UITableViewCell {
 
-    //
-    private var debugUUID = UUID()
-    //
-
-    private var viewModel: MatchLineTableCellViewModel?
-
-    var matchStatsViewModel: MatchStatsViewModel?
-
     // MARK: - UI Components
     private lazy var collectionBaseView: UIView = Self.createCollectionBaseView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
@@ -66,7 +58,23 @@ class MatchLineTableViewCell: UITableViewCell {
         }
     }
 
+    private var viewModel: MatchLineTableCellViewModel?
+
+    var matchStatsViewModel: MatchStatsViewModel?
+
     private var cancellables: Set<AnyCancellable> = []
+
+    // MARK: - Internal Types
+    private enum MatchWidgetDisplayType {
+        case live
+        case preLive // Default pre-live / Standard
+        case classic
+        case boosted
+        case outright
+        case backgroundImage
+        case topImage
+        // Add any other distinct types as needed
+    }
 
     // MARK: - Initialization
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -104,10 +112,53 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
-        self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
-        self.collectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
-        self.collectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
-        self.collectionView.register(SeeMoreMarketsCollectionViewCell.self, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
+        self.collectionView.register(
+            ClassicMatchWidgetCollectionViewCell.self,
+            forCellWithReuseIdentifier: ClassicMatchWidgetCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            PreLiveMatchWidgetCollectionViewCell.self,
+            forCellWithReuseIdentifier: PreLiveMatchWidgetCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            LiveMatchWidgetCollectionViewCell.self,
+            forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            BackgroundImageMatchWidgetCollectionViewCell.self,
+            forCellWithReuseIdentifier: BackgroundImageMatchWidgetCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            TopImageMatchWidgetCollectionViewCell.self,
+            forCellWithReuseIdentifier: TopImageMatchWidgetCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            BoostedMatchWidgetCollectionViewCell.self,
+            forCellWithReuseIdentifier: BoostedMatchWidgetCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            OutrightMatchWidgetCollectionViewCell.self,
+            forCellWithReuseIdentifier: OutrightMatchWidgetCollectionViewCell.identifier
+        )
+
+
+
+        self.collectionView.register(
+            MatchWidgetCollectionViewCell.self,
+            forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            OddDoubleCollectionViewCell.nib,
+            forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            OddTripleCollectionViewCell.nib,
+            forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            SeeMoreMarketsCollectionViewCell.self,
+            forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier
+        )
 
         self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
 
@@ -190,29 +241,16 @@ class MatchLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: MatchLineTableCellViewModel) {
         self.viewModel = viewModel
 
-        // let matchDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
-        // print("BlinkDebug line (\(self.debugUUID.uuidString)) configure(withViewModel \(matchDesc)")
-
-//        self.loadingView.stopAnimating()
-//        self.setupWithMatch(viewModel.match)
-
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
 
-        self.matchInfoPublisher = viewModel.$match
+        self.matchInfoPublisher = viewModel.matchPublisher
             .removeDuplicates(by: { [weak self] oldMatch, newMatch in
-
-                // let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
-                // let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-                // print("BlinkDebug Line comparing \(oldMatchDesc) <> \(newMatchDesc)")
-
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
-                    // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) ignoring")
                     return true
                 }
                 else {
-                    // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) not ignoring:\(visuallySimilar.1 ?? "")")
                     return false
                 }
             })
@@ -223,8 +261,6 @@ class MatchLineTableViewCell: UITableViewCell {
                 case .failure: ()
                 }
             } receiveValue: { [weak self] match in
-                // let matchDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
-                // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) collectionView.reloadData requested \(matchDesc)")
                 self?.setupWithMatch(match)
                 self?.loadingView.stopAnimating()
             }
@@ -233,49 +269,6 @@ class MatchLineTableViewCell: UITableViewCell {
     private func setupWithMatch(_ newMatch: Match) {
         self.match = newMatch
         self.collectionView.reloadData()
-        return
-
-        // TODO: Implement diffable updates
-        // currently some cells appear with old data from previous VM
-        //
-        /*
-        guard
-            let currentMatch = self.match
-        else {
-
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch reload all \(matchDesc)")
-
-            // If no self.match was found it should refresh all sections
-            self.match = newMatch
-            self.collectionView.reloadData()
-            return
-        }
-
-        // We have a match already
-
-        // if Match.visuallySimilar(lhs: newMatch, rhs: currentMatch).0 {
-        if
-            newMatch.id == currentMatch.id &&
-            newMatch.status == currentMatch.status &&
-            newMatch.markets.first == currentMatch.markets.first {
-
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            let oldMatchDesc = "[\(currentMatch.id) \(currentMatch.homeParticipant.name) vs \(currentMatch.awayParticipant.name)]"
-
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch reload sec markest \(matchDesc) <> \(oldMatchDesc)")
-
-            self.match = newMatch
-            self.collectionView.reloadSections(IndexSet(integer: 1)) // reload secundary markets
-        }
-        else {
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch match diff reload all \(matchDesc)")
-
-            self.match = newMatch
-            self.collectionView.reloadData()
-        }
-         */
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -505,11 +498,11 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let knownStatus = self.viewModel?.status ?? .unknown
-
         guard
-            let match = self.viewModel?.match
+            let match = self.viewModel?.match,
+            let cellViewModel = self.viewModel?.matchWidgetCellViewModel
         else {
+            // Return placeholder if no match
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
             cell.backgroundView?.backgroundColor = UIColor.App.backgroundCards
             cell.backgroundColor = UIColor.App.backgroundCards
@@ -519,127 +512,39 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
 
         switch indexPath.section {
         case 0:
-            guard
-                let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
-            else {
-                fatalError()
-            }
+             // --- Determine State and Type ---
+             let state = cellViewModel.matchWidgetStatus
+            let type = cellViewModel.matchWidgetType
+             // --- Switch on the combination ---
+             switch (state, type) {
+             case (.live, _): // Explicitly match live state with live type
+                 return configureLiveCell(collectionView: collectionView, indexPath: indexPath, viewModel: cellViewModel, match: match)
 
-            if let cellViewModel = self.viewModel?.matchWidgetCellViewModel {
-                // print("BlinkDebug line (\(self.debugUUID.uuidString)) viewModel for cell found")
-                cell.configure(withViewModel: cellViewModel)
-            }
-            else {
-                // print("BlinkDebug line (\(self.debugUUID.uuidString)) viewModel for cell not found!")
-                let cellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: knownStatus)
-                cell.configure(withViewModel: cellViewModel)
-            }
+             case (_, .boosted): // Boosted overrides state (assuming boosted is always pre-live visually)
+                 return configureBoostedCell(collectionView: collectionView, indexPath: indexPath, viewModel: cellViewModel, match: match)
 
-            cell.tappedMatchWidgetAction = { [weak self] _ in
-                self?.tappedMatchLine()
-            }
-            cell.selectedOutcome = self.selectedOutcome
-            cell.unselectedOutcome = self.unselectedOutcome
+             case (_, .topImageOutright): // Outright overrides state
+                 return configureOutrightCell(collectionView: collectionView, indexPath: indexPath, viewModel: cellViewModel, match: match)
 
-            cell.didLongPressOdd = { [weak self] bettingTicket in
-                self?.didLongPressOdd?(bettingTicket)
-            }
+             case (_, .backgroundImage): // BackgroundImage overrides state
+                 return configureBackgroundImageCell(collectionView: collectionView, indexPath: indexPath, viewModel: cellViewModel, match: match)
 
-            cell.tappedMixMatchAction = { [weak self] match in
-                self?.tappedMixMatchAction?(match)
-            }
+             case (_, .topImage): // TopImage overrides state
+                 return configureTopImageCell(collectionView: collectionView, indexPath: indexPath, viewModel: cellViewModel, match: match)
 
-            cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
-
-            return cell
+             default:
+                 return configurePreLiveCell(collectionView: collectionView, indexPath: indexPath, viewModel: cellViewModel, match: match)
+             }
 
         case 1:
-            if match.markets.count > 1, let market = match.markets[safe: indexPath.row + 1] {
+            return configureMarketCell(collectionView: collectionView, indexPath: indexPath, viewModel: cellViewModel, match: match)
 
-                let cellViewModel = self.viewModel?.matchWidgetCellViewModel ?? MatchWidgetCellViewModel(match: match, matchWidgetStatus: knownStatus)
-
-                let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
-                let countryIso = match.venue?.isoCode ?? ""
-
-                if market.outcomes.count == 2 {
-                    if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
-                        cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market,
-                                             match: match,
-                                             teamsText: teamsText,
-                                             countryIso: countryIso,
-                                             isLive: cellViewModel.matchWidgetStatus == .live )
-
-                        cell.tappedMatchWidgetAction = { [weak self] in
-                            self?.tappedMatchLine()
-                        }
-
-                        cell.didLongPressOdd = { [weak self] bettingTicket in
-                            self?.didLongPressOdd?(bettingTicket)
-                        }
-
-                        return cell
-                    }
-                }
-                else {
-                    if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
-                        cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market,
-                                             match: match,
-                                             teamsText: teamsText,
-                                             countryIso: countryIso,
-                                             isLive: cellViewModel.matchWidgetStatus == .live)
-
-                        cell.tappedMatchWidgetAction = {  [weak self] in
-                            self?.tappedMatchLine()
-                        }
-
-                        cell.didLongPressOdd = { [weak self] bettingTicket in
-                            self?.didLongPressOdd?(bettingTicket)
-                        }
-
-                        return cell
-                    }
-                }
-            }
         case 2:
-            guard
-                let cell = collectionView.dequeueCellType(SeeMoreMarketsCollectionViewCell.self, indexPath: indexPath)
-            else {
-                fatalError()
-            }
-
-            let marketsRawString = localized("number_of_markets")
-            let singularMarketRawString = localized("number_of_market_singular")
-            var marketString = ""
-            if match.numberTotalOfMarkets > 1 {
-                marketString = marketsRawString.replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
-            }
-            else {
-                marketString = singularMarketRawString.replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
-            }
-
-            cell.configureWithSubtitleString(marketString)
-
-            if match.numberTotalOfMarkets == 0 {
-                cell.hideSubtitle()
-            }
-
-            cell.tappedAction = { [weak self] in
-                self?.tappedMatchLine()
-            }
-            return cell
+            return configureSeeMoreCell(collectionView: collectionView, indexPath: indexPath, match: match)
 
         default:
-            ()
+            fatalError("Unexpected section index \(indexPath.section)")
         }
-
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
-        cell.backgroundView?.backgroundColor = UIColor.App.backgroundCards
-        cell.backgroundColor = UIColor.App.backgroundCards
-        cell.layer.cornerRadius = 9
-        return cell
-
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -706,6 +611,207 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 }
 
+// MARK: - Private Configuration Helpers
+private extension MatchLineTableViewCell {
+
+    // MARK: - Cell Configuration Functions
+    func configureLiveCell(collectionView: UICollectionView, indexPath: IndexPath, viewModel: MatchWidgetCellViewModel, match: Match) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueCellType(LiveMatchWidgetCollectionViewCell.self, indexPath: indexPath) else {
+            fatalError("Could not dequeue LiveMatchWidgetCollectionViewCell")
+        }
+        cell.configure(withViewModel: viewModel)
+        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
+        // Assign closures (standard ones for now, customize if needed)
+        cell.tappedMatchWidgetAction = { [weak self] _ in self?.tappedMatchLine() }
+        cell.selectedOutcome = self.selectedOutcome
+        cell.unselectedOutcome = self.unselectedOutcome
+        cell.didLongPressOdd = { [weak self] bettingTicket in self?.didLongPressOdd?(bettingTicket) }
+
+        return cell
+    }
+
+    func configurePreLiveCell(collectionView: UICollectionView, indexPath: IndexPath, viewModel: MatchWidgetCellViewModel, match: Match) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueCellType(PreLiveMatchWidgetCollectionViewCell.self, indexPath: indexPath) else {
+            fatalError("Could not dequeue PreLiveMatchWidgetCollectionViewCell")
+        }
+        cell.configure(withViewModel: viewModel)
+        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
+        // Assign closures
+        cell.tappedMatchWidgetAction = { [weak self] _ in self?.tappedMatchLine() }
+        cell.selectedOutcome = self.selectedOutcome
+        cell.unselectedOutcome = self.unselectedOutcome
+        cell.didLongPressOdd = { [weak self] bettingTicket in self?.didLongPressOdd?(bettingTicket) }
+
+        return cell
+    }
+
+    func configureClassicCell(collectionView: UICollectionView, indexPath: IndexPath, viewModel: MatchWidgetCellViewModel, match: Match) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueCellType(ClassicMatchWidgetCollectionViewCell.self, indexPath: indexPath) else {
+            fatalError("Could not dequeue ClassicMatchWidgetCollectionViewCell")
+        }
+        cell.configure(withViewModel: viewModel)
+        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
+        // Assign closures
+        cell.tappedMatchWidgetAction = { [weak self] _ in self?.tappedMatchLine() }
+        cell.selectedOutcome = self.selectedOutcome
+        cell.unselectedOutcome = self.unselectedOutcome
+        cell.didLongPressOdd = { [weak self] bettingTicket in self?.didLongPressOdd?(bettingTicket) }
+
+        return cell
+    }
+
+    func configureBoostedCell(collectionView: UICollectionView, indexPath: IndexPath, viewModel: MatchWidgetCellViewModel, match: Match) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueCellType(BoostedMatchWidgetCollectionViewCell.self, indexPath: indexPath) else {
+            fatalError("Could not dequeue BoostedMatchWidgetCollectionViewCell")
+        }
+        cell.configure(withViewModel: viewModel)
+        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
+        // Assign closures (maybe boosted cells have different interactions?)
+        cell.tappedMatchWidgetAction = { [weak self] _ in self?.tappedMatchLine() }
+        cell.selectedOutcome = self.selectedOutcome
+        cell.unselectedOutcome = self.unselectedOutcome
+        cell.didLongPressOdd = { [weak self] bettingTicket in self?.didLongPressOdd?(bettingTicket) }
+
+        return cell
+    }
+
+    func configureOutrightCell(collectionView: UICollectionView, indexPath: IndexPath, viewModel: MatchWidgetCellViewModel, match: Match) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueCellType(OutrightMatchWidgetCollectionViewCell.self, indexPath: indexPath) else {
+            fatalError("Could not dequeue OutrightMatchWidgetCollectionViewCell")
+        }
+        cell.configure(withViewModel: viewModel)
+        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
+        // Assign closures (Outrights might have fewer/different actions)
+        cell.tappedMatchWidgetAction = { [weak self] _ in self?.tappedMatchLine() }
+        // Outrights might not have standard outcomes to select/unselect?
+        // cell.selectedOutcome = self.selectedOutcome
+        // cell.unselectedOutcome = self.unselectedOutcome
+        // cell.didLongPressOdd = { [weak self] bettingTicket in self?.didLongPressOdd?(bettingTicket) }
+
+
+        return cell
+    }
+
+    func configureBackgroundImageCell(collectionView: UICollectionView, indexPath: IndexPath, viewModel: MatchWidgetCellViewModel, match: Match) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueCellType(BackgroundImageMatchWidgetCollectionViewCell.self, indexPath: indexPath) else {
+            fatalError("Could not dequeue BackgroundImageMatchWidgetCollectionViewCell")
+        }
+        cell.configure(withViewModel: viewModel)
+        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
+        // Assign closures
+        cell.tappedMatchWidgetAction = { [weak self] _ in self?.tappedMatchLine() }
+        cell.selectedOutcome = self.selectedOutcome
+        cell.unselectedOutcome = self.unselectedOutcome
+        cell.didLongPressOdd = { [weak self] bettingTicket in self?.didLongPressOdd?(bettingTicket) }
+
+        return cell
+    }
+
+    func configureTopImageCell(collectionView: UICollectionView, indexPath: IndexPath, viewModel: MatchWidgetCellViewModel, match: Match) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueCellType(TopImageMatchWidgetCollectionViewCell.self, indexPath: indexPath) else {
+            fatalError("Could not dequeue TopImageMatchWidgetCollectionViewCell")
+        }
+        cell.configure(withViewModel: viewModel)
+        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
+        // Assign closures
+        cell.tappedMatchWidgetAction = { [weak self] _ in self?.tappedMatchLine() }
+        cell.selectedOutcome = self.selectedOutcome
+        cell.unselectedOutcome = self.unselectedOutcome
+        cell.didLongPressOdd = { [weak self] bettingTicket in self?.didLongPressOdd?(bettingTicket) }
+
+        return cell
+    }
+
+    // MARK: - Market Cell Configuration
+    func configureMarketCell(collectionView: UICollectionView, indexPath: IndexPath, viewModel: MatchWidgetCellViewModel, match: Match) -> UICollectionViewCell {
+        // Check if we have a market to display
+        guard match.markets.count > 1,
+              let market = match.markets[safe: indexPath.row + 1] else {
+            // Return empty cell if no market available
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
+            cell.contentView.isHidden = true
+            return cell
+        }
+
+        let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
+        let countryIso = match.venue?.isoCode ?? ""
+        let isLive = viewModel.matchWidgetStatus == .live
+
+        // Dequeue and configure the appropriate cell based on outcomes count
+        if market.outcomes.count == 2 {
+            guard let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) else {
+                fatalError("Could not dequeue OddDoubleCollectionViewCell")
+            }
+
+            cell.matchStatsViewModel = self.matchStatsViewModel
+            cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso, isLive: isLive)
+
+            cell.tappedMatchWidgetAction = { [weak self] in
+                self?.tappedMatchLine()
+            }
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.didLongPressOdd?(bettingTicket)
+            }
+
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) else {
+                fatalError("Could not dequeue OddTripleCollectionViewCell")
+            }
+
+            cell.matchStatsViewModel = self.matchStatsViewModel
+            cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso, isLive: isLive)
+
+            cell.tappedMatchWidgetAction = { [weak self] in
+                self?.tappedMatchLine()
+            }
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.didLongPressOdd?(bettingTicket)
+            }
+
+            return cell
+        }
+    }
+
+    // MARK: - See More Cell Configuration
+    func configureSeeMoreCell(collectionView: UICollectionView, indexPath: IndexPath, match: Match) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueCellType(SeeMoreMarketsCollectionViewCell.self, indexPath: indexPath) else {
+            fatalError("Could not dequeue SeeMoreMarketsCollectionViewCell")
+        }
+
+        // Configure market count string
+        let marketString: String
+        if match.numberTotalOfMarkets > 1 {
+            marketString = localized("number_of_markets")
+                .replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
+        } else {
+            marketString = localized("number_of_market_singular")
+                .replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
+        }
+
+        cell.configureWithSubtitleString(marketString)
+
+        // Hide subtitle if no markets
+        if match.numberTotalOfMarkets == 0 {
+            cell.hideSubtitle()
+        }
+
+        // Configure tap action
+        cell.tappedAction = { [weak self] in
+            self?.tappedMatchLine()
+        }
+
+        return cell
+    }
+
+}
 
 #if DEBUG
 import SwiftUI

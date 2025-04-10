@@ -36,7 +36,8 @@ extension UIImage {
                 r = pixel & 255
                 g = (pixel >> 8) & 255
                 b = (pixel >> 16) & 255
-            } else if cgImage.byteOrderInfo == .order32Little {
+            }
+            else if cgImage.byteOrderInfo == .order32Little {
                 r = (pixel >> 16) & 255
                 g = (pixel >> 8) & 255
                 b = pixel & 255

@@ -931,10 +931,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell
             }
 
-        case .highlightedMatches, .highlightedBoostedOddsMatches:
-
+        case .highlightedMatches:
             guard
-                let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row)
+                let viewModel = self.viewModel.highlightedMatchesViewModel(forIndex: indexPath.row)
             else {
                 return UITableViewCell()
             }
@@ -949,23 +948,49 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.setupWithViewModel(viewModel)
-
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
             }
-
             cell.tappedMatchOutrightLineAction = { [weak self] competition in
                 self?.openOutrightDetails(competition: competition)
             }
-
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
             }
-
             cell.tappedMixMatchAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id, isMixMatch: true)
             }
+            return cell
+        
+        case .highlightedBoostedOddsMatches:
+            guard
+                let viewModel = self.viewModel.highlightedBoostedMatchesViewModel(forIndex: indexPath.row)
+            else {
+                return UITableViewCell()
+            }
 
+            // Create the identifier based on the cell type
+            let cellIdentifier = MatchWidgetContainerTableViewCell.identifier+viewModel.matchWidgetType.rawValue
+
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MatchWidgetContainerTableViewCell
+            else {
+                return UITableViewCell()
+            }
+
+            cell.setupWithViewModel(viewModel)
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id)
+            }
+            cell.tappedMatchOutrightLineAction = { [weak self] competition in
+                self?.openOutrightDetails(competition: competition)
+            }
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+            cell.tappedMixMatchAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id, isMixMatch: true)
+            }
             return cell
 
         case .promotionalStories:
@@ -1077,7 +1102,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .highlightedMarketProChoices:
             guard
-                let viewModel = self.viewModel.highlightedMarket(forIndex: indexPath.row)
+                let viewModel = self.viewModel.highlightedMarketViewModel(forIndex: indexPath.row)
             else {
                 return UITableViewCell()
             }
@@ -1170,18 +1195,19 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 //                return 130
 //            }
             return UITableView.automaticDimension
+            
         case .highlightedMatches:
-            if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
+            if let viewModel = self.viewModel.highlightedMatchesViewModel(forIndex: indexPath.row) {
                 return viewModel.maxHeightForInnerCards()
             }
             return UITableView.automaticDimension
         case .highlightedBoostedOddsMatches:
-            if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
+            if let viewModel = self.viewModel.highlightedBoostedMatchesViewModel(forIndex: indexPath.row) {
                 return viewModel.maxHeightForInnerCards()
             }
             return UITableView.automaticDimension
         case .highlightedMarketProChoices:
-            if let viewModel = self.viewModel.highlightedMarket(forIndex: indexPath.row) {
+            if let viewModel = self.viewModel.highlightedMarketViewModel(forIndex: indexPath.row) {
                 return viewModel.maxHeightForInnerCards()
             }
             return UITableView.automaticDimension
@@ -1238,17 +1264,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .topCompetitionsShortcuts:
             return 130
         case .highlightedMatches:
-            if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
+            if let viewModel = self.viewModel.highlightedMatchesViewModel(forIndex: indexPath.row) {
                 return viewModel.maxHeightForInnerCards()
             }
             return 234
         case .highlightedBoostedOddsMatches:
-            if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
+            if let viewModel = self.viewModel.highlightedBoostedMatchesViewModel(forIndex: indexPath.row) {
                 return viewModel.maxHeightForInnerCards()
             }
             return 234
         case .highlightedMarketProChoices:
-            if let viewModel = self.viewModel.highlightedMarket(forIndex: indexPath.row) {
+            if let viewModel = self.viewModel.highlightedMarketViewModel(forIndex: indexPath.row) {
                 return viewModel.maxHeightForInnerCards()
             }
             return MarketWidgetContainerTableViewModel.defaultCardHeight
@@ -1413,10 +1439,12 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
                 break
             case .topCompetitionsShortcuts:
                 break
-            case .highlightedMatches, .highlightedBoostedOddsMatches:
-                _ = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row)
+            case .highlightedMatches:
+                _ = self.viewModel.highlightedMatchesViewModel(forIndex: indexPath.row)
+            case .highlightedBoostedOddsMatches:
+                _ = self.viewModel.highlightedBoostedMatchesViewModel(forIndex: indexPath.row)
             case .highlightedMarketProChoices:
-                _ = self.viewModel.highlightedMarket(forIndex: indexPath.row)
+                _ = self.viewModel.highlightedMarketViewModel(forIndex: indexPath.row)
             case .promotionalStories:
                 break
             case .promotedSportSection:

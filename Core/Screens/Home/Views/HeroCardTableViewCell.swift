@@ -154,19 +154,28 @@ class HeroCardTableViewCell: UITableViewCell {
             }
             .store(in: &self.cancellables)
         
-        viewModel.countryFlagImagePublisher
+        viewModel.countryFlagImageNamePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] countryFlagImage in
-                self?.locationIconImageView.image = countryFlagImage
+            .sink { [weak self] countryFlagImageName in
+                if let countryFlagImageName, let countryFlagImage = UIImage(named: countryFlagImageName) {
+                    self?.locationIconImageView.image = countryFlagImage
+                }
+                else {
+                    self?.locationIconImageView.image = nil
+                }
             }
             .store(in: &self.cancellables)
         
-        viewModel.sportIconImagePublisher
+        viewModel.sportIconImageNamePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] sportIconImage in
-                self?.sportIconImageView.image = sportIconImage.withRenderingMode(.alwaysTemplate)
-                self?.sportIconImageView.tintColor = UIColor.App.iconSportsHeroCard
-
+            .sink { [weak self] sportIconImageName in
+                if let sportIconImageName, let sportIconImage = UIImage(named: sportIconImageName) {
+                    self?.sportIconImageView.image = sportIconImage.withRenderingMode(.alwaysTemplate)
+                    self?.sportIconImageView.tintColor = UIColor.App.iconSportsHeroCard
+                }
+                else {
+                    self?.sportIconImageView.image = nil
+                }
             }
             .store(in: &self.cancellables)
         

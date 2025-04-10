@@ -1,0 +1,36 @@
+# Configuration for MatchWidgetCollectionViewCell migration validation
+# --------------------------------------------------------
+
+# Path to the original monolithic Swift file
+old_file: "Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidgetCollectionViewCell_old.swift"
+
+# Use a glob pattern to match all extension files
+new_files: "Core/Screens/PreLiveEvents/Views/Cells/Match/MatchWidget/Extensions/MatchWidgetCollectionViewCell+*.swift"
+
+# Lines to ignore during comparison
+ignore_lines:
+  # Common imports
+  - "import UIKit"
+  - "import Foundation"
+  
+  # Basic syntax elements
+  - "{"
+  - "}"
+  - "("
+  - ")"
+  - "// MARK: -"
+  - "extension MatchWidgetCollectionViewCell {"
+  
+  # Class definitions and includes
+  - "final class MatchWidgetCollectionViewCell: BaseCollectionViewCell {"
+  - "@objc protocol MatchWidgetCollectionViewCellDelegate: AnyObject {"
+  
+  # Common methods that might be reorganized or refactored
+  - "*override func*"
+  - "*required init*"
+  - "*super.init*"
+  - "*fatalError*"
+  - "*@IBOutlet*"
+  - "*@IBAction*"
+  - "*setNeedsLayout*"
+  - "*layoutIfNeeded*" 

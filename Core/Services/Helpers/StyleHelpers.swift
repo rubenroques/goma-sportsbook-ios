@@ -73,9 +73,9 @@ class StyleHelper {
     static func cardsStyleHeight() -> CGFloat {
         switch Self.cardsStyleActive() {
         case .small:
-            return MatchWidgetCollectionViewCell.smallCellHeight
+            return ClassicMatchWidgetCollectionViewCell.cellHeight
         case .normal:
-            return MatchWidgetCollectionViewCell.normalCellHeight
+            return MatchWidgetCollectionViewCell.cellHeight
         }
     }
 

@@ -42,8 +42,8 @@ force_cast:
 force_try:
   error
 
-statement_position:
-  statement_mode: uncuddled_else
+#statement_position:
+#  statement_mode: uncuddled_else
 
 disabled_rules:
   - for_where
@@ -59,6 +59,8 @@ disabled_rules:
   - function_body_length
   - type_body_length
   - nesting
+  - private_outlet
+  - statement_position
 
 opt_in_rules:
   - private_outlet

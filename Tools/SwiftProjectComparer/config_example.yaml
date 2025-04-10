@@ -1,0 +1,41 @@
+# Example configuration for Swift Project Comparer
+# ------------------------------------------------
+
+# Path to the base project directory (the one you're merging INTO)
+# This should be your main project that will receive code from the legacy project
+base_directory: "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/"
+
+# Path to the legacy project directory (the one you're merging FROM)
+# This is the project that has diverged and contains code you want to identify
+legacy_directory: "/Users/rroques/Desktop/GOMA/iOS/MultiBet-iOS"
+
+# Directories to exclude from analysis (recommended)
+# These are typically third-party dependencies or build artifacts
+excluded_directories:
+  - "Pods"
+  - "Carthage"
+  - "DerivedData"
+  - ".git"
+  - "fastlane"
+  - "Scripts"
+  - "Generated"
+
+# Types to ignore in the comparison (optional)
+# This is useful for common utility types that shouldn't be counted as missing
+ignored_types:
+  # Ignore these type names regardless of their kind (class, struct, enum, etc.)
+  names:
+    - "CodingKeys"
+    - "Constants"
+    - "AppDelegate"
+    - "SceneDelegate"
+
+  # Ignore types matching regex patterns
+  patterns:
+    - ".*Tests$"
+    - "Test.*"
+    - "Mock.*"
+
+# Path where the comparison report should be saved
+# If not provided, the report will be printed to the console
+output_report: "project_comparison_report.md"

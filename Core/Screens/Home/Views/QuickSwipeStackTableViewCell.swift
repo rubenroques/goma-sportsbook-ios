@@ -70,7 +70,7 @@ class QuickSwipeStackTableViewCell: UITableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
-        self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
+        self.collectionView.register(MatchWidgetCollectionViewCell.self, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -62,25 +62,25 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
     private lazy var bottomButtonsContainerStackView: UIStackView = self.createBottomButtonsContainerStackView()
     private lazy var seeAllMarketsButton: UIButton = self.createSeeAllMarketsButton()
-    
+
     private lazy var homeUpChangeOddValueImageView: UIImageView = self.createHomeUpChangeOddValueImageView()
     private lazy var homeDownChangeOddValueImageView: UIImageView = self.createHomeDownChangeOddValueImageView()
     private lazy var drawUpChangeOddValueImageView: UIImageView = self.createDrawUpChangeOddValueImageView()
     private lazy var drawDownChangeOddValueImageView: UIImageView = self.createDrawDownChangeOddValueImageView()
     private lazy var awayUpChangeOddValueImageView: UIImageView = self.createAwayUpChangeOddValueImageView()
     private lazy var awayDownChangeOddValueImageView: UIImageView = self.createAwayDownChangeOddValueImageView()
-    
+
     // Mix match bottom bar
     private lazy var mixMatchContainerView: UIView = self.createMixMatchContainerView()
-    
+
     private lazy var mixMatchBaseView: UIView = self.createMixMatchBaseView()
-    
+
     private lazy var mixMatchBackgroundImageView: UIImageView = self.createMixMatchBackgroundImageView()
-    
+
     private lazy var mixMatchIconImageView: UIImageView = self.createMixMatchIconImageView()
-    
+
     lazy var mixMatchLabel: UILabel = self.createMixMatchLabel()
-    
+
     lazy var mixMatchNavigationIconImageView: UIImageView = self.createMixMatchNavigationIconImageView()
 
     lazy var cashbackIconImageView: UIImageView = self.createCashbackIconImageView()
@@ -88,15 +88,15 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     private var viewModel: MarketWidgetCellViewModel?
 
     private var cancellables = Set<AnyCancellable>()
-    
+
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
     private var rightOutcome: Outcome?
-    
+
     private var currentHomeOddValue: Double?
     private var currentDrawOddValue: Double?
     private var currentAwayOddValue: Double?
-    
+
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
@@ -116,7 +116,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
         }
     }
-    
+
     var isFavorite: Bool = false {
         didSet {
             if self.isFavorite {
@@ -147,35 +147,35 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.homeButton.isUserInteractionEnabled = true
         self.drawButton.isUserInteractionEnabled = true
         self.awayButton.isUserInteractionEnabled = true
-        
+
         self.favoriteButton.addTarget(self, action: #selector(self.didTapFavoriteIcon), for: .primaryActionTriggered)
-        
+
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeButton.addGestureRecognizer(tapLeftOddButton)
-        
+
         let longPressLeftOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressLeftOddButton))
         self.homeButton.addGestureRecognizer(longPressLeftOddButton)
-        
+
         let tapMiddleOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapMiddleOddButton))
         self.drawButton.addGestureRecognizer(tapMiddleOddButton)
-        
+
         let longPressMiddleOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressMiddleOddButton))
         self.drawButton.addGestureRecognizer(longPressMiddleOddButton)
-        
+
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayButton.addGestureRecognizer(tapRightOddButton)
-        
+
         let longPressRightOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressRightOddButton))
         self.awayButton.addGestureRecognizer(longPressRightOddButton)
-        
+
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
-        
+
         self.seeAllMarketsButton.addTarget(self, action: #selector(self.didTapMatchView), for: .primaryActionTriggered)
-        
+
         let tapMixMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMixMatch))
         self.mixMatchContainerView.addGestureRecognizer(tapMixMatchView)
-        
+
         self.mixMatchContainerView.isHidden = true
 
         self.hasCashback = false
@@ -196,22 +196,22 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.homeButton.isHidden = false
         self.drawButton.isHidden = false
         self.awayButton.isHidden = false
-        
+
         self.leftOutcome = nil
         self.middleOutcome = nil
         self.rightOutcome = nil
-        
+
         self.isFavorite = false
-        
+
         self.leftOddButtonSubscriber?.cancel()
         self.leftOddButtonSubscriber = nil
-        
+
         self.middleOddButtonSubscriber?.cancel()
         self.middleOddButtonSubscriber = nil
-        
+
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
-        
+
         self.mixMatchContainerView.isHidden = true
 
         self.hasCashback = false
@@ -229,25 +229,25 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                                                   UIColor.App.cardBorderLineGradient3]
 
         self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
-        
+
         self.containerStackView.backgroundColor = .clear
 
         self.leagueInfoStackView.backgroundColor = .clear
-        
+
         self.favoriteButton.backgroundColor = .clear
         self.favoriteImageView.backgroundColor = .clear
-        
+
         self.leagueNameLabel.textColor = UIColor.App.textSecondary
         self.eventDateLabel.textColor = UIColor.App.textSecondary
         self.eventTimeLabel.textColor = UIColor.App.textSecondary
         self.teamsLabel.textColor = UIColor.App.highlightPrimary
-        
+
         self.bottomButtonsContainerStackView.backgroundColor = .clear
-        
+
         self.seeAllMarketsButton.backgroundColor = UIColor.App.backgroundSecondary
         self.seeAllMarketsButton.tintColor = UIColor.App.textSecondary
         self.seeAllMarketsButton.titleLabel?.textColor = UIColor.App.textSecondary
-        
+
         self.homeOutcomeBaseView.backgroundColor = .clear
         self.drawOutcomeBaseView.backgroundColor = .clear
         self.awayOutcomeBaseView.backgroundColor = .clear
@@ -255,7 +255,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.homeButton.backgroundColor = UIColor.App.backgroundOdds
         self.drawButton.backgroundColor = UIColor.App.backgroundOdds
         self.awayButton.backgroundColor = UIColor.App.backgroundOdds
-        
+
         if isLeftOutcomeButtonSelected {
             self.homeButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
             self.homeOutcomeNameLabel.textColor = UIColor.App.buttonTextPrimary
@@ -266,7 +266,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             self.homeOutcomeNameLabel.textColor = UIColor.App.textPrimary
             self.homeOutcomeValueLabel.textColor = UIColor.App.textPrimary
         }
-        
+
         if isMiddleOutcomeButtonSelected {
             self.drawButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
             self.drawOutcomeNameLabel.textColor = UIColor.App.buttonTextPrimary
@@ -277,7 +277,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             self.drawOutcomeNameLabel.textColor = UIColor.App.textPrimary
             self.drawOutcomeValueLabel.textColor = UIColor.App.textPrimary
         }
-        
+
         if isRightOutcomeButtonSelected {
             self.awayButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
             self.awayOutcomeNameLabel.textColor = UIColor.App.buttonTextPrimary
@@ -292,7 +292,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
     func configure(with viewModel: MarketWidgetCellViewModel) {
         self.viewModel = viewModel
-        
+
         if let customBetAvailable = viewModel.highlightedMarket.content.customBetAvailable,
            customBetAvailable {
             self.mixMatchContainerView.isHidden = false
@@ -313,55 +313,60 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
 
-        viewModel.sportIconImagePublisher
+        viewModel.sportIconImageNamePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sportIconImage in
-                self?.sportImageView.image = sportIconImage
+                if let sportIconImage {
+                    self?.sportImageView.image = UIImage(named: sportIconImage)
+                }
+                else {
+                    self?.sportImageView.image = nil
+                }
             }
             .store(in: &self.cancellables)
-        
-        viewModel.countryFlagImagePublisher
+
+        viewModel.countryFlagImageNamePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] countryFlagImage in
-                self?.countryImageView.image = countryFlagImage
+                self?.countryImageView.image = UIImage(named: countryFlagImage)
             }
             .store(in: &self.cancellables)
-        
+
         viewModel.competitionName
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitionName in
                 self?.leagueNameLabel.text = competitionName
             }
             .store(in: &self.cancellables)
-        
+
         viewModel.eventName
             .receive(on: DispatchQueue.main)
             .sink { [weak self] eventName in
                 self?.teamsLabel.text = eventName
             }
             .store(in: &self.cancellables)
-        
+
         viewModel.marketName
             .receive(on: DispatchQueue.main)
             .sink { [weak self] marketName in
                 self?.marketNameLabel.text = marketName
             }
             .store(in: &self.cancellables)
-        
+
         viewModel.startDateStringPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] startDateString in
                 self?.eventDateLabel.text = startDateString
             }
             .store(in: &self.cancellables)
-        
+
         viewModel.startTimeStringPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] startTimeString in
                 self?.eventTimeLabel.text = startTimeString
             }
             .store(in: &self.cancellables)
-        
+
         viewModel.isFavoriteMatchPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isFavoriteMatch in
@@ -376,11 +381,11 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 self?.hasCashback = canHaveCashback
             }
             .store(in: &self.cancellables)
-        
+
         self.configureOddsButtons()
-        
+
     }
-    
+
     private func configureOddsButtons() {
 
         self.homeButton.isHidden = true
@@ -408,7 +413,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
             self.leftOutcome = outcome
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-            
+
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
@@ -418,22 +423,22 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 self.homeButton.alpha = 0.5
                 self.setHomeOddValueLabel(toText: "-")
             }
-            
+
             self.leftOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { [weak self] serviceProviderOutcome in
-                    
+
                     guard let weakSelf = self,
                     let serviceProviderOutcome = serviceProviderOutcome
                     else { return }
-                    
+
                     let outcome = ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: serviceProviderOutcome)
-                    
+
                     let bettingOffer = outcome.bettingOffer
-                    
+
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.homeButton.isUserInteractionEnabled = false
                         weakSelf.homeButton.alpha = 0.5
@@ -442,9 +447,9 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                     else {
                         weakSelf.homeButton.isUserInteractionEnabled = true
                         weakSelf.homeButton.alpha = 1.0
-                        
+
                         let newOddValue = bettingOffer.decimalOdd
-                        
+
                         if let currentOddValue = weakSelf.currentHomeOddValue {
                             if newOddValue > currentOddValue {
                                 weakSelf.highlightOddChangeUp(animated: true,
@@ -462,7 +467,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                     }
                 })
         }
-        
+
         if let outcome = availableOutcomes[safe: 1] {
 
             if let nameDigit1 = market?.nameDigit1 {
@@ -481,7 +486,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
             self.middleOutcome = outcome
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-            
+
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
@@ -491,22 +496,22 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 self.drawButton.alpha = 0.5
                 self.setDrawOddValueLabel(toText: "-")
             }
-            
+
             self.middleOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { _ in
-                    
+
                 }, receiveValue: { [weak self] serviceProviderOutcome in
-                    
+
                     guard let weakSelf = self,
                     let serviceProviderOutcome = serviceProviderOutcome
                     else { return }
-                    
+
                     let outcome = ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: serviceProviderOutcome)
-                    
+
                     let bettingOffer = outcome.bettingOffer
-                    
+
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.drawButton.isUserInteractionEnabled = false
                         weakSelf.drawButton.alpha = 0.5
@@ -515,7 +520,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                     else {
                         weakSelf.drawButton.isUserInteractionEnabled = true
                         weakSelf.drawButton.alpha = 1.0
-                        
+
                         let newOddValue = bettingOffer.decimalOdd
                         if let currentOddValue = weakSelf.currentDrawOddValue {
                             if newOddValue > currentOddValue {
@@ -534,7 +539,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                     }
                 })
         }
-        
+
         if let outcome = availableOutcomes[safe: 2] {
 
             if let nameDigit1 = market?.nameDigit1 {
@@ -553,7 +558,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
             self.rightOutcome = outcome
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-            
+
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
@@ -563,22 +568,22 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 self.awayButton.alpha = 0.5
                 self.setAwayOddValueLabel(toText: "-")
             }
-            
+
             self.rightOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { _ in
-                    
+
                 }, receiveValue: { [weak self] serviceProviderOutcome in
-                    
+
                     guard let weakSelf = self,
                     let serviceProviderOutcome = serviceProviderOutcome
                     else { return }
-                    
+
                     let outcome = ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: serviceProviderOutcome)
-                    
+
                     let bettingOffer = outcome.bettingOffer
-                    
+
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.awayButton.isUserInteractionEnabled = false
                         weakSelf.awayButton.alpha = 0.5
@@ -587,7 +592,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                     else {
                         weakSelf.awayButton.isUserInteractionEnabled = true
                         weakSelf.awayButton.alpha = 1.0
-                        
+
                         let newOddValue = bettingOffer.decimalOdd
                         if let currentOddValue = weakSelf.currentAwayOddValue {
                             if newOddValue > currentOddValue {
@@ -601,14 +606,14 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                                                                 baseView: weakSelf.awayButton)
                             }
                         }
-                        
+
                         weakSelf.currentAwayOddValue = newOddValue
                         weakSelf.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
                     }
                 })
         }
     }
-    
+
     func selectLeftOddButton() {
         self.setupWithTheme()
     }
@@ -616,7 +621,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     func deselectLeftOddButton() {
         self.setupWithTheme()
     }
-    
+
     @objc func didTapLeftOddButton() {
 
         guard
@@ -642,7 +647,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             self.isLeftOutcomeButtonSelected = false
-            
+
         }
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
@@ -650,7 +655,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.success)
             self.isLeftOutcomeButtonSelected = true
-            
+
         }
 
     }
@@ -665,7 +670,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             else {
                 return
             }
-            
+
             let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                               outcomeId: outcome.id,
                                               marketId: market.id,
@@ -756,14 +761,14 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
         }
     }
-    
+
     @objc private func didTapMatchView() {
-        
+
         if let viewModel = self.viewModel,
            let matchId = viewModel.highlightedMarket.content.eventId {
             self.tappedMatchIdAction(matchId)
         }
-        
+
     }
 
     //
@@ -805,7 +810,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.success)
-            
+
             self.isRightOutcomeButtonSelected = true
         }
     }
@@ -839,7 +844,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
         }
     }
-    
+
     @objc func didTapFavoriteIcon() {
         if Env.userSessionStore.isUserLogged() {
             if let matchId = self.viewModel?.highlightedMarket.content.eventId {
@@ -851,9 +856,9 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             self.viewController?.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     func markAsFavorite(matchId: String) {
-        
+
         if Env.favoritesManager.isEventFavorite(eventId: matchId) {
             Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: .match)
             self.isFavorite = false
@@ -862,9 +867,9 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: .match)
             self.isFavorite = true
         }
-        
+
     }
-    
+
     private func setHomeOddValueLabel(toText text: String) {
         self.homeOutcomeValueLabel.text = text
     }
@@ -876,14 +881,14 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     private func setAwayOddValueLabel(toText text: String) {
         self.awayOutcomeValueLabel.text = text
     }
-    
+
     @objc private func didTapMixMatch() {
         if let viewModel = self.viewModel,
            let matchId = viewModel.highlightedMarket.content.eventId {
             self.tappedMixMatchAction(matchId)
         }
     }
-    
+
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
@@ -910,7 +915,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         }, completion: nil)
 
     }
-    
+
     private func animateBorderColor(view: UIView, color: UIColor, duration: Double) {
         let animation = CABasicAnimation(keyPath: "borderColor")
         animation.fromValue = layer.borderColor
@@ -919,7 +924,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
-    
+
     // MARK: - Layout
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -927,7 +932,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.teamPillContainerView.layer.cornerRadius = self.teamPillContainerView.frame.height/2
         self.sportImageView.layer.cornerRadius = self.sportImageView.frame.height/2
         self.countryImageView.layer.cornerRadius = self.countryImageView.frame.height/2
-        
+
     }
 
 }
@@ -962,12 +967,12 @@ extension ProChoiceHighlightCollectionViewCell {
         self.containerView.bringSubviewToFront(self.favoriteButton)
 
         self.containerStackView.addArrangedSubview(self.eventInfoContainerView)
-                
+
         self.containerStackView.addArrangedSubview(self.oddsStackView)
 
         self.containerStackView.addArrangedSubview(self.bottomButtonsContainerStackView)
         self.bottomButtonsContainerStackView.addArrangedSubview(self.seeAllMarketsButton)
-        
+
         self.bottomButtonsContainerStackView.addArrangedSubview(self.mixMatchContainerView)
         self.mixMatchContainerView.addSubview(self.mixMatchBaseView)
         self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
@@ -984,24 +989,24 @@ extension ProChoiceHighlightCollectionViewCell {
         self.homeButton.addSubview(self.homeOutcomeBaseView)
         self.homeOutcomeBaseView.addSubview(self.homeOutcomeNameLabel)
         self.homeOutcomeBaseView.addSubview(self.homeOutcomeValueLabel)
-        
+
         self.homeButton.addSubview(self.homeUpChangeOddValueImageView)
         self.homeButton.addSubview(self.homeDownChangeOddValueImageView)
-        
+
         self.drawButton.addSubview(self.drawOutcomeBaseView)
         self.drawOutcomeBaseView.addSubview(self.drawOutcomeNameLabel)
         self.drawOutcomeBaseView.addSubview(self.drawOutcomeValueLabel)
-        
+
         self.drawButton.addSubview(self.drawUpChangeOddValueImageView)
         self.drawButton.addSubview(self.drawDownChangeOddValueImageView)
-        
+
         self.awayButton.addSubview(self.awayOutcomeBaseView)
         self.awayOutcomeBaseView.addSubview(self.awayOutcomeNameLabel)
         self.awayOutcomeBaseView.addSubview(self.awayOutcomeValueLabel)
-        
+
         self.awayButton.addSubview(self.awayUpChangeOddValueImageView)
         self.awayButton.addSubview(self.awayDownChangeOddValueImageView)
-        
+
         self.oddsStackView.addArrangedSubview(self.homeButton)
         self.oddsStackView.addArrangedSubview(self.drawButton)
         self.oddsStackView.addArrangedSubview(self.awayButton)
@@ -1013,16 +1018,16 @@ extension ProChoiceHighlightCollectionViewCell {
         self.bottomButtonsContainerStackView.isLayoutMarginsRelativeArrangement = true
         self.bottomButtonsContainerStackView.layoutMargins = UIEdgeInsets(top: 7, left: 16, bottom: 2, right: 16)
         //
-        
+
         self.initConstraints()
-        
+
         self.leagueInfoStackView.setNeedsLayout()
         self.leagueInfoStackView.layoutIfNeeded()
-        
+
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
-    
+
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
@@ -1074,7 +1079,7 @@ extension ProChoiceHighlightCollectionViewCell {
             self.cashbackImageView.trailingAnchor.constraint(equalTo: self.leagueInfoContainerView.trailingAnchor),
             self.cashbackImageView.widthAnchor.constraint(equalToConstant: 14),
             self.cashbackImageView.widthAnchor.constraint(equalTo: self.cashbackImageView.heightAnchor),
-            
+
             self.favoriteButton.centerXAnchor.constraint(equalTo: self.favoriteImageView.centerXAnchor),
             self.favoriteButton.centerYAnchor.constraint(equalTo: self.favoriteImageView.centerYAnchor),
             self.favoriteButton.widthAnchor.constraint(equalToConstant: 40),
@@ -1117,25 +1122,25 @@ extension ProChoiceHighlightCollectionViewCell {
             self.homeOutcomeBaseView.leadingAnchor.constraint(equalTo: self.homeButton.leadingAnchor, constant: 2),
             self.homeOutcomeBaseView.trailingAnchor.constraint(equalTo: self.homeButton.trailingAnchor, constant: -2),
             self.homeOutcomeBaseView.centerYAnchor.constraint(equalTo: self.homeButton.centerYAnchor),
-            
+
             self.homeOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.homeOutcomeBaseView.centerXAnchor),
             self.homeOutcomeNameLabel.topAnchor.constraint(equalTo: self.homeOutcomeBaseView.topAnchor, constant: 1),
             self.homeOutcomeNameLabel.leadingAnchor.constraint(equalTo: self.homeOutcomeNameLabel.leadingAnchor, constant: 1),
-            
+
             self.homeOutcomeValueLabel.topAnchor.constraint(equalTo: self.homeOutcomeNameLabel.bottomAnchor, constant: 4),
             self.homeOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.homeOutcomeBaseView.centerXAnchor),
             self.homeOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.homeOutcomeBaseView.bottomAnchor, constant: -1),
-            
+
             self.homeUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
             self.homeUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
             self.homeUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.homeButton.centerYAnchor),
             self.homeUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.homeButton.trailingAnchor, constant: -5),
-            
+
             self.homeDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
             self.homeDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
             self.homeDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.homeButton.centerYAnchor),
             self.homeDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.homeButton.trailingAnchor, constant: -5),
-            
+
             self.drawOutcomeBaseView.leadingAnchor.constraint(equalTo: self.drawButton.leadingAnchor, constant: 2),
             self.drawOutcomeBaseView.trailingAnchor.constraint(equalTo: self.drawButton.trailingAnchor, constant: -2),
             self.drawOutcomeBaseView.centerYAnchor.constraint(equalTo: self.drawButton.centerYAnchor),
@@ -1143,16 +1148,16 @@ extension ProChoiceHighlightCollectionViewCell {
             self.drawOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.drawOutcomeBaseView.centerXAnchor),
             self.drawOutcomeNameLabel.topAnchor.constraint(equalTo: self.drawOutcomeBaseView.topAnchor, constant: 1),
             self.drawOutcomeNameLabel.leadingAnchor.constraint(equalTo: self.drawOutcomeBaseView.leadingAnchor, constant: 1),
-            
+
             self.drawOutcomeValueLabel.topAnchor.constraint(equalTo: self.drawOutcomeNameLabel.bottomAnchor, constant: 4),
             self.drawOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.drawOutcomeBaseView.centerXAnchor),
             self.drawOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.drawOutcomeBaseView.bottomAnchor, constant: -1),
-            
+
             self.drawUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
             self.drawUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
             self.drawUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.drawButton.centerYAnchor),
             self.drawUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.drawButton.trailingAnchor, constant: -5),
-            
+
             self.drawDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
             self.drawDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
             self.drawDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.drawButton.centerYAnchor),
@@ -1161,26 +1166,26 @@ extension ProChoiceHighlightCollectionViewCell {
             self.awayOutcomeBaseView.leadingAnchor.constraint(equalTo: self.awayButton.leadingAnchor, constant: 2),
             self.awayOutcomeBaseView.trailingAnchor.constraint(equalTo: self.awayButton.trailingAnchor, constant: -2),
             self.awayOutcomeBaseView.centerYAnchor.constraint(equalTo: self.awayButton.centerYAnchor),
-            
+
             self.awayOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.awayOutcomeBaseView.centerXAnchor),
             self.awayOutcomeNameLabel.topAnchor.constraint(equalTo: self.awayOutcomeBaseView.topAnchor, constant: 1),
             self.awayOutcomeNameLabel.leadingAnchor.constraint(equalTo: self.awayOutcomeBaseView.leadingAnchor, constant: 1),
-            
+
             self.awayOutcomeValueLabel.topAnchor.constraint(equalTo: self.awayOutcomeNameLabel.bottomAnchor, constant: 4),
             self.awayOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.awayOutcomeBaseView.centerXAnchor),
             self.awayOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.awayOutcomeBaseView.bottomAnchor, constant: -1),
-            
+
             self.awayUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
             self.awayUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
             self.awayUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.awayButton.centerYAnchor),
             self.awayUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.awayButton.trailingAnchor, constant: -5),
-            
+
             self.awayDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
             self.awayDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
             self.awayDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.awayButton.centerYAnchor),
             self.awayDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.awayButton.trailingAnchor, constant: -5)
         ])
-        
+
         NSLayoutConstraint.activate([
             self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 27),
 
@@ -1188,20 +1193,20 @@ extension ProChoiceHighlightCollectionViewCell {
             self.mixMatchBaseView.leadingAnchor.constraint(equalTo: self.mixMatchContainerView.leadingAnchor, constant: 0),
             self.mixMatchBaseView.trailingAnchor.constraint(equalTo: self.mixMatchContainerView.trailingAnchor, constant: 0),
             self.mixMatchBaseView.topAnchor.constraint(equalTo: self.mixMatchContainerView.topAnchor),
-            
+
             self.mixMatchBackgroundImageView.leadingAnchor.constraint(equalTo: self.mixMatchBaseView.leadingAnchor),
             self.mixMatchBackgroundImageView.trailingAnchor.constraint(equalTo: self.mixMatchBaseView.trailingAnchor),
             self.mixMatchBackgroundImageView.topAnchor.constraint(equalTo: self.mixMatchBaseView.topAnchor),
             self.mixMatchBackgroundImageView.bottomAnchor.constraint(equalTo: self.mixMatchBaseView.bottomAnchor),
-        
+
             self.mixMatchLabel.centerXAnchor.constraint(equalTo: self.mixMatchBaseView.centerXAnchor),
             self.mixMatchLabel.centerYAnchor.constraint(equalTo: self.mixMatchBaseView.centerYAnchor),
-            
+
             self.mixMatchIconImageView.widthAnchor.constraint(equalToConstant: 21),
             self.mixMatchIconImageView.heightAnchor.constraint(equalToConstant: 25),
             self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2),
             self.mixMatchIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
-            
+
             self.mixMatchNavigationIconImageView.widthAnchor.constraint(equalToConstant: 11),
             self.mixMatchNavigationIconImageView.heightAnchor.constraint(equalToConstant: 13),
             self.mixMatchNavigationIconImageView.leadingAnchor.constraint(equalTo: self.mixMatchLabel.trailingAnchor, constant: 6),
@@ -1210,7 +1215,7 @@ extension ProChoiceHighlightCollectionViewCell {
         ])
     }
 
-    // MARK: - UI Creation    
+    // MARK: - UI Creation
     private func createContainerView() -> UIView {
         let view = UIView()
         view.backgroundColor = UIColor.App.backgroundPrimary
@@ -1276,7 +1281,7 @@ extension ProChoiceHighlightCollectionViewCell {
 
         return stackView
     }
-    
+
     private func createFavoriteButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -1292,7 +1297,7 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }
-    
+
     private func createCountryIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -1308,13 +1313,13 @@ extension ProChoiceHighlightCollectionViewCell {
         label.text = "createLeagueNameLabel"
         return label
     }
-    
+
     private func createEventInfoContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
-    
+
     private func createBackgroundImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -1323,7 +1328,7 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.clipsToBounds = true
         return imageView
     }
-    
+
     private func createEventDateLabel() -> UILabel {
         let label = UILabel()
         label.font = AppFont.with(type: .bold, size: 11)
@@ -1332,7 +1337,7 @@ extension ProChoiceHighlightCollectionViewCell {
 
         return label
     }
-    
+
     private func createEventTimeLabel() -> UILabel {
         let label = UILabel()
         label.font = AppFont.with(type: .bold, size: 11)
@@ -1350,16 +1355,16 @@ extension ProChoiceHighlightCollectionViewCell {
         label.text = "Market Name Label"
         return label
     }
-    
+
     private func createTeamPillContainerView() -> GradientBorderView {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
         gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 8
-        
+
         gradientBorderView.gradientColors = [UIColor.App.highlightSecondary,
                                              UIColor.App.highlightPrimary]
-        
+
         gradientBorderView.gradientStartPoint = CGPoint(x: 0, y: 0.5)
         gradientBorderView.gradientEndPoint = CGPoint(x: 2, y: 0.5)
 
@@ -1375,7 +1380,7 @@ extension ProChoiceHighlightCollectionViewCell {
 
         return label
     }
-    
+
     private func createOddsStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -1385,14 +1390,14 @@ extension ProChoiceHighlightCollectionViewCell {
         stackView.isLayoutMarginsRelativeArrangement = true
         return stackView
     }
-    
+
     private func createOutcomeBaseView() -> UIView {
         let outcomeBaseView = UIView()
         outcomeBaseView.translatesAutoresizingMaskIntoConstraints = false
         outcomeBaseView.layer.cornerRadius = 4.5
         return outcomeBaseView
     }
-    
+
     private func createOutcomeContainerBaseView() -> UIView {
         let outcomeBaseView = UIView()
         outcomeBaseView.translatesAutoresizingMaskIntoConstraints = false
@@ -1436,7 +1441,7 @@ extension ProChoiceHighlightCollectionViewCell {
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         button.layer.cornerRadius = CornerRadius.view
         button.setImage(UIImage(named: "arrow_right_icon"), for: .normal)
-        
+
 //        button.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5), imageTitlePadding: 5)
         button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         button.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
@@ -1457,7 +1462,7 @@ extension ProChoiceHighlightCollectionViewCell {
         fadingView.fadeLocations = [0.0, 0.42, 0.58, 1.0]
         return fadingView
     }
-    
+
     private func createHomeUpChangeOddValueImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -1466,7 +1471,7 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.alpha = 0
         return imageView
     }
-    
+
     private func createHomeDownChangeOddValueImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -1475,7 +1480,7 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.alpha = 0
         return imageView
     }
-    
+
     private func createDrawUpChangeOddValueImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -1484,7 +1489,7 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.alpha = 0
         return imageView
     }
-    
+
     private func createDrawDownChangeOddValueImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -1493,7 +1498,7 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.alpha = 0
         return imageView
     }
-    
+
     private func createAwayUpChangeOddValueImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -1502,7 +1507,7 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.alpha = 0
         return imageView
     }
-    
+
     private func createAwayDownChangeOddValueImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -1511,14 +1516,14 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.alpha = 0
         return imageView
     }
-    
+
     private func createMixMatchContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.clipsToBounds = true
         return view
     }
-    
+
     private func createMixMatchBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -1534,7 +1539,7 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         return imageView
     }
-    
+
     private func createMixMatchIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -1542,30 +1547,30 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
-    
+
     private func createMixMatchLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "\(localized("mix_match_or_bet_with_string")) \(localized("mix_match_mix_string"))\("mix_match_match_string")"
         label.font = AppFont.with(type: .bold, size: 14)
         label.textAlignment = .center
-        
+
         let text = "\(localized("mix_match_or_bet_with_string")) \(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
-        
+
         let attributedString = NSMutableAttributedString(string: text)
         let fullRange = (text as NSString).range(of: text)
         var range = (text as NSString).range(of: localized("mix_match_mix_string"))
-        
+
         attributedString.addAttribute(.foregroundColor, value: UIColor.App.buttonTextPrimary, range: fullRange)
         attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: fullRange)
-        
+
         attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
-        
+
         label.attributedText = attributedString
-        
+
         return label
     }
-    
+
     private func createMixMatchNavigationIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false

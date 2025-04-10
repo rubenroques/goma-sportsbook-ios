@@ -245,7 +245,7 @@ extension MyGamesViewController: UITableViewDataSource, UITableViewDelegate {
                     self?.viewModel.matchWentLiveAction?()
                 }
 
-                viewModel.$match
+                viewModel.matchPublisher
                     .dropFirst()
                     .sink(receiveValue: { [weak self] match in
                         guard let self = self else { return }

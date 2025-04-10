@@ -128,7 +128,7 @@ class HorizontalMatchInfoView: UIView {
 
         // Bind home team name
         viewModel.homeTeamNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.homeParticipantNameLabel.text = name
             }
@@ -136,7 +136,7 @@ class HorizontalMatchInfoView: UIView {
 
         // Bind away team name
         viewModel.awayTeamNamePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.awayParticipantNameLabel.text = name
             }
@@ -144,7 +144,7 @@ class HorizontalMatchInfoView: UIView {
 
         // Bind display state
         viewModel.displayStatePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 switch state {
                 case .preLive(let date, let time):
@@ -343,7 +343,7 @@ extension HorizontalMatchInfoView {
             self.liveMatchDotImageView.heightAnchor.constraint(equalTo: self.liveMatchDotBaseView.heightAnchor),
 
             // Minimum height constraint
-            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 67),
+            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 70),
         ])
     }
 }
@@ -362,7 +362,7 @@ extension HorizontalMatchInfoView {
             view.backgroundColor = .systemGray6
             return view
         }
-        .frame(width: 300, height: 67)
+        .frame(width: 300, height: 70)
 
         PreviewUIView {
             let view = HorizontalMatchInfoView()
@@ -375,7 +375,7 @@ extension HorizontalMatchInfoView {
             view.backgroundColor = .systemGray6
             return view
         }
-        .frame(width: 300, height: 67)
+        .frame(width: 300, height: 70)
 
         PreviewUIView {
             let view = HorizontalMatchInfoView()
@@ -388,7 +388,7 @@ extension HorizontalMatchInfoView {
             view.backgroundColor = .systemGray6
             return view
         }
-        .frame(width: 300, height: 67)
+        .frame(width: 300, height: 70)
     }
     .padding()
 }
@@ -409,7 +409,7 @@ extension HorizontalMatchInfoView {
         view.backgroundColor = .systemGray6
         return view
     }
-    .frame(width: 300, height: 67)
+    .frame(width: 300, height: 70)
 }
 
 @available(iOS 17.0, *)
@@ -427,7 +427,7 @@ extension HorizontalMatchInfoView {
         view.backgroundColor = .systemGray6
         return view
     }
-    .frame(width: 300, height: 67)
+    .frame(width: 300, height: 70)
 }
 
 @available(iOS 17.0, *)
@@ -445,47 +445,5 @@ extension HorizontalMatchInfoView {
         view.backgroundColor = .systemGray6
         return view
     }
-    .frame(width: 300, height: 67)
+    .frame(width: 300, height: 70)
 }
-
-/**
-
- // In the parent ViewModel
- func updateMatchInfoViewModel(for match: Match) -> HorizontalMatchInfoViewModel {
-     // Format data and determine state
-     let homeTeamName = match.homeParticipant.name
-     let awayTeamName = match.awayParticipant.name
-
-     let displayState: HorizontalMatchInfoViewModel.DisplayState
-
-     switch match.status {
-     case .notStarted:
-         let dateString = formatDate(match.date)
-         let timeString = formatTime(match.date)
-         displayState = .preLive(date: dateString, time: timeString)
-     case .inProgress:
-         let score = formatScore(match.homeParticipantScore, match.awayParticipantScore)
-         displayState = .live(score: score, matchTime: match.matchTime)
-     case .ended:
-         let score = formatScore(match.homeParticipantScore, match.awayParticipantScore)
-         displayState = .ended(score: score)
-     case .unknown:
-         let dateString = formatDate(match.date)
-         let timeString = formatTime(match.date)
-         displayState = .preLive(date: dateString, time: timeString)
-     }
-
-     return HorizontalMatchInfoViewModel(
-         homeTeamName: homeTeamName,
-         awayTeamName: awayTeamName,
-         displayState: displayState
-     )
- }
-
- // In the parent ViewController
- func updateUI() {
-     let matchInfoViewModel = viewModel.updateMatchInfoViewModel(for: currentMatch)
-     matchInfoView.configure(with: matchInfoViewModel)
- }
-
- */

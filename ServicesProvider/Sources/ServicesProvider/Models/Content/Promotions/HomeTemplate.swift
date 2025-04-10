@@ -34,6 +34,9 @@ public enum HomeWidget: Codable, Equatable, Hashable {
     case topCompetitions(WidgetData)
     case suggestedBets(WidgetData)
     case popularEvents(WidgetData)
+    case favorites(WidgetData)
+    case featuredTips(WidgetData)
+    case news(WidgetData)
 
     public init?(id: String,
                  type: String,
@@ -78,6 +81,12 @@ public enum HomeWidget: Codable, Equatable, Hashable {
             self = .suggestedBets(widgetData)
         case "popularevents":
             self = .popularEvents(widgetData)
+        case "favorites":
+            self = .favorites(widgetData)
+        case "featuredtips":
+            self = .featuredTips(widgetData)
+        case "news":
+            self = .news(widgetData)
         default:
             return nil
         }
@@ -147,7 +156,10 @@ public enum HomeWidget: Codable, Equatable, Hashable {
                 .proChoices(let data),
                 .topCompetitions(let data),
                 .suggestedBets(let data),
-                .popularEvents(let data):
+                .popularEvents(let data),
+                .favorites(let data),
+                .featuredTips(let data),
+                .news(let data):
             return data
         }
     }

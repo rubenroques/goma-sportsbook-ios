@@ -118,7 +118,13 @@ class CMSManagedHomeViewTemplateDataSource {
         case onePerLine
         case multiplesPerLineByType
     }
-    private var highlightsPresentationMode = HighlightsPresentationMode.multiplesPerLineByType
+
+    // Dictionary to hold presentation mode for each content type
+    private var highlightsPresentationModes: [HomeViewModel.Content: HighlightsPresentationMode] = [
+        .highlightedMatches: .multiplesPerLineByType,
+        .highlightedBoostedOddsMatches: .multiplesPerLineByType,
+        .highlightedMarketProChoices: .multiplesPerLineByType
+    ]
 
     private var highlightsVisualImageMatches: [Match]  = []
     private var highlightsVisualImageOutrights: [Match] = []
@@ -206,270 +212,312 @@ class CMSManagedHomeViewTemplateDataSource {
         // Sort widgets by sortOrder
         let sortedWidgets = homeTemplate.widgets.sorted { $0.sortOrder < $1.sortOrder }
 
-        // Convert CMS widgets to app content types
-        self.contentTypes = sortedWidgets.compactMap { widget in
-            return self.mapWidgetToContentType(widget)
-        }
-
-        // Trigger a refresh since we've updated the content types
-        self.refreshPublisher.send()
-    }
-
-    // Map CMS widget types to app content types
-    private func mapWidgetToContentType(_ widget: HomeWidget) -> HomeViewModel.Content? {
-        switch widget {
-        case .alertBanners:
-            return .alertBannersLine
-        case .banners:
-            return .bannerLine
-        case .carouselEvents:
-            return .quickSwipeStack
-        case .stories:
-            return .promotionalStories
-        case .heroCardEvents:
-            return .heroCard
-        case .highlightedLiveEvents:
-            return .highlightedLiveMatches
-        case .betSwipe:
-            return .makeOwnBetCallToAction
-        case .highlightedEvents:
-            return .highlightedMatches
-        case .boostedEvents:
-            return .highlightedBoostedOddsMatches
-        case .proChoices:
-            return .highlightedMarketProChoices
-        case .topCompetitions:
-            return .topCompetitionsShortcuts
-        case .suggestedBets:
-            return .promotedBetslips
-        case .popularEvents:
-            return .promotedSportSection
-        }
-    }
-
-    // Set default content types in case of failure
-    private func setDefaultContentTypes() {
-        self.contentTypes = [
-            .alertBannersLine, // AlertBanners
-            .bannerLine, // PromotionBanners
-            .quickSwipeStack, // MatchBanners
-            .promotionalStories, // PromotionStories - instagram style stories
-            .heroCard, // HeroBanner
-            .highlightedLiveMatches, // LiveGamesHome
-            .makeOwnBetCallToAction, // MakeYourOwnBet
-            .highlightedMatches, // Highlights image cards
-            .highlightedMarketProChoices, // Pro Choices Markets
-            .highlightedBoostedOddsMatches, // Boosted Odds
-            .topCompetitionsShortcuts, // TopCompetitionsMobile
-            .promotedBetslips, // SuggestedBets
-        ]
-    }
-
-    func refreshTemplate() {
-        // First refresh the home template
-        self.fetchHomeTemplate()
-    }
-
-    func refreshData() {
-        // Clear all caches regardless of which widgets are present
-        self.matchWidgetContainerTableViewModelCache = [:]
-        self.matchWidgetCellViewModelCache = [:]
-        self.matchLineTableCellViewModelCache = [:]
-        self.matchLineTableCellViewModelCache = [:]
-        self.marketWidgetContainerTableViewModelCache = [:]
-        self.heroCardWidgetCellViewModelCache = [:]
-
-        self.suggestedBetslips = []
-        self.highlightedMarkets = []
-
-        self.cachedFeaturedTipLineViewModel = nil
-
-        self.highlightedLiveMatchLineCellViewModelCache = [:]
-
-        // Only fetch data for widgets that are present in contentTypes
-        if self.contentTypes.contains(.quickSwipeStack) {
-            self.fetchCarouselMatches()
-        }
-
-        if self.contentTypes.contains(.highlightedMatches) || self.contentTypes.contains(.highlightedBoostedOddsMatches) {
-            self.fetchHighlightMatches()
-        }
-
-        if self.contentTypes.contains(.highlightedMarketProChoices) {
-            self.fetchHighlightMarkets()
-        }
-
-        if self.contentTypes.contains(.promotedSportSection) {
-            self.fetchPromotedSports()
-        }
-
-        if self.contentTypes.contains(.promotedBetslips) {
-            self.fetchPromotedBetslips()
-        }
-
-        if self.contentTypes.contains(.promotionalStories) {
-            self.fetchPromotionalStories()
-        }
-
-        if self.contentTypes.contains(.topCompetitionsShortcuts) {
-            self.fetchTopCompetitions()
-        }
-
-        if self.contentTypes.contains(.highlightedLiveMatches) {
-            self.fetchHighlightedLiveMatches()
-        }
-
-        if self.contentTypes.contains(.heroCard) {
-            self.fetchHeroMatches()
-        }
-
-        if self.contentTypes.contains(.alertBannersLine) {
-            self.fetchAlerts()
-        }
-
-        if self.contentTypes.contains(.bannerLine) {
-            self.fetchBanners()
-        }
-
-    }
-    // User alerts
-    func fetchAlerts() {
-        let kycPublisher = Env.userSessionStore.userKnowYourCustomerStatusPublisher
-            .map { kycStatus -> [ActivationAlert] in
-                if kycStatus == .request {
-                    let uploadDocumentsAlertData = ActivationAlert(
-                        title: localized("document_validation_required"),
-                        description: localized("document_validation_required_description"),
-                        linkLabel: localized("complete_your_verification"),
-                        alertType: .documents
-                    )
-                    return [uploadDocumentsAlertData]
+        for widget in homeTemplate.widgets {
+            switch widget {
+        case .highlightedEvents(let widgetData):
+            switch widgetData.orientation {
+            case .vertical:
+                highlightsPresentationModes[.highlightedMatches] = .onePerLine
+            case .horizontal:
+                highlightsPresentationModes[.highlightedMatches] = .multiplesPerLineByType
+            default:
+                break
+            }
+        case .boostedEvents(let widgetData):
+                switch widgetData.orientation {
+                case .vertical:
+                    highlightsPresentationModes[.highlightedBoostedOddsMatches] = .onePerLine
+                case .horizontal:
+                    highlightsPresentationModes[.highlightedBoostedOddsMatches] = .multiplesPerLineByType
+                default:
+                    break
                 }
-                return []
-            }
-
-        let serverAlertsPublisher = Env.servicesProvider.getAlertBanner()
-            .map { alertBanner -> [ActivationAlert] in
-                guard let alertBanner = alertBanner else { return [] }
-                let serverAlert = ServiceProviderModelMapper.activationAlert(fromAlertBanner: alertBanner)
-                return [serverAlert]
-            }
-            .replaceError(with: [])
-
-        let combinedCancellable = Publishers.CombineLatest(kycPublisher, serverAlertsPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] kycAlerts, serverAlerts in
-                self?.alertsArray = kycAlerts + serverAlerts
-                self?.refreshPublisher.send()
-            }
-
-        self.addCancellable(combinedCancellable)
-    }
-
-    // User alerts
-    func fetchBanners() {
-        let cancellable = Env.servicesProvider.getBanners()
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                //
-            } receiveValue: { [weak self] (banners: [Banner]) in
-                guard let self = self else { return }
-
-                // Filter banners based on user login status if needed
-                let filteredBanners = banners.filter { banner in
-                    if Env.userSessionStore.isUserLogged() {
-                        return banner.userType == "all" || banner.userType == "logged_in"
-                    }
-                    else {
-                        return banner.userType == "all" || banner.userType == "logged_out"
-                    }
+        case .proChoices(let widgetData):
+                switch widgetData.orientation {
+                case .vertical:
+                    highlightsPresentationModes[.highlightedMarketProChoices] = .onePerLine
+                case .horizontal:
+                    highlightsPresentationModes[.highlightedMarketProChoices] = .multiplesPerLineByType
+                default:
+                    break
                 }
+        default:
+            break
+        }
+    }
 
-                // Map to BannerInfo using the new mapper
-                self.banners = filteredBanners.map(ServiceProviderModelMapper.bannerInfo(fromBanner:))
-                self.refreshPublisher.send()
+    // Convert CMS widgets to app content types
+    self.contentTypes = sortedWidgets.compactMap { widget in
+        return self.mapWidgetToContentType(widget)
+    }
+
+    // Trigger a refresh since we've updated the content types
+    self.refreshPublisher.send()
+}
+
+// Map CMS widget types to app content types
+private func mapWidgetToContentType(_ widget: HomeWidget) -> HomeViewModel.Content? {
+    switch widget {
+    case .alertBanners:
+        return .alertBannersLine
+    case .banners:
+        return .bannerLine
+    case .carouselEvents:
+        return .quickSwipeStack
+    case .stories:
+        return .promotionalStories
+    case .heroCardEvents:
+        return .heroCard
+    case .highlightedLiveEvents:
+        return .highlightedLiveMatches
+    case .betSwipe:
+        return .makeOwnBetCallToAction
+    case .highlightedEvents:
+        return .highlightedMatches
+    case .boostedEvents:
+        return .highlightedBoostedOddsMatches
+    case .proChoices:
+        return .highlightedMarketProChoices
+    case .topCompetitions:
+        return .topCompetitionsShortcuts
+    case .suggestedBets:
+        return .promotedBetslips
+    case .popularEvents:
+        return .promotedSportSection
+    case .favorites:
+        return .userFavorites
+    case .featuredTips:
+        return .promotedBetslips
+    case .news:
+        return .videoNewsLine
+    }
+}
+
+// Set default content types in case of failure
+private func setDefaultContentTypes() {
+    self.contentTypes = [
+        .alertBannersLine, // AlertBanners
+        .bannerLine, // PromotionBanners
+        .quickSwipeStack, // MatchBanners
+        .promotionalStories, // PromotionStories - instagram style stories
+        .heroCard, // HeroBanner
+        .highlightedLiveMatches, // LiveGamesHome
+        .makeOwnBetCallToAction, // MakeYourOwnBet
+        .highlightedMatches, // Highlights image cards
+        .highlightedMarketProChoices, // Pro Choices Markets
+        .highlightedBoostedOddsMatches, // Boosted Odds
+        .topCompetitionsShortcuts, // TopCompetitionsMobile
+        .promotedBetslips, // SuggestedBets
+    ]
+}
+
+func refreshTemplate() {
+    // First refresh the home template
+    self.fetchHomeTemplate()
+}
+
+func refreshData() {
+    // Clear all caches regardless of which widgets are present
+    self.matchWidgetContainerTableViewModelCache = [:]
+    self.matchWidgetCellViewModelCache = [:]
+    self.matchLineTableCellViewModelCache = [:]
+    self.matchLineTableCellViewModelCache = [:]
+    self.marketWidgetContainerTableViewModelCache = [:]
+    self.heroCardWidgetCellViewModelCache = [:]
+
+    self.suggestedBetslips = []
+    self.highlightedMarkets = []
+
+    self.cachedFeaturedTipLineViewModel = nil
+
+    self.highlightedLiveMatchLineCellViewModelCache = [:]
+
+    // Only fetch data for widgets that are present in contentTypes
+    if self.contentTypes.contains(.quickSwipeStack) {
+        self.fetchCarouselMatches()
+    }
+
+    if self.contentTypes.contains(.highlightedMatches) || self.contentTypes.contains(.highlightedBoostedOddsMatches) {
+        self.fetchHighlightMatches()
+    }
+
+    if self.contentTypes.contains(.highlightedMarketProChoices) {
+        self.fetchHighlightMarkets()
+    }
+
+    if self.contentTypes.contains(.promotedSportSection) {
+        self.fetchPromotedSports()
+    }
+
+    if self.contentTypes.contains(.promotedBetslips) {
+        self.fetchPromotedBetslips()
+    }
+
+    if self.contentTypes.contains(.promotionalStories) {
+        self.fetchPromotionalStories()
+    }
+
+    if self.contentTypes.contains(.topCompetitionsShortcuts) {
+        self.fetchTopCompetitions()                   }
+
+    if self.contentTypes.contains(.highlightedLiveMatches) {
+        self.fetchHighlightedLiveMatches()
+    }
+
+    if self.contentTypes.contains(.heroCard) {
+        self.fetchHeroMatches()
+    }
+
+    if self.contentTypes.contains(.alertBannersLine) {
+        self.fetchAlerts()
+    }
+
+    if self.contentTypes.contains(.bannerLine) {
+        self.fetchBanners()
+    }
+}
+
+// User alerts
+func fetchAlerts() {
+    let kycPublisher = Env.userSessionStore.userKnowYourCustomerStatusPublisher
+        .map { kycStatus -> [ActivationAlert] in
+            if kycStatus == .request {
+                let uploadDocumentsAlertData = ActivationAlert(
+                    title: localized("document_validation_required"),
+                    description: localized("document_validation_required_description"),
+                    linkLabel: localized("complete_your_verification"),
+                    alertType: .documents
+                )
+                return [uploadDocumentsAlertData]
+            }
+            return []
+        }
+
+    let serverAlertsPublisher = Env.servicesProvider.getAlertBanner()
+        .map { alertBanner -> [ActivationAlert] in
+            guard let alertBanner = alertBanner else { return [] }
+            let serverAlert = ServiceProviderModelMapper.activationAlert(fromAlertBanner: alertBanner)
+            return [serverAlert]
+        }
+        .replaceError(with: [])
+
+    let combinedCancellable = Publishers.CombineLatest(kycPublisher, serverAlertsPublisher)
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] kycAlerts, serverAlerts in
+            self?.alertsArray = kycAlerts + serverAlerts
+            self?.refreshPublisher.send()
+        }
+
+    self.addCancellable(combinedCancellable)
+}
+
+// User alerts
+func fetchBanners() {
+    let cancellable = Env.servicesProvider.getBanners()
+        .receive(on: DispatchQueue.main)
+        .sink { _ in
+            //
+        } receiveValue: { [weak self] (banners: [Banner]) in
+            guard let self = self else { return }
+
+            // Filter banners based on user login status if needed
+            let filteredBanners = banners.filter { banner in
+                if Env.userSessionStore.isUserLogged() {
+                    return banner.userType == "all" || banner.userType == "logged_in"
+                }
+                else {
+                    return banner.userType == "all" || banner.userType == "logged_out"
+                }
             }
 
-        // Store the cancellable in a thread-safe manner
-        self.addCancellable(cancellable)
-    }
-
-    func fetchPromotionalStories() {
-        let cancellable = Env.servicesProvider.getStories()
-            .map(ServiceProviderModelMapper.promotionalStories(fromServiceProviderStories:))
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                
-            } receiveValue: { [weak self] promotionalStories in
-                self?.promotionalStories = promotionalStories
-                self?.refreshPublisher.send()
-            }
-
-        self.addCancellable(cancellable)
-    }
-
-    func fetchCarouselMatches() {
-        let cancellable = Env.servicesProvider.getCarouselEvents()
-            .map(ServiceProviderModelMapper.matches(fromEvents:))
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-                //
-            }, receiveValue: { [weak self] matches in
-                self?.quickSwipeStackMatches = matches
-                self?.refreshPublisher.send()
-            })
-
-        self.addCancellable(cancellable)
-    }
-
-    //
-    // Highlights
-    func highlightsMatchesNumberOfRows() -> Int {
-        switch self.highlightsPresentationMode {
-        case .onePerLine:
-            return self.highlightsVisualImageMatches.count +
-                self.highlightsVisualImageOutrights.count
-
-        case .multiplesPerLineByType:
-            return (self.highlightsVisualImageMatches.isNotEmpty ? 1 : 0) +
-                (self.highlightsVisualImageOutrights.isNotEmpty ? 1 : 0)
+            // Map to BannerInfo using the new mapper
+            self.banners = filteredBanners.map(ServiceProviderModelMapper.bannerInfo(fromBanner:))
+            self.refreshPublisher.send()
         }
-    }
 
-    func highlightsBoostedOddsMatchesNumberOfRows() -> Int {
-        switch self.highlightsPresentationMode {
-        case .onePerLine:
-            return self.highlightsBoostedMatches.count
-        case .multiplesPerLineByType:
-            return self.highlightsBoostedMatches.isNotEmpty ? 1 : 0
+    // Store the cancellable in a thread-safe manner
+    self.addCancellable(cancellable)
+}
+
+func fetchPromotionalStories() {
+    let cancellable = Env.servicesProvider.getStories()
+        .map(ServiceProviderModelMapper.promotionalStories(fromServiceProviderStories:))
+        .receive(on: DispatchQueue.main)
+        .sink { completion in
+
+        } receiveValue: { [weak self] promotionalStories in
+            self?.promotionalStories = promotionalStories
+            self?.refreshPublisher.send()
         }
+
+    self.addCancellable(cancellable)
+}
+
+func fetchCarouselMatches() {
+    let cancellable = Env.servicesProvider.getCarouselEvents()
+        .map(ServiceProviderModelMapper.matches(fromEvents:))
+        .receive(on: DispatchQueue.main)
+        .sink(receiveCompletion: { _ in
+            //
+        }, receiveValue: { [weak self] matches in
+            self?.quickSwipeStackMatches = matches
+            self?.refreshPublisher.send()
+        })
+
+    self.addCancellable(cancellable)
+}
+
+//
+// Highlights
+func highlightsMatchesNumberOfRows() -> Int {
+    guard let mode = highlightsPresentationModes[.highlightedMatches] else { return 0 }
+
+    switch mode {
+    case .onePerLine:
+        return self.highlightsVisualImageMatches.count + self.highlightsVisualImageOutrights.count
+    case .multiplesPerLineByType:
+        return (self.highlightsVisualImageMatches.isNotEmpty ? 1 : 0) + (self.highlightsVisualImageOutrights.isNotEmpty ? 1 : 0)
     }
+}
 
-    func highlightedMarketProChoicesNumberOfRows() -> Int {
-        switch self.highlightsPresentationMode {
-        case .onePerLine:
-            return self.highlightedMarkets.count
-        case .multiplesPerLineByType:
-            return self.highlightedMarkets.isNotEmpty ? 1 : 0
-        }
+func highlightsBoostedOddsMatchesNumberOfRows() -> Int {
+    guard let mode = highlightsPresentationModes[.highlightedBoostedOddsMatches] else { return 0 }
+
+    switch mode {
+    case .onePerLine:
+        return self.highlightsBoostedMatches.count
+    case .multiplesPerLineByType:
+        return self.highlightsBoostedMatches.isNotEmpty ? 1 : 0
     }
+}
 
-    func fetchHighlightMatches() {
+func highlightedMarketProChoicesNumberOfRows() -> Int {
+    guard let mode = highlightsPresentationModes[.highlightedMarketProChoices] else { return 0 }
 
-        let imageMatches = Env.servicesProvider.getTopImageEvents()
-            .receive(on: DispatchQueue.main)
-            .map(ServiceProviderModelMapper.matches(fromEvents:))
-            .replaceError(with: [])
+    switch mode {
+    case .onePerLine:
+        return self.highlightedMarkets.count
+    case .multiplesPerLineByType:
+        return self.highlightedMarkets.isNotEmpty ? 1 : 0
+    }
+}
 
-        let boostedMatches = Env.servicesProvider.getBoostedOddsEvents()
-            .receive(on: DispatchQueue.main)
-            .map({ events in
-                return ServiceProviderModelMapper.matches(fromEvents: events)
-            })
-            // .map(ServiceProviderModelMapper.matches(fromEvents:))
-            .replaceError(with: [])
+func fetchHighlightMatches() {
 
-        let combinedCancellable = Publishers.CombineLatest(imageMatches, boostedMatches)
+    let imageMatches = Env.servicesProvider.getTopImageEvents()
+        .receive(on: DispatchQueue.main)
+        .map(ServiceProviderModelMapper.matches(fromEvents:))
+        .replaceError(with: [])
+
+    let boostedMatches = Env.servicesProvider.getBoostedOddsEvents()
+        .receive(on: DispatchQueue.main)
+        .map({ events in
+            return ServiceProviderModelMapper.matches(fromEvents: events)
+        })
+    // .map(ServiceProviderModelMapper.matches(fromEvents:))
+        .replaceError(with: [])
+
+    let combinedCancellable = Publishers.CombineLatest(imageMatches, boostedMatches)
         .map { highlightedVisualImageEvents, highlightedBoostedEvents -> [HighlightedMatchType] in
             var events: [HighlightedMatchType] = highlightedVisualImageEvents.map({ HighlightedMatchType.visualImageMatch($0) })
             events.append(contentsOf: highlightedBoostedEvents.map({ HighlightedMatchType.boostedOddsMatch($0) }))
@@ -515,249 +563,249 @@ class CMSManagedHomeViewTemplateDataSource {
             self?.refreshPublisher.send()
         })
 
-        self.addCancellable(combinedCancellable)
-    }
+    self.addCancellable(combinedCancellable)
+}
 
-    func fetchHighlightMarkets() {
-        let cancellable = Env.servicesProvider.getProChoiceMarketCards()
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
+func fetchHighlightMarkets() {
+    let cancellable = Env.servicesProvider.getProChoiceMarketCards()
+        .receive(on: DispatchQueue.main)
+        .sink { _ in
 
-            } receiveValue: { [weak self] highlightMarkets in
-                var mappedHighlightMarket: [ImageHighlightedContent<Market>] = []
-                for highlightMarket in highlightMarkets {
-                    let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.content)
+        } receiveValue: { [weak self] highlightMarkets in
+            var mappedHighlightMarket: [ImageHighlightedContent<Market>] = []
+            for highlightMarket in highlightMarkets {
+                let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.content)
 
-                    mappedHighlightMarket.append(ImageHighlightedContent<Market>(
-                        content: mappedMarket,
-                        imageURLString: highlightMarket.imageURL,
-                        promotedDetailsCount: highlightMarket.promotedChildCount))
-                }
-                self?.highlightedMarkets = mappedHighlightMarket
-                self?.refreshPublisher.send()
+                mappedHighlightMarket.append(ImageHighlightedContent<Market>(
+                    content: mappedMarket,
+                    imageURLString: highlightMarket.imageURL,
+                    promotedDetailsCount: highlightMarket.promotedChildCount))
             }
+            self?.highlightedMarkets = mappedHighlightMarket
+            self?.refreshPublisher.send()
+        }
 
-        self.addCancellable(cancellable)
+    self.addCancellable(cancellable)
 
-    }
+}
 
-    func fetchHeroMatches() {
+func fetchHeroMatches() {
 
-        let cancellable = Env.servicesProvider.getHeroCardEvents()
-            .receive(on: DispatchQueue.main)
-            .map(ServiceProviderModelMapper.matches(fromEvents:))
-            .compactMap({ $0 })
-            .sink(receiveCompletion: { _ in
+    let cancellable = Env.servicesProvider.getHeroCardEvents()
+        .receive(on: DispatchQueue.main)
+        .map(ServiceProviderModelMapper.matches(fromEvents:))
+        .compactMap({ $0 })
+        .sink(receiveCompletion: { _ in
 
-            }, receiveValue: { [weak self] heroMatches in
-                self?.heroMatches = heroMatches
-                self?.refreshPublisher.send()
-            })
+        }, receiveValue: { [weak self] heroMatches in
+            self?.heroMatches = heroMatches
+            self?.refreshPublisher.send()
+        })
 
-        self.addCancellable(cancellable)
+    self.addCancellable(cancellable)
 
-    }
+}
 
-    func fetchPromotedSports() {
+func fetchPromotedSports() {
 
-        let cancellable = Env.servicesProvider.getPromotedSports()
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                //
-            } receiveValue: { [weak self] promotedSports in
-                self?.promotedSports = promotedSports
-                self?.refreshPublisher.send()
+    let cancellable = Env.servicesProvider.getPromotedSports()
+        .receive(on: DispatchQueue.main)
+        .sink { _ in
+            //
+        } receiveValue: { [weak self] promotedSports in
+            self?.promotedSports = promotedSports
+            self?.refreshPublisher.send()
+        }
+
+    self.addCancellable(cancellable)
+
+}
+
+func fetchMatchesForPromotedSport(_ promotedSport: PromotedSport) {
+
+    let publishers = promotedSport.marketGroups.map({ Env.servicesProvider.getEventsForEventGroup(withId: $0.id) })
+
+    let mergeManyCancellable = Publishers.MergeMany(publishers)
+        .collect()
+        .receive(on: DispatchQueue.main)
+        .sink { _ in
+            //
+        } receiveValue: { [weak self] eventGroups in
+            let matches = eventGroups.flatMap(\.events).prefix(20).map(ServiceProviderModelMapper.match(fromEvent:)).compactMap({ $0 })
+            self?.promotedSportsMatches[promotedSport.id] = matches
+            self?.refreshPublisher.send()
+        }
+
+    self.addCancellable(mergeManyCancellable)
+
+}
+
+private func fetchTopCompetitions() {
+
+    let cancellable = Env.servicesProvider.getTopCompetitions()
+        .removeDuplicates()
+        .receive(on: DispatchQueue.main)
+        .sink(receiveCompletion: { completion in
+            switch completion {
+            case .finished:
+                ()
+            case .failure(let error):
+                print("TopCompetitionsLineCellViewModel getTopCompetitionsIdentifier error: \(error)")
             }
+        }, receiveValue: { [weak self] topCompetitions in
+            let convertedCompetitions = self?.convertTopCompetitions(topCompetitions) ?? []
 
-        self.addCancellable(cancellable)
+            let topCompetitionIds = convertedCompetitions.map { $0.id }
+            Env.favoritesManager.topCompetitionIds = topCompetitionIds
 
-    }
+            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
 
-    func fetchMatchesForPromotedSport(_ promotedSport: PromotedSport) {
+                if convertedCompetitions.contains(where: {
+                    $0.id == featuredCompetitionId
+                }) {
+                    let filteredConvertedCOmpetitions = convertedCompetitions.filter( {
+                        $0.id != featuredCompetitionId
+                    })
 
-        let publishers = promotedSport.marketGroups.map({ Env.servicesProvider.getEventsForEventGroup(withId: $0.id) })
-
-        let mergeManyCancellable = Publishers.MergeMany(publishers)
-            .collect()
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                //
-            } receiveValue: { [weak self] eventGroups in
-                let matches = eventGroups.flatMap(\.events).prefix(20).map(ServiceProviderModelMapper.match(fromEvent:)).compactMap({ $0 })
-                self?.promotedSportsMatches[promotedSport.id] = matches
-                self?.refreshPublisher.send()
-            }
-
-        self.addCancellable(mergeManyCancellable)
-
-    }
-
-    private func fetchTopCompetitions() {
-
-        let cancellable = Env.servicesProvider.getTopCompetitions()
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("TopCompetitionsLineCellViewModel getTopCompetitionsIdentifier error: \(error)")
-                }
-            }, receiveValue: { [weak self] topCompetitions in
-                let convertedCompetitions = self?.convertTopCompetitions(topCompetitions) ?? []
-
-                let topCompetitionIds = convertedCompetitions.map { $0.id }
-                Env.favoritesManager.topCompetitionIds = topCompetitionIds
-
-                if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
-
-                    if convertedCompetitions.contains(where: {
-                        $0.id == featuredCompetitionId
-                    }) {
-                        let filteredConvertedCOmpetitions = convertedCompetitions.filter( {
-                            $0.id != featuredCompetitionId
-                        })
-
-                        self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: filteredConvertedCOmpetitions)
-                    }
-                    else {
-                        self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
-                    }
+                    self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: filteredConvertedCOmpetitions)
                 }
                 else {
                     self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
                 }
+            }
+            else {
+                self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
+            }
 
-                self?.refreshPublisher.send()
-            })
+            self?.refreshPublisher.send()
+        })
 
-        self.addCancellable(cancellable)
+    self.addCancellable(cancellable)
 
-    }
+}
 
-    private func processTopCompetitions(topCompetitions: [TopCompetitionPointer]) -> [String: [String]] {
-        var competitionsIdentifiers: [String: [String]] = [:]
-        for topCompetition in topCompetitions {
-            let competitionComponents = topCompetition.competitionId.components(separatedBy: "/")
-            let competitionName = competitionComponents[competitionComponents.count - 2].lowercased()
-            if let competitionId = competitionComponents.last {
-                if let topCompetition = competitionsIdentifiers[competitionName] {
-                    if !topCompetition.contains(where: {
-                        $0 == competitionId
-                    }) {
-                        competitionsIdentifiers[competitionName]?.append(competitionId)
-                    }
-
+private func processTopCompetitions(topCompetitions: [TopCompetitionPointer]) -> [String: [String]] {
+    var competitionsIdentifiers: [String: [String]] = [:]
+    for topCompetition in topCompetitions {
+        let competitionComponents = topCompetition.competitionId.components(separatedBy: "/")
+        let competitionName = competitionComponents[competitionComponents.count - 2].lowercased()
+        if let competitionId = competitionComponents.last {
+            if let topCompetition = competitionsIdentifiers[competitionName] {
+                if !topCompetition.contains(where: {
+                    $0 == competitionId
+                }) {
+                    competitionsIdentifiers[competitionName]?.append(competitionId)
                 }
-                else {
-                    competitionsIdentifiers[competitionName] = [competitionId]
-                }
+
+            }
+            else {
+                competitionsIdentifiers[competitionName] = [competitionId]
             }
         }
-        return competitionsIdentifiers
     }
+    return competitionsIdentifiers
+}
 
-    private func convertTopCompetitions(_ topCompetitions: [TopCompetition]) -> [TopCompetitionItemCellViewModel] {
-        return topCompetitions.map { pointer -> TopCompetitionItemCellViewModel? in
-            let mappedSport = ServiceProviderModelMapper.sport(fromServiceProviderSportType: pointer.sportType)
-            if let pointerCountry = pointer.country {
-                let mappedCountry = ServiceProviderModelMapper.country(fromServiceProviderCountry: pointerCountry)
-                return TopCompetitionItemCellViewModel(id: pointer.id,
-                                                       name: pointer.name,
-                                                       sport: mappedSport,
-                                                       country: mappedCountry)
-            }
-            return nil
-        }
-        .compactMap({ $0 })
-
-    }
-
-    func fetchHighlightedLiveMatches() {
-
-        let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
-
-        self.highlightedLiveMatches = []
-
-        var userId: String?
-
-        if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
-            userId = loggedUserId
-        }
-
-        let cancellable = Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount, userId: userId)
-            .map { highlightedLiveEvents in
-                return highlightedLiveEvents.compactMap(ServiceProviderModelMapper.match(fromEvent:))
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
-                }
-            } receiveValue: { [weak self] liveEvents in
-                self?.highlightedLiveMatches = liveEvents
-                self?.refreshPublisher.send()
-
-                let eventsIds = liveEvents.compactMap({ return $0.trackableReference })
-                self?.waitUserToTrackImpressionForEvents(eventsIds: eventsIds)
-            }
-
-        self.addCancellable(cancellable)
-    }
-
-    private func waitUserToTrackImpressionForEvents(eventsIds: [String]) {
-        self.pendingUserTrackRequest?.cancel()
-
-        self.pendingUserTrackRequest = Env.userSessionStore.userProfilePublisher
-            .compactMap({ $0?.userIdentifier })
-            .first()
-            .sink { [weak self] userIdentifier in
-                self?.trackImpressionForEvents(eventsIds: eventsIds, userId: userIdentifier)
-            }
-    }
-
-    private func trackImpressionForEvents(eventsIds: [String], userId: String) {
-
-        Env.servicesProvider.trackEvent(.impressionsEvents(eventsIds: eventsIds), userIdentifer: userId)
-            .sink { _ in
-                //
-            } receiveValue: {
-                //
-            }
-            .store(in: &self.cancellables)
-
-    }
-
-    private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
-        let croppedSection = section - self.fixedSections
-        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
-           let matchesForSport = self.promotedSportsMatches[promotedSportId],
-           let match = matchesForSport[safe: index] {
-            return match
+private func convertTopCompetitions(_ topCompetitions: [TopCompetition]) -> [TopCompetitionItemCellViewModel] {
+    return topCompetitions.map { pointer -> TopCompetitionItemCellViewModel? in
+        let mappedSport = ServiceProviderModelMapper.sport(fromServiceProviderSportType: pointer.sportType)
+        if let pointerCountry = pointer.country {
+            let mappedCountry = ServiceProviderModelMapper.country(fromServiceProviderCountry: pointerCountry)
+            return TopCompetitionItemCellViewModel(id: pointer.id,
+                                                   name: pointer.name,
+                                                   sport: mappedSport,
+                                                   country: mappedCountry)
         }
         return nil
     }
+    .compactMap({ $0 })
 
-    // ALERT: The data comes from Suggested bets
-    // but the UI shown to the user is from old FeaturedTips
-    func fetchPromotedBetslips() {
-        let userIdentifier = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
-        let cancellable = Env.servicesProvider.getPromotedBetslips(userId: userIdentifier)
-            .map(ServiceProviderModelMapper.suggestedBetslips(fromPromotedBetslips:))
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                //
-            } receiveValue: { [weak self] suggestedBetslips in
-                self?.suggestedBetslips = suggestedBetslips
-                self?.refreshPublisher.send()
-            }
+}
 
-        self.addCancellable(cancellable)
+func fetchHighlightedLiveMatches() {
+
+    let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+
+    self.highlightedLiveMatches = []
+
+    var userId: String?
+
+    if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+        userId = loggedUserId
     }
+
+    let cancellable = Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount, userId: userId)
+        .map { highlightedLiveEvents in
+            return highlightedLiveEvents.compactMap(ServiceProviderModelMapper.match(fromEvent:))
+        }
+        .receive(on: DispatchQueue.main)
+        .sink { completion in
+            switch completion {
+            case .finished:
+                ()
+            case .failure(let error):
+                print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
+            }
+        } receiveValue: { [weak self] liveEvents in
+            self?.highlightedLiveMatches = liveEvents
+            self?.refreshPublisher.send()
+
+            let eventsIds = liveEvents.compactMap({ return $0.trackableReference })
+            self?.waitUserToTrackImpressionForEvents(eventsIds: eventsIds)
+        }
+
+    self.addCancellable(cancellable)
+}
+
+private func waitUserToTrackImpressionForEvents(eventsIds: [String]) {
+    self.pendingUserTrackRequest?.cancel()
+
+    self.pendingUserTrackRequest = Env.userSessionStore.userProfilePublisher
+        .compactMap({ $0?.userIdentifier })
+        .first()
+        .sink { [weak self] userIdentifier in
+            self?.trackImpressionForEvents(eventsIds: eventsIds, userId: userIdentifier)
+        }
+}
+
+private func trackImpressionForEvents(eventsIds: [String], userId: String) {
+
+    Env.servicesProvider.trackEvent(.impressionsEvents(eventsIds: eventsIds), userIdentifer: userId)
+        .sink { _ in
+            //
+        } receiveValue: {
+            //
+        }
+        .store(in: &self.cancellables)
+
+}
+
+private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
+    let croppedSection = section - self.fixedSections
+    if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
+       let matchesForSport = self.promotedSportsMatches[promotedSportId],
+       let match = matchesForSport[safe: index] {
+        return match
+    }
+    return nil
+}
+
+// ALERT: The data comes from Suggested bets
+// but the UI shown to the user is from old FeaturedTips
+func fetchPromotedBetslips() {
+    let userIdentifier = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
+    let cancellable = Env.servicesProvider.getPromotedBetslips(userId: userIdentifier)
+        .map(ServiceProviderModelMapper.suggestedBetslips(fromPromotedBetslips:))
+        .receive(on: DispatchQueue.main)
+        .sink { _ in
+            //
+        } receiveValue: { [weak self] suggestedBetslips in
+            self?.suggestedBetslips = suggestedBetslips
+            self?.refreshPublisher.send()
+        }
+
+    self.addCancellable(cancellable)
+}
 
 }
 
@@ -955,6 +1003,21 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     // Content type ViewModels methods
+    func contentViewModel(forSection section: Int, forIndex index: Int) -> Any? {
+        guard let contentType = self.contentType(forSection: section) else { return nil }
+
+        switch contentType {
+        case .highlightedMatches:
+            return highlightedMatchesViewModel(forIndex: index)
+        case .highlightedBoostedOddsMatches:
+            return highlightedBoostedMatchesViewModel(forIndex: index)
+        case .highlightedMarketProChoices:
+            return highlightedMarketViewModel(forIndex: index)
+        default:
+            return nil
+        }
+    }
+
     func alertsArrayViewModel() -> [ActivationAlert] {
         return self.alertsArray
     }
@@ -969,10 +1032,6 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
         self.storiesLineViewModel = viewModel
-    }
-
-    func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
-        return nil
     }
 
     func favoriteMatch(forIndex index: Int) -> Match? {
@@ -1033,165 +1092,20 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     // Highlights
     //
     func highlightedMatchViewModel(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
-        switch self.highlightsPresentationMode {
-        case .onePerLine:
-            return self.highlightedMatchViewModelVertical(forSection: section, forIndex: index)
-        case .multiplesPerLineByType:
-            return self.highlightedMatchViewModelHorizontal(forSection: section, forIndex: index)
-        }
-    }
-
-    private func highlightedMatchViewModelVertical(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
-        // Each highlight match has it's own line
-        guard
-            let contentType = self.contentType(forSection: section)
-        else {
-            return nil
-        }
-        let highlightsOutrightsMatchesIndex = index-self.highlightsVisualImageMatches.count
+        guard let contentType = self.contentType(forSection: section) else { return nil }
 
         switch contentType {
         case .highlightedMatches:
-            if let match = self.highlightsVisualImageMatches[safe: index] {
-                var type = MatchWidgetType.topImage
-
-                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
-                    type = .topImageWithMixMatch
-                }
-
-                let id = match.id + type.rawValue
-
-                if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
-                    return matchWidgetContainerTableViewModel
-                }
-                else {
-                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: type))
-                    self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
-                    return matchWidgetContainerTableViewModel
-                }
-            }
-            else if let match = self.highlightsVisualImageOutrights[safe: highlightsOutrightsMatchesIndex] {
-                let id = match.id + MatchWidgetType.topImageOutright.rawValue
-                if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
-                    return matchWidgetContainerTableViewModel
-                }
-                else {
-                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: .topImageOutright))
-                    self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
-                    return matchWidgetContainerTableViewModel
-                }
-            }
-
+            return highlightedMatchesViewModel(forIndex: index)
         case .highlightedBoostedOddsMatches:
-            if let match = self.highlightsBoostedMatches[safe: index] {
-                let id = match.id + MatchWidgetType.boosted.rawValue
-                if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
-                    return matchWidgetContainerTableViewModel
-                }
-                else {
-                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted))
-                    self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
-                    return matchWidgetContainerTableViewModel
-                }
-            }
+            return highlightedBoostedMatchesViewModel(forIndex: index)
         default:
             return nil
         }
-
-        return nil
     }
 
-    private func highlightedMatchViewModelHorizontal(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
-        // There is a line for each highlight type (image, boosted, outrightImage)
-        // Each match card for each type will show as a horizontal scroll
-        guard
-            let contentType = self.contentType(forSection: section)
-        else {
-            return nil
-        }
-
-        var ids = ""
-        var viewModels: [MatchWidgetCellViewModel] = []
-        switch (index, contentType) {
-        case (0, .highlightedMatches):
-            ids = self.highlightsVisualImageMatches.map { match in
-                var type = MatchWidgetType.topImage
-                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
-                    type = .topImageWithMixMatch
-                }
-                return match.id + type.rawValue
-            }.joined(separator: "-")
-
-            viewModels = self.highlightsVisualImageMatches.map { match in
-                var type = MatchWidgetType.topImage
-                if (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
-                    type = .topImageWithMixMatch
-                }
-                return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
-            }
-
-        case (1, .highlightedMatches):
-            var type = MatchWidgetType.topImageOutright
-            ids = self.highlightsVisualImageOutrights.map { $0.id + type.rawValue }.joined(separator: "-")
-            viewModels = self.highlightsVisualImageOutrights.map { match in
-
-                return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
-            }
-        case (0, .highlightedBoostedOddsMatches):
-            var type = MatchWidgetType.boosted
-            ids = self.highlightsBoostedMatches.map { $0.id + type.rawValue }.joined(separator: "-")
-            viewModels = self.highlightsBoostedMatches.map { match in
-                return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
-            }
-        default:
-            return nil
-        }
-
-        if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[ids] {
-            return matchWidgetContainerTableViewModel
-        }
-        else {
-            let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel(cardsViewModels: viewModels)
-            self.matchWidgetContainerTableViewModelCache[ids] = matchWidgetContainerTableViewModel
-            return matchWidgetContainerTableViewModel
-        }
-
-    }
-
-    //
-    // Highlighted markets (aka Pro choices)
     func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
-
-        switch self.highlightsPresentationMode {
-        case .onePerLine:
-            // Each highlight market has it's own line
-            guard let market = self.highlightedMarkets[safe: index] else { return nil }
-            let id = market.content.id
-            if let marketWidgetContainerTableViewModel = self.marketWidgetContainerTableViewModelCache[id] {
-                return marketWidgetContainerTableViewModel
-            }
-            else {
-                let marketWidgetCellViewModel = MarketWidgetCellViewModel(highlightedMarket: market)
-                let marketWidgetContainerTableViewModel = MarketWidgetContainerTableViewModel(singleCardsViewModel: marketWidgetCellViewModel)
-                self.marketWidgetContainerTableViewModelCache[id] = marketWidgetContainerTableViewModel
-                return marketWidgetContainerTableViewModel
-            }
-
-        case .multiplesPerLineByType:
-            // There is a line for each highlight type (markets only has one at the moment)
-            // Each market card type will show all card of that type in a horizontal scroll
-            let ids = self.highlightedMarkets.map(\.content.id).joined(separator: "-")
-            let viewModels = self.highlightedMarkets.map({ MarketWidgetCellViewModel(highlightedMarket: $0) })
-
-            if let marketWidgetContainerTableViewModel = self.marketWidgetContainerTableViewModelCache[ids] {
-                return marketWidgetContainerTableViewModel
-            }
-            else {
-                let marketWidgetContainerTableViewModel = MarketWidgetContainerTableViewModel(cardsViewModels: viewModels)
-                self.marketWidgetContainerTableViewModelCache[ids] = marketWidgetContainerTableViewModel
-                return marketWidgetContainerTableViewModel
-            }
-        }
+        return highlightedMarketViewModel(forIndex: index)
     }
 
     //
@@ -1269,4 +1183,134 @@ extension CMSManagedHomeViewTemplateDataSource {
         return existingStories.contains(storyToCheck)
     }
 
+}
+
+extension CMSManagedHomeViewTemplateDataSource {
+    // MARK: - Presentation Mode Helpers
+    private func presentationMode(for contentType: HomeViewModel.Content) -> HighlightsPresentationMode? {
+        return highlightsPresentationModes[contentType]
+    }
+
+    // MARK: - Highlights ViewModels
+    func highlightedMatchesViewModel(forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
+        guard let mode = highlightsPresentationModes[.highlightedMatches] else { return nil }
+
+        switch mode {
+        case .onePerLine:
+            if let match = highlightsVisualImageMatches[safe: index] {
+                return createSingleMatchViewModel(match, withMixMatchCheck: true)
+            } else if let match = highlightsVisualImageOutrights[safe: index - highlightsVisualImageMatches.count] {
+                return createSingleMatchViewModel(match, type: .topImageOutright)
+            }
+            return nil
+
+        case .multiplesPerLineByType:
+            if index == 0 && !highlightsVisualImageMatches.isEmpty {
+                return createHorizontalMatchesViewModel(highlightsVisualImageMatches, withMixMatchCheck: true)
+            } else if index == 1 && !highlightsVisualImageOutrights.isEmpty {
+                return createHorizontalMatchesViewModel(highlightsVisualImageOutrights, type: .topImageOutright)
+            }
+            return nil
+        }
+    }
+
+    func highlightedBoostedMatchesViewModel(forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
+        guard let mode = highlightsPresentationModes[.highlightedBoostedOddsMatches] else { return nil }
+
+        switch mode {
+        case .onePerLine:
+            guard let match = highlightsBoostedMatches[safe: index] else { return nil }
+            return createSingleMatchViewModel(match, type: .boosted)
+
+        case .multiplesPerLineByType:
+            if index == 0 && !highlightsBoostedMatches.isEmpty {
+                return createHorizontalMatchesViewModel(highlightsBoostedMatches, type: .boosted)
+            }
+            return nil
+        }
+    }
+
+    func highlightedMarketViewModel(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
+        guard let mode = highlightsPresentationModes[.highlightedMarketProChoices] else { return nil }
+
+        switch mode {
+        case .onePerLine:
+            guard let market = highlightedMarkets[safe: index] else { return nil }
+            return createSingleMarketViewModel(market)
+
+        case .multiplesPerLineByType:
+            if index == 0 && !highlightedMarkets.isEmpty {
+                return createHorizontalMarketsViewModel(highlightedMarkets)
+            }
+            return nil
+        }
+    }
+
+    // MARK: - ViewModel Creation Helpers
+    private func createSingleMatchViewModel(_ match: Match, type: MatchWidgetType? = nil, withMixMatchCheck: Bool = false) -> MatchWidgetContainerTableViewModel {
+        var widgetType = type ?? .topImage
+
+        if withMixMatchCheck && (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
+            widgetType = .topImageWithMixMatch
+        }
+
+        let id = match.id + widgetType.rawValue
+
+        if let cached = matchWidgetContainerTableViewModelCache[id] {
+            return cached
+        }
+
+        let viewModel = MatchWidgetContainerTableViewModel(
+            singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: widgetType)
+        )
+        matchWidgetContainerTableViewModelCache[id] = viewModel
+        return viewModel
+    }
+
+    private func createHorizontalMatchesViewModel(_ matches: [Match], type: MatchWidgetType? = nil, withMixMatchCheck: Bool = false) -> MatchWidgetContainerTableViewModel {
+        let viewModels = matches.map { match -> MatchWidgetCellViewModel in
+            var widgetType = type ?? .topImage
+            if withMixMatchCheck && (match.markets.first?.customBetAvailable ?? false) && TargetVariables.hasFeatureEnabled(feature: .mixMatch) {
+                widgetType = .topImageWithMixMatch
+            }
+            return MatchWidgetCellViewModel(match: match, matchWidgetType: widgetType)
+        }
+
+        let ids = matches.map { $0.id + (type?.rawValue ?? "") }.joined(separator: "-")
+
+        if let cached = matchWidgetContainerTableViewModelCache[ids] {
+            return cached
+        }
+
+        let viewModel = MatchWidgetContainerTableViewModel(cardsViewModels: viewModels)
+        matchWidgetContainerTableViewModelCache[ids] = viewModel
+        return viewModel
+    }
+
+    private func createSingleMarketViewModel(_ market: ImageHighlightedContent<Market>) -> MarketWidgetContainerTableViewModel {
+        let id = market.content.id
+
+        if let cached = marketWidgetContainerTableViewModelCache[id] {
+            return cached
+        }
+
+        let viewModel = MarketWidgetContainerTableViewModel(
+            singleCardsViewModel: MarketWidgetCellViewModel(highlightedMarket: market)
+        )
+        marketWidgetContainerTableViewModelCache[id] = viewModel
+        return viewModel
+    }
+
+    private func createHorizontalMarketsViewModel(_ markets: [ImageHighlightedContent<Market>]) -> MarketWidgetContainerTableViewModel {
+        let ids = markets.map(\.content.id).joined(separator: "-")
+
+        if let cached = marketWidgetContainerTableViewModelCache[ids] {
+            return cached
+        }
+
+        let viewModels = markets.map { MarketWidgetCellViewModel(highlightedMarket: $0) }
+        let viewModel = MarketWidgetContainerTableViewModel(cardsViewModels: viewModels)
+        marketWidgetContainerTableViewModelCache[ids] = viewModel
+        return viewModel
+    }
 }

@@ -1,0 +1,459 @@
+summary,description,project_key,issuetype_name,story_points,labels
+"[iOS] EM - Setup Project Structure","**Goal:** Create the standard directory layout for the new EveryMatrix provider.
+
+**Subtasks:**
+* Create provider root: `ServicesProvider/Sources/ServicesProvider/Providers/EveryMatrix/`
+* Create subdirectories: `Models`, `Models/Mapper`, `Models/DTO`, `WebSocket`, `ChannelStores`
+
+**Acceptance:** Directory structure matches standard provider layout.",SPOR,Story,3,"ios,s44"
+"[iOS] EM - Implement Basic Configuration","**Goal:** Integrate EveryMatrix into the framework's configuration system.
+
+**Subtasks:**
+* Add `everyMatrix` case to `ProviderType` enum.
+* Create `EveryMatrixConfiguration.swift` with properties for WebSocket URL, authentication parameters, and channel settings.
+* Implement secure storage for API credentials (use existing security architecture in the framework).
+* Update `ServicesProviderConfiguration` to load EveryMatrix-specific settings.
+* Modify client initialization code to instantiate EveryMatrix providers when the appropriate type is selected.
+
+**Acceptance:** Running `ServicesProviderClient(providerType: .everyMatrix, configuration: config)` successfully initializes an EveryMatrix client with correct settings.",SPOR,Story,5,"ios,s44"
+"[iOS] EM - Implement Base Connector","**Goal:** Create the fundamental `EveryMatrixConnector` class.
+
+**Subtasks:**
+* Create `EveryMatrixConnector.swift`.
+* Implement the `Connector` protocol requirement (`connectionStatePublisher`).
+* Create a `CurrentValueSubject` for connection state management.
+* Add methods to update connection state based on WebSocket activity.
+
+**Acceptance:** `EveryMatrixConnector` successfully publishes connection state changes through its `connectionStatePublisher`.",SPOR,Story,4,"ios,s44"
+"[iOS] EM - Foundation Testing","**Goal:** Verify the configuration and base connector implementation.
+
+**Subtasks:**
+* Write unit tests for `EveryMatrixConfiguration` with various settings combinations.
+* Test `EveryMatrixConnector` connection state transitions.
+* Verify configuration validation and error handling.
+
+**Acceptance:** Configuration and base connector components pass tests with >90% code coverage.",SPOR,Story,4,"ios,s44"
+"[iOS] EM - WebSocket Client Protocol","**Goal:** Define and implement the core WebSocket client protocol that will interface with EveryMatrix WebSocket API.
+
+**Subtasks:**
+* Create `WebSocketClientProtocol.swift` with methods for connection management, subscription, and message routing.
+* Define property: `connectionStatePublisher: AnyPublisher<WebSocketConnectionState, Never>`.
+* Define property: `messagePublisher: AnyPublisher<(channelId: String, message: Data), Error>`.
+* Define methods: `connect()`, `disconnect()`, `subscribe(to:)`, `unsubscribe(from:)`.
+* Add methods for sending commands/requests through the WebSocket: `sendRequest(channelId:, request:)`.
+* Document each method and property with clear expectations and behavior.
+
+**Acceptance:** Protocol contains a complete interface for WebSocket operations without implementation gaps.",SPOR,Story,5,"ios,s44"
+"[iOS] EM - WebSocket Connection Implementation","**Goal:** Implement a concrete WebSocket client that connects to the EveryMatrix WebSocket API.
+
+**Subtasks:**
+* Create `EMWebSocketConnection.swift` implementing `WebSocketClientProtocol`.
+* Integrate with the existing `WebSocketClientStream` or similar network layer.
+* Implement authentication flow with EveryMatrix-specific handshake protocol.
+* Create message serialization/deserialization logic for all expected message types.
+* Implement connection state machine (connecting → connected → disconnected).
+* Add auto-reconnect logic with exponential backoff.
+* Implement ping/pong heartbeat mechanism to keep connection alive.
+* Implement error handling and categorization (network errors, protocol errors, authentication errors).
+
+**Acceptance:** Client successfully connects to EveryMatrix WebSocket endpoint, authenticates, maintains connection, and handles reconnection scenarios.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Request-Response Pattern for WebSocket","**Goal:** Implement a request-response pattern over WebSocket to replace the functionality typically handled by REST.
+
+**Subtasks:**
+* Create `WebSocketRequest` protocol with message ID and serialization support.
+* Create `WebSocketResponse` protocol with message ID and deserialization support.
+* Implement `RequestResponseManager.swift` to track pending requests and match responses.
+* Add timeout handling for requests that don't receive responses.
+* Create Combine publisher wrapper for request-response operations: `func request<T>(_ request: WebSocketRequest) -> AnyPublisher<T, Error>`.
+* Implement correlation ID generation for matching requests with responses.
+
+**Acceptance:** Request-response pattern allows for making API calls over WebSocket with proper response handling.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - DTOs & Normalized Data Models","**Goal:** Define data transfer objects that match the flat/normalized data structure sent by EveryMatrix WebSocket.
+
+**Subtasks:**
+* Create `EventDTO.swift` with properties matching EveryMatrix event object schema.
+* Create `MarketDTO.swift` with properties matching EveryMatrix market object schema, including `eventId` reference.
+* Create `OutcomeDTO.swift` with properties matching EveryMatrix outcome object schema, including `marketId` reference.
+* Create `RelationDTO.swift` for explicit relationship messages.
+* Add `Codable` conformance to all DTOs with appropriate coding keys mapped to EveryMatrix API field names.
+* Create `EMMessageType` enum to categorize different WebSocket message types (create, update, delete, relation).
+* Create wrapper struct for WebSocket messages that includes type information and payload.
+* Create request/response DTOs for operations typically done via REST (user profile, bet history, etc.).
+
+**Acceptance:** Sample messages from EveryMatrix WebSocket documentation successfully decode into the DTO structures without parsing errors.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Channel Data Store Implementation","**Goal:** Create the core data storage and reconstruction component for a single WebSocket channel.
+
+**Subtasks:**
+* Create `ChannelDataStore.swift` with storage dictionaries:
+  * `events: [String: EventDTO]`
+  * `markets: [String: MarketDTO]`
+  * `outcomes: [String: OutcomeDTO]`
+  * `eventMarketIDs: [String: Set<String>]`
+  * `marketOutcomeIDs: [String: Set<String>]`
+* Create a `PassthroughSubject` or `CurrentValueSubject` as `outputSubject` for publishing reconstructed data.
+* Implement `processUpdate(data:)` method with message parsing and internal state updates.
+* Implement full relationship tracking logic that updates relationship dictionaries when objects are added/modified/removed.
+* Create the `buildFullEventGraph()` method to reconstruct nested objects from flat data and relationship maps.
+* Implement `reconstructAndEmit()` method to rebuild and publish the entire object graph.
+* Add synchronization using a DispatchQueue or Actor to prevent concurrent data modification.
+
+**Acceptance:** `ChannelDataStore` successfully processes sample WebSocket messages, maintains correct relationship information, and emits properly reconstructed object hierarchies.",SPOR,Story,24,"ios,s44"
+"[iOS] EM - WebSocket Provider Integration","**Goal:** Connect WebSocket components to the EveryMatrix provider implementation.
+
+**Subtasks:**
+* Add fields to provider base class:
+  * `private let webSocketClient: WebSocketClientProtocol`
+  * `private var channelStores: [String: ChannelDataStore] = [:]`
+  * `private var cancellables = Set<AnyCancellable>()`
+  * `private let requestResponseManager: RequestResponseManager`
+* Create channel identifier mapping from functional areas to EveryMatrix channel IDs.
+* Implement message routing logic that forwards WebSocket messages to the appropriate channel store.
+* Create `setupSubscription(forChannelId:)` method that creates, configures, and returns a data store and publisher for a channel.
+* Implement channel cleanup logic triggered when Combine subscriptions are cancelled.
+* Connect WebSocket connection state publisher to the `EveryMatrixConnector`'s connection state publisher.
+* Implement base methods for sending requests and handling responses.
+
+**Acceptance:** Provider base class correctly manages WebSocket connections, channels, and request-response operations.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Performance Optimization & Memory Management","**Goal:** Optimize the WebSocket implementation for high-performance and efficient memory usage.
+
+**Subtasks:**
+* Implement delta updates that only reconstruct affected parts of the object tree.
+* Create monitoring for each channel store's memory footprint.
+* Add automated cleanup for stale data (objects not updated within a certain timeframe).
+* Optimize dictionary lookups by using appropriate capacity hints and access patterns.
+* Create a dedicated DispatchQueue for processing WebSocket messages.
+* Implement thread synchronization using locks, queues, or actors.
+* Add overflow protection for high-frequency update channels.
+* Implement throttling/debouncing mechanism for high-frequency updates.
+
+**Acceptance:** Implementation successfully processes 100+ updates per second without excessive CPU usage or memory growth.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - WebSocket Infrastructure Testing","**Goal:** Create comprehensive tests for the WebSocket infrastructure components.
+
+**Subtasks:**
+* Create `MockWebSocketClient` conforming to `WebSocketClientProtocol` for controlled testing.
+* Write unit tests for each DTO to verify proper decoding of sample messages.
+* Test the request-response mechanism with simulated delays and errors.
+* Write tests for `ChannelDataStore` with various update scenarios:
+  * Object creation
+  * Object modification
+  * Object deletion
+  * Relationship changes
+* Test the reconstruction algorithm with complex relational scenarios.
+* Verify performance with large datasets (100+ events, 1000+ markets).
+* Test memory usage patterns during high-frequency updates.
+
+**Acceptance:** All WebSocket infrastructure components pass tests with >90% code coverage.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Define Events Provider Structure & Domain Models","**Goal:** Set up the `EveryMatrixEventsProvider` class and define the domain models for events data.
+
+**Subtasks:**
+* Create `EveryMatrixEventsProvider.swift` conforming to `EventsProvider`.
+* Add required properties and implement initializer accepting WebSocket client and configuration.
+* Define domain models in separate files:
+  * `EventModel.swift` with nested market structure
+  * `MarketModel.swift` with nested outcome structure
+  * `OutcomeModel.swift` with betting offer details
+* Create documentation for the mapping relationship between DTOs and domain models.
+
+**Acceptance:** Provider class compiles and domain models properly represent the public API expected by consumers.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Implement WebSocket Channel Definitions for Events","**Goal:** Define and implement WebSocket channels for different types of events data.
+
+**Subtasks:**
+* Create mapping between `EventsProvider` protocol methods and WebSocket channels.
+* Define channel parameters for various data types (live events, pre-live events, specific sports, etc.).
+* Create subscription message templates for each channel type.
+* Implement channel identifier generation based on subscription parameters.
+* Create channel-specific processing logic for different message formats.
+* Document the complete channel structure for events data.
+
+**Acceptance:** All event data subscription types map to appropriate WebSocket channels with correct parameters.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Implement Subscription Methods","**Goal:** Implement the subscription methods using the channel data store architecture.
+
+**Subtasks:**
+* Implement `subscribeLiveMatches(forSportType:)` using the channel store approach:
+  * Generate appropriate channel ID
+  * Create/retrieve channel store
+  * Subscribe to WebSocket channel
+  * Return properly-typed publisher
+* Implement `subscribePreLiveMatches(forSportType:initialDate:endDate:eventCount:sortType:)` with similar pattern.
+* Implement at least 8 other key subscription methods from the `EventsProvider` protocol.
+* Add subscription cancellation and cleanup logic.
+* Create error handling for subscription failures with specific error types.
+
+**Acceptance:** All implemented subscription methods properly subscribe to WebSocket channels and return typed publishers that emit updates.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Implement WebSocket Request Methods for Events","**Goal:** Implement non-subscription methods that would typically use REST, using the WebSocket request-response pattern.
+
+**Subtasks:**
+* Create WebSocket request/response pairs for each non-subscription method in `EventsProvider`.
+* Implement `getAvailableSportTypes(initialDate:endDate:)` using WebSocket request.
+* Implement `getMarketGroups(forEvent:includeMixMatchGroup:includeAllMarketsGroup:)`.
+* Implement at least 8 other key getter methods from the protocol.
+* Create response handling logic for each request type.
+* Add timeout and retry logic for failed requests.
+
+**Acceptance:** All non-subscription `EventsProvider` methods successfully operate via WebSocket requests and return expected data.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Domain Model Mapping & Event Reconstruction","**Goal:** Implement the mapping logic from DTO objects to domain models.
+
+**Subtasks:**
+* Create `EveryMatrixModelMapper+Events.swift`.
+* Implement `func map(eventDTO: EventDTO, withMarkets markets: [MarketModel]) -> EventModel` method.
+* Implement `func map(marketDTO: MarketDTO, withOutcomes outcomes: [OutcomeModel]) -> MarketModel` method.
+* Implement `func map(outcomeDTO: OutcomeDTO) -> OutcomeModel` method.
+* Create helper method to transform a full reconstructed DTO graph to domain models.
+* Add defensive coding to handle missing or partial data (null checks, optional chaining).
+* Implement special logic for any EveryMatrix-specific transformations.
+
+**Acceptance:** Mapping functions successfully convert complete and partial DTO object graphs to valid domain models.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - EventsProvider Testing","**Goal:** Verify the implementation of the `EveryMatrixEventsProvider`.
+
+**Subtasks:**
+* Write at least 10 unit tests for DTO to domain model mapping functions.
+* Create mock channel data and test subscription method publishers emit correct data.
+* Test WebSocket request-response methods with mock responses.
+* Write tests for error cases:
+  * Network failures
+  * Decoding errors
+  * Business logic errors
+* Create integration tests for subscription lifecycle (subscribe → receive updates → unsubscribe).
+
+**Acceptance:** Tests provide >80% code coverage of the `EveryMatrixEventsProvider` implementation.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Define Betting Provider Structure & Models","**Goal:** Set up the `EveryMatrixBettingProvider` class and define necessary betting data models.
+
+**Subtasks:**
+* Create `EveryMatrixBettingProvider.swift` conforming to `BettingProvider`.
+* Implement required initializers and properties.
+* Define DTO models for betting operations:
+  * `BetHistoryDTO`
+  * `BetDetailsDTO`
+  * `BetCalculationDTO`
+  * `PlaceBetResponseDTO`
+  * Other required betting-specific DTOs
+* Create WebSocket request-response pairs for each betting operation.
+* Document the mapping between `BettingProvider` methods and WebSocket requests/subscriptions.
+
+**Acceptance:** Provider structure is established with appropriate model definitions that match EveryMatrix API formats.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Implement Betting Request-Response Methods","**Goal:** Implement WebSocket request methods for betting operations.
+
+**Subtasks:**
+* Create WebSocket request templates for all needed betting operations.
+* Implement core betting methods using the WebSocket request-response pattern:
+  * `getBetHistory(pageIndex:)`
+  * `getBetDetails(identifier:)`
+  * `calculatePotentialReturn(forBetTicket:)`
+  * `placeBets(betTickets:useFreebetBalance:)`
+  * At least 7 other key betting operations
+* Create response handling and error mapping for each operation.
+* Implement optimistic responses where appropriate (e.g., bet placement).
+* Add validation logic for request parameters.
+
+**Acceptance:** Betting operations successfully execute via WebSocket and return appropriate responses.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Implement Betting WebSocket Subscriptions","**Goal:** Implement real-time betting functionality using WebSocket subscriptions.
+
+**Subtasks:**
+* Identify betting features requiring real-time updates (e.g., live odds, cashout availability).
+* Create DTOs for betting-related WebSocket subscription messages.
+* Implement dedicated channel stores for real-time betting data:
+  * `BetCashoutAvailabilityStore`
+  * `LiveOddsUpdateStore`
+  * Other necessary stores
+* Build WebSocket channel subscription logic for betting features.
+* Create data reconstruction logic specific to betting concerns.
+* Implement methods returning real-time publishers (e.g., cashout availability).
+
+**Acceptance:** Real-time betting features receive and process updates through WebSocket subscriptions.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Implement Betting Mappers","**Goal:** Create mapping logic to convert EveryMatrix betting models to canonical models.
+
+**Subtasks:**
+* Create `EveryMatrixModelMapper+Betting.swift`.
+* Implement at least 10 mapping functions for key betting entities:
+  * `map(betHistoryDTO:) -> BettingHistory`
+  * `map(betDTO:) -> Bet`
+  * `map(potentialReturnDTO:) -> BetslipPotentialReturn`
+  * `map(placedBetResponseDTO:) -> PlacedBetsResponse`
+  * Additional required mappers
+* Add special handling for EveryMatrix-specific bet formats or rules.
+
+**Acceptance:** Mapping functions convert all EveryMatrix betting DTOs to canonical framework models.",SPOR,Story,5,"ios,s44"
+"[iOS] EM - Implement Remaining BettingProvider Methods","**Goal:** Complete the implementation of the `BettingProvider` protocol.
+
+**Subtasks:**
+* Implement remaining methods from the protocol using appropriate WebSocket patterns.
+* Connect mappers to all response handling logic.
+* Ensure all methods handle WebSocket connection issues gracefully.
+* Add logging for debugging betting operations.
+* Implement proper error propagation through Combine publishers.
+
+**Acceptance:** All `BettingProvider` methods are implemented and return data in the expected format.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - BettingProvider Testing","**Goal:** Verify the implementation of the `EveryMatrixBettingProvider`.
+
+**Subtasks:**
+* Write unit tests for mapping functions.
+* Test betting request-response methods with mock responses.
+* Create tests for WebSocket subscriptions related to betting.
+* Write integration tests for key betting flows:
+  * Viewing bet history
+  * Placing a bet
+  * Calculating potential returns
+  * Cashout operations
+* Test error handling and edge cases.
+
+**Acceptance:** Tests provide >80% coverage of the `EveryMatrixBettingProvider` implementation.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Define PAM Structure & Core Models","**Goal:** Set up `EveryMatrixPrivilegedAccessManager` and define core PAM-related models.
+
+**Subtasks:**
+* Create `EveryMatrixPrivilegedAccessManager.swift` conforming to `PrivilegedAccessManager`.
+* Implement `userSessionStatePublisher` and `userProfilePublisher` properties.
+* Define DTOs for authentication and user profile:
+  * `UserProfileDTO`
+  * `LoginRequestDTO` and `LoginResponseDTO`
+  * `SignUpRequestDTO` and `SignUpResponseDTO`
+  * Other authentication-related DTOs
+* Create WebSocket request-response pairs for authentication operations.
+* Create initial properties for managing authentication state.
+
+**Acceptance:** Provider structure is established with necessary properties and initial model definitions.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Implement Authentication & User Profile via WebSocket","**Goal:** Implement authentication and profile management using WebSocket requests.
+
+**Subtasks:**
+* Implement the WebSocket authentication handshake process.
+* Create WebSocket request for `login(username:password:)`.
+* Implement `getUserProfile(withKycExpire:)` using WebSocket request.
+* Create WebSocket request for signup operations.
+* Implement token/session management for authenticated WebSocket connections.
+* Add automatic reconnection with authentication for dropped connections.
+* Create specialized error handling for authentication failures.
+
+**Acceptance:** Authentication and user profile management successfully operate via WebSocket.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Implement PAM WebSocket Subscriptions","**Goal:** Implement real-time user account features using WebSocket subscriptions.
+
+**Subtasks:**
+* Identify user account features requiring real-time updates (e.g., balance changes, notifications).
+* Create DTOs for account-related WebSocket subscription messages.
+* Implement dedicated channel stores for user-related real-time data.
+* Build WebSocket subscription logic for user account features.
+* Create publishers that emit user account updates.
+* Implement methods returning real-time publishers for account updates.
+
+**Acceptance:** Real-time user account features receive and process updates through WebSocket.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Implement PAM Mappers","**Goal:** Create mapping logic for PAM models.
+
+**Subtasks:**
+* Create `EveryMatrixModelMapper+User.swift`.
+* Implement mappers for core entities:
+  * `map(userProfileDTO:) -> UserProfile`
+  * `map(loginResponseDTO:) -> UserProfile`
+  * `map(signupResponseDTO:) -> SignUpResponse`
+* Add transformations for any EveryMatrix-specific fields.
+
+**Acceptance:** Mapping functions convert EveryMatrix PAM DTOs to canonical framework models.",SPOR,Story,5,"ios,s44"
+"[iOS] EM - Implement PAM Payments Functionality via WebSocket","**Goal:** Implement payment functionality using WebSocket requests.
+
+**Subtasks:**
+* Define models for payment operations:
+  * `PaymentMethodDTO`
+  * `DepositRequestDTO` and `DepositResponseDTO`
+  * `WithdrawalRequestDTO` and `WithdrawalResponseDTO`
+  * `TransactionHistoryRequestDTO` and `TransactionHistoryResponseDTO`
+* Create WebSocket requests for all payment operations.
+* Implement payment methods in `EveryMatrixPrivilegedAccessManager`:
+  * `getPayments()`
+  * `processDeposit(paymentMethod:amount:option:)`
+  * `processWithdrawal(paymentMethod:amount:conversionId:)`
+  * `getTransactionsHistory(startDate:endDate:transactionTypes:pageNumber:)`
+  * Other required payment methods
+* Add real-time payment status monitoring via WebSocket subscriptions.
+* Implement mappers for payment response data.
+
+**Acceptance:** All payment features function correctly using WebSocket requests and subscriptions.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Implement Remaining PAM Functionality","**Goal:** Implement all other required PAM features via WebSocket.
+
+**Subtasks:**
+* Implement wallet & limits functionality via WebSocket requests and subscriptions.
+* Implement KYC & document functionality via WebSocket (may need separate API for document upload).
+* Implement bonuses & consents functionality via WebSocket.
+* Implement social features (if required) via WebSocket.
+* Create specialized data models for each feature group.
+* Add error handling specific to each feature area.
+* Implement WebSocket subscriptions for real-time updates on each feature.
+
+**Acceptance:** All PAM features from the protocol specification function correctly via WebSocket.",SPOR,Story,15,"ios,s44"
+"[iOS] EM - PAM Testing","**Goal:** Verify the implementation of the `EveryMatrixPrivilegedAccessManager`.
+
+**Subtasks:**
+* Write unit tests for mapping functions.
+* Test authentication and profile methods with mock responses.
+* Test payment-related methods with various scenarios.
+* Test KYC, bonuses, and other PAM features.
+* Test WebSocket subscriptions for user account updates.
+* Create integration tests for complete user flows:
+  * Registration → Login → Profile update
+  * Deposit → Place bet → View history
+  * Document upload → Verification
+
+**Acceptance:** Tests provide >80% coverage of the `EveryMatrixPrivilegedAccessManager` implementation.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Client Integration","**Goal:** Make all EveryMatrix providers work together through the `ServicesProviderClient`.
+
+**Subtasks:**
+* Update `ServicesProviderClient.swift` to initialize all EveryMatrix providers when specified.
+* Create a shared WebSocket connection instance that can be used by multiple providers.
+* Implement shared authentication state management across providers.
+* Add code to `connect()`, `disconnect()`, and `reconnectIfNeeded()` that handles EveryMatrix-specific requirements.
+* Test creation of client with various provider combinations.
+
+**Acceptance:** `ServicesProviderClient` correctly initializes and operates all EveryMatrix providers using a unified WebSocket connection.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - WebSocket Architecture Optimization","**Goal:** Fine-tune the WebSocket implementation based on testing results.
+
+**Subtasks:**
+* Run performance profiling on the WebSocket message processing pipeline.
+* Identify and fix at least 3 bottlenecks in the reconstruction logic.
+* Implement improved thread synchronization based on profiling.
+* Add throttling for high-frequency channels (e.g. live odds) with configurable parameters.
+* Implement resource cleanup for both connection and memory when subscriptions end.
+* Create monitoring points for memory and CPU usage.
+* Optimize WebSocket message parsing for better performance.
+
+**Acceptance:** WebSocket implementation handles realistic workloads with acceptable CPU (<10% on test device) and memory (no continuous growth) usage.",SPOR,Story,10,"ios,s44"
+"[iOS] EM - Error Handling Standardization","**Goal:** Create a consistent error handling system across the provider.
+
+**Subtasks:**
+* Create comprehensive error mapping from EveryMatrix error codes to `ServiceProviderError` cases.
+* Update all WebSocket response handling to use standardized error mapping.
+* Add specialized WebSocket-specific error types (connection drops, subscription failures, etc.).
+* Implement consistent error reporting for mapping failures.
+* Test all error scenarios with deliberate failures.
+
+**Acceptance:** All errors from WebSocket and internal logic map to appropriate `ServiceProviderError` cases with descriptive messages.",SPOR,Story,5,"ios,s44"
+"[iOS] EM - Modular Provider Support","**Goal:** Allow the framework to function when only some providers are initialized.
+
+**Subtasks:**
+* Add null-provider pattern for disabled provider types.
+* Create configuration options to enable/disable specific providers.
+* Modify initialization code to handle partial provider configurations.
+* Test partial setups (e.g., Betting only, Events only).
+* Ensure WebSocket connection is managed properly with partial provider setups.
+
+**Acceptance:** Framework operates correctly with any combination of enabled/disabled providers.",SPOR,Story,5,"ios,s44"
+"[iOS] EM - Integration Testing","**Goal:** Verify that all components work together correctly in realistic scenarios.
+
+**Subtasks:**
+* Create at least 10 integration tests for multi-provider scenarios:
+  * Authentication → Event browsing → Bet placement
+  * Live event monitoring → Cashout processing
+  * Profile management → Payment processing
+* Test with realistic volumes: 100+ events, 1000+ markets, high-frequency updates.
+* Measure memory usage during extended test sessions (1+ hour).
+* Test with simulated network disruptions (WebSocket disconnections and reconnections).
+* Verify that all providers function correctly through a single WebSocket connection.
+
+**Acceptance:** Integration tests pass consistently with acceptable performance metrics.",SPOR,Story,8,"ios,s44"
+"[iOS] EM - Documentation","**Goal:** Provide comprehensive documentation for the EveryMatrix implementation.
+
+**Subtasks:**
+* Create a WebSocket architecture document describing the channel data store pattern.
+* Document the request-response pattern over WebSocket.
+* Add Swift documentation comments (`///`) to all public types and methods.
+* Add inline comments to complex sections (WebSocket message handling, reconstruction algorithm).
+* Update framework README to include EveryMatrix provider.
+* Create setup guide with step-by-step instructions for EveryMatrix configuration.
+* Document potential integration issues and their solutions.
+
+**Acceptance:** Documentation provides clear guidance for usage and maintenance of the implementation.",SPOR,Story,8,"ios,s44"
