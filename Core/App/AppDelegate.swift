@@ -14,7 +14,7 @@ import IQKeyboardManagerSwift
 import PhraseSDK
 import AdyenActions
 import OptimoveSDK
-import Adjust
+import AdjustSdk
 import FirebaseCore
 import FirebaseFirestore
 
@@ -157,15 +157,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         application.registerForRemoteNotifications()
 
         // Adjust
-        // Sandbox ENV = ADJEnvironmentSandbox
         let appToken = "u9xpbb9chxj4"
         let environment = ADJEnvironmentProduction
         let adjustConfig = ADJConfig(appToken: appToken, environment: environment)
 
-        adjustConfig?.logLevel = ADJLogLevelSuppress
+        adjustConfig?.logLevel = .suppress
         adjustConfig?.delegate = self
 
-        Adjust.appDidLaunch(adjustConfig)
+        Adjust.initSdk(adjustConfig)
 
         //
         #if DEBUG

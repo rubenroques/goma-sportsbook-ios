@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import OptimoveSDK
-import Adjust
+import AdjustSdk
 
 class FooterResponsibleGamingView: UIView {
 

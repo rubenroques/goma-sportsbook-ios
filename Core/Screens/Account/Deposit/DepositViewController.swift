@@ -14,7 +14,7 @@ import AdyenComponents
 import Lottie
 import SafariServices
 import OptimoveSDK
-import Adjust
+import AdjustSdk
 
 class DepositViewController: UIViewController {
 

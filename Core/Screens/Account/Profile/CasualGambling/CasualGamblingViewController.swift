@@ -7,7 +7,7 @@
 
 import UIKit
 import OptimoveSDK
-import Adjust
+import AdjustSdk
 
 class CasualGamblingViewController: UIViewController {
 

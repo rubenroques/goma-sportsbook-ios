@@ -8,7 +8,7 @@ import AdyenComponents
 import HeaderTextField
 import LocalAuthentication
 import OptimoveSDK
-import Adjust
+import AdjustSdk
 
 class LoginViewController: UIViewController {
 
