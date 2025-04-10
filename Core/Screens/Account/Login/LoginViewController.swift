@@ -376,8 +376,9 @@ class LoginViewController: UIViewController {
             
             Optimove.shared.reportScreenVisit(screenTitle: "register_start")
             
-            let event = ADJEvent(eventToken: "x9jrel")
-            Adjust.trackEvent(event)
+            if let event = ADJEvent(eventToken: "x9jrel") {
+                Adjust.trackEvent(event)
+            }
         }
 
         if !animated {
@@ -611,8 +612,9 @@ class LoginViewController: UIViewController {
                 Optimove.shared.reportScreenVisit(screenTitle: "sign_up")
                 
                 // Adjust
-                let event = ADJEvent(eventToken: "p6p4xw")
-                Adjust.trackEvent(event)
+                if let event = ADJEvent(eventToken: "p6p4xw") {
+                    Adjust.trackEvent(event)
+                }
             }
             .store(in: &cancellables)
     }

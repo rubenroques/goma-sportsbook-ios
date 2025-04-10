@@ -671,10 +671,11 @@ class DepositViewController: UIViewController {
             
             Optimove.shared.reportScreenVisit(screenTitle: "first_deposit")
             
-            let event = ADJEvent(eventToken: "gvnieo")
-            // Pass deposit amount associated
-            event?.setRevenue(self.viewModel.paymentsDropIn.depositAmount, currency: "EUR")
-            Adjust.trackEvent(event)
+            if let event = ADJEvent(eventToken: "gvnieo") {
+                // Pass deposit amount associated
+                event.setRevenue(self.viewModel.paymentsDropIn.depositAmount, currency: "EUR")
+                Adjust.trackEvent(event)
+            }
             
             AnalyticsClient.sendEvent(event: .firstDeposit(value: self.viewModel.paymentsDropIn.depositAmount))
         }
@@ -692,10 +693,11 @@ class DepositViewController: UIViewController {
             
             Optimove.shared.reportScreenVisit(screenTitle: "purchase")
             
-            let event = ADJEvent(eventToken: "amh53g")
-            // Pass deposit amount associated
-            event?.setRevenue(self.viewModel.paymentsDropIn.depositAmount, currency: "EUR")
-            Adjust.trackEvent(event)
+            if let event = ADJEvent(eventToken: "amh53g") {
+                // Pass deposit amount associated
+                event.setRevenue(self.viewModel.paymentsDropIn.depositAmount, currency: "EUR")
+                Adjust.trackEvent(event)
+            }
             
             AnalyticsClient.sendEvent(event: .purchase(value: self.viewModel.paymentsDropIn.depositAmount))
 

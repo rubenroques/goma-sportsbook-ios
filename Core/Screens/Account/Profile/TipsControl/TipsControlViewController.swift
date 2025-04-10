@@ -264,8 +264,9 @@ class TipsControlViewController: UIViewController {
                 Optimove.shared.reportEvent(name: "sos_joueur_click")
 
                 // Adjust
-                let event = ADJEvent(eventToken: "9t3uav")
-                Adjust.trackEvent(event)
+                if let event = ADJEvent(eventToken: "9t3uav") {
+                    Adjust.trackEvent(event)
+                }
                 
                 UIApplication.shared.open(url)
             }
@@ -300,8 +301,9 @@ class TipsControlViewController: UIViewController {
                 Optimove.shared.reportEvent(name: "joueurs_info_service_click")
 
                 // Adjust
-                let event = ADJEvent(eventToken: "piroso")
-                Adjust.trackEvent(event)
+                if let event = ADJEvent(eventToken: "piroso") {
+                    Adjust.trackEvent(event)
+                }
                 
                 UIApplication.shared.open(url)
             }
@@ -330,8 +332,9 @@ class TipsControlViewController: UIViewController {
             Optimove.shared.reportEvent(name: "sos_joueur_click")
 
             // Adjust
-            let event = ADJEvent(eventToken: "9t3uav")
-            Adjust.trackEvent(event)
+            if let event = ADJEvent(eventToken: "9t3uav") {
+                Adjust.trackEvent(event)
+            }
             
             UIApplication.shared.open(url)
         }
@@ -347,8 +350,9 @@ class TipsControlViewController: UIViewController {
             Optimove.shared.reportEvent(name: "evalujeu_click")
 
             // Adjust
-            let event = ADJEvent(eventToken: "43y8ai")
-            Adjust.trackEvent(event)
+            if let event = ADJEvent(eventToken: "43y8ai") {
+                Adjust.trackEvent(event)
+            }
             
             UIApplication.shared.open(url)
         }
