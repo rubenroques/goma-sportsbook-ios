@@ -29,9 +29,11 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
 
     static var features: [SportsbookTargetFeatures] { get }
 
+    static var userRequiredFeatures: [SportsbookTargetFeatures] { get }
+
     static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool
 
-    static var shouldUserBlurEffectTabBar: Bool { get }
+    static var shouldUseBlurEffectTabBar: Bool { get }
 
     static var shouldUseGradientBackgrounds: Bool { get }
 
@@ -47,26 +49,17 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
 
     static var enableDeveloperSettings: Bool { get }
 
-    // static var registerFlowType: RegisterFlowType { get }
+    static var registerFlowType: RegisterFlowType { get }
 
     static var links: URLEndpoint.Links { get }
 
 }
 
 enum SportsbookTargetFeatures: Codable, CaseIterable {
-    case homeBanners
-    case homePopUps
 
-    case getLocationLimits
+    case homePopUps // the legacy pop up that appears in the boot if configured
 
-    case favoriteEvents
-    case favoriteCompetitions
-
-    case eventStats
-    case eventListFilters
-
-    case betsNotifications
-    case eventsNotifications
+    case lockOutOfLocation // call a ws with user geolocation to block if outside allowed country
 
     case chat
     case tips
@@ -82,6 +75,11 @@ enum SportsbookTargetFeatures: Codable, CaseIterable {
     case legalAgeWarning
     
     case mixMatch
+    
+    case homeTickets
+    case userWalletBalance
+    
+    case featuredCompetitionInTabBar
 }
 
 enum SportsbookSupportedLanguage: String, CaseIterable {
@@ -134,6 +132,7 @@ extension SportsbookTarget {
     }
 }
 
+/*
 extension SportsbookTarget {
 
     static var supportedCardStyles: [CardsStyle] {
@@ -148,7 +147,7 @@ extension SportsbookTarget {
         return .toggle
     }
 
-    static var shouldUserBlurEffectTabBar: Bool {
+    static var shouldUseBlurEffectTabBar: Bool {
         return false
     }
 
@@ -173,13 +172,6 @@ extension SportsbookTarget {
     static var localizationOverrides: [String: String] {
         return [:]
     }
-    
-    static var links: URLEndpoint.Links {
-        return URLEndpoint.Links.empty
-    }
-    
-    static var enableDeveloperSettings: Bool {
-        return true
-    }
 
 }
+*/

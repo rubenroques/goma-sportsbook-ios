@@ -59,7 +59,7 @@ struct TargetVariables: SportsbookTarget {
         return [.cashback]
     }
     
-    static var shouldUserBlurEffectTabBar: Bool {
+    static var shouldUseBlurEffectTabBar: Bool {
         return true
     }
     
@@ -87,10 +87,6 @@ struct TargetVariables: SportsbookTarget {
         let baseUrl = api.promotions
         let isDarkThemeString = isDarkTheme?.description ?? ""
         return "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
-    }
-    
-    static var appStoreUrl: String? {
-        return "https://apps.apple.com/"
     }
     
     static var secundaryMarketSpecsUrl: String? {

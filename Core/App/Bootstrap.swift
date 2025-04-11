@@ -28,7 +28,7 @@ class Bootstrap {
 
         environment.businessSettingsSocket.connectAfterAuth()
 
-        if TargetVariables.hasFeatureEnabled(feature: .getLocationLimits) {
+        if TargetVariables.hasFeatureEnabled(feature: .lockOutOfLocation) {
             if environment.locationManager.isLocationServicesEnabled() {
                 environment.locationManager.startGeoLocationUpdates()
             }

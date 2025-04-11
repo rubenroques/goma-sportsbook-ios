@@ -89,8 +89,8 @@ class MultibetPersonalInfoFormStepViewModel {
             .store(in: &self.cancellables)
 
         //
-        let clearedEmailState = self.emailState.removeDuplicates()
-        let clearedEmail = self.email.removeDuplicates()
+        // let clearedEmailState = self.emailState.removeDuplicates()
+        // let clearedEmail = self.email.removeDuplicates()
 
         // Enable after endpoint is available
 //        Publishers.CombineLatest(clearedEmailState, clearedEmail)

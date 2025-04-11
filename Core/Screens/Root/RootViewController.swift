@@ -748,11 +748,13 @@ class RootViewController: UIViewController {
         }
         else {
             self.cashbackButtonBaseView.isHidden = true
-            
         }
         
-        if let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition,
-           let featuredCompetitionId = featuredCompetition.id {
+        if
+            TargetVariables.hasFeatureEnabled(feature: .featuredCompetitionInTabBar),
+            let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition,
+            featuredCompetition.id != nil
+        {
             self.featuredCompetitionButtonBaseView.isHidden = false
             
             // Set bottom banner icon
@@ -812,7 +814,7 @@ class RootViewController: UIViewController {
         }
         
         //
-        if TargetVariables.shouldUserBlurEffectTabBar {
+        if TargetVariables.shouldUseBlurEffectTabBar {
             
             self.bottomBackgroundView.backgroundColor = .clear
             
@@ -883,7 +885,7 @@ class RootViewController: UIViewController {
         self.casinoTitleLabel.textColor = UIColor.App.textSecondary
         self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
 
-        if TargetVariables.shouldUserBlurEffectTabBar {
+        if TargetVariables.shouldUseBlurEffectTabBar {
             self.tabBarView.backgroundColor = .clear
             self.bottomSafeAreaView.backgroundColor = .clear
         }

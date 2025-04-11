@@ -60,10 +60,14 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback, .legalAgeWarning, .mixMatch]
+        return [.cashback, .legalAgeWarning, .mixMatch, .featuredCompetitionInTabBar]
+    }
+    
+    static var userRequiredFeatures: [SportsbookTargetFeatures] {
+        return []
     }
 
-    static var shouldUserBlurEffectTabBar: Bool {
+    static var shouldUseBlurEffectTabBar: Bool {
         return true
     }
 
@@ -92,10 +96,6 @@ struct TargetVariables: SportsbookTarget {
         let isDarkThemeString = isDarkTheme?.description ?? ""
         let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
         return urlString
-    }
-
-    static var appStoreUrl: String? {
-        return "https://apps.apple.com/fr/app/betsson/id6463237718"
     }
 
     static var secundaryMarketSpecsUrl: String? {

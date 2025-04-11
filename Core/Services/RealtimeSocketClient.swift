@@ -44,39 +44,15 @@ class RealtimeSocketClient {
     }
 
     func connectAfterAuth() {
-        // We can only connect to the ea
-        Auth.auth().addStateDidChangeListener { [weak self] _, user in 
+        // We can only connect to the DB after firebase auth (even if anon auth)
+        Auth.auth().addStateDidChangeListener { [weak self] _, user in
             if user != nil {
                 self?.connect()
             }
         }
-
-//        self.databaseReference.getData {  [weak self] error, snapshot in
-//            if let errorValue = error {
-//                print("DebugRouter databaseReference.getData error:", dump(errorValue))
-//            }
-//            else {
-//                self?.parseSnapshot(snapshot)
-//            }
-//        }
-
-//        self.databaseHandle = self.databaseReference.observe(.value, with: { [weak self] snapshot in
-//            self?.isObservingDatabase = true
-//            self?.parseSnapshot(snapshot)
-//        })
-        
-        // Timeout handling
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-//            if !(self?.isObservingDatabase ?? false) {
-//                print("DebugRouter Timeout: No data received from Firebase within 3 seconds")
-//                self?.connect()
-//            }
-//        }
-        
     }
     
     private func connect() {
-        
         self.databaseReference = Database.database(url: Self.url).reference()
 
         self.databaseHandle = self.databaseReference?.observe(.value, with: { [weak self] snapshot in

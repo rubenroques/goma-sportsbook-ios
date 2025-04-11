@@ -60,10 +60,14 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback, .mixMatch]
+        return [.cashback, .mixMatch, .featuredCompetitionInTabBar]
     }
 
-    static var shouldUserBlurEffectTabBar: Bool {
+    static var userRequiredFeatures: [SportsbookTargetFeatures] {
+        return []
+    }
+
+    static var shouldUseBlurEffectTabBar: Bool {
         return true
     }
 
@@ -93,10 +97,6 @@ struct TargetVariables: SportsbookTarget {
         return "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
     }
 
-    static var appStoreUrl: String? {
-        return "https://apps.apple.com/fr/app/betsson/id6463237718"
-    }
-
     static var secundaryMarketSpecsUrl: String? {
         return "https://betsson.fr/secondary_markets_config.json"
     }
@@ -113,6 +113,10 @@ struct TargetVariables: SportsbookTarget {
 
     static var registerFlowType: RegisterFlowType {
         return .betsson
+    }
+    
+    static var enableDeveloperSettings: Bool {
+        return false
     }
 }
 

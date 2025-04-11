@@ -42,7 +42,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     override init() {
         super.init()
 
-        if TargetVariables.hasFeatureEnabled(feature: .getLocationLimits) {
+        if TargetVariables.hasFeatureEnabled(feature: .lockOutOfLocation) {
             self.locationManager = CLLocationManager()
             self.locationManager?.delegate = self
             self.locationManager?.pausesLocationUpdatesAutomatically = true
