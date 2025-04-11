@@ -4949,6 +4949,18 @@
 		6547C88E2C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
 		6547C88F2C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
 		6547C8902C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
+		6556E5FD2DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E5FE2DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E5FF2DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6002DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6012DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6022DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6032DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6042DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6052DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6062DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6072DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
+		6556E6082DA96199004BDF68 /* StatsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */; };
 		655E1FFE2B21E8A500C95337 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E1FFD2B21E8A500C95337 /* NotificationService.swift */; };
 		655E20022B21E8A500C95337 /* NotificationsService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 655E1FFB2B21E8A500C95337 /* NotificationsService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		655E20072B21E9E100C95337 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */; };
@@ -9234,14 +9246,12 @@
 		CEA667652D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
 		CEA667662D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
 		CEA667672D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */; };
-		CEAB09A62D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB09A72D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB09A92D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB09AB2D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB09AC2D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB09AD2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB09AE2D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB09AF2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB09B02D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB09B12D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB09B22D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -9319,25 +9329,21 @@
 		CEAB09FC2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB098B2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift */; };
 		CEAB09FD2D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09682D77588D00541098 /* EmailVerificationTableViewCell.swift */; };
 		CEAB09FE2D77588D00541098 /* TodayMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09562D77588D00541098 /* TodayMatchesDataSource.swift */; };
-		CEAB09FF2D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0A002D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0A022D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0A042D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0A052D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0A062D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0A072D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0A082D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0A092D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0A0A2D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0A0B2D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
-		CEAB0A0C2D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0A0D2D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0A0F2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0A112D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0A122D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0A132D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0A142D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0A152D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0A162D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0A172D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0A182D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -9415,14 +9421,12 @@
 		CEAB0A622D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB098B2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift */; };
 		CEAB0A632D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09682D77588D00541098 /* EmailVerificationTableViewCell.swift */; };
 		CEAB0A642D77588D00541098 /* TodayMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09562D77588D00541098 /* TodayMatchesDataSource.swift */; };
-		CEAB0A652D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0A662D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0A682D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0A6A2D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0A6B2D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0A6C2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0A6D2D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0A6E2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0A6F2D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0A702D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0A712D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -9463,14 +9467,12 @@
 		CEAB0A952D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB098B2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift */; };
 		CEAB0A962D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09682D77588D00541098 /* EmailVerificationTableViewCell.swift */; };
 		CEAB0A972D77588D00541098 /* TodayMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09562D77588D00541098 /* TodayMatchesDataSource.swift */; };
-		CEAB0A982D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0A992D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0A9B2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0A9D2D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0A9E2D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0A9F2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0AA02D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0AA12D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0AA22D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0AA32D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0AA42D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -9511,25 +9513,21 @@
 		CEAB0AC82D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB098B2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift */; };
 		CEAB0AC92D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09682D77588D00541098 /* EmailVerificationTableViewCell.swift */; };
 		CEAB0ACA2D77588D00541098 /* TodayMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09562D77588D00541098 /* TodayMatchesDataSource.swift */; };
-		CEAB0ACB2D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0ACC2D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0ACE2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0AD02D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0AD12D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0AD22D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0AD32D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0AD42D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0AD52D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0AD62D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0AD72D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
-		CEAB0AD82D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0AD92D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0ADB2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0ADD2D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0ADE2D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0ADF2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0AE02D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0AE12D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0AE22D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0AE32D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0AE42D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -9570,14 +9568,12 @@
 		CEAB0B082D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB098B2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift */; };
 		CEAB0B092D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09682D77588D00541098 /* EmailVerificationTableViewCell.swift */; };
 		CEAB0B0A2D77588D00541098 /* TodayMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09562D77588D00541098 /* TodayMatchesDataSource.swift */; };
-		CEAB0B0B2D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0B0C2D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0B0E2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0B102D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0B112D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0B122D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0B132D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0B142D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0B152D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0B162D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0B172D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -9655,25 +9651,21 @@
 		CEAB0B612D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB098B2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift */; };
 		CEAB0B622D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09682D77588D00541098 /* EmailVerificationTableViewCell.swift */; };
 		CEAB0B632D77588D00541098 /* TodayMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB09562D77588D00541098 /* TodayMatchesDataSource.swift */; };
-		CEAB0B642D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0B652D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0B672D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0B692D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0B6A2D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0B6B2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0B6C2D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0B6D2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0B6E2D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0B6F2D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0B702D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
-		CEAB0B712D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEAB0B722D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEAB0B742D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEAB0B762D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEAB0B772D77588D00541098 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEAB0B782D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEAB0B792D77588D00541098 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEAB0B7A2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEAB0B7B2D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEAB0B7C2D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEAB0B7D2D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -10536,14 +10528,12 @@
 		CEB5D7372D88BC4D00B9D73F /* SimpleRegisterEmailCheckViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45BEA47B26F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib */; };
 		CEB5D7382D88BC4D00B9D73F /* RefusedAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8409726DE65BF00269B05 /* RefusedAccessViewController.xib */; };
 		CEB5D7392D88BC4D00B9D73F /* EmptyCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */; };
-		CEB5D73A2D88BC4D00B9D73F /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */; };
 		CEB5D73B2D88BC4D00B9D73F /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09732D77588D00541098 /* BannerTopCollectionViewCell.xib */; };
 		CEB5D73D2D88BC4D00B9D73F /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09622D77588D00541098 /* ActivationAlertCollectionViewCell.xib */; };
 		CEB5D73E2D88BC4D00B9D73F /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09692D77588D00541098 /* EmailVerificationTableViewCell.xib */; };
 		CEB5D73F2D88BC4D00B9D73F /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB099D2D77588D00541098 /* TitleTableViewHeader.xib */; };
 		CEB5D7402D88BC4D00B9D73F /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09702D77588D00541098 /* BannerScrollTableViewCell.xib */; };
 		CEB5D7412D88BC4D00B9D73F /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09A02D77588D00541098 /* TournamentTableViewHeader.xib */; };
-		CEB5D7422D88BC4D00B9D73F /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */; };
 		CEB5D7432D88BC4D00B9D73F /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB096D2D77588D00541098 /* BannerMatchCollectionViewCell.xib */; };
 		CEB5D7442D88BC4D00B9D73F /* EmailActivationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09672D77588D00541098 /* EmailActivationTableViewCell.xib */; };
 		CEB5D7452D88BC4D00B9D73F /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAB09652D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -11482,6 +11472,7 @@
 		6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardSecondaryMarketCollectionViewCell.swift; sourceTree = "<group>"; };
 		6547C87F2C63DBF00041409C /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		6547C8882C650BA50041409C /* CustomPageIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageIndicator.swift; sourceTree = "<group>"; };
+		6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsWebViewController.swift; sourceTree = "<group>"; };
 		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		655E1FFD2B21E8A500C95337 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		655E1FFF2B21E8A500C95337 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -12077,9 +12068,7 @@
 		CEAB097D2D77588D00541098 /* MatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
 		CEAB097F2D77588D00541098 /* MatchWidgetContainerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetContainerTableViewCell.swift; sourceTree = "<group>"; };
 		CEAB09812D77588D00541098 /* OddDoubleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddDoubleCollectionViewCell.swift; sourceTree = "<group>"; };
-		CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OddDoubleCollectionViewCell.xib; sourceTree = "<group>"; };
 		CEAB09832D77588D00541098 /* OddTripleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddTripleCollectionViewCell.swift; sourceTree = "<group>"; };
-		CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OddTripleCollectionViewCell.xib; sourceTree = "<group>"; };
 		CEAB09872D77588D00541098 /* OutrightCompetitionLargeLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightCompetitionLargeLineTableViewCell.swift; sourceTree = "<group>"; };
 		CEAB09882D77588D00541098 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightCompetitionLargeWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
 		CEAB098A2D77588D00541098 /* OutrightCompetitionLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightCompetitionLineTableViewCell.swift; sourceTree = "<group>"; };
@@ -16444,9 +16433,7 @@
 			isa = PBXGroup;
 			children = (
 				CEAB09812D77588D00541098 /* OddDoubleCollectionViewCell.swift */,
-				CEAB09822D77588D00541098 /* OddDoubleCollectionViewCell.xib */,
 				CEAB09832D77588D00541098 /* OddTripleCollectionViewCell.swift */,
-				CEAB09842D77588D00541098 /* OddTripleCollectionViewCell.xib */,
 			);
 			path = Odds;
 			sourceTree = "<group>";
@@ -16585,6 +16572,7 @@
 			children = (
 				CEAB099B2D77588D00541098 /* Cells */,
 				CEAB09A22D77588D00541098 /* Headers */,
+				6556E5FC2DA96199004BDF68 /* StatsWebViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -17607,14 +17595,12 @@
 				45290A1C2CB6AAFC00D69021 /* Roboto-MediumItalic.ttf in Resources */,
 				45290A1D2CB6AAFC00D69021 /* Roboto-Light.ttf in Resources */,
 				45290A1E2CB6AAFC00D69021 /* Roboto-Thin.ttf in Resources */,
-				CEAB0B712D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0B722D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0B742D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0B762D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0B772D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0B782D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0B792D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0B7A2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0B7B2D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0B7C2D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0B7D2D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -17725,14 +17711,12 @@
 				457CBBEA282D27D000ED0F00 /* EmptyCardTableViewCell.xib in Resources */,
 				457CBC64282D291200ED0F00 /* Colors.xcassets in Resources */,
 				457CBBEB282D27D000ED0F00 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
-				CEAB0A652D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0A662D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0A682D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0A6A2D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0A6B2D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0A6C2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0A6D2D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0A6E2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0A6F2D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0A702D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0A712D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -17877,14 +17861,12 @@
 				457CBE92282D2CD100ED0F00 /* EmptyCardTableViewCell.xib in Resources */,
 				457CBE94282D2CD100ED0F00 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				457CBE96282D2CD100ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				CEAB0A982D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0A992D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0A9B2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0A9D2D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0A9E2D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0A9F2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0AA02D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0AA12D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0AA22D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0AA32D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0AA42D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -18029,14 +18011,12 @@
 				4589C96A282024E400243547 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				4589C96C282024E400243547 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				4589C970282024E400243547 /* FullRegisterDocumentsViewController.xib in Resources */,
-				CEAB0AD82D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0AD92D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0ADB2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0ADD2D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0ADE2D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0ADF2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0AE02D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0AE12D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0AE22D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0AE32D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0AE42D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -18221,14 +18201,12 @@
 				45A33309298976BA008181E9 /* MaintenanceViewController.xib in Resources */,
 				45A3330B298976BA008181E9 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				45A3330D298976BA008181E9 /* CountrySelectorTableViewCell.xib in Resources */,
-				CEAB0A0C2D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0A0D2D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0A0F2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0A112D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0A122D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0A132D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0A142D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0A152D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0A162D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0A172D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0A182D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -18383,14 +18361,12 @@
 				CE6257FB2D5A17B7009C11D2 /* avatar1-light.json in Resources */,
 				CE6257FC2D5A17B7009C11D2 /* avatar1-dark.json in Resources */,
 				CE6257FD2D5A17B7009C11D2 /* avatar6-dark.json in Resources */,
-				CEAB0ACB2D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0ACC2D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0ACE2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0AD02D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0AD12D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0AD22D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0AD32D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0AD42D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0AD52D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0AD62D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0AD72D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -18555,14 +18531,12 @@
 				45F6BDFE2AB3732C00C81DE1 /* SearchViewController.xib in Resources */,
 				45F6BE002AB3732C00C81DE1 /* ForbiddenLocationViewController.xib in Resources */,
 				45290A022CB6AAFC00D69021 /* Roboto-Bold.ttf in Resources */,
-				CEAB0B642D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0B652D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0B672D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0B692D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0B6A2D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0B6B2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0B6C2D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0B6D2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0B6E2D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0B6F2D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0B702D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -18690,14 +18664,12 @@
 				A9C3431A28F9A74A0055360B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				45ED1AE92A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				45E46C1A2A08FEB900BB9B85 /* sports-loading.json in Resources */,
-				CEAB09FF2D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0A002D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0A022D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0A042D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0A052D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0A062D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0A072D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0A082D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0A092D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0A0A2D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0A0B2D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -18822,14 +18794,12 @@
 				CE12A44C2D31347E0022BDF7 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				CE12A44D2D31347E0022BDF7 /* RefusedAccessViewController.xib in Resources */,
 				CE12A44E2D31347E0022BDF7 /* EmptyCardTableViewCell.xib in Resources */,
-				CEAB0B0B2D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB0B0C2D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEAB0B0E2D77588D00541098 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEAB0B102D77588D00541098 /* EmailVerificationTableViewCell.xib in Resources */,
 				CEAB0B112D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB0B122D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB0B132D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB0B142D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB0B152D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB0B162D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB0B172D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -18989,7 +18959,6 @@
 				CEA5691E2D5A58D800696793 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				CEA5691F2D5A58D800696793 /* RefusedAccessViewController.xib in Resources */,
 				CEA569202D5A58D800696793 /* EmptyCardTableViewCell.xib in Resources */,
-				CEAB09A62D77588D00541098 /* OddTripleCollectionViewCell.xib in Resources */,
 				CEAB09A72D77588D00541098 /* BannerTopCollectionViewCell.xib in Resources */,
 				CEEFD4632D88CA2A00AE4301 /* Ubuntu-Bold.ttf in Resources */,
 				CEEFD4642D88CA2A00AE4301 /* Ubuntu-Medium.ttf in Resources */,
@@ -19000,7 +18969,6 @@
 				CEAB09AC2D77588D00541098 /* TitleTableViewHeader.xib in Resources */,
 				CEAB09AD2D77588D00541098 /* BannerScrollTableViewCell.xib in Resources */,
 				CEAB09AE2D77588D00541098 /* TournamentTableViewHeader.xib in Resources */,
-				CEAB09AF2D77588D00541098 /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEAB09B02D77588D00541098 /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEAB09B12D77588D00541098 /* EmailActivationTableViewCell.xib in Resources */,
 				CEAB09B22D77588D00541098 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -19184,14 +19152,12 @@
 				CEEFD4772D88CA3F00AE4301 /* Baloo2-Bold.ttf in Resources */,
 				CEEFD4782D88CA3F00AE4301 /* Baloo2-SemiBold.ttf in Resources */,
 				CEEFD4792D88CA3F00AE4301 /* Baloo2-Medium.ttf in Resources */,
-				CEB5D73A2D88BC4D00B9D73F /* OddTripleCollectionViewCell.xib in Resources */,
 				CEB5D73B2D88BC4D00B9D73F /* BannerTopCollectionViewCell.xib in Resources */,
 				CEB5D73D2D88BC4D00B9D73F /* ActivationAlertCollectionViewCell.xib in Resources */,
 				CEB5D73E2D88BC4D00B9D73F /* EmailVerificationTableViewCell.xib in Resources */,
 				CEB5D73F2D88BC4D00B9D73F /* TitleTableViewHeader.xib in Resources */,
 				CEB5D7402D88BC4D00B9D73F /* BannerScrollTableViewCell.xib in Resources */,
 				CEB5D7412D88BC4D00B9D73F /* TournamentTableViewHeader.xib in Resources */,
-				CEB5D7422D88BC4D00B9D73F /* OddDoubleCollectionViewCell.xib in Resources */,
 				CEB5D7432D88BC4D00B9D73F /* BannerMatchCollectionViewCell.xib in Resources */,
 				CEB5D7442D88BC4D00B9D73F /* EmailActivationTableViewCell.xib in Resources */,
 				CEB5D7452D88BC4D00B9D73F /* ActivationAlertScrollableTableViewCell.xib in Resources */,
@@ -19924,6 +19890,7 @@
 				CE794C432D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE794C442D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
 				CEAB0BA12D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
+				6556E6032DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEAB0BA22D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */,
 				CEAB0BA32D77588D00541098 /* TodayMatchesDataSource.swift in Sources */,
 				450B797428F58574009229E3 /* MyTicketsViewModel.swift in Sources */,
@@ -20296,6 +20263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A90FB7C429AF67B000D08A7C /* AlertType.swift in Sources */,
+				6556E6082DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				A9C2D52229C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				A99DE67B29A643F800AA24AA /* PaymentStatus.swift in Sources */,
 				A9A1B2CE2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
@@ -20758,6 +20726,7 @@
 				CE794C202D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE794C212D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
 				CEAB0A622D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
+				6556E6042DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEAB0A632D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */,
 				CEAB0A642D77588D00541098 /* TodayMatchesDataSource.swift in Sources */,
 				45C10FAA28772DA700037BBE /* ViewState.swift in Sources */,
@@ -21338,6 +21307,7 @@
 				A90229B628B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				457CBCF2282D2CD100ED0F00 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
 				457CBCF3282D2CD100ED0F00 /* BonusActiveTableViewCell.swift in Sources */,
+				6556E6062DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				457CBCF4282D2CD100ED0F00 /* GomaGamingService.swift in Sources */,
 				A9A5217E2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				457CBCF6282D2CD100ED0F00 /* AppDelegate.swift in Sources */,
@@ -22384,6 +22354,7 @@
 				CE794C352D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE794C362D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
 				CEAB0B082D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
+				6556E6002DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEAB0B092D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */,
 				CEAB0B0A2D77588D00541098 /* TodayMatchesDataSource.swift in Sources */,
 				4589C863282024E400243547 /* EventPartScore.swift in Sources */,
@@ -23198,6 +23169,7 @@
 				CE794C512D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE794C522D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
 				CEAB0A3C2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
+				6556E5FE2DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEAB0A3D2D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */,
 				CEAB0A3E2D77588D00541098 /* TodayMatchesDataSource.swift in Sources */,
 				45A3318D298976BA008181E9 /* RankingCellViewModel.swift in Sources */,
@@ -24012,6 +23984,7 @@
 				CE794C4A2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE794C4B2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
 				CEAB0AC92D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */,
+				6556E5FD2DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEAB0ACA2D77588D00541098 /* TodayMatchesDataSource.swift in Sources */,
 				45A6BCC028246A7500D9B416 /* BonusViewController.swift in Sources */,
 				45A6BCC128246A7500D9B416 /* ChatMessageView.swift in Sources */,
@@ -24826,6 +24799,7 @@
 				CE794C3C2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE794C3D2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
 				CEAB0B612D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
+				6556E6072DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEAB0B622D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */,
 				CEAB0B632D77588D00541098 /* TodayMatchesDataSource.swift in Sources */,
 				45F6BC392AB3732C00C81DE1 /* CGPoint+Extensions.swift in Sources */,
@@ -25414,6 +25388,7 @@
 				457C9F2A2A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				450FC4012A2B2589000DB866 /* BoostedArrowView.swift in Sources */,
 				A9C3411428F9A74A0055360B /* SuggestedBetViewModel.swift in Sources */,
+				6556E5FF2DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				A9A2924A2A61670100A7C334 /* UserReferralView.swift in Sources */,
 				A9C3411628F9A74A0055360B /* Authenticator.swift in Sources */,
 				A91A05BB29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
@@ -26460,6 +26435,7 @@
 				CE794C2E2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE794C2F2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
 				CEAB0B3B2D77588D00541098 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
+				6556E6012DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEAB0B3C2D77588D00541098 /* EmailVerificationTableViewCell.swift in Sources */,
 				CEAB0B3D2D77588D00541098 /* TodayMatchesDataSource.swift in Sources */,
 				CE12A2AA2D31347E0022BDF7 /* EventPartScore.swift in Sources */,
@@ -27224,6 +27200,7 @@
 				CEA5677A2D5A58D800696793 /* Theme.swift in Sources */,
 				CEA5677B2D5A58D800696793 /* UserActionView.swift in Sources */,
 				CEA5677C2D5A58D800696793 /* LoadingSpinnerViewController.swift in Sources */,
+				6556E6022DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEA5677D2D5A58D800696793 /* CashbackRootViewController.swift in Sources */,
 				CEA5677F2D5A58D800696793 /* UserBalance.swift in Sources */,
 				CEA567802D5A58D800696793 /* UserRankingPositionTableViewCell.swift in Sources */,
@@ -28085,6 +28062,7 @@
 				CE794C5F2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE794C602D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
 				CEB5D5912D88BC4D00B9D73F /* OddDoubleCollectionViewCell.swift in Sources */,
+				6556E6052DA96199004BDF68 /* StatsWebViewController.swift in Sources */,
 				CEB5D5922D88BC4D00B9D73F /* MatchLineTableViewCell.swift in Sources */,
 				CEB5D5932D88BC4D00B9D73F /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				CEB5D5942D88BC4D00B9D73F /* EmailVerificationTableViewCell.swift in Sources */,

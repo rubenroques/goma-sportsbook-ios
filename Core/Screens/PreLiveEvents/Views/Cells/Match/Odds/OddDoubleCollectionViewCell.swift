@@ -10,87 +10,52 @@ import ServicesProvider
 import Combine
 
 class OddDoubleCollectionViewCell: UICollectionViewCell {
-
-    @IBOutlet private weak var baseView: UIView!
-
-    lazy var gradientBorderView: GradientBorderView = {
-        var gradientBorderView = GradientBorderView()
-        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
-        gradientBorderView.gradientBorderWidth = 1
-        gradientBorderView.gradientCornerRadius = 9
-        
-        gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
-                                             UIColor.App.cardBorderLineGradient2,
-                                             UIColor.App.cardBorderLineGradient3]
-
-        return gradientBorderView
-    }()
-
-    lazy var liveGradientBorderView: GradientBorderView = {
-        var gradientBorderView = GradientBorderView()
-        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
-        gradientBorderView.gradientBorderWidth = 1
-        gradientBorderView.gradientCornerRadius = 9
-        
-        gradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
-                                             UIColor.App.liveBorderGradient2,
-                                             UIColor.App.liveBorderGradient1]
-        
-        return gradientBorderView
-    }()
     
-    @IBOutlet private weak var participantsNameLabel: UILabel!
-    @IBOutlet private weak var participantsCountryImageView: UIImageView!
-
-    @IBOutlet private weak var marketStatsStackView: UIStackView!
-    @IBOutlet private weak var marketNameLabel: UILabel!
-
-    @IBOutlet private weak var oddsStackView: UIStackView!
-
-    @IBOutlet private weak var leftBaseView: UIView!
-    @IBOutlet private weak var leftOddTitleLabel: UILabel!
-    @IBOutlet private weak var leftOddValueLabel: UILabel!
-
-    @IBOutlet private weak var rightBaseView: UIView!
-    @IBOutlet private weak var rightOddTitleLabel: UILabel!
-    @IBOutlet private weak var rightOddValueLabel: UILabel!
-
-    @IBOutlet private weak var suspendedBaseView: UIView!
-    @IBOutlet private weak var suspendedLabel: UILabel!
-
-    @IBOutlet private weak var leftUpChangeOddValueImage: UIImageView!
-    @IBOutlet private weak var leftDownChangeOddValueImage: UIImageView!
-    @IBOutlet private weak var rightUpChangeOddValueImage: UIImageView!
-    @IBOutlet private weak var rightDownChangeOddValueImage: UIImageView!
-
-    @IBOutlet private weak var statsBaseView: UIView!
-    @IBOutlet private weak var iconStatsImageView: UIImageView!
-    @IBOutlet private weak var homeCircleCaptionView: UIView!
-    @IBOutlet private weak var homeNameCaptionLabel: UILabel!
-    @IBOutlet private weak var awayCircleCaptionView: UIView!
-    @IBOutlet private weak var awayNameCaptionLabel: UILabel!
-    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    // MARK: Private Properties
+    private lazy var baseView: UIView = Self.createBaseView()
+    private lazy var gradientBorderView: GradientBorderView = Self.createGradientBorderView()
+    private lazy var liveGradientBorderView: GradientBorderView = Self.createLiveGradientBorderView()
     
-    //
-    // Design Constraints
-    @IBOutlet private weak var topMarginSpaceConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var bottomMarginSpaceConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var leadingMarginSpaceConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var trailingMarginSpaceConstraint: NSLayoutConstraint!
-
-    @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
-
-    var openStatsButton: OpenStatsButton?
+    private lazy var participantsCountryImageView: UIImageView = Self.createParticipantsCountryImageView()
+    private lazy var participantsNameLabel: UILabel = Self.createParticipantsNameLabel()
+    
+    private lazy var statsBaseView: UIView = Self.createStatsBaseView()
+    private lazy var iconStatsImageView: UIImageView = Self.createIconStatsImageView()
+    private lazy var homeCircleCaptionView: UIView = Self.createHomeCircleCaptionView()
+    private lazy var homeNameCaptionLabel: UILabel = Self.createHomeNameCaptionLabel()
+    private lazy var awayCircleCaptionView: UIView = Self.createAwayCircleCaptionView()
+    private lazy var awayNameCaptionLabel: UILabel = Self.createAwayNameCaptionLabel()
+    private lazy var cashbackIconImageView: UIImageView = Self.createCashbackIconImageView()
+    
+    private lazy var marketStatsStackView: UIStackView = Self.createMarketStatsStackView()
+    private lazy var marketNameLabel: UILabel = Self.createMarketNameLabel()
+    private lazy var marketInfoView: UIView = Self.createMarketInfoView()
+    
+    private lazy var oddsStackView: UIStackView = Self.createOddsStackView()
+    private lazy var leftBaseView: UIView = Self.createLeftBaseView()
+    private lazy var leftOddTitleLabel: UILabel = Self.createLeftOddTitleLabel()
+    private lazy var leftOddValueLabel: UILabel = Self.createLeftOddValueLabel()
+    private lazy var leftUpChangeOddValueImage: UIImageView = Self.createLeftUpChangeOddValueImage()
+    private lazy var leftDownChangeOddValueImage: UIImageView = Self.createLeftDownChangeOddValueImage()
+    
+    private lazy var rightBaseView: UIView = Self.createRightBaseView()
+    private lazy var rightOddTitleLabel: UILabel = Self.createRightOddTitleLabel()
+    private lazy var rightOddValueLabel: UILabel = Self.createRightOddValueLabel()
+    private lazy var rightUpChangeOddValueImage: UIImageView = Self.createRightUpChangeOddValueImage()
+    private lazy var rightDownChangeOddValueImage: UIImageView = Self.createRightDownChangeOddValueImage()
+    
+    private lazy var suspendedBaseView: UIView = Self.createSuspendedBaseView()
+    private lazy var suspendedLabel: UILabel = Self.createSuspendedLabel()
+    
+    // MARK: Constraints
+    private var topMarginSpaceConstraint: NSLayoutConstraint!
+    private var bottomMarginSpaceConstraint: NSLayoutConstraint!
+    private var leadingMarginSpaceConstraint: NSLayoutConstraint!
+    private var trailingMarginSpaceConstraint: NSLayoutConstraint!
+    private var headerHeightConstraint: NSLayoutConstraint!
+    private var buttonsHeightConstraint: NSLayoutConstraint!
     
     private var cachedCardsStyle: CardsStyle?
-    //
-
-    var matchStatsViewModel: MatchStatsViewModel?
-
-    var match: Match?
-    var market: Market?
-
     private var leftOutcome: Outcome?
     private var rightOutcome: Outcome?
 
@@ -115,65 +80,32 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    // MARK: Public properties
+    var openStatsButton: OpenStatsButton?
+    
+    var matchStatsViewModel: MatchStatsViewModel?
+
+    var match: Match?
+    var market: Market?
+    
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback
         }
     }
 
+    // MARK: Callbacks
     var tappedMatchWidgetAction: (() -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-
-        // Setup fonts
-        self.suspendedLabel.font = AppFont.with(type: .bold, size: 13)
-        self.participantsNameLabel.font = AppFont.with(type: .medium, size: 10)
-        self.homeNameCaptionLabel.font = AppFont.with(type: .medium, size: 9)
-        self.awayNameCaptionLabel.font = AppFont.with(type: .medium, size: 9)
-        self.leftOddValueLabel.font = AppFont.with(type: .bold, size: 13)
-        self.leftOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
-        self.rightOddValueLabel.font = AppFont.with(type: .bold, size: 13)
-        self.rightOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
-        self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
-
-        //
-        self.backgroundView?.backgroundColor = .clear
-        self.backgroundColor = .clear
-
-        self.baseView.bringSubviewToFront(self.suspendedBaseView)
+        self.setupSubviews()
 
         self.statsBaseView.isHidden = true
-
-        self.homeCircleCaptionView.layer.masksToBounds = true
-        self.awayCircleCaptionView.layer.masksToBounds = true
-
-        self.baseView.layer.cornerRadius = 9
-
-        self.oddsStackView.backgroundColor = .clear
-
-        self.suspendedBaseView.layer.cornerRadius = 4.5
-        self.leftBaseView.layer.cornerRadius = 4.5
-        self.rightBaseView.layer.cornerRadius = 4.5
-
-        self.participantsNameLabel.text = ""
-        self.marketNameLabel.text = ""
-
-        self.leftOddValueLabel.text = "-"
-        self.rightOddValueLabel.text = "-"
-
-        self.suspendedLabel.text = localized("suspended")
         
         self.suspendedBaseView.isHidden = true
-
-        self.leftUpChangeOddValueImage.alpha = 0.0
-        self.leftDownChangeOddValueImage.alpha = 0.0
-        self.rightUpChangeOddValueImage.alpha = 0.0
-        self.rightDownChangeOddValueImage.alpha = 0.0
-        
-        self.cashbackIconImageView.image = UIImage(named: "cashback_small_blue_icon")
-        self.cashbackIconImageView.contentMode = .scaleAspectFit
         
         self.hasCashback = false
 
@@ -191,51 +123,16 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
-
-        // Add gradient border
-        self.baseView.addSubview(self.gradientBorderView)
-        self.baseView.addSubview(self.liveGradientBorderView)
         
-        self.baseView.sendSubviewToBack(self.liveGradientBorderView)
-        self.baseView.sendSubviewToBack(self.gradientBorderView)
-
-        NSLayoutConstraint.activate([
-            self.baseView.leadingAnchor.constraint(equalTo: self.gradientBorderView.leadingAnchor),
-            self.baseView.trailingAnchor.constraint(equalTo: self.gradientBorderView.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: self.gradientBorderView.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: self.gradientBorderView.bottomAnchor),
-            
-            self.baseView.leadingAnchor.constraint(equalTo: self.liveGradientBorderView.leadingAnchor),
-            self.baseView.trailingAnchor.constraint(equalTo: self.liveGradientBorderView.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: self.liveGradientBorderView.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: self.liveGradientBorderView.bottomAnchor),
-        ])
-        
-        self.gradientBorderView.isHidden = true
-        self.liveGradientBorderView.isHidden = true
-        
-        //
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
         
     }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        self.adjustDesignToCardStyle()
-        self.setupWithTheme()
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        self.baseView.layer.cornerRadius = 9
-
-        self.homeCircleCaptionView.layer.cornerRadius = self.homeCircleCaptionView.frame.size.width / 2
-        self.awayCircleCaptionView.layer.cornerRadius = self.awayCircleCaptionView.frame.size.width / 2
-    }
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
 
@@ -306,16 +203,47 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
     }
+    
+    // MARK: Layout and theme
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
 
+        self.adjustDesignToCardStyle()
+        self.setupWithTheme()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.baseView.layer.cornerRadius = 9
+
+        self.homeCircleCaptionView.layer.cornerRadius = self.homeCircleCaptionView.frame.size.width / 2
+        self.awayCircleCaptionView.layer.cornerRadius = self.awayCircleCaptionView.frame.size.width / 2
+        
+        self.baseView.layer.cornerRadius = 9
+
+        self.suspendedBaseView.layer.cornerRadius = 4.5
+        self.leftBaseView.layer.cornerRadius = 4.5
+        self.rightBaseView.layer.cornerRadius = 4.5
+    }
+    
     func setupWithTheme() {
+        self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.baseView.backgroundColor = UIColor.App.backgroundCards
 
         self.participantsNameLabel.textColor = UIColor.App.textPrimary
+        
+        self.marketInfoView.backgroundColor = .clear
         self.marketNameLabel.textColor = UIColor.App.textPrimary
 
         self.leftBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.leftOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.leftOddValueLabel.textColor = UIColor.App.textPrimary
+        
         self.rightBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.rightOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.rightOddValueLabel.textColor = UIColor.App.textPrimary
 
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
@@ -354,7 +282,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         
         self.openStatsButton?.setupWithTheme()
     }
-
+    
     private func adjustDesignToCardStyle() {
 
         if self.cachedCardsStyle == StyleHelper.cardsStyleActive() {
@@ -401,7 +329,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.leftOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.rightOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
-
+    
+    // MARK: Functions
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String, isLive: Bool) {
 
         if isLive {
@@ -583,14 +512,10 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                 })
         }
         
-        self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match) 
+        self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
 
     }
-
-    @IBAction private func didTapMatchView(_ sender: Any) {
-        self.tappedMatchWidgetAction?()
-    }
-
+    
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
@@ -626,9 +551,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
-
-    //
-    //
+    
     private func showMarketButtons() {
         self.suspendedBaseView.isHidden = true
     }
@@ -642,19 +565,36 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.suspendedLabel.text = localized("closed_market")
         self.suspendedBaseView.isHidden = false
     }
-
-    //
-    //
+    
     func selectLeftOddButton() {
         self.leftBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.leftOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
         self.leftOddValueLabel.textColor = UIColor.App.buttonTextPrimary
     }
+    
     func deselectLeftOddButton() {
         self.leftBaseView.backgroundColor = UIColor.App.backgroundOdds
         self.leftOddTitleLabel.textColor = UIColor.App.textPrimary
         self.leftOddValueLabel.textColor = UIColor.App.textPrimary
     }
+    
+    func selectRightOddButton() {
+        self.rightBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.rightOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.rightOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+    }
+    
+    func deselectRightOddButton() {
+        self.rightBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.rightOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.rightOddValueLabel.textColor = UIColor.App.textPrimary
+    }
+    
+    // MARK: Actions
+    @objc private func didTapMatchView(_ sender: Any) {
+        self.tappedMatchWidgetAction?()
+    }
+    
     @objc func didTapLeftOddButton() {
 
         guard
@@ -699,17 +639,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             self.didLongPressOdd?(bettingTicket)
         }
     }
-
-    func selectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        self.rightOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
-        self.rightOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-    }
-    func deselectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App.backgroundOdds
-        self.rightOddTitleLabel.textColor = UIColor.App.textPrimary
-        self.rightOddValueLabel.textColor = UIColor.App.textPrimary
-    }
+    
     @objc func didTapRightOddButton() {
 
         guard
@@ -754,7 +684,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             self.didLongPressOdd?(bettingTicket)
         }
     }
-
 }
 
 extension OddDoubleCollectionViewCell {
@@ -899,153 +828,448 @@ extension OddDoubleCollectionViewCell {
     }
 }
 
-import WebKit
-
-class StatsWebViewController: UIViewController, WKNavigationDelegate {
+extension OddDoubleCollectionViewCell {
     
-    private var loadingView: UIActivityIndicatorView!
-    private var webView: WKWebView!
-    private var webViewHeightConstraint: NSLayoutConstraint!
-    private var closeButton: UIButton!
-
-    private var matchId: String
-    private var marketTypeId: String
+    private static func createBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 9
+        view.clipsToBounds = true
+        return view
+    }
     
-    private var marketStatsSubscriber: AnyCancellable?
-    
-    init(matchId: String, marketTypeId: String) {
-        self.matchId = matchId
-        self.marketTypeId = marketTypeId
-        super.init(nibName: nil, bundle: nil)
+    private static func createGradientBorderView() -> GradientBorderView {
+        let gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 1
+        gradientBorderView.gradientCornerRadius = 9
+        gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                             UIColor.App.cardBorderLineGradient2,
+                                             UIColor.App.cardBorderLineGradient3]
+        gradientBorderView.isHidden = true
+        return gradientBorderView
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    private static func createLiveGradientBorderView() -> GradientBorderView {
+        let gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 1
+        gradientBorderView.gradientCornerRadius = 9
+        gradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
+                                             UIColor.App.liveBorderGradient2,
+                                             UIColor.App.liveBorderGradient1]
+        gradientBorderView.isHidden = true
+        return gradientBorderView
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+    private static func createParticipantsNameLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .medium, size: 10)
+        label.textColor = UIColor.App.textPrimary
+        label.text = ""
+        return label
+    }
 
-        self.setupCloseButton()
+    private static func createParticipantsCountryImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
 
-        let webConfiguration = WKWebViewConfiguration()
-        self.webView = WKWebView(frame: .zero, configuration: webConfiguration)
-        self.webView.navigationDelegate = self
-        self.webView.isOpaque = false
+    private static func createMarketStatsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.distribution = .equalSpacing
+        return stackView
+    }
 
-        self.webView.backgroundColor = UIColor.clear
-        self.webView.scrollView.backgroundColor = UIColor.clear
-        self.webView.scrollView.isScrollEnabled = false
-        
-        self.view.addSubview(webView)
+    private static func createMarketNameLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textColor = UIColor.App.textPrimary
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.minimumScaleFactor = 0.8
+        label.adjustsFontSizeToFitWidth = true
+        label.text = ""
+        return label
+    }
 
-        self.webView.translatesAutoresizingMaskIntoConstraints = false
+    private static func createMarketInfoView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createOddsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 12
+        stackView.distribution = .fillEqually
+        return stackView
+    }
+
+    private static func createLeftBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 4.5
+        return view
+    }
+
+    private static func createLeftOddTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .medium, size: 10)
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createLeftOddValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 13)
+        label.textAlignment = .center
+        label.text = "-"
+        return label
+    }
+
+    private static func createLeftUpChangeOddValueImage() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "odd_up_icon")
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        imageView.alpha = 0.0
+        return imageView
+    }
+
+    private static func createLeftDownChangeOddValueImage() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "odd_down_icon")
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        imageView.alpha = 0.0
+        return imageView
+    }
+
+    private static func createRightBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 4.5
+        return view
+    }
+
+    private static func createRightOddTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .medium, size: 10)
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createRightOddValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 13)
+        label.textAlignment = .center
+        label.text = "-"
+        return label
+    }
+
+    private static func createRightUpChangeOddValueImage() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "odd_up_icon")
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        imageView.alpha = 0.0
+        return imageView
+    }
+
+    private static func createRightDownChangeOddValueImage() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "odd_down_icon")
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        imageView.alpha = 0.0
+        return imageView
+    }
+
+    private static func createSuspendedBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 4.5
+        view.isHidden = true
+        return view
+    }
+
+    private static func createSuspendedLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 13)
+        label.text = localized("suspended")
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createStatsBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    private static func createIconStatsImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "market_stats_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createHomeCircleCaptionView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 3
+        view.clipsToBounds = true
+        view.layer.masksToBounds = true
+        return view
+    }
+
+    private static func createHomeNameCaptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .medium, size: 9)
+        return label
+    }
+
+    private static func createAwayCircleCaptionView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 3
+        view.clipsToBounds = true
+        view.layer.masksToBounds = true
+        return view
+    }
+
+    private static func createAwayNameCaptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .medium, size: 9)
+        return label
+    }
+
+    private static func createCashbackIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "cashback_small_blue_icon")
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        return imageView
+    }
+    
+    // MARK: - Setup
+    private func setupSubviews() {
+        self.contentView.addSubview(self.baseView)
         
-        self.loadingView = UIActivityIndicatorView()
-        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
+        self.baseView.addSubview(self.gradientBorderView)
+        self.baseView.addSubview(self.liveGradientBorderView)
         
-        self.view.addSubview(self.loadingView)
+        self.baseView.addSubview(self.participantsCountryImageView)
+        self.baseView.addSubview(self.participantsNameLabel)
         
-        self.webViewHeightConstraint = self.webView.heightAnchor.constraint(equalToConstant: 0)
+        self.baseView.addSubview(self.marketInfoView)
+        self.marketInfoView.addSubview(self.marketStatsStackView)
+        self.marketStatsStackView.addArrangedSubview(self.marketNameLabel)
         
+        self.baseView.addSubview(self.oddsStackView)
+        self.oddsStackView.addArrangedSubview(self.leftBaseView)
+        self.oddsStackView.addArrangedSubview(self.rightBaseView)
+        
+        self.leftBaseView.addSubview(self.leftOddTitleLabel)
+        self.leftBaseView.addSubview(self.leftOddValueLabel)
+        self.leftBaseView.addSubview(self.leftUpChangeOddValueImage)
+        self.leftBaseView.addSubview(self.leftDownChangeOddValueImage)
+        
+        self.rightBaseView.addSubview(self.rightOddTitleLabel)
+        self.rightBaseView.addSubview(self.rightOddValueLabel)
+        self.rightBaseView.addSubview(self.rightUpChangeOddValueImage)
+        self.rightBaseView.addSubview(self.rightDownChangeOddValueImage)
+        
+        self.baseView.addSubview(self.suspendedBaseView)
+        self.suspendedBaseView.addSubview(self.suspendedLabel)
+        
+        self.baseView.addSubview(self.statsBaseView)
+        self.statsBaseView.addSubview(self.iconStatsImageView)
+        self.statsBaseView.addSubview(self.homeCircleCaptionView)
+        self.statsBaseView.addSubview(self.homeNameCaptionLabel)
+        self.statsBaseView.addSubview(self.awayCircleCaptionView)
+        self.statsBaseView.addSubview(self.awayNameCaptionLabel)
+        
+        self.baseView.addSubview(self.cashbackIconImageView)
+        
+        self.baseView.bringSubviewToFront(self.suspendedBaseView)
+        
+        self.initConstraints()
+    }
+    
+    private func initConstraints() {
+        // Base view constraints
         NSLayoutConstraint.activate([
-            self.webView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
-            self.webView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.webView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.webViewHeightConstraint,
+            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+        ])
+        
+        // Gradient border constraints
+        NSLayoutConstraint.activate([
+            self.gradientBorderView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.gradientBorderView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.gradientBorderView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.gradientBorderView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
             
-            self.loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            self.liveGradientBorderView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.liveGradientBorderView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.liveGradientBorderView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.liveGradientBorderView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor)
         ])
-
-        self.loadingView.startAnimating()
         
-        let theme = self.traitCollection.userInterfaceStyle
-        self.marketStatsSubscriber = Env.servicesProvider.getStatsWidget(eventId: self.matchId,
-                                                                         marketTypeName: self.marketTypeId,
-                                                                         isDarkTheme: theme == .dark ? true : false)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("getStatsWidget completion \(completion)")
-            } receiveValue: { [weak self] statsWidgetRenderDataType in
-                switch statsWidgetRenderDataType {
-                case .url:
-                    break
-                case .htmlString(let url, let htmlString):
-                    self?.webView.loadHTMLString(htmlString, baseURL: url)
-                }
-            }
+        // Header components constraints
+        self.leadingMarginSpaceConstraint = self.participantsCountryImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 12)
+        self.topMarginSpaceConstraint = self.participantsCountryImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 6)
+        self.headerHeightConstraint = self.participantsCountryImageView.heightAnchor.constraint(equalToConstant: 16)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(closeButtonTapped))
-        self.view.addGestureRecognizer(tapGesture)
-    }
-
-    private func setupCloseButton() {
-        self.closeButton = UIButton(type: .custom)
-        
-        let closeImage = UIImage(named: "arrow_close_icon")?.withRenderingMode(.alwaysTemplate)
-        
-        self.closeButton.setImage(closeImage, for: .normal)
-        self.closeButton.imageView?.setImageColor(color: UIColor.App.buttonTextPrimary)
-        self.view.addSubview(self.closeButton)
-
-        self.closeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            self.closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            self.closeButton.widthAnchor.constraint(equalToConstant: 40),
-            self.closeButton.heightAnchor.constraint(equalToConstant: 40)
+            self.leadingMarginSpaceConstraint,
+            self.topMarginSpaceConstraint,
+            self.headerHeightConstraint,
+            self.participantsCountryImageView.widthAnchor.constraint(equalTo: self.participantsCountryImageView.heightAnchor),
+            
+            self.participantsNameLabel.leadingAnchor.constraint(equalTo: self.participantsCountryImageView.trailingAnchor, constant: 6),
+            self.participantsNameLabel.centerYAnchor.constraint(equalTo: self.participantsCountryImageView.centerYAnchor, constant: 1),
+            self.participantsNameLabel.trailingAnchor.constraint(equalTo: self.cashbackIconImageView.leadingAnchor, constant: -6),
+            
+            self.cashbackIconImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.participantsCountryImageView.centerYAnchor),
+            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.cashbackIconImageView.heightAnchor.constraint(equalToConstant: 20)
         ])
-
-        self.closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        
+        // Stats base view constraints
+        NSLayoutConstraint.activate([
+            self.statsBaseView.leadingAnchor.constraint(equalTo: self.participantsCountryImageView.leadingAnchor),
+            self.statsBaseView.trailingAnchor.constraint(equalTo: self.participantsNameLabel.trailingAnchor),
+            self.statsBaseView.topAnchor.constraint(equalTo: self.participantsCountryImageView.topAnchor),
+            self.statsBaseView.bottomAnchor.constraint(equalTo: self.participantsCountryImageView.bottomAnchor),
+            
+            self.iconStatsImageView.leadingAnchor.constraint(equalTo: self.statsBaseView.leadingAnchor),
+            self.iconStatsImageView.centerYAnchor.constraint(equalTo: self.statsBaseView.centerYAnchor),
+            self.iconStatsImageView.topAnchor.constraint(equalTo: self.statsBaseView.topAnchor),
+            
+            self.homeCircleCaptionView.leadingAnchor.constraint(equalTo: self.iconStatsImageView.trailingAnchor, constant: 4),
+            self.homeCircleCaptionView.centerYAnchor.constraint(equalTo: self.statsBaseView.centerYAnchor),
+            self.homeCircleCaptionView.widthAnchor.constraint(equalToConstant: 6),
+            self.homeCircleCaptionView.heightAnchor.constraint(equalToConstant: 6),
+            
+            self.homeNameCaptionLabel.leadingAnchor.constraint(equalTo: self.homeCircleCaptionView.trailingAnchor, constant: 3),
+            self.homeNameCaptionLabel.centerYAnchor.constraint(equalTo: self.statsBaseView.centerYAnchor),
+            
+            self.awayCircleCaptionView.leadingAnchor.constraint(equalTo: self.homeNameCaptionLabel.trailingAnchor, constant: 6),
+            self.awayCircleCaptionView.centerYAnchor.constraint(equalTo: self.statsBaseView.centerYAnchor),
+            self.awayCircleCaptionView.widthAnchor.constraint(equalToConstant: 6),
+            self.awayCircleCaptionView.heightAnchor.constraint(equalToConstant: 6),
+            
+            self.awayNameCaptionLabel.leadingAnchor.constraint(equalTo: self.awayCircleCaptionView.trailingAnchor, constant: 3),
+            self.awayNameCaptionLabel.centerYAnchor.constraint(equalTo: self.statsBaseView.centerYAnchor)
+        ])
+        
+        // Market info view constraints
+        NSLayoutConstraint.activate([
+            self.marketInfoView.leadingAnchor.constraint(equalTo: self.participantsCountryImageView.leadingAnchor),
+            self.marketInfoView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12),
+            self.marketInfoView.topAnchor.constraint(equalTo: self.participantsCountryImageView.bottomAnchor, constant: 6),
+            
+            self.marketStatsStackView.leadingAnchor.constraint(equalTo: self.marketInfoView.leadingAnchor),
+            self.marketStatsStackView.trailingAnchor.constraint(equalTo: self.marketInfoView.trailingAnchor),
+            self.marketStatsStackView.topAnchor.constraint(equalTo: self.marketInfoView.topAnchor),
+            self.marketStatsStackView.bottomAnchor.constraint(equalTo: self.marketInfoView.bottomAnchor)
+        ])
+        
+        // Odds stack view constraints
+        self.buttonsHeightConstraint = self.oddsStackView.heightAnchor.constraint(equalToConstant: 40)
+        self.trailingMarginSpaceConstraint = self.baseView.trailingAnchor.constraint(equalTo: self.oddsStackView.trailingAnchor, constant: 12)
+        self.bottomMarginSpaceConstraint = self.baseView.bottomAnchor.constraint(equalTo: self.oddsStackView.bottomAnchor, constant: 12)
+        
+        NSLayoutConstraint.activate([
+            self.oddsStackView.leadingAnchor.constraint(equalTo: self.participantsCountryImageView.leadingAnchor),
+            self.trailingMarginSpaceConstraint,
+            self.oddsStackView.topAnchor.constraint(equalTo: self.marketInfoView.bottomAnchor, constant: 4),
+            self.bottomMarginSpaceConstraint,
+            self.buttonsHeightConstraint
+        ])
+        
+        // Left odd labels constraints
+        NSLayoutConstraint.activate([
+            self.leftOddTitleLabel.leadingAnchor.constraint(equalTo: self.leftBaseView.leadingAnchor, constant: 2),
+            self.leftOddTitleLabel.trailingAnchor.constraint(equalTo: self.leftBaseView.trailingAnchor, constant: -2),
+            self.leftOddTitleLabel.topAnchor.constraint(equalTo: self.leftBaseView.topAnchor, constant: 6),
+            self.leftOddTitleLabel.heightAnchor.constraint(equalToConstant: 14),
+            
+            self.leftOddValueLabel.leadingAnchor.constraint(equalTo: self.leftBaseView.leadingAnchor, constant: 2),
+            self.leftOddValueLabel.trailingAnchor.constraint(equalTo: self.leftBaseView.trailingAnchor, constant: -2),
+            self.leftOddValueLabel.topAnchor.constraint(equalTo: self.leftOddTitleLabel.bottomAnchor),
+            
+            self.leftUpChangeOddValueImage.trailingAnchor.constraint(equalTo: self.leftBaseView.trailingAnchor, constant: -6),
+            self.leftUpChangeOddValueImage.topAnchor.constraint(equalTo: self.leftBaseView.topAnchor, constant: 14),
+            self.leftUpChangeOddValueImage.widthAnchor.constraint(equalToConstant: 11),
+            self.leftUpChangeOddValueImage.heightAnchor.constraint(equalToConstant: 9),
+            
+            self.leftDownChangeOddValueImage.trailingAnchor.constraint(equalTo: self.leftBaseView.trailingAnchor, constant: -6),
+            self.leftDownChangeOddValueImage.bottomAnchor.constraint(equalTo: self.leftBaseView.bottomAnchor, constant: -14),
+            self.leftDownChangeOddValueImage.widthAnchor.constraint(equalToConstant: 11),
+            self.leftDownChangeOddValueImage.heightAnchor.constraint(equalToConstant: 9)
+        ])
+        
+        // Right odd labels constraints
+        NSLayoutConstraint.activate([
+            self.rightOddTitleLabel.leadingAnchor.constraint(equalTo: self.rightBaseView.leadingAnchor, constant: 2),
+            self.rightOddTitleLabel.trailingAnchor.constraint(equalTo: self.rightBaseView.trailingAnchor, constant: -2),
+            self.rightOddTitleLabel.topAnchor.constraint(equalTo: self.rightBaseView.topAnchor, constant: 6),
+            self.rightOddTitleLabel.heightAnchor.constraint(equalToConstant: 14),
+            
+            self.rightOddValueLabel.leadingAnchor.constraint(equalTo: self.rightBaseView.leadingAnchor, constant: 2),
+            self.rightOddValueLabel.trailingAnchor.constraint(equalTo: self.rightBaseView.trailingAnchor, constant: -2),
+            self.rightOddValueLabel.topAnchor.constraint(equalTo: self.rightOddTitleLabel.bottomAnchor),
+            
+            self.rightUpChangeOddValueImage.trailingAnchor.constraint(equalTo: self.rightBaseView.trailingAnchor, constant: -6),
+            self.rightUpChangeOddValueImage.topAnchor.constraint(equalTo: self.rightBaseView.topAnchor, constant: 14),
+            self.rightUpChangeOddValueImage.widthAnchor.constraint(equalToConstant: 11),
+            self.rightUpChangeOddValueImage.heightAnchor.constraint(equalToConstant: 9),
+            
+            self.rightDownChangeOddValueImage.trailingAnchor.constraint(equalTo: self.rightBaseView.trailingAnchor, constant: -6),
+            self.rightDownChangeOddValueImage.bottomAnchor.constraint(equalTo: self.rightBaseView.bottomAnchor, constant: -14),
+            self.rightDownChangeOddValueImage.widthAnchor.constraint(equalToConstant: 11),
+            self.rightDownChangeOddValueImage.heightAnchor.constraint(equalToConstant: 9)
+        ])
+        
+        // Suspended view constraints
+        NSLayoutConstraint.activate([
+            self.suspendedBaseView.leadingAnchor.constraint(equalTo: self.oddsStackView.leadingAnchor),
+            self.suspendedBaseView.trailingAnchor.constraint(equalTo: self.oddsStackView.trailingAnchor),
+            self.suspendedBaseView.topAnchor.constraint(equalTo: self.oddsStackView.topAnchor),
+            self.suspendedBaseView.bottomAnchor.constraint(equalTo: self.oddsStackView.bottomAnchor),
+            
+            self.suspendedLabel.centerXAnchor.constraint(equalTo: self.suspendedBaseView.centerXAnchor),
+            self.suspendedLabel.centerYAnchor.constraint(equalTo: self.suspendedBaseView.centerYAnchor)
+        ])
     }
-
-    @objc private func closeButtonTapped() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        self.loadingView.startAnimating()
-    }
-    
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        self.loadingView.stopAnimating()
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        self.webView.evaluateJavaScript("document.readyState", completionHandler: { [weak self] complete, error in
-            if complete != nil {
-                self?.recalculateWebview()
-            }
-            else if let error = error {
-                Logger.log("Match details WKWebView didFinish error \(error)")
-            }
-        })
-    }
-    
-    private func recalculateWebview() {
-        executeDelayed(0.2) {
-             self.webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] height, error in
-                 if let heightFloat = height as? CGFloat {
-                     self?.redrawWebView(withHeight: heightFloat)
-                 }
-                 if let error = error {
-                     Logger.log("Match details WKWebView didFinish error \(error)")
-                 }
-             })
-         }
-     }
-     
-     private func redrawWebView(withHeight heigth: CGFloat) {
-         if heigth < 10 {
-            self.recalculateWebview()
-         }
-         else {
-             self.webViewHeightConstraint.constant = heigth
-             self.view.layoutIfNeeded()
-             self.loadingView.stopAnimating()
-         }
-     }
-         
 }
