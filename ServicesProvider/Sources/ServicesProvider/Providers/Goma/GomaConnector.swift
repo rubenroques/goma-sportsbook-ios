@@ -34,17 +34,30 @@ class GomaConnector: Connector {
     }
 
     var authenticator: GomaAPIAuthenticator
+    
+    private static var defaultSessionConfiguration: URLSessionConfiguration {
+        var configuration = URLSessionConfiguration.ephemeral
+        configuration.httpMaximumConnectionsPerHost = 1
+        configuration.waitsForConnectivity = true
+        configuration.httpShouldUsePipelining = false
+        return configuration
+    }
+    
+    private static var defaultSession: URLSession {
+        return URLSession(configuration: Self.defaultSessionConfiguration)
+    }
+    
     private let session: URLSession
     private let decoder: JSONDecoder
 
-    convenience init(session: URLSession = URLSession(configuration: URLSessionConfiguration.default),
+    convenience init(session: URLSession = GomaConnector.defaultSession,
          decoder: JSONDecoder = JSONDecoder(),
          deviceIdentifier: String) {
 
         self.init(gomaAPIAuthenticator: GomaAPIAuthenticator(deviceIdentifier: deviceIdentifier))
     }
 
-    init(session: URLSession = URLSession(configuration: URLSessionConfiguration.default),
+    init(session: URLSession = GomaConnector.defaultSession,
          decoder: JSONDecoder = JSONDecoder(),
          gomaAPIAuthenticator: GomaAPIAuthenticator) {
 
@@ -89,7 +102,7 @@ class GomaConnector: Connector {
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
         
-        request.assumesHTTP3Capable = true
+        request.setValue("close", forHTTPHeaderField: "Connection")
 
         return self.authenticator.publisherWithValidToken()
             .flatMap { token -> AnyPublisher<Data, Error> in

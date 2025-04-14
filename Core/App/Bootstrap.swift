@@ -91,7 +91,5 @@ class Bootstrap {
                 environment.favoritesManager.getUserFavorites()
             })
             .store(in: &self.cancellables)
-
     }
-    
 }

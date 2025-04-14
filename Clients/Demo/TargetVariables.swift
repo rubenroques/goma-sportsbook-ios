@@ -125,22 +125,22 @@ extension TargetVariables {
 
     // MARK: - URLEndpointProvider Implementation
     static var links: URLEndpoint.Links {
-        URLEndpoint.Links(
-            api: URLEndpoint.APIs(
+        URLEndpoint.Links.init(
+            api: URLEndpoint.APIs.init(
                 gomaGaming: "https://www.gomadevelopment.pt/",
                 sportsbook: "https://www.gomadevelopment.pt/",
                 firebase: "https://www.gomadevelopment.pt/",
                 casino: "https://www.gomadevelopment.pt/",
                 promotions: "https://www.gomadevelopment.pt/",
                 affiliateSystem: "http://www.partenaire-betsson.fr/",
-                secundaryMarketSpecsUrl: "https://www.gomadevelopment.pt/",
+                secundaryMarketSpecsUrl: "https://www.gomadevelopment.pt/"
             ),
-            support: URLEndpoint.Support(
+            support: URLEndpoint.Support.init(
                 helpCenter: "https://www.gomadevelopment.pt/",
                 zendesk: "https://www.gomadevelopment.pt/",
-                customerSupport: "https://www.gomadevelopment.pt/",
+                customerSupport: "https://www.gomadevelopment.pt/"
             ),
-            responsibleGaming: URLEndpoint.ResponsibleGaming(
+            responsibleGaming: URLEndpoint.ResponsibleGaming.init(
                 gamblingAddictionHelpline: "https://www.gomadevelopment.pt/",
                 gamblingBlockingSoftware: "https://www.gomadevelopment.pt/",
                 gamblingBehaviorSelfAssessment: "https://www.gomadevelopment.pt/",
@@ -152,16 +152,15 @@ extension TargetVariables {
                 parentalControl: "https://www.gomadevelopment.pt/",
                 addictionTreatmentCenter: "https://www.gomadevelopment.pt/",
                 selfExclusionService: "https://www.gomadevelopment.pt/",
-                gamblingHabitsApp: "https://www.gomadevelopment.pt/",
+                gamblingHabitsApp: "https://www.gomadevelopment.pt/"
             ),
-
-            socialMedia: URLEndpoint.SocialMedia(
+            socialMedia: URLEndpoint.SocialMedia.init(
                 facebook: "https://www.gomadevelopment.pt/",
                 twitter: "https://www.gomadevelopment.pt/",
                 youtube: "https://www.gomadevelopment.pt/",
-                instagram: "https://www.gomadevelopment.pt/",
+                instagram: "https://www.gomadevelopment.pt/"
             ),
-            legalAndInfo: URLEndpoint.LegalAndInfo(
+            legalAndInfo: URLEndpoint.LegalAndInfo.init(
                 responsibleGambling: "https://www.gomadevelopment.pt/",
                 privacyPolicy: "https://www.gomadevelopment.pt/",
                 cookiePolicy: "https://www.gomadevelopment.pt/",

@@ -976,7 +976,6 @@ extension GomaAPIProvider: EventsProvider {
     
     //
     //
-    //
     func subscribeOutrightEvent(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
