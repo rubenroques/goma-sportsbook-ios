@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import OrderedCollections
 import SocketIO
+import ServicesProvider
 
 class GomaGamingSocialServiceClient {
 
@@ -31,9 +32,9 @@ class GomaGamingSocialServiceClient {
                 return dictionary.values.map({$0.users})
             }
             .map { users -> [Bool] in
-                let userId = Env.gomaNetworkClient.getCurrentToken()?.userId ?? -1
+                let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
                 return users
-                    .map({!$0.contains(String(userId))})
+                    .map({!$0.contains(userId)})
                     .filter({ $0 })
             }
             .map(\.count)
@@ -48,19 +49,26 @@ class GomaGamingSocialServiceClient {
     var allDataSubscribed: PassthroughSubject<Void, Never> = .init()
     var chatPage: Int = 1
 
-    var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
-    
+    var locations: OrderedDictionary<String, LocationDetailed> = [:]
+    var socialAppNamesSupported: [String] = ["Facebook", "Telegram", "Twitter", "Whatsapp", "Discord", "Messenger"]
+    var socialAppNamesSchemesSupported: [String] = ["fb://", "tg://", "twitter://", "whatsapp://", "discord://", "fb-messenger://"]
+    var socialAppSharesAvailable: [String] = ["https://www.facebook.com/sharer.php?u=%url", "tg://msg_url?url=%url", "https://twitter.com/intent/tweet?url=%url", "whatsapp://send/?text=%url", "", ""]
     var socialAppsInfo: [SocialAppInfo] = []
 
-    // Followers
+    // Followees
     var followingUsersPublisher: CurrentValueSubject<[Follower], Never> = .init([])
     var refetchFollowingUsersPublisher: PassthroughSubject<Void, Never> = .init()
+    
+    // Followers
+    var followersPublisher: CurrentValueSubject<[Follower], Never> = .init([])
     
     // MARK: Private Properties
     private var manager: SocketManager?
     private var socket: SocketIOClient?
         
-    private let websocketURL = "https://sportsbook-api.gomagaming.com/"
+//    private let websocketURL = "https://sportsbook-api.gomagaming.com/"
+    private let websocketURL = "https://socket.gomademo.com/"
+
     private let authToken = "9g7rp9760c33c6g1f19mn5ut3asd67"
 
     private var shouldRestoreConnection = false
@@ -99,21 +107,66 @@ class GomaGamingSocialServiceClient {
 
     func getFollowingUsers() {
 
-        Env.gomaNetworkClient.getFollowingUsers(deviceId: Env.deviceId)
+//        Env.gomaNetworkClient.getFollowingUsers(deviceId: Env.deviceId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("FOLLOWING USERS ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//
+//            }, receiveValue: { [weak self] response in
+//                print("FOLLOWING USERS RESPONSE: \(response)")
+//
+//                if let followers = response.data {
+//                    self?.followingUsersPublisher.value = followers
+//                }
+//
+//            })
+//            .store(in: &cancellables)
+        
+        Env.servicesProvider.getFollowees()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     print("FOLLOWING USERS ERROR: \(error)")
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] response in
-                print("FOLLOWING USERS RESPONSE: \(response)")
 
-                if let followers = response.data {
-                    self?.followingUsersPublisher.value = followers
+            }, receiveValue: { [weak self] followees in
+                print("FOLLOWING USERS RESPONSE: \(followees)")
+                
+                let mappedFollowees = followees.map( {
+                    return ServiceProviderModelMapper.follower(fromServiceProviderFollower: $0)
+                })
+
+                self?.followingUsersPublisher.value = mappedFollowees
+
+            })
+            .store(in: &cancellables)
+        
+        Env.servicesProvider.getFollowers()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FOLLOWERS USERS ERROR: \(error)")
+                case .finished:
+                    ()
                 }
+
+            }, receiveValue: { [weak self] followers in
+                print("FOLLOWERS USERS RESPONSE: \(followers)")
+                
+                let mappedFollowers = followers.map( {
+                    return ServiceProviderModelMapper.follower(fromServiceProviderFollower: $0)
+                })
+
+                self?.followersPublisher.value = mappedFollowers
 
             })
             .store(in: &cancellables)
@@ -121,6 +174,16 @@ class GomaGamingSocialServiceClient {
 
     func storeSocialAppsInfo() {
 
+        for (index, socialApp) in self.socialAppNamesSupported.enumerated() {
+
+            if let socialAppUrlScheme = self.socialAppNamesSchemesSupported[safe: index],
+               let socialAppShareAvailable = self.socialAppSharesAvailable[safe: index] {
+
+                let socialAppInfo = SocialAppInfo(name: socialApp, urlScheme: socialAppUrlScheme, urlShare: socialAppShareAvailable)
+
+                self.socialAppsInfo.append(socialAppInfo)
+            }
+        }
     }
 
     func connectSocket() {
@@ -137,14 +200,24 @@ class GomaGamingSocialServiceClient {
         self.manager = nil
 
         // Start the Socket
-        guard let jwtToken = Env.gomaNetworkClient.getCurrentToken() else { return }
+//        guard let jwtToken = Env.gomaNetworkClient.getCurrentToken() else { return }
+        
+        guard let jwtToken = Env.servicesProvider.getAcessToken() else { return }
 
+//        let configs = SocketIOClientConfiguration.init(arrayLiteral: .log(false),
+//                                                       .forceWebsockets(true),
+//                                                       .forcePolling(false),
+//                                                       .secure(true),
+//                                                       .path("/socket/socket.io"),
+//                                                       .connectParams([ "EIO": "4", "jwt": jwtToken.hash]),
+//                                                       .extraHeaders(["token": "\(authToken)"]))
+        
         let configs = SocketIOClientConfiguration.init(arrayLiteral: .log(false),
                                                        .forceWebsockets(true),
                                                        .forcePolling(false),
                                                        .secure(true),
-                                                       .path("/socket/socket.io"),
-                                                       .connectParams([ "EIO": "4", "jwt": jwtToken.hash]),
+                                                       .path("/socket.io"),
+                                                       .connectParams([ "EIO": "4", "authToken": jwtToken]),
                                                        .extraHeaders(["token": "\(authToken)"]))
 
         let websocketURL = self.websocketURL
@@ -159,16 +232,16 @@ class GomaGamingSocialServiceClient {
         //  CALLBACKS
         //
         self.socket?.on(clientEvent: .websocketUpgrade) {data, _ in
-            Logger.log("SocketSocialDebug: WebsocketUpgrade \(data)")
+            print("SocketSocialDebug: WebsocketUpgrade \(data)")
         }
 
         self.socket?.on(clientEvent: .statusChange) {data, _ in
-            Logger.log("SocketSocialDebug: statusChange \(data)")
+            print("SocketSocialDebug: statusChange \(data)")
         }
 
         self.socket?.on(clientEvent: .connect) {_, _ in
-            Logger.log("SocketSocialDebug: Connected")
-            Logger.log("SocketSocialDebug connected to Goma Social Server!")
+            print("SocketSocialDebug: Connected")
+            print("SocketSocialDebug connected to Goma Social Server!")
 
             self.setupPostConnection()
             
@@ -177,14 +250,14 @@ class GomaGamingSocialServiceClient {
         }
 
         self.socket?.on(clientEvent: .reconnectAttempt) { data, _ in
-            Logger.log("SocketSocialDebug: reconnectAttempt \(data)")
+            print("SocketSocialDebug: reconnectAttempt \(data)")
         }
 
         self.socket?.on(clientEvent: .disconnect) { _, _ in
             self.isConnected = false
             self.isConnecting = false
 
-            Logger.log("SocketSocialDebug: ⚠️ Disconnected ⚠️")
+            print("SocketSocialDebug: ⚠️ Disconnected ⚠️")
 
             if self.shouldRestoreConnection {
                 self.restoreConnection()
@@ -195,11 +268,11 @@ class GomaGamingSocialServiceClient {
             self.isConnected = false
             self.isConnecting = false
 
-            Logger.log("SocketSocialDebug: error \(data)")
+            print("SocketSocialDebug: error \(data)")
         }
         
-        self.socket?.onAny({ _ in
-            // Logger.log("SocketSocialDebug: Any - \(data)")
+        self.socket?.onAny({ data in
+            // print("SocketSocialDebug: Any - \(data)")
         })
         
         //
@@ -211,12 +284,12 @@ class GomaGamingSocialServiceClient {
 
     func establishConnection() {
         if isConnecting {
-            Logger.log("SocketSocialDebug: Already connecting")
+            print("SocketSocialDebug: Already connecting")
             return
         }
 
         if isConnected {
-            Logger.log("SocketSocialDebug: Already connected")
+            print("SocketSocialDebug: Already connected")
             return
         }
 
@@ -226,17 +299,17 @@ class GomaGamingSocialServiceClient {
     }
 
     func restoreConnection() {
-        Logger.log("SocketSocialDebug: restore connection")
+        print("SocketSocialDebug: restore connection")
         if self.socket?.status == .connected {
             return
         }
 
-        Logger.log("SocketSocialDebug: restore connect call")
+        print("SocketSocialDebug: restore connect call")
         self.socket?.connect()
     }
 
     func closeConnection() {
-        Logger.log("SocketSocialDebug: close connection")
+        print("SocketSocialDebug: close connection")
 
         self.isConnected = false
         self.isConnecting = false
@@ -245,7 +318,7 @@ class GomaGamingSocialServiceClient {
     }
 
     func forceRefresh() { // New clean connection
-        Logger.log("SocketSocialDebug: force refresh")
+        print("SocketSocialDebug: force refresh")
 
         self.shouldRestoreConnection = false
         self.closeConnection()
@@ -255,7 +328,7 @@ class GomaGamingSocialServiceClient {
 
         self.clearStorage()
 
-        Logger.log("SocketSocialDebug: emit games.all")
+        print("SocketSocialDebug: emit games.all")
     }
 
     func clearSocketCustomHandlers() {
@@ -300,22 +373,54 @@ class GomaGamingSocialServiceClient {
         self.clearStorage()
     }
 
-    private func getChatrooms() {
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
+    func getChatrooms() {
+//        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("SocketSocialDebug: getChatrooms failure \(error)")
+//                case .finished:
+//                    print("SocketSocialDebug: getChatrooms finished")
+//                }
+//            }, receiveValue: { [weak self] response in
+//                if let chatrooms = response.data {
+//                    self?.storeChatrooms(chatroomsData: chatrooms)
+//                }
+//            })
+//            .store(in: &cancellables)
+        
+        Env.servicesProvider.getChatrooms()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    Logger.log("SocketSocialDebug: getChatrooms failure \(error)")
+                    print("SOCIAL SERVICE CHATROOMS ERROR: \(error)")
                 case .finished:
-                    Logger.log("SocketSocialDebug: getChatrooms finished")
+                    ()
                 }
-            }, receiveValue: { [weak self] response in
-                if let chatrooms = response.data {
-                    self?.storeChatrooms(chatroomsData: chatrooms)
-                }
+
+            }, receiveValue: { [weak self] chatroomsData in
+                
+                let mappedChatroomsData = chatroomsData.map({
+                    return ServiceProviderModelMapper.chatroomData(fromServiceProviderChatroomData: $0)
+                })
+                
+                self?.storeChatrooms(chatroomsData: mappedChatroomsData)
+                
             })
             .store(in: &cancellables)
+    }
+    
+    func getChatAssistant() -> Int? {
+        
+        if let chatAssistantChat = self.individualChatroomsData.value.filter({
+            $0.users.contains(where: { $0.id == 1}) && $0.users.count < 3
+        }).first {
+            return chatAssistantChat.chatroom.id
+        }
+        
+        return nil
     }
     
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
@@ -338,13 +443,13 @@ class GomaGamingSocialServiceClient {
         self.socket?.handlers.forEach({ print($0) })
 
         let handlerId = self.socket?.on("social.chatrooms.join") { data, _ in
-            Logger.log("LASTM SocketSocialDebug: on social.chatrooms.join: \( data.json() )")
+            print("LASTM SocketSocialDebug: on social.chatrooms.join: \( data.json() )")
             let chatMessageResponse = self.parseChatMessages(data: data)
             if let lastMessageResponse = chatMessageResponse {
                 if lastMessageResponse.isNotEmpty {
                     if let lastMessages = lastMessageResponse[safe: 0]?.messages, lastMessages.isNotEmpty {
                         if let chatroomId = lastMessages[safe: 0]?.toChatroom {
-
+                            
                             if let lastMessage = lastMessages[safe: 0] {
 
                                 if let lastMessageList = self.chatroomLastMessagePublisher[chatroomId] {
@@ -353,9 +458,16 @@ class GomaGamingSocialServiceClient {
                                 else {
                                     self.chatroomLastMessagePublisher[chatroomId] = .init(lastMessage)
 
-                                    // self.allChatroomIdsLastMessageSubscribed.value.append(chatroomId)
+                                    //self.allChatroomIdsLastMessageSubscribed.value.append(chatroomId)
 
                                     self.checkAllLastMessagesSubscribed()
+                                }
+                                
+                                // Check if needed to "reset" Assistant prompts
+                                if chatroomId == self.getChatAssistant(),
+                                    lastMessage.isPrompt == nil {
+                                    print("NEED TO RESET ASSISTANT")
+                                    self.sendAIResetMessage(chatroomId: chatroomId, message: localized("chat_ai_suggestions_items"))
                                 }
 
                             }
@@ -373,16 +485,16 @@ class GomaGamingSocialServiceClient {
         for chatroomId in chatroomIds {
             // JOIN EMIT
             self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
-            Logger.log("SocketSocialDebug: emit social.chatrooms.join id: \(chatroomId)")
+            print("SocketSocialDebug: emit social.chatrooms.join id: \(chatroomId)")
 
             // ON LISTENER FOR NEW MESSAGES
             let chatHandlerId = self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
-                Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
+                print("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
                 let chatMessages = self.parseChatMessages(data: data)
                 if let chatMessages = chatMessages?[safe: 0]?.messages {
                     for chatMessage in chatMessages {
                         let chatroomId = chatMessage.toChatroom
-
+                        
                         // Update stored messages aswell
                         if var storedMessages = self.chatroomMessagesPublisher[chatroomId] {
                             storedMessages.value.append(chatMessage)
@@ -407,7 +519,7 @@ class GomaGamingSocialServiceClient {
                             self.chatroomLastMessagePublisher[chatroomId] = .init(chatMessage)
                         }
                         
-                        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                        if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
                             if chatMessage.fromUser != "\(loggedUserId)" {
                                 self.unreadMessagesState.send(true)
                             }
@@ -435,7 +547,7 @@ class GomaGamingSocialServiceClient {
 
         // ON LISTENER FOR CHATROOM MESSAGES
         let messagesHandlerId = self.socket?.on("social.chatrooms.messages") { data, _ in
-            Logger.log("SocketSocialDebug: on social.chatrooms.messages: \(data.json())")
+            print("SocketSocialDebug: on social.chatrooms.messages: \(data.json())")
             let chatMessages = self.parseChatMessages(data: data)
             
             if let chatMessages = chatMessages?[safe: 0]?.messages {
@@ -501,7 +613,7 @@ class GomaGamingSocialServiceClient {
         for chatroomId in chatroomIds {
 
             let onlineUsersHandlerId = self.socket?.on("social.chatroom.\(chatroomId).users.online") { data, _ in
-                Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId).users.online: \( data.json() )")
+                print("SocketSocialDebug: on social.chatroom.\(chatroomId).users.online: \( data.json() )")
 
                 let chatOnlineUsers = self.parseChatOnlineUsers(data: data)
 
@@ -524,11 +636,11 @@ class GomaGamingSocialServiceClient {
         // Last Message
         self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
 
-        // All Messages
+        //All Messages
         self.chatroomMessagesPublisher[chatroomId] = .init([])
 
         let chatHandlerId = self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
-            Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
+            print("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
             let chatMessages = self.parseChatMessages(data: data)
             if let chatMessages = chatMessages?[safe: 0]?.messages {
                 for chatMessage in chatMessages {
@@ -558,7 +670,7 @@ class GomaGamingSocialServiceClient {
                         self.chatroomLastMessagePublisher[chatroomId] = .init(chatMessage)
                     }
 
-                    if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                    if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
                         if chatMessage.fromUser != "\(loggedUserId)" {
                             self.unreadMessagesState.send(true)
                         }
@@ -577,7 +689,7 @@ class GomaGamingSocialServiceClient {
             self.socketCustomHandlers.insert(chatHandlerId)
         }
 
-        // Read messages
+        //Read messages
         let handlerId = self.socket?.on("social.chatroom.\(chatroomId).read") { data, _ in
             print("SocketDebug: on social.chatroom.\(chatroomId).read: \( data.json() )")
             let chatUsers = self.parseChatUsers(data: data)
@@ -595,7 +707,7 @@ class GomaGamingSocialServiceClient {
 
         // Online Users
         let onlineUsersHandlerId = self.socket?.on("social.chatroom.\(chatroomId).users.online") { data, _ in
-            Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId).users.online: \( data.json() )")
+            print("SocketSocialDebug: on social.chatroom.\(chatroomId).users.online: \( data.json() )")
 
             let chatOnlineUsers = self.parseChatOnlineUsers(data: data)
 
@@ -633,6 +745,15 @@ class GomaGamingSocialServiceClient {
 
     func sendMessage(chatroomId: Int, message: String, attachment: [String: AnyObject]?) {
          self.socket?.emit("social.chatrooms.message", ["id": "\(chatroomId)", "message": message, "repliedMessage": nil, "attachment": attachment])
+    }
+    
+    func sendAIMessage(chatroomId: Int, message: String, attachment: [String: AnyObject]?) {
+        self.socket?.emit("social.chatrooms.message", ["id": "\(chatroomId)", "message": message, "repliedMessage": nil, "attachment": nil, "toAi": true])
+    }
+    
+    func sendAIResetMessage(chatroomId: Int, message: String) {
+        self.socket?.emit("social.chatrooms.message", ["id": "\(chatroomId)", "message": message, "repliedMessage": nil, "attachment": nil, "toAi": false, "isPrompt": true])
+
     }
 
     func requestMessagesHistory(forChatroomID chatroomId: Int, forPage page: Int) {
@@ -698,14 +819,14 @@ class GomaGamingSocialServiceClient {
     }
 
     // Locations
-    func storeLocations(locations: [EveryMatrix.Location]) {
+    func storeLocations(locations: [LocationDetailed]) {
         self.locations = [:]
         for location in locations {
             self.locations[location.id] = location
         }
     }
 
-    func location(forId id: String) -> EveryMatrix.Location? {
+    func location(forId id: String) -> LocationDetailed? {
         return self.locations[id]
     }
 

@@ -41,6 +41,8 @@ class UserProfileTipsViewController: UIViewController {
             self.emptyStateBaseView.isHidden = !isEmptyState
         }
     }
+    
+    var shouldShowLogin: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: UserProfileTipsViewModel) {
@@ -68,13 +70,19 @@ class UserProfileTipsViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
-        self.tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
         self.isLoading = false
 
         self.isEmptyState = false
 
         self.bind(toViewModel: self.viewModel)
+
+    }
+
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
 
     }
 
@@ -130,7 +138,10 @@ class UserProfileTipsViewController: UIViewController {
 
     // MARK: Functions
     private func showBetslip() {
-        let betslipViewController = BetslipViewController()
+        let betslipViewModel = BetslipViewModel()
+        
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
+        
         let navigationViewController = Router.navigationController(with: betslipViewController)
 
         self.navigationController?.present(navigationViewController, animated: true, completion: nil)
@@ -171,8 +182,12 @@ extension UserProfileTipsViewController: UITableViewDelegate, UITableViewDataSou
             cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
 
             cell.shouldShowBetslip = { [weak self] in
-                // self?.shouldShowBetslip?()
+                //self?.shouldShowBetslip?()
                 self?.showBetslip()
+            }
+            
+            cell.shouldShowLogin = { [weak self] in
+                self?.shouldShowLogin?()
             }
 
             return cell

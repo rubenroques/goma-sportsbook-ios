@@ -110,10 +110,10 @@ class FeaturedTipCollectionViewModel {
         
         switch self.dataType {
         case .featuredTip(let featuredTip):
-            if let oddsDouble = Double(featuredTip.totalOdds) {
-                let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
-                return "\(oddFormatted)"
-            }
+            let oddsDouble = Double(featuredTip.totalOdds)
+            let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
+            return "\(oddFormatted)"
+            
         case .suggestedBetslip(let suggestedBetslip):
             let totalOdd = suggestedBetslip.selections.map(\.odd).reduce(1, *)
             let oddFormatted = OddFormatter.formatOdd(withValue: totalOdd)
@@ -165,7 +165,7 @@ class FeaturedTipCollectionViewModel {
                                        outcomeId: selection.outcomeId,
                                        marketId: selection.bettingTypeId,
                                        matchId: selection.eventId,
-                                       decimalOdd: Double(selection.odds) ?? 0.0,
+                                       decimalOdd: Double(selection.odd),
                                        isAvailable: true,
                                        matchDescription: selection.eventName,
                                        marketDescription: selection.extraSelectionInfo.marketName,
@@ -275,7 +275,7 @@ class FeaturedTipSelectionViewModel {
     var competitiontName: String {
         switch dataType {
         case .featuredTipSelection(let featuredTipSelection):
-            return featuredTipSelection.sportParentName
+            return featuredTipSelection.sportParentName ?? ""
         case .suggestedBetslipSelection(let suggestedBetslipSelection):
             return suggestedBetslipSelection.competitionName
         }

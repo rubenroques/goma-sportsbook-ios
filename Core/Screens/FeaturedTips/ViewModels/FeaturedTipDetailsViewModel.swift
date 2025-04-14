@@ -21,11 +21,10 @@ class FeaturedTipDetailsViewModel {
     }
 
     func getTotalOdds() -> String {
-        if let oddsDouble = Double(self.featuredTip.totalOdds) {
-            let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
-            return "\(oddFormatted)"
-        }
-        return ""
+        let oddsDouble = Double(self.featuredTip.totalOdds)
+        let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
+        return "\(oddFormatted)"
+        
     }
 
     func getNumberSelections() -> String {

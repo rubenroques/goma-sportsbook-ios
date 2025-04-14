@@ -272,6 +272,15 @@ class UserSessionStore {
                 
                 self?.userSessionPublisher.send(session)
                 self?.userProfilePublisher.send(profile)
+                
+                if TargetVariables.hasFeatureEnabled(feature: .chat) {
+                    Env.gomaSocialClient.connectSocket()
+                    Env.gomaSocialClient.getInAppMessagesCounter()
+                    Env.gomaSocialClient.getChatrooms()
+                    Env.gomaSocialClient.getFollowingUsers()
+                    
+                    self?.requestNotificationsUserSettings()
+                }
             })
             .map({ _ in
                 return ()

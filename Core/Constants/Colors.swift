@@ -74,13 +74,22 @@ extension UIColor {
         static let buttonActiveHoverPrimary = UIColor(named: "buttonActiveHoverPrimary")!
         static let buttonDisablePrimary = UIColor(named: "buttonDisablePrimary")!
         static let buttonTextDisablePrimary = UIColor(named: "buttonTextDisablePrimary")!
+        
+        static let buttonTextSecondary = UIColor(named: "buttonTextSecondary")!
+        
+        static let buttonTextTertiary = UIColor(named: "buttonTextTertiary")!
+        static let buttonTextDisableTertiary = UIColor(named: "buttonTextDisableTertiary")!
 
         static let buttonBackgroundSecondary = UIColor(named: "buttonBackgroundSecondary")!
         static let buttonActiveHoverSecondary = UIColor(named: "buttonActiveHoverSecondary")!
 
+        static let buttonBackgroundTertiary = UIColor(named: "buttonBackgroundTertiary")!
+
         static let buttonActiveHoverTertiary = UIColor(named: "buttonActiveHoverTertiary")!
 
         static let buttonBorderTertiary = UIColor(named: "buttonBorderTertiary")!
+        
+        static let buttonBorderDisableTertiary = UIColor(named: "buttonBorderDisableTertiary")!
 
         static let bubblesPrimary = UIColor(named: "bubblesPrimary")!
 
@@ -193,6 +202,14 @@ extension UIColor {
 
         static var iconSportsHeroCard: UIColor {
             return UIColor(named: "iconSportsHeroCard") ?? Self.textPrimary
+        }
+        
+        static var messageGradient1: UIColor {
+            return UIColor(named: "messageGradient1") ?? Self.messageGradient1
+        }
+        
+        static var messageGradient2: UIColor {
+            return UIColor(named: "messageGradient2") ?? Self.messageGradient2
         }
 
         static func validateThemeColors() -> [UIColor] {

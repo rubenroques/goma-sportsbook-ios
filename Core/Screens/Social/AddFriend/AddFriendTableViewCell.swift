@@ -85,6 +85,7 @@ class AddFriendTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
+        self.iconBaseView.clipsToBounds = true
 
         self.iconImageView.layer.cornerRadius = self.iconImageView.frame.height / 2
 
@@ -93,19 +94,19 @@ class AddFriendTableViewCell: UITableViewCell {
 
     func setupWithTheme() {
 
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.iconBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.iconImageView.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.userInfoStackView.backgroundColor = UIColor.App.backgroundPrimary
+        self.userInfoStackView.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.userStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.userStateBaseView.backgroundColor = .clear
 
         self.userStateView.backgroundColor = UIColor.App.alertSuccess
 
@@ -123,6 +124,10 @@ class AddFriendTableViewCell: UITableViewCell {
         self.titleLabel.text = viewModel.username
 
         self.isCheckboxSelected = viewModel.isCheckboxSelected
+        
+        if let avatar = viewModel.userContact.avatar {
+            self.iconImageView.image = UIImage(named: avatar)
+        }
 
         viewModel.isOnlinePublisher
             .sink(receiveValue: { [weak self] isOnline in
@@ -162,7 +167,7 @@ extension AddFriendTableViewCell {
     private static func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "my_account_profile_icon")
+        imageView.image = UIImage(named: "empty_user_image")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -263,10 +268,10 @@ extension AddFriendTableViewCell {
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 30),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 35),
             self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
             self.iconImageView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
-            self.iconImageView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
+            self.iconImageView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor, constant: 3),
 
 //            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 10),
 //            self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),

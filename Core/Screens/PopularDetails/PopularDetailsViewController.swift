@@ -245,7 +245,10 @@ class PopularDetailsViewController: UIViewController {
     }
 
     private func openBetslipModal() {
-        let betslipViewController = BetslipViewController()
+        let betslipViewModel = BetslipViewModel()
+
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
+        
         betslipViewController.willDismissAction = { [weak self] in
             self?.reloadTableView()
         }
@@ -258,7 +261,7 @@ class PopularDetailsViewController: UIViewController {
     
     func openChatModal() {
         if Env.userSessionStore.isUserLogged() {
-            let socialViewController = SocialViewController()
+            let socialViewController = ChatListViewController()
             self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
         }
         else {

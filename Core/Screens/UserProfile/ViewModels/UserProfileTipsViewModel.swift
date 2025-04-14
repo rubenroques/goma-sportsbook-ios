@@ -30,62 +30,62 @@ class UserProfileTipsViewModel {
 
         self.isLoadingPublisher.send(true)
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, userIds: [userId], page: self.page)
+        Env.servicesProvider.getFeaturedTips(page: self.page, limit: nil, topTips: nil, followersTips: nil, friendsTips: nil, userId: self.userId, homeTips: nil)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("USER TIPS ERROR: \(error)")
+                    print("ALL TIPS ERROR: \(error)")
                 case .finished:
                     ()
                 }
-
+                
                 self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] response in
-                print("USER TIPS RESPONSE: \(response)")
-
-                if let tips = response.data {
-                    self?.userTipsPublisher.value = tips
-
-                    if tips.count < 10 {
-                        self?.tipsHasNextPage = false
-                    }
-                    else {
-                        self?.tipsHasNextPage = true
-                    }
+                
+            }, receiveValue: { [weak self] featuredTips in
+                let mappedFeaturedTips = ServiceProviderModelMapper.featuredTips(fromServiceProviderFeaturedTips: featuredTips)
+                                
+                self?.userTipsPublisher.value = mappedFeaturedTips
+                
+                if mappedFeaturedTips.count < 10 {
+                    self?.tipsHasNextPage = false
                 }
+                else {
+                    self?.tipsHasNextPage = true
+                }
+                
             })
             .store(in: &cancellables)
     }
 
     private func loadNextUserTips() {
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, userIds: [userId], page: self.page)
+        Env.servicesProvider.getFeaturedTips(page: self.page, limit: nil, topTips: nil, followersTips: nil, friendsTips: nil, userId: self.userId, homeTips: nil)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("USER TIPS ERROR: \(error)")
+                    print("NEXT USER TIPS ERROR: \(error)")
                 case .finished:
                     ()
                 }
-
+                
                 self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] response in
-                print("USER TIPS RESPONSE: \(response)")
-
-                if let tips = response.data {
-                    self?.userTipsPublisher.value.append(contentsOf: tips)
-
-                    if tips.count < 10 {
-                        self?.tipsHasNextPage = false
-                    }
-                    else {
-                        self?.tipsHasNextPage = true
-                    }
+                
+            }, receiveValue: { [weak self] featuredTips in
+                let mappedFeaturedTips = ServiceProviderModelMapper.featuredTips(fromServiceProviderFeaturedTips: featuredTips)
+                
+                print("NEXT USER TIPS: \(mappedFeaturedTips)")
+                
+                self?.userTipsPublisher.value.append(contentsOf: mappedFeaturedTips)
+                
+                if mappedFeaturedTips.count < 10 {
+                    self?.tipsHasNextPage = false
                 }
+                else {
+                    self?.tipsHasNextPage = true
+                }
+                
             })
             .store(in: &cancellables)
 

@@ -12,7 +12,7 @@ class FriendProfileViewModel {
     var username: String
     var userId: Int
 
-    init(friendData: GomaFriend) {
+    init(friendData: UserFriend) {
         self.username = friendData.username
 
         self.userId = friendData.id

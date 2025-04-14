@@ -85,37 +85,40 @@ class GroupUserManagementTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
+        self.iconBaseView.clipsToBounds = true
 
         self.iconImageView.layer.cornerRadius = self.iconImageView.frame.height / 2
 
         self.userStateView.layer.cornerRadius = self.userStateView.frame.height / 2
+        
+        self.userAdminInnerView.layer.cornerRadius = CornerRadius.label
     }
 
     func setupWithTheme() {
 
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.iconBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.iconImageView.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.userInfoStackView.backgroundColor = UIColor.App.backgroundPrimary
+        self.userInfoStackView.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.userAdminBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.userAdminBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.userAdminInnerView.backgroundColor = UIColor.App.backgroundOdds
 
-        self.userAdminLabel.textColor = UIColor.App.textPrimary
+        self.userAdminLabel.textColor = UIColor.App.buttonTextPrimary
 
-        self.userStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.userStateBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.userStateView.backgroundColor = UIColor.App.alertSuccess
 
         self.deleteButton.backgroundColor = .clear
 
-        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLineSecondary
 
     }
 
@@ -125,6 +128,10 @@ class GroupUserManagementTableViewCell: UITableViewCell {
         self.titleLabel.text = viewModel.username
 
         self.isAdmin = viewModel.isAdmin
+        
+        if let avatar = viewModel.userContact.avatar {
+            self.iconImageView.image = UIImage(named: avatar)
+        }
 
         viewModel.isOnlinePublisher
             .sink(receiveValue: { [weak self] isOnline in
@@ -152,7 +159,7 @@ extension GroupUserManagementTableViewCell {
     private static func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "my_account_profile_icon")
+        imageView.image = UIImage(named: "empty_user_image")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -264,10 +271,10 @@ extension GroupUserManagementTableViewCell {
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 30),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 35),
             self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
             self.iconImageView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
-            self.iconImageView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
+            self.iconImageView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor, constant: 3),
 
             self.deleteButton.leadingAnchor.constraint(greaterThanOrEqualTo: self.userInfoStackView.trailingAnchor, constant: 8),
             self.deleteButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -25),

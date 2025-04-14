@@ -53,7 +53,7 @@ class SocialViewController: UIViewController {
     private var friendsListViewController: FriendsListViewController
 
     private var viewModel: SocialViewModel
-
+    
     // MARK: - Lifetime and Cycle
     init(viewModel: SocialViewModel = SocialViewModel()) {
         self.viewModel = viewModel
@@ -108,10 +108,21 @@ class SocialViewController: UIViewController {
         self.conversationsViewController.reloadFriendsData = { [weak self] in
             self?.friendsListViewController.needsRefetchData()
         }
-
+        
         // NEW LAYOUT
-        self.friendsButton.isHidden = true
+        self.friendsButton.isHidden = false
         self.settingsButton.isHidden = true
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // self.showWorkInProgressAlert()
+    }
+
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -121,21 +132,22 @@ class SocialViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundSecondary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
 
         self.tabViewController.textColor = UIColor.App.textPrimary
+//        self.tabViewController.textIdleColor = UIColor.App.textSecondary
         self.tabViewController.separatorBarColor = UIColor.App.separatorLine
 
         self.titleLabel.backgroundColor = .clear
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.containerBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.containerBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.notificationsButton.backgroundColor = .clear
 
@@ -173,7 +185,7 @@ class SocialViewController: UIViewController {
 
         addFriendsViewController.chatListNeedsReload = { [weak self] in
             self?.conversationsViewController.needsRefetchData()
-            self?.friendsListViewController.needsRefetchData()
+//            self?.friendsListViewController.needsRefetchData()
         }
 
         self.navigationController?.pushViewController(addFriendsViewController, animated: true)

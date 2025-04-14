@@ -2015,3 +2015,19 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "administrative_costs" = "Frais administratifs";
 
 "betting_fail_to_place_bets" = "Something went wrong while placing your Bet(s).";
+
+"chat_ai_suggestions_title" = "Hi, I'm your personal GOMA AI Betting Assistant. Please select one of the options below or start typing to begin.";
+"do_you_have_a_friends_qr_code" = "Do you have a friend's QR code?";
+"add_via_qr_code" = "Add via QR code";
+"this_is_your_qr_code" = "This is your QR code!";
+"share_it" = "Share it";
+"share_it_with_a_friend_so_they_can_add_you" = "Share it with a friend so they can add you";
+"someone_sent_you_a_code_instead" = "Someone sent you a code instead?";
+"read_qr_code" = "Read QR code";
+"create_a_group" = "Create a group";
+"select_2_friends_for_group" = "Select atleast 2 friends to create a group";
+"add_members" = "Add members";
+"start_group_chat" = "Start Group Chat";
+"user_has_received_friend_request" = "{username} has received your friend request.";
+"you_still_havent_added_friends" = "You still haven't added friends";
+"bet_same" = "Bet same";

@@ -33,7 +33,7 @@ class EditGroupAddFriendViewModel {
 
     private func getFriends() {
 
-        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+        Env.servicesProvider.getFriends()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -42,20 +42,41 @@ class EditGroupAddFriendViewModel {
                 case .finished:
                     print("FRIENDS FINISHED")
                 }
-            }, receiveValue: { [weak self] response in
-                print("FRIENDS GOMA: \(response)")
-                if let friends = response.data {
-                    self?.processFriendsData(friends: friends)
-                }
+            }, receiveValue: { [weak self] userFriends in
+                print("FRIENDS GOMA: \(userFriends)")
+                
+                let mappedFriends = userFriends.map({
+                    ServiceProviderModelMapper.userFriend(fromServiceProviderUserFriend: $0)
+                })
+                
+                self?.processFriendsData(friends: mappedFriends)
+                
             })
             .store(in: &cancellables)
+        
+//        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("FRIENDS ERROR: \(error)")
+//                case .finished:
+//                    print("FRIENDS FINISHED")
+//                }
+//            }, receiveValue: { [weak self] response in
+//                print("FRIENDS GOMA: \(response)")
+//                if let friends = response.data {
+//                    self?.processFriendsData(friends: friends)
+//                }
+//            })
+//            .store(in: &cancellables)
 
     }
 
-    private func processFriendsData(friends: [GomaFriend]) {
+    private func processFriendsData(friends: [UserFriend]) {
 
         for friend in friends {
-            let user = UserContact(id: "\(friend.id)", username: friend.username, phones: [])
+            let user = UserContact(id: "\(friend.id)", username: friend.username, phones: [], avatar: friend.avatar)
             if !self.groupUsers.contains(where: {$0.id == user.id }) {
                 self.usersPublisher.value.append(user)
             }
@@ -108,7 +129,7 @@ class EditGroupAddFriendViewModel {
 
         print("FRIENDS TO ADD: \(userIds)")
 
-        Env.gomaNetworkClient.addUserToGroup(deviceId: Env.deviceId, chatroomId: self.chatroomId, userIds: userIds)
+        Env.servicesProvider.addUsersToGroup(groupId: self.chatroomId, userIds: userIds)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -122,5 +143,20 @@ class EditGroupAddFriendViewModel {
                 self?.addedSelectedUsers.send(selectedUsers)
             })
             .store(in: &cancellables)
+        
+//        Env.gomaNetworkClient.addUserToGroup(deviceId: Env.deviceId, chatroomId: self.chatroomId, userIds: userIds)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("ADD FRIENDS GROUP ERROR: \(error)")
+//                case .finished:
+//                    print("ADD FRIENDS GROUP FINISHED")
+//                }
+//            }, receiveValue: { [weak self] response in
+//                print("ADD FRIENDS GROUP GOMA: \(response)")
+//                self?.addedSelectedUsers.send(selectedUsers)
+//            })
+//            .store(in: &cancellables)
     }
 }

@@ -20,6 +20,8 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         return userProfileSubject.eraseToAnyPublisher()
     }
 
+    var accessToken: String? = nil
+
     var hasSecurityQuestions: Bool = false
 
     private var sessionCoordinator: SportRadarSessionCoordinator
@@ -1550,7 +1552,7 @@ extension SportRadarPrivilegedAccessManager {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    func getFriends() -> AnyPublisher<[GomaFriend], ServiceProviderError> {
+    func getFriends() -> AnyPublisher<[UserFriend], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
@@ -1563,6 +1565,7 @@ extension SportRadarPrivilegedAccessManager {
     }
 
     func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError> {
+        
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 

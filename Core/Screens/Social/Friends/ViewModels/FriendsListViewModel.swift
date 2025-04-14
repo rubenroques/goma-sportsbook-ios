@@ -13,8 +13,8 @@ class FriendsListViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var friendsPublisher: CurrentValueSubject<[GomaFriend], Never> = .init([])
-    var initialFriends: [GomaFriend] = []
+    var friendsPublisher: CurrentValueSubject<[UserFriend], Never> = .init([])
+    var initialFriends: [UserFriend] = []
 
     var cachedFriendCellViewModels: [Int: FriendStatusCellViewModel] = [:]
 
@@ -29,28 +29,28 @@ class FriendsListViewModel {
 
     // MARK: Functions
     private func getFriends() {
-        self.isLoadingPublisher.send(true)
+        self.isLoadingPublisher.send(false)
 
-        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("LIST FRIEND ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-
-                self?.isLoadingPublisher.send(false)
-                self?.dataNeedsReload.send()
-
-            }, receiveValue: { response in
-                if let friends = response.data {
-                    self.friendsPublisher.value = friends
-                    self.initialFriends = friends
-                }
-            })
-            .store(in: &cancellables)
+//        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("LIST FRIEND ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//
+//                self?.isLoadingPublisher.send(false)
+//                self?.dataNeedsReload.send()
+//
+//            }, receiveValue: { response in
+//                if let friends = response.data {
+//                    self.friendsPublisher.value = friends
+//                    self.initialFriends = friends
+//                }
+//            })
+//            .store(in: &cancellables)
     }
 
     func filterSearch(searchQuery: String) {

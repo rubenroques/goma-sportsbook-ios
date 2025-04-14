@@ -21,6 +21,7 @@ class ConversationDetailViewController: UIViewController {
     private lazy var iconStateView: UIView = Self.createIconStateView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+    private lazy var assistantLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var navigationLineSeparatorView: UIView = Self.createNavigationLineSeparatorView()
     private lazy var tableView: UITableView = Self.createTableView()
@@ -28,14 +29,18 @@ class ConversationDetailViewController: UIViewController {
     private lazy var messageInputLineSeparatorView: UIView = Self.createMessageInputLineSeparatorView()
     private lazy var messageInputView: ChatMessageView = Self.createMessageInputView()
     private lazy var sendButton: UIButton = Self.createSendButton()
-
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
+    private lazy var listLoadingBaseView: UIView = Self.createListLoadingBaseView()
+    private lazy var listLoadingActivityIndicatorView: UIActivityIndicatorView = Self.createListLoadingActivityIndicatorView()
+
     // Constraints
-    private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
-    private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
     private lazy var viewHeightConstraint: NSLayoutConstraint = Self.createViewHeightConstraint()
+//    private lazy var avatarCenterConstraint: NSLayoutConstraint = Self.createAvatarCenterConstraint()
+
+    private lazy var messageViewToTableConstraint: NSLayoutConstraint = Self.createMessageViewToTableConstraint()
+    private lazy var messageViewToListLoadingConstraint: NSLayoutConstraint = Self.createMessageViewToListLoadingConstraint()
 
     private var viewModel: ConversationDetailViewModel
 
@@ -52,6 +57,30 @@ class ConversationDetailViewController: UIViewController {
     var shouldCloseChat: (() -> Void)?
     var shouldReloadData: (() -> Void)?
     var cameFromProfile: Bool = false
+    
+    var isChatAssistant: Bool = false {
+        didSet {
+            self.messageInputView.hasTicketButton = !isChatAssistant
+            self.titleLabel.isHidden = isChatAssistant
+            self.subtitleLabel.isHidden = isChatAssistant
+            self.assistantLabel.isHidden = !isChatAssistant
+        }
+    }
+    
+    var isListLoading: Bool = false {
+        didSet {
+            if isListLoading {
+                self.listLoadingActivityIndicatorView.startAnimating()
+            }
+            else {
+                self.listLoadingActivityIndicatorView.stopAnimating()
+            }
+            self.listLoadingBaseView.isHidden = !isListLoading
+            
+            self.messageViewToTableConstraint.isActive = !isListLoading
+            self.messageViewToListLoadingConstraint.isActive = isListLoading
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     init(viewModel: ConversationDetailViewModel) {
@@ -93,8 +122,10 @@ class ConversationDetailViewController: UIViewController {
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
 
-        let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
-        self.navigationView.addGestureRecognizer(contactTapGesture)
+        if !self.isChatAssistant {
+            let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
+            self.navigationView.addGestureRecognizer(contactTapGesture)
+        }
 
         self.bind(toViewModel: self.viewModel)
 
@@ -107,11 +138,16 @@ class ConversationDetailViewController: UIViewController {
         self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
         
         self.tableView.isDirectionalLockEnabled = true 
-        self.tableView.alwaysBounceHorizontal = true
+        self.tableView.alwaysBounceHorizontal = false
         self.tableView.alwaysBounceVertical = false
 
         // Delegate the interactivePopGesture for gesture verification
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
+        // Constraint
+//        self.avatarCenterConstraint.constant = self.isChatAssistant ? 0 : 3
+        
+        self.isListLoading = false
         
     }
 
@@ -141,12 +177,14 @@ class ConversationDetailViewController: UIViewController {
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
 
         self.iconView.layer.cornerRadius = self.iconView.frame.height / 2
+        self.iconView.clipsToBounds = true
 
         self.iconStateView.layer.cornerRadius = self.iconStateView.frame.height / 2
 
         self.iconUserImageView.layer.cornerRadius = self.iconUserImageView.frame.height / 2
 
-        self.sendButton.layer.cornerRadius = self.sendButton.frame.height / 2
+        self.sendButton.layer.cornerRadius = CornerRadius.checkBox
+        self.sendButton.clipsToBounds = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -156,35 +194,41 @@ class ConversationDetailViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.iconBaseView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        self.iconBaseView.backgroundColor = UIColor.App.highlightTertiary
 
-        self.iconView.backgroundColor = UIColor.App.backgroundPrimary
+        self.iconView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.iconIdentifierLabel.textColor = UIColor.App.buttonBackgroundSecondary
+        self.iconIdentifierLabel.textColor = UIColor.App.highlightTertiary
 
         self.iconStateView.backgroundColor = UIColor.App.alertSuccess
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
+        self.assistantLabel.textColor = UIColor.App.textPrimary
+
         self.navigationLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
         self.tableView.backgroundColor = .clear
 
-        self.messageInputBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.messageInputBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.messageInputLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
-        self.sendButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.sendButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.sendButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.8)
+        
+        self.listLoadingBaseView.backgroundColor = UIColor.App.backgroundSecondary
+
     }
 
     // MARK: Binding
@@ -194,6 +238,7 @@ class ConversationDetailViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] title in
                 self?.titleLabel.text = title
+                self?.assistantLabel.text = title
             })
             .store(in: &cancellables)
 
@@ -201,6 +246,14 @@ class ConversationDetailViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] users in
                 self?.subtitleLabel.text = users
+                
+                if let isChatAssistant = self?.isChatAssistant,
+                    isChatAssistant {
+                    self?.iconUserImageView.image = UIImage(named: "ai_assistant_icon")
+                }
+                else if let avatar = viewModel.getConversationData()?.avatar {
+                    self?.iconUserImageView.image = UIImage(named: avatar)
+                }
             })
             .store(in: &cancellables)
 
@@ -267,6 +320,14 @@ class ConversationDetailViewController: UIViewController {
             })
             .store(in: &cancellables)
         
+        if self.isChatAssistant {
+            viewModel.isAIMessageLoading
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] isLoading in
+                    self?.isListLoading = isLoading
+                })
+                .store(in: &cancellables)
+        }
     }
 
     // MARK: Functions
@@ -315,10 +376,41 @@ class ConversationDetailViewController: UIViewController {
 
     private func addTicketToBetslip(ticket: BetHistoryEntry) {
         if let betShareToken = ticket.betShareToken {
-            self.viewModel.addBetTicketToBetslip(withBetToken: betShareToken)
+            
+            if let eventId = ticket.selections?.first?.eventId {
+                let bettingTickets = ServiceProviderModelMapper.bettingTicket(fromBetHistoryEntry: ticket)
+                
+                self.viewModel.addBettingTicketsToBetslip(bettingTickets: bettingTickets)
+                
+                self.openBetslip()
+            }
+            else {
+                self.viewModel.addBetTicketToBetslip(withBetToken: betShareToken)
+            }
+            
+
         }
     }
+    
+    private func openBetslip() {
+        let betslipViewModel = BetslipViewModel()
+        
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
+        
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
 
+    private func sendPromptMessage(message: String) {
+        let dateNow = Date()
+        let dateNowString = self.viewModel.getDefaultDateFormatted(date: dateNow)
+        let dateNowTimestamp = Int(Date().timeIntervalSince1970)
+        
+        let messageData = MessageData(type: .sentNotSeen, text: message, date: dateNowString, timestamp: dateNowTimestamp)
+        
+        self.viewModel.addMessage(message: messageData, toAI: true)
+        
+    }
+    
     // MARK: Actions
     @objc func didTapBackButton() {
 
@@ -344,8 +436,12 @@ class ConversationDetailViewController: UIViewController {
         if message != "" {
 
             let messageData = MessageData(type: .sentNotSeen, text: message, date: dateNowString, timestamp: dateNowTimestamp)
-
-            self.viewModel.addMessage(message: messageData)
+            if self.isChatAssistant {
+                self.viewModel.addMessage(message: messageData, toAI: true)
+            }
+            else {
+                self.viewModel.addMessage(message: messageData)
+            }
             self.messageInputView.clearTextView()
         }
 
@@ -410,34 +506,19 @@ class ConversationDetailViewController: UIViewController {
     }
 
     private func showBetslipViewController() {
-        let betslipViewController = BetslipViewController()
+        let betslipViewModel = BetslipViewModel()
+        
+        let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
+        
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
-        self.messageInputKeyboardConstraint.isActive = false
-        self.messageInputBottomConstraint.isActive = true
-        self.scrollToTopTableView()
+//        self.scrollToTopTableView()
 
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let keyboardHeight = keyboardSize.height - self.bottomSafeAreaView.frame.height
-
-            self.messageInputKeyboardConstraint =
-            NSLayoutConstraint(item: self.messageInputBaseView,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: self.bottomSafeAreaView,
-                               attribute: .top,
-                               multiplier: 1,
-                               constant: -keyboardHeight)
-            self.messageInputBottomConstraint.isActive = false
-            self.messageInputKeyboardConstraint.isActive = true
-            }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        self.messageInputKeyboardConstraint.isActive = false
-        self.messageInputBottomConstraint.isActive = true
     }
 
 }
@@ -498,7 +579,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     }
                     if let userId = messageData.userId {
                         let username = self.viewModel.getUsername(userId: userId)
-                        cell.setupMessage(messageData: messageData, username: username, chatroomId: self.viewModel.conversationId)
+                        cell.setupMessage(messageData: messageData, username: username, avatarName: self.viewModel.getAvatarForUserId(userId: userId), chatroomId: self.viewModel.conversationId)
                         cell.didTapBetNowAction = { [weak self] viewModel in
                             self?.addTicketToBetslip(ticket: viewModel.ticket)
                         }
@@ -516,7 +597,18 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     }
                     if let userId = messageData.userId {
                         let username = self.viewModel.getUsername(userId: userId)
-                        cell.setupMessage(messageData: messageData, username: username, chatroomId: self.viewModel.conversationId)
+                        
+                        let isAssistantMessage = self.isChatAssistant
+                        
+                        cell.setupMessage(messageData: messageData,
+                                          username: username,
+                                          avatarName: self.viewModel.getAvatarForUserId(userId: userId) ,
+                                          chatroomId: self.viewModel.conversationId,
+                                          isAssistantMessage: isAssistantMessage)
+                        
+                        cell.shouldSendPromptMessage = { [weak self] text in
+                            self?.sendPromptMessage(message: text)
+                        }
                     }
 
                     cell.isReversedCell(isReversed: true)
@@ -697,6 +789,18 @@ extension ConversationDetailViewController {
         label.text = "@chattitle"
         return label
     }
+    
+    private static func createAssistantLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.textPrimary
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        label.numberOfLines = 1
+        label.text = "Assistant"
+        label.isHidden = true
+        return label
+    }
 
     private static func createBackButton() -> UIButton {
         let backButton = UIButton.init(type: .custom)
@@ -747,21 +851,6 @@ extension ConversationDetailViewController {
         return button
     }
 
-    private static func createMessageInputBottomConstraint() -> NSLayoutConstraint {
-        let constraint = NSLayoutConstraint()
-        return constraint
-    }
-
-    private static func createMessageInputKeyboardConstraint() -> NSLayoutConstraint {
-        let constraint = NSLayoutConstraint()
-        return constraint
-    }
-
-    private static func createViewHeightConstraint() -> NSLayoutConstraint {
-        let constraint = NSLayoutConstraint()
-        return constraint
-    }
-
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -775,7 +864,43 @@ extension ConversationDetailViewController {
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
     }
+    
+    private static func createListLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
+    private static func createListLoadingActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.stopAnimating()
+        return activityIndicatorView
+    }
+
+
+    // Constraints
+    private static func createViewHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createAvatarCenterConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createMessageViewToTableConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createMessageViewToListLoadingConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -794,6 +919,7 @@ extension ConversationDetailViewController {
 
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.subtitleLabel)
+        self.navigationView.addSubview(self.assistantLabel)
         self.navigationView.addSubview(self.navigationLineSeparatorView)
 
         self.view.addSubview(self.tableView)
@@ -808,6 +934,9 @@ extension ConversationDetailViewController {
 
         self.view.addSubview(self.loadingBaseView)
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+        
+        self.view.addSubview(self.listLoadingBaseView)
+        self.listLoadingBaseView.addSubview(self.listLoadingActivityIndicatorView)
 
         self.initConstraints()
 
@@ -820,7 +949,7 @@ extension ConversationDetailViewController {
 
         self.messageInputView.shouldResizeView = { [weak self] newHeight in
             self?.viewHeightConstraint.constant = newHeight
-            self?.view.layoutIfNeeded()
+//            self?.view.layoutIfNeeded()
         }
     }
 
@@ -850,18 +979,18 @@ extension ConversationDetailViewController {
             self.iconBaseView.heightAnchor.constraint(equalToConstant: 32),
             self.iconBaseView.widthAnchor.constraint(equalTo: self.iconBaseView.heightAnchor),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-
-            self.iconView.widthAnchor.constraint(equalToConstant: 29),
-            self.iconView.heightAnchor.constraint(equalTo: self.iconView.widthAnchor),
-            self.iconView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
-            self.iconView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
+            
+            self.iconView.leadingAnchor.constraint(equalTo: self.iconBaseView.leadingAnchor, constant: 2),
+            self.iconView.trailingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: -2),
+            self.iconView.topAnchor.constraint(equalTo: self.iconBaseView.topAnchor, constant: 2),
+            self.iconView.bottomAnchor.constraint(equalTo: self.iconBaseView.bottomAnchor, constant: -2),
 
             self.iconIdentifierLabel.centerXAnchor.constraint(equalTo: self.iconView.centerXAnchor),
             self.iconIdentifierLabel.centerYAnchor.constraint(equalTo: self.iconView.centerYAnchor),
 
             self.iconUserImageView.centerXAnchor.constraint(equalTo: self.iconView.centerXAnchor),
             self.iconUserImageView.centerYAnchor.constraint(equalTo: self.iconView.centerYAnchor),
-            self.iconUserImageView.widthAnchor.constraint(equalToConstant: 26),
+            self.iconUserImageView.widthAnchor.constraint(equalToConstant: 27),
             self.iconUserImageView.heightAnchor.constraint(equalTo: self.iconUserImageView.widthAnchor),
 
             self.iconStateView.trailingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: -1.5),
@@ -876,6 +1005,10 @@ extension ConversationDetailViewController {
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 16),
             self.subtitleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: 10),
             self.subtitleLabel.bottomAnchor.constraint(equalTo: self.iconBaseView.bottomAnchor),
+            
+            self.assistantLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 16),
+            self.assistantLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -10),
+            self.assistantLabel.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
 
             self.backButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
@@ -898,7 +1031,8 @@ extension ConversationDetailViewController {
         NSLayoutConstraint.activate([
             self.messageInputBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.messageInputBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.messageInputBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor),
+//            self.messageInputBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor),
+            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
 
             self.messageInputLineSeparatorView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor),
             self.messageInputLineSeparatorView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor),
@@ -906,6 +1040,7 @@ extension ConversationDetailViewController {
             self.messageInputLineSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             self.messageInputView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor, constant: 15),
+            self.messageInputView.topAnchor.constraint(equalTo: self.messageInputLineSeparatorView.bottomAnchor, constant: 10),
             self.messageInputView.bottomAnchor.constraint(equalTo: self.messageInputBaseView.bottomAnchor, constant: -10),
 
             self.sendButton.leadingAnchor.constraint(equalTo: self.messageInputView.trailingAnchor, constant: 16),
@@ -926,21 +1061,29 @@ extension ConversationDetailViewController {
             self.view.topAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
             self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
         ])
-
-        self.messageInputBottomConstraint =
-        NSLayoutConstraint(item: self.messageInputBaseView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: self.bottomSafeAreaView,
-                           attribute: .top,
-                           multiplier: 1,
-                           constant: 0)
-        self.messageInputBottomConstraint.isActive = true
-
-        self.messageInputKeyboardConstraint.isActive = false
-
+        
+        // List load
+        NSLayoutConstraint.activate([
+            self.listLoadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.listLoadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.listLoadingBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor),
+            self.listLoadingBaseView.heightAnchor.constraint(equalToConstant: 60),
+            
+            self.listLoadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.listLoadingBaseView.centerYAnchor),
+            self.listLoadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.listLoadingBaseView.centerXAnchor)
+        ])
+        
         self.viewHeightConstraint = self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70)
         self.viewHeightConstraint.isActive = true
+
+//        self.avatarCenterConstraint = self.iconUserImageView.centerYAnchor.constraint(equalTo: self.iconView.centerYAnchor, constant: 3)
+//        self.avatarCenterConstraint.isActive = true
+
+        self.messageViewToTableConstraint = self.messageInputBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor)
+        self.messageViewToTableConstraint.isActive = true
+        
+        self.messageViewToListLoadingConstraint = self.messageInputBaseView.topAnchor.constraint(equalTo: self.listLoadingBaseView.bottomAnchor)
+        self.messageViewToListLoadingConstraint.isActive = false
 
     }
 }

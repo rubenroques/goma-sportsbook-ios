@@ -14,7 +14,7 @@ class NewGroupManagementViewModel {
 
     // MARK: Public Properties
     var users: [UserContact] = []
-    var gomaFriends: [GomaFriend] = []
+    var userFriends: [UserFriend] = []
     var cachedUserCellViewModels: [String: GroupUserManagementCellViewModel] = [:]
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
 
@@ -28,8 +28,8 @@ class NewGroupManagementViewModel {
     private func processUserContacts() {
         for user in self.users {
             if let userId = Int(user.id) {
-                let gomaFriend = GomaFriend(id: userId, name: user.username, username: user.username, isAdmin: 0)
-                self.gomaFriends.append(gomaFriend)
+                let gomaFriend = UserFriend(id: userId, name: user.username, username: user.username, avatar: user.avatar, isAdmin: false)
+                self.userFriends.append(gomaFriend)
             }
         }
     }
@@ -56,7 +56,8 @@ class NewGroupManagementViewModel {
 
     func getAdminUserId() -> Int {
 
-        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+        if let loggedUserIdString = Env.userSessionStore.userProfilePublisher.value?.userIdentifier,
+        let loggedUserId = Int(loggedUserIdString) {
             return loggedUserId
         }
 

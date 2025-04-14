@@ -37,7 +37,7 @@ extension ServiceProviderModelMapper {
                                freeBet: bet.freebet,
                                partialCashoutReturn: bet.partialCashoutReturn,
                                partialCashoutStake: bet.partialCashoutStake,
-                               betShareToken: nil,
+                               betShareToken: bet.shareId,
                                betslipId: bet.betslipId,
                                cashbackReturn: bet.cashbackReturn,
                                freebetReturn: bet.freebetReturn,
@@ -93,10 +93,10 @@ extension ServiceProviderModelMapper {
                                                                 status: status,
                                                                 result: result,
                                                                 priceValue: decimalOdd,
-                                                                sportId: nil,
+                                                                sportId: betSelection.sportType.iconId,
                                                                 sportName: betSelection.sportType.name,
-                                                                venueId: nil,
-                                                                venueName: betSelection.country?.iso2Code,
+                                                                venueId: betSelection.country?.iso2Code,
+                                                                venueName: betSelection.country?.name,
                                                                 tournamentId: nil,
                                                                 tournamentName: betSelection.tournamentName,
                                                                 eventId: betSelection.eventId,
@@ -242,5 +242,38 @@ extension ServiceProviderModelMapper {
                                         awayParticipantScore: nil,
                                         marketName: bettingTicket.marketDescription,
                                         betName: bettingTicket.outcomeDescription)
+    }
+    
+    static func bettingTicket(fromBetHistoryEntry betHistoryEntry: BetHistoryEntry) -> [BettingTicket] {
+        guard let selections = betHistoryEntry.selections else { return [] }
+        
+        var tickets: [BettingTicket] = []
+        
+        for selection in selections {
+        
+            let matchDescription = "\(selection.homeParticipantName ?? "") x \(selection.awayParticipantName ?? "")"
+            let marketDescription = selection.marketName ?? ""
+            let outcomeDescription = selection.betName ?? ""
+            
+            tickets.append(
+                BettingTicket(id: selection.outcomeId,
+                              outcomeId: selection.outcomeId,
+                              marketId: selection.bettingTypeId ?? "",
+                              matchId: selection.eventId ?? "",
+                              decimalOdd: selection.priceValue ?? 1.0,
+                              isAvailable: true,
+                              matchDescription: matchDescription,
+                              marketDescription: marketDescription,
+                              outcomeDescription: outcomeDescription,
+                              homeParticipantName: selection.homeParticipantName,
+                              awayParticipantName: selection.awayParticipantName,
+                              sportIdCode: selection.sportId)
+
+            )
+            
+        }
+        
+        return tickets
+        
     }
 }

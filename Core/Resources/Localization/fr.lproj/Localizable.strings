@@ -92,7 +92,7 @@
 "back_to_site" = "Retourner au paris";
 "bank_id" = "Coordonnées bancaires";
 "beginner" = "Débutant";
-"best_number_of_consecutive_wins" = "";
+"best_number_of_consecutive_wins" = "Meilleur nombre de victoires consécutives";
 "bet" = "Pari";
 "bet_amount" = "Montant du pari";
 "bet_now" = "Pariez maintenant";
@@ -136,7 +136,7 @@
 "birth_place" = "Lieu de naissance";
 "block" = "Bloc";
 "block_contact" = "";
-"block_user" = "";
+"block_user" = "Bloquer l'utilisateur";
 "bonus" = "Bonus";
 "bonus_added" = "Le bonus a été ajouté à votre compte";
 "bonus_amount" = "Montant du bonus";
@@ -165,7 +165,7 @@
 "chat_empty_shared_ticket_others" = "";
 "chat_empty_shared_ticket_self" = "";
 "chat_empty_state_text" = "";
-"chat_group_users_details" = "";
+"chat_group_users_details" = "{num_online} online, {num_members} members";
 "check_email" = "Vérifiez votre e-mail";
 "check_email_text" = "Nous avons envoyé un code à\n{email}\n";
 "check_email_text1" = "Nous avons envoyé un code à";
@@ -436,7 +436,7 @@
 "last_name_is_required" = "Le nom de famille est un champ obligatoire. Veuillez remplir ce champ.";
 "last_x_matches" = "{totalMatches} derniers matchs";
 "later" = "Plus tard";
-"latest_tips" = "";
+"latest_tips" = "Derniers conseils";
 "leave" = "Quitter";
 "leave_group" = "Quitter le groupe";
 "leave_group_message" = "Êtes-vous sûr de vouloir quitter le groupe ?";
@@ -541,7 +541,7 @@
 "need_login_favorites" = "Vous devez être connecté pour voir vos favoris.";
 "need_login_tickets" = "Vous devez être connecté pour pouvoir voir vos billets";
 "new_create_account" = "Nouveau ici? Créer un nouveau compte";
-"new_group" = "";
+"new_group" = "New group";
 "new_here" = "Nouveau ici?";
 "new_message" = "Nouveau message";
 "new_password" = "Nouveau mot de passe";
@@ -2100,3 +2100,19 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "leave_questionnaire" = "Êtes-vous sûr de vouloir partir ?";
 
 "back_home" = "Retour à la page d'accueil";
+
+"chat_ai_suggestions_title" = "Hi, I'm your personal GOMA AI Betting Assistant. Please select one of the options below or start typing to begin.";
+"do_you_have_a_friends_qr_code" = "Do you have a friend's QR code?";
+"add_via_qr_code" = "Add via QR code";
+"this_is_your_qr_code" = "This is your QR code!";
+"share_it" = "Share it";
+"share_it_with_a_friend_so_they_can_add_you" = "Share it with a friend so they can add you";
+"someone_sent_you_a_code_instead" = "Someone sent you a code instead?";
+"read_qr_code" = "Read QR code";
+"create_a_group" = "Create a group";
+"select_2_friends_for_group" = "Select atleast 2 friends to create a group";
+"add_members" = "Add members";
+"start_group_chat" = "Start Group Chat";
+"user_has_received_friend_request" = "{username} has received your friend request.";
+"you_still_havent_added_friends" = "You still haven't added friends";
+"bet_same" = "Même pari";

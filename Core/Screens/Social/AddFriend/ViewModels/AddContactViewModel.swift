@@ -13,7 +13,7 @@ class AddContactViewModel {
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
     private var registeredUsers: [GomaContact] = []
-    private var friendsList: [GomaFriend] = []
+    private var friendsList: [UserFriend] = []
     // MARK: Public Properties
     var users: [UserContact] = []
     var sectionUsers: [Int: [UserContact]] = [:]
@@ -120,8 +120,8 @@ class AddContactViewModel {
 
     private func getFriendsList() {
         self.isLoadingPublisher.send(true)
-
-        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+        
+        Env.servicesProvider.getFriends()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -132,13 +132,36 @@ class AddContactViewModel {
                 }
 
                 self?.getContactsData()
-
-            }, receiveValue: { response in
-                if let friends = response.data {
-                    self.friendsList = friends
-                }
+                
+            }, receiveValue: { [weak self] userFriends in
+                
+                let mappedFriends = userFriends.map({
+                    ServiceProviderModelMapper.userFriend(fromServiceProviderUserFriend: $0)
+                })
+                
+                self?.friendsList = mappedFriends
+                                
             })
             .store(in: &cancellables)
+
+//        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("LIST FRIEND ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//
+//                self?.getContactsData()
+//
+//            }, receiveValue: { response in
+//                if let friends = response.data {
+//                    self.friendsList = friends
+//                }
+//            })
+//            .store(in: &cancellables)
     }
 
     private func getContactsData() {
@@ -357,6 +380,14 @@ struct ContactsData {
     let phoneNumber: [String]
     let emailAddress: String
     var identifier: String
+
+    init(givenName: String, familyName: String, phoneNumber: [String], emailAddress: String, identifier: String) {
+        self.givenName = givenName
+        self.familyName = familyName
+        self.phoneNumber = phoneNumber
+        self.emailAddress = emailAddress
+        self.identifier = identifier
+    }
 }
 
 struct UserContactSectionData {

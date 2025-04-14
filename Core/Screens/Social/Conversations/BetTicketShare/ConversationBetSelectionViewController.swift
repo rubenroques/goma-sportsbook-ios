@@ -21,7 +21,7 @@ class ConversationBetSelectionViewController: UIViewController {
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     private var viewModel: ConversationBetSelectionViewModel
-
+    
     private var cancellables = Set<AnyCancellable>()
 
     private var isLoading: Bool = false {
@@ -85,7 +85,7 @@ class ConversationBetSelectionViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.tableView.backgroundColor = .clear
 
@@ -95,7 +95,7 @@ class ConversationBetSelectionViewController: UIViewController {
 
         self.emptyBetsLabel.textColor = UIColor.App.textPrimary
 
-        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.8)
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundSecondary.withAlphaComponent(0.7)
     }
 
     // MARK: Binding
@@ -110,7 +110,7 @@ class ConversationBetSelectionViewController: UIViewController {
 
          viewModel.hasTicketSelectedPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
+            .sink(receiveValue: { [weak self] hasTicketSelected in
 
                 self?.selectedBetTicketPublisher.send(self?.viewModel.selectedTicket)
             })
@@ -168,43 +168,60 @@ extension ConversationBetSelectionViewController: UITableViewDelegate, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if self.viewModel.myTicketsTypePublisher.value == .opened {
-
-            guard
-                let cell = tableView.dequeueCellType(BetSelectionTableViewCell.self),
-                let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
-            else {
-                fatalError()
-            }
-
-            cell.configure(withViewModel: cellViewModel)
-            cell.didTapCheckboxAction = { [weak self] viewModel in
-                self?.viewModel.checkSelectedTicket(withId: viewModel.id)
-            }
-            cell.didTapUncheckboxAction = { [weak self] viewModel in
-                self?.viewModel.uncheckSelectedTicket(withId: viewModel.id)
-            }
-
-            return cell
-        }
+        guard
+            let cell = tableView.dequeueCellType(BetSelectionStateTableViewCell.self),
+            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
         else {
-            guard
-                let cell = tableView.dequeueCellType(BetSelectionStateTableViewCell.self),
-                let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
-            else {
-                fatalError()
-            }
-
-            cell.configure(withViewModel: cellViewModel)
-            cell.didTapCheckboxAction = { [weak self] viewModel in
-                self?.viewModel.checkSelectedTicket(withId: viewModel.id)
-            }
-            cell.didTapUncheckboxAction = { [weak self] viewModel in
-                self?.viewModel.uncheckSelectedTicket(withId: viewModel.id)
-            }
-
-            return cell
+            fatalError()
         }
+
+        cell.configure(withViewModel: cellViewModel)
+        cell.didTapCheckboxAction = { [weak self] viewModel in
+            self?.viewModel.checkSelectedTicket(withId: viewModel.id)
+        }
+        cell.didTapUncheckboxAction = { [weak self] viewModel in
+            self?.viewModel.uncheckSelectedTicket(withId: viewModel.id)
+        }
+
+        return cell
+        
+//        if self.viewModel.myTicketsTypePublisher.value == .opened {
+//
+//            guard
+//                let cell = tableView.dequeueCellType(BetSelectionTableViewCell.self),
+//                let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
+//            else {
+//                fatalError()
+//            }
+//
+//            cell.configure(withViewModel: cellViewModel)
+//            cell.didTapCheckboxAction = { [weak self] viewModel in
+//                self?.viewModel.checkSelectedTicket(withId: viewModel.id)
+//            }
+//            cell.didTapUncheckboxAction = { [weak self] viewModel in
+//                self?.viewModel.uncheckSelectedTicket(withId: viewModel.id)
+//            }
+//
+//            return cell
+//        }
+//        else {
+//            guard
+//                let cell = tableView.dequeueCellType(BetSelectionStateTableViewCell.self),
+//                let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
+//            else {
+//                fatalError()
+//            }
+//
+//            cell.configure(withViewModel: cellViewModel)
+//            cell.didTapCheckboxAction = { [weak self] viewModel in
+//                self?.viewModel.checkSelectedTicket(withId: viewModel.id)
+//            }
+//            cell.didTapUncheckboxAction = { [weak self] viewModel in
+//                self?.viewModel.uncheckSelectedTicket(withId: viewModel.id)
+//            }
+//
+//            return cell
+//        }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -268,7 +285,7 @@ extension ConversationBetSelectionViewController {
     private static func createEmptyBetsImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "no_content_icon")
+        imageView.image = UIImage(named: "my_tickets_empty_icon")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }
@@ -277,6 +294,7 @@ extension ConversationBetSelectionViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = localized("not_bets_tickets_section")
+        label.font = AppFont.with(type: .medium, size: 16)
         label.numberOfLines = 0
         label.textAlignment = .center
         return label

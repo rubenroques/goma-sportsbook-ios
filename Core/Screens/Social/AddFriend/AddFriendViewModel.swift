@@ -18,7 +18,7 @@ class AddFriendViewModel {
     var initialUsers: [UserContact] = []
     var cachedSearchCellViewModels: [String: AddFriendCellViewModel] = [:]
     var cachedFriendsCellViewModels: [Int: FriendStatusCellViewModel] = [:]
-    var friendsPublisher: CurrentValueSubject<[GomaFriend], Never> = .init([])
+    var friendsPublisher: CurrentValueSubject<[UserFriend], Never> = .init([])
     var userContactSection: CurrentValueSubject<[UserContactSection], Never> = .init([])
     var individualChatrooms: [ChatroomData] = []
 
@@ -35,12 +35,12 @@ class AddFriendViewModel {
     init() {
         self.canAddFriendPublisher.send(false)
 
-        self.getGomaFriends()
+//        self.getUserFriends()
     }
 
     func getUserInfo(friendCode: String) {
-
-        Env.gomaNetworkClient.searchUserCode(deviceId: Env.deviceId, code: friendCode)
+        
+        Env.servicesProvider.searchUserWithCode(code: friendCode)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -58,7 +58,7 @@ class AddFriendViewModel {
 
                 guard let self = self else {return}
 
-                let user = UserContact(id: "\(searchUser.id)", username: searchUser.username ?? "User", phones: [])
+                let user = UserContact(id: "\(searchUser.id)", username: searchUser.username, phones: [], avatar: searchUser.avatar)
 
                 if !self.userInfoAlreadyRetrieved(user: user) {
                     self.usersPublisher.value.append(user)
@@ -67,11 +67,11 @@ class AddFriendViewModel {
             })
             .store(in: &cancellables)
 
-        // self.dataNeedsReload.send()
     }
 
-    private func getGomaFriends() {
-        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+    private func getUserFriends() {
+        
+        Env.servicesProvider.getFriends()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -80,38 +80,64 @@ class AddFriendViewModel {
                 case .finished:
                     ()
                 }
-//                self?.isLoadingPublisher.send(false)
-//                self?.dataNeedsReload.send()
-            }, receiveValue: { [weak self] response in
-                if let friends = response.data {
-                    self?.friendsPublisher.value = friends
-                    self?.processFriends()
-                }
+
+            }, receiveValue: { [weak self] userFriends in
+                
+                let mappedFriends = userFriends.map({
+                    ServiceProviderModelMapper.userFriend(fromServiceProviderUserFriend: $0)
+                })
+                
+                self?.friendsPublisher.value = mappedFriends
+                
+                self?.processFriends()
+                
             })
             .store(in: &cancellables)
+        
     }
 
     private func getIndividualChatroomsData() {
-
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
+        
+        Env.servicesProvider.getChatrooms()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     print("CHATROOMS ERROR: \(error)")
-//                    self?.isLoadingPublisher.send(false)
-//                    self?.dataNeedsReload.send()
                 case .finished:
                     ()
                 }
 
-            }, receiveValue: { [weak self] response in
-                if let chatrooms = response.data {
-                    self?.storeIndividualChatrooms(chatroomsData: chatrooms)
-                }
-
+            }, receiveValue: { [weak self] chatroomsData in
+                
+                let mappedChatroomsData = chatroomsData.map({
+                    return ServiceProviderModelMapper.chatroomData(fromServiceProviderChatroomData: $0)
+                })
+                
+                self?.storeIndividualChatrooms(chatroomsData: mappedChatroomsData)
+                
             })
             .store(in: &cancellables)
+
+//        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("CHATROOMS ERROR: \(error)")
+//                    self?.isLoadingPublisher.send(false)
+//                    self?.dataNeedsReload.send()
+//                case .finished:
+//                    ()
+//                }
+//
+//            }, receiveValue: { [weak self] response in
+//                if let chatrooms = response.data {
+//                    self?.storeIndividualChatrooms(chatroomsData: chatrooms)
+//                }
+//
+//            })
+//            .store(in: &cancellables)
     }
 
     private func storeIndividualChatrooms(chatroomsData: [ChatroomData]) {
@@ -134,7 +160,7 @@ class AddFriendViewModel {
     func getConversationData(userId: String) -> ConversationData {
         var chatroomId = 0
         var chatroomUsername = ""
-        var chatroomUsers: [GomaFriend] = []
+        var chatroomUsers: [UserFriend] = []
 
         for chatroomData in self.individualChatrooms {
             for user in chatroomData.users {
@@ -178,7 +204,7 @@ class AddFriendViewModel {
         var friendsContactArray: [UserContact] = []
 
         for friend in self.friendsPublisher.value {
-            let user = UserContact(id: "\(friend.id)", username: friend.username ?? "User", phones: [])
+            let user = UserContact(id: "\(friend.id)", username: friend.username, phones: [], avatar: friend.avatar)
 
             friendsContactArray.append(user)
         }
@@ -206,7 +232,7 @@ class AddFriendViewModel {
             userIds.append(selectedUser.id)
         }
 
-        Env.gomaNetworkClient.addFriends(deviceId: Env.deviceId, userIds: userIds)
+        Env.servicesProvider.addFriends(userIds: userIds)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -218,15 +244,16 @@ class AddFriendViewModel {
                 }
 
                 self?.shouldShowAlert.send(true)
-            }, receiveValue: { [weak self] response in
-                print("ADD FRIEND GOMA: \(response)")
+            }, receiveValue: { [weak self] addFriendResponse in
+                print("ADD FRIEND GOMA: \(addFriendResponse)")
 
-                if let chatroomIdsData = response.data?.chatroomIds {
+                if let chatroomIdsData = addFriendResponse.chatroomIds {
                     self?.chatroomsResponse = chatroomIdsData
                 }
                 self?.friendAlertType = .success
             })
             .store(in: &cancellables)
+        
     }
 
     func checkSelectedUserContact(cellViewModel: AddFriendCellViewModel) {
@@ -247,6 +274,71 @@ class AddFriendViewModel {
         }
 
     }
+    
+    func processQRCode(code: String) {
+        let pattern = "/friend-code/([A-Z0-9]+)"
+        let regex = try? NSRegularExpression(pattern: pattern)
+        
+        if let match = regex?.firstMatch(in: code, range: NSRange(code.startIndex..., in: code)) {
+            if let range = Range(match.range(at: 1), in: code) {
+                let extractedCode = String(code[range])
+                self.searchFriendFromQRCode(code: extractedCode)
+
+            }
+        }
+        else {
+            self.friendCodeInvalidPublisher.send()
+        }
+        
+    }
+    
+    func searchFriendFromQRCode(code: String) {
+        print("QR CODE: \(code)")
+        
+        Env.servicesProvider.searchUserWithCode(code: code)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("SEARCH FRIEND ERROR: \(error)")
+                    self?.friendCodeInvalidPublisher.send()
+                case .finished:
+                    print("SEARCH FRIEND FINISHED")
+                }
+
+            }, receiveValue: { [weak self] searchUser in
+                print("SEARCH FRIEND GOMA: \(searchUser)")
+
+                self?.addFriendFromId(id: "\(searchUser.id)")
+
+                
+            })
+            .store(in: &cancellables)
+        
+    }
+    
+    func addFriendFromId(id: String) {
+        
+        Env.servicesProvider.addFriends(userIds: [id])
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("ADD FRIEND ERROR: \(error)")
+                    self?.friendAlertType = .error
+                case .finished:
+                    print("ADD FRIEND FINISHED")
+                }
+
+                self?.shouldShowAlert.send(true)
+            }, receiveValue: { [weak self] addFriendResponse in
+                print("ADD FRIEND GOMA: \(addFriendResponse)")
+                
+                self?.friendAlertType = .success
+            })
+            .store(in: &cancellables)
+    
+    }
 }
 
 struct UserContact {
@@ -254,6 +346,7 @@ struct UserContact {
     var username: String
     var phones: [String]
     var emails: [String]?
+    var avatar: String?
 }
 
 enum ContactSectionType {

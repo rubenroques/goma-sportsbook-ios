@@ -73,7 +73,7 @@ extension ListActionHeaderFooterView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Title"
-        label.font = AppFont.with(type: .semibold, size: 14)
+        label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .left
         return label
     }

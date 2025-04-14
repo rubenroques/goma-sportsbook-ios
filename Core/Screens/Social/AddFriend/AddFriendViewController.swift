@@ -16,15 +16,21 @@ class AddFriendViewController: UIViewController {
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var closeButton: UIButton = Self.createCloseButton()
+    private lazy var userInfoHeaderView: UIView = Self.createUserInfoHeaderView()
+    private lazy var userIconView: UIView = Self.createUserIconView()
+    private lazy var userIconImageView: UIImageView = Self.createUserIconImageView()
+    private lazy var usernameLabel: UILabel = Self.createUsernameLabel()
+    private lazy var userCodeTitleLabel: UILabel = Self.createUserCodeTitleLabel()
+    private lazy var shareCodeButton: UIButton = Self.createShareCodeButton()
+    private lazy var qrCodeButton: UIButton = Self.createQRCodeButton()
     private lazy var searchFriendLabel: UILabel = Self.createSearchFriendLabel()
-    private lazy var searchFriendTextFieldView: ActionTextFieldView = Self.createSearchFriendTextFieldView()
-    private lazy var addContactFriendButton: UIButton = Self.createAddContactFriendButton()
-    private lazy var tableSeparatorLineView: UIView = Self.createTableSeparatorLineView()
+    private lazy var searchFriendTextFieldView: ActionSearchTextFieldView = Self.createSearchFriendTextFieldView()
     private lazy var tableView: UITableView = Self.createTableView()
-    private lazy var addFriendBaseView: UIView = Self.createAddFriendBaseView()
-    private lazy var addFriendButton: UIButton = Self.createAddFriendButton()
-    private lazy var addFriendSeparatorLineView: UIView = Self.createAddFriendSeparatorLineView()
+    private lazy var scanFriendBaseView: UIView = Self.createScanFriendBaseView()
+    private lazy var scanFriendTitleLabel: UILabel = Self.createScanFriendTitleLabel()
+    private lazy var scanFriendIconView: UIView = Self.createScanFriendIconView()
+    private lazy var scanFriendImageView: UIImageView = Self.createScanFriendImageView()
+    private lazy var scanFriendSubtitleLabel: UILabel = Self.createScanFriendSubtitleLabel()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -34,7 +40,6 @@ class AddFriendViewController: UIViewController {
     var isEmptySearch: Bool = true {
         didSet {
             self.tableView.isHidden = isEmptySearch
-            self.tableSeparatorLineView.isHidden = isEmptySearch
         }
     }
 
@@ -63,16 +68,17 @@ class AddFriendViewController: UIViewController {
         self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
         self.tableView.register(AddFriendTableViewCell.self,
                                 forCellReuseIdentifier: AddFriendTableViewCell.identifier)
-        self.tableView.register(FriendStatusTableViewCell.self,
-                                forCellReuseIdentifier: FriendStatusTableViewCell.identifier)
+        self.tableView.register(SearchFriendTableViewCell.self,
+                                forCellReuseIdentifier: SearchFriendTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+        
+        self.shareCodeButton.addTarget(self, action: #selector(didTapShareCodeButton), for: .primaryActionTriggered)
+        
+        self.qrCodeButton.addTarget(self, action: #selector(didTapQRCodeButton), for: .primaryActionTriggered)
 
-        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
-
-        self.addContactFriendButton.addTarget(self, action: #selector(didTapAddContactButton), for: .primaryActionTriggered)
-
-        self.addFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
+        let scanQRCodeGesture = UITapGestureRecognizer(target: self, action: #selector(didTapScanQRCode))
+        self.scanFriendIconView.addGestureRecognizer(scanQRCodeGesture)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
@@ -86,6 +92,22 @@ class AddFriendViewController: UIViewController {
           tableView.sectionHeaderTopPadding = 0
         }
     }
+    
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+
+        super.viewDidLayoutSubviews()
+        
+        self.userInfoHeaderView.layer.cornerRadius = CornerRadius.button
+
+        self.userIconView.layer.cornerRadius = self.userIconView.frame.height / 2
+        self.userIconView.clipsToBounds = true
+        
+        self.userIconImageView.layer.cornerRadius = self.userIconImageView.frame.height / 2
+        
+        self.scanFriendIconView.layer.cornerRadius = CornerRadius.button
+
+    }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -94,36 +116,44 @@ class AddFriendViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.backButton.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
-
-        self.closeButton.backgroundColor = .clear
-        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
-
+        
+        self.userInfoHeaderView.backgroundColor = UIColor.App.backgroundPrimary
+        
+        self.userIconView.backgroundColor = .clear
+        self.userIconView.layer.borderColor = UIColor.App.highlightTertiary.cgColor
+        
+        self.userIconImageView.backgroundColor = .clear
+        
+        self.usernameLabel.textColor = UIColor.App.highlightTertiary
+                        
+        self.shareCodeButton.tintColor = UIColor.App.iconPrimary
+        
+        self.qrCodeButton.tintColor = UIColor.App.iconPrimary
+        
         self.searchFriendLabel.textColor = UIColor.App.textPrimary
 
-        self.addContactFriendButton.backgroundColor = .clear
-        self.addContactFriendButton.tintColor = UIColor.App.highlightSecondary
-        self.addContactFriendButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+        self.tableView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.tableSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.scanFriendBaseView.backgroundColor = .clear
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.addFriendBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
-        StyleHelper.styleButton(button: self.addFriendButton)
-
-        self.addFriendSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.scanFriendTitleLabel.textColor = UIColor.App.textSecondary
+        
+        self.scanFriendIconView.backgroundColor = UIColor.App.backgroundTertiary
+        
+        self.scanFriendImageView.backgroundColor = .clear
+        
+        self.scanFriendSubtitleLabel.textColor = UIColor.App.textPrimary
     }
 
     // MARK: binding
@@ -140,7 +170,7 @@ class AddFriendViewController: UIViewController {
         viewModel.canAddFriendPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isEnabled in
-                self?.addFriendButton.isEnabled = isEnabled
+//                self?.addFriendButton.isEnabled = isEnabled
             })
             .store(in: &cancellables)
 
@@ -230,11 +260,9 @@ class AddFriendViewController: UIViewController {
         switch friendAlertType {
         case .success:
 
-            Env.gomaSocialClient.forceRefresh()
-
-//            self.chatListNeedsReload?()
-//
-//            self.navigationController?.popViewController(animated: true)
+            self.chatListNeedsReload?()
+            
+            self.navigationController?.popViewController(animated: true)
         case .error:
             let errorFriendAlert = UIAlertController(title: localized("friend_added_error"),
                                                        message: localized("friend_added_message_error"),
@@ -272,78 +300,112 @@ class AddFriendViewController: UIViewController {
     }
 
     // MARK: Actions
-    @objc func didTapBackButton() {
+    @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
-
-    @objc func didTapCloseButton() {
-
-        if self.isModal {
-            self.dismiss(animated: true, completion: nil)
+    
+    @objc private func didTapShareCodeButton() {
+        
+        let urlMobile = TargetVariables.clientBaseUrl
+        
+        let userCode = Env.userSessionStore.userProfilePublisher.value?.godfatherCode ?? ""
+        
+        let shareLink = "\(urlMobile)/en/friend-code/\(userCode)"
+        
+        let shareActivityViewController = UIActivityViewController(activityItems: [shareLink],
+                                                                   applicationActivities: nil)
+        if let popoverController = shareActivityViewController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
         }
-        else {
-            self.navigationController?.popViewController(animated: true)
+
+        self.present(shareActivityViewController, animated: true, completion: nil)
+    }
+    
+    @objc private func didTapQRCodeButton() {
+        let socialUserQRCodeViewModel = SocialUserQRCodeViewModel()
+        
+        let socialUserQRCodeViewController = SocialUserQRCodeViewController(viewModel: socialUserQRCodeViewModel)
+        
+        socialUserQRCodeViewController.chatListNeedsReload = { [weak self] in
+            self?.chatListNeedsReload?()
         }
+        
+        self.navigationController?.pushViewController(socialUserQRCodeViewController, animated: true)
     }
 
-    @objc func didTapAddContactButton() {
+//    @objc func didTapAddContactButton() {
+//
+//        let contactStore = CNContactStore()
+//
+//        switch CNContactStore.authorizationStatus(for: .contacts) {
+//        case .authorized:
+//            print("Authorized")
+//            let addContactViewModel = AddContactViewModel()
+//            let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
+//
+//            addContactViewController.chatListNeedsReload = { [weak self] in
+//                self?.chatListNeedsReload?()
+//            }
+//
+//            self.navigationController?.pushViewController(addContactViewController, animated: true)
+//
+//        case .notDetermined:
+//            print("Not determined")
+//            contactStore.requestAccess(for: .contacts) { succeeded, error in
+//                guard succeeded && error == nil else {
+//                    return
+//                }
+//
+//                if succeeded {
+//                    DispatchQueue.main.async {
+//                        let addContactViewModel = AddContactViewModel()
+//                        let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
+//
+//                        addContactViewController.chatListNeedsReload = { [weak self] in
+//                            self?.chatListNeedsReload?()
+//                        }
+//
+//                        self.navigationController?.pushViewController(addContactViewController, animated: true)
+//                    }
+//
+//                }
+//            }
+//
+//        case .denied:
+//            print("Not handled")
+//
+//        case .restricted:
+//            print("Not handled")
+//
+//        @unknown default:
+//            print("Not handled")
+//        }
+//
+//    }
 
-        let contactStore = CNContactStore()
-
-        switch CNContactStore.authorizationStatus(for: .contacts) {
-        case .authorized:
-            print("Authorized")
-            let addContactViewModel = AddContactViewModel()
-            let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
-
-            addContactViewController.chatListNeedsReload = { [weak self] in
-                self?.chatListNeedsReload?()
-            }
-
-            self.navigationController?.pushViewController(addContactViewController, animated: true)
-
-        case .notDetermined:
-            print("Not determined")
-            contactStore.requestAccess(for: .contacts) { succeeded, error in
-                guard succeeded && error == nil else {
-                    return
-                }
-
-                if succeeded {
-                    DispatchQueue.main.async {
-                        let addContactViewModel = AddContactViewModel()
-                        let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
-
-                        addContactViewController.chatListNeedsReload = { [weak self] in
-                            self?.chatListNeedsReload?()
-                        }
-
-                        self.navigationController?.pushViewController(addContactViewController, animated: true)
-                    }
-
-                }
-            }
-
-        case .denied:
-            print("Not handled")
-
-        case .restricted:
-            print("Not handled")
-
-        @unknown default:
-            print("Not handled")
-        }
-
-    }
-
-    @objc func didTapAddFriendButton() {
+    @objc private func didTapAddFriendButton() {
         print("FRIENDS SELECTED: \(self.viewModel.selectedUsers)")
 
         self.viewModel.sendFriendRequest()
     }
 
-    @objc func didTapBackground() {
+    @objc private func didTapBackground() {
         self.searchFriendTextFieldView.resignFirstResponder()
+    }
+    
+    @objc private func didTapScanQRCode() {
+        let scannerVC = QRScannerViewController()
+        let navigationController = UINavigationController(rootViewController: scannerVC)
+        navigationController.modalPresentationStyle = .fullScreen
+        
+        scannerVC.didScanQRCode = { [weak self] code in
+            print("SCANNED: \(code)")
+            self?.viewModel.processQRCode(code: code)
+        }
+        
+        present(navigationController, animated: true)
     }
 
 }
@@ -366,7 +428,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
         if self.viewModel.userContactSection.value[indexPath.section].contactSectionType == .search {
 
-            guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
+            guard let cell = tableView.dequeueCellType(SearchFriendTableViewCell.self)
             else {
                 fatalError()
             }
@@ -376,24 +438,24 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
                 if let cellViewModel = self.viewModel.cachedSearchCellViewModels[userContact.id] {
                     cell.configure(viewModel: cellViewModel)
 
-                    cell.didTapCheckboxAction = { [weak self] in
-                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                    }
                 }
                 else {
                     let cellViewModel = AddFriendCellViewModel(userContact: userContact)
                     self.viewModel.cachedSearchCellViewModels[userContact.id] = cellViewModel
                     cell.configure(viewModel: cellViewModel)
 
-                    cell.didTapCheckboxAction = { [weak self] in
-                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                    }
                 }
 
             }
-
-            if indexPath.row == self.viewModel.usersPublisher.value.count - 1 {
-                cell.hasSeparatorLine = false
+            
+            cell.roundCornerType = .all
+            
+            cell.errorAddingFriend = { [weak self] in
+                self?.showAddFriendAlert(friendAlertType: .error)
+            }
+            
+            cell.chatListNeedsReload = { [weak self] in
+                self?.chatListNeedsReload?()
             }
 
             return cell
@@ -443,22 +505,24 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
         if self.viewModel.userContactSection.value[section].contactSectionType == .search {
 
-            if self.viewModel.usersPublisher.value.isNotEmpty {
-                guard
-                    let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
-                else {
-                    fatalError()
-                }
-
-                let resultsLabel = "Results (\(self.viewModel.usersPublisher.value.count))"
-
-                headerView.configureHeader(title: resultsLabel)
-
-                return headerView
-            }
-            else {
-                return UIView()
-            }
+//            if self.viewModel.usersPublisher.value.isNotEmpty {
+//                guard
+//                    let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
+//                else {
+//                    fatalError()
+//                }
+//
+//                let resultsLabel = "Results (\(self.viewModel.usersPublisher.value.count))"
+//
+//                headerView.configureHeader(title: resultsLabel)
+//
+//                return headerView
+//            }
+//            else {
+//                return UIView()
+//            }
+            
+            return UIView()
         }
         else if self.viewModel.userContactSection.value[section].contactSectionType == .friends {
             if self.viewModel.friendsPublisher.value.isNotEmpty {
@@ -509,6 +573,9 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
         if self.viewModel.userContactSection.value.isNotEmpty {
+            if self.viewModel.userContactSection.value[section].contactSectionType == .search {
+                return 0
+            }
             return 30
         }
         else {
@@ -520,6 +587,9 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
         if self.viewModel.userContactSection.value.isNotEmpty {
+            if self.viewModel.userContactSection.value[section].contactSectionType == .search {
+                return 0
+            }
             return 30
         }
         else {
@@ -577,55 +647,105 @@ extension AddFriendViewController {
         label.text = localized("add_friend")
         return label
     }
+    
+    private static func createUserInfoHeaderView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createUserIconView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.borderWidth = 2
+        return view
+    }
+    
+    private static func createUserIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        if let avatar = Env.userSessionStore.userProfilePublisher.value?.avatarName {
+            if let avatarImage = UIImage(named: avatar) {
+                imageView.image = avatarImage
+            }
+            else {
+                imageView.image = UIImage(named: "empty_user_image")
+            }
+        }
+        else {
+            imageView.image = UIImage(named: "empty_user_image")
+        }
+        
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createUsernameLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.textAlignment = .left
+        label.text = "\(Env.userSessionStore.userProfilePublisher.value?.username ?? "")"
+        return label
+    }
+    
+    private static func createUserCodeTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
 
-    private static func createCloseButton() -> UIButton {
+        let code = Env.userSessionStore.userProfilePublisher.value?.godfatherCode ?? ""
+        
+        let fullText = localized("user_code_dynamic").replacingFirstOccurrence(of: "{code_str}", with: code)
+        
+        let range = (fullText as NSString).range(of: code)
+        
+        let attributedString = NSMutableAttributedString(
+            string: fullText,
+            attributes: [.foregroundColor: UIColor.App.textPrimary,
+                         .font: AppFont.with(type: .bold, size: 16)]
+        )
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textSecondary, range: range)
+        
+        label.attributedText = attributedString
+        return label
+    }
+    
+    private static func createShareCodeButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("close"), for: .normal)
-        button.setContentHuggingPriority(.required, for: .horizontal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
+        let image = UIImage(named: "share_code_icon")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
         return button
     }
-
-    private static func createSearchBar() -> UISearchBar {
-        let searchBar = UISearchBar()
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        return searchBar
+    
+    private static func createQRCodeButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(named: "qr_code_icon")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        return button
     }
 
     private static func createSearchFriendLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 14)
+        label.font = AppFont.with(type: .bold, size: 18)
         label.numberOfLines = 0
         label.textAlignment = .left
         label.text = localized("search_friend_code")
         return label
     }
 
-    private static func createSearchFriendTextFieldView() -> ActionTextFieldView {
-        let textFieldView = ActionTextFieldView()
+    private static func createSearchFriendTextFieldView() -> ActionSearchTextFieldView {
+        let textFieldView = ActionSearchTextFieldView()
         textFieldView.translatesAutoresizingMaskIntoConstraints = false
         textFieldView.setPlaceholderText(placeholder: localized("friend_code"))
         textFieldView.setActionButtonTitle(title: localized("search"))
         return textFieldView
-    }
-
-    private static func createAddContactFriendButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
-        button.setTitle(localized("add_from_contact"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
-        return button
-    }
-
-    private static func createTableSeparatorLineView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
     }
 
     private static func createTableView() -> UITableView {
@@ -636,23 +756,42 @@ extension AddFriendViewController {
         return tableView
     }
 
-    private static func createAddFriendBaseView() -> UIView {
+    private static func createScanFriendBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createAddFriendButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("add_friend"), for: .normal)
-        return button
+    private static func createScanFriendTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .center
+        label.text = localized("do_you_have_a_friends_qr_code")
+        return label
     }
-
-    private static func createAddFriendSeparatorLineView() -> UIView {
+    
+    private static func createScanFriendIconView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+    
+    private static func createScanFriendImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "scan_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createScanFriendSubtitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 12)
+        label.textAlignment = .center
+        label.text = localized("add_via_qr_code")
+        return label
     }
 
     private func setupSubviews() {
@@ -663,24 +802,33 @@ extension AddFriendViewController {
 
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.titleLabel)
-        self.navigationView.addSubview(self.closeButton)
-
-//        self.view.addSubview(self.searchBar)
-
+        
+        self.view.addSubview(self.userInfoHeaderView)
+        
+        self.userInfoHeaderView.addSubview(self.userIconView)
+        
+        self.userIconView.addSubview(self.userIconImageView)
+        
+        self.userInfoHeaderView.addSubview(self.usernameLabel)
+        self.userInfoHeaderView.addSubview(self.userCodeTitleLabel)
+        self.userInfoHeaderView.addSubview(self.shareCodeButton)
+        self.userInfoHeaderView.addSubview(self.qrCodeButton)
+        
         self.view.addSubview(self.searchFriendLabel)
 
         self.view.addSubview(self.searchFriendTextFieldView)
 
-        self.view.addSubview(self.addContactFriendButton)
-
-        self.view.addSubview(self.tableSeparatorLineView)
-
         self.view.addSubview(self.tableView)
 
-        self.view.addSubview(self.addFriendBaseView)
+        self.view.addSubview(self.scanFriendBaseView)
 
-        self.addFriendBaseView.addSubview(self.addFriendButton)
-        self.addFriendBaseView.addSubview(self.addFriendSeparatorLineView)
+        self.scanFriendBaseView.addSubview(self.scanFriendTitleLabel)
+        
+        self.scanFriendBaseView.addSubview(self.scanFriendIconView)
+        
+        self.scanFriendIconView.addSubview(self.scanFriendImageView)
+        
+        self.scanFriendBaseView.addSubview(self.scanFriendSubtitleLabel)
 
         self.view.addSubview(self.bottomSafeAreaView)
 
@@ -715,29 +863,55 @@ extension AddFriendViewController {
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor)
 
-            self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -16),
-            self.closeButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.closeButton.heightAnchor.constraint(equalToConstant: 40)
-
+        ])
+        
+        // User Header Info View
+        NSLayoutConstraint.activate([
+            self.userInfoHeaderView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.userInfoHeaderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+            self.userInfoHeaderView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 10),
+            
+            self.userIconView.leadingAnchor.constraint(equalTo: self.userInfoHeaderView.leadingAnchor, constant: 18),
+            self.userIconView.topAnchor.constraint(equalTo: self.userInfoHeaderView.topAnchor, constant: 24),
+            self.userIconView.bottomAnchor.constraint(equalTo: self.userInfoHeaderView.bottomAnchor, constant: -24),
+            self.userIconView.widthAnchor.constraint(equalToConstant: 40),
+            self.userIconView.heightAnchor.constraint(equalTo: self.userIconView.widthAnchor),
+            
+            self.userIconImageView.leadingAnchor.constraint(equalTo: self.userIconView.leadingAnchor),
+            self.userIconImageView.trailingAnchor.constraint(equalTo: self.userIconView.trailingAnchor),
+            self.userIconImageView.topAnchor.constraint(equalTo: self.userIconView.topAnchor),
+            self.userIconImageView.bottomAnchor.constraint(equalTo: self.userIconView.bottomAnchor),
+            
+            self.usernameLabel.leadingAnchor.constraint(equalTo: self.userIconView.trailingAnchor, constant: 10),
+            self.usernameLabel.trailingAnchor.constraint(equalTo: self.userInfoHeaderView.trailingAnchor, constant: -18),
+            self.usernameLabel.topAnchor.constraint(equalTo: self.userIconView.topAnchor, constant: -4),
+            
+            self.userCodeTitleLabel.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor, constant: 0),
+            self.userCodeTitleLabel.bottomAnchor.constraint(equalTo: self.userIconView.bottomAnchor, constant: 4),
+            
+            self.shareCodeButton.leadingAnchor.constraint(equalTo: self.userCodeTitleLabel.trailingAnchor, constant: 8),
+            self.shareCodeButton.centerYAnchor.constraint(equalTo: self.userCodeTitleLabel.centerYAnchor),
+            self.shareCodeButton.widthAnchor.constraint(equalToConstant: 25),
+            self.shareCodeButton.heightAnchor.constraint(equalTo: self.shareCodeButton.widthAnchor),
+            
+            self.qrCodeButton.leadingAnchor.constraint(equalTo: self.shareCodeButton.trailingAnchor, constant: 2),
+            self.qrCodeButton.centerYAnchor.constraint(equalTo: self.userCodeTitleLabel.centerYAnchor),
+            self.qrCodeButton.widthAnchor.constraint(equalToConstant: 25),
+            self.qrCodeButton.heightAnchor.constraint(equalTo: self.shareCodeButton.widthAnchor)
+            
         ])
 
         // Search friend code views
         NSLayoutConstraint.activate([
             self.searchFriendLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.searchFriendLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
-            self.searchFriendLabel.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
+            self.searchFriendLabel.topAnchor.constraint(equalTo: self.userInfoHeaderView.bottomAnchor, constant: 35),
 
             self.searchFriendTextFieldView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.searchFriendTextFieldView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
-            self.searchFriendTextFieldView.topAnchor.constraint(equalTo: self.searchFriendLabel.bottomAnchor, constant: 8),
-        ])
-
-        // Contact list button
-        NSLayoutConstraint.activate([
-            self.addContactFriendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.addContactFriendButton.topAnchor.constraint(equalTo: self.searchFriendTextFieldView.bottomAnchor, constant: 30)
+            self.searchFriendTextFieldView.topAnchor.constraint(equalTo: self.searchFriendLabel.bottomAnchor, constant: 8)
         ])
 
         // Tableview
@@ -745,32 +919,36 @@ extension AddFriendViewController {
 
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.tableSeparatorLineView.bottomAnchor, constant: 25),
-
-            self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor, constant: 25),
-            self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor, constant: -25),
-            self.tableSeparatorLineView.topAnchor.constraint(equalTo: self.addContactFriendButton.bottomAnchor, constant: 10),
-            self.tableSeparatorLineView.heightAnchor.constraint(equalToConstant: 1)
+            self.tableView.topAnchor.constraint(equalTo: self.searchFriendTextFieldView.bottomAnchor, constant: 20)
 
         ])
 
         // Add Friend Button View
         NSLayoutConstraint.activate([
-            self.addFriendBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.addFriendBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.addFriendBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 8),
-            self.addFriendBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-            self.addFriendBaseView.heightAnchor.constraint(equalToConstant: 105),
-
-            self.addFriendButton.leadingAnchor.constraint(equalTo: self.addFriendBaseView.leadingAnchor, constant: 33),
-            self.addFriendButton.trailingAnchor.constraint(equalTo: self.addFriendBaseView.trailingAnchor, constant: -33),
-            self.addFriendButton.heightAnchor.constraint(equalToConstant: 55),
-            self.addFriendButton.centerYAnchor.constraint(equalTo: self.addFriendBaseView.centerYAnchor),
-
-            self.addFriendSeparatorLineView.leadingAnchor.constraint(equalTo: self.addFriendBaseView.leadingAnchor),
-            self.addFriendSeparatorLineView.trailingAnchor.constraint(equalTo: self.addFriendBaseView.trailingAnchor),
-            self.addFriendSeparatorLineView.topAnchor.constraint(equalTo: self.addFriendBaseView.topAnchor),
-            self.addFriendSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.scanFriendBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.scanFriendBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.scanFriendBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 8),
+            self.scanFriendBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+            
+            self.scanFriendTitleLabel.leadingAnchor.constraint(equalTo: self.scanFriendBaseView.leadingAnchor, constant: 15),
+            self.scanFriendTitleLabel.trailingAnchor.constraint(equalTo: self.scanFriendBaseView.trailingAnchor, constant: -15),
+            self.scanFriendTitleLabel.topAnchor.constraint(equalTo: self.scanFriendBaseView.topAnchor, constant: 2),
+            
+            self.scanFriendIconView.topAnchor.constraint(equalTo: self.scanFriendTitleLabel.bottomAnchor, constant: 15),
+            self.scanFriendIconView.widthAnchor.constraint(equalToConstant: 55),
+            self.scanFriendIconView.heightAnchor.constraint(equalTo: self.scanFriendIconView.widthAnchor),
+            self.scanFriendIconView.centerXAnchor.constraint(equalTo: self.scanFriendBaseView.centerXAnchor),
+            
+            self.scanFriendImageView.centerXAnchor.constraint(equalTo: self.scanFriendIconView.centerXAnchor),
+            self.scanFriendImageView.centerYAnchor.constraint(equalTo: self.scanFriendIconView.centerYAnchor),
+            self.scanFriendImageView.widthAnchor.constraint(equalToConstant: 32),
+            self.scanFriendImageView.heightAnchor.constraint(equalTo: self.scanFriendImageView.widthAnchor),
+            
+            self.scanFriendSubtitleLabel.leadingAnchor.constraint(equalTo: self.scanFriendBaseView.leadingAnchor, constant: 15),
+            self.scanFriendSubtitleLabel.trailingAnchor.constraint(equalTo: self.scanFriendBaseView.trailingAnchor, constant: -15),
+            self.scanFriendSubtitleLabel.topAnchor.constraint(equalTo: self.scanFriendIconView.bottomAnchor, constant: 8),
+            self.scanFriendSubtitleLabel.bottomAnchor.constraint(equalTo: self.scanFriendBaseView.bottomAnchor, constant: -15)
+            
         ])
 
     }

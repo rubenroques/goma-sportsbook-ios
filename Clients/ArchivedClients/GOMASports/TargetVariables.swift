@@ -49,7 +49,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var serviceProviderType: ServiceProviderType {
-        return .everymatrix
+        return .goma
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {

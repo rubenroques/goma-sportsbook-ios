@@ -9,5 +9,5 @@ import Foundation
 
 public struct ChatroomData {
     public let chatroom: Chatroom
-    public let users: [GomaFriend]
+    public let users: [UserFriend]
 }

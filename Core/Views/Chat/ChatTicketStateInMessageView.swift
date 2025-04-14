@@ -52,6 +52,9 @@ class ChatTicketStateInMessageView: UIView {
             case .draw:
                 self.topStateView.backgroundColor = UIColor.App.myTicketsOther
                 self.bottomStateView.backgroundColor = UIColor.App.myTicketsOther
+            case .open:
+                self.topStateView.backgroundColor = UIColor.App.backgroundPrimary
+                self.bottomStateView.backgroundColor = UIColor.App.backgroundPrimary
             }
         }
     }

@@ -47,6 +47,7 @@ class TipsTableViewCell: UITableViewCell {
 
     var shouldShowBetslip: (() -> Void)?
     var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
+    var shouldShowLogin: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -83,7 +84,7 @@ class TipsTableViewCell: UITableViewCell {
         self.hasFollow = false
 
         // EM TEMP SHUTDOWN
-        self.betButton.isEnabled = false
+        self.betButton.isEnabled = true
     }
 
     // MARK: - Layout and Theme
@@ -149,7 +150,7 @@ class TipsTableViewCell: UITableViewCell {
         self.betButton.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), imageTitlePadding: CGFloat(0))
 
         // EM TEMP SHUTDOWN
-        self.betButton.isEnabled = false
+        self.betButton.isEnabled = true
     }
 
     // MARK: Function
@@ -215,18 +216,28 @@ class TipsTableViewCell: UITableViewCell {
 
     // MARK: Actions
     @objc func didTapFollowButton() {
-        if let viewModel = self.viewModel,
-           let userId = viewModel.getUserId() {
-
-            viewModel.followUser(userId: userId)
+        if let loggedUser = Env.userSessionStore.userProfilePublisher.value {
+            if let viewModel = self.viewModel,
+               let userId = viewModel.getUserId() {
+                
+                viewModel.followUser(userId: userId)
+            }
+        }
+        else {
+            self.shouldShowLogin?()
         }
     }
 
     @objc func didTapUnfollowButton() {
-        if let viewModel = self.viewModel,
-           let userId = viewModel.getUserId() {
-
-            viewModel.unfollowUser(userId: userId)
+        if let loggedUser = Env.userSessionStore.userProfilePublisher.value {
+            if let viewModel = self.viewModel,
+               let userId = viewModel.getUserId() {
+                
+                viewModel.unfollowUser(userId: userId)
+            }
+        }
+        else {
+            self.shouldShowLogin?()
         }
     }
 

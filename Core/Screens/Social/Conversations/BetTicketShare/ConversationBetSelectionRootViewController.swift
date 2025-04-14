@@ -17,10 +17,10 @@ class ConversationBetSelectionRootViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var closeButton: UIButton = Self.createCloseButton()
-    private lazy var navigationLineSeparatorView: UIView = Self.createNavigationLineSeparatorView()
 
     private lazy var topBaseView: UIView = Self.createTopBaseView()
     private lazy var ticketTypesCollectionView: UICollectionView = Self.createTicketTypesCollectionView()
+    private lazy var pagesLineSeparatorView: UIView = Self.createPagesLineSeparatorView()
     private lazy var pagesBaseView: UIView = Self.createPagesBaseView()
 
     private lazy var messageInputBaseView: UIView = Self.createMessageInputBaseView()
@@ -33,10 +33,6 @@ class ConversationBetSelectionRootViewController: UIViewController {
 
     // Constraints
     private lazy var viewHeightConstraint: NSLayoutConstraint = Self.createViewHeightConstraint()
-
-    // Constraints
-    private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
-    private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
 
     private var ticketTypePagedViewController: UIPageViewController
     private var ticketTypesViewControllers = [UIViewController]()
@@ -80,6 +76,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
                 self?.viewModel.openSelectedTicket = selectedTicket
+                self?.viewModel.checkTicketSelected()
             })
             .store(in: &cancellables)
 
@@ -88,6 +85,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
                 self?.viewModel.resolvedSelectedTicket = selectedTicket
+                self?.viewModel.checkTicketSelected()
             })
             .store(in: &cancellables)
 
@@ -96,6 +94,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
                 self?.viewModel.wonSelectedTicket = selectedTicket
+                self?.viewModel.checkTicketSelected()
             })
             .store(in: &cancellables)
 
@@ -136,6 +135,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         self.sendButton.layer.cornerRadius = CornerRadius.button
+        self.sendButton.clipsToBounds = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -145,30 +145,33 @@ class ConversationBetSelectionRootViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.titleLabel.textColor = UIColor.App.textPrimary
+        
+        self.subtitleLabel.textColor = UIColor.App.textSecondary
 
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         self.closeButton.backgroundColor = .clear
 
-        self.navigationLineSeparatorView.backgroundColor = UIColor.App.separatorLine
-
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.ticketTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
+        
+        self.pagesLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
-        self.messageInputBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.messageInputBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.messageInputLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
-        self.sendButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
-
+        self.sendButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.sendButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
+        
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.8)
    }
 
@@ -199,6 +202,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
            .store(in: &cancellables)
 
         viewModel.messageSentAction = { [weak self] in
+            self?.didTapBackground()
             self?.dismiss(animated: true, completion: nil)
         }
 
@@ -276,28 +280,11 @@ class ConversationBetSelectionRootViewController: UIViewController {
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
-        self.messageInputKeyboardConstraint.isActive = false
-        self.messageInputBottomConstraint.isActive = true
-
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let keyboardHeight = keyboardSize.height - self.bottomSafeAreaView.frame.height
-
-            self.messageInputKeyboardConstraint =
-            NSLayoutConstraint(item: self.messageInputBaseView,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: self.bottomSafeAreaView,
-                               attribute: .top,
-                               multiplier: 1,
-                               constant: -keyboardHeight)
-            self.messageInputBottomConstraint.isActive = false
-            self.messageInputKeyboardConstraint.isActive = true
-            }
+        
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        self.messageInputKeyboardConstraint.isActive = false
-        self.messageInputBottomConstraint.isActive = true
+       
     }
 }
 
@@ -306,6 +293,8 @@ extension ConversationBetSelectionRootViewController: UIPageViewControllerDelega
     func selectTicketType(atIndex index: Int, animated: Bool = true) {
         self.viewModel.selectTicketType(atIndex: index)
 
+        self.viewModel.checkTicketSelected()
+        
         self.ticketTypesCollectionView.reloadData()
         self.ticketTypesCollectionView.layoutIfNeeded()
         self.ticketTypesCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: animated)
@@ -390,11 +379,14 @@ extension ConversationBetSelectionRootViewController: UICollectionViewDelegate, 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         let previousSelectionValue = self.viewModel.selectedTicketTypeIndexPublisher.value ?? -1
-
+        
         if indexPath.row != previousSelectionValue {
             self.viewModel.selectedTicketTypeIndexPublisher.send(indexPath.row)
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
+        
+        self.viewModel.checkTicketSelected()
+
     }
 
 }
@@ -458,8 +450,7 @@ extension ConversationBetSelectionRootViewController {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.App.textPrimary
-        label.font = AppFont.with(type: .bold, size: 16)
+        label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .center
         label.numberOfLines = 1
         label.text = localized("share_my_tickets")
@@ -469,8 +460,7 @@ extension ConversationBetSelectionRootViewController {
     private static func createSubtitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.App.textSecondary
-        label.font = AppFont.with(type: .regular, size: 14)
+        label.font = AppFont.with(type: .regular, size: 12)
         label.textAlignment = .center
         label.numberOfLines = 1
         label.text = "@chattitle"
@@ -482,7 +472,7 @@ extension ConversationBetSelectionRootViewController {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.setTitle(localized("cancel"), for: .normal)
         backButton.setContentHuggingPriority(.required, for: .horizontal)
-        backButton.titleLabel?.font = AppFont.with(type: .bold, size: 14)
+        backButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         return backButton
     }
 
@@ -510,6 +500,12 @@ extension ConversationBetSelectionRootViewController {
         collectionView.alwaysBounceHorizontal = true
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 32)
         return collectionView
+    }
+    
+    private static func createPagesLineSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createPagesBaseView() -> UIView {
@@ -546,21 +542,6 @@ extension ConversationBetSelectionRootViewController {
         return button
     }
 
-    private static func createMessageInputBottomConstraint() -> NSLayoutConstraint {
-        let constraint = NSLayoutConstraint()
-        return constraint
-    }
-
-    private static func createMessageInputKeyboardConstraint() -> NSLayoutConstraint {
-        let constraint = NSLayoutConstraint()
-        return constraint
-    }
-
-    private static func createViewHeightConstraint() -> NSLayoutConstraint {
-        let constraint = NSLayoutConstraint()
-        return constraint
-    }
-
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -574,6 +555,12 @@ extension ConversationBetSelectionRootViewController {
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
     }
+    
+    // Constraints
+    private static func createViewHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
 
     private func setupSubviews() {
 
@@ -584,10 +571,10 @@ extension ConversationBetSelectionRootViewController {
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.subtitleLabel)
         self.navigationView.addSubview(self.closeButton)
-        self.navigationView.addSubview(self.navigationLineSeparatorView)
 
         self.view.addSubview(self.topBaseView)
         self.topBaseView.addSubview(self.ticketTypesCollectionView)
+        self.topBaseView.addSubview(self.pagesLineSeparatorView)
 
         self.view.addSubview(self.pagesBaseView)
 
@@ -636,24 +623,20 @@ extension ConversationBetSelectionRootViewController {
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
+//            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 60),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -60),
-            self.titleLabel.topAnchor.constraint(equalTo: self.navigationView.topAnchor, constant: 6),
+            self.titleLabel.topAnchor.constraint(equalTo: self.navigationView.topAnchor, constant: 12),
 
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 60),
             self.subtitleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -60),
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 4),
+            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: -12),
 
-            self.closeButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
+            self.closeButton.heightAnchor.constraint(equalToConstant: 40),
             self.closeButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -10),
-
-            self.navigationLineSeparatorView.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor),
-            self.navigationLineSeparatorView.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor),
-            self.navigationLineSeparatorView.bottomAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
-            self.navigationLineSeparatorView.heightAnchor.constraint(equalToConstant: 1)
+            self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -10)
         ])
 
         // Page Control
@@ -666,7 +649,13 @@ extension ConversationBetSelectionRootViewController {
             self.ticketTypesCollectionView.leadingAnchor.constraint(equalTo: self.topBaseView.leadingAnchor),
             self.ticketTypesCollectionView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
             self.ticketTypesCollectionView.topAnchor.constraint(equalTo: self.topBaseView.topAnchor),
-            self.ticketTypesCollectionView.bottomAnchor.constraint(equalTo: self.topBaseView.bottomAnchor),
+//            self.ticketTypesCollectionView.bottomAnchor.constraint(equalTo: self.topBaseView.bottomAnchor),
+            
+            self.pagesLineSeparatorView.leadingAnchor.constraint(equalTo: self.topBaseView.leadingAnchor),
+            self.pagesLineSeparatorView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
+            self.pagesLineSeparatorView.topAnchor.constraint(equalTo: self.ticketTypesCollectionView.bottomAnchor),
+            self.pagesLineSeparatorView.bottomAnchor.constraint(equalTo: self.topBaseView.bottomAnchor),
+            self.pagesLineSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             self.pagesBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.pagesBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -678,8 +667,7 @@ extension ConversationBetSelectionRootViewController {
             self.messageInputBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.messageInputBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.messageInputBaseView.topAnchor.constraint(equalTo: self.pagesBaseView.bottomAnchor),
-//            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-            // self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70),
+            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
 
             self.messageInputLineSeparatorView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor),
             self.messageInputLineSeparatorView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor),
@@ -707,18 +695,6 @@ extension ConversationBetSelectionRootViewController {
             self.view.topAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
             self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
         ])
-
-        self.messageInputBottomConstraint =
-        NSLayoutConstraint(item: self.messageInputBaseView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: self.bottomSafeAreaView,
-                           attribute: .top,
-                           multiplier: 1,
-                           constant: 0)
-        self.messageInputBottomConstraint.isActive = true
-
-        self.messageInputKeyboardConstraint.isActive = false
 
         self.viewHeightConstraint = self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70)
         self.viewHeightConstraint.isActive = true

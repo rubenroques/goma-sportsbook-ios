@@ -19,6 +19,7 @@ class UserProfileViewModel {
     var userProfileInfo: UserProfileInfo?
     var userProfileInfoStatePublisher: CurrentValueSubject<UserProfileState, Never> = .init(.loading)
     var userConnection: UserConnection?
+    var userChatroomId: Int?
 
     var showFriendRequestAlert: (() -> Void)?
     var shouldCloseUserProfile: (() -> Void)?
@@ -33,6 +34,7 @@ class UserProfileViewModel {
         self.getUserProfileInfo()
 
         self.getUserConnections()
+        self.checkFriendUser()
     }
 
     private func setupPublishers() {
@@ -53,7 +55,7 @@ class UserProfileViewModel {
             "\($0.id)" == userId
         })
 
-        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+        if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
 
             if followUserId.isNotEmpty || userId == "\(loggedUserId)" {
                 self.isFollowingUser.send(true)
@@ -70,7 +72,7 @@ class UserProfileViewModel {
     private func checkFriendUser() {
         let userId = self.userBasicInfo.userId
 
-        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+        Env.servicesProvider.getFriends()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -79,30 +81,30 @@ class UserProfileViewModel {
                 case .finished:
                     print("FRIENDS FINISHED")
                 }
-
-            }, receiveValue: { [weak self] response in
-
-                if let friends = response.data {
-                    let friendUserId = friends.filter({
-                        "\($0.id)" == userId
-                    })
-
-                    if friendUserId.isNotEmpty {
-                        self?.isFriendUser.send(true)
-                    }
-                    else {
-                        self?.isFriendUser.send(false)
-                    }
+                
+            }, receiveValue: { [weak self] friends in
+                
+                let friendUserId = friends.filter({
+                    "\($0.id)" == userId
+                })
+                
+                if friendUserId.isNotEmpty {
+                    self?.isFriendUser.send(true)
                 }
+                else {
+                    self?.isFriendUser.send(false)
+                }
+                
             })
+        
             .store(in: &cancellables)
 
     }
 
     private func getUserProfileInfo() {
         let userId = self.userBasicInfo.userId
-
-        Env.gomaNetworkClient.getUserProfileInfo(deviceId: Env.deviceId, userId: userId)
+        
+        Env.servicesProvider.getUserProfileInfo(userId: userId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -115,9 +117,11 @@ class UserProfileViewModel {
 
             }, receiveValue: { [weak self] userProfileInfo in
 
-                self?.userProfileInfo = userProfileInfo
+                let mappedUserProfileInfo = ServiceProviderModelMapper.userProfileInfo(fromServiceProviderUserProfileInfo: userProfileInfo)
+                
+                self?.userProfileInfo = mappedUserProfileInfo
 
-                self?.configureUserProfileInfo(userProfileInfo: userProfileInfo)
+                self?.configureUserProfileInfo(userProfileInfo: mappedUserProfileInfo)
 
                 self?.userProfileInfoStatePublisher.send(.loaded)
 
@@ -129,7 +133,7 @@ class UserProfileViewModel {
 
         let userId = self.userBasicInfo.userId
 
-        Env.gomaNetworkClient.followUser(deviceId: Env.deviceId, userId: userId)
+        Env.servicesProvider.addFollowee(userId: userId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -138,26 +142,28 @@ class UserProfileViewModel {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] _ in
+            }, receiveValue: { [weak self] response in
+                print("FOLLOW USER RESPONSE: \(response)")
                 Env.gomaSocialClient.getFollowingUsers()
             })
             .store(in: &cancellables)
     }
 
-    func deleteFollowUser() {
+    func unfollowUser() {
 
         let userId = self.userBasicInfo.userId
-
-        Env.gomaNetworkClient.deleteFollowUser(deviceId: Env.deviceId, userId: userId)
+        
+        Env.servicesProvider.removeFollowee(userId: userId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("DELETE FOLLOW USER ERROR: \(error)")
+                    print("UNFOLLOW USER ERROR: \(error)")
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] _ in
+            }, receiveValue: { [weak self] response in
+                print("UNFOLLOW USER RESPONSE: \(response)")
                 Env.gomaSocialClient.getFollowingUsers()
             })
             .store(in: &cancellables)
@@ -166,26 +172,29 @@ class UserProfileViewModel {
     func addFriendRequest() {
         let userId = self.userBasicInfo.userId
 
-        Env.gomaNetworkClient.addFriendRequest(deviceId: Env.deviceId, userIds: [userId], request: true)
+        Env.servicesProvider.addFriends(userIds: [userId], request: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("ADD FRIEND REQUEST ERROR: \(error)")
+                    print("ADD FRIEND ERROR: \(error)")
                 case .finished:
-                    print("ADD FRIEND REQUEST FINISHED")
+                    print("ADD FRIEND FINISHED")
                 }
 
-            }, receiveValue: { [weak self] _ in
+            }, receiveValue: { [weak self] addFriendResponse in
+                print("ADD FRIEND GOMA: \(addFriendResponse)")
                 self?.showFriendRequestAlert?()
+                
             })
             .store(in: &cancellables)
+        
     }
 
     func unfriendUser() {
         if let userId = Int(self.userBasicInfo.userId) {
 
-            Env.gomaNetworkClient.deleteFriend(deviceId: Env.deviceId, userId: userId)
+            Env.servicesProvider.removeFriend(userId: userId)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
@@ -195,35 +204,80 @@ class UserProfileViewModel {
                         ()
                     }
 
-                }, receiveValue: { [weak self] _ in
+                }, receiveValue: { [weak self] response in
                     self?.shouldCloseUserProfile?()
                 })
                 .store(in: &cancellables)
+            
+//            Env.gomaNetworkClient.deleteFriend(deviceId: Env.deviceId, userId: userId)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .failure(let error):
+//                        print("DELETE FRIEND ERROR: \(error)")
+//                    case .finished:
+//                        ()
+//                    }
+//
+//                }, receiveValue: { [weak self] response in
+//                    self?.shouldCloseUserProfile?()
+//                })
+//                .store(in: &cancellables)
         }
 
     }
 
     private func getUserConnections() {
         let userId = self.userBasicInfo.userId
-
-        Env.gomaNetworkClient.getUserConnections(deviceId: Env.deviceId, userId: userId)
+        
+        Env.servicesProvider.getChatrooms()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("USER CONNECTIONS ERROR: \(error)")
+                    print("CHATROOMS CONNECTIONS ERROR: \(error)")
                 case .finished:
                     ()
                 }
-
-            }, receiveValue: { [weak self] response in
-                if let userConnection = response.data {
-                    self?.userConnection = userConnection
-                    self?.configureUserConnections(userConnection: userConnection)
+                
+            }, receiveValue: { [weak self] chatroomsData in
+                
+                let mappedChatroomsData = chatroomsData.map({
+                    return ServiceProviderModelMapper.chatroomData(fromServiceProviderChatroomData: $0)
+                })
+                
+                if let userIdInt = Int(userId) {
+                    let userChatId = mappedChatroomsData.filter({
+                        $0.chatroom.type == "individual" &&
+                        $0.users.contains(where: {
+                            $0.id == userIdInt
+                        })
+                    }).first
+                    
+                    self?.userChatroomId = userChatId?.chatroom.id
                 }
+                
             })
             .store(in: &cancellables)
-
+        
+        //        Env.gomaNetworkClient.getUserConnections(deviceId: Env.deviceId, userId: userId)
+        //            .receive(on: DispatchQueue.main)
+        //            .sink(receiveCompletion: { [weak self] completion in
+        //                switch completion {
+        //                case .failure(let error):
+        //                    print("USER CONNECTIONS ERROR: \(error)")
+        //                case .finished:
+        //                    ()
+        //                }
+        //
+        //            }, receiveValue: { [weak self] response in
+        //                if let userConnection = response.data {
+        //                    self?.userConnection = userConnection
+        //                    self?.configureUserConnections(userConnection: userConnection)
+        //                }
+        //            })
+        //            .store(in: &cancellables)
+        
     }
 
     private func configureUserProfileInfo(userProfileInfo: UserProfileInfo) {
