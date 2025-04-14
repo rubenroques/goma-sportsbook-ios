@@ -64,6 +64,7 @@ public class Client {
         case .development:
             SportRadarConfiguration.shared.environment = .development
         }
+
     }
 
     public func connect() {

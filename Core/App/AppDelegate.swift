@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         #if DEBUG
         let phraseConfiguration = PhraseConfiguration()
         phraseConfiguration.debugMode = false
-        phraseConfiguration.localeOverride = "fr-FR"
+        // phraseConfiguration.localeOverride = "fr-FR"
         Phrase.shared.configuration = phraseConfiguration
         Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "GuBCndN-seQgps-CuyMlx6AXkzsiyGuJMIFicqpvMoc")
         #else

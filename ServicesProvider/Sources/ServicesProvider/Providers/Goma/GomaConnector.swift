@@ -11,10 +11,12 @@ import Combine
 struct GomaSessionAccessToken: Codable {
     var hash: String
     var type: String
+    var expireTimestamp: Int?
 
     enum CodingKeys: String, CodingKey {
         case hash = "token"
         case type = "type"
+        case expireTimestamp = "expires_at"
     }
 
 }
@@ -57,17 +59,17 @@ class GomaConnector: Connector {
     }
 
     func clearToken() {
-        print("GGAPI Clearing token...")
+        print("[GOMAAPI][DEBUG] Clearing token...")
         self.authenticator.updateToken(newToken: nil)
     }
 
     func updateToken(newToken: String) {
-        print("GGAPI Updating token...")
+        print("[GOMAAPI][DEBUG] Updating token...")
         self.authenticator.updateToken(newToken: newToken)
     }
 
     func updateCredentials(credentials: GomaUserCredentials?) {
-        print("GGAPI Updating credentials for user: \(credentials?.username ?? "unknown")")
+        print("[GOMAAPI][DEBUG] Updating credentials for user: \(credentials?.username ?? "unknown")")
         self.authenticator.updateCredentials(credentials: credentials)
     }
 
@@ -79,22 +81,24 @@ class GomaConnector: Connector {
     }
 
     func request<T: Codable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
-        print("GGAPI Preparing request for endpoint: \(endpoint)")
+        print("[GOMAAPI][DEBUG] Preparing request for endpoint: \(endpoint)")
         guard
             var request = endpoint.request()
         else {
             let error = ServiceProviderError.invalidRequestFormat
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
+        
+        request.assumesHTTP3Capable = true
 
         return self.authenticator.publisherWithValidToken()
             .flatMap { token -> AnyPublisher<Data, Error> in
-                print("GGAPI Received valid token: \(token.hash)")
+                print("[GOMAAPI][DEBUG] Received valid token: \(token.hash)")
                 request.setValue("Bearer \(token.hash)", forHTTPHeaderField: "Authorization")
                 return self.publisher(for: request, token: token).eraseToAnyPublisher()
             }
             .tryCatch { error -> AnyPublisher<Data, Error> in
-                print("GGAPI Error encountered: \(error). Attempting token refresh...")
+                print("[GOMAAPI][DEBUG] Error encountered: \(error). Attempting token refresh...")
                 // We only catch this error if it's a unauthorized
                 guard
                     let serviceError = error as? ServiceProviderError,
@@ -112,13 +116,13 @@ class GomaConnector: Connector {
                     .eraseToAnyPublisher()
             }
             .tryMap({ data in
-                print("GGAPI Decoding data...")
+                print("[GOMAAPI][DEBUG] Decoding data...")
                 do {
                     return try self.decoder.decode(T.self, from: data)
                 } catch let error as DecodingError {
                     // Handle DecodingError by printing the expected and received JSON
-                    print("GGAPI Decoding Error: \(error)")
-                    print("GGAPI Received JSON: \(String(data: data, encoding: .utf8) ?? "Invalid JSON")")
+                    print("[GOMAAPI][DEBUG] Decoding Error: \(error)")
+                    print("[GOMAAPI][DEBUG] Received JSON: \(String(data: data, encoding: .utf8) ?? "Invalid JSON")")
                     throw error
                 } catch {
                     // Propagate other errors
@@ -126,14 +130,14 @@ class GomaConnector: Connector {
                 }
             })
             .mapError({ error -> ServiceProviderError in
-                
-                print("GGAPI Mapping error: \(error)")
+
+                print("[GOMAAPI][DEBUG] Mapping error: \(error)")
                 if let typedError = error as? ServiceProviderError {
-                    print("GGAPI request: \(request)")
+                    print("[GOMAAPI][DEBUG] request: \(request)")
                     return typedError
                 }
                 else if let decodingError = error as? DecodingError {
-                    print("GGAPI request: \(request)")
+                    print("[GOMAAPI][DEBUG] request: \(request)")
 
                     let errorMessage = "\(decodingError)"
                     return ServiceProviderError.decodingError(message: errorMessage)
@@ -148,20 +152,20 @@ class GomaConnector: Connector {
     }
 
     private func publisher(for request: URLRequest, token: GomaSessionAccessToken?) -> AnyPublisher<Data, Error> {
-        print("GGAPI Creating publisher for request: \(request.url?.absoluteString ?? "unknown URL")")
+        print("[GOMAAPI][DEBUG] Creating publisher for request: \(request.url?.absoluteString ?? "unknown URL")")
         var request = request
         if let token = token {
             request.setValue("Bearer \(token.hash)", forHTTPHeaderField: "Authorization")
         }
         else {
-            print("GGAPI Error Authorization token not found.")
+            print("[GOMAAPI][DEBUG] Error Authorization token not found.")
         }
 
-        print("GGAPI GomaGaming URL Request: ", request.cURL(pretty: false), "\n==========================================")
+        print("[GOMAAPI][DEBUG] GomaGaming URL Request: ", request.cURL(pretty: false), "\n==========================================")
 
         return self.session.dataTaskPublisher(for: request)
             .tryMap { urlSessionOutput in
-                print("GGAPI Received response with status code: \((urlSessionOutput.response as? HTTPURLResponse)?.statusCode ?? -1)")
+                print("[GOMAAPI][DEBUG] Received response with status code: \((urlSessionOutput.response as? HTTPURLResponse)?.statusCode ?? -1)")
                 guard let httpResponse = urlSessionOutput.response as? HTTPURLResponse else {
                     throw ServiceProviderError.invalidResponse
                 }

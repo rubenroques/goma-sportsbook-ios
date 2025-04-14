@@ -53,12 +53,11 @@ extension Endpoint {
             }
         }
 
-        
-        // print("NetworkLogs: [\(self.comment ?? "")]\n",
-        //      "NetworkLogs: ", request.cURL(pretty: true),
-        //     "\nNetworkLogs: =========================",
-        //      "\nNetworkLogs")
-        
+        print("[GOMAAPI][DEBUG] Endpoint request created: ",
+              dump(request),
+              " -- with body: ",
+              String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "[no body]"
+        )
 
         return request
     }

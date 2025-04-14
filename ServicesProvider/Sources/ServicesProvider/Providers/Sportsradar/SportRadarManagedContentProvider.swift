@@ -156,7 +156,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
                         })
 
                         // re-order the cleanedEvents based on the order of marketIds in headlineItems
-                        let orderedEvents = boostedOddsPointers.compactMap { item in eventDict[item.boostedEventMarketId ?? ""] }
+                        let orderedEvents = boostedOddsPointers.compactMap { item in eventDict[item.boostedEventMarketId] }
                         return orderedEvents
                     })
 
@@ -220,7 +220,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
 
                             if let existingEvent = eventMap[event.id] {
                                 // Event already exists, merge markets
-                                var updatedEvent = existingEvent
+                                let updatedEvent = existingEvent
                                 let newMarkets = updatedEvent.markets + event.markets
                                 updatedEvent.markets = newMarkets
                                 eventMap[event.id] = updatedEvent
@@ -235,7 +235,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
 
                         // Second pass: post-process events with additional information
                         let processedEvents = eventMap.values.map { event -> Event in
-                            var modifiedEvent = event
+                            let modifiedEvent = event
 
                             modifiedEvent.promoImageURL = eventImageURLs[event.id] ?? ""
 

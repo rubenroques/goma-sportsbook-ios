@@ -45,6 +45,7 @@ class GomaAPIPromotionsClient {
 
         // Call initialDump and store the response, it should contain all the data required to build the home template sections
 
+        print("[GOMAAPI][DEBUG] GomaAPIPromotionsClient preFetchHomeContent call initialDump")
         let endpoint = GomaAPIPromotionsSchema.initialDump
         let publisher = self.connector.request(endpoint)
             .handleEvents(receiveOutput: { [weak self] (initialDump: GomaModels.InitialDump) in

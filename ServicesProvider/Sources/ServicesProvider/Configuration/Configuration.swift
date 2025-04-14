@@ -7,14 +7,6 @@
 
 import Foundation
 
-/// Represents available features that can be enabled or disabled
-public enum Feature: String, CaseIterable {
-    /// Mix and match betting feature
-    case mixMatch
-    
-    // Add more features as needed
-}
-
 public struct Configuration {
     
     public enum Environment {
@@ -34,10 +26,7 @@ public struct Configuration {
     
     /// Device UUID for tracking and analytics
     private(set) var deviceUUID: String?
-    
-    /// Enabled features
-    private(set) var enabledFeatures: Set<Feature>
-    
+
     /// Credentials for a specific provider
     public struct ProviderCredentials {
         let name: String
@@ -48,20 +37,14 @@ public struct Configuration {
         environment: Environment,
         deviceUUID: String?,
         providerMapping: [Domain: Provider],
-        credentials: [Provider: ProviderCredentials],
-        enabledFeatures: Set<Feature>
+        credentials: [Provider: ProviderCredentials]
     ) {
         self.environment = environment
         self.deviceUUID = deviceUUID
         self.providerMapping = providerMapping
         self.credentials = credentials
-        self.enabledFeatures = enabledFeatures
     }
-    
-    /// Check if a feature is enabled
-    public func isFeatureEnabled(_ feature: Feature) -> Bool {
-        return enabledFeatures.contains(feature)
-    }
+
     
     /// Builder class for creating Configuration instances
     public class Builder {
@@ -69,7 +52,6 @@ public struct Configuration {
         private var deviceUUID: String?
         private var providerMapping: [Domain: Provider] = [:]
         private var credentials: [Provider: ProviderCredentials] = [:]
-        private var enabledFeatures: Set<Feature> = []
         
         public init() {}
         
@@ -104,30 +86,7 @@ public struct Configuration {
             self.credentials[provider] = credential
             return self
         }
-        
-        /// Enables a specific feature
-        @discardableResult
-        public func enableFeature(_ feature: Feature) -> Builder {
-            self.enabledFeatures.insert(feature)
-            return self
-        }
-        
-        /// Enables multiple features
-        @discardableResult
-        public func enableFeatures(_ features: [Feature]) -> Builder {
-            for feature in features {
-                self.enabledFeatures.insert(feature)
-            }
-            return self
-        }
-        
-        /// Disables a specific feature
-        @discardableResult
-        public func disableFeature(_ feature: Feature) -> Builder {
-            self.enabledFeatures.remove(feature)
-            return self
-        }
-        
+
         /// Builds and validates the configuration
         public func build() throws -> Configuration {
             // Validate that all providers have credentials
@@ -143,8 +102,7 @@ public struct Configuration {
                 environment: environment,
                 deviceUUID: deviceUUID,
                 providerMapping: providerMapping,
-                credentials: credentials,
-                enabledFeatures: enabledFeatures
+                credentials: credentials
             )
         }
     }
@@ -155,7 +113,6 @@ public struct Configuration {
         self.deviceUUID = deviceUUID
         self.providerMapping = [:]
         self.credentials = [:]
-        self.enabledFeatures = []
     }
 }
 

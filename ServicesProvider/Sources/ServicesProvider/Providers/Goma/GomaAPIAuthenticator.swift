@@ -73,22 +73,25 @@ class GomaAPIAuthenticator {
 
     private func loggedUserValidToken(deviceId: String, pushToken: String?, forceRefresh: Bool = false, loggedUser: GomaUserCredentials) -> AnyPublisher<GomaSessionAccessToken, Error> {
         return self.queue.sync(execute: { [weak self] in
-            
+            print("[GOMAAPI][DEBUG] GomaAPIAuthenticator loggedUserValidToken")
             var shouldForceRefresh = forceRefresh
             
             // We're already loading a new token
             if let publisher = self?.refreshPublisher {
+                print("[GOMAAPI][DEBUG] refreshPublisher-loggedUserValidToken- We're already loading a new token")
                 return publisher
             }
             
             // We don't have a token so we override the forceRefresh
             if let selfValue = self, selfValue.token == nil {
+                print("[GOMAAPI][DEBUG] refreshPublisher-loggedUserValidToken- We don't have a token so we override the forceRefresh")
                 shouldForceRefresh = true
             }
             
             
             // We already have a valid token and don't want to force a refresh
             if let selfValue = self, let token = selfValue.token, !shouldForceRefresh {
+                print("[GOMAAPI][DEBUG] refreshPublisher-loggedUserValidToken- We already have a valid token and don't want to force a refresh")
                 return Just(token).setFailureType(to: Error.self).eraseToAnyPublisher()
             }
             
@@ -103,6 +106,8 @@ class GomaAPIAuthenticator {
                 return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
             }
             
+            print("[GOMAAPI][DEBUG] LoggedUser Auth-Request:", request.cURL(pretty: true), "\n==========================================")
+
             let publisher = weakSelf.session.dataTaskPublisher(for: request)
                 .tryMap { result in
                     if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
@@ -120,7 +125,7 @@ class GomaAPIAuthenticator {
                 .decode(type: GomaSessionAccessToken.self, decoder: JSONDecoder())
                 .handleEvents(receiveOutput: { token in
                     self?.token = token
-                    print("GGAPI New Session Token [logged] \(token)")
+                    print("[GOMAAPI][DEBUG] New Session Token [logged] \(token)")
                 }, receiveCompletion: { _ in
                     self?.queue.sync {
                         self?.refreshPublisher = nil
@@ -138,21 +143,24 @@ class GomaAPIAuthenticator {
                                      pushToken: String?,
                                      forceRefresh: Bool = false) -> AnyPublisher<GomaSessionAccessToken, Error> {
         return self.queue.sync(execute: { [weak self] in
-
+            print("[GOMAAPI][DEBUG] GomaAPIAuthenticator anonymousValidToken")
             var shouldForceRefresh = forceRefresh
 
             // We're already loading a new token
             if let publisher = self?.refreshPublisher {
+                print("[GOMAAPI][DEBUG] refreshPublisher-anonymousValidToken- We're already loading a new token")
                 return publisher
             }
 
             // We don't have a token so we override the forceRefresh
             if let selfValue = self, selfValue.token == nil {
+                print("[GOMAAPI][DEBUG] refreshPublisher-anonymousValidToken- We don't have a token so we override the forceRefresh")
                 shouldForceRefresh = true
             }
 
             // We already have a valid token and don't want to force a refresh
             if let selfValue = self, let token = selfValue.token, !shouldForceRefresh {
+                print("[GOMAAPI][DEBUG] refreshPublisher-anonymousValidToken- We already have a valid token and don't want to force a refresh")
                 return Just(token).setFailureType(to: Error.self).eraseToAnyPublisher()
             }
 
@@ -166,7 +174,7 @@ class GomaAPIAuthenticator {
                 return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
             }
             
-            print("GGAPI Anon Auth - Request: \n", request.cURL(pretty: true), "\n==========================================")
+            print("[GOMAAPI][DEBUG] AnonAuth-Request: ", request.cURL(pretty: true), "\n==========================================")
 
             let publisher = weakSelf.session.dataTaskPublisher(for: request)
                 .tryMap { result in
@@ -185,7 +193,7 @@ class GomaAPIAuthenticator {
                 .decode(type: GomaSessionAccessToken.self, decoder: JSONDecoder())
                 .handleEvents(receiveOutput: { token in
                     self?.token = token
-                    print("GGAPI New Session Token [anon] \(token)")
+                    print("[GOMAAPI][DEBUG] New Session Token [anon] \(token)")
                 }, receiveCompletion: { _ in
                     self?.queue.sync {
                         self?.refreshPublisher = nil
