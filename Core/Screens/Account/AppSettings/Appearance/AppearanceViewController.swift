@@ -70,14 +70,14 @@ class AppearanceViewController: UIViewController {
 
         viewModel.selectedThemePublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { theme in
-                if theme == Theme.dark {
+            .sink(receiveValue: { mode in
+                if mode == AppearanceMode.dark {
                     UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .dark
                 }
-                else if theme == Theme.light {
+                else if mode == AppearanceMode.light {
                     UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .light
                 }
-                else if theme == Theme.device {
+                else if mode == AppearanceMode.device {
                     UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .unspecified
                 }
             })

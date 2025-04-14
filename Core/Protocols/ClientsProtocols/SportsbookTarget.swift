@@ -16,7 +16,7 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
 
     static var environmentType: EnvironmentType { get }
 
-    static var supportedThemes: [Theme] { get }
+    static var supportedThemes: [AppearanceMode] { get }
 
     static var supportedCardStyles: [CardsStyle] { get }
     static var defaultCardStyle: CardsStyle { get }

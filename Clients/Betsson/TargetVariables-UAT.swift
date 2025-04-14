@@ -27,8 +27,8 @@ struct TargetVariables: SportsbookTarget {
         return "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
     }
 
-    static var supportedThemes: [Theme] {
-        return Theme.allCases
+    static var supportedThemes: [AppearanceMode] {
+        return AppearanceMode.allCases
     }
 
     static var supportedCardStyles: [CardsStyle] {

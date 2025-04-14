@@ -15,20 +15,20 @@ class AppearanceViewModel: NSObject {
 
     // MARK: Public Properties
     var themeRadioButtonViews: [SettingsRadioRowView] = []
-    var selectedThemePublisher: CurrentValueSubject<Theme, Never>
+    var selectedThemePublisher: CurrentValueSubject<AppearanceMode, Never>
 
     // MARK: Lifetime and Cycle
     override init() {
-        self.selectedThemePublisher = { () -> CurrentValueSubject<Theme, Never> in
-            let themeChosenId = UserDefaults.standard.theme.themeId
+        self.selectedThemePublisher = { () -> CurrentValueSubject<AppearanceMode, Never> in
+            let themeChosenId = UserDefaults.standard.appearanceMode.themeId
 
             if themeChosenId == 1 {
-                return .init(Theme.dark)
+                return .init(AppearanceMode.dark)
             }
             else if themeChosenId == 2 {
-                return .init(Theme.light)
+                return .init(AppearanceMode.light)
             }
-            return .init(Theme.device)
+            return .init(AppearanceMode.device)
         }()
         super.init()
 
@@ -38,7 +38,7 @@ class AppearanceViewModel: NSObject {
 
     func setSelectedView() {
         // Set selected view
-        let themeChosenId = UserDefaults.standard.theme.themeId
+        let themeChosenId = UserDefaults.standard.appearanceMode.themeId
 
         for view in self.themeRadioButtonViews {
             view.didTapView = { _ in
@@ -58,16 +58,16 @@ class AppearanceViewModel: NSObject {
         viewTapped.isChecked = true
 
         if viewTapped.viewId == 1 {
-            UserDefaults.standard.theme = Theme.dark
-            self.selectedThemePublisher.send(Theme.dark)
+            UserDefaults.standard.appearanceMode = AppearanceMode.dark
+            self.selectedThemePublisher.send(AppearanceMode.dark)
         }
         else if viewTapped.viewId == 2 {
-            UserDefaults.standard.theme = Theme.light
-            self.selectedThemePublisher.send(Theme.light)
+            UserDefaults.standard.appearanceMode = AppearanceMode.light
+            self.selectedThemePublisher.send(AppearanceMode.light)
         }
         else if viewTapped.viewId == 3 {
-            UserDefaults.standard.theme = Theme.device
-            self.selectedThemePublisher.send(Theme.device)
+            UserDefaults.standard.appearanceMode = AppearanceMode.device
+            self.selectedThemePublisher.send(AppearanceMode.device)
         }
 
     }

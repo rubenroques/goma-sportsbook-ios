@@ -651,7 +651,7 @@ class ProfileViewController: UIViewController {
         // Create and setup theme selector container and view
         themeBaseView = UIView()
         themeBaseView.backgroundColor = .clear
-        let currentTheme = UserDefaults.standard.theme
+        let currentTheme = UserDefaults.standard.appearanceMode
         themeSelectorView = ThemeSelectorView(selectedMode: currentTheme) // You might want to get the actual current theme here
         
         // Add theme selector to its container
@@ -691,8 +691,8 @@ class ProfileViewController: UIViewController {
     }
 
     // Add handler for theme changes
-    private func handleThemeChange(_ mode: Theme) {
-        UserDefaults.standard.theme = mode
+    private func handleThemeChange(_ mode: AppearanceMode) {
+        UserDefaults.standard.appearanceMode = mode
         switch mode {
         case .light:
             UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .light
@@ -992,31 +992,11 @@ extension ProfileViewController {
 
 }
 
-extension Theme {
-    
-    var title: String {
-        switch self {
-        case .light: return localized("theme_short_light")
-        case .device: return localized("theme_short_system")
-        case .dark: return localized("theme_short_dark")
-        }
-        
-    }
-    
-    var iconName: String {
-        switch self {
-        case .light: return "light_theme_icon"
-        case .device: return "system_theme_icon"
-        case .dark: return "dark_theme_icon"
-        }
-    }
-}
-
 class ThemeSelectorView: UIView {
     
     // MARK: - Properties
-    private var selectedMode: Theme
-    var onThemeChange: ((Theme) -> Void)?
+    private var selectedMode: AppearanceMode
+    var onThemeChange: ((AppearanceMode) -> Void)?
     
     private lazy var stackView: UIStackView = {
         let stack = UIStackView()
@@ -1030,7 +1010,7 @@ class ThemeSelectorView: UIView {
     private var containerViews: [UIView] = []
     
     // MARK: - Initialization
-    init(selectedMode: Theme = .device) {
+    init(selectedMode: AppearanceMode = .device) {
         self.selectedMode = selectedMode
         super.init(frame: .zero)
         setupView()
@@ -1064,7 +1044,7 @@ class ThemeSelectorView: UIView {
     }
     
     private func setupContainerViews() {
-        Theme.allCases.enumerated().forEach { index, mode in
+        AppearanceMode.allCases.enumerated().forEach { index, mode in
             let button = createButton(for: mode)
             self.stackView.addArrangedSubview(button)
             self.containerViews.append(button)
@@ -1089,7 +1069,7 @@ class ThemeSelectorView: UIView {
         return separator
     }
     
-    private func createButton(for mode: Theme) -> UIView {
+    private func createButton(for mode: AppearanceMode) -> UIView {
         let baseView = UIView()
         baseView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -1139,7 +1119,7 @@ class ThemeSelectorView: UIView {
     // MARK: - Actions
     @objc private func buttonTapped(_ sender: UITapGestureRecognizer) {
         guard let tappedView = sender.view else { return }
-        let newMode = Theme.allCases[tappedView.tag]
+        let newMode = AppearanceMode.allCases[tappedView.tag]
         if newMode != selectedMode {
             self.selectedMode = newMode
             self.updateSelection()
@@ -1148,7 +1128,7 @@ class ThemeSelectorView: UIView {
     }
     
     // MARK: - Public Methods
-    func setSelectedMode(_ mode: Theme) {
+    func setSelectedMode(_ mode: AppearanceMode) {
         self.selectedMode = mode
         self.updateSelection()
     }
@@ -1156,7 +1136,7 @@ class ThemeSelectorView: UIView {
     // MARK: - Private Methods
     private func updateSelection() {
         self.containerViews.enumerated().forEach { index, button in
-            let isSelected = Theme.allCases[index] == self.selectedMode
+            let isSelected = AppearanceMode.allCases[index] == self.selectedMode
             self.updateContainerView(button, isSelected: isSelected)
         }
     }

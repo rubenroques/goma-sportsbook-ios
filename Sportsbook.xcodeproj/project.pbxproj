@@ -247,7 +247,7 @@
 		450B798428F58574009229E3 /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD8280057BB0098854C /* ChatMessageView.swift */; };
 		450B798528F58574009229E3 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		450B798628F58574009229E3 /* FeaturedTipDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8E2A28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift */; };
-		450B798928F58574009229E3 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
+		450B798928F58574009229E3 /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* AppearanceMode.swift */; };
 		450B798A28F58574009229E3 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
 		450B798B28F58574009229E3 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
 		450B798D28F58574009229E3 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
@@ -988,7 +988,7 @@
 		45A3319D298976BA008181E9 /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD8280057BB0098854C /* ChatMessageView.swift */; };
 		45A3319E298976BA008181E9 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		45A3319F298976BA008181E9 /* FeaturedTipDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8E2A28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift */; };
-		45A331A2298976BA008181E9 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
+		45A331A2298976BA008181E9 /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* AppearanceMode.swift */; };
 		45A331A3298976BA008181E9 /* BetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45711906294B9A27000395F0 /* BetType.swift */; };
 		45A331A4298976BA008181E9 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
 		45A331A5298976BA008181E9 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
@@ -1711,7 +1711,7 @@
 		45F6BC4D2AB3732C00C81DE1 /* BoostedArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3FD2A2B2588000DB866 /* BoostedArrowView.swift */; };
 		45F6BC4E2AB3732C00C81DE1 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		45F6BC4F2AB3732C00C81DE1 /* FeaturedTipDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8E2A28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift */; };
-		45F6BC512AB3732C00C81DE1 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
+		45F6BC512AB3732C00C81DE1 /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* AppearanceMode.swift */; };
 		45F6BC522AB3732C00C81DE1 /* BetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45711906294B9A27000395F0 /* BetType.swift */; };
 		45F6BC532AB3732C00C81DE1 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
 		45F6BC542AB3732C00C81DE1 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
@@ -3118,7 +3118,7 @@
 		CE12A2BC2D31347E0022BDF7 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		CE12A2BD2D31347E0022BDF7 /* BoostedArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3FD2A2B2588000DB866 /* BoostedArrowView.swift */; };
 		CE12A2BE2D31347E0022BDF7 /* FeaturedTipDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8E2A28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift */; };
-		CE12A2C02D31347E0022BDF7 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
+		CE12A2C02D31347E0022BDF7 /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* AppearanceMode.swift */; };
 		CE12A2C12D31347E0022BDF7 /* BetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45711906294B9A27000395F0 /* BetType.swift */; };
 		CE12A2C22D31347E0022BDF7 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
 		CE12A2C32D31347E0022BDF7 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
@@ -4733,7 +4733,7 @@
 		CEF1955C2DA834E900C81F12 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		CEF1955D2DA834E900C81F12 /* FeaturedTipDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8E2A28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift */; };
 		CEF1955E2DA834E900C81F12 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		CEF1955F2DA834E900C81F12 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
+		CEF1955F2DA834E900C81F12 /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* AppearanceMode.swift */; };
 		CEF195602DA834E900C81F12 /* BetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45711906294B9A27000395F0 /* BetType.swift */; };
 		CEF195612DA834E900C81F12 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
 		CEF195622DA834E900C81F12 /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
@@ -5330,7 +5330,7 @@
 		451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		4515635E26BE032E00690896 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
 		4515636A26BE949300690896 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
-		4515636D26BE94F600690896 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		4515636D26BE94F600690896 /* AppearanceMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceMode.swift; sourceTree = "<group>"; };
 		4515637326BE982000690896 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		45166CA526F28D2E00E69D65 /* Bootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bootstrap.swift; sourceTree = "<group>"; };
 		45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
@@ -7325,7 +7325,7 @@
 			children = (
 				456B342326C17E83009D7D27 /* Constants.swift */,
 				4515636A26BE949300690896 /* UserSettings.swift */,
-				4515636D26BE94F600690896 /* Theme.swift */,
+				4515636D26BE94F600690896 /* AppearanceMode.swift */,
 				4515637326BE982000690896 /* Colors.swift */,
 				4589F41E26BF03FE005DF543 /* Fonts.swift */,
 				A91F4B4127C002FA008C7510 /* OddsFormat.swift */,
@@ -12379,7 +12379,7 @@
 				CEA667492D84A76100C74895 /* URLPath.swift in Sources */,
 				450FC3FF2A2B2588000DB866 /* BoostedArrowView.swift in Sources */,
 				450B798628F58574009229E3 /* FeaturedTipDetailsViewModel.swift in Sources */,
-				450B798928F58574009229E3 /* Theme.swift in Sources */,
+				450B798928F58574009229E3 /* AppearanceMode.swift in Sources */,
 				45711908294B9A27000395F0 /* BetType.swift in Sources */,
 				450B798A28F58574009229E3 /* UserActionView.swift in Sources */,
 				450B798B28F58574009229E3 /* LoadingSpinnerViewController.swift in Sources */,
@@ -13237,7 +13237,7 @@
 				450FC3FE2A2B2588000DB866 /* BoostedArrowView.swift in Sources */,
 				45A3319E298976BA008181E9 /* CurrencyHelper.swift in Sources */,
 				45A3319F298976BA008181E9 /* FeaturedTipDetailsViewModel.swift in Sources */,
-				45A331A2298976BA008181E9 /* Theme.swift in Sources */,
+				45A331A2298976BA008181E9 /* AppearanceMode.swift in Sources */,
 				45A331A3298976BA008181E9 /* BetType.swift in Sources */,
 				45A331A4298976BA008181E9 /* UserActionView.swift in Sources */,
 				A9BAFB4D2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
@@ -14071,7 +14071,7 @@
 				45F6BC4D2AB3732C00C81DE1 /* BoostedArrowView.swift in Sources */,
 				45F6BC4E2AB3732C00C81DE1 /* CurrencyHelper.swift in Sources */,
 				45F6BC4F2AB3732C00C81DE1 /* FeaturedTipDetailsViewModel.swift in Sources */,
-				45F6BC512AB3732C00C81DE1 /* Theme.swift in Sources */,
+				45F6BC512AB3732C00C81DE1 /* AppearanceMode.swift in Sources */,
 				45F6BC522AB3732C00C81DE1 /* BetType.swift in Sources */,
 				45F6BC532AB3732C00C81DE1 /* UserActionView.swift in Sources */,
 				45F6BC542AB3732C00C81DE1 /* LoadingSpinnerViewController.swift in Sources */,
@@ -14909,7 +14909,7 @@
 				CE12A2BD2D31347E0022BDF7 /* BoostedArrowView.swift in Sources */,
 				CEA6674D2D84A76100C74895 /* URLPath.swift in Sources */,
 				CE12A2BE2D31347E0022BDF7 /* FeaturedTipDetailsViewModel.swift in Sources */,
-				CE12A2C02D31347E0022BDF7 /* Theme.swift in Sources */,
+				CE12A2C02D31347E0022BDF7 /* AppearanceMode.swift in Sources */,
 				CE12A2C12D31347E0022BDF7 /* BetType.swift in Sources */,
 				CE12A2C22D31347E0022BDF7 /* UserActionView.swift in Sources */,
 				CE12A2C32D31347E0022BDF7 /* LoadingSpinnerViewController.swift in Sources */,
@@ -15797,7 +15797,7 @@
 				CEF1955C2DA834E900C81F12 /* CurrencyHelper.swift in Sources */,
 				CEF1955D2DA834E900C81F12 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				CEF1955E2DA834E900C81F12 /* (null) in Sources */,
-				CEF1955F2DA834E900C81F12 /* Theme.swift in Sources */,
+				CEF1955F2DA834E900C81F12 /* AppearanceMode.swift in Sources */,
 				CEF195602DA834E900C81F12 /* BetType.swift in Sources */,
 				CEF195612DA834E900C81F12 /* UserActionView.swift in Sources */,
 				CEF195622DA834E900C81F12 /* RegisterSuccessViewController.swift in Sources */,

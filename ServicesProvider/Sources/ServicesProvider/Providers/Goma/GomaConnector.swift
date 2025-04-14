@@ -36,7 +36,7 @@ class GomaConnector: Connector {
     var authenticator: GomaAPIAuthenticator
     
     private static var defaultSessionConfiguration: URLSessionConfiguration {
-        var configuration = URLSessionConfiguration.ephemeral
+        let configuration = URLSessionConfiguration.ephemeral
         configuration.httpMaximumConnectionsPerHost = 1
         configuration.waitsForConnectivity = true
         configuration.httpShouldUsePipelining = false
@@ -54,7 +54,9 @@ class GomaConnector: Connector {
          decoder: JSONDecoder = JSONDecoder(),
          deviceIdentifier: String) {
 
-        self.init(gomaAPIAuthenticator: GomaAPIAuthenticator(deviceIdentifier: deviceIdentifier))
+        self.init(session: session,
+                  decoder: decoder,
+                  gomaAPIAuthenticator: GomaAPIAuthenticator(deviceIdentifier: deviceIdentifier))
     }
 
     init(session: URLSession = GomaConnector.defaultSession,

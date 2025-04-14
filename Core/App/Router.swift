@@ -69,13 +69,13 @@ class Router {
 
     func makeKeyAndVisible() {
 
-        if TargetVariables.supportedThemes == Theme.allCases {
-            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+        if TargetVariables.supportedThemes == AppearanceMode.allCases {
+            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
         }
-        else if TargetVariables.supportedThemes == [Theme.dark] {
+        else if TargetVariables.supportedThemes == [AppearanceMode.dark] {
             self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
         }
-        else if TargetVariables.supportedThemes == [Theme.light] {
+        else if TargetVariables.supportedThemes == [AppearanceMode.light] {
             self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         }
         else {

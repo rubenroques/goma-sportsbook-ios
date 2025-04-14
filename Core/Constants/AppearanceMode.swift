@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-enum Theme: Int, CaseIterable {
+enum AppearanceMode: Int, CaseIterable {
     case light
     case device
     case dark
 }
 
-extension Theme {
+extension AppearanceMode {
     var userInterfaceStyle: UIUserInterfaceStyle {
         switch self {
         case .device:
@@ -43,6 +43,26 @@ extension Theme {
         }
         else {
             return false
+        }
+    }
+}
+
+extension AppearanceMode {
+    
+    var title: String {
+        switch self {
+        case .light: return localized("theme_short_light")
+        case .device: return localized("theme_short_system")
+        case .dark: return localized("theme_short_dark")
+        }
+        
+    }
+    
+    var iconName: String {
+        switch self {
+        case .light: return "light_theme_icon"
+        case .device: return "system_theme_icon"
+        case .dark: return "dark_theme_icon"
         }
     }
 }

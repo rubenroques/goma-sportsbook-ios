@@ -10,7 +10,7 @@ import RegisterFlow
 
 enum UserDefaultsKey: String {
 
-    case theme = "appThemeKey"
+    case appearanceMode = "appThemeKey"
     case userSession = "userSession"
     case userSkippedLoginFlow = "userSkippedLoginFlow"
     case userOddsFormat = "userOddsFormat"
@@ -36,18 +36,18 @@ enum UserDefaultsKey: String {
 
 extension UserDefaults {
 
-    var theme: Theme {
+    var appearanceMode: AppearanceMode {
         get {
-            if let themeInt = self.value(forKey: UserDefaultsKey.theme.key) as? Int {
-                return Theme(rawValue: themeInt) ?? .dark
+            if let appearanceModeInt = self.value(forKey: UserDefaultsKey.appearanceMode.key) as? Int {
+                return AppearanceMode(rawValue: appearanceModeInt) ?? .dark
             }
 
-            self.setValue(Theme.dark.rawValue, forKey: UserDefaultsKey.theme.key)
+            self.setValue(AppearanceMode.dark.rawValue, forKey: UserDefaultsKey.appearanceMode.key)
             self.synchronize()
             return .dark
         }
         set {
-            self.set(newValue.rawValue, forKey: UserDefaultsKey.theme.key)
+            self.set(newValue.rawValue, forKey: UserDefaultsKey.appearanceMode.key)
             self.synchronize()
         }
     }

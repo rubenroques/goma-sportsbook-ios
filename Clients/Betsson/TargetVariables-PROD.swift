@@ -27,8 +27,8 @@ struct TargetVariables: SportsbookTarget {
         return "https://betssonfr-74f1b-default-rtdb.europe-west1.firebasedatabase.app/"
     }
 
-    static var supportedThemes: [Theme] {
-        return Theme.allCases
+    static var supportedThemes: [AppearanceMode] {
+        return AppearanceMode.allCases
     }
 
     static var supportedCardStyles: [CardsStyle] {
