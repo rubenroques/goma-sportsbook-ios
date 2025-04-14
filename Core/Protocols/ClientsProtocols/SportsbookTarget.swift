@@ -82,6 +82,8 @@ enum SportsbookTargetFeatures: Codable, CaseIterable {
     case legalAgeWarning
     
     case mixMatch
+        
+    case homeTickets
 }
 
 enum SportsbookSupportedLanguage: String, CaseIterable {

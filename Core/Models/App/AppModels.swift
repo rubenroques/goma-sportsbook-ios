@@ -519,3 +519,20 @@ struct PromotionalStory {
     let ctaText: String
     
 }
+
+struct RegionCountry: Codable {
+    var id: Int
+    var isoCode: String
+    var name: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case isoCode = "iso_code"
+        case name = "name"
+    }
+}
+
+enum TopCompetitionWidgetVersion {
+    case version1
+    case version2
+}

@@ -59,6 +59,9 @@ class PromotedCompetitionTableViewCell: UITableViewCell {
            let homeBanner = featuredCompetition.homeBanner,
            let url = URL(string: "\(homeBanner)") {
             self.promoImageView.kf.setImage(with: url)
+            
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
         }
     }
     
@@ -111,8 +114,9 @@ extension PromotedCompetitionTableViewCell {
             
             self.promoImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.promoImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.promoImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.promoImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
+            self.promoImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
+            self.promoImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -10),
+            self.promoImageView.heightAnchor.constraint(equalToConstant: 100)
         ])
 
     }
