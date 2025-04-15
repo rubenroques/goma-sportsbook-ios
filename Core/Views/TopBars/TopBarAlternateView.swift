@@ -247,10 +247,18 @@ class TopBarView: UIView {
             self.profilePictureBaseView.isHidden = false
             self.anonymousUserMenuBaseView.isHidden = true
 
-            self.accountValueBaseView.isHidden = false
             self.cashbackBaseView.isHidden = false
 
             self.loginBaseView.isHidden = true
+            
+            if TargetVariables.hasFeatureEnabled(feature: .userWalletBalance) {
+                self.accountValueBaseView.isHidden = false
+                Env.userSessionStore.refreshUserWallet()
+            }
+            else {
+                self.accountValueBaseView.isHidden = true
+            }
+            
         case .anonymous:
             self.profilePictureBaseView.isHidden = true
             self.anonymousUserMenuBaseView.isHidden = false

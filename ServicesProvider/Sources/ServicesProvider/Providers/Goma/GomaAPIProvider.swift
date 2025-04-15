@@ -81,7 +81,7 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
         let publisher: AnyPublisher<GomaModels.LoginResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .handleEvents(receiveOutput: { [weak self] response in
-                self?.connector.updateToken(newToken: response.token)
+                self?.connector.updateToken(newToken: response.data.token)
             })
             .map({ loginResponse in
             let mappedLoginResponse = GomaModelMapper.loginResponse(fromInternalLoginResponse: loginResponse)

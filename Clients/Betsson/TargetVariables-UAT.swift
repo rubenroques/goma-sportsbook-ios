@@ -52,7 +52,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var serviceProviderType: ServiceProviderType {
-        return .goma
+        return .sportradar
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {
@@ -60,7 +60,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback, .legalAgeWarning, .mixMatch]
+        return [.cashback, .legalAgeWarning, .mixMatch, .userWalletBalance]
     }
 
     static var shouldUserBlurEffectTabBar: Bool {

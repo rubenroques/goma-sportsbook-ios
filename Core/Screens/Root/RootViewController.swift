@@ -450,14 +450,6 @@ class RootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        if TargetVariables.hasFeatureEnabled(feature: .userWalletBalance) {
-            self.accountValueBaseView.isHidden = false
-            Env.userSessionStore.refreshUserWallet()
-        }
-        else {
-            self.accountValueBaseView.isHidden = true
-        }
-
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -572,6 +564,14 @@ class RootViewController: UIViewController {
         }
         else {
             self.myTicketsButtonBaseView.isHidden = true
+        }
+        
+        if TargetVariables.hasFeatureEnabled(feature: .userWalletBalance) {
+            self.accountValueBaseView.isHidden = false
+            Env.userSessionStore.refreshUserWallet()
+        }
+        else {
+            self.accountValueBaseView.isHidden = true
         }
 
         Env.businessSettingsSocket.clientSettingsPublisher

@@ -52,11 +52,23 @@ enum GomaModels {
     }
     
     struct LoginResponse: Codable {
-        let token: String
-        let userData: BasicRegisterResponse
+        let message: String?
+        let data: LoginData
         
         enum CodingKeys: String, CodingKey {
+            case message = "message"
+            case data = "data"
+        }
+    }
+    
+    struct LoginData: Codable {
+        let token: String
+        let expires: Int?
+        let userData: BasicRegisterResponse
+        
+        enum CodingKeys: String, CodingKey{
             case token = "token"
+            case expires = "expires_at"
             case userData = "user"
         }
     }
