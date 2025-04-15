@@ -52,7 +52,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var serviceProviderType: ServiceProviderType {
-        return .sportradar
+        return .goma
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {

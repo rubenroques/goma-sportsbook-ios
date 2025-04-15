@@ -84,6 +84,8 @@ enum SportsbookTargetFeatures: Codable, CaseIterable {
     case mixMatch
         
     case homeTickets
+    
+    case userWalletBalance
 }
 
 enum SportsbookSupportedLanguage: String, CaseIterable {

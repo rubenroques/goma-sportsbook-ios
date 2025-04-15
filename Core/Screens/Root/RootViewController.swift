@@ -146,18 +146,21 @@ class RootViewController: UIViewController {
     // MARK: Public properties
     // Child view controllers
     lazy var homeViewController = HomeViewController()
+    
     lazy var preLiveViewController: PreLiveEventsViewController = {
         let defaultSport = Env.sportsStore.defaultSport
         let viewModel = PreLiveEventsViewModel(selectedSport: defaultSport)
         let preLiveEventsViewController = PreLiveEventsViewController(viewModel: viewModel)
         return preLiveEventsViewController
     }()
+    
     lazy var liveEventsViewController: LiveEventsViewController = {
         let defaultLiveSport = Env.sportsStore.defaultLiveSport
         let liveEventsViewModel = LiveEventsViewModel(selectedSport: defaultLiveSport)
         let liveEventsViewController = LiveEventsViewController(viewModel: liveEventsViewModel)
         return liveEventsViewController
     }()
+    
     lazy var tipsRootViewController = TipsRootViewController()
     lazy var cashbackViewController = CashbackRootViewController()
     lazy var myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 0))
@@ -167,7 +170,7 @@ class RootViewController: UIViewController {
         if let competitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
 
             let topCompetitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
-
+            
             let featuredCompetitionDetailRootViewController = FeaturedCompetitionDetailRootViewController(viewModel: topCompetitionDetailsViewModel)
 
             return featuredCompetitionDetailRootViewController
@@ -175,7 +178,7 @@ class RootViewController: UIViewController {
 
         return nil
     }()
-    lazy var casinoViewController = CasinoDemoImageWebViewController() // CasinoWebViewController()
+    lazy var casinoViewController = CasinoDemoImageWebViewController()
 
     // Loaded view controllers
     var homeViewControllerLoaded = false
@@ -318,26 +321,6 @@ class RootViewController: UIViewController {
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
 
-//        NotificationCenter.default.addObserver(
-//            forName: UIWindow.didResignKeyNotification,
-//            object: self.overlayWindow,
-//            queue: nil
-//        ) { notification in
-//            print("Video is now fullscreen")
-//
-//            self.pictureInPictureView?.isHidden = true
-//        }
-//
-//        NotificationCenter.default.addObserver(
-//            forName: UIWindow.didBecomeKeyNotification,
-//            object: self.overlayWindow,
-//            queue: nil
-//        ) { notification in
-//            print("Video stopped")
-//
-//            self.pictureInPictureView?.isHidden = false
-//        }
-
         //
         self.setupWithTheme()
 
@@ -467,26 +450,16 @@ class RootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-//        if TargetVariables.hasFeatureEnabled(feature: .userWalletBalance) {
-//            self.accountValueBaseView.isHidden = false
-//            Env.userSessionStore.refreshUserWallet()
-//        }
-//        else {
-//            self.accountValueBaseView.isHidden = true
-//        }
+        if TargetVariables.hasFeatureEnabled(feature: .userWalletBalance) {
+            self.accountValueBaseView.isHidden = false
+            Env.userSessionStore.refreshUserWallet()
+        }
+        else {
+            self.accountValueBaseView.isHidden = true
+        }
 
-//        Publishers.CombineLatest(Env.businessSettingsSocket.clientSettingsPublisher, Env.userSessionStore.userProfilePublisher)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] clientSettings, userProfile in
-//
-//                if let userProfile = userProfile {
-//                    Env.userSessionStore.authenticateUser(isAnonymous: false)
-//                }
-//
-//            })
-//            .store(in: &cancellables)
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
