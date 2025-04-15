@@ -61,7 +61,7 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
 
         self.sectionTitleLabel.textColor = UIColor.App.textPrimary
 
-        self.searchIconBaseView.backgroundColor = UIColor.App.pillSettings
+        self.searchIconBaseView.backgroundColor = UIColor.App.settingPill
 
         self.searchIconImageView.backgroundColor = .clear
         self.searchIconImageView.setTintColor(color: UIColor.App.iconPrimary)

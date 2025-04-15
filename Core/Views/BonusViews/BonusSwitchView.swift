@@ -61,7 +61,7 @@ class BonusSwitchView: UIView {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.backgroundDarker
+        self.containerView.backgroundColor = .black
 
         self.iconImageView.backgroundColor = .clear
 

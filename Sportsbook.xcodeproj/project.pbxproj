@@ -4216,30 +4216,38 @@
 		CEE502D62D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
 		CEE502E02D66AF6F001B0342 /* ViewModelHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */; };
 		CEEDD2332DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
-		CEEDD2342DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
 		CEEDD2352DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
-		CEEDD2362DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
-		CEEDD2372DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
 		CEEDD2382DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
-		CEEDD2392DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
 		CEEDD23A2DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
-		CEEDD23B2DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
-		CEEDD23C2DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
+		CEEDD23B2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift */; };
+		CEEDD23C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift */; };
 		CEEDD23F2DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
-		CEEDD2402DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
 		CEEDD2412DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
-		CEEDD2422DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
-		CEEDD2432DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
+		CEEDD2422DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift */; };
+		CEEDD2432DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift */; };
 		CEEDD2442DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
-		CEEDD2452DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
 		CEEDD2462DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
-		CEEDD2472DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
-		CEEDD2482DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
+		CEEDD2472DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift */; };
+		CEEDD2482DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift */; };
 		CEEDD24A2DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
-		CEEDD24B2DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
 		CEEDD24C2DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
-		CEEDD24D2DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
-		CEEDD24E2DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
+		CEEDD24D2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift */; };
+		CEEDD24E2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift */; };
+		CEEDD2512DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2502DAE64DF0048A5B0 /* ColorExtension+Loader.swift */; };
+		CEEDD2522DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2502DAE64DF0048A5B0 /* ColorExtension+Loader.swift */; };
+		CEEDD2532DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2502DAE64DF0048A5B0 /* ColorExtension+Loader.swift */; };
+		CEEDD2542DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2502DAE64DF0048A5B0 /* ColorExtension+Loader.swift */; };
+		CEEDD2552DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2502DAE64DF0048A5B0 /* ColorExtension+Loader.swift */; };
+		CEEDD25E2DAE6EF60048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD25D2DAE6EF60048A5B0 /* ThemeColors.swift */; };
+		CEEDD25F2DAE6EF60048A5B0 /* ColorExtension+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD25C2DAE6EF60048A5B0 /* ColorExtension+Colors.swift */; };
+		CEEDD2622DAE74600048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2612DAE74600048A5B0 /* ThemeColors.swift */; };
+		CEEDD2632DAE74600048A5B0 /* ColorExtension+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2602DAE74600048A5B0 /* ColorExtension+Colors.swift */; };
+		CEEDD2642DAE74600048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2612DAE74600048A5B0 /* ThemeColors.swift */; };
+		CEEDD2652DAE74600048A5B0 /* ColorExtension+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2602DAE74600048A5B0 /* ColorExtension+Colors.swift */; };
+		CEEDD2692DAE74750048A5B0 /* ColorExtension+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2672DAE74750048A5B0 /* ColorExtension+Colors.swift */; };
+		CEEDD26A2DAE74750048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2682DAE74750048A5B0 /* ThemeColors.swift */; };
+		CEEDD26B2DAE74750048A5B0 /* ColorExtension+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2672DAE74750048A5B0 /* ColorExtension+Colors.swift */; };
+		CEEDD26C2DAE74750048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2682DAE74750048A5B0 /* ThemeColors.swift */; };
 		CEEFD45E2D88C0BA00AE4301 /* AdresseFrancaise in Frameworks */ = {isa = PBXBuildFile; productRef = CEEFD45D2D88C0BA00AE4301 /* AdresseFrancaise */; };
 		CEEFD45F2D88CA2A00AE4301 /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
 		CEEFD4602D88CA2A00AE4301 /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
@@ -6349,11 +6357,17 @@
 		CEE232032DA8365A000E3813 /* LaunchScreen-Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "LaunchScreen-Demo.storyboard"; sourceTree = "<group>"; };
 		CEE502CF2D66A609001B0342 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
 		CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelHelperTests.swift; sourceTree = "<group>"; };
-		CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		CEEDD22A2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ColorExtension+Colors-Placeholder.swift"; sourceTree = "<group>"; };
 		CEEDD22B2DADE1D90048A5B0 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
+		CEEDD22C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColorsPlaceholder.swift; sourceTree = "<group>"; };
 		CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeService.swift; sourceTree = "<group>"; };
-		CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeValidation.swift; sourceTree = "<group>"; };
+		CEEDD2502DAE64DF0048A5B0 /* ColorExtension+Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ColorExtension+Loader.swift"; sourceTree = "<group>"; };
+		CEEDD25C2DAE6EF60048A5B0 /* ColorExtension+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ColorExtension+Colors.swift"; sourceTree = "<group>"; };
+		CEEDD25D2DAE6EF60048A5B0 /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
+		CEEDD2602DAE74600048A5B0 /* ColorExtension+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ColorExtension+Colors.swift"; sourceTree = "<group>"; };
+		CEEDD2612DAE74600048A5B0 /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
+		CEEDD2672DAE74750048A5B0 /* ColorExtension+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ColorExtension+Colors.swift"; sourceTree = "<group>"; };
+		CEEDD2682DAE74750048A5B0 /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
 		CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
@@ -6708,6 +6722,7 @@
 		450B7B2628F58625009229E3 /* SportRadar */ = {
 			isa = PBXGroup;
 			children = (
+				CEEDD2662DAE74650048A5B0 /* Theme */,
 				450B7B3428F58625009229E3 /* ClientVariables.swift */,
 				450B7B3028F58625009229E3 /* TargetVariables-UAT.swift */,
 				CE12A4C22D3134E80022BDF7 /* TargetVariables-PROD.swift */,
@@ -7761,6 +7776,7 @@
 		45A33350298976E3008181E9 /* Betsson */ = {
 			isa = PBXGroup;
 			children = (
+				CEEDD2572DAE67920048A5B0 /* Theme */,
 				45A3335E298976E3008181E9 /* ClientVariables.swift */,
 				45A3335A298976E3008181E9 /* TargetVariables-UAT.swift */,
 				455E86B82AC464920031AF26 /* TargetVariables-PROD.swift */,
@@ -10419,8 +10435,8 @@
 		CEEDD22D2DADE1D90048A5B0 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
-				CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */,
-				CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */,
+				CEEDD22A2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift */,
+				CEEDD22C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift */,
 			);
 			path = Generated;
 			sourceTree = "<group>";
@@ -10430,8 +10446,35 @@
 			children = (
 				CEEDD22D2DADE1D90048A5B0 /* Generated */,
 				CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */,
+				CEEDD2502DAE64DF0048A5B0 /* ColorExtension+Loader.swift */,
 				CEEDD22B2DADE1D90048A5B0 /* Theme.swift */,
-				CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		CEEDD2562DAE67860048A5B0 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				CEEDD25C2DAE6EF60048A5B0 /* ColorExtension+Colors.swift */,
+				CEEDD25D2DAE6EF60048A5B0 /* ThemeColors.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		CEEDD2572DAE67920048A5B0 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				CEEDD2602DAE74600048A5B0 /* ColorExtension+Colors.swift */,
+				CEEDD2612DAE74600048A5B0 /* ThemeColors.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		CEEDD2662DAE74650048A5B0 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				CEEDD2672DAE74750048A5B0 /* ColorExtension+Colors.swift */,
+				CEEDD2682DAE74750048A5B0 /* ThemeColors.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -10508,6 +10551,7 @@
 		CEF197AB2DA8350400C81F12 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				CEEDD2562DAE67860048A5B0 /* Theme */,
 				CEF1979C2DA8350400C81F12 /* Assets */,
 				CEF197A12DA8350400C81F12 /* LaunchScreen */,
 				CEF197A42DA8350400C81F12 /* Misc */,
@@ -12298,10 +12342,9 @@
 				CEEFDE8A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEEFDE8B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEEDD24A2DADE1D90048A5B0 /* Theme.swift in Sources */,
-				CEEDD24B2DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
 				CEEDD24C2DADE1D90048A5B0 /* ThemeService.swift in Sources */,
-				CEEDD24D2DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
-				CEEDD24E2DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
+				CEEDD24D2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift in Sources */,
+				CEEDD24E2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */,
 				CEEFDE8C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				450B794328F58574009229E3 /* AggregatorRepository.swift in Sources */,
 				CE16F2822D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
@@ -12680,6 +12723,8 @@
 				65CD18A12D9469EA00CA23E0 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				65CD18A22D9469EA00CA23E0 /* ListTitleHeaderFooterView.swift in Sources */,
 				65CD18A32D9469EA00CA23E0 /* ChatNotificationsViewModel.swift in Sources */,
+				CEEDD26B2DAE74750048A5B0 /* ColorExtension+Colors.swift in Sources */,
+				CEEDD26C2DAE74750048A5B0 /* ThemeColors.swift in Sources */,
 				65CD18A42D9469EA00CA23E0 /* FriendProfileViewController.swift in Sources */,
 				65CD18A52D9469EA00CA23E0 /* SentTicketMessageTableViewCell.swift in Sources */,
 				65CD18A62D9469EA00CA23E0 /* NewMessageViewController.swift in Sources */,
@@ -12729,6 +12774,7 @@
 				450B7A5228F58574009229E3 /* LogViewerViewController.swift in Sources */,
 				A9527C152A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
 				450B7A5328F58574009229E3 /* TransactionsHistoryRootViewController.swift in Sources */,
+				CEEDD2542DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */,
 				45970A022C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				450B7A5428F58574009229E3 /* FavoritesManager.swift in Sources */,
 				4542DFEA2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -13159,10 +13205,9 @@
 				CEEFDE662D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEEFDE672D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEEDD2382DADE1D90048A5B0 /* Theme.swift in Sources */,
-				CEEDD2392DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
 				CEEDD23A2DADE1D90048A5B0 /* ThemeService.swift in Sources */,
-				CEEDD23B2DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
-				CEEDD23C2DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
+				CEEDD23B2DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift in Sources */,
+				CEEDD23C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */,
 				CEEFDE682D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45A3315A298976BA008181E9 /* UploadDocumentsViewModel.swift in Sources */,
 				45A3315B298976BA008181E9 /* AggregatorRepository.swift in Sources */,
@@ -13294,6 +13339,8 @@
 				45A331A3298976BA008181E9 /* BetType.swift in Sources */,
 				45A331A4298976BA008181E9 /* UserActionView.swift in Sources */,
 				A9BAFB4D2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
+				CEEDD2642DAE74600048A5B0 /* ThemeColors.swift in Sources */,
+				CEEDD2652DAE74600048A5B0 /* ColorExtension+Colors.swift in Sources */,
 				45A331A5298976BA008181E9 /* LoadingSpinnerViewController.swift in Sources */,
 				655E20132B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				CED5D91B2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
@@ -13590,6 +13637,7 @@
 				45A33272298976BA008181E9 /* ServiceProviderModelMapper+Country.swift in Sources */,
 				45A33273298976BA008181E9 /* LogViewerViewController.swift in Sources */,
 				A9527C142A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
+				CEEDD2512DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */,
 				45970A002C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				45A33274298976BA008181E9 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE82C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -13996,10 +14044,9 @@
 				CEEFDE962D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEEFDE972D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEEDD23F2DADE1D90048A5B0 /* Theme.swift in Sources */,
-				CEEDD2402DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
 				CEEDD2412DADE1D90048A5B0 /* ThemeService.swift in Sources */,
-				CEEDD2422DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
-				CEEDD2432DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
+				CEEDD2422DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift in Sources */,
+				CEEDD2432DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */,
 				CEEFDE982D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45F6BC042AB3732C00C81DE1 /* UploadDocumentsViewModel.swift in Sources */,
 				45F6BC052AB3732C00C81DE1 /* AggregatorRepository.swift in Sources */,
@@ -14131,6 +14178,8 @@
 				45F6BC512AB3732C00C81DE1 /* AppearanceMode.swift in Sources */,
 				45F6BC522AB3732C00C81DE1 /* BetType.swift in Sources */,
 				45F6BC532AB3732C00C81DE1 /* UserActionView.swift in Sources */,
+				CEEDD2622DAE74600048A5B0 /* ThemeColors.swift in Sources */,
+				CEEDD2632DAE74600048A5B0 /* ColorExtension+Colors.swift in Sources */,
 				45F6BC542AB3732C00C81DE1 /* LoadingSpinnerViewController.swift in Sources */,
 				655E20142B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				CED5D8F12D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
@@ -14427,6 +14476,7 @@
 				45F6BD2F2AB3732C00C81DE1 /* ServiceProviderModelMapper+Country.swift in Sources */,
 				45F6BD302AB3732C00C81DE1 /* LogViewerViewController.swift in Sources */,
 				45F6BD312AB3732C00C81DE1 /* MyCompetitionsRootViewController.swift in Sources */,
+				CEEDD2522DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */,
 				45970A012C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				45F6BD322AB3732C00C81DE1 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE92C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -14841,10 +14891,9 @@
 				CEEFDE902D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEEFDE912D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEEDD2442DADE1D90048A5B0 /* Theme.swift in Sources */,
-				CEEDD2452DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
 				CEEDD2462DADE1D90048A5B0 /* ThemeService.swift in Sources */,
-				CEEDD2472DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
-				CEEDD2482DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
+				CEEDD2472DADE1D90048A5B0 /* ColorExtension+Colors-Placeholder.swift in Sources */,
+				CEEDD2482DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */,
 				CEEFDE922D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE12A2712D31347E0022BDF7 /* RibDocsViewModel.swift in Sources */,
 				CE16F27F2D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
@@ -15223,6 +15272,8 @@
 				65CD185C2D9469EA00CA23E0 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				65CD185D2D9469EA00CA23E0 /* ListTitleHeaderFooterView.swift in Sources */,
 				65CD185E2D9469EA00CA23E0 /* ChatNotificationsViewModel.swift in Sources */,
+				CEEDD2692DAE74750048A5B0 /* ColorExtension+Colors.swift in Sources */,
+				CEEDD26A2DAE74750048A5B0 /* ThemeColors.swift in Sources */,
 				65CD185F2D9469EA00CA23E0 /* FriendProfileViewController.swift in Sources */,
 				65CD18602D9469EA00CA23E0 /* SentTicketMessageTableViewCell.swift in Sources */,
 				65CD18612D9469EA00CA23E0 /* NewMessageViewController.swift in Sources */,
@@ -15272,6 +15323,7 @@
 				CE12A3AF2D31347E0022BDF7 /* MyCompetitionsRootViewController.swift in Sources */,
 				CE12A3B02D31347E0022BDF7 /* TransactionsHistoryRootViewController.swift in Sources */,
 				CE12A3B12D31347E0022BDF7 /* PromotedBetslip.swift in Sources */,
+				CEEDD2532DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */,
 				CE12A3B22D31347E0022BDF7 /* FavoritesManager.swift in Sources */,
 				CE12A3B32D31347E0022BDF7 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				CE12A3B42D31347E0022BDF7 /* BonusTypeMapper.swift in Sources */,
@@ -15788,6 +15840,7 @@
 				CEF195242DA834E900C81F12 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				CEF195252DA834E900C81F12 /* TopCompetitionsDataSource.swift in Sources */,
 				CEF195262DA834E900C81F12 /* MatchWidgetCollectionViewCell.swift in Sources */,
+				CEEDD2552DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */,
 				CEF195272DA834E900C81F12 /* LoadingMoreTableViewCell.swift in Sources */,
 				CEF195282DA834E900C81F12 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
 				CEF195292DA834E900C81F12 /* PreLiveEventsViewModel.swift in Sources */,
@@ -15886,6 +15939,8 @@
 				CEF1957A2DA834E900C81F12 /* AnonymousSideMenuViewController.swift in Sources */,
 				CEF1957B2DA834E900C81F12 /* TipsControlViewController.swift in Sources */,
 				CEF1957C2DA834E900C81F12 /* (null) in Sources */,
+				CEEDD25E2DAE6EF60048A5B0 /* ThemeColors.swift in Sources */,
+				CEEDD25F2DAE6EF60048A5B0 /* ColorExtension+Colors.swift in Sources */,
 				CEF1957D2DA834E900C81F12 /* UIView+Shift.swift in Sources */,
 				CEF1957E2DA834E900C81F12 /* MessageDetailViewModel.swift in Sources */,
 				CEF1957F2DA834E900C81F12 /* TipInfoView.swift in Sources */,
@@ -16232,10 +16287,7 @@
 				CEB2364C2DAD0E1000260B5B /* AIAssistantUITableViewCell.swift in Sources */,
 				CEB2364D2DAD0E1000260B5B /* SentMessageTableViewCell.swift in Sources */,
 				CEEDD2332DADE1D90048A5B0 /* Theme.swift in Sources */,
-				CEEDD2342DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
 				CEEDD2352DADE1D90048A5B0 /* ThemeService.swift in Sources */,
-				CEEDD2362DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
-				CEEDD2372DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
 				CEB2364E2DAD0E1000260B5B /* FriendsListViewModel.swift in Sources */,
 				CEF196A62DA834E900C81F12 /* SmallToolTipViewModel.swift in Sources */,
 				CEF196A72DA834E900C81F12 /* NetworkSession.swift in Sources */,

@@ -29,9 +29,9 @@ extension LiveMatchWidgetCollectionViewCell {
         self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
 
         // Boosted Odds
-        self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
-                                                      UIColor.App.liveBorderGradient2,
-                                                      UIColor.App.liveBorderGradient1]
+        self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorder3,
+                                                      UIColor.App.liveBorder2,
+                                                      UIColor.App.liveBorder1]
 
         self.topSeparatorAlphaLineView.isHidden = false
 

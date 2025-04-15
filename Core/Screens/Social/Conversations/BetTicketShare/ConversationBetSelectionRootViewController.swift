@@ -161,7 +161,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
         self.closeButton.backgroundColor = .clear
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
+        self.ticketTypesCollectionView.backgroundColor = UIColor.App.navPills
         
         self.pagesLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 

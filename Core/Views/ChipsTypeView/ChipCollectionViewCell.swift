@@ -66,11 +66,11 @@ class ChipCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.normalColor = UIColor.App.pillBackground
+        self.normalColor = UIColor.App.pills
         self.selectedColor = UIColor.App.highlightPrimary
 
         self.titleLabel.textColor = UIColor.App.textPrimary
-        self.containerView.backgroundColor = hasBackgroundStyle ? UIColor.App.pillNavigation : .clear
+        self.containerView.backgroundColor = hasBackgroundStyle ? UIColor.App.navPills : .clear
 
         self.drawSelectionState()
     }
@@ -78,11 +78,11 @@ class ChipCollectionViewCell: UICollectionViewCell {
     private func drawSelectionState() {
         if self.isSelected {
             self.selectionHighlightView.backgroundColor = self.selectedColor
-            self.containerView.backgroundColor = hasBackgroundStyle ? UIColor.App.pillNavigation : self.normalColor
+            self.containerView.backgroundColor = hasBackgroundStyle ? UIColor.App.navPills : self.normalColor
         }
         else {
             self.selectionHighlightView.backgroundColor = self.normalColor
-            self.containerView.backgroundColor = hasBackgroundStyle ? UIColor.App.pillNavigation : self.normalColor
+            self.containerView.backgroundColor = hasBackgroundStyle ? UIColor.App.navPills : self.normalColor
         }
     }
 

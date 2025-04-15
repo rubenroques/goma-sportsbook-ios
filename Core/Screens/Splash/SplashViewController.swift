@@ -40,6 +40,9 @@ class SplashViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
         
+        // Start theme
+        ThemeService.shared.fetchThemeFromServer()
+        
         // Env.appSession.isLoadingAppSettingsPublisher,
         self.isLoadingBootDataSubscription = Publishers.CombineLatest(
             Env.sportsStore.activeSportsPublisher,

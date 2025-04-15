@@ -52,7 +52,7 @@ class CompetitionHistoryCollectionViewCell: UICollectionViewCell {
 
     func setupWithTheme() {
 
-        self.containerView.backgroundColor = UIColor.App.pillNavigation
+        self.containerView.backgroundColor = UIColor.App.navPills
 
         self.containerView.layer.borderColor = UIColor.App.buttonActiveHoverTertiary.cgColor
 

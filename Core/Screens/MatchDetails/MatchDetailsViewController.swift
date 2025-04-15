@@ -1180,8 +1180,8 @@ extension MatchDetailsViewController {
         self.marketGroupsPagedBaseView.backgroundColor = .clear
 
         // Market List CollectionView
-        self.chipsTypeView.backgroundColor = UIColor.App.pillNavigation
-        self.marketTypesBaseView.backgroundColor = UIColor.App.pillNavigation
+        self.chipsTypeView.backgroundColor = UIColor.App.navPills
+        self.marketTypesBaseView.backgroundColor = UIColor.App.navPills
 
         //
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary

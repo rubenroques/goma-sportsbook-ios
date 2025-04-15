@@ -129,7 +129,7 @@ class BonusRootViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.bonusTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
+        self.bonusTypesCollectionView.backgroundColor = UIColor.App.navPills
 
         self.noLoginBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.noLoginTitleLabel.textColor = UIColor.App.textPrimary

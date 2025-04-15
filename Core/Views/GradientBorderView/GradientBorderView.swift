@@ -13,7 +13,7 @@ class GradientBorderView: UIView {
     var gradientBorderWidth: CGFloat = 10
     var gradientCornerRadius: CGFloat = 0
 
-    var gradientColors: [UIColor] = [UIColor.App.liveBorderGradient3, UIColor.App.liveBorderGradient2, UIColor.App.liveBorderGradient1] {
+    var gradientColors: [UIColor] = [UIColor.App.liveBorder3, UIColor.App.liveBorder2, UIColor.App.liveBorder1] {
         didSet {
             self.setNeedsLayout()
         }

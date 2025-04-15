@@ -13,11 +13,11 @@ class ThemeService {
     // Current theme publisher
     private var themeSubject = CurrentValueSubject<Theme, Never>(Theme.defaultTheme)
     var themePublisher: AnyPublisher<Theme, Never> {
-        return themeSubject.eraseToAnyPublisher()
+        return self.themeSubject.eraseToAnyPublisher()
     }
 
     var currentTheme: Theme {
-        return themeSubject.value
+        return self.themeSubject.value
     }
     
     private var cancellables = Set<AnyCancellable>()
@@ -25,12 +25,17 @@ class ThemeService {
     init() {
         // Load cached theme on init
         if let cachedTheme = loadCachedTheme() {
-            themeSubject.send(cachedTheme)
+            self.themeSubject.send(cachedTheme)
         }
     }
 
     func fetchThemeFromServer() {
-        guard let url = URL(string: serverURL) else { return }
+        
+        //TODO: The CMS does not suppport yet the themes
+        return
+        
+        //
+        guard let url = URL(string: self.serverURL) else { return }
         
         URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data }
@@ -54,17 +59,17 @@ class ThemeService {
                     window.subviews.forEach { $0.setNeedsDisplay() }
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
 
     private func cacheTheme(_ theme: Theme) {
         if let encoded = try? JSONEncoder().encode(theme) {
-            UserDefaults.standard.set(encoded, forKey: themeKey)
+            UserDefaults.standard.set(encoded, forKey: self.themeKey)
         }
     }
 
     private func loadCachedTheme() -> Theme? {
-        guard let data = UserDefaults.standard.data(forKey: themeKey) else {
+        guard let data = UserDefaults.standard.data(forKey: self.themeKey) else {
             return nil
         }
 

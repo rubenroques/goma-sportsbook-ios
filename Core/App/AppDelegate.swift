@@ -174,27 +174,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         adjustConfig?.delegate = self
 
         Adjust.appDidLaunch(adjustConfig)
-
-        // Initialize Theme Service
-        ThemeService.shared.fetchThemeFromServer()
         
         //
-        #if DEBUG
-        // Validate theme colors and check for any missing/invalid definitions
-        let colorIssues = UIColor.App.validateAppColors()
-        if !colorIssues.isEmpty {
-            print("⚠️ THEME COLOR VALIDATION ISSUES: ⚠️")
-            for issue in colorIssues {
-                print("⚠️ \(issue)")
-            }
-            // Optionally - you can make the app crash in development to force fixing these issues
-            // assertionFailure("Theme color validation failed")
-        } else {
-            print("✅ All theme colors validated successfully")
-        }
-        
+        // #if DEBUG
         // AppFont.printFonts()
-        #endif
+        // #endif
+        //
+        
+        // App Init
         //
         self.window = UIWindow()
 

@@ -32,9 +32,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9
         
-        gradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
-                                             UIColor.App.liveBorderGradient2,
-                                             UIColor.App.liveBorderGradient1]
+        gradientBorderView.gradientColors = [UIColor.App.liveBorder3,
+                                             UIColor.App.liveBorder2,
+                                             UIColor.App.liveBorder1]
         
         return gradientBorderView
     }()

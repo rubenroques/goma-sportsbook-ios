@@ -26,9 +26,9 @@ extension ClassicMatchWidgetCollectionViewCell {
         self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
 
-        self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
-                                                      UIColor.App.liveBorderGradient2,
-                                                      UIColor.App.liveBorderGradient1]
+        self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorder3,
+                                                      UIColor.App.liveBorder2,
+                                                      UIColor.App.liveBorder1]
 
         self.gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
                                                   UIColor.App.cardBorderLineGradient2,

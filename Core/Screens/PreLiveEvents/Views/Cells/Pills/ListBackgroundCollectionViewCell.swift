@@ -52,10 +52,10 @@ class ListBackgroundCollectionViewCell: UICollectionViewCell {
 
     func setupWithTheme() {
         self.iconImageView.backgroundColor = .clear
-        self.normalColor = UIColor.App.pillBackground
+        self.normalColor = UIColor.App.pills
         self.selectedColor = UIColor.App.highlightPrimary
 
-        self.containerView.backgroundColor = UIColor.App.pillNavigation
+        self.containerView.backgroundColor = UIColor.App.navPills
         self.setupWithSelection(self.selectedType)
     }
 

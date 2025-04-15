@@ -348,7 +348,7 @@ class MyCompetitionsRootViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.shortcutsCollectionView.backgroundColor = UIColor.App.pillNavigation
+        self.shortcutsCollectionView.backgroundColor = UIColor.App.navPills
 
         self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
 

@@ -23,7 +23,7 @@ class TopCompetitionCollectionViewCell: UICollectionViewCell {
                 self.titleLabel.textColor = UIColor.App.textPrimary
             }
             else {
-                self.containerView.backgroundColor = UIColor.App.pillNavigation
+                self.containerView.backgroundColor = UIColor.App.navPills
 
                 self.titleLabel.textColor = UIColor.App.textSecondary
             }
@@ -70,7 +70,7 @@ class TopCompetitionCollectionViewCell: UICollectionViewCell {
 
     func setupWithTheme() {
 
-        self.containerView.backgroundColor = UIColor.App.pillNavigation
+        self.containerView.backgroundColor = UIColor.App.navPills
 
         self.containerView.layer.borderColor = UIColor.App.buttonActiveHoverTertiary.cgColor
 

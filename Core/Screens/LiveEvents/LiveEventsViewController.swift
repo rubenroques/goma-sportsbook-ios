@@ -546,8 +546,8 @@ class LiveEventsViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = .clear
         
-        self.chipsTypeView.backgroundColor = UIColor.App.pillNavigation
-        self.filtersChipsBaseView.backgroundColor = UIColor.App.pillNavigation
+        self.chipsTypeView.backgroundColor = UIColor.App.navPills
+        self.filtersChipsBaseView.backgroundColor = UIColor.App.navPills
         
         self.tableView.backgroundColor = .clear
         self.tableView.backgroundView?.backgroundColor = .clear
@@ -577,7 +577,7 @@ class LiveEventsViewController: UIViewController {
         
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
-        self.filtersButtonView.backgroundColor = UIColor.App.pillSettings
+        self.filtersButtonView.backgroundColor = UIColor.App.settingPill
         
         self.emptyBaseView.backgroundColor = .clear
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary

@@ -39,9 +39,9 @@ extension LiveMatchWidgetCollectionViewCell {
         liveGradientBorderView.gradientBorderWidth = 2.1
         liveGradientBorderView.gradientCornerRadius = 9
 
-        liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
-                                                 UIColor.App.liveBorderGradient2,
-                                                 UIColor.App.liveBorderGradient1]
+        liveGradientBorderView.gradientColors = [UIColor.App.liveBorder3,
+                                                 UIColor.App.liveBorder2,
+                                                 UIColor.App.liveBorder1]
 
         return liveGradientBorderView
     }

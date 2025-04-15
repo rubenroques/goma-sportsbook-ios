@@ -843,9 +843,9 @@ class RootViewController: UIViewController {
             self.topBarView.backgroundColor = .clear
 
             self.topGradientBackgroundView.backgroundColor = .clear
-            self.topBackgroundGradientLayer.colors = [UIColor.App.headerGradient1.cgColor,
-                                                      UIColor.App.headerGradient2.cgColor,
-                                                      UIColor.App.headerGradient3.cgColor]
+            self.topBackgroundGradientLayer.colors = [UIColor.App.topBarGradient1.cgColor,
+                                                      UIColor.App.topBarGradient2.cgColor,
+                                                      UIColor.App.topBarGradient3.cgColor]
 
             self.containerView.backgroundColor = .clear
             self.mainContainerView.backgroundColor = .clear

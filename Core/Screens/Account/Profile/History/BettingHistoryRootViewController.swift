@@ -169,7 +169,7 @@ class BettingHistoryRootViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.shortcutsCollectionView.backgroundColor = UIColor.App.pillNavigation
+        self.shortcutsCollectionView.backgroundColor = UIColor.App.navPills
 
         self.noLoginBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.noLoginTitleLabel.textColor = UIColor.App.textPrimary
