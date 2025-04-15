@@ -286,7 +286,6 @@
 		450B79C028F58574009229E3 /* MyFavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69A27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift */; };
 		450B79C128F58574009229E3 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		450B79C228F58574009229E3 /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
-		450B79C328F58574009229E3 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515637326BE982000690896 /* Colors.swift */; };
 		450B79C428F58574009229E3 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		450B79C528F58574009229E3 /* FeaturedTipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */; };
 		450B79C728F58574009229E3 /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
@@ -1032,7 +1031,6 @@
 		45A331DE298976BA008181E9 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		45A331DF298976BA008181E9 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		45A331E0298976BA008181E9 /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
-		45A331E1298976BA008181E9 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515637326BE982000690896 /* Colors.swift */; };
 		45A331E2298976BA008181E9 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		45A331E3298976BA008181E9 /* FeaturedTipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */; };
 		45A331E5298976BA008181E9 /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
@@ -1765,7 +1763,6 @@
 		45F6BC932AB3732C00C81DE1 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		45F6BC942AB3732C00C81DE1 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		45F6BC952AB3732C00C81DE1 /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
-		45F6BC962AB3732C00C81DE1 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515637326BE982000690896 /* Colors.swift */; };
 		45F6BC972AB3732C00C81DE1 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		45F6BC982AB3732C00C81DE1 /* FeaturedTipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */; };
 		45F6BC9A2AB3732C00C81DE1 /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
@@ -3174,7 +3171,6 @@
 		CE12A3042D31347E0022BDF7 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		CE12A3052D31347E0022BDF7 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		CE12A3062D31347E0022BDF7 /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
-		CE12A3072D31347E0022BDF7 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515637326BE982000690896 /* Colors.swift */; };
 		CE12A3082D31347E0022BDF7 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		CE12A3092D31347E0022BDF7 /* FeaturedTipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */; };
 		CE12A30B2D31347E0022BDF7 /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
@@ -4219,6 +4215,31 @@
 		CEE502D42D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
 		CEE502D62D66A609001B0342 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502CF2D66A609001B0342 /* SportTypeStore.swift */; };
 		CEE502E02D66AF6F001B0342 /* ViewModelHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */; };
+		CEEDD2332DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
+		CEEDD2342DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
+		CEEDD2352DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
+		CEEDD2362DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
+		CEEDD2372DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
+		CEEDD2382DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
+		CEEDD2392DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
+		CEEDD23A2DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
+		CEEDD23B2DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
+		CEEDD23C2DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
+		CEEDD23F2DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
+		CEEDD2402DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
+		CEEDD2412DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
+		CEEDD2422DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
+		CEEDD2432DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
+		CEEDD2442DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
+		CEEDD2452DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
+		CEEDD2462DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
+		CEEDD2472DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
+		CEEDD2482DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
+		CEEDD24A2DADE1D90048A5B0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22B2DADE1D90048A5B0 /* Theme.swift */; };
+		CEEDD24B2DADE1D90048A5B0 /* ThemeValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */; };
+		CEEDD24C2DADE1D90048A5B0 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */; };
+		CEEDD24D2DADE1D90048A5B0 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */; };
+		CEEDD24E2DADE1D90048A5B0 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */; };
 		CEEFD45E2D88C0BA00AE4301 /* AdresseFrancaise in Frameworks */ = {isa = PBXBuildFile; productRef = CEEFD45D2D88C0BA00AE4301 /* AdresseFrancaise */; };
 		CEEFD45F2D88CA2A00AE4301 /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
 		CEEFD4602D88CA2A00AE4301 /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
@@ -4805,7 +4826,6 @@
 		CEF195A52DA834E900C81F12 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		CEF195A62DA834E900C81F12 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		CEF195A72DA834E900C81F12 /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
-		CEF195A82DA834E900C81F12 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515637326BE982000690896 /* Colors.swift */; };
 		CEF195A92DA834E900C81F12 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		CEF195AA2DA834E900C81F12 /* FeaturedTipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */; };
 		CEF195AB2DA834E900C81F12 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -5331,7 +5351,6 @@
 		4515635E26BE032E00690896 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
 		4515636A26BE949300690896 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		4515636D26BE94F600690896 /* AppearanceMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceMode.swift; sourceTree = "<group>"; };
-		4515637326BE982000690896 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		45166CA526F28D2E00E69D65 /* Bootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bootstrap.swift; sourceTree = "<group>"; };
 		45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		451ABD6529CB3B1D0062641F /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
@@ -6330,6 +6349,11 @@
 		CEE232032DA8365A000E3813 /* LaunchScreen-Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "LaunchScreen-Demo.storyboard"; sourceTree = "<group>"; };
 		CEE502CF2D66A609001B0342 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
 		CEE502DF2D66AF6F001B0342 /* ViewModelHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelHelperTests.swift; sourceTree = "<group>"; };
+		CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		CEEDD22B2DADE1D90048A5B0 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
+		CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeService.swift; sourceTree = "<group>"; };
+		CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeValidation.swift; sourceTree = "<group>"; };
 		CEEFDE562D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CEEFDE572D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CEEFDE582D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
@@ -7323,10 +7347,10 @@
 		456B341826C178D9009D7D27 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
+				CEEDD2312DADE1D90048A5B0 /* Theme */,
 				456B342326C17E83009D7D27 /* Constants.swift */,
 				4515636A26BE949300690896 /* UserSettings.swift */,
 				4515636D26BE94F600690896 /* AppearanceMode.swift */,
-				4515637326BE982000690896 /* Colors.swift */,
 				4589F41E26BF03FE005DF543 /* Fonts.swift */,
 				A91F4B4127C002FA008C7510 /* OddsFormat.swift */,
 				45B74ACE292BFE3500F2076C /* ServiceProviderType.swift */,
@@ -10392,6 +10416,26 @@
 			path = Classic;
 			sourceTree = "<group>";
 		};
+		CEEDD22D2DADE1D90048A5B0 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				CEEDD22A2DADE1D90048A5B0 /* ColorExtension.swift */,
+				CEEDD22C2DADE1D90048A5B0 /* ThemeColors.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		CEEDD2312DADE1D90048A5B0 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				CEEDD22D2DADE1D90048A5B0 /* Generated */,
+				CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */,
+				CEEDD22B2DADE1D90048A5B0 /* Theme.swift */,
+				CEEDD2302DADE1D90048A5B0 /* ThemeValidation.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
 		CEEFDE5C2D8B772900630F7E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -12253,6 +12297,11 @@
 				CEEFDE892D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEEFDE8A2D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEEFDE8B2D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEDD24A2DADE1D90048A5B0 /* Theme.swift in Sources */,
+				CEEDD24B2DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
+				CEEDD24C2DADE1D90048A5B0 /* ThemeService.swift in Sources */,
+				CEEDD24D2DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
+				CEEDD24E2DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
 				CEEFDE8C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				450B794328F58574009229E3 /* AggregatorRepository.swift in Sources */,
 				CE16F2822D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
@@ -12445,7 +12494,6 @@
 				450B79C128F58574009229E3 /* MainMarketType.swift in Sources */,
 				A9B6305629102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				450B79C228F58574009229E3 /* FilterHistoryViewModel.swift in Sources */,
-				450B79C328F58574009229E3 /* Colors.swift in Sources */,
 				450B79C428F58574009229E3 /* CashoutAggregator.swift in Sources */,
 				450B79C528F58574009229E3 /* FeaturedTipCollectionViewModel.swift in Sources */,
 				450B79C728F58574009229E3 /* FilterRowView.swift in Sources */,
@@ -13110,6 +13158,11 @@
 				CEEFDE652D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEEFDE662D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEEFDE672D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEDD2382DADE1D90048A5B0 /* Theme.swift in Sources */,
+				CEEDD2392DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
+				CEEDD23A2DADE1D90048A5B0 /* ThemeService.swift in Sources */,
+				CEEDD23B2DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
+				CEEDD23C2DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
 				CEEFDE682D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45A3315A298976BA008181E9 /* UploadDocumentsViewModel.swift in Sources */,
 				45A3315B298976BA008181E9 /* AggregatorRepository.swift in Sources */,
@@ -13303,7 +13356,6 @@
 				45A331DE298976BA008181E9 /* MainMarketType.swift in Sources */,
 				45A331DF298976BA008181E9 /* RecoverPasswordViewController.swift in Sources */,
 				45A331E0298976BA008181E9 /* FilterHistoryViewModel.swift in Sources */,
-				45A331E1298976BA008181E9 /* Colors.swift in Sources */,
 				45A331E2298976BA008181E9 /* CashoutAggregator.swift in Sources */,
 				45A331E3298976BA008181E9 /* FeaturedTipCollectionViewModel.swift in Sources */,
 				45A331E5298976BA008181E9 /* FilterRowView.swift in Sources */,
@@ -13943,6 +13995,11 @@
 				CEEFDE952D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEEFDE962D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEEFDE972D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEDD23F2DADE1D90048A5B0 /* Theme.swift in Sources */,
+				CEEDD2402DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
+				CEEDD2412DADE1D90048A5B0 /* ThemeService.swift in Sources */,
+				CEEDD2422DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
+				CEEDD2432DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
 				CEEFDE982D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45F6BC042AB3732C00C81DE1 /* UploadDocumentsViewModel.swift in Sources */,
 				45F6BC052AB3732C00C81DE1 /* AggregatorRepository.swift in Sources */,
@@ -14136,7 +14193,6 @@
 				45F6BC932AB3732C00C81DE1 /* MainMarketType.swift in Sources */,
 				45F6BC942AB3732C00C81DE1 /* RecoverPasswordViewController.swift in Sources */,
 				45F6BC952AB3732C00C81DE1 /* FilterHistoryViewModel.swift in Sources */,
-				45F6BC962AB3732C00C81DE1 /* Colors.swift in Sources */,
 				45F6BC972AB3732C00C81DE1 /* CashoutAggregator.swift in Sources */,
 				45F6BC982AB3732C00C81DE1 /* FeaturedTipCollectionViewModel.swift in Sources */,
 				45F6BC9A2AB3732C00C81DE1 /* FilterRowView.swift in Sources */,
@@ -14784,6 +14840,11 @@
 				CEEFDE8F2D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEEFDE902D8B772900630F7E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEEFDE912D8B772900630F7E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEEDD2442DADE1D90048A5B0 /* Theme.swift in Sources */,
+				CEEDD2452DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
+				CEEDD2462DADE1D90048A5B0 /* ThemeService.swift in Sources */,
+				CEEDD2472DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
+				CEEDD2482DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
 				CEEFDE922D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE12A2712D31347E0022BDF7 /* RibDocsViewModel.swift in Sources */,
 				CE16F27F2D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
@@ -14975,7 +15036,6 @@
 				CE12A3042D31347E0022BDF7 /* MainMarketType.swift in Sources */,
 				CE12A3052D31347E0022BDF7 /* RecoverPasswordViewController.swift in Sources */,
 				CE12A3062D31347E0022BDF7 /* FilterHistoryViewModel.swift in Sources */,
-				CE12A3072D31347E0022BDF7 /* Colors.swift in Sources */,
 				CE12A3082D31347E0022BDF7 /* CashoutAggregator.swift in Sources */,
 				CE12A3092D31347E0022BDF7 /* FeaturedTipCollectionViewModel.swift in Sources */,
 				CE12A30B2D31347E0022BDF7 /* FilterRowView.swift in Sources */,
@@ -15869,7 +15929,6 @@
 				CEF195A52DA834E900C81F12 /* MainMarketType.swift in Sources */,
 				CEF195A62DA834E900C81F12 /* RecoverPasswordViewController.swift in Sources */,
 				CEF195A72DA834E900C81F12 /* FilterHistoryViewModel.swift in Sources */,
-				CEF195A82DA834E900C81F12 /* Colors.swift in Sources */,
 				CEF195A92DA834E900C81F12 /* CashoutAggregator.swift in Sources */,
 				CEF195AA2DA834E900C81F12 /* FeaturedTipCollectionViewModel.swift in Sources */,
 				CEF195AB2DA834E900C81F12 /* (null) in Sources */,
@@ -16172,6 +16231,11 @@
 				CEB2364B2DAD0E1000260B5B /* AddFriendViewModel.swift in Sources */,
 				CEB2364C2DAD0E1000260B5B /* AIAssistantUITableViewCell.swift in Sources */,
 				CEB2364D2DAD0E1000260B5B /* SentMessageTableViewCell.swift in Sources */,
+				CEEDD2332DADE1D90048A5B0 /* Theme.swift in Sources */,
+				CEEDD2342DADE1D90048A5B0 /* ThemeValidation.swift in Sources */,
+				CEEDD2352DADE1D90048A5B0 /* ThemeService.swift in Sources */,
+				CEEDD2362DADE1D90048A5B0 /* ColorExtension.swift in Sources */,
+				CEEDD2372DADE1D90048A5B0 /* ThemeColors.swift in Sources */,
 				CEB2364E2DAD0E1000260B5B /* FriendsListViewModel.swift in Sources */,
 				CEF196A62DA834E900C81F12 /* SmallToolTipViewModel.swift in Sources */,
 				CEF196A72DA834E900C81F12 /* NetworkSession.swift in Sources */,
