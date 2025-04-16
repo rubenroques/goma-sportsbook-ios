@@ -67,7 +67,7 @@ enum GomaModels {
         let token: String
         let expires: Int?
         let userData: BasicRegisterResponse
-
+        
         enum CodingKeys: String, CodingKey{
             case token = "token"
             case expires = "expires_at"

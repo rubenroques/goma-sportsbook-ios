@@ -15,6 +15,10 @@ struct FeaturedCompetition: Codable {
     var bottomBarName: String?
     var pageDetailBanner: String?
     var pageDetailBackground: String?
+    var competitionIconId: Int?
+    var competitionSportId: Int?
+    var regionCountry: RegionCountry?
+    var name: String?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -23,6 +27,10 @@ struct FeaturedCompetition: Codable {
         case bottomBarName = "bottom_bar_name"
         case pageDetailBanner = "page_detail_banner"
         case pageDetailBackground = "page_detail_bg"
+        case competitionIconId = "competition_icon_id"
+        case competitionSportId = "competition_sport_id"
+        case regionCountry = "region"
+        case name = "name"
     }
     
     init(from decoder: Decoder) throws {
@@ -49,5 +57,13 @@ struct FeaturedCompetition: Codable {
         self.pageDetailBanner = try container.decodeIfPresent(String.self, forKey: .pageDetailBanner)
         
         self.pageDetailBackground = try container.decodeIfPresent(String.self, forKey: .pageDetailBackground)
+        
+        self.competitionIconId = try container.decodeIfPresent(Int.self, forKey: .competitionIconId)
+        
+        self.competitionSportId = try container.decodeIfPresent(Int.self, forKey: .competitionSportId)
+        
+        self.regionCountry = try container.decodeIfPresent(RegionCountry.self, forKey: .regionCountry)
+        
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
     }
 }

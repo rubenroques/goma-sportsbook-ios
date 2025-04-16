@@ -493,7 +493,7 @@ struct UserProfile: Codable, Hashable {
 
 }
 
-struct UserWallet {
+struct UserWallet: Codable, Hashable {
 
     let total: Double
     let bonus: Double?
@@ -502,7 +502,7 @@ struct UserWallet {
 
 }
 
-struct PromotionalStory {
+struct PromotionalStory: Codable, Hashable {
 
     let id: String
     // The title of the button story cell
@@ -518,4 +518,21 @@ struct PromotionalStory {
     // the link (internal or external) of the full screen bottom button
     let ctaText: String
     
+}
+
+struct RegionCountry: Codable, Hashable {
+    var id: Int
+    var isoCode: String
+    var name: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case isoCode = "iso_code"
+        case name = "name"
+    }
+}
+
+enum TopCompetitionWidgetVersion: Codable, Hashable {
+    case version1
+    case version2
 }

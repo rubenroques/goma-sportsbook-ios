@@ -118,6 +118,10 @@ struct TargetVariables: SportsbookTarget {
     static var enableDeveloperSettings: Bool {
         return false
     }
+    
+    static var topCompetitionWidgetVersion: TopCompetitionWidgetVersion {
+        return .version1
+    }
 }
 
 extension TargetVariables {

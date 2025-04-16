@@ -60,7 +60,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback, .mixMatch, .casino, .chat, .featuredCompetitionInTabBar]
+        return [.cashback, .mixMatch, .chat, .featuredCompetitionInTabBar]
     }
     
     static var userRequiredFeatures: [SportsbookTargetFeatures] {
@@ -117,6 +117,10 @@ struct TargetVariables: SportsbookTarget {
     
     static var enableDeveloperSettings: Bool {
         return true
+    }
+    
+    static var topCompetitionWidgetVersion: TopCompetitionWidgetVersion {
+        return .version2
     }
     
 }

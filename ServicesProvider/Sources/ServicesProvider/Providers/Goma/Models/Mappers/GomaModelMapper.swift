@@ -37,9 +37,9 @@ struct GomaModelMapper {
     static func loginResponse(fromInternalLoginResponse loginResponse: GomaModels.LoginResponse) -> LoginResponse {
         let userProfile = UserProfile(userIdentifier: "\(loginResponse.data.userData.id)",
                                         sessionKey: "",
-                                      username: loginResponse.data.userData.username,
-                                      email: loginResponse.data.userData.email,
-                                      firstName: loginResponse.data.userData.name,
+                                          username: loginResponse.data.userData.username,
+                                          email: loginResponse.data.userData.email,
+                                          firstName: loginResponse.data.userData.name,
                                         middleName: nil,  // Added
                                         lastName: nil,
                                         birthDate: Date(),

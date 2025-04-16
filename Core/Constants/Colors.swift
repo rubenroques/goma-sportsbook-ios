@@ -21,5 +21,6 @@ import Combine
 extension UIColor {
     // This struct is actually defined in ColorExtension.swift
     // Keep this empty struct so the compiler can find the real one
-    struct App {}
+    struct App { }
+    
 }

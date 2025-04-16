@@ -86,6 +86,8 @@ class TopCompetitionsLineTableViewCell: UITableViewCell, UICollectionViewDataSou
         self.collectionView.delegate = self
         self.collectionView.register(TopCompetitionItemCollectionViewCell.self,
                                      forCellWithReuseIdentifier: TopCompetitionItemCollectionViewCell.identifier)
+        self.collectionView.register(TopCompetitionLogoCollectionViewCell.self,
+                                     forCellWithReuseIdentifier: TopCompetitionLogoCollectionViewCell.identifier)
 
         self.contentView.addSubview(self.collectionView)
         self.contentView.addSubview(self.loadingView)
@@ -122,6 +124,20 @@ class TopCompetitionsLineTableViewCell: UITableViewCell, UICollectionViewDataSou
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if TargetVariables.topCompetitionWidgetVersion == .version2 {
+            guard
+                let cell = collectionView.dequeueCellType(TopCompetitionLogoCollectionViewCell.self, indexPath: indexPath),
+                let cellViewModel = self.viewModel?.topCompetitions[safe: indexPath.row]
+            else {
+                fatalError()
+            }
+            cell.configureWithViewModel(cellViewModel)
+            cell.selectedItemAction = { [weak self] viewModel in
+                self?.selectedItemAction(viewModel.id)
+            }
+
+            return cell
+        }
         guard
             let cell = collectionView.dequeueCellType(TopCompetitionItemCollectionViewCell.self, indexPath: indexPath),
             let cellViewModel = self.viewModel?.topCompetitions[safe: indexPath.row]
@@ -138,6 +154,9 @@ class TopCompetitionsLineTableViewCell: UITableViewCell, UICollectionViewDataSou
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Return the size of each item in your collection view
+        if TargetVariables.topCompetitionWidgetVersion == .version2 {
+            return CGSize(width: 185, height: 80)
+        }
         return CGSize(width: 125, height: 80)
     }
 

@@ -53,6 +53,7 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
 
     static var links: URLEndpoint.Links { get }
 
+    static var topCompetitionWidgetVersion: TopCompetitionWidgetVersion { get }
 }
 
 enum SportsbookTargetFeatures: Codable, CaseIterable {

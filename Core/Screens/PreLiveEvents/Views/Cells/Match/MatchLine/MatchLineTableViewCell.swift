@@ -148,11 +148,11 @@ class MatchLineTableViewCell: UITableViewCell {
             forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier
         )
         self.collectionView.register(
-            OddDoubleCollectionViewCell.nib,
+            OddDoubleCollectionViewCell.self,
             forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier
         )
         self.collectionView.register(
-            OddTripleCollectionViewCell.nib,
+            OddTripleCollectionViewCell.self,
             forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier
         )
         self.collectionView.register(

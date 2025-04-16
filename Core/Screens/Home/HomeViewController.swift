@@ -89,6 +89,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(StoriesLineTableViewCell.self, forCellReuseIdentifier: StoriesLineTableViewCell.identifier)
         self.tableView.register(TopCompetitionsLineTableViewCell.self, forCellReuseIdentifier: TopCompetitionsLineTableViewCell.identifier)
         self.tableView.register(PromotedCompetitionTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTableViewCell.identifier)
+        self.tableView.register(PromotedCompetitionTopImageTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTopImageTableViewCell.identifier)
         self.tableView.register(HeroCardTableViewCell.self, forCellReuseIdentifier: HeroCardTableViewCell.identifier)
 
         self.tableView.register(MarketWidgetContainerTableViewCell.self, forCellReuseIdentifier: MarketWidgetContainerTableViewCell.identifier)
@@ -881,6 +882,25 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
 
                 if indexPath.row == 0 {
+                    
+                    if TargetVariables.topCompetitionWidgetVersion == .version2 {
+                        guard
+                            let cell = tableView.dequeueReusableCell(withIdentifier: PromotedCompetitionTopImageTableViewCell.identifier) as? PromotedCompetitionTopImageTableViewCell
+                        else {
+                            return UITableViewCell()
+                        }
+                        
+                        cell.configure()
+                        
+                        cell.didTapPromotedCompetition = { [weak self] competitionId in
+                            let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
+                            
+                            self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport, isFeaturedCompetition: true)
+                        }
+                        
+                        return cell
+                    }
+                    
                     guard
                         let cell = tableView.dequeueCellType(PromotedCompetitionTableViewCell.self)
                     else {
