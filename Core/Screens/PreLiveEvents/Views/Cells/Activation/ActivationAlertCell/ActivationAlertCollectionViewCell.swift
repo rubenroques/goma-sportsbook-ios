@@ -111,8 +111,9 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
 
         self.containerView.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.gradientView.colors = [(UIColor.App.backgroundHeaderGradient2, NSNumber(0.0)),
-                                    (UIColor.App.backgroundHeaderGradient1, NSNumber(1.0))]
+        self.gradientView.colors = [(UIColor.App.topBarGradient3, NSNumber(0.0)),
+                                    (UIColor.App.topBarGradient2, NSNumber(0.5)),
+                                    (UIColor.App.topBarGradient1, NSNumber(1.0))]
 
         self.backgroundImageView.backgroundColor = .clear
 

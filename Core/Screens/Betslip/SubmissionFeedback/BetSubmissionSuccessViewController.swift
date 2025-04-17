@@ -255,12 +255,9 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.loadingBaseView.backgroundColor = .clear
 
         // Background views
-
-        self.topBackgroundView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient2, NSNumber(1.0))]
-        
-        if self.usedCashback {
-            self.topBackgroundView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient1, NSNumber(1.0))]
-        }
+        self.topBackgroundView.colors = [(UIColor.App.topBarGradient1, NSNumber(0.0)),
+                                         (UIColor.App.topBarGradient2, NSNumber(0.5)),
+                                         (UIColor.App.topBarGradient1, NSNumber(1.0))]
 
         self.bottomBackgroundView.backgroundColor = UIColor.App.backgroundPrimary
 

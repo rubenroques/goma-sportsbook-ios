@@ -69,8 +69,9 @@ class RegisterSuccessViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.containerGradientView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)),
-                                              (UIColor.App.backgroundHeaderGradient2, NSNumber(1.0))]
+        self.containerGradientView.colors = [(UIColor.App.topBarGradient1, NSNumber(0.0)),
+                                             (UIColor.App.topBarGradient2, NSNumber(0.5)),
+                                              (UIColor.App.topBarGradient3, NSNumber(1.0))]
 
         self.containerGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
         self.containerGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)

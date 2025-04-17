@@ -628,6 +628,22 @@ extension UIColor.App {
     }
 
 
+    // Betslip colors
+    static var backgroundBetslip: UIColor {
+        dynamicColor(
+            lightKeyPath: \.backgroundBetslip,
+            darkKeyPath: \.backgroundBetslip
+        )
+    }
+
+    static var addBetslip: UIColor {
+        dynamicColor(
+            lightKeyPath: \.addBetslip,
+            darkKeyPath: \.addBetslip
+        )
+    }
+
+
     // Game Header colors
     static var gameHeaderTextPrimary: UIColor {
         dynamicColor(
@@ -647,22 +663,6 @@ extension UIColor.App {
         dynamicColor(
             lightKeyPath: \.gameHeader,
             darkKeyPath: \.gameHeader
-        )
-    }
-
-
-    // Betslip colors
-    static var backgroundBetslip: UIColor {
-        dynamicColor(
-            lightKeyPath: \.backgroundBetslip,
-            darkKeyPath: \.backgroundBetslip
-        )
-    }
-
-    static var addBetslip: UIColor {
-        dynamicColor(
-            lightKeyPath: \.addBetslip,
-            darkKeyPath: \.addBetslip
         )
     }
 
@@ -700,20 +700,6 @@ extension UIColor.App {
         dynamicColor(
             lightKeyPath: \.boostedOddsGradient2,
             darkKeyPath: \.boostedOddsGradient2
-        )
-    }
-
-    static var backgroundHeaderGradient1: UIColor {
-        dynamicColor(
-            lightKeyPath: \.backgroundHeaderGradient1,
-            darkKeyPath: \.backgroundHeaderGradient1
-        )
-    }
-
-    static var backgroundHeaderGradient2: UIColor {
-        dynamicColor(
-            lightKeyPath: \.backgroundHeaderGradient2,
-            darkKeyPath: \.backgroundHeaderGradient2
         )
     }
 

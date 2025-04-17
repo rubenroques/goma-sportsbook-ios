@@ -57,7 +57,9 @@ class GenericErrorViewController: UIViewController {
 
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topGradientView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient2, NSNumber(1.0))]
+        self.topGradientView.colors = [(UIColor.App.topBarGradient1, NSNumber(0.0)),
+                                       (UIColor.App.topBarGradient2, NSNumber(0.5)),
+                                       (UIColor.App.topBarGradient3, NSNumber(1.0))]
 
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 

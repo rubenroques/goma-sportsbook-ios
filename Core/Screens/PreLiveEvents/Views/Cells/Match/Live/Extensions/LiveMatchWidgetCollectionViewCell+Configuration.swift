@@ -78,11 +78,11 @@ extension LiveMatchWidgetCollectionViewCell {
                         switch changeDirection {
                         case .up:
                             self.highlightOddChangeUp(animated: true,
-                                                    upChangeOddValueImage: self.homeUpChangeOddValueImage,
+                                                    upChangeOddValueImage: self.homeUpChangeOddValueImageView,
                                                     baseView: self.homeBaseView)
                         case .down:
                             self.highlightOddChangeDown(animated: true,
-                                                      downChangeOddValueImage: self.homeDownChangeOddValueImage,
+                                                      downChangeOddValueImage: self.homeDownChangeOddValueImageView,
                                                       baseView: self.homeBaseView)
                         case .none:
                             break
@@ -116,11 +116,11 @@ extension LiveMatchWidgetCollectionViewCell {
                         switch changeDirection {
                         case .up:
                             self.highlightOddChangeUp(animated: true,
-                                                    upChangeOddValueImage: self.drawUpChangeOddValueImage,
+                                                    upChangeOddValueImage: self.drawUpChangeOddValueImageView,
                                                     baseView: self.drawBaseView)
                         case .down:
                             self.highlightOddChangeDown(animated: true,
-                                                      downChangeOddValueImage: self.drawDownChangeOddValueImage,
+                                                      downChangeOddValueImage: self.drawDownChangeOddValueImageView,
                                                       baseView: self.drawBaseView)
                         case .none:
                             break
@@ -154,11 +154,11 @@ extension LiveMatchWidgetCollectionViewCell {
                         switch changeDirection {
                         case .up:
                             self.highlightOddChangeUp(animated: true,
-                                                    upChangeOddValueImage: self.awayUpChangeOddValueImage,
+                                                    upChangeOddValueImage: self.awayUpChangeOddValueImageView,
                                                     baseView: self.awayBaseView)
                         case .down:
                             self.highlightOddChangeDown(animated: true,
-                                                      downChangeOddValueImage: self.awayDownChangeOddValueImage,
+                                                      downChangeOddValueImage: self.awayDownChangeOddValueImageView,
                                                       baseView: self.awayBaseView)
                         case .none:
                             break

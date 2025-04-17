@@ -37,12 +37,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var awayOddValueLabel: UILabel = self.createAwayOddValueLabel()
 
     // Odds change indicators
-    lazy var homeUpChangeOddValueImage: UIImageView = self.createHomeUpChangeOddValueImage()
-    lazy var homeDownChangeOddValueImage: UIImageView = self.createHomeDownChangeOddValueImage()
-    lazy var drawUpChangeOddValueImage: UIImageView = self.createDrawUpChangeOddValueImage()
-    lazy var drawDownChangeOddValueImage: UIImageView = self.createDrawDownChangeOddValueImage()
-    lazy var awayUpChangeOddValueImage: UIImageView = self.createAwayUpChangeOddValueImage()
-    lazy var awayDownChangeOddValueImage: UIImageView = self.createAwayDownChangeOddValueImage()
+    lazy var homeUpChangeOddValueImageView: UIImageView = self.createHomeUpChangeOddValueImage()
+    lazy var homeDownChangeOddValueImageView: UIImageView = self.createHomeDownChangeOddValueImage()
+    lazy var drawUpChangeOddValueImageView: UIImageView = self.createDrawUpChangeOddValueImage()
+    lazy var drawDownChangeOddValueImageView: UIImageView = self.createDrawDownChangeOddValueImage()
+    lazy var awayUpChangeOddValueImageView: UIImageView = self.createAwayUpChangeOddValueImage()
+    lazy var awayDownChangeOddValueImageView: UIImageView = self.createAwayDownChangeOddValueImage()
 
     // Status views
     lazy var suspendedBaseView: UIView = self.createSuspendedBaseView()
@@ -171,12 +171,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.suspendedBaseView.layer.borderWidth = 1
 
         // Reset odd change indicators
-        self.homeUpChangeOddValueImage.alpha = 0.0
-        self.homeDownChangeOddValueImage.alpha = 0.0
-        self.drawUpChangeOddValueImage.alpha = 0.0
-        self.drawDownChangeOddValueImage.alpha = 0.0
-        self.awayUpChangeOddValueImage.alpha = 0.0
-        self.awayDownChangeOddValueImage.alpha = 0.0
+        self.homeUpChangeOddValueImageView.alpha = 0.0
+        self.homeDownChangeOddValueImageView.alpha = 0.0
+        self.drawUpChangeOddValueImageView.alpha = 0.0
+        self.drawDownChangeOddValueImageView.alpha = 0.0
+        self.awayUpChangeOddValueImageView.alpha = 0.0
+        self.awayDownChangeOddValueImageView.alpha = 0.0
 
         self.oddsStackView.backgroundColor = .clear
         self.homeBaseView.backgroundColor = .clear
@@ -248,12 +248,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 9
 
-        self.homeUpChangeOddValueImage.alpha = 0.0
-        self.homeDownChangeOddValueImage.alpha = 0.0
-        self.drawUpChangeOddValueImage.alpha = 0.0
-        self.drawDownChangeOddValueImage.alpha = 0.0
-        self.awayUpChangeOddValueImage.alpha = 0.0
-        self.awayDownChangeOddValueImage.alpha = 0.0
+        self.homeUpChangeOddValueImageView.alpha = 0.0
+        self.homeDownChangeOddValueImageView.alpha = 0.0
+        self.drawUpChangeOddValueImageView.alpha = 0.0
+        self.drawDownChangeOddValueImageView.alpha = 0.0
+        self.awayUpChangeOddValueImageView.alpha = 0.0
+        self.awayDownChangeOddValueImageView.alpha = 0.0
 
         self.oddsStackView.backgroundColor = .clear
         self.homeBaseView.backgroundColor = .clear

@@ -39,36 +39,24 @@ extension LiveMatchWidgetCollectionViewCell {
         self.homeBaseView.addSubview(self.homeOddValueLabel)
 
         // Set up home odd change indicators
-        let homeOddChangeView = UIView()
-        homeOddChangeView.translatesAutoresizingMaskIntoConstraints = false
-        homeOddChangeView.backgroundColor = .clear
-        homeOddChangeView.addSubview(self.homeUpChangeOddValueImage)
-        homeOddChangeView.addSubview(self.homeDownChangeOddValueImage)
-        self.homeBaseView.addSubview(homeOddChangeView)
+        self.homeBaseView.addSubview(self.homeUpChangeOddValueImageView)
+        self.homeBaseView.addSubview(self.homeDownChangeOddValueImageView)
 
         // Set up draw odds
         self.drawBaseView.addSubview(self.drawOddTitleLabel)
         self.drawBaseView.addSubview(self.drawOddValueLabel)
 
         // Set up draw odd change indicators
-        let drawOddChangeView = UIView()
-        drawOddChangeView.translatesAutoresizingMaskIntoConstraints = false
-        drawOddChangeView.backgroundColor = .clear
-        drawOddChangeView.addSubview(self.drawUpChangeOddValueImage)
-        drawOddChangeView.addSubview(self.drawDownChangeOddValueImage)
-        self.drawBaseView.addSubview(drawOddChangeView)
+        self.drawBaseView.addSubview(self.drawUpChangeOddValueImageView)
+        self.drawBaseView.addSubview(self.drawDownChangeOddValueImageView)
 
         // Set up away odds
         self.awayBaseView.addSubview(self.awayOddTitleLabel)
         self.awayBaseView.addSubview(self.awayOddValueLabel)
 
         // Set up away odd change indicators
-        let awayOddChangeView = UIView()
-        awayOddChangeView.translatesAutoresizingMaskIntoConstraints = false
-        awayOddChangeView.backgroundColor = .clear
-        awayOddChangeView.addSubview(self.awayUpChangeOddValueImage)
-        awayOddChangeView.addSubview(self.awayDownChangeOddValueImage)
-        self.awayBaseView.addSubview(awayOddChangeView)
+        self.awayBaseView.addSubview(self.awayUpChangeOddValueImageView)
+        self.awayBaseView.addSubview(self.awayDownChangeOddValueImageView)
 
         // Set up suspended view
         self.mainContentBaseView.addSubview(self.suspendedBaseView)
@@ -155,7 +143,17 @@ extension LiveMatchWidgetCollectionViewCell {
             self.homeOddValueLabel.topAnchor.constraint(equalTo: self.homeOddTitleLabel.bottomAnchor),
             self.homeOddValueLabel.centerXAnchor.constraint(equalTo: self.homeBaseView.centerXAnchor),
             self.homeOddValueLabel.leadingAnchor.constraint(equalTo: self.homeBaseView.leadingAnchor, constant: 2),
-            self.homeOddValueLabel.trailingAnchor.constraint(equalTo: self.homeBaseView.trailingAnchor, constant: -2)
+            self.homeOddValueLabel.trailingAnchor.constraint(equalTo: self.homeBaseView.trailingAnchor, constant: -2),
+            
+            self.homeUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.homeUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.homeUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.homeBaseView.centerYAnchor),
+            self.homeUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.homeBaseView.trailingAnchor, constant: -5),
+            
+            self.homeDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.homeDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.homeDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.homeBaseView.centerYAnchor),
+            self.homeDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.homeBaseView.trailingAnchor, constant: -5),
         ])
 
         // Draw odds constraints
@@ -170,7 +168,17 @@ extension LiveMatchWidgetCollectionViewCell {
             self.drawOddValueLabel.topAnchor.constraint(equalTo: self.drawOddTitleLabel.bottomAnchor),
             self.drawOddValueLabel.centerXAnchor.constraint(equalTo: self.drawBaseView.centerXAnchor),
             self.drawOddValueLabel.leadingAnchor.constraint(equalTo: self.drawBaseView.leadingAnchor, constant: 2),
-            self.drawOddValueLabel.trailingAnchor.constraint(equalTo: self.drawBaseView.trailingAnchor, constant: -2)
+            self.drawOddValueLabel.trailingAnchor.constraint(equalTo: self.drawBaseView.trailingAnchor, constant: -2),
+            
+            self.drawUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.drawUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.drawUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.drawBaseView.centerYAnchor),
+            self.drawUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.drawBaseView.trailingAnchor, constant: -5),
+            
+            self.drawDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.drawDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.drawDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.drawBaseView.centerYAnchor),
+            self.drawDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.drawBaseView.trailingAnchor, constant: -5),
         ])
 
         // Away odds constraints
@@ -185,7 +193,17 @@ extension LiveMatchWidgetCollectionViewCell {
             self.awayOddValueLabel.topAnchor.constraint(equalTo: self.awayOddTitleLabel.bottomAnchor),
             self.awayOddValueLabel.centerXAnchor.constraint(equalTo: self.awayBaseView.centerXAnchor),
             self.awayOddValueLabel.leadingAnchor.constraint(equalTo: self.awayBaseView.leadingAnchor, constant: 2),
-            self.awayOddValueLabel.trailingAnchor.constraint(equalTo: self.awayBaseView.trailingAnchor, constant: -2)
+            self.awayOddValueLabel.trailingAnchor.constraint(equalTo: self.awayBaseView.trailingAnchor, constant: -2),
+            
+            self.awayUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.awayUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.awayUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.awayBaseView.centerYAnchor),
+            self.awayUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.awayBaseView.trailingAnchor, constant: -5),
+            
+            self.awayDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.awayDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.awayDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.awayBaseView.centerYAnchor),
+            self.awayDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.awayBaseView.trailingAnchor, constant: -5),
         ])
 
         // Suspended view constraints
