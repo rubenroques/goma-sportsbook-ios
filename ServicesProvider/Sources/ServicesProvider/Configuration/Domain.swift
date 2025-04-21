@@ -8,16 +8,13 @@ public enum Domain: String, CaseIterable {
     /// Bet history and active bets management
     case myBets
     
-    /// Bonus and promotion management
+    /// Bonus and cashback management
     case bonus
     
-    /// Real-time sports events and odds
-    case liveEvents
+    /// pre live and live sports events, markets, outomes and odds
+    case events
     
-    /// Pre-match events and odds
-    case preLiveEvents
-    
-    /// Payment processing and transactions
+    /// Payment processing and transactions (Deposit/Withdraw)
     case payments
     
     /// Responsible gaming limits and controls
@@ -29,6 +26,9 @@ public enum Domain: String, CaseIterable {
     /// Analytics and tracking
     case analytics
     
-    /// Content management (banners, promotions)
-    case managedContent
+    /// Content management (banners, alerts, highlights, home widgets )
+    case managedHomeContent
+    
+    // Static promotional campaigns pages
+    case promotionalCampaigns
 }

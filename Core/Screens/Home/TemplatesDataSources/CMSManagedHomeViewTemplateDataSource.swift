@@ -134,6 +134,13 @@ class CMSManagedHomeViewTemplateDataSource {
     // Hero card
     private var heroMatches: [Match]  = []
 
+    // Promotions
+    private var promotions: [PromotionInfo] = []
+    private var cachedPromotionLineViewModel: PromotionLineTableViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
 
@@ -200,7 +207,9 @@ class CMSManagedHomeViewTemplateDataSource {
                     self?.refreshData()
                 }
             }, receiveValue: { [weak self] homeTemplate in
-                self?.processHomeTemplate(homeTemplate)
+//                self?.processHomeTemplate(homeTemplate)
+                self?.setDefaultContentTypes()
+
                 self?.refreshData()
             })
 
@@ -309,6 +318,9 @@ private func setDefaultContentTypes() {
         .topCompetitionsShortcuts, // TopCompetitionsMobile
         .promotedBetslips, // SuggestedBets
     ]
+
+    // .promotions, // Promotions
+
 }
 
 func refreshTemplate() {
@@ -324,6 +336,8 @@ func refreshData() {
     self.matchLineTableCellViewModelCache = [:]
     self.marketWidgetContainerTableViewModelCache = [:]
     self.heroCardWidgetCellViewModelCache = [:]
+
+        self.cachedPromotionLineViewModel = nil
 
     self.suggestedBetslips = []
     self.highlightedMarkets = []
@@ -374,6 +388,10 @@ func refreshData() {
 
     if self.contentTypes.contains(.bannerLine) {
         self.fetchBanners()
+    }
+
+    if self.contentTypes.contains(.promotions) {
+        self.fetchPromotions()
     }
 }
 
@@ -605,6 +623,32 @@ func fetchHeroMatches() {
     self.addCancellable(cancellable)
 
 }
+    
+    func fetchPromotions() {
+        
+        Env.servicesProvider.getPromotions()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                
+                switch completion {
+                case .finished:
+                    print("FINISHED GET PROMOTIONS")
+                case .failure(let error):
+                    print("ERROR GET PROMOTIONS: \(error)")
+                }
+
+            }, receiveValue: { [weak self] promotionsInfo in
+                
+                let mappedPromotionsInfo = promotionsInfo.map({
+                    ServiceProviderModelMapper.promotionInfo(fromInternalPromotionInfo: $0)
+                })
+                
+                self?.promotions = mappedPromotionsInfo
+                self?.refreshPublisher.send()
+
+            })
+            .store(in: &cancellables)
+    }
 
 func fetchPromotedSports() {
 
@@ -854,6 +898,8 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.bannersLineViewModel == nil ? 0 : 1
         case .heroCard:
             return self.heroMatches.count
+        case .promotions:
+            return self.promotions.isEmpty ? 0 : 1
         case .quickSwipeStack:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
         case .promotionalStories:
@@ -903,6 +949,8 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return localized("live")
         case .highlightedMarketProChoices:
             return localized("highlights_pro_choices_section_header")
+        case .promotions:
+            return localized("promotions")
         case .promotedBetslips:
             return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
         case .topCompetitionsShortcuts:
@@ -932,6 +980,8 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return "tabbar_live_icon"
         case .highlightedMarketProChoices:
             return "pro_choices_icon"
+        case .promotions:
+            return "megaphone_icon"
         case .topCompetitionsShortcuts:
             return "trophy_icon"
         case .promotedBetslips:
@@ -976,6 +1026,8 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                 return matchesForSport.isNotEmpty
             }
             return false
+        case .promotions:
+            return self.promotions.isNotEmpty
         default:
             return false
         }
@@ -1087,6 +1139,17 @@ extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             }
         }
         return nil
+    }
+    
+    func promotionLineViewModel() -> PromotionLineTableViewModel? {
+        if let promotionLineViewModel = self.cachedPromotionLineViewModel {
+            return promotionLineViewModel
+        }
+        else {
+            let promotions = self.promotions
+            self.cachedPromotionLineViewModel = PromotionLineTableViewModel(promotions: promotions)
+            return self.cachedPromotionLineViewModel
+        }
     }
 
     // Highlights

@@ -13,6 +13,7 @@ enum GomaAPIPromotionsSchema {
 
     // Promotions
     case allPromotions
+    case promotionDetails(promotionSlug: String, staticPageSlug: String)
     case alertBanner
     case banners
     case sportBanners
@@ -39,6 +40,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "/api/home/v1/template"
         case .allPromotions:
             return "/api/promotions/v1"
+        case .promotionDetails(let promotionSlug, let staticPageSlug):
+            return "/api/promotions/v1/\(promotionSlug)/\(staticPageSlug)"
         case .alertBanner:
             return "/api/promotions/v1/alert-banner"
         case .banners:
@@ -68,14 +71,18 @@ extension GomaAPIPromotionsSchema: Endpoint {
         var queryItems: [URLQueryItem] = []
 
         // Always add platform=ios for all endpoints
-        queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+//        queryItems.append(URLQueryItem(name: "platform", value: "ios"))
 
         switch self {
         case .news(let pageIndex, let pageSize):
             queryItems.append(URLQueryItem(name: "page", value: "\(pageIndex)"))
             queryItems.append(URLQueryItem(name: "page_size", value: "\(pageSize)"))
+            queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+
         case .initialDump:
             queryItems.append(URLQueryItem(name: "promotions", value: "false"))
+            queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+
         default:
             break
         }
@@ -129,6 +136,8 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "Get home template configuration"
         case .allPromotions:
             return "Get all promotional content"
+        case .promotionDetails:
+            return "Get promotion details content"
         case .alertBanner:
             return "Get alert banner"
         case .banners:

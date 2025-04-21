@@ -5,14 +5,6 @@
 //  Created by Ruben Roques on 19/02/2025.
 //
 
-
-//
-//  PromotionsProvider.swift
-//  
-//
-//  Created by André Lascas on 16/08/2024.
-//
-
 import Foundation
 import Combine
 import SharedModels

@@ -2116,3 +2116,7 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "user_has_received_friend_request" = "{username} has received your friend request.";
 "you_still_havent_added_friends" = "You still haven't added friends";
 "bet_same" = "Même pari";
+
+"no_promotions_available" = "Il n'y a pas de promotions disponibles.";
+
+"promotion_not_found" = "Promotion non trouvée.";

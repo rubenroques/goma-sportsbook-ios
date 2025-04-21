@@ -21,6 +21,7 @@ class StaticHomeViewTemplateDataSource {
         .highlightedLiveMatches, // LiveGamesHome
         .makeOwnBetCallToAction, // MakeYourOwnBet
         .highlightedMatches, // Highlights image cards
+        .promotions, // Promotions
         .highlightedMarketProChoices, // Pro Choices Markets
         .highlightedBoostedOddsMatches, // Boosted Odds
         .topCompetitionsShortcuts, // TopCompetitionsMobile
@@ -141,7 +142,14 @@ class StaticHomeViewTemplateDataSource {
     //
     // Hero card
     private var heroMatches: [Match]  = []
-
+    
+    // Promotions
+    private var promotions: [PromotionInfo] = []
+    private var cachedPromotionLineViewModel: PromotionLineTableViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
 
@@ -224,6 +232,8 @@ class StaticHomeViewTemplateDataSource {
         self.fetchHighlightedLiveMatches()
 
         self.fetchHeroMatches()
+        
+        self.fetchPromotions()
     }
 
     // User alerts
@@ -461,6 +471,32 @@ class StaticHomeViewTemplateDataSource {
 
         self.addCancellable(cancellable)
 
+    }
+    
+    func fetchPromotions() {
+        
+        Env.servicesProvider.getPromotions()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                
+                switch completion {
+                case .finished:
+                    print("FINISHED GET PROMOTIONS")
+                case .failure(let error):
+                    print("ERROR GET PROMOTIONS: \(error)")
+                }
+
+            }, receiveValue: { [weak self] promotionsInfo in
+                
+                let mappedPromotionsInfo = promotionsInfo.map({
+                    ServiceProviderModelMapper.promotionInfo(fromInternalPromotionInfo: $0)
+                })
+                
+                self?.promotions = mappedPromotionsInfo
+                self?.refreshPublisher.send()
+
+            })
+            .store(in: &cancellables)
     }
 
     func fetchPromotedSports() {
@@ -837,6 +873,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.bannersLineViewModel == nil ? 0 : 1
         case .heroCard:
             return self.heroMatches.count
+        case .promotions:
+            return self.promotions.isEmpty ? 0 : 1
         case .quickSwipeStack:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
         case .promotionalStories:
@@ -890,6 +928,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
         case .topCompetitionsShortcuts:
             return localized("top_competitions")
+        case .promotions:
+            return localized("promotions")
         case .promotedSportSection:
             let croppedSection = section - self.fixedSections
             if let promotedSportName = self.promotedSports[safe: croppedSection]?.name {
@@ -919,6 +959,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return "trophy_icon"
         case .promotedBetslips:
             return "suggested_bet_icon"
+        case .promotions:
+            return "megaphone_icon"
         case .promotedSportSection:
             let activeSports = Env.sportsStore.getActiveSports()
             let croppedSection = section - self.fixedSections
@@ -959,6 +1001,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                 return matchesForSport.isNotEmpty
             }
             return false
+        case .promotions:
+            return self.promotions.isNotEmpty
         default:
             return false
         }
@@ -1051,6 +1095,17 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             }
         }
         return nil
+    }
+    
+    func promotionLineViewModel() -> PromotionLineTableViewModel? {
+        if let promotionLineViewModel = self.cachedPromotionLineViewModel {
+            return promotionLineViewModel
+        }
+        else {
+            let promotions = self.promotions
+            self.cachedPromotionLineViewModel = PromotionLineTableViewModel(promotions: promotions)
+            return self.cachedPromotionLineViewModel
+        }
     }
 
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {

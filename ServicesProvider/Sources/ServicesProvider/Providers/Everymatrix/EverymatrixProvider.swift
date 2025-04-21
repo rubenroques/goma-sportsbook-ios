@@ -7,7 +7,7 @@
 
 import Foundation
 
-class EverymatrixProvider {
+class EveryMatrixProvider {
     
 }
 //

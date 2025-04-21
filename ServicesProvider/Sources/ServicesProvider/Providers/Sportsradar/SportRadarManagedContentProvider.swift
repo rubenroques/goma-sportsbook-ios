@@ -501,6 +501,13 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
         return publisher.eraseToAnyPublisher()
     }
     
+    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
+        self.gomaManagedContentProvider.getPromotions()
+    }
+    
+    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
+        self.gomaManagedContentProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
+    }
 }
 
 

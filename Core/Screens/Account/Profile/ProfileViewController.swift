@@ -915,36 +915,46 @@ extension ProfileViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
+//    @objc func promotionsViewTapped(sender: UITapGestureRecognizer) {
+//
+//        let promotionsWebViewModel = PromotionsWebViewModel()
+//        let appLanguage = "fr"
+//        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
+//        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
+//
+//        if let url = URL(string: urlString) {
+//            let promotionsWebViewModel = PromotionsWebViewModel()
+//            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+//            promotionsWebViewController.openBetSwipeAction = { [weak self] in
+//                self?.requestBetSwipeAction()
+//            }
+//            promotionsWebViewController.openRegisterAction = { [weak self] in
+//                self?.requestRegisterAction()
+//            }
+//            promotionsWebViewController.openHomeAction = { [weak self] in
+//                self?.requestHomeAction()
+//            }
+//            promotionsWebViewController.openLiveAction = { [weak self] in
+//                self?.requestLiveAction()
+//            }
+//            promotionsWebViewController.openRecruitAction = { [weak self] in
+//                self?.openRecruitScreen()
+//            }
+//            promotionsWebViewController.openContactSettingsAction = { [weak self] in
+//                self?.requestContactSettingsAction()
+//            }
+//            self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
+//        }
+//    }
+    
     @objc func promotionsViewTapped(sender: UITapGestureRecognizer) {
-
-        let promotionsWebViewModel = PromotionsWebViewModel()
-        let appLanguage = "fr"
-        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
-
-        if let url = URL(string: urlString) {
-            let promotionsWebViewModel = PromotionsWebViewModel()
-            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-            promotionsWebViewController.openBetSwipeAction = { [weak self] in
-                self?.requestBetSwipeAction()
-            }
-            promotionsWebViewController.openRegisterAction = { [weak self] in
-                self?.requestRegisterAction()
-            }
-            promotionsWebViewController.openHomeAction = { [weak self] in
-                self?.requestHomeAction()
-            }
-            promotionsWebViewController.openLiveAction = { [weak self] in
-                self?.requestLiveAction()
-            }
-            promotionsWebViewController.openRecruitAction = { [weak self] in
-                self?.openRecruitScreen()
-            }
-            promotionsWebViewController.openContactSettingsAction = { [weak self] in
-                self?.requestContactSettingsAction()
-            }
-            self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
-        }
+        
+        let promotionsViewModel = PromotionsViewModel()
+        
+        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
+        
+        self.navigationController?.pushViewController(promotionsViewController, animated: true)
+        
     }
 
     @objc func responsibleGamingViewTapped(sender: UITapGestureRecognizer) {

@@ -48,5 +48,8 @@ protocol HomeViewTemplateDataSource {
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel?
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel)
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel?
+    
+    func promotionLineViewModel() -> PromotionLineTableViewModel?
+
     func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel?
 }

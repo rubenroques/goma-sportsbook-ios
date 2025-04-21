@@ -255,35 +255,46 @@ extension AnonymousSideMenuViewController {
         self.requestLoginAction()
     }
 
-    @objc func promotionsViewTapped() {
-        let promotionsWebViewModel = PromotionsWebViewModel()
-        let appLanguage = "fr"
-        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
-
-        if let url = URL(string: urlString) {
-            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-            promotionsWebViewController.openBetSwipeAction = { [weak self] in
-                self?.requestBetSwipeAction()
-            }
-            promotionsWebViewController.openRegisterAction = { [weak self] in
-                self?.requestRegisterAction()
-            }
-            promotionsWebViewController.openHomeAction = { [weak self] in
-                self?.requestHomeAction()
-            }
-            promotionsWebViewController.openRecruitAction = { [weak self] in
-                self?.openRecruitScreen()
-            }
-            promotionsWebViewController.openLiveAction = { [weak self] in
-                self?.requestLiveAction()
-            }
-            promotionsWebViewController.openContactSettingsAction = { [weak self] in
-                self?.requestContactSettingsAction()
-            }
-            self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
-        }
+//    @objc func promotionsViewTapped() {
+//        let promotionsWebViewModel = PromotionsWebViewModel()
+//        let appLanguage = "fr"
+//        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
+//        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
+//
+//        if let url = URL(string: urlString) {
+//            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+//            promotionsWebViewController.openBetSwipeAction = { [weak self] in
+//                self?.requestBetSwipeAction()
+//            }
+//            promotionsWebViewController.openRegisterAction = { [weak self] in
+//                self?.requestRegisterAction()
+//            }
+//            promotionsWebViewController.openHomeAction = { [weak self] in
+//                self?.requestHomeAction()
+//            }
+//            promotionsWebViewController.openRecruitAction = { [weak self] in
+//                self?.openRecruitScreen()
+//            }
+//            promotionsWebViewController.openLiveAction = { [weak self] in
+//                self?.requestLiveAction()
+//            }
+//            promotionsWebViewController.openContactSettingsAction = { [weak self] in
+//                self?.requestContactSettingsAction()
+//            }
+//            self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
+//        }
+//    }
+    
+    @objc func promotionsViewTapped(sender: UITapGestureRecognizer) {
+        
+        let promotionsViewModel = PromotionsViewModel()
+        
+        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
+        
+        self.navigationController?.pushViewController(promotionsViewController, animated: true)
+        
     }
+
 
     @objc private func responsibleGamingViewTapped() {
         let responsibleGamingViewController = ResponsibleGamingViewController()

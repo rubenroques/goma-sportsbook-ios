@@ -217,4 +217,26 @@ class GomaManagedContentProvider: ManagedContentProvider {
             .eraseToAnyPublisher()
     }
     
+    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
+        let endpoint = GomaAPIPromotionsSchema.allPromotions
+        
+        let publisher: AnyPublisher<[GomaModels.PromotionInfo], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
+        return publisher.map({ promotionsInfo in
+            let convertedPromotionsResponse = promotionsInfo.map({
+                GomaModelMapper.promotionInfo(fromInternalPromotionInfo: $0)
+            })
+            return convertedPromotionsResponse
+        }).eraseToAnyPublisher()
+    }
+
+    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
+        let endpoint = GomaAPIPromotionsSchema.promotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
+        
+        let publisher: AnyPublisher<GomaModels.PromotionInfo, ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
+        return publisher.map({ promotionInfo in
+            let convertedPromotionsResponse = GomaModelMapper.promotionInfo(fromInternalPromotionInfo: promotionInfo)
+            
+            return convertedPromotionsResponse
+        }).eraseToAnyPublisher()
+    }
 }

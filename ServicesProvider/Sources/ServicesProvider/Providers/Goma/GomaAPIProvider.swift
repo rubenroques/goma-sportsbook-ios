@@ -1634,3 +1634,20 @@ extension GomaAPIProvider: BettingProvider {
     
 }
 
+extension GomaAPIProvider {
+    static func parseGomaDateString(_ dateString: String) -> Date? {
+        
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"
+        
+        if let date = dateFormatter.date(from: dateString) {
+            return date
+        }
+        
+        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        return dateFormatter.date(from: dateString)
+    }
+}

@@ -91,8 +91,10 @@ class HomeViewController: UIViewController {
         self.tableView.register(PromotedCompetitionTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTableViewCell.identifier)
         self.tableView.register(PromotedCompetitionTopImageTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTopImageTableViewCell.identifier)
         self.tableView.register(HeroCardTableViewCell.self, forCellReuseIdentifier: HeroCardTableViewCell.identifier)
+        self.tableView.register(PromotionLineTableViewCell.self, forCellReuseIdentifier: PromotionLineTableViewCell.identifier)
 
         self.tableView.register(MarketWidgetContainerTableViewCell.self, forCellReuseIdentifier: MarketWidgetContainerTableViewCell.identifier)
+
 
         // Register cell based on the MatchWidgetType
         for matchWidgetType in MatchWidgetType.allCases {
@@ -717,6 +719,15 @@ class HomeViewController: UIViewController {
 
         self.present(Router.navigationController(with: betSubmissionSuccessViewController), animated: true)
     }
+    
+    private func openPromotionDetail(promotion: PromotionInfo) {
+        
+        let promotionDetailViewModel = PromotionDetailViewModel(promotion: promotion)
+        
+        let promotionDetailViewController = PromotionDetailViewController(viewModel: promotionDetailViewModel)
+        
+        self.present(promotionDetailViewController, animated: true)
+    }
 }
 
 //
@@ -1120,6 +1131,23 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.configure(withViewModel: viewModel)
 
             return cell
+            
+        case .promotions:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: PromotionLineTableViewCell.identifier, for: indexPath) as? PromotionLineTableViewCell,
+                let viewModel = self.viewModel.promotionLineViewModel()
+            else {
+                return UITableViewCell()
+            }
+            
+            cell.configure(withViewModel: viewModel)
+
+            cell.didTapPromotionAction = { [weak self] promotion in
+                self?.openPromotionDetail(promotion: promotion)
+            }
+            
+            return cell
+            
         case .highlightedMarketProChoices:
             guard
                 let viewModel = self.viewModel.highlightedMarketViewModel(forIndex: indexPath.row)
@@ -1249,6 +1277,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 //                }
 //            }
             return UITableView.automaticDimension
+        case .promotions:
+            return UITableView.automaticDimension
         case .videoNewsLine:
             return 258
         }
@@ -1316,6 +1346,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 //                }
 //            }
             return 679
+        case .promotions:
+            return 320
         case .videoNewsLine:
             return 258
         }
@@ -1474,6 +1506,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .highlightedLiveMatches:
                 break
             case .heroCard:
+                break
+            case .promotions:
                 break
             case .videoNewsLine:
                 break
