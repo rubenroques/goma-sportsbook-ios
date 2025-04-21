@@ -10,14 +10,14 @@ import Combine
 import SharedModels
 import CryptoKit
 
-class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
+class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
   
     var connector: OmegaConnector
-    var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
-        return userSessionStateSubject.eraseToAnyPublisher()
+    var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
+        return self.sessionStateSubject.eraseToAnyPublisher()
     }
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> {
-        return userProfileSubject.eraseToAnyPublisher()
+        return self.userProfileSubject.eraseToAnyPublisher()
     }
 
     var accessToken: String? = nil
@@ -26,14 +26,10 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
     private var sessionCoordinator: SportRadarSessionCoordinator
 
-    private let userSessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
+    private let sessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
     private let userProfileSubject: CurrentValueSubject<UserProfile?, Error> = .init(nil)
 
     private var cancellables: Set<AnyCancellable> = []
-
-    //Sumsub
-    private let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"
-    private let sumsubSecretKey = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
 
     init(sessionCoordinator: SportRadarSessionCoordinator, connector: OmegaConnector = OmegaConnector()) {
 
@@ -1228,46 +1224,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-
-        let endpoint = OmegaAPIClient.contactUs(firstName: firstName, lastName: lastName, email: email, subject: subject, message: message)
-
-        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
-            if basicResponse.status == "SUCCESS" {
-
-                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
-
-                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-
-            }
-            else {
-                return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
-            }
-        }).eraseToAnyPublisher()
-    }
-
-    func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError> {
-
-        let endpoint = OmegaAPIClient.contactSupport(userIdentifier: userIdentifier, firstName: firstName, lastName: lastName, email: email, subject: subject, subjectType: subjectType, message: message, isLogged: isLogged)
-
-        let publisher: AnyPublisher<SportRadarModels.SupportResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.flatMap({ supportResponse -> AnyPublisher<SupportResponse, ServiceProviderError> in
-
-            if supportResponse.request != nil {
-
-                let supportResponse = SportRadarModelMapper.supportResponse(fromInternalSupportResponse: supportResponse)
-
-                return Just(supportResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-
-            }
-            else {
-                return Fail(outputType: SupportResponse.self, failure: ServiceProviderError.errorMessage(message: supportResponse.description ?? "Error")).eraseToAnyPublisher()
-            }
-        }).eraseToAnyPublisher()
-    }
 
     func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError> {
         let endpoint = OmegaAPIClient.getAllConsents
@@ -1324,64 +1280,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
-    }
-
-    func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
-
-        // let url = "/resources/accessTokens?userId=\(userId)&levelName=\(levelName)&ttlInSecs=600".replacingOccurrences(of: " ", with: "%20")
-        let customAllowedSet =  NSCharacterSet(charactersIn:"; ").inverted
-
-        let url = "/resources/accessTokens?userId=\(userId)&levelName=\(levelName)".addingPercentEncoding(withAllowedCharacters: customAllowedSet) ?? ""
-
-        let method = "post"
-
-        let secretKeyData = self.sumsubSecretKey.data(using: String.Encoding.utf8) ?? Data()
-
-        let signatureHeaders = self.generateSignatureHeaders(url: url, method: method, secretKeyData: secretKeyData, appToken: self.sumsubAppToken)
-
-        let endpoint = OmegaAPIClient.getSumsubAccessToken(userId: userId, levelName: levelName, body: nil, header: signatureHeaders)
-
-        let publisher: AnyPublisher<SportRadarModels.AccessTokenResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.flatMap({ accessTokenResponse -> AnyPublisher<AccessTokenResponse, ServiceProviderError> in
-            if accessTokenResponse.token != nil {
-                let mappedAccessTokenResponse = SportRadarModelMapper.accessTokenResponse(fromInternalAccessTokenResponse: accessTokenResponse)
-
-                return Just(mappedAccessTokenResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-            }
-            else {
-                return Fail(outputType: AccessTokenResponse.self, failure: ServiceProviderError.errorMessage(message: accessTokenResponse.description ?? "Error")).eraseToAnyPublisher()
-            }
-        }).eraseToAnyPublisher()
-    }
-
-    func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
-
-        //let url = "/resources/applicants/-;externalUserId=\(userId)/one".replacingOccurrences(of: " ", with: "%20")
-        let customAllowedSet =  NSCharacterSet(charactersIn:" ").inverted
-
-        let url = "/resources/applicants/-;externalUserId=\(userId)/one".addingPercentEncoding(withAllowedCharacters: customAllowedSet) ?? ""
-
-        let method = "get"
-
-        let secretKeyData = self.sumsubSecretKey.data(using: String.Encoding.utf8) ?? Data()
-
-        let signatureHeaders = self.generateSignatureHeaders(url: url, method: method, secretKeyData: secretKeyData, appToken: self.sumsubAppToken)
-
-        let endpoint = OmegaAPIClient.getSumsubApplicantData(userId: userId, header: signatureHeaders)
-
-        let publisher: AnyPublisher<SportRadarModels.ApplicantDataResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.flatMap({ applicantDataResponse -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> in
-            if applicantDataResponse.info != nil {
-                let mappedApplicantDataResponse = SportRadarModelMapper.applicantDataResponse(fromInternalApplicantDataResponse: applicantDataResponse)
-
-                return Just(mappedApplicantDataResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-            }
-            else {
-                return Fail(outputType: ApplicantDataResponse.self, failure: ServiceProviderError.errorMessage(message: applicantDataResponse.description ?? "Error")).eraseToAnyPublisher()
-            }
-        }).eraseToAnyPublisher()
     }
 
     func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {

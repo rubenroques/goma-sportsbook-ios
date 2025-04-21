@@ -13,7 +13,7 @@ class GomaAPIProvider {
 
     var connector: GomaConnector
 
-    private let userSessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
+    private let sessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
     private let userProfileSubject: CurrentValueSubject<UserProfile?, Error> = .init(nil)
 
     //Paginators cache
@@ -21,10 +21,8 @@ class GomaAPIProvider {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    var isProviderEnabled: Bool = false
-
-    init(deviceIdentifier: String) {
-        self.connector = GomaConnector(deviceIdentifier: deviceIdentifier)
+    convenience init(deviceIdentifier: String) {
+        self.init(connector: GomaConnector(deviceIdentifier: deviceIdentifier))
     }
     
     init(connector: GomaConnector) {
@@ -33,24 +31,16 @@ class GomaAPIProvider {
 
 }
 
-extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
-    
-    var providerEnabled: Bool {
-        return self.isProviderEnabled
+extension GomaAPIProvider: PrivilegedAccessManagerProvider {
+
+    var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
+        return self.sessionStateSubject.eraseToAnyPublisher()
     }
 
-    func isPromotionsProviderEnabled(isEnabled: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
-        self.isProviderEnabled = isEnabled
-        return Just(isEnabled).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-    }
-
-    var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
-        return userSessionStateSubject.eraseToAnyPublisher()
-    }
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> {
-        return userProfileSubject.eraseToAnyPublisher()
+        return self.userProfileSubject.eraseToAnyPublisher()
     }
-
+    
     var accessToken: String? {
         return self.connector.authenticator.getToken()
     }
@@ -58,21 +48,7 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
     var hasSecurityQuestions: Bool {
         return false
     }
-
-    func anonymousLogin() -> AnyPublisher<String, ServiceProviderError> {
-        let endpoint = GomaAPISchema.anonymousAuth(deviceId: self.connector.authenticator.deviceIdentifier, pushToken: self.connector.getPushNotificationToken())
-
-        let publisher: AnyPublisher<GomaModels.AnonymousLoginResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher
-            .handleEvents(receiveOutput: { [weak self] response in
-                self?.connector.updateToken(newToken: response.token)
-            })
-            .map({ anonymousLoginResponse in
-                return anonymousLoginResponse.token
-            }).eraseToAnyPublisher()
-    }
-
+    
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
         let endpoint = GomaAPISchema.login(username: username,
                                            password: password,
@@ -88,22 +64,7 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
             return mappedLoginResponse.userProfile
         }).eraseToAnyPublisher()
     }
-
-    func logoutUser() -> AnyPublisher<String, ServiceProviderError> {
-
-        let endpoint = GomaAPISchema.logout
-
-        let publisher: AnyPublisher<GomaModels.LogoutResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher
-            .handleEvents(receiveOutput: { [weak self] response in
-                self?.connector.clearToken()
-            })
-            .map({ logoutResponse in
-            return logoutResponse.message
-        }).eraseToAnyPublisher()
-    }
-
+    
     func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
 
         let endpoint = GomaAPISchema.updatePersonalInfo(fullname: form.firstName ?? "", avatar: form.avatar ?? "")
@@ -129,23 +90,6 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
 
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-    }
-
-    func basicSignUp(form: SignUpForm) -> AnyPublisher<DetailedSignUpResponse, ServiceProviderError> {
-        let endpoint = GomaAPISchema.register(name: form.firstName + " " + form.lastName,
-                                            email: form.email,
-                                            username: form.username,
-                                            password: form.password,
-                                              avatarName: form.avatarName ?? "")
-        let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.BasicRegisterResponse>, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.map({ gomaResponse in
-            let basicRegisterResponse = gomaResponse.data
-
-            let basicSignUpResponse = GomaModelMapper.basicRegisterResponse(fromInternalBasicRegisterResponse: basicRegisterResponse)
-
-            return basicSignUpResponse
-        }).eraseToAnyPublisher()
     }
 
     func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
@@ -364,16 +308,6 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
 
-    func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-    }
-
-    func contactSupport(userIdentifier: String, firstName: String, lastName: String,
-                        email: String, subject: String, subjectType: String,
-                        message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
     func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
@@ -383,14 +317,6 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
     }
 
     func setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
@@ -409,8 +335,7 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
     func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
-    //
+
     //
     //
     func getUserProfile(withKycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError> {

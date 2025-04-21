@@ -9,22 +9,7 @@ import Foundation
 import Combine
 import SharedModels
 
+// to remove
 protocol PromotionsProvider {
-    
-    var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
-    var userProfilePublisher: AnyPublisher<UserProfile?, Error> { get }
-    var providerEnabled: Bool { get }
-    
-    func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
-    
-    func isPromotionsProviderEnabled(isEnabled: Bool) -> AnyPublisher<Bool, ServiceProviderError>
-    
-    func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>
-    
-    func anonymousLogin() -> AnyPublisher<String, ServiceProviderError>
-            
-    func logoutUser() -> AnyPublisher<String, ServiceProviderError>
-    
-    func basicSignUp(form: SignUpForm) -> AnyPublisher<DetailedSignUpResponse, ServiceProviderError>
-    
+
 }

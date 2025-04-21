@@ -71,10 +71,6 @@ class Environment {
         )
     }()
 
-    // Sumsub keys
-    let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"
-    let sumsubSecretKey: String = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
-
     init() {
 
     }

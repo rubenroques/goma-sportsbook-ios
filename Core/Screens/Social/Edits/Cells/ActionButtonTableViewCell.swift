@@ -60,11 +60,24 @@ extension ActionButtonTableViewCell {
     private static func createActionButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
-        button.setTitle(localized("add_more_friends"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
+
+        if #available(iOS 15.0, *) {
+            var config = UIButton.Configuration.plain()
+            config.image = UIImage(named: "add_orange_icon")
+            config.title = localized("add_more_friends")
+            config.imagePadding = 10
+            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0)
+            config.baseForegroundColor = UIColor.App.highlightSecondary
+            config.attributedTitle = AttributedString(localized("add_more_friends"), attributes: AttributeContainer([.font: AppFont.with(type: .semibold, size: 14)]))
+            button.configuration = config
+        } else {
+            button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
+            button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
+            button.setTitle(localized("add_more_friends"), for: .normal)
+            button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
+        }
+
         return button
     }
 

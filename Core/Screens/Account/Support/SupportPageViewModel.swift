@@ -60,14 +60,17 @@ class SupportPageViewModel {
             subjectTypeTag = filteredSubjectTypeTag
         }
 
-        Env.servicesProvider.contactSupport(userIdentifier: userIdentifier,
-                                            firstName: name,
-                                            lastName: surname,
-                                            email: userEmail,
-                                            subject: title,
-                                            subjectType: subjectTypeTag,
-                                            message: message,
-                                            isLogged: isLogged)
+        let form = ServicesProvider.ContactSupportForm(
+            userIdentifier: userIdentifier,
+            firstName: name,
+            lastName: surname,
+            email: userEmail,
+            subject: title,
+            subjectType: subjectTypeTag,
+            message: message,
+            isLogged: isLogged
+        )
+        Env.servicesProvider.contactSupport(form: form)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -86,20 +89,6 @@ class SupportPageViewModel {
                 self?.supportResponseAction?(true, nil)
             })
             .store(in: &cancellables)
-        
-//        Env.gomaNetworkClient.sendSupportTicket(deviceId: Env.deviceId, title: title, message: message)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    self.supportResponseAction?(false)
-//                case .finished:
-//                 ()
-//                }
-//            }, receiveValue: { [weak self] response in
-//                self?.supportResponseAction?(true)
-//            })
-//            .store(in: &cancellables)
         
     }
        

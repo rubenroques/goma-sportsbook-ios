@@ -114,13 +114,6 @@ public struct SportRadarConfiguration {
         }
     }
 
-    public var sumsubHostname: String {
-        switch self.environment {
-        case .production: return "https://api.sumsub.com"
-        default: return "https://api.sumsub.com"
-        }
-    }
-
     public var frontEndCode: String {
         return "1356"
     }

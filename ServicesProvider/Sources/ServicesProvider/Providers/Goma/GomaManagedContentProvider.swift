@@ -10,60 +10,60 @@ import Combine
 
 /// Implementation of ManagedContentProvider for the Goma API
 class GomaManagedContentProvider: ManagedContentProvider {
-   
+    
     // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
     }
-
+    
     private let connectionStateSubject = CurrentValueSubject<ConnectorState, Never>(.disconnected)
     private let authenticator: GomaAPIAuthenticator
     private let apiClient: GomaAPIPromotionsClient
-
+    
     private var cancellables = Set<AnyCancellable>()
-
+    
     // MARK: - Initialization
-    init(gomaAPIAuthenticator: GomaAPIAuthenticator = GomaAPIAuthenticator(deviceIdentifier: "")) {
-        self.authenticator = gomaAPIAuthenticator
-
+    init(authenticator: GomaAPIAuthenticator = GomaAPIAuthenticator(deviceIdentifier: "")) {
+        self.authenticator = authenticator
+        
         self.apiClient = GomaAPIPromotionsClient(
-            connector: GomaConnector(gomaAPIAuthenticator: gomaAPIAuthenticator),
+            connector: GomaConnector(authenticator: authenticator),
             cache: GomaAPIPromotionsCache()
         )
     }
-
+    
     func invalidateCache() {
         self.apiClient.clearCache()
     }
-
+    
     // MARK: - API Request Helper
-
+    
     private func request<T: Decodable>(_ endpoint: GomaAPIPromotionsSchema) -> AnyPublisher<T, ServiceProviderError> {
         // This is a simplified placeholder for API requests
         // In a real implementation, you would handle authentication and network requests here
         return Fail(error: ServiceProviderError.notSupportedForProvider)
             .eraseToAnyPublisher()
     }
-
+    
     // MARK: - ManagedContentProvider Implementation
     func preFetchHomeContent() -> AnyPublisher<CMSInitialDump, ServiceProviderError> {
-
+        
         return self.apiClient.preFetchHomeContent()
             .map({ (initialDump: GomaModels.InitialDump) in
                 return GomaModelMapper.initialDump(fromInternalInitialDump: initialDump)
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError> {
-
+        
         return self.apiClient.homeTemplate()
             .map({ internalHomeTemplate in
                 return GomaModelMapper.homeTemplate(fromInternalHomeTemplate: internalHomeTemplate)
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getAlertBanner() -> AnyPublisher<AlertBanner?, ServiceProviderError> {
         return self.apiClient.alertBanner()
             .map({ internalAlertBanner in
@@ -71,7 +71,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
         // TODO: SP Merge Needs tests
         return self.apiClient.banners()
@@ -82,9 +82,9 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError> {
-
+        
         return self.apiClient.carouselEventPointers()
             .map({ internalCarouselEvents in
                 return GomaModelMapper.carouselEventPointers(fromInternalCarouselEventPointers: internalCarouselEvents)
@@ -103,7 +103,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             return convertedEvents
         }).eraseToAnyPublisher()
     }
-
+    
     func getBoostedOddsPointers() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
         return self.apiClient.boostedOddsPointers()
             .map({ internalBoostedOddsBanners in
@@ -111,21 +111,21 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getBoostedOddsEvents() -> AnyPublisher<Events, ServiceProviderError> {
         // TODO: SP Merge Needs tests
         let endpoint = GomaAPISchema.getBoostedOddEvents
         let publisher: AnyPublisher<[GomaModels.BoostedOddsEvent], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
         return publisher.map({ boostedOddEvents in
-
+            
             let convertedEvents = boostedOddEvents.map({
                 return GomaModelMapper.event(fromInternalBoostedOddsEvent: $0)
             })
-
+            
             return convertedEvents
         }).eraseToAnyPublisher()
     }
-
+    
     func getTopImageCardPointers() -> AnyPublisher<TopImageCardPointers, ServiceProviderError> {
         return self.apiClient.topImageCardPointers()
             .map({ topImageCardPointers in
@@ -138,7 +138,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             .map(GomaModelMapper.events(fromInternalEvents:))
             .eraseToAnyPublisher()
     }
-
+    
     func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError> {
         return self.apiClient.heroCards()
             .map({ internalHeroCardPointers in
@@ -146,7 +146,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getHeroCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
         let endpoint = GomaAPISchema.getHeroCards
         let publisher: AnyPublisher<GomaModels.HeroCardEvents, ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
@@ -157,9 +157,9 @@ class GomaManagedContentProvider: ManagedContentProvider {
             return convertedEvents
         }).eraseToAnyPublisher()
     }
-
+    
     func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
-
+        
         return self.apiClient.stories()
             .map({ internalStories in
                 return internalStories.map({ internalStory in
@@ -168,7 +168,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
         return self.apiClient.newsItems(pageIndex: pageIndex, pageSize: pageSize)
             .map({ internalNewsItems in
@@ -176,7 +176,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getProChoiceCardPointers() -> AnyPublisher<ProChoiceCardPointers, ServiceProviderError> {
         return self.apiClient.proChoicePointers()
             .map({ pointers in
@@ -184,7 +184,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-
+    
     func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError> {
         let transform: ([GomaModels.Event]) -> ImageHighlightedContents<Market> = { events in
             let mappedEvents = GomaModelMapper.events(fromInternalEvents: events)
@@ -199,8 +199,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             .map(transform)
             .eraseToAnyPublisher()
     }
-
-
+    
     func getTopCompetitionsPointers() -> AnyPublisher<TopCompetitionPointers, ServiceProviderError> {
         return self.apiClient.topCompetitionPointers()
             .map({ pointers in
@@ -216,27 +215,5 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-    
-    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
-        let endpoint = GomaAPIPromotionsSchema.allPromotions
-        
-        let publisher: AnyPublisher<[GomaModels.PromotionInfo], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
-        return publisher.map({ promotionsInfo in
-            let convertedPromotionsResponse = promotionsInfo.map({
-                GomaModelMapper.promotionInfo(fromInternalPromotionInfo: $0)
-            })
-            return convertedPromotionsResponse
-        }).eraseToAnyPublisher()
-    }
 
-    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
-        let endpoint = GomaAPIPromotionsSchema.promotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
-        
-        let publisher: AnyPublisher<GomaModels.PromotionInfo, ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
-        return publisher.map({ promotionInfo in
-            let convertedPromotionsResponse = GomaModelMapper.promotionInfo(fromInternalPromotionInfo: promotionInfo)
-            
-            return convertedPromotionsResponse
-        }).eraseToAnyPublisher()
-    }
 }

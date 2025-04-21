@@ -14,6 +14,8 @@ public enum ServiceProviderError: Error, Equatable, Hashable {
     case bettingProviderNotFound
     case promotionsProviderNotFound
     case managedContentProviderNotFound
+    case customerSupportProviderNotFound
+    case promotionalCampaignsProviderNotFound
     
     case subscriptionNotFound
 

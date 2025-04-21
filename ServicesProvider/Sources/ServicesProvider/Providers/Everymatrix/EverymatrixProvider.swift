@@ -11,7 +11,7 @@ class EveryMatrixProvider {
     
 }
 //
-//extension EverymatrixProvider: PrivilegedAccessManager {
+//extension EverymatrixProvider: PrivilegedAccessManagerProvider {
 //
 //}
 //

@@ -1,15 +1,16 @@
 //
-//  GomaDownloadableContentsProvider.swift
+//  GomaCustomerSupportProvider.swift
 //  ServicesProvider
 //
-//  Created by Ruben Roques on 14/03/2025.
+//  Created by Ruben Roques on 21/04/2025.
 //
+
 
 import Foundation
 import Combine
 
 /// Implementation of DownloadableContentsProvider for the Goma API
-class GomaDownloadableContentsProvider: DownloadableContentsProvider {
+class GomaCustomerSupportProvider: CustomerSupportProvider {
 
     // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
@@ -31,10 +32,14 @@ class GomaDownloadableContentsProvider: DownloadableContentsProvider {
         )
     }
 
-    func getDownloadableContentItems() -> AnyPublisher<DownloadableContentItems, ServiceProviderError> {
-        return self.apiClient.downloadableContents()
-            .map(GomaModelMapper.downloadableContentItems(fromInternalDownloadableContentItems:))
-            .eraseToAnyPublisher()
+    /// Sends a “Contact Us” request with basic details.
+    func contactUs(form: ContactUsForm) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    /// Sends a support request including account context.
+    func contactSupport(form: ContactSupportForm) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
 }

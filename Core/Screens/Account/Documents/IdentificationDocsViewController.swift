@@ -379,16 +379,6 @@ class IdentificationDocsViewController: UIViewController {
             return
         }
 
-        // TODO: Check token expiration
-//        sdk.tokenExpirationHandler { (onComplete) in
-//            self.viewModel.getSumsubAccessToken()
-//
-//            self.viewModel.
-//            { (newToken) in
-//                onComplete(newToken)
-//            }
-//        }
-
         // Verification handler
         sdk.verificationHandler { isApproved in
             print("verificationHandler: Applicant is " + (isApproved ? "approved" : "finally rejected"))

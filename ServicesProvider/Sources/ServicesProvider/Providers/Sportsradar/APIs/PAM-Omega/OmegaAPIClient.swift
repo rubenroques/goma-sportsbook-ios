@@ -160,9 +160,6 @@ enum OmegaAPIClient {
     case getUserConsents
     case setUserConsents(consentVersionIds: [Int]? = nil, unconsentVersionIds: [Int]? = nil)
 
-    case getSumsubAccessToken(userId: String, levelName: String, body: Data? = nil, header: [String: String])
-    case getSumsubApplicantData(userId: String, body: Data? = nil, header: [String: String])
-
     case generateDocumentTypeToken(docType: String)
     case checkDocumentationData
 
@@ -296,11 +293,6 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/user/consents"
         case .setUserConsents:
             return "/ps/ips/user/consents/save"
-
-        case .getSumsubAccessToken:
-            return "/resources/accessTokens"
-        case .getSumsubApplicantData(let userId, _, _):
-            return "/resources/applicants/-;externalUserId=\(userId)/one"
 
         case .generateDocumentTypeToken:
             return "/ps/ips/generateToken"
@@ -817,18 +809,6 @@ extension OmegaAPIClient: Endpoint {
 
             return queryItemsURL
 
-        case .getSumsubAccessToken(let userId, let levelName, _, _):
-            return [
-
-                URLQueryItem(name: "userId", value: userId),
-                URLQueryItem(name: "levelName", value: levelName)
-//                URLQueryItem(name: "ttlInSecs", value: "600")
-
-            ]
-
-        case .getSumsubApplicantData:
-            return nil
-
         case .generateDocumentTypeToken(let docType):
             return [
 
@@ -929,9 +909,6 @@ extension OmegaAPIClient: Endpoint {
         case .getUserConsents: return .get
         case .setUserConsents: return .post
 
-        case .getSumsubAccessToken: return .post
-        case .getSumsubApplicantData: return .get
-
         case .generateDocumentTypeToken: return .get
         case .checkDocumentationData: return .get
             
@@ -993,9 +970,6 @@ extension OmegaAPIClient: Endpoint {
             }
             """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-
-        case .getSumsubAccessToken( _, _, let body, _):
-            return body
 
         default:
             return nil
@@ -1068,9 +1042,6 @@ extension OmegaAPIClient: Endpoint {
         case .getUserConsents: return true
         case .setUserConsents: return true
 
-        case .getSumsubAccessToken: return false
-        case .getSumsubApplicantData: return false
-
         case .generateDocumentTypeToken: return true
         case .checkDocumentationData: return true
             
@@ -1087,10 +1058,6 @@ extension OmegaAPIClient: Endpoint {
         switch self {
         case .contactSupport:
             return SportRadarConfiguration.shared.supportHostname
-        case .getSumsubAccessToken:
-            return SportRadarConfiguration.shared.sumsubHostname
-        case .getSumsubApplicantData:
-            return SportRadarConfiguration.shared.sumsubHostname
         default:
             return SportRadarConfiguration.shared.pamHostname
         }
@@ -1120,10 +1087,7 @@ extension OmegaAPIClient: Endpoint {
                 "app-origin": "ios",
             ]
             return customHeaders
-        case .getSumsubAccessToken(_ , _, _, let header):
-            return header
-        case .getSumsubApplicantData( _, _,  let header):
-            return header
+
         case .contactSupport(_, _, _, let email, _, _, _, let isLogged):
 
             if isLogged {
@@ -1227,8 +1191,6 @@ extension OmegaAPIClient: Endpoint {
         case .getAllConsents: return "getAllConsents"
         case .getUserConsents: return "getUserConsents"
         case .setUserConsents: return "setUserConsents"
-        case .getSumsubAccessToken: return "getSumsubAccessToken"
-        case .getSumsubApplicantData: return "getSumsubApplicantData"
         case .generateDocumentTypeToken: return "generateDocumentTypeToken"
         case .checkDocumentationData: return "checkDocumentationData"
         case .getMobileVerificationCode: return "getMobileVerificationCode"

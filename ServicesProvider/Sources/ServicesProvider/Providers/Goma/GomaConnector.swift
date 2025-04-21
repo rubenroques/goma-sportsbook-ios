@@ -56,12 +56,12 @@ class GomaConnector: Connector {
 
         self.init(session: session,
                   decoder: decoder,
-                  gomaAPIAuthenticator: GomaAPIAuthenticator(deviceIdentifier: deviceIdentifier))
+                  authenticator: GomaAPIAuthenticator(deviceIdentifier: deviceIdentifier))
     }
 
     init(session: URLSession = GomaConnector.defaultSession,
          decoder: JSONDecoder = JSONDecoder(),
-         gomaAPIAuthenticator: GomaAPIAuthenticator) {
+         authenticator: GomaAPIAuthenticator) {
 
         self.session = session
         self.decoder = decoder
@@ -70,7 +70,7 @@ class GomaConnector: Connector {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // 2003-12-31 00:00:00
         self.decoder.dateDecodingStrategy = .formatted(dateFormatter)
 
-        self.authenticator = gomaAPIAuthenticator
+        self.authenticator = authenticator
     }
 
     func clearToken() {

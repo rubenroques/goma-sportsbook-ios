@@ -8,12 +8,13 @@
 import Foundation
 
 enum GomaAPIPromotionsSchema {
+    // Initial Dump
+    case initialDump
+    
     // Home Template
     case homeTemplate
 
-    // Promotions
-    case allPromotions
-    case promotionDetails(promotionSlug: String, staticPageSlug: String)
+    // Home widgets contents
     case alertBanner
     case banners
     case sportBanners
@@ -25,8 +26,6 @@ enum GomaAPIPromotionsSchema {
     case proChoices
     case topCompetitions
     
-    // Initial Dump
-    case initialDump
 }
 
 extension GomaAPIPromotionsSchema: Endpoint {
@@ -36,12 +35,12 @@ extension GomaAPIPromotionsSchema: Endpoint {
 
     var endpoint: String {
         switch self {
+        case .initialDump:
+            return "/api/initial-dump/v1"
+            
         case .homeTemplate:
             return "/api/home/v1/template"
-        case .allPromotions:
-            return "/api/promotions/v1"
-        case .promotionDetails(let promotionSlug, let staticPageSlug):
-            return "/api/promotions/v1/\(promotionSlug)/\(staticPageSlug)"
+
         case .alertBanner:
             return "/api/promotions/v1/alert-banner"
         case .banners:
@@ -62,8 +61,6 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "/api/promotions/v1/pro-choices"
         case .topCompetitions:
             return "/api/competitions/v1/featured"
-        case .initialDump:
-            return "/api/initial-dump/v1"
         }
     }
 
@@ -115,8 +112,6 @@ extension GomaAPIPromotionsSchema: Endpoint {
         switch self {
         case .homeTemplate:
             return 15.0
-        case .allPromotions:
-            return 30.0
         case .news:
             return 20.0
         case .initialDump:
@@ -134,10 +129,7 @@ extension GomaAPIPromotionsSchema: Endpoint {
         switch self {
         case .homeTemplate:
             return "Get home template configuration"
-        case .allPromotions:
-            return "Get all promotional content"
-        case .promotionDetails:
-            return "Get promotion details content"
+            
         case .alertBanner:
             return "Get alert banner"
         case .banners:

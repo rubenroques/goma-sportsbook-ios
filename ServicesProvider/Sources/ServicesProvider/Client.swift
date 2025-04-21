@@ -21,20 +21,19 @@ public class Client {
 
     private var providerType: ProviderType = .everymatrix
 
-    private var privilegedAccessManager: (any PrivilegedAccessManager)?
+    private var privilegedAccessManager: (any PrivilegedAccessManagerProvider)?
     private var bettingProvider: (any BettingProvider)?
     private var eventsProvider: (any EventsProvider)?
-    private var promotionsProvider: (any PromotionsProvider)? // TODO: SP Merge - Use login connectors
-
     private var managedContentProvider: (any ManagedContentProvider)? // TODO: SP Merge - Use login connectors
-
+    
+    private var promotionsProvider: (any PromotionsProvider)?
+    private var customerSupportProvider: (any CustomerSupportProvider)?
+    private var promotionalCampaignsProvider: (any PromotionalCampaignsProvider)?
     private var downloadableContentsProvider: (any DownloadableContentsProvider)?
 
     private var analyticsProvider: (any AnalyticsProvider)?
 
     private var cancellables = Set<AnyCancellable>()
-
-    public var sumsubDataProvider: SumsubDataProvider?
 
     private var configuration = Configuration() {
         didSet {
@@ -82,21 +81,23 @@ public class Client {
             }
             
             GomaAPIClientConfiguration.shared.environment = .gomaDemo
-            let gomaAPIAuthenticator =  GomaAPIAuthenticator(deviceIdentifier: deviceUUID)
+            let authenticator =  GomaAPIAuthenticator(deviceIdentifier: deviceUUID)
 
-            let gomaConnector = GomaConnector(gomaAPIAuthenticator: gomaAPIAuthenticator)
+            let gomaConnector = GomaConnector(authenticator: authenticator)
             
             let gomaAPIProvider = GomaAPIProvider(connector: gomaConnector)
             self.privilegedAccessManager = gomaAPIProvider
             self.eventsProvider = gomaAPIProvider
             self.bettingProvider = gomaAPIProvider
             
-            let gomaManagedContentProvider = GomaManagedContentProvider(gomaAPIAuthenticator: gomaAPIAuthenticator)
+            let gomaManagedContentProvider = GomaManagedContentProvider(authenticator: authenticator)
             self.managedContentProvider = gomaManagedContentProvider
             
-            let gomaDownloadableContentsProvider = GomaDownloadableContentsProvider(gomaAPIAuthenticator: gomaAPIAuthenticator)
+            let gomaDownloadableContentsProvider = GomaDownloadableContentsProvider(authenticator: authenticator)
             self.downloadableContentsProvider = gomaDownloadableContentsProvider
             
+            self.promotionalCampaignsProvider = GomaPromotionalCampaignsProvider(authenticator: authenticator)
+
             gomaAPIProvider.connectionStatePublisher
                 .sink(receiveCompletion: { completion in
 
@@ -109,9 +110,11 @@ public class Client {
 
             // Session Coordinator
             let sessionCoordinator = SportRadarSessionCoordinator()
-
+            
+            
+            let omegaConnector = OmegaConnector()
             let sportRadarPrivilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator,
-                                                                             connector: OmegaConnector())
+                                                                             connector: omegaConnector)
 
             self.privilegedAccessManager = sportRadarPrivilegedAccessManager
             let eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator,
@@ -129,13 +132,17 @@ public class Client {
             self.managedContentProvider = SportRadarManagedContentProvider(
                 sessionCoordinator: sessionCoordinator,
                 eventsProvider: eventsProvider,
-                gomaManagedContentProvider: GomaManagedContentProvider(gomaAPIAuthenticator: gomaAPIAuthenticator)
+                gomaManagedContentProvider: GomaManagedContentProvider(authenticator: gomaAPIAuthenticator)
             )
 
             self.downloadableContentsProvider = SportRadarDownloadableContentsProvider(
                 sessionCoordinator: sessionCoordinator,
-                gomaDownloadableContentsProvider: GomaDownloadableContentsProvider(gomaAPIAuthenticator: gomaAPIAuthenticator)
+                gomaDownloadableContentsProvider: GomaDownloadableContentsProvider(authenticator: gomaAPIAuthenticator)
             )
+            
+            self.customerSupportProvider = SportRadarCustomerSupportProvider(connector: omegaConnector)
+            
+            self.promotionalCampaignsProvider = GomaPromotionalCampaignsProvider(authenticator: gomaAPIAuthenticator)
 
             sessionCoordinator.registerUpdater(sportRadarPrivilegedAccessManager, forKey: .launchToken)
 
@@ -147,8 +154,6 @@ public class Client {
                 }).store(in: &self.cancellables)
 
             self.bettingConnectionStatePublisher = self.bettingProvider!.connectionStatePublisher
-
-            self.sumsubDataProvider = SumsubDataProvider()
 
             self.analyticsProvider = SportRadarAnalyticsProvider()
         }
@@ -1518,26 +1523,6 @@ extension Client {
         return privilegedAccessManager.optOutBonus(partyId: partyId, code: code)
     }
 
-    public func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-        guard
-            let privilegedAccessManager = self.privilegedAccessManager
-        else {
-            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-        }
-
-        return privilegedAccessManager.contactUs(firstName: firstName, lastName: lastName, email: email, subject: subject, message: message)
-    }
-
-    public func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError> {
-        guard
-            let privilegedAccessManager = self.privilegedAccessManager
-        else {
-            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-        }
-
-        return privilegedAccessManager.contactSupport(userIdentifier: userIdentifier, firstName: firstName, lastName: lastName, email: email, subject: subject, subjectType: subjectType, message: message, isLogged: isLogged)
-    }
-
     public func calculateCashout(betId: String, stakeValue: String? = nil) -> AnyPublisher<Cashout, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
@@ -1635,26 +1620,6 @@ extension Client {
         return privilegedAccessManager.setUserConsents(consentVersionIds: consentVersionIds, unconsenVersionIds: unconsetVersionIds)
     }
 
-    public func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
-        guard
-            let privilegedAccessManager = self.privilegedAccessManager
-        else {
-            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-        }
-
-        return privilegedAccessManager.getSumsubAccessToken(userId: userId, levelName: levelName)
-    }
-
-    public func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
-        guard
-            let privilegedAccessManager = self.privilegedAccessManager
-        else {
-            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-        }
-
-        return privilegedAccessManager.getSumsubApplicantData(userId: userId)
-    }
-
     public func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
@@ -1711,69 +1676,6 @@ extension Client {
         return analyticsProvider.trackEvent(vaixAnalyticsEvent, userIdentifer: userIdentifer).eraseToAnyPublisher()
     }
 
-}
-
-extension Client {
-
-    public func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-        guard
-            let promotionsProvider = self.promotionsProvider
-        else {
-            return Fail(error: ServiceProviderError.promotionsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return promotionsProvider.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier)
-    }
-
-    public func isPromotionsProviderEnabled(isEnabled: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
-        guard
-            let promotionsProvider = self.promotionsProvider
-        else {
-            return Fail(error: ServiceProviderError.promotionsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return promotionsProvider.isPromotionsProviderEnabled(isEnabled: isEnabled)
-    }
-
-    public func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
-        guard
-            let promotionsProvider = self.promotionsProvider
-        else {
-            return Fail(error: ServiceProviderError.promotionsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return promotionsProvider.login(username: username, password: password)
-    }
-
-    public func anonymousLogin() -> AnyPublisher<String, ServiceProviderError> {
-        guard
-            let promotionsProvider = self.promotionsProvider
-        else {
-            return Fail(error: ServiceProviderError.promotionsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return promotionsProvider.anonymousLogin()
-    }
-
-    public func logoutUser() -> AnyPublisher<String, ServiceProviderError> {
-        guard
-            let promotionsProvider = self.promotionsProvider
-        else {
-            return Fail(error: ServiceProviderError.promotionsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return promotionsProvider.logoutUser()
-    }
-
-    public func basicSignUp(form: SignUpForm) -> AnyPublisher<DetailedSignUpResponse, ServiceProviderError> {
-        guard
-            let promotionsProvider = self.promotionsProvider
-        else {
-            return Fail(error: ServiceProviderError.promotionsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return promotionsProvider.basicSignUp(form: form)
-    }
 }
 
 // MARK: - ManagedContentProvider Implementation
@@ -1945,26 +1847,6 @@ extension Client {
         }
 
         return managedContentProvider.getTopCompetitions()
-    }
-    
-    public func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
-        guard
-            let managedContentProvider = self.managedContentProvider
-        else {
-            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return managedContentProvider.getPromotions()
-    }
-    
-    public func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
-        guard
-            let managedContentProvider = self.managedContentProvider
-        else {
-            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return managedContentProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
     }
 
 }
@@ -2171,6 +2053,52 @@ extension Client {
         
         return privilegedAccessManager.searchUserWithCode(code: code)
     }
+}
+
+extension Client {
+    
+    public func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
+        guard
+            let promotionalCampaignsProvider = self.promotionalCampaignsProvider
+        else {
+            return Fail(error: .promotionalCampaignsProviderNotFound).eraseToAnyPublisher()
+        }
+        return promotionalCampaignsProvider.getPromotions()
+    }
+    
+    public func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
+        guard
+            let promotionalCampaignsProvider = self.promotionalCampaignsProvider
+        else {
+            return Fail(error: .promotionalCampaignsProviderNotFound).eraseToAnyPublisher()
+        }
+        return promotionalCampaignsProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
+    }
+    
+}
+
+extension Client {
+    
+    public func contactUs(form: ContactUsForm) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let customerSupportProvider = self.customerSupportProvider
+        else {
+            return Fail(error: ServiceProviderError.customerSupportProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return customerSupportProvider.contactUs(form: form)
+    }
+
+    public func contactSupport(form: ContactSupportForm) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+        guard
+            let customerSupportProvider = self.customerSupportProvider
+        else {
+            return Fail(error: ServiceProviderError.customerSupportProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return customerSupportProvider.contactSupport(form: form)
+    }
+
 }
 
 extension Client {

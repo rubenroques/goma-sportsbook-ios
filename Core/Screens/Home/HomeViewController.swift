@@ -408,7 +408,6 @@ class HomeViewController: UIViewController {
                 let navigationViewController = Router.navigationController(with: promotionsWebViewController)
 
                 promotionsWebViewController.openBetSwipeAction = { [weak self] in
-
                     navigationViewController.dismiss(animated: true, completion: {
                         self?.openBetSwipe()
                     })
@@ -420,7 +419,7 @@ class HomeViewController: UIViewController {
                     })
                 }
 
-                promotionsWebViewController.openHomeAction = { [weak self] in
+                promotionsWebViewController.openHomeAction = {
                     navigationViewController.dismiss(animated: true)
                 }
 
@@ -443,8 +442,6 @@ class HomeViewController: UIViewController {
                 }
 
                 self.present(navigationViewController, animated: true, completion: nil)
-
-//                self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
             }
         }
     }
@@ -498,7 +495,7 @@ class HomeViewController: UIViewController {
                 })
             }
 
-            storiesFullScreenViewController.requestHomeAction = { [weak self] in
+            storiesFullScreenViewController.requestHomeAction = {
                 storiesFullScreenViewController.dismiss(animated: true)
             }
 

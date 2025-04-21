@@ -102,8 +102,13 @@ protocol ManagedContentProvider: Connector {
     func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError>
     
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
+
+}
+
+protocol PromotionalCampaignsProvider {
     
     func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError>
     
     func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError>
+    
 }
