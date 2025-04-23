@@ -10,7 +10,7 @@ import Combine
 import SharedModels
 
 /// Implementation of ManagedContentProvider for the Sportradar API
-class SportRadarManagedContentProvider: ManagedContentProvider {
+class SportRadarManagedContentProvider: HomeContentProvider {
     
     // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
@@ -22,19 +22,19 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
     private unowned let sessionCoordinator: SportRadarSessionCoordinator
     private let eventsProvider: SportRadarEventsProvider
 
-    private let gomaManagedContentProvider: GomaManagedContentProvider
+    private let homeContentProvider: GomaHomeContentProvider
 
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
     init(sessionCoordinator: SportRadarSessionCoordinator,
          eventsProvider: SportRadarEventsProvider,
-         gomaManagedContentProvider: GomaManagedContentProvider = GomaManagedContentProvider()) {
+         homeContentProvider: GomaHomeContentProvider) {
 
         self.sessionCoordinator = sessionCoordinator
         self.eventsProvider = eventsProvider
 
-        self.gomaManagedContentProvider = gomaManagedContentProvider
+        self.homeContentProvider = homeContentProvider
 
         // Set up token handling
         self.sessionCoordinator.token(forKey: .launchToken)
@@ -50,23 +50,23 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
 
     // MARK: - ManagedContentProvider Implementation
     func preFetchHomeContent() -> AnyPublisher<CMSInitialDump, ServiceProviderError> {
-        return self.gomaManagedContentProvider.preFetchHomeContent()
+        return self.homeContentProvider.preFetchHomeContent()
     }
 
     func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError> {
-        return self.gomaManagedContentProvider.getHomeTemplate()
+        return self.homeContentProvider.getHomeTemplate()
     }
 
     func getAlertBanner() -> AnyPublisher<AlertBanner?, ServiceProviderError> {
-        return self.gomaManagedContentProvider.getAlertBanner()
+        return self.homeContentProvider.getAlertBanner()
     }
 
     func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
-        return self.gomaManagedContentProvider.getBanners()
+        return self.homeContentProvider.getBanners()
     }
 
     func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError> {
-        return self.gomaManagedContentProvider.getCarouselEventPointers()
+        return self.homeContentProvider.getCarouselEventPointers()
     }
 
     func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
@@ -118,7 +118,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
     }
     
     func getBoostedOddsPointers() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
-        return self.gomaManagedContentProvider.getBoostedOddsPointers()
+        return self.homeContentProvider.getBoostedOddsPointers()
     }
     
     func getBoostedOddsEvents() -> AnyPublisher<Events, ServiceProviderError> {
@@ -170,11 +170,11 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
     }
     
     func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError> {
-        return self.gomaManagedContentProvider.getHeroCardPointers()
+        return self.homeContentProvider.getHeroCardPointers()
     }
 
     func getHeroCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
-        let requestPublisher = self.gomaManagedContentProvider.getHeroCardPointers()
+        let requestPublisher = self.homeContentProvider.getHeroCardPointers()
 
         var uniqueMarketGroupIds: [String] = []
 
@@ -261,7 +261,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
     }
 
     func getTopImageCardPointers() -> AnyPublisher<TopImageCardPointers, ServiceProviderError> {
-        return self.gomaManagedContentProvider.getTopImageCardPointers()
+        return self.homeContentProvider.getTopImageCardPointers()
     }
     
     func getTopImageEvents() -> AnyPublisher<Events, ServiceProviderError> {
@@ -314,15 +314,15 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
 
     
     func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
-        return self.gomaManagedContentProvider.getStories()
+        return self.homeContentProvider.getStories()
     }
 
     func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
-        return self.gomaManagedContentProvider.getNews(pageIndex: pageIndex, pageSize: pageSize)
+        return self.homeContentProvider.getNews(pageIndex: pageIndex, pageSize: pageSize)
     }
 
     func getProChoiceCardPointers() -> AnyPublisher<ProChoiceCardPointers, ServiceProviderError> {
-        return self.gomaManagedContentProvider.getProChoiceCardPointers()
+        return self.homeContentProvider.getProChoiceCardPointers()
     }
     
     func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError> {
@@ -398,7 +398,7 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
     }
     
     func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
-        return self.gomaManagedContentProvider.getTopCompetitionsPointers()
+        return self.homeContentProvider.getTopCompetitionsPointers()
     }
 
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {

@@ -8,6 +8,7 @@
 import Foundation
 
 public struct PromotionInfo: Codable {
+    
     public let id: Int
     public let title: String
     public let slug: String
@@ -23,21 +24,35 @@ public struct PromotionInfo: Codable {
     public let staticPageSlug: String?
     public let staticPage: StaticPage?
 
-    enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case title = "title"
-        case slug = "slug"
-        case sortOrder = "sort_order"
-        case platform = "platform"
-        case status = "status"
-        case userType = "user_type"
-        case listDisplayNote = "list_display_note"
-        case listDisplayDescription = "list_display_description"
-        case listDisplayImageUrl = "list_display_image_url"
-        case startDate = "start_date"
-        case endDate = "end_date"
-        case staticPageSlug = "static_page_slug"
-        case staticPage = "static_page"
+    init(id: Int,
+         title: String,
+         slug: String,
+         sortOrder: Int,
+         platform: String,
+         status: String,
+         userType: String,
+         listDisplayNote: String?,
+         listDisplayDescription: String?,
+         listDisplayImageUrl: String,
+         startDate: Date?,
+         endDate: Date?,
+         staticPageSlug: String?,
+         staticPage: StaticPage?)
+    {
+        self.id = id
+        self.title = title
+        self.slug = slug
+        self.sortOrder = sortOrder
+        self.platform = platform
+        self.status = status
+        self.userType = userType
+        self.listDisplayNote = listDisplayNote
+        self.listDisplayDescription = listDisplayDescription
+        self.listDisplayImageUrl = listDisplayImageUrl
+        self.startDate = startDate
+        self.endDate = endDate
+        self.staticPageSlug = staticPageSlug
+        self.staticPage = staticPage
     }
 }
 
@@ -55,19 +70,31 @@ public struct StaticPage: Codable {
     public let sections: [SectionBlock]
     public let terms: TermItem?
 
-    enum CodingKeys: String, CodingKey {
-        case title = "title"
-        case slug = "slug"
-        case headerImageUrl = "header_image_url"
-        case isActive = "is_active"
-        case usedForPromotions = "used_for_promotions"
-        case platform = "platform"
-        case status = "status"
-        case userType = "user_type"
-        case startDate = "start_date"
-        case endDate = "end_date"
-        case sections = "sections"
-        case terms = "terms_and_conditions"
+    init(title: String,
+         slug: String,
+         headerImageUrl: String?,
+         isActive: Bool,
+         usedForPromotions: Bool,
+         platform: String,
+         status: String,
+         userType: String,
+         startDate: Date?,
+         endDate: Date?,
+         sections: [SectionBlock],
+         terms: TermItem?)
+    {
+        self.title = title
+        self.slug = slug
+        self.headerImageUrl = headerImageUrl
+        self.isActive = isActive
+        self.usedForPromotions = usedForPromotions
+        self.platform = platform
+        self.status = status
+        self.userType = userType
+        self.startDate = startDate
+        self.endDate = endDate
+        self.sections = sections
+        self.terms = terms
     }
 }
 

@@ -8,12 +8,13 @@
 import Foundation
 
 public enum ServiceProviderError: Error, Equatable, Hashable {
-
+    case onConnection
+    
     case privilegedAccessManagerNotFound
     case eventsProviderNotFound
     case bettingProviderNotFound
     case promotionsProviderNotFound
-    case managedContentProviderNotFound
+    case homeContentProviderNotFound
     case customerSupportProviderNotFound
     case promotionalCampaignsProviderNotFound
     
@@ -57,6 +58,7 @@ public enum ServiceProviderError: Error, Equatable, Hashable {
     case errorDetailedMessage(key: String, message: String)
 
     case invalidUserLocation
+    
     case notSupportedForProvider
     case unknown
 }

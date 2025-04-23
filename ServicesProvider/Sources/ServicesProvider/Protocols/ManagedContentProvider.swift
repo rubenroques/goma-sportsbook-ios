@@ -12,7 +12,7 @@ import Combine
 ///
 /// This protocol provides methods for retrieving promotional and templated content
 /// used throughout the application, including banners, stories, news, and other promotional items.
-protocol ManagedContentProvider: Connector {
+protocol HomeContentProvider: Connector {
 
     // MARK: - Home Template
 
@@ -103,12 +103,4 @@ protocol ManagedContentProvider: Connector {
     
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
 
-}
-
-protocol PromotionalCampaignsProvider {
-    
-    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError>
-    
-    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError>
-    
 }

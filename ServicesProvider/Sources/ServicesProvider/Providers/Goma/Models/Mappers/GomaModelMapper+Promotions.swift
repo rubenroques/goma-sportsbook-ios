@@ -197,9 +197,9 @@ extension GomaModelMapper {
         
         let staticPage = self.staticPage(fromInternalStaticPage: promotionInfo.staticPage ?? nil)
         
-        let startDate = GomaAPIProvider.parseGomaDateString(promotionInfo.startDate ?? "")
+        let startDate = GomaProvider.parseGomaDateString(promotionInfo.startDate ?? "")
         
-        let endDate = GomaAPIProvider.parseGomaDateString(promotionInfo.endDate ?? "")
+        let endDate = GomaProvider.parseGomaDateString(promotionInfo.endDate ?? "")
         
         return PromotionInfo(id: promotionInfo.id, title: promotionInfo.title, slug: promotionInfo.slug, sortOrder: promotionInfo.sortOrder, platform: promotionInfo.platform, status: promotionInfo.status, userType: promotionInfo.userType, listDisplayNote: promotionInfo.listDisplayNote, listDisplayDescription: promotionInfo.listDisplayDescription, listDisplayImageUrl: promotionInfo.listDisplayImageUrl, startDate: startDate, endDate: endDate, staticPageSlug: promotionInfo.staticPageSlug, staticPage: staticPage)
     }
@@ -216,9 +216,9 @@ extension GomaModelMapper {
                 terms = self.termItem(fromInternalTermItem: staticPageTerms)
             }
             
-            let startDate = GomaAPIProvider.parseGomaDateString(staticPage.startDate ?? "")
+            let startDate = GomaProvider.parseGomaDateString(staticPage.startDate ?? "")
             
-            let endDate = GomaAPIProvider.parseGomaDateString(staticPage.endDate ?? "")
+            let endDate = GomaProvider.parseGomaDateString(staticPage.endDate ?? "")
             
             return StaticPage(title: staticPage.title, slug: staticPage.slug, headerImageUrl: staticPage.headerImageUrl, isActive: staticPage.isActive, usedForPromotions: staticPage.usedForPromotions, platform: staticPage.platform, status: staticPage.status, userType: staticPage.userType, startDate: startDate, endDate: endDate, sections: sections, terms: terms)
         }

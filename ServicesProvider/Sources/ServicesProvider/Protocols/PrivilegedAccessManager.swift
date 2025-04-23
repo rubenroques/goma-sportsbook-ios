@@ -9,11 +9,6 @@ import Foundation
 import Combine
 import SharedModels
 
-enum UserSessionStatus {
-    case anonymous
-    case logged
-}
-
 protocol PrivilegedAccessManagerProvider {
 
     var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
@@ -32,8 +27,8 @@ protocol PrivilegedAccessManagerProvider {
 
     func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError>
 
-    func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>
-    func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError>
+    /// Unified sign up method handling both simple and full sign up forms
+    func signUp(with formType: SignUpFormType) -> AnyPublisher<SignUpResponse, ServiceProviderError>
 
     func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func updateDeviceIdentifier(deviceIdentifier: String, appVersion: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
@@ -140,17 +135,19 @@ protocol PrivilegedAccessManagerProvider {
 
 /// Protocol for managing user accounts, authentication, and profile management
 protocol PlayerAccountManagementProvider {
-    
+
     var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> { get }
-    
+
     var accessToken: String? { get }
     var hasSecurityQuestions: Bool { get }
 
     // Authentication
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>
-    func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError>
-    func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>
+
+    /// Unified sign up method handling both simple and full sign up forms
+    func signUp(with formType: SignUpFormType) -> AnyPublisher<SignUpResponse, ServiceProviderError>
+
     func signUpCompletion(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>
     func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError>
 
@@ -177,7 +174,7 @@ protocol PlayerAccountManagementProvider {
     func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError>
     func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>
     func uploadMultipleUserDocuments(documentType: String, files: [String: Data]) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>
-    
+
     func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>
     func checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>
 
@@ -261,7 +258,7 @@ protocol BonusProvider {
 /// Protocol for customer support features
 protocol CustomerSupportProvider {
 
-    /// Sends a “Contact Us” request with basic details.
+    /// Sends a "Contact Us" request with basic details.
     func contactUs(form: ContactUsForm) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     /// Sends a support request including account context.

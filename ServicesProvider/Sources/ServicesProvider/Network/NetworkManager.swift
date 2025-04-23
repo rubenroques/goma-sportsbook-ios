@@ -27,8 +27,7 @@ class NetworkManager {
         guard
             let request = endpoint.request()
         else {
-            let error = ServiceProviderError.invalidRequestFormat
-            return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
+            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
         
         return self.session.dataTaskPublisher(for: request)

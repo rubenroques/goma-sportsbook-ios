@@ -42,7 +42,6 @@ struct SportRadarAnalyticsProvider: AnalyticsProvider {
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                     throw ServiceProviderError.unknown
                 }
-
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)

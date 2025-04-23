@@ -897,3 +897,14 @@ public struct UserNotificationsSettings: Codable {
     }
     
 }
+
+/// Enum representing the two types of sign up forms
+public enum SignUpFormType {
+    case simple(SimpleSignUpForm)
+    case full(SignUpForm)
+}
+
+enum UserSessionStatus {
+    case anonymous
+    case logged
+}

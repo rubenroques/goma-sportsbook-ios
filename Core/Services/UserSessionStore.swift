@@ -291,7 +291,7 @@ class UserSessionStore {
     }
     
     func registerUser(form: ServicesProvider.SimpleSignUpForm) -> AnyPublisher<Void, RegisterUserError> {
-        return Env.servicesProvider.simpleSignUp(form: form)
+        return Env.servicesProvider.signUp(with: .simple(form))
             .mapError { (error: ServiceProviderError) -> RegisterUserError in
                 switch error {
                 case ServiceProviderError.invalidSignUpUsername:
@@ -331,6 +331,10 @@ class UserSessionStore {
 //            }
 //            .replaceError(with: false) // if an error occour it shouldn't show the blocking screen
 //            .eraseToAnyPublisher()
+        
+        // TODO: V2 - this should be agnostic from the client
+        // TODO: V2 |  getting it from businessSettingsSocket does not make sense
+        // TODO: V2 |  this being in the app makes even less sense
         let periodTypes = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits ? "RollingWeekly,Permanent" : "Weekly,Permanent"
         
         return Env.servicesProvider.getResponsibleGamingLimits(periodTypes: periodTypes, limitTypes: "DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT")

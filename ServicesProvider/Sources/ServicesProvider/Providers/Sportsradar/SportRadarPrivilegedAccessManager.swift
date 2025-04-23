@@ -172,84 +172,93 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         .eraseToAnyPublisher()
     }
 
-    func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
+    func signUp(with formType: SignUpFormType) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
+        switch formType {
+        case .simple(let form):
+            // Handle simple sign up form
+            let endpoint = OmegaAPIClient.quickSignup(email: form.email,
+                                                      username: form.username,
+                                                      password: form.password,
+                                                      birthDate: form.birthDate,
+                                                      mobilePrefix: form.mobilePrefix,
+                                                      mobileNumber: form.mobileNumber,
+                                                      countryIsoCode: form.countryIsoCode,
+                                                      currencyCode: form.currencyCode)
 
-        let endpoint = OmegaAPIClient.quickSignup(email: form.email,
-                                                  username: form.username,
-                                                  password: form.password,
-                                                  birthDate: form.birthDate,
-                                                  mobilePrefix: form.mobilePrefix,
-                                                  mobileNumber: form.mobileNumber,
-                                                  countryIsoCode: form.countryIsoCode,
-                                                  currencyCode: form.currencyCode)
+            let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
 
-        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
-            if statusResponse.status == "SUCCESS" {
-                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-            }
-            else if let errors = statusResponse.errors {
-                if errors.contains(where: { $0.field == "username" }) {
-                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpUsername).eraseToAnyPublisher()
+            return publisher.flatMap({ statusResponse -> AnyPublisher<SignUpResponse, ServiceProviderError> in
+                if statusResponse.status == "SUCCESS" {
+                    let response = SignUpResponse(successful: true)
+                    return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
-                else if errors.contains(where: { $0.field == "email" }) {
-                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpEmail).eraseToAnyPublisher()
+                else if let errors = statusResponse.errors {
+                    var signUpErrors: [SignUpResponse.SignUpError] = []
+                    
+                    for error in errors {
+                        let signUpError = SignUpResponse.SignUpError(field: error.field, error: error.error)
+                        signUpErrors.append(signUpError)
+                    }
+                    
+                    let response = SignUpResponse(successful: false, errors: signUpErrors)
+                    return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
-                else if errors.contains(where: { $0.field == "password" }) {
-                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpPassword).eraseToAnyPublisher()
+                return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+            
+        case .full(let form):
+            // Handle full sign up form
+            let endpoint = OmegaAPIClient.signUp(email: form.email,
+                                                 username: form.username,
+                                                 password: form.password,
+                                                 birthDate: form.birthDate,
+                                                 mobilePrefix: form.mobilePrefix,
+                                                 mobileNumber: form.mobileNumber,
+                                                 nationalityIso2Code: form.nationalityIsoCode,
+                                                 currencyCode: form.currencyCode,
+                                                 firstName: form.firstName,
+                                                 lastName: form.lastName,
+                                                 middleName: form.middleName,
+                                                 gender: form.gender,
+                                                 address: form.address,
+                                                 city: form.city,
+                                                 postalCode: form.postCode,
+                                                 countryIso2Code: form.countryIsoCode,
+                                                 bonusCode: form.bonusCode,
+                                                 receiveMarketingEmails: form.receiveMarketingEmails,
+                                                 avatarName: form.avatarName,
+                                                 godfatherCode: form.godfatherCode,
+                                                 birthDepartment: form.birthDepartment,
+                                                 birthCity: form.birthCity,
+                                                 birthCountry: form.birthCountry,
+                                                 streetNumber: form.streetNumber,
+                                                 consentedIds: form.consentedIds,
+                                                 unconsentedIds: form.unConsentedIds,
+                                                 mobileVerificationRequestId: form.mobileVerificationRequestId)
+
+            let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+            return publisher.flatMap({ statusResponse -> AnyPublisher<SignUpResponse, ServiceProviderError> in
+                if statusResponse.status == "SUCCESS" {
+                    let response = SignUpResponse(successful: true)
+                    return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
-            }
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
-        })
-        .eraseToAnyPublisher()
-    }
-
-    func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
-
-        let endpoint = OmegaAPIClient.signUp(email: form.email,
-                                             username: form.username,
-                                             password: form.password,
-                                             birthDate: form.birthDate,
-                                             mobilePrefix: form.mobilePrefix,
-                                             mobileNumber: form.mobileNumber,
-                                             nationalityIso2Code: form.nationalityIsoCode,
-                                             currencyCode: form.currencyCode,
-                                             firstName: form.firstName,
-                                             lastName: form.lastName,
-                                             middleName: form.middleName,
-                                             gender: form.gender,
-                                             address: form.address,
-                                             city: form.city,
-                                             postalCode: form.postCode,
-                                             countryIso2Code: form.countryIsoCode,
-                                             bonusCode: form.bonusCode,
-                                             receiveMarketingEmails: form.receiveMarketingEmails,
-                                             avatarName: form.avatarName,
-                                             godfatherCode: form.godfatherCode,
-                                             birthDepartment: form.birthDepartment,
-                                             birthCity: form.birthCity,
-                                             birthCountry: form.birthCountry,
-                                             streetNumber: form.streetNumber,
-                                             consentedIds: form.consentedIds,
-                                             unconsentedIds: form.unConsentedIds,
-                                             mobileVerificationRequestId: form.mobileVerificationRequestId)
-
-        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.flatMap({ (statusResponse: SportRadarModels.StatusResponse) -> AnyPublisher<SignUpResponse, ServiceProviderError> in
-            if statusResponse.status == "SUCCESS" || statusResponse.status == "BONUSPLAN_NOT_FOUND" {
-                return Just( SignUpResponse(successful: true) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-            }
-            else if let errors = statusResponse.errors {
-                let mappedErrors = errors.map { error -> SignUpResponse.SignUpError in
-                    return SignUpResponse.SignUpError(field: error.field, error: error.error)
+                else if let errors = statusResponse.errors {
+                    var signUpErrors: [SignUpResponse.SignUpError] = []
+                    
+                    for error in errors {
+                        let signUpError = SignUpResponse.SignUpError(field: error.field, error: error.error)
+                        signUpErrors.append(signUpError)
+                    }
+                    
+                    let response = SignUpResponse(successful: false, errors: signUpErrors)
+                    return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
-                return Just( SignUpResponse(successful: false, errors: mappedErrors) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-            }
-            return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
-        })
-        .eraseToAnyPublisher()
+                return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+        }
     }
 
     func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {

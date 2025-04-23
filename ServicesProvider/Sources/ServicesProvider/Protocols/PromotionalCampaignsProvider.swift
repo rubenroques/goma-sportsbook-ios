@@ -1,0 +1,17 @@
+//
+//  PromotionalCampaignsProvider.swift
+//  ServicesProvider
+//
+//  Created by Ruben Roques on 21/04/2025.
+//
+
+import Foundation
+import Combine
+
+protocol PromotionalCampaignsProvider {
+    
+    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError>
+    
+    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError>
+    
+}

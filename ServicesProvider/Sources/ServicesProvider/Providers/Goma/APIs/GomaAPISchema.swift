@@ -9,22 +9,22 @@ import Foundation
 
 extension GomaAPISchema {
     enum ArgumentModels {
-        
         struct BetSelection {
             let eventId: String
             let outcomeId: String
         }
-
     }
 }
 
 enum GomaAPISchema {
+    
     case anonymousAuth(deviceId: String, pushToken: String?)
     case login(username: String, password: String, pushToken: String?)
     case register(name: String, email: String, username: String, password: String, avatarName: String, deviceToken: String? = nil)
+    case logout
     case requestPasswordResetEmail(email: String)
     case updatePassword(oldPassword: String, password: String, passwordConfirmation: String)
-    case logout
+    
     case getSports
     
     case getHomeContents

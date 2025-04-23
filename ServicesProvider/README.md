@@ -20,7 +20,7 @@ API Request → Internal GomaModels → GomaModelMapper → Domain Models
 
 #### Content Providers
 - **ManagedContentProvider**: Protocol defining the interface for content retrieval
-- **GomaManagedContentProvider**: Implementation of the provider that coordinates API requests and data transformation
+- **GomaHomeContentProvider**: Implementation of the provider that coordinates API requests and data transformation
 
 #### Models
 - **Internal Models** (`GomaModels+*.swift`): Direct representations of API JSON responses
@@ -92,7 +92,7 @@ Manages promotional content and campaigns:
 The package includes implementations for different backend systems:
 
 ### Goma Providers
-- **GomaManagedContentProvider**: Implements the ManagedContentProvider protocol for the Goma API
+- **GomaHomeContentProvider**: Implements the ManagedContentProvider protocol for the Goma API
 - **GomaAPIClient**: Base client for Goma API requests
 - **GomaConnector**: Manages connection state for Goma services
 
@@ -114,7 +114,7 @@ The **ServicesProvider.Client** class serves as the main entry point for the app
 
 1. **API Request Stage**:
    - The application requests data through the `ManagedContentProvider` interface
-   - `GomaManagedContentProvider` initiates an API request using `GomaPromotionsAPIClient`
+   - `GomaHomeContentProvider` initiates an API request using `GomaPromotionsAPIClient`
    - Authentication is applied via `GomaAPIAuthenticator`
 
 2. **Internal Model Decoding Stage**:

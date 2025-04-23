@@ -24,9 +24,8 @@ public class Client {
     private var privilegedAccessManager: (any PrivilegedAccessManagerProvider)?
     private var bettingProvider: (any BettingProvider)?
     private var eventsProvider: (any EventsProvider)?
-    private var managedContentProvider: (any ManagedContentProvider)? // TODO: SP Merge - Use login connectors
-    
-    private var promotionsProvider: (any PromotionsProvider)?
+    private var homeContentProvider: (any HomeContentProvider)? // TODO: SP Merge - Use login connectors
+
     private var customerSupportProvider: (any CustomerSupportProvider)?
     private var promotionalCampaignsProvider: (any PromotionalCampaignsProvider)?
     private var downloadableContentsProvider: (any DownloadableContentsProvider)?
@@ -74,28 +73,28 @@ public class Client {
             // self.privilegedAccessManager = everymatrixProvider
             // self.bettingProvider = everymatrixProvider
             // self.eventsProvider = everymatrixProvider
-            
+
         case .goma:
             guard let deviceUUID = self.configuration.deviceUUID else {
                 fatalError("GOMA API service provider required a deviceIdentifier")
             }
-            
-            GomaAPIClientConfiguration.shared.environment = .gomaDemo
-            let authenticator =  GomaAPIAuthenticator(deviceIdentifier: deviceUUID)
 
-            let gomaConnector = GomaConnector(authenticator: authenticator)
+            GomaAPIClientConfiguration.shared.environment = .gomaDemo
+            let authenticator = GomaAuthenticator(deviceIdentifier: deviceUUID)
             
-            let gomaAPIProvider = GomaAPIProvider(connector: gomaConnector)
+            let gomaConnector = GomaConnector(authenticator: authenticator)
+
+            let gomaAPIProvider = GomaProvider(connector: gomaConnector)
             self.privilegedAccessManager = gomaAPIProvider
             self.eventsProvider = gomaAPIProvider
             self.bettingProvider = gomaAPIProvider
-            
-            let gomaManagedContentProvider = GomaManagedContentProvider(authenticator: authenticator)
-            self.managedContentProvider = gomaManagedContentProvider
-            
+
+            let gomaManagedContentProvider = GomaHomeContentProvider(authenticator: authenticator)
+            self.homeContentProvider = gomaManagedContentProvider
+
             let gomaDownloadableContentsProvider = GomaDownloadableContentsProvider(authenticator: authenticator)
             self.downloadableContentsProvider = gomaDownloadableContentsProvider
-            
+
             self.promotionalCampaignsProvider = GomaPromotionalCampaignsProvider(authenticator: authenticator)
 
             gomaAPIProvider.connectionStatePublisher
@@ -104,14 +103,14 @@ public class Client {
                 }, receiveValue: { [weak self] connectorState in
                     self?.eventsConnectionStateSubject.send(connectorState)
                 }).store(in: &self.cancellables)
-            
-            
+
+
         case .sportradar:
 
             // Session Coordinator
             let sessionCoordinator = SportRadarSessionCoordinator()
-            
-            
+
+
             let omegaConnector = OmegaConnector()
             let sportRadarPrivilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator,
                                                                              connector: omegaConnector)
@@ -126,23 +125,23 @@ public class Client {
             // The common API Authenticator
             // All subsets of the GOMA api should share the same Authenticator, it's a shared token and connection
             GomaAPIClientConfiguration.shared.environment = .betsson
-            
-            let  gomaAPIAuthenticator =  GomaAPIAuthenticator(deviceIdentifier: self.configuration.deviceUUID ?? "")
 
-            self.managedContentProvider = SportRadarManagedContentProvider(
+            let  gomaAuthenticator =  GomaAuthenticator(deviceIdentifier: self.configuration.deviceUUID ?? "")
+
+            self.homeContentProvider = SportRadarManagedContentProvider(
                 sessionCoordinator: sessionCoordinator,
                 eventsProvider: eventsProvider,
-                gomaManagedContentProvider: GomaManagedContentProvider(authenticator: gomaAPIAuthenticator)
+                homeContentProvider: GomaHomeContentProvider(authenticator: gomaAuthenticator)
             )
 
             self.downloadableContentsProvider = SportRadarDownloadableContentsProvider(
                 sessionCoordinator: sessionCoordinator,
-                gomaDownloadableContentsProvider: GomaDownloadableContentsProvider(authenticator: gomaAPIAuthenticator)
+                gomaDownloadableContentsProvider: GomaDownloadableContentsProvider(authenticator: gomaAuthenticator)
             )
-            
+
             self.customerSupportProvider = SportRadarCustomerSupportProvider(connector: omegaConnector)
-            
-            self.promotionalCampaignsProvider = GomaPromotionalCampaignsProvider(authenticator: gomaAPIAuthenticator)
+
+            self.promotionalCampaignsProvider = GomaPromotionalCampaignsProvider(authenticator: gomaAuthenticator)
 
             sessionCoordinator.registerUpdater(sportRadarPrivilegedAccessManager, forKey: .launchToken)
 
@@ -507,7 +506,7 @@ extension Client {
 }
 
 extension Client {
-    
+
     public func getMarketGroups(
         forEvent event: Event,
         includeMixMatchGroup hasMixMatchGroup: Bool,
@@ -850,22 +849,13 @@ extension Client {
         return privilegedAccessManager.updateUserProfile(form: form)
     }
 
-    public func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
+    public func signUp(with formType: SignUpFormType) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        return privilegedAccessManager.simpleSignUp(form: form)
-    }
-
-    public func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
-        guard
-            let privilegedAccessManager = self.privilegedAccessManager
-        else {
-            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-        }
-        return privilegedAccessManager.signUp(form: form)
+        return privilegedAccessManager.signUp(with: formType)
     }
 
     public func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
@@ -1683,380 +1673,380 @@ extension Client {
 
     public func preFetchHomeContent() -> AnyPublisher<CMSInitialDump, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.preFetchHomeContent()
+        return homeContentProvider.preFetchHomeContent()
     }
 
     public func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getHomeTemplate()
+        return homeContentProvider.getHomeTemplate()
     }
 
     public func getAlertBanner() -> AnyPublisher<AlertBanner?, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getAlertBanner()
+        return homeContentProvider.getAlertBanner()
     }
 
     public func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getBanners()
+        return homeContentProvider.getBanners()
     }
 
     public func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getCarouselEventPointers()
+        return homeContentProvider.getCarouselEventPointers()
     }
-    
+
     public func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getCarouselEvents()
+        return homeContentProvider.getCarouselEvents()
     }
-    
+
 
     public func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getBoostedOddsPointers()
+        return homeContentProvider.getBoostedOddsPointers()
     }
 
     public func getBoostedOddsEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getBoostedOddsEvents()
+        return homeContentProvider.getBoostedOddsEvents()
     }
 
     public func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getHeroCardPointers()
+        return homeContentProvider.getHeroCardPointers()
     }
 
     public func getHeroCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: .homeContentProviderNotFound).eraseToAnyPublisher()
         }
-        return managedContentProvider.getHeroCardEvents()
+        return homeContentProvider.getHeroCardEvents()
     }
 
     public func getTopImageEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getTopImageEvents()
+        return homeContentProvider.getTopImageEvents()
     }
 
     public func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getStories()
+        return homeContentProvider.getStories()
     }
 
     public func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getNews(pageIndex: pageIndex, pageSize: pageSize)
+        return homeContentProvider.getNews(pageIndex: pageIndex, pageSize: pageSize)
     }
 
     public func getProChoiceCardPointers() -> AnyPublisher<ProChoiceCardPointers, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
-        return managedContentProvider.getProChoiceCardPointers()
+        return homeContentProvider.getProChoiceCardPointers()
     }
 
     public func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
-        return managedContentProvider.getProChoiceMarketCards()
+        return homeContentProvider.getProChoiceMarketCards()
     }
 
     public func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: .homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getTopCompetitionsPointers()
+        return homeContentProvider.getTopCompetitionsPointers()
     }
 
     public func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
         guard
-            let managedContentProvider = self.managedContentProvider
+            let homeContentProvider = self.homeContentProvider
         else {
-            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: .homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getTopCompetitions()
+        return homeContentProvider.getTopCompetitions()
     }
 
 }
 
 // Social endpoints
 extension Client {
-    
+
     public func getFollowees() -> AnyPublisher<[Follower], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getFollowees()
     }
-    
+
     public func getTotalFollowees() -> AnyPublisher<Int, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getTotalFollowees()
     }
-    
+
     public func getFollowers() -> AnyPublisher<[Follower], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getFollowers()
     }
-    
+
     public func getTotalFollowers() -> AnyPublisher<Int, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getTotalFollowers()
     }
-    
+
     public func addFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.addFollowee(userId: userId)
     }
-    
+
     public func removeFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.removeFollowee(userId: userId)
     }
-    
+
     public func getTipsRankings(type: String? = nil, followers: Bool? = nil) -> AnyPublisher<[TipRanking], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getTipsRankings(type: type, followers: followers)
     }
-    
+
     public func getUserProfileInfo(userId: String) -> AnyPublisher<UserProfileInfo, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getUserProfileInfo(userId: userId)
     }
-    
+
     public func getFriendRequests() -> AnyPublisher<[FriendRequest], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getFriendRequests()
     }
-    
+
     public func getFriends() -> AnyPublisher<[UserFriend], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getFriends()
     }
-    
+
     public func addFriends(userIds: [String], request: Bool = false) -> AnyPublisher<AddFriendResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.addFriends(userIds: userIds, request: request)
     }
-    
+
     public func removeFriend(userId: Int) -> AnyPublisher<String, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.removeFriend(userId: userId)
     }
-    
+
     public func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getChatrooms()
     }
-    
+
     public func addGroup(name: String, userIds: [String]) -> AnyPublisher<ChatroomId, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.addGroup(name: name, userIds: userIds)
     }
-    
+
     public func deleteGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.deleteGroup(id: id)
     }
-    
+
     public func editGroup(id: Int, name: String) -> AnyPublisher<String, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.editGroup(id: id, name: name)
     }
-    
+
     public func leaveGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.deleteGroup(id: id)
     }
-    
+
     public func addUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.addUsersToGroup(groupId: groupId, userIds: userIds)
     }
-    
+
     public func removeUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.removeUsersToGroup(groupId: groupId, userIds: userIds)
     }
-    
+
     public func searchUserWithCode(code: String) -> AnyPublisher<SearchUser, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.searchUserWithCode(code: code)
     }
 }
 
 extension Client {
-    
+
     public func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
         guard
             let promotionalCampaignsProvider = self.promotionalCampaignsProvider
@@ -2065,7 +2055,7 @@ extension Client {
         }
         return promotionalCampaignsProvider.getPromotions()
     }
-    
+
     public func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
         guard
             let promotionalCampaignsProvider = self.promotionalCampaignsProvider
@@ -2074,11 +2064,11 @@ extension Client {
         }
         return promotionalCampaignsProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
     }
-    
+
 }
 
 extension Client {
-    
+
     public func contactUs(form: ContactUsForm) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         guard
             let customerSupportProvider = self.customerSupportProvider
@@ -2107,7 +2097,7 @@ extension Client {
         guard
             let downloadableContentsProvider = self.downloadableContentsProvider
         else {
-            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: .homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
         return downloadableContentsProvider.getDownloadableContentItems()

@@ -33,7 +33,7 @@ class GomaConnector: Connector {
         return connectionStateSubject.eraseToAnyPublisher()
     }
 
-    var authenticator: GomaAPIAuthenticator
+    var authenticator: GomaAuthenticator
     
     private static var defaultSessionConfiguration: URLSessionConfiguration {
         let configuration = URLSessionConfiguration.ephemeral
@@ -56,12 +56,12 @@ class GomaConnector: Connector {
 
         self.init(session: session,
                   decoder: decoder,
-                  authenticator: GomaAPIAuthenticator(deviceIdentifier: deviceIdentifier))
+                  authenticator: GomaAuthenticator(deviceIdentifier: deviceIdentifier))
     }
 
     init(session: URLSession = GomaConnector.defaultSession,
          decoder: JSONDecoder = JSONDecoder(),
-         authenticator: GomaAPIAuthenticator) {
+         authenticator: GomaAuthenticator) {
 
         self.session = session
         self.decoder = decoder

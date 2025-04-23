@@ -193,7 +193,7 @@ public class SteppedRegistrationViewModel {
                     }
                 }
                 
-                return self.serviceProvider.signUp(form: form).eraseToAnyPublisher()
+                return self.serviceProvider.signUp(with: .full(form)).eraseToAnyPublisher()
             })
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
@@ -232,7 +232,7 @@ public class SteppedRegistrationViewModel {
 
         self.isLoading.send(true)
         
-        self.serviceProvider.signUp(form: form)
+        self.serviceProvider.signUp(with: .full(form))
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {

@@ -353,7 +353,7 @@ class LoginViewController: UIViewController {
         
         let hasLegalAgeWarning = TargetVariables.features.contains(.legalAgeWarning) ? true : false
         
-        let registerFlowType = self.setupRegisterFlowType(registerFlowType: TargetVariables.registerFlowType)
+        let registerFlowType = self.convertRegisterFlowType(TargetVariables.registerFlowType)
 
         let viewModel = SteppedRegistrationViewModel(registerSteps: registerSteps,
                                                      userRegisterEnvelop: userRegisterEnvelopValue,
@@ -377,7 +377,7 @@ class LoginViewController: UIViewController {
             }
         }
         
-        steppedRegistrationViewController.sendRegisterEventAction = { [weak self] username in
+        steppedRegistrationViewController.sendRegisterEventAction = { username in
             
             Optimove.shared.reportEvent(
                 name: "register_start",
@@ -399,7 +399,7 @@ class LoginViewController: UIViewController {
         self.present(registerNavigationController, animated: animated)
     }
     
-    private func setupRegisterFlowType(registerFlowType: RegisterFlowType) -> RegisterFlow.FlowType {
+    private func convertRegisterFlowType(_ registerFlowType: RegisterFlowType) -> RegisterFlow.FlowType {
         
         switch TargetVariables.registerFlowType {
         case .betsson:
