@@ -304,8 +304,8 @@ class StaticHomeViewTemplateDataSource {
     }
 
     func fetchPromotionalStories() {
-        let cancellable = Env.servicesProvider.getPromotionalTopStories()
-            .map(ServiceProviderModelMapper.promotionalStories(fromPromotionalStories:))
+        let cancellable = Env.servicesProvider.getStories()
+            .map(ServiceProviderModelMapper.promotionalStories(fromServiceProviderStories:))
             .receive(on: DispatchQueue.main)
             .sink { completions in
                 //
@@ -516,7 +516,7 @@ class StaticHomeViewTemplateDataSource {
 
     func fetchMatchesForPromotedSport(_ promotedSport: PromotedSport) {
 
-        let publishers = promotedSport.marketGroups.map({ Env.servicesProvider.getEventsForEventGroup(withId: $0.id) })
+        let publishers = promotedSport.marketGroups.map({ Env.servicesProvider.getEventGroup(withId: $0.id) })
 
         let mergeManyCancellable = Publishers.MergeMany(publishers)
             .collect()

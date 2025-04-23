@@ -27,20 +27,6 @@ public class EventMetadataPointer: Codable {
 
 }
 
-public class EventGroupPointer: Codable {
-
-    public var eventsPointers: [String]
-    public var marketGroupId: String?
-    public var title: String?
-
-    public init(eventsPointers: [String], marketGroupId: String?, title: String?) {
-        self.eventsPointers = eventsPointers
-        self.marketGroupId = marketGroupId
-        self.title = title
-    }
-
-}
-
 public class EventsGroup {
     public var events: Events
     public var marketGroupId: String?
@@ -705,7 +691,6 @@ public struct MarketGroup {
     public var numberOfMarkets: Int?
     public var loaded: Bool
     public var markets: [Market]?
-
 }
 
 public struct FieldWidgetRenderData {

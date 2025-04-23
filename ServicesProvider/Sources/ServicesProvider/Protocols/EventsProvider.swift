@@ -37,14 +37,8 @@ protocol EventsProvider: Connector {
     func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
     func subscribeOutrightEvent(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
 
-    //
-    //
-    // TODO: SP Merge - subscribePreLiveSportTypes , subscribeAllSportTypes and subscribeLiveSportTypes should all be merged into -> subscribeSportTypes
+    // sports list
     func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
-    // <->
-    func subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
-    func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
-    func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
 
     //
     // Live Data extended info independent from the lists
@@ -57,11 +51,8 @@ protocol EventsProvider: Connector {
     func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError>
     func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError>
 
-
     //
     //
-    func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
-
     func getMarketGroups(forEvent event: Event, includeMixMatchGroup: Bool, includeAllMarketsGroup: Bool) -> AnyPublisher<[MarketGroup], Never>
 
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
@@ -89,7 +80,7 @@ protocol EventsProvider: Connector {
 
     func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError>
 
-    func getEventsForEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
+    func getEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
     func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError>
 
@@ -110,7 +101,6 @@ protocol EventsProvider: Connector {
 
     func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError>
 
-    //
     // Favorites
     func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>
     func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError>
@@ -122,17 +112,8 @@ protocol EventsProvider: Connector {
     //
     // Utilities
     func getDatesFilter(timeRange: String) -> [Date]
-
-    func getAlertBanners() -> AnyPublisher<[AlertBanner], ServiceProviderError>
     func getNews() -> AnyPublisher<[News], ServiceProviderError>
-    func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError>
-    func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError>
-    
-    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
-        
-    func getPromotedEventsBySport() -> AnyPublisher<[SportType: Events], ServiceProviderError>
     func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError>
     func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError>
     func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError>
-
 }

@@ -27,19 +27,11 @@ enum GomaAPISchema {
     
     case getSports
     
-    case getHomeContents
-    case getHomeAlerts
-    case getBanners
-    case getStories
     case getHighlights
     case getPopularEventPointers
     case getPopularEvents
-    case getEventsBanners
+
     case getFeaturedCompetitions
-    case getAlertBanners
-    case getNews
-    case getHeroCards
-    case getBoostedOddEvents
     
     case getTrendingEvents(sportCode: String, page: Int)
     case getUpcomingEvents(sportCode: String, page: Int)
@@ -141,6 +133,7 @@ extension GomaAPISchema: Endpoint {
         case .getSports:
             return "/api/sports/\(Self.version)"
         
+        /*
         case .getHomeContents:
             return "/api/promotions/\(Self.version)/home"
         case .getHomeAlerts:
@@ -150,14 +143,7 @@ extension GomaAPISchema: Endpoint {
             return "/api/promotions/\(Self.version)/banners"
         case .getStories:
             return "/api/promotions/\(Self.version)/stories"
-        case .getHighlights:
-            return "/api/events/\(Self.version)/highlights"
-        case .getPopularEventPointers:
-            return "/api/events/\(Self.version)/popular"
-        case .getPopularEvents:
-            return "/api/events/\(Self.version)/popular"
-        case .getAlertBanners:
-            return "/api/promotions/\(Self.version)/alert-banner"
+
         case .getNews:
             return "/api/promotions/\(Self.version)/news"
         case .getHeroCards:
@@ -167,9 +153,18 @@ extension GomaAPISchema: Endpoint {
             
         case .getEventsBanners:
             return "/api/promotions/\(Self.version)/sport-banners"
+            
+        */
+            
+        case .getHighlights:
+            return "/api/events/\(Self.version)/highlights"
+        case .getPopularEventPointers:
+            return "/api/events/\(Self.version)/popular"
+        case .getPopularEvents:
+            return "/api/events/\(Self.version)/popular"
+        
         case .getFeaturedCompetitions:
             return "/api/competitions/\(Self.version)/featured"
-        
         
         case .getTrendingEvents:
             return "/api/events/\(Self.version)/trending"
@@ -179,7 +174,6 @@ extension GomaAPISchema: Endpoint {
             return "/api/events/\(Self.version)/live"
         case .getEndedEvents:
             return "/api/events/\(Self.version)/scores"
-            
             
         case .getRegions:
             return "/api/regions/\(Self.version)"
@@ -310,34 +304,17 @@ extension GomaAPISchema: Endpoint {
             return nil
         case .getSports:
             return nil
-        
-        case .getHomeContents:
-            return nil
-        case .getHomeAlerts:
-            return nil
-        case .getBanners:
-            return nil
-        case .getStories:
-            return nil
+
         case .getHighlights:
             return nil
         case .getPopularEventPointers:
             return nil
         case .getPopularEvents:
             return nil
-        case .getEventsBanners:
-            return nil
+
         case .getFeaturedCompetitions:
             return nil
-        case .getAlertBanners:
-            return nil
-        case .getNews:
-            return nil
-        case .getHeroCards:
-            return nil
-        case .getBoostedOddEvents:
-            return nil
-            
+
         case .getTrendingEvents(let sportCode, let page):
             return [
                 URLQueryItem(name: "sport_id", value: sportCode),
@@ -603,31 +580,13 @@ extension GomaAPISchema: Endpoint {
         case .getSports:
             return .get
 
-        case .getHomeContents:
-            return .get
-        case .getHomeAlerts:
-            return .get
-        case .getBanners:
-            return .get
-        case .getStories:
-            return .get
         case .getHighlights:
             return .get
         case .getPopularEventPointers:
             return .get
         case .getPopularEvents:
             return .get
-        case .getAlertBanners:
-            return .get
-        case .getNews:
-            return .get
-        case .getHeroCards:
-            return .get
-        case .getBoostedOddEvents:
-            return .get
             
-        case .getEventsBanners:
-            return .get
         case .getFeaturedCompetitions:
             return .get
             
@@ -818,31 +777,13 @@ extension GomaAPISchema: Endpoint {
         case .getSports:
             return nil
             
-        case .getHomeContents:
-            return nil
-        case .getHomeAlerts:
-            return nil
-        case .getBanners:
-            return nil
-        case .getStories:
-            return nil
         case .getHighlights:
             return nil
         case .getPopularEventPointers:
             return nil
         case .getPopularEvents:
             return nil
-        case .getAlertBanners:
-            return nil
-        case .getNews:
-            return nil
-        case .getHeroCards:
-            return nil
-        case .getBoostedOddEvents:
-            return nil
-            
-        case .getEventsBanners:
-            return nil
+
         case .getFeaturedCompetitions:
             return nil
             

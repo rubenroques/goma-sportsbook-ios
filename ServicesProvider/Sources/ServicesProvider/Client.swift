@@ -68,12 +68,18 @@ public class Client {
     public func connect() {
         switch self.providerType {
         case .everymatrix:
-            fatalError()
-            // let everymatrixProvider = EverymatrixProvider()
-            // self.privilegedAccessManager = everymatrixProvider
-            // self.bettingProvider = everymatrixProvider
-            // self.eventsProvider = everymatrixProvider
+            let everyMatrixConnector = EveryMatrixConnector(wampManager: WAMPManager())
+            
+            self.eventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector)
+            
+            everyMatrixConnector.connectionStatePublisher
+                .sink(receiveCompletion: { completion in
 
+                }, receiveValue: { [weak self] connectorState in
+                    self?.eventsConnectionStateSubject.send(connectorState)
+                }).store(in: &self.cancellables)
+            
+            
         case .goma:
             guard let deviceUUID = self.configuration.deviceUUID else {
                 fatalError("GOMA API service provider required a deviceIdentifier")
@@ -176,36 +182,6 @@ public class Client {
 }
 
 extension Client {
-
-    //
-    // Sports
-    //
-    public func subscribePreLiveSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.subscribePreLiveSportTypes(initialDate: initialDate, endDate: endDate)
-    }
-
-    public func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.subscribeLiveSportTypes()
-    }
-
-    public func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.subscribeAllSportTypes()
-    }
 
     //
     // Events
@@ -431,15 +407,6 @@ extension Client {
         return eventsProvider.addFavoriteToList(listId: listId, eventId: eventId)
     }
 
-    public func getAlertBanners() -> AnyPublisher<[AlertBanner], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getAlertBanners()
-    }
-
     public func getNews() -> AnyPublisher<[News], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -447,33 +414,6 @@ extension Client {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.getNews()
-    }
-
-    public func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getPromotedEventGroupsPointers()
-    }
-
-    public func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getPromotedEventsGroups()
-    }
-
-    public func getPromotedEventsBySport() -> AnyPublisher<[SportType : Events], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getPromotedEventsBySport()
     }
 
     public func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
@@ -494,7 +434,8 @@ extension Client {
         return eventsProvider.deleteFavoriteItem(favoriteId: favoriteId, type: type)
     }
 
-    public func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {
+    public func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?)
+    -> AnyPublisher<FeaturedTips, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -507,11 +448,8 @@ extension Client {
 
 extension Client {
 
-    public func getMarketGroups(
-        forEvent event: Event,
-        includeMixMatchGroup hasMixMatchGroup: Bool,
-        includeAllMarketsGroup hasAllMarketsGroup: Bool
-    ) -> AnyPublisher<[MarketGroup], Never>
+    public func getMarketGroups(forEvent event: Event, includeMixMatchGroup hasMixMatchGroup: Bool, includeAllMarketsGroup hasAllMarketsGroup: Bool)
+    -> AnyPublisher<[MarketGroup], Never>
     {
         guard
             let eventsProvider = self.eventsProvider
@@ -560,15 +498,6 @@ extension Client {
         return eventsProvider.getStatsWidget(eventId: eventId, marketTypeName: marketTypeName, isDarkTheme: isDarkTheme)
     }
 
-    public func getAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getAvailableSportTypes(initialDate: initialDate, endDate: endDate)
-    }
-
     public func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -609,26 +538,6 @@ extension Client {
         return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page, isLive: isLive)
     }
 
-    public func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return eventsProvider.getHomeSliders()
-    }
-
-    public func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return eventsProvider.getPromotionalTopStories()
-    }
-
     //
     //
     public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
@@ -662,14 +571,14 @@ extension Client {
     }
 
 
-    public func getEventsForEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+    public func getEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getEventsForEventGroup(withId: eventGroupId)
+        return eventsProvider.getEventGroup(withId: eventGroupId)
     }
 
     //
@@ -2114,7 +2023,7 @@ extension Client {
         else {
             return []
         }
-
         return eventsProvider.getDatesFilter(timeRange: timeRange)
     }
+    
 }

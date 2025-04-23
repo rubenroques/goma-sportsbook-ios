@@ -140,9 +140,7 @@ extension TodayMatchesDataSource {
         }
 
         let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
-
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
-
         Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType,
                                                            initialDate: datesFilter[safe: 0],
                                                            endDate: datesFilter[safe: 1],
@@ -168,7 +166,6 @@ extension TodayMatchesDataSource {
         }
 
         let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
-
         let selectedSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
 
         // We need to clear old subscriptions and publisher cancellables

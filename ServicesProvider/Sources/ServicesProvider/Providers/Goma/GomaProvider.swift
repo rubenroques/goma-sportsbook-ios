@@ -862,19 +862,6 @@ extension GomaProvider: EventsProvider {
         }
     }
     
-    func subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-    
-    // TODO: SP Merge - subscribePreLiveSportTypes , subscribeAllSportTypes and subscribeLiveSportTypes should all be merged into -> subscribeSportTypes
-    func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-    
-    func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-    
     func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
         let endpoint = GomaAPISchema.getSports
         let publisher: AnyPublisher<GomaModels.Sports, ServiceProviderError> = self.connector.request(endpoint)
@@ -883,7 +870,7 @@ extension GomaProvider: EventsProvider {
         }).eraseToAnyPublisher()
     }
 
-    func getEventsForEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+    func getEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
@@ -998,10 +985,6 @@ extension GomaProvider: EventsProvider {
         .eraseToAnyPublisher()
     }
 
-    func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError> {
-        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-    }
-
     func getMarketGroups(
         forEvent event: Event,
         includeMixMatchGroup: Bool,
@@ -1112,16 +1095,6 @@ extension GomaProvider: EventsProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    func getAlertBanners() -> AnyPublisher<[AlertBanner], ServiceProviderError> {
-        let endpoint = GomaAPISchema.getHomeAlerts
-        let publisher: AnyPublisher<GomaModels.AlertBanner, ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ banner in
-            let alertBanners = [banner]
-            let convertedBanners = GomaModelMapper.alertBanners(fromInternalAlertBanners: alertBanners)
-            return convertedBanners
-        }).eraseToAnyPublisher()
-    }
-
     func getNews() -> AnyPublisher<[News], ServiceProviderError> {
         // TODO: SP MErge - it should have been replaced
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
@@ -1135,36 +1108,6 @@ extension GomaProvider: EventsProvider {
 //        }).eraseToAnyPublisher()
     }
 
-    func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError> {
-        let endpoint = GomaAPISchema.getPopularEventPointers
-        let publisher: AnyPublisher<[GomaModels.EventsPointerGroup], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ pointers in
-            var eventGroupPointers: [EventGroupPointer] = []
-            for pointer in pointers {
-                let eventGroupPointer = EventGroupPointer(eventsPointers: pointer.events, marketGroupId: nil, title: pointer.title)
-                eventGroupPointers.append(eventGroupPointer)
-            }
-            return eventGroupPointers
-        }).eraseToAnyPublisher()
-
-    }
-
-    func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
-        // TODO: SP MErge - it should have been replaced
-        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-//        let endpoint = GomaAPIClient.getStories
-//        let publisher: AnyPublisher<[GomaModels.Story], ServiceProviderError> = self.connector.request(endpoint)
-//
-//        return publisher.map({ stories in
-//            let convertedStories = GomaModelMapper.promotionalStories(fromStories: stories)
-//            return convertedStories
-//        }).eraseToAnyPublisher()
-    }
-
     func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
         let endpoint = GomaAPISchema.getHighlights
         let publisher: AnyPublisher<[GomaModels.EventMetadataPointer], ServiceProviderError> = self.connector.request(endpoint)
@@ -1175,48 +1118,6 @@ extension GomaProvider: EventsProvider {
 
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-    }
-
-    func getPromotedEventsBySport() -> AnyPublisher<[SportType: Events], ServiceProviderError> {
-
-        let endpoint = GomaAPISchema.getPopularEvents
-        let publisher: AnyPublisher<[GomaModels.PopularEvent], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ popularEvents in
-
-            var groupedEvents: [SportType: Events] = [:]
-
-            for popularEvent in popularEvents {
-
-                if popularEvent.events.isEmpty {
-                    continue
-                }
-
-                let eventTitle = popularEvent.title ?? ""
-
-                let convertedEvents = GomaModelMapper.events(fromInternalEvents: popularEvent.events)
-
-                var newSportType = SportType(
-                    name: eventTitle,
-                    numericId: nil,
-                    alphaId: nil,
-                    iconId: nil,
-                    showEventCategory: false,
-                    numberEvents: popularEvent.events.count,
-                    numberOutrightEvents: 0,
-                    numberOutrightMarkets: 0,
-                    numberLiveEvents: 0
-                )
-                if let sportType = convertedEvents.first?.sport,
-                   eventTitle == sportType.name {
-                    newSportType = sportType
-                }
-
-                groupedEvents[newSportType] = convertedEvents
-            }
-
-            return groupedEvents
-        }).eraseToAnyPublisher()
-
     }
 
     func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError> {

@@ -119,6 +119,11 @@ class GomaHomeContentAPIClient {
         
         return self.connector.request(endpoint)
     }
+    
+    func carouselEvents() -> AnyPublisher<GomaModels.HeroCardEvents, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.sportBanners
+        return self.connector.request(endpoint)
+    }
 
     /// Get boosted odds banners
     /// - Returns: A publisher with the decoded response or error
@@ -126,7 +131,14 @@ class GomaHomeContentAPIClient {
         let endpoint = GomaHomeContentAPISchema.boostedOdds
         return self.connector.request(endpoint)
     }
-
+    
+    func boostedOddsEvents() -> AnyPublisher<GomaModels.BoostedOddsEvents, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.boostedOdds
+        return self.connector.request(endpoint)
+    }
+    
+    /// Get Top Image events
+    ///
     func topImageCardPointers() -> AnyPublisher<GomaModels.TopImageCardPointers, ServiceProviderError> {
         // First check if we have a valid cached version
         if let cachedData = self.cache.getCachedInitialDump(), let topImageCardPointers = cachedData.homeWidgetPointers?.topImageCardPointers {
@@ -153,7 +165,7 @@ class GomaHomeContentAPIClient {
 
     /// Get hero cards
     /// - Returns: A publisher with the decoded response or error
-    func heroCards() -> AnyPublisher<GomaModels.HeroCardPointers, ServiceProviderError> {
+    func heroCardPointers() -> AnyPublisher<GomaModels.HeroCardPointers, ServiceProviderError> {
         // First check if we have a valid cached version
         if let cachedData = self.cache.getCachedInitialDump(), let heroCardPointers = cachedData.homeWidgetPointers?.heroCardPointers {
             return Just(heroCardPointers)
@@ -161,6 +173,11 @@ class GomaHomeContentAPIClient {
                 .eraseToAnyPublisher()
         }
 
+        let endpoint = GomaHomeContentAPISchema.heroCards
+        return self.connector.request(endpoint)
+    }
+    
+    func heroCardEvents() -> AnyPublisher<GomaModels.HeroCardEvents, ServiceProviderError> {
         let endpoint = GomaHomeContentAPISchema.heroCards
         return self.connector.request(endpoint)
     }
