@@ -9,7 +9,6 @@ import Foundation
 import Combine
 import OrderedCollections
 
-
 class SportRadarEventMarketsCoordinator {
 
     var storage: SportRadarEventStorage
@@ -18,36 +17,38 @@ class SportRadarEventMarketsCoordinator {
     let eventMainMarketIdentifier: ContentIdentifier
 
     let eventSecundaryMarketsIdentifier: ContentIdentifier
-    
+
     // TODO: check why live highlights in home are losing the reference to this subscription.
     // TODO: IMPORTANT: This vars needs to be weak for the auto unsubscribe to work
-    var subscription: Subscription?
-    
+    weak var subscription: Subscription?
+
     var isActive: Bool {
         if self.waitingSubscription {
             // We haven't tried to subscribe or the
             // subscribe request it's ongoing right now
             return true
         }
-        
+
         return self.subscription != nil
     }
 
     var eventWithSecundaryMarketsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return self.eventWithSecundaryMarketsSubject
-            .throttle(for: .milliseconds(800), scheduler: DispatchQueue.main, latest: true)
             .eraseToAnyPublisher()
     }
 
     private var eventWithSecundaryMarketsSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
-    
+
     private var waitingSubscription = true
     private let decoder = JSONDecoder()
     private let session = URLSession.init(configuration: .default)
-    
+
     private var cancellables = Set<AnyCancellable>()
 
+    private let subscriptionAccessQueue = DispatchQueue(label: "com.goma.subscriptionAccessQueue")
+
     init(matchId: String, sessionToken: String, storage: SportRadarEventStorage) {
+
         self.sessionToken = sessionToken
         self.storage = storage
 
@@ -64,10 +65,10 @@ class SportRadarEventMarketsCoordinator {
                                                                 contentRoute: eventSecundaryMarketsRoute)
 
         self.eventSecundaryMarketsIdentifier = eventSecundaryMarketsIdentifier
-        
+
         self.subscription = nil
         self.waitingSubscription = true
-        
+
         Publishers.CombineLatest(self.storage.eventPublisher,
                                  self.eventWithSecundaryMarketsSubject.replaceError(with: .disconnected))
         .filter({ storedEvent, eventWithSecundaryMarketsSubject in
@@ -87,7 +88,6 @@ class SportRadarEventMarketsCoordinator {
             }
         })
         .sink { completion in
-            
         } receiveValue: { [weak self] updatedStoredEvent in
             self?.eventWithSecundaryMarketsSubject.send(.contentUpdate(content: updatedStoredEvent))
         }
@@ -96,17 +96,14 @@ class SportRadarEventMarketsCoordinator {
     }
 
     deinit {
-        let debugPrint = "SportRadarEventMarketsCoordinator deinit \(self.eventSecundaryMarketsIdentifier)"
-        print(debugPrint)
-    }
-    
-    func start() {
-        // Boot the coordinator
-        self.subscribeEventMainMarkets()
-        self.subscribeEventSecundaryMarkets()
+        print("SportRadarEventMarketsCoordinator.deinit")
     }
 
-    func subscribeEventMainMarkets() {
+    func start() {
+        self.subscribeEventMainMarkets()
+    }
+
+    private func subscribeEventMainMarkets() {
         let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
                                                          contentIdentifier: self.eventMainMarketIdentifier)
 
@@ -140,29 +137,31 @@ class SportRadarEventMarketsCoordinator {
                     break
                 case .failure(let failure):
                     self?.subscription = nil
-                    print("subscribeEventSecundaryMarkets completed with error: \(failure)")
                 }
-                self?.waitingSubscription = false
+                self?.subscribeEventSecundaryMarkets()
             }, receiveValue: { [weak self] in
                 if let self = self {
-                    let subscription = Subscription(contentIdentifier: self.eventMainMarketIdentifier,
-                                                    sessionToken: self.sessionToken,
-                                                    unsubscriber: self)
-                    self.eventWithSecundaryMarketsSubject.send(.connected(subscription: subscription))
 
-                    if let currentSubscription = self.subscription {
-                        currentSubscription.associateSubscription(subscription)
-                    }
-                    else {
-                        self.subscription = subscription
+                    self.subscriptionAccessQueue.sync {
+                        let subscription = Subscription(contentIdentifier: self.eventMainMarketIdentifier,
+                                                        sessionToken: self.sessionToken,
+                                                        unsubscriber: self)
+
+                        if let currentSubscription = self.subscription {
+                            currentSubscription.associateSubscription(subscription)
+                        }
+                        else {
+                            self.subscription = subscription
+                        }
+
+                        self.eventWithSecundaryMarketsSubject.send(.connected(subscription: subscription))
                     }
                 }
-
             })
             .store(in: &self.cancellables)
     }
 
-    func subscribeEventSecundaryMarkets() {
+    private func subscribeEventSecundaryMarkets() {
         let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
                                                          contentIdentifier: self.eventSecundaryMarketsIdentifier)
 
@@ -196,21 +195,19 @@ class SportRadarEventMarketsCoordinator {
                     break
                 case .failure(let failure):
                     self?.subscription = nil
-                    print("subscribeEventSecundaryMarkets completed with error: \(failure)")
                 }
                 self?.waitingSubscription = false
             }, receiveValue: { [weak self] in
                 if let self = self {
-                    let subscription = Subscription(contentIdentifier: self.eventSecundaryMarketsIdentifier,
-                                                    sessionToken: self.sessionToken,
-                                                    unsubscriber: self)
-                    self.eventWithSecundaryMarketsSubject.send(.connected(subscription: subscription))
 
-                    if let currentSubscription = self.subscription {
-                        currentSubscription.associateSubscription(subscription)
-                    }
-                    else {
-                        self.subscription = subscription
+                    self.subscriptionAccessQueue.sync {
+                        let subscription = Subscription(contentIdentifier: self.eventSecundaryMarketsIdentifier,
+                                                        sessionToken: self.sessionToken,
+                                                        unsubscriber: self)
+
+                        if let currentSubscription = self.subscription {
+                            currentSubscription.associateSubscription(subscription)
+                        }
                     }
                 }
             })
@@ -226,44 +223,36 @@ class SportRadarEventMarketsCoordinator {
         let secundaryMarketsEndpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
                                                                 contentIdentifier: self.eventSecundaryMarketsIdentifier)
 
-        guard let secundarMarketsRequest = secundaryMarketsEndpoint.request() else { return }
+        guard let secundarMarketsRequest = secundaryMarketsEndpoint.request() else {
+            return
+        }
         let secundaryMarketsSessionDataTask = self.session.dataTask(with: secundarMarketsRequest) { data, response, error in
             if let error {
-                print("SportRadarEventMarketsCoordinator: reconnect dataTask contentIdentifier \(self.eventSecundaryMarketsIdentifier) error \(error)")
             }
             if let data, let dataString = String(data: data, encoding: .utf8) {
-                print("SportRadarEventMarketsCoordinator: reconnect dataTask contentIdentifier \(self.eventSecundaryMarketsIdentifier) data \(dataString)")
             }
         }
         secundaryMarketsSessionDataTask.resume()
-
     }
-
 }
-
 
 extension SportRadarEventMarketsCoordinator {
 
     func updatedMainMarket(forContentIdentifier identifier: ContentIdentifier, onEvent event: Event) {
-
         if self.eventMainMarketIdentifier != identifier {
             return
         }
-
         self.storage.storeEvent(event, withMainMarket: true)
     }
 
     func updatedSecundaryMarkets(forContentIdentifier identifier: ContentIdentifier, onEvent event: Event) {
-
         if self.eventSecundaryMarketsIdentifier != identifier {
             return
         }
-
         self.storage.storeSecundaryMarkets(event.markets)
     }
-    
-    func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
 
+    func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
         if content.contentIdentifier?.contentType == .eventSecundaryMarkets {
             return
         }
@@ -281,16 +270,15 @@ extension SportRadarEventMarketsCoordinator {
         }
 
         switch content {
-
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.storage.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
+
         case .updateOutcomeTradability(_, let selectionId, let isTradable):
             self.storage.updateOutcomeTradability(withId: selectionId, isTradable: isTradable)
 
         case .updateMarketTradability(_, let marketId, let isTradable):
             self.storage.updateMarketTradability(withId: marketId, isTradable: isTradable)
 
-        //
         case .addMarket(let contentIdentifier, let market):
             let mappedMarket = SportRadarModelMapper.market(fromInternalMarket: market)
             if contentIdentifier.contentType == .eventMainMarket {
@@ -302,7 +290,7 @@ extension SportRadarEventMarketsCoordinator {
 
         case .enableMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: true)
-            
+
         case .removeMarket(let contentIdentifier, let marketId):
             if contentIdentifier.contentType == .eventMainMarket {
                 self.storage.removeMainMarket(withId: marketId)
@@ -312,10 +300,9 @@ extension SportRadarEventMarketsCoordinator {
             }
 
         default:
-            () // Ignore other cases
+            () // ignore other cases
         }
     }
-
 }
 
 extension SportRadarEventMarketsCoordinator {
@@ -333,17 +320,19 @@ extension SportRadarEventMarketsCoordinator {
     }
 
     func containsEvent(withid id: String) -> Bool {
-        return self.storage.containsEvent(withid: id)
+        let contains = self.storage.containsEvent(withid: id)
+        return contains
     }
-    
+
     func containsMarket(withid id: String) -> Bool {
-        return self.storage.containsMarket(withid: id)
+        let contains = self.storage.containsMarket(withid: id)
+        return contains
     }
 
     func containsOutcome(withid id: String) -> Bool {
-        return self.storage.containsOutcome(withid: id)
+        let contains = self.storage.containsOutcome(withid: id)
+        return contains
     }
-
 }
 
 extension SportRadarEventMarketsCoordinator: UnsubscriptionController {
@@ -357,10 +346,10 @@ extension SportRadarEventMarketsCoordinator: UnsubscriptionController {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("ServiceProvider.Subscription.Debug unsubscribe failed")
+                print("ServiceProvider.Subscription.Debug SportRadarEventMarketsCoordinator unsubscribe failed")
                 return
             }
-            print("ServiceProvider.Subscription.Debug unsubscribe ok")
+            print("ServiceProvider.Subscription.Debug SportRadarEventMarketsCoordinator unsubscribe ok")
         }
         sessionDataTask.resume()
     }

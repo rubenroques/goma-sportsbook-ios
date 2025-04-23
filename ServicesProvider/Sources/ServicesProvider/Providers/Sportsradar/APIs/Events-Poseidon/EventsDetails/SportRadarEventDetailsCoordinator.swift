@@ -99,6 +99,7 @@ class SportRadarEventDetailsCoordinator {
     }
 
     deinit {
+        print("SportRadarEventDetailsCoordinator.deinit")
     }
     
     private func checkEventDetailsAvailable() -> AnyPublisher<Void, ServiceProviderError> {

@@ -160,7 +160,6 @@ class MatchLineTableViewCell: UITableViewCell {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
         self.setupWithTheme()
     }
 
@@ -180,29 +179,16 @@ class MatchLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: MatchLineTableCellViewModel) {
         self.viewModel = viewModel
         
-        // let matchDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
-        // print("BlinkDebug line (\(self.debugUUID.uuidString)) configure(withViewModel \(matchDesc)")
-        
-//        self.loadingView.stopAnimating()
-//        self.setupWithMatch(viewModel.match)
-
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
         
         self.matchInfoPublisher = viewModel.$match
-            .removeDuplicates(by: { [weak self] oldMatch, newMatch in
-                
-                // let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
-                // let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-                // print("BlinkDebug Line comparing \(oldMatchDesc) <> \(newMatchDesc)")
-                
+            .removeDuplicates(by: { oldMatch, newMatch in
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
-                    // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) ignoring")
                     return true
                 }
                 else {
-                    // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) not ignoring:\(visuallySimilar.1 ?? "")")
                     return false
                 }
             })
@@ -213,8 +199,6 @@ class MatchLineTableViewCell: UITableViewCell {
                 case .failure: ()
                 }
             } receiveValue: { [weak self] match in
-                // let matchDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
-                // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) collectionView.reloadData requested \(matchDesc)")
                 self?.setupWithMatch(match)
                 self?.loadingView.stopAnimating()
             }
@@ -223,54 +207,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
 
     private func setupWithMatch(_ newMatch: Match) {
-
-
         self.match = newMatch
         self.collectionView.reloadData()
-        return
-        
-        
-        // TODO: Implement diffable updates
-        // currently some cells appear with old data from previous VM
-        //
-        /*
-        guard
-            let currentMatch = self.match
-        else {
-            
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch reload all \(matchDesc)")
-            
-            // If no self.match was found it should refresh all sections
-            self.match = newMatch
-            self.collectionView.reloadData()
-            return
-        }
-        
-        // We have a match already
-        
-        // if Match.visuallySimilar(lhs: newMatch, rhs: currentMatch).0 {
-        if
-            newMatch.id == currentMatch.id &&
-            newMatch.status == currentMatch.status &&
-            newMatch.markets.first == currentMatch.markets.first {
-        
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            let oldMatchDesc = "[\(currentMatch.id) \(currentMatch.homeParticipant.name) vs \(currentMatch.awayParticipant.name)]"
-
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch reload sec markest \(matchDesc) <> \(oldMatchDesc)")
-            
-            self.match = newMatch
-            self.collectionView.reloadSections(IndexSet(integer: 1)) // reload secundary markets
-        }
-        else {
-            let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-            // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch match diff reload all \(matchDesc)")
-            
-            self.match = newMatch
-            self.collectionView.reloadData()
-        }
-         */
     }
 
     func shouldShowCountryFlag(_ show: Bool) {

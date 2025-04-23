@@ -10,53 +10,41 @@ import Combine
 import ServicesProvider
 
 class MatchLineTableCellViewModel {
-    
-//    var match2: Match {
-//        return match2Subject.value
-//    }
-//    
-//    private var match2Subject: CurrentValueSubject<Match, Never>
-//    private var match2Publisher: AnyPublisher<Match, Never> {
-//        return match2Subject.eraseToAnyPublisher()
-//    }
-    
+
     @Published private(set) var match: Match
     @Published private(set) var matchWidgetCellViewModel: MatchWidgetCellViewModel
-    
+
     @Published private(set) var status: MatchWidgetStatus = .unknown
-    
+
     private var secundaryMarketsSubscription: ServicesProvider.Subscription?
     private var secundaryMarketsPublisher: AnyCancellable?
-    
+
     private var cancellables: Set<AnyCancellable> = []
 
-    //
+    let matchId: String
+
     init(match: Match, status: MatchWidgetStatus = .unknown) {
         self.status = status
-        
+
         self.match = match
         self.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: status)
-        
+
+
+        self.matchId = match.id
+
         self.observeMatchValues()
         self.loadEventDetails()
     }
-    
+
     private func observeMatchValues() {
 
         self.$match
             .removeDuplicates(by: { oldMatch, newMatch in
-                
-                // let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
-                // let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-                // print("BlinkDebug >LineVC - comparing \(oldMatchDesc) to \(newMatchDesc)")
-                      
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
-                    // print("BlinkDebug >LineVC - ignoring")
                     return true
                 }
                 else {
-                    // print("BlinkDebug >LineVC - not ignoring due to diff:\(visuallySimilar.1 ?? "")")
                     return false
                 }
             })
@@ -65,11 +53,11 @@ class MatchLineTableCellViewModel {
             }
             .store(in: &self.cancellables)
     }
-    
+
     deinit {
         print("MatchLineTableCellViewModel.deinit")
     }
-    
+
     //
     private func loadEventDetails() {
         if self.match.status.isLive {
@@ -85,77 +73,86 @@ class MatchLineTableCellViewModel {
 }
 
 extension MatchLineTableCellViewModel {
-    
+
     private func loadLiveEventDetails(matchId: String) {
         self.secundaryMarketsPublisher?.cancel()
         self.secundaryMarketsPublisher = nil
-        
+
         self.secundaryMarketsPublisher = Publishers.CombineLatest(
             Env.servicesProvider.subscribeEventMarkets(eventId: matchId),
             SecundaryMarketsService.fetchSecundaryMarkets()
-                .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
+                .mapError { error in
+                    return ServiceProviderError.errorMessage(message: error.localizedDescription)
+                }
         )
         .receive(on: DispatchQueue.main)
-        .sink { completion in
-            print("loadLiveEventDetails \(matchId) completion  \(completion)")
+        .sink { [weak self] completion in
+            guard let self = self else { return }
         } receiveValue: { [weak self] subscribableContentMatch, marketsAdditionalInfos in
+            guard let self = self else { return }
             switch subscribableContentMatch {
             case .connected(subscription: let subscription):
-                self?.secundaryMarketsSubscription = subscription
+                self.secundaryMarketsSubscription = subscription
             case .contentUpdate(content: let updatedEvent):
                 guard
                     var newMatch = ServiceProviderModelMapper.match(fromEvent: updatedEvent)
                 else {
                     return
                 }
-                
+
+
                 let sportId = newMatch.sport.alphaId ?? (newMatch.sportIdCode ?? "")
-                
-                let finalMarkets = self?.processMarkets(forMatch: self?.match,
+
+                let finalMarkets = self.processMarkets(forMatch: self.match,
                                                         newMarkets: newMatch.markets,
                                                         marketsAdditionalInfo: marketsAdditionalInfos,
                                                         sportId: sportId) ?? []
-                
-                if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
+
+
+                var oldMatch = self.match
+                if self.match.markets.isNotEmpty {
                     oldMatch.markets = finalMarkets
-                    self?.match = oldMatch
+                    self.match = oldMatch
                 } else {
                     newMatch.markets = finalMarkets
-                    self?.match = newMatch
+                    self.match = newMatch
                 }
-                
+
             case .disconnected:
                 break
             }
         }
     }
-    
+
     private func loadPreLiveEventDetails(matchId: String) {
         self.secundaryMarketsPublisher?.cancel()
         self.secundaryMarketsPublisher = nil
-        
+
         self.secundaryMarketsPublisher = Publishers.CombineLatest(
             Env.servicesProvider.getEventSecundaryMarkets(eventId: matchId),
             SecundaryMarketsService.fetchSecundaryMarkets()
-                .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
+                .mapError { error in
+                    return ServiceProviderError.errorMessage(message: error.localizedDescription)
+                }
         )
         .receive(on: DispatchQueue.main)
-        .sink { _ in
-            
+        .sink { completion in
         } receiveValue: { [weak self] eventWithSecundaryMarkets, marketsAdditionalInfos in
             guard
                 var newMatch = ServiceProviderModelMapper.match(fromEvent: eventWithSecundaryMarkets)
             else {
                 return
             }
-            
+
+
             let sportId = newMatch.sport.alphaId ?? (newMatch.sportIdCode ?? "")
-            
+
             let finalMarkets = self?.processMarkets(forMatch: self?.match,
                                                     newMarkets: newMatch.markets,
                                                     marketsAdditionalInfo: marketsAdditionalInfos,
                                                     sportId: sportId) ?? []
-            
+
+
             // If we got the event detail via EventSummary
             // the event come has no markets.
             if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
@@ -168,14 +165,15 @@ extension MatchLineTableCellViewModel {
             }
         }
     }
-    
-    private func processMarkets(forMatch oldMatch: Match?, 
+
+    private func processMarkets(forMatch oldMatch: Match?,
                                 newMarkets: [Market],
-                                marketsAdditionalInfo: [SecundarySportMarket], 
+                                marketsAdditionalInfo: [SecundarySportMarket],
                                 sportId: String) -> [Market]
     {
         var statsForMarket: [String: String?] = [:]
         var firstMarket = oldMatch?.markets.first // Capture the first market
+
         var additionalMarkets: [Market] = []
 
         let newMainMarket: Market? = newMarkets.first { newMarket in
@@ -195,22 +193,23 @@ extension MatchLineTableCellViewModel {
             $0.sportId.lowercased() == sportId.lowercased()
         }) {
             for (index, secundaryMarket) in secundaryMarketsForSport.markets.enumerated() {
-                
+
                 if marketsAdditionalInfoOrder[secundaryMarket.marketTypeId] == nil {
                     marketsAdditionalInfoOrder[secundaryMarket.marketTypeId] = index
                 }
-                
+
                 if var foundMarket = additionalMarkets.first(where: { market in
                     (market.marketTypeId ?? "") == secundaryMarket.marketTypeId
                 }) {
                     foundMarket.statsTypeId = secundaryMarket.statsId
-                    statsForMarket[foundMarket.id] = secundaryMarket.statsId                    
+                    statsForMarket[foundMarket.id] = secundaryMarket.statsId
                 }
             }
+        } else {
         }
-        
+
         var finalMarkets: [Market] = []
-        
+
         for market in additionalMarkets {
             if let statsTypeId = statsForMarket[market.id] {
                 var newMarket = market
@@ -222,14 +221,15 @@ extension MatchLineTableCellViewModel {
                 finalMarkets.append(newMarket)
             }
         }
-        
+
+
         // Sort the finalMarkets based on the order in marketsAdditionalInfoOrder
         finalMarkets.sort { market1, market2 -> Bool in
             let index1 = marketsAdditionalInfoOrder[market1.marketTypeId ?? ""] ?? 0
             let index2 = marketsAdditionalInfoOrder[market2.marketTypeId ?? ""] ?? 0
             return index1 < index2
         }
-        
+
         let mergedMarkets: [Market]
 
         // replace new first market in the array with a the main market
@@ -244,6 +244,7 @@ extension MatchLineTableCellViewModel {
         else {
             mergedMarkets = finalMarkets
         }
+
         return mergedMarkets
     }
 
@@ -261,29 +262,29 @@ public protocol VisuallySimilar {
 extension Match: VisuallySimilar {
     static func visuallySimilar(lhs: Self, rhs: Self) -> (Bool, String?) {
         var equalValue = true
-        
+
         equalValue = equalValue && lhs.id == rhs.id
         if !equalValue { return (false, "Match id diff") }
-        
+
         equalValue = equalValue && lhs.status == rhs.status
         if !equalValue { return (false, "Match status diff") }
-        
+
         equalValue = equalValue && lhs.homeParticipant.id == rhs.homeParticipant.id
         if !equalValue { return (false, "Match awayParticipant id diff") }
-        
+
         equalValue = equalValue && lhs.awayParticipant.id == rhs.awayParticipant.id
         if !equalValue { return (false, "Match awayParticipant id diff") }
-        
+
         equalValue = equalValue && lhs.detailedScores == rhs.detailedScores
         if !equalValue { return (false, "Match detailedScores") }
-        
+
         equalValue = equalValue && lhs.matchTime == rhs.matchTime
         if !equalValue { return (false, "Match detailedScores") }
-        
+
         let arrayEqualValue = Array<Market>.visuallySimilar(lhs: lhs.markets, rhs: rhs.markets)
         equalValue = equalValue && arrayEqualValue.0
         if !equalValue { return (false, arrayEqualValue.1) }
-            
+
         return (equalValue, nil)
     }
 }
@@ -291,20 +292,20 @@ extension Match: VisuallySimilar {
 extension Market: VisuallySimilar {
     static func visuallySimilar(lhs: Self, rhs: Self) -> (Bool, String?) {
         var equalValue = true
-        
+
         equalValue = equalValue && lhs.id == rhs.id
         if !equalValue { return (false, "Market id diff") }
-        
+
         equalValue = equalValue && lhs.name == rhs.name
         if !equalValue { return (false, "Market name diff") }
-        
+
         equalValue = equalValue && lhs.isAvailable == rhs.isAvailable
         if !equalValue { return (false, "Market isAvailable") }
-        
+
         let arrayEqualValue = Array.visuallySimilar(lhs: lhs.outcomes, rhs: rhs.outcomes)
         equalValue = equalValue && arrayEqualValue.0
         if !equalValue { return (false, arrayEqualValue.1) }
-        
+
         return (equalValue, nil)
     }
 }
@@ -313,14 +314,14 @@ extension Outcome: VisuallySimilar {
     static func visuallySimilar(lhs: Self, rhs: Self) -> (Bool, String?) {
         var equalValue = lhs.id == rhs.id
         if !equalValue { return (false, "Outcome id diff") }
-            
+
         equalValue = equalValue && lhs.translatedName == rhs.translatedName
         if !equalValue { return (false, "Outcome translatedName diff") }
-                
+
         let bettingOfferValue = BettingOffer.visuallySimilar(lhs: lhs.bettingOffer, rhs: rhs.bettingOffer)
         equalValue = equalValue && bettingOfferValue.0
         if !equalValue { return (false, bettingOfferValue.1) }
-        
+
         return (equalValue, nil)
     }
 }
@@ -328,9 +329,9 @@ extension Outcome: VisuallySimilar {
 extension BettingOffer: VisuallySimilar {
     static func visuallySimilar(lhs: Self, rhs: BettingOffer) -> (Bool, String?) {
         var equalValue = lhs.id == rhs.id
-        
+
         if !equalValue { return (false, "BettingOffer id diff") }
-            
+
         return (equalValue, nil)
     }
 }

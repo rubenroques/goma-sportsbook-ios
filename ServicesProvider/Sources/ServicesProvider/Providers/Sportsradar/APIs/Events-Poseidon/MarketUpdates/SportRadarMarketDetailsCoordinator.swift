@@ -46,8 +46,6 @@ class SportRadarMarketDetailsCoordinator {
     private var marketCancellable: AnyCancellable?
 
     init(marketId: String, eventId: String, sessionToken: String, contentIdentifier: ContentIdentifier) {
-
-        print("SportRadarMarketDetailsCoordinator new \(contentIdentifier)")
         
         self.marketId = marketId
         self.eventId = eventId
@@ -75,11 +73,12 @@ class SportRadarMarketDetailsCoordinator {
                     return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
                 }
                 
+                
                 // Create the subscription
                 let subscription = Subscription(contentIdentifier: self.contentIdentifier, sessionToken: self.sessionToken, unsubscriber: self)
                 self.marketCurrentValueSubject.send(.connected(subscription: subscription))
                 self.subscription = subscription
-                
+                 \(market.outcomes.count)")
                 // update with the market from the get request
                 self.updateMarket(market)
                 
@@ -95,9 +94,7 @@ class SportRadarMarketDetailsCoordinator {
                 }
                 
             }, receiveValue: { _ in
-                
             })
-
     }
     
     private func checkMarketUpdatesAvailable() -> AnyPublisher<Market, ServiceProviderError> {
@@ -132,7 +129,6 @@ class SportRadarMarketDetailsCoordinator {
                 }
             })
             .eraseToAnyPublisher()
-
     }
 
     func requestMarketUpdates() -> AnyPublisher<Void, ServiceProviderError> {
@@ -165,9 +161,7 @@ class SportRadarMarketDetailsCoordinator {
             .eraseToAnyPublisher()
     }
 
-
     func updateMarket(_ market: Market) {
-        // print("☁️SP debugbetslip updated SportRadarMarketDetailsCoordinator \(self.contentIdentifier) \(market.id)")
 
         self.marketCurrentValueSubject.send(.contentUpdate(content: market))
 
@@ -190,9 +184,10 @@ class SportRadarMarketDetailsCoordinator {
 
         // Update the socket session token
         self.sessionToken = newSessionToken
-        print("SportRadarMarketDetailsCoordinator: reconnect withNewSessionToken \(newSessionToken)")
 
-        guard self.subscription != nil else { return }
+        guard self.subscription != nil else {
+            return
+        }
 
         // Reset the storage, avoid duplicates, we will recieve every info again
         self.reset()
@@ -201,49 +196,27 @@ class SportRadarMarketDetailsCoordinator {
         let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
                                                          contentIdentifier: self.contentIdentifier)
 
-        guard let request = endpoint.request() else { return }
+        guard let request = endpoint.request() else {
+            return
+        }
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error {
-                print("SportRadarMarketDetailsCoordinator: reconnect dataTask contentIdentifier \(self.contentIdentifier) error \(error)")
             }
             if let data, let dataString = String(data: data, encoding: .utf8) {
-                print("SportRadarMarketDetailsCoordinator: reconnect dataTask contentIdentifier \(self.contentIdentifier) data \(dataString)")
             }
         }
         sessionDataTask.resume()
     }
-
 }
-
 
 extension SportRadarMarketDetailsCoordinator {
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
-
-//        guard
-//            let updatedContentIdentifier = content.contentIdentifier
-//        else {
-//            print("SportRadarMarketDetailsCoordinator ignoring contentIdentifierLess \(content)")
-//            return
-//        }
-//
-//        if self.contentIdentifier != updatedContentIdentifier {
-//            // ignoring this update, not subscribed by this class
-//            // print("☁️SP \"type\":\"market\" SportRadarMarketDetailsCoordinator ignoring \(updatedContentIdentifier) != \(self.contentIdentifier)")
-//            return
-//        }
-//        else {
-//            print("☁️SP \"type\":\"market\" SportRadarMarketDetailsCoordinator handling \(updatedContentIdentifier) ==  self \(self.contentIdentifier)")
-//        }
-
-        // print("☁️SP debugdetails  \"type\":\"market\" SportRadarMarketDetailsCoordinator handleContentUpdate \(content)")
-
         let trackedMarketId = self.marketId
         
         switch content {
         case .updateMarketTradability(_, let marketId, let isTradable):
             if trackedMarketId == marketId {
-                // print("☁️SP debugbetslip updateMarketTradability \(marketId) \(isTradable)")
                 self.updateMarketTradability(withId: marketId, isTradable: isTradable)
             }
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
@@ -259,17 +232,14 @@ extension SportRadarMarketDetailsCoordinator {
                         self.updateOutcomeOdd(withId: outcome.id, newOddNumerator: String(fractionOdd.numerator), newOddDenominator: String(fractionOdd.denominator))
                     }
                 }
-                // print("☁️SP MarketDetailer debugbetslip \(market.id) add market ")
                 self.updateMarketTradability(withId: market.id, isTradable: market.isTradable)
             }
         case .enableMarket(_, let marketId):
             if trackedMarketId == marketId {
-                // print("☁️SP MarketDetailer debugbetslip \(marketId) enabled market")
                 self.updateMarketTradability(withId: marketId, isTradable: true)
             }
         case .removeMarket(_, let marketId):
             if trackedMarketId == marketId {
-                // print("☁️SP MarketDetailer debugbetslip \(marketId) removed market")
                 self.updateMarketTradability(withId: marketId, isTradable: false)
             }
         case .removeEvent(_, let updatedEventId):
@@ -281,12 +251,13 @@ extension SportRadarMarketDetailsCoordinator {
                 self.updateMarketTradability(withId: trackedMarketId, isTradable: true)
             }
         default:
-            () // Ignore other cases
         }
     }
 
     func updateMarketTradability(withId id: String, isTradable: Bool) {
-        guard let updatedMarket = self.market else { return }
+        guard let updatedMarket = self.market else {
+            return
+        }
         let currentTradable = updatedMarket.isTradable
         if isTradable != currentTradable {
             updatedMarket.isTradable = isTradable
@@ -300,7 +271,9 @@ extension SportRadarMarketDetailsCoordinator {
         else {
             return
         }
-        guard let outcomeSubject = self.outcomesDictionary[id] else { return }
+        guard let outcomeSubject = self.outcomesDictionary[id] else {
+            return
+        }
 
         let outcome = outcomeSubject.value
 
@@ -318,7 +291,7 @@ extension SportRadarMarketDetailsCoordinator {
         if newOddNumeratorValue == oldNumerator && newOddDenominatorValue == oldDenominator {
             return
         }
-
+ \(newOddNumeratorValue)/\(newOddDenominatorValue)")
         outcome.odd = OddFormat.fraction(numerator: newOddNumeratorValue, denominator: newOddDenominatorValue)
         outcomeSubject.send(outcome)
 
@@ -330,37 +303,32 @@ extension SportRadarMarketDetailsCoordinator {
     }
 
     func updateOutcomeTradability(withId id: String, isTradable: Bool) {
-        guard let outcomeSubject = self.outcomesDictionary[id] else { return }
+        guard let outcomeSubject = self.outcomesDictionary[id] else {
+            return
+        }
         let outcome = outcomeSubject.value
         outcome.isTradable = isTradable
         outcomeSubject.send(outcome)
     }
-
-}
-
-extension SportRadarMarketDetailsCoordinator {
-
-
 }
 
 extension SportRadarMarketDetailsCoordinator: UnsubscriptionController {
 
     func unsubscribe(subscription: Subscription) {
         let endpoint = SportRadarRestAPIClient.unsubscribe(sessionToken: subscription.sessionToken, contentIdentifier: subscription.contentIdentifier)
-        guard let request = endpoint.request() else { return }
+        guard let request = endpoint.request() else {
+            return
+        }
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             guard
                 error == nil,
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarMarketDetailsCoordinator unsubscribe failed")
                 return
             }
-            print("SportRadarMarketDetailsCoordinator unsubscribe ok")
         }
         sessionDataTask.resume()
     }
-
 }
 
