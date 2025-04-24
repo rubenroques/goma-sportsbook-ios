@@ -73,12 +73,11 @@ class SportRadarMarketDetailsCoordinator {
                     return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
                 }
                 
-                
                 // Create the subscription
                 let subscription = Subscription(contentIdentifier: self.contentIdentifier, sessionToken: self.sessionToken, unsubscriber: self)
                 self.marketCurrentValueSubject.send(.connected(subscription: subscription))
                 self.subscription = subscription
-                 \(market.outcomes.count)")
+
                 // update with the market from the get request
                 self.updateMarket(market)
                 
@@ -251,6 +250,7 @@ extension SportRadarMarketDetailsCoordinator {
                 self.updateMarketTradability(withId: trackedMarketId, isTradable: true)
             }
         default:
+            ()
         }
     }
 
@@ -291,7 +291,7 @@ extension SportRadarMarketDetailsCoordinator {
         if newOddNumeratorValue == oldNumerator && newOddDenominatorValue == oldDenominator {
             return
         }
- \(newOddNumeratorValue)/\(newOddDenominatorValue)")
+
         outcome.odd = OddFormat.fraction(numerator: newOddNumeratorValue, denominator: newOddDenominatorValue)
         outcomeSubject.send(outcome)
 

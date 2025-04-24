@@ -11,10 +11,35 @@ import ServicesProvider
 
 class MatchLineTableCellViewModel {
 
-    @Published private(set) var match: Match
-    @Published private(set) var matchWidgetCellViewModel: MatchWidgetCellViewModel
+    //
+    private let matchSubject: CurrentValueSubject<Match, Never>
+    var matchPublisher: AnyPublisher<Match, Never> {
+        return matchSubject.eraseToAnyPublisher()
+    }
 
-    @Published private(set) var status: MatchWidgetStatus = .unknown
+    var match: Match {
+        return matchSubject.value
+    }
+
+    //
+    private let matchWidgetCellViewModelSubject: CurrentValueSubject<MatchWidgetCellViewModel, Never>
+    var matchWidgetCellViewModelPublisher: AnyPublisher<MatchWidgetCellViewModel, Never> {
+        return matchWidgetCellViewModelSubject.eraseToAnyPublisher()
+    }
+
+    var matchWidgetCellViewModel: MatchWidgetCellViewModel {
+        return matchWidgetCellViewModelSubject.value
+    }
+
+    //
+    private let statusSubject: CurrentValueSubject<MatchWidgetStatus, Never>
+    var statusPublisher: AnyPublisher<MatchWidgetStatus, Never> {
+        return statusSubject.eraseToAnyPublisher()
+    }
+
+    var status: MatchWidgetStatus {
+        return statusSubject.value
+    }
 
     private var secundaryMarketsSubscription: ServicesProvider.Subscription?
     private var secundaryMarketsPublisher: AnyCancellable?
@@ -24,11 +49,11 @@ class MatchLineTableCellViewModel {
     let matchId: String
 
     init(match: Match, status: MatchWidgetStatus = .unknown) {
-        self.status = status
-
-        self.match = match
-        self.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: status)
-
+        self.statusSubject = CurrentValueSubject<MatchWidgetStatus, Never>(status)
+        self.matchSubject = CurrentValueSubject<Match, Never>(match)
+        self.matchWidgetCellViewModelSubject = CurrentValueSubject<MatchWidgetCellViewModel, Never>(
+            MatchWidgetCellViewModel(match: match, matchWidgetStatus: status)
+        )
 
         self.matchId = match.id
 
@@ -38,7 +63,7 @@ class MatchLineTableCellViewModel {
 
     private func observeMatchValues() {
 
-        self.$match
+        self.matchPublisher
             .removeDuplicates(by: { oldMatch, newMatch in
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
@@ -112,10 +137,10 @@ extension MatchLineTableCellViewModel {
                 var oldMatch = self.match
                 if self.match.markets.isNotEmpty {
                     oldMatch.markets = finalMarkets
-                    self.match = oldMatch
+                    self.matchSubject.send(oldMatch)
                 } else {
                     newMatch.markets = finalMarkets
-                    self.match = newMatch
+                    self.matchSubject.send(newMatch)
                 }
 
             case .disconnected:
@@ -137,13 +162,14 @@ extension MatchLineTableCellViewModel {
         )
         .receive(on: DispatchQueue.main)
         .sink { completion in
+            
         } receiveValue: { [weak self] eventWithSecundaryMarkets, marketsAdditionalInfos in
+            
             guard
                 var newMatch = ServiceProviderModelMapper.match(fromEvent: eventWithSecundaryMarkets)
             else {
                 return
             }
-
 
             let sportId = newMatch.sport.alphaId ?? (newMatch.sportIdCode ?? "")
 
@@ -157,11 +183,11 @@ extension MatchLineTableCellViewModel {
             // the event come has no markets.
             if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
                 oldMatch.markets = finalMarkets
-                self?.match = oldMatch
+                self?.matchSubject.send(oldMatch)
             }
             else {
                 newMatch.markets = finalMarkets
-                self?.match = newMatch
+                self?.matchSubject.send(newMatch)
             }
         }
     }
@@ -171,6 +197,7 @@ extension MatchLineTableCellViewModel {
                                 marketsAdditionalInfo: [SecundarySportMarket],
                                 sportId: String) -> [Market]
     {
+
         var statsForMarket: [String: String?] = [:]
         var firstMarket = oldMatch?.markets.first // Capture the first market
 
@@ -237,7 +264,7 @@ extension MatchLineTableCellViewModel {
             firstMarket = newMainMarketValue
         }
 
-        // arrange the final list of markets
+        // Arrange the final list of markets
         if let first = firstMarket {
             mergedMarkets = [first] + finalMarkets
         }
@@ -329,9 +356,7 @@ extension Outcome: VisuallySimilar {
 extension BettingOffer: VisuallySimilar {
     static func visuallySimilar(lhs: Self, rhs: BettingOffer) -> (Bool, String?) {
         var equalValue = lhs.id == rhs.id
-
         if !equalValue { return (false, "BettingOffer id diff") }
-
         return (equalValue, nil)
     }
 }

@@ -12,6 +12,7 @@ class SmallToolTipViewModel: ObservableObject {
 
     @Published var text: String
     @Published var type: ToolTipType
+    
     var onTap: () -> Void
 
     init(text: String, type: ToolTipType = .info, onTap: @escaping () -> Void = {}) {

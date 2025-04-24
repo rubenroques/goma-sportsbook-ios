@@ -14,7 +14,7 @@ class MatchLineTableViewCell: UITableViewCell {
     //
     private var debugUUID = UUID()
     //
-    
+
     private var viewModel: MatchLineTableCellViewModel?
 
     var matchStatsViewModel: MatchStatsViewModel?
@@ -22,7 +22,7 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var debugLabel: UILabel!
     @IBOutlet private var backSliderView: UIView!
     @IBOutlet private var backSliderIconImageView: UIImageView!
-    
+
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
@@ -44,7 +44,7 @@ class MatchLineTableViewCell: UITableViewCell {
     var tappedMatchLineAction: ((Match) -> Void)?
     var selectedOutcome: ((Match, Market, Outcome) -> Void)?
     var unselectedOutcome: ((Match, Market, Outcome) -> Void)?
-    
+
     var matchWentLive: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
@@ -56,7 +56,7 @@ class MatchLineTableViewCell: UITableViewCell {
         let cardHeight = StyleHelper.cardsStyleHeight()
         return cardHeight + cellInternSpace + cellInternSpace
     }
-    
+
     private var selectedSeeMoreMarketsCollectionViewCell: SeeMoreMarketsCollectionViewCell? {
         willSet {
             self.selectedSeeMoreMarketsCollectionViewCell?.transitionId = nil
@@ -72,14 +72,14 @@ class MatchLineTableViewCell: UITableViewCell {
         super.awakeFromNib()
 
         // print("BlinkDebug: line awakeFromNib")
-        
+
         self.selectionStyle = .none
 
         self.loadingView.hidesWhenStopped = true
         self.loadingView.stopAnimating()
 
         self.cachedCardsStyle = StyleHelper.cardsStyleActive()
-        
+
         self.debugLabel.isHidden = true
 
         self.backSliderView.alpha = 0.0
@@ -95,7 +95,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
 
         self.collectionView.clipsToBounds = false
-        
+
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.showsHorizontalScrollIndicator = false
 
@@ -120,17 +120,17 @@ class MatchLineTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         self.selectionStyle = .none
 
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
-        
+
         self.viewModel = nil
         self.match = nil
 
         self.cancellables.removeAll()
-        
+
         self.matchStatsViewModel = nil
 
         self.loadingView.hidesWhenStopped = true
@@ -175,14 +175,14 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.backgroundColor = UIColor.App.backgroundOdds
         self.backSliderIconImageView.setTintColor(color: UIColor.App.iconPrimary)
     }
-    
+
     func configure(withViewModel viewModel: MatchLineTableCellViewModel) {
         self.viewModel = viewModel
         
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
         
-        self.matchInfoPublisher = viewModel.$match
+        self.matchInfoPublisher = viewModel.matchPublisher
             .removeDuplicates(by: { oldMatch, newMatch in
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
@@ -224,7 +224,7 @@ class MatchLineTableViewCell: UITableViewCell {
             self.tappedMatchLineAction?(match)
         }
     }
-    
+
 }
 
 extension MatchLineTableViewCell: UIScrollViewDelegate {
@@ -235,19 +235,19 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
 
         let pushScreenMargin = 100.0
         let bounceXPosition = ( (scrollView.contentOffset.x - scrollView.contentInset.left) + scrollView.frame.width) - scrollView.contentSize.width
-        
+
         var activeSeeMoreCell: SeeMoreMarketsCollectionViewCell?
-        
+
         if bounceXPosition >= 0 {
             for cell in self.collectionView.visibleCells {
                 if let seeMoreCell = cell as? SeeMoreMarketsCollectionViewCell {
                     seeMoreCell.setAnimationPercentage(bounceXPosition / Double(pushScreenMargin * 0.98))
-                    
+
                     activeSeeMoreCell = seeMoreCell
                 }
             }
         }
-        
+
         if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
             if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + pushScreenMargin {
 
@@ -313,9 +313,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+
         let knownStatus = self.viewModel?.status ?? .unknown
-        
+
         guard
             let match = self.viewModel?.match
         else {
@@ -333,13 +333,11 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             else {
                 fatalError()
             }
-            
+
             if let cellViewModel = self.viewModel?.matchWidgetCellViewModel {
-                // print("BlinkDebug line (\(self.debugUUID.uuidString)) viewModel for cell found")
                 cell.configure(withViewModel: cellViewModel)
             }
             else {
-                // print("BlinkDebug line (\(self.debugUUID.uuidString)) viewModel for cell not found!")
                 let cellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: knownStatus)
                 cell.configure(withViewModel: cellViewModel)
             }
@@ -353,32 +351,31 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.didLongPressOdd?(bettingTicket)
             }
-            
+
             cell.tappedMixMatchAction = { [weak self] match in
                 self?.tappedMixMatchAction?(match)
             }
-            
+
             cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
             return cell
-            
+
         case 1:
             if match.markets.count > 1, let market = match.markets[safe: indexPath.row + 1] {
-
                 let cellViewModel = self.viewModel?.matchWidgetCellViewModel ?? MatchWidgetCellViewModel(match: match, matchWidgetStatus: knownStatus)
-                
+
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
 
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, 
+                        cell.setupWithMarket(market,
                                              match: match,
                                              teamsText: teamsText,
                                              countryIso: countryIso,
                                              isLive: cellViewModel.matchWidgetStatus == .live )
-                        
+
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLine()
                         }
@@ -398,7 +395,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                                              teamsText: teamsText,
                                              countryIso: countryIso,
                                              isLive: cellViewModel.matchWidgetStatus == .live)
-                        
+
                         cell.tappedMatchWidgetAction = {  [weak self] in
                             self?.tappedMatchLine()
                         }
@@ -458,7 +455,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        
+
         if section == 1, (self.match?.markets.count ?? 0) <= 1 {
             return 0
         }
@@ -509,7 +506,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             if width > 390 {
                 width = 390
             }
-            
+
             return CGSize(width: width, height: height) // design width: 331
         }
     }
