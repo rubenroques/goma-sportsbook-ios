@@ -8,19 +8,6 @@
 import Foundation
 import Extensions
 
-extension Subscription {
-    var detailedDescription: String {
-        var description = "Subscription ID: \(id)\n"
-        description += "Content Identifier: \(contentIdentifier)\n"
-        description += "Session Token: \(sessionToken)\n"
-        description += "Associated Subscriptions: \(associatedSubscriptions.map { $0.id }.joined(separator: ", "))"
-        return description
-    }
-
-    // ... rest of your Subscription class ...
-}
-
-
 public protocol UnsubscriptionController: AnyObject {
     func unsubscribe(subscription: Subscription)
 }
@@ -71,6 +58,17 @@ public class Subscription: Hashable, Identifiable {
 
 }
 
+extension Subscription {
+    
+    var detailedDescription: String {
+        var description = "Subscription ID: \(id)\n"
+        description += "Content Identifier: \(contentIdentifier)\n"
+        description += "Session Token: \(sessionToken)\n"
+        description += "Associated Subscriptions: \(associatedSubscriptions.map { $0.id }.joined(separator: ", "))"
+        return description
+    }
+    
+}
 
 extension Subscription: CustomStringConvertible {
     public var description: String {

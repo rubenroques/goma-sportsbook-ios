@@ -119,7 +119,7 @@ class EveryMatrixConnector: Connector {
     func request<T: Codable>(_ router: WAMPRouter) -> AnyPublisher<T, ServiceProviderError> {
         return self.serialQueue.sync {
             self.wampManager.getModel(router: router, decodingType: T.self)
-                .mapError { error in
+                .mapError { error -> ServiceProviderError in
                     switch error {
                     case .notConnected:
                         return .onConnection
@@ -140,7 +140,7 @@ class EveryMatrixConnector: Connector {
     func subscribe<T: Codable>(_ router: WAMPRouter) -> AnyPublisher<WAMPSubscriptionContent<T>, ServiceProviderError> {
         return self.serialQueue.sync {
             self.wampManager.subscribeEndpoint(router, decodingType: T.self)
-                .mapError { error in
+                .mapError { error -> ServiceProviderError in
                     switch error {
                     case .notConnected:
                         return .onConnection

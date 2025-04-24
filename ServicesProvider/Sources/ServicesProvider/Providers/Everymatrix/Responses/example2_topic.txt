@@ -1,0 +1,634 @@
+
+Subscription callback [/sports/6/en/209176411/tournament-odds/3000419] failed with error: "undefined"
+Subscription callback [/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3] successfully.
+Requesting initial dump for [/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3]...
+Initial dump call succeed, response =
+{
+"version": "1745502439341",
+"format": "AGGREGATOR",
+"messageType": "INITIAL_DUMP",
+"records": [
+{
+"_type": "SPORT",
+"id": "63",
+"name": "Table Tennis",
+"shortName": "Tabl",
+"isVirtual": false,
+"numberOfEvents": 395,
+"numberOfMarkets": 3815,
+"numberOfBettingOffers": 8892,
+"numberOfLiveEvents": 21,
+"numberOfLiveMarkets": 532,
+"numberOfLiveBettingOffers": 1250,
+"numberOfUpcomingMatches": 374,
+"numberOfMatchesWhichWillHaveLiveOdds": "148",
+"childrenIds": [],
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": true,
+"hasOutrights": false
+},
+{
+"_type": "SPORT",
+"id": "106",
+"name": "NBA2k",
+"shortName": "NBA2",
+"isVirtual": false,
+"numberOfEvents": 17,
+"numberOfMarkets": 598,
+"numberOfBettingOffers": 1226,
+"numberOfLiveEvents": 10,
+"numberOfLiveMarkets": 525,
+"numberOfLiveBettingOffers": 1071,
+"numberOfUpcomingMatches": 7,
+"numberOfMatchesWhichWillHaveLiveOdds": "6",
+"parentId": "96",
+"childrenIds": [],
+"parentName": "eSports",
+"parentShortName": "eSpo",
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": true,
+"hasOutrights": false
+},
+...
+.....
+{
+"_type": "LOCATION",
+"id": "67",
+"typeId": "2",
+"name": "Europe",
+"shortName": "Euro",
+"code": "EU"
+},
+{
+"_type": "LOCATION",
+"id": "111",
+"typeId": "1",
+"name": "Italy",
+"shortName": "Ital",
+"code": "IT"
+},
+,
+{
+"_type": "EVENT_CATEGORY",
+"id": "6",
+"sportId": "3",
+"sportName": "Tennis",
+"name": "Challenger",
+"shortName": "Challenger",
+"numberOfEvents": 40,
+"numberOfMarkets": 1194,
+"numberOfBettingOffers": 2986,
+"numberOfLiveEvents": 8,
+"numberOfLiveMarkets": 379,
+"numberOfLiveBettingOffers": 921,
+"numberOfUpcomingMatches": 32
+},
+,
+{
+"_type": "MATCH",
+"id": "268330604723048448",
+"typeId": "1",
+"sportId": "63",
+"parentId": "97615650748366848",
+"parentPartId": "1",
+"name": "Roman Yushko - Vadim Reva",
+"startTime": 1745501700000,
+"venueId": "240",
+"statusId": "2",
+"rootPartId": "240",
+"currentPartId": "243",
+"allowsLiveOdds": false,
+"numberOfMarkets": 44,
+"numberOfBettingOffers": 98,
+"typeName": "Generic Match",
+"sportName": "Table Tennis",
+"shortSportName": "Tabl",
+"parentName": "Setka Cup 2025",
+"shortParentName": "Setka Cup",
+"parentPartName": "Whole Event",
+"shortParentPartName": "Whole Event",
+"venueName": "World",
+"shortVenueName": "World",
+"statusName": "In Progress",
+"rootPartName": "Whole Match",
+"shortRootPartName": "Whole Match",
+"currentPartName": "3rd Set",
+"shortCurrentPartName": "3rd Set",
+"shortName": "Roman Yushko - Vadim Reva",
+"parentStartTime": 1734343200000,
+"parentEndTime": 1765792800000,
+"parentTemplateId": "96333958816542720",
+"homeParticipantId": "99774216595984384",
+"homeParticipantName": "Roman Yushko",
+"awayParticipantId": "100997432100409344",
+"awayParticipantName": "Vadim Reva",
+"homeShortParticipantName": "Roman Yushko",
+"awayShortParticipantName": "Vadim Reva",
+"categoryId": "240063",
+"categoryName": "World",
+"redirectDelay": "60000",
+"displayChildren": false,
+"layoutStyle": "US"
+},
+{
+"_type": "MATCH",
+"id": "268330388730023936",
+"typeId": "1",
+"sportId": "63",
+"parentId": "97615650748366848",
+"parentPartId": "1",
+"name": "Hryhoriev Roman - Kononenko Vadym",
+"startTime": 1745501400000,
+"venueId": "240",
+"statusId": "2",
+"rootPartId": "240",
+"currentPartId": "244",
+"allowsLiveOdds": false,
+"numberOfMarkets": 41,
+"numberOfBettingOffers": 92,
+"typeName": "Generic Match",
+"sportName": "Table Tennis",
+"shortSportName": "Tabl",
+"parentName": "Setka Cup 2025",
+"shortParentName": "Setka Cup",
+"parentPartName": "Whole Event",
+"shortParentPartName": "Whole Event",
+"venueName": "World",
+"shortVenueName": "World",
+"statusName": "In Progress",
+"rootPartName": "Whole Match",
+"shortRootPartName": "Whole Match",
+"currentPartName": "4th Set",
+"shortCurrentPartName": "4th Set",
+"shortName": "Hryhoriev Roman - Kononenko Vadym",
+"parentStartTime": 1734343200000,
+"parentEndTime": 1765792800000,
+"parentTemplateId": "96333958816542720",
+"homeParticipantId": "205007765961338880",
+"homeParticipantName": "Hryhoriev Roman",
+"awayParticipantId": "203089656715309056",
+"awayParticipantName": "Kononenko Vadym",
+"homeShortParticipantName": "Hryhoriev Roman",
+"awayShortParticipantName": "Kononenko Vadym",
+"categoryId": "240063",
+"categoryName": "World",
+"redirectDelay": "60000",
+"displayChildren": false,
+"layoutStyle": "US"
+},
+,
+{
+"_type": "EVENT_STATISTICS",
+"id": "268399734868283392",
+"providerId": "3000555",
+"providerEntityId": "60128483",
+"entityId": "268399731256987648"
+},
+{
+"_type": "EVENT_STATISTICS",
+"id": "268398337043075072",
+"providerId": "3000555",
+"providerEntityId": "60128463",
+"entityId": "268397579390291968"
+},
+{
+"_type": "EVENT_INFO",
+"id": "268399501215338496",
+"typeId": "1",
+"eventId": "268330604723048448",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "240",
+"paramFloat1": 1,
+"paramFloat2": 1,
+"paramParticipantId1": "99774216595984384",
+"paramParticipantId2": "100997432100409344",
+"paramScoringUnitId1": "53",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Set",
+"eventPartRelativePosition": 93
+},
+{
+"_type": "EVENT_INFO",
+"id": "268399502282788864",
+"typeId": "37",
+"eventId": "268330604723048448",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "240",
+"paramParticipantId1": "99774216595984384",
+"eventPartName": "Whole Match",
+"typeName": "Serve",
+"shortTypeName": "Serve",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 93
+},
+,
+{
+"_type": "MARKET",
+"id": "268330588535058432",
+"name": "Home Away",
+"shortName": "Home Away",
+"displayKey": "b466_ep240",
+"displayName": "Home Away",
+"displayShortName": "Home Away",
+"eventId": "268330588399865856",
+"eventPartId": "240",
+"bettingTypeId": "466",
+"numberOfOutcomes": 2,
+"isComplete": true,
+"isClosed": false,
+"bettingTypeName": "Home Away",
+"shortBettingTypeName": "Home Away",
+"eventPartName": "Whole Match",
+"mainLine": false,
+"isAvailable": true,
+"shortEventPartName": "Whole Match",
+"asianLine": false,
+"allowEachWay": false,
+"allowStartingPrice": false
+},
+{
+"_type": "MARKET",
+"id": "268397579497173504",
+"name": "Home Away",
+"shortName": "Home Away",
+"displayKey": "b466_ep240",
+"displayName": "Home Away",
+"displayShortName": "Home Away",
+"eventId": "268397579390291968",
+"eventPartId": "240",
+"bettingTypeId": "466",
+"numberOfOutcomes": 2,
+"isComplete": true,
+"isClosed": false,
+"bettingTypeName": "Home Away",
+"shortBettingTypeName": "Home Away",
+"eventPartName": "Whole Match",
+"mainLine": false,
+"isAvailable": false,
+"notAvailableSince": 1745502397902,
+"shortEventPartName": "Whole Match",
+"asianLine": false,
+"allowEachWay": false,
+"allowStartingPrice": false
+},
+,
+{
+"_type": "OUTCOME",
+"id": "268397579457413120",
+"typeId": "104",
+"statusId": "1",
+"eventId": "268397579390291968",
+"eventPartId": "240",
+"paramParticipantId1": "168097491692081152",
+"code": "#P168097491692081152",
+"typeName": "Winner with money back on draw",
+"translatedName": "Tadeas Zika",
+"shortTranslatedName": "1",
+"eventPartName": "Whole Match",
+"paramParticipantName1": "Tadeas Zika",
+"shortParamParticipantName1": "Tadeas Zika",
+"shortEventPartName": "Whole Match",
+"headerName": "Home",
+"headerShortName": "Home",
+"headerNameKey": "home"
+},
+{
+"_type": "OUTCOME",
+"id": "268397579457413376",
+"typeId": "104",
+"statusId": "1",
+"eventId": "268397579390291968",
+"eventPartId": "240",
+"paramParticipantId1": "157416179233771520",
+"code": "#P157416179233771520",
+"typeName": "Winner with money back on draw",
+"translatedName": "Michal Zahradka",
+"shortTranslatedName": "2",
+"eventPartName": "Whole Match",
+"paramParticipantName1": "Michal Zahradka",
+"shortParamParticipantName1": "Michal Zahradka",
+"shortEventPartName": "Whole Match",
+"headerName": "Away",
+"headerShortName": "Away",
+"headerNameKey": "away"
+},
+,
+{
+"_type": "MARKET_OUTCOME_RELATION",
+"id": "268397579497173760",
+"marketId": "268397579497173504",
+"outcomeId": "268397579457413120"
+},
+{
+"_type": "MARKET_OUTCOME_RELATION",
+"id": "268397579497174272",
+"marketId": "268397579497173504",
+"outcomeId": "268397579457413376"
+},
+{
+"_type": "MARKET_OUTCOME_RELATION",
+"id": "268399297480945920",
+"marketId": "268399297480945664",
+"outcomeId": "268399297428881408"
+},
+,
+{
+"_type": "BETTING_OFFER",
+"id": "268387861918659584",
+"providerId": "3001033",
+"outcomeId": "268387860664749824",
+"bettingTypeId": "62",
+"statusId": "1",
+"isLive": true,
+"odds": 1.78125,
+"lastChangedTime": 1745502423612,
+"bettingTypeName": "Points Handicap",
+"shortBettingTypeName": "Points Handicap",
+"isAvailable": true
+},
+{
+"_type": "BETTING_OFFER",
+"id": "268387861918660096",
+"providerId": "3001033",
+"outcomeId": "268387860666845184",
+"bettingTypeId": "62",
+"statusId": "1",
+"isLive": true,
+"odds": 1.8547008,
+"lastChangedTime": 1745502423612,
+"bettingTypeName": "Points Handicap",
+"shortBettingTypeName": "Points Handicap",
+"isAvailable": true
+},
+{
+"_type": "MAIN_MARKET",
+"id": "413",
+"bettingTypeId": "466",
+"eventPartId": "240",
+"sportId": "63",
+"bettingTypeName": "Home Away",
+"eventPartName": "Whole Match",
+"numberOfOutcomes": 2,
+"liveMarket": true,
+"outright": false
+},
+{
+"_type": "MAIN_MARKET",
+"id": "408",
+"bettingTypeId": "62",
+"eventPartId": "240",
+"sportId": "63",
+"bettingTypeName": "Points Handicap",
+"eventPartName": "Whole Match",
+"numberOfOutcomes": 2,
+"liveMarket": true,
+"outright": false
+},
+{
+"_type": "MAIN_MARKET",
+"id": "411",
+"bettingTypeId": "193",
+"eventPartId": "240",
+"sportId": "63",
+"bettingTypeName": "Points Over/Under",
+"eventPartName": "Whole Match",
+"numberOfOutcomes": 2,
+"liveMarket": true,
+"outright": false
+},
+{
+"_type": "MARKET_INFO",
+"id": "268399088486120960",
+"marketInfo": "Home win or Away win, with money back on draw.",
+"displayKey": "b466_ep240"
+},
+....
+{
+"_type": "MARKET_INFO",
+"id": "268335409863391232",
+"marketInfo": "The participant will be given various lines of handicaps. This betting type has only two outcomes, Home and Away, draw being excluded.",
+"displayKey": "b62_ep240"
+},
+{
+"_type": "LIVE_MATCHES_NUMBER",
+"id": "1",
+"numberOfLiveEvents": 156
+}
+]
+}
+
+---------------------------
+Callback ["/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1745502439529",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268386914008052224",
+"changedProperties": {
+"lastChangedTime": 1745502439357,
+"odds": 1.8
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268386914008052480",
+"changedProperties": {
+"lastChangedTime": 1745502439357,
+"odds": 1.9090909
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1745502439884",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "MATCH",
+"id": "268330588399865856",
+"changedProperties": {
+"numberOfMarkets": 51,
+"numberOfBettingOffers": 119
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268399839888289792",
+"changedProperties": {
+"lastChangedTime": 1745502439473,
+"odds": 1.7299271
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268399839888290048",
+"changedProperties": {
+"lastChangedTime": 1745502439474,
+"odds": 1.9090909
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268400172877230848",
+"changedProperties": {
+"lastChangedTime": 1745502439475,
+"odds": 1.877193
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268400172878278656",
+"changedProperties": {
+"lastChangedTime": 1745502439475,
+"odds": 1.8
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1745502440247",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "268399207024758784",
+"changedProperties": {
+"paramParticipantId1": "203089656715309056"
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1745502440622",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268396631925208064",
+"changedProperties": {
+"lastChangedTime": 1745502440450,
+"odds": 3.2
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "MARKET",
+"id": "268399839698546688",
+"changedProperties": {
+"mainLine": false
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1745502440968",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "268400011072835584",
+"changedProperties": {
+"paramFloat2": 8
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268399723995476224",
+"changedProperties": {
+"lastChangedTime": 1745502440648,
+"odds": 1.9345795
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268399723996524544",
+"changedProperties": {
+"lastChangedTime": 1745502440648,
+"odds": 1.7692307
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268399503299588096",
+"changedProperties": {
+"lastChangedTime": 1745502440670,
+"odds": 1.625
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268399503299588352",
+"changedProperties": {
+"lastChangedTime": 1745502440670,
+"odds": 2
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1745502441341",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268388167243019264",
+"changedProperties": {
+"lastChangedTime": 1745502441060,
+"odds": 2.1
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "268388167243019520",
+"changedProperties": {
+"lastChangedTime": 1745502441060,
+"odds": 1.65
+}
+}
+]
+}
+
+Unsubscribe callback [/sports/6/en/live-matches-aggregator-main/all-disciplines/all-locations/default-event-info/10/3] successfully.
