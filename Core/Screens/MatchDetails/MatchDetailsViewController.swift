@@ -397,14 +397,19 @@ class MatchDetailsViewController: UIViewController {
         self.shareButton.setTitle("", for: .normal)
         self.shareButton.setImage(UIImage(named: "more_options_icon"), for: .normal)
 
+        //
         self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
 
         self.headerCompetitionImageView.image = nil
-        self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
+        self.headerCompetitionImageView.isHidden = true
+        
         self.headerCompetitionImageView.contentMode = .scaleAspectFill
         self.headerCompetitionImageView.layer.borderWidth = 0.5
 
+        self.headerCompetitionSportImageView.isHidden = false
+        
+        //
         self.headerDetailHomeLabel.text = localized("home_label_default")
         self.headerDetailHomeLabel.font = AppFont.with(type: .bold, size: 16)
         self.headerDetailHomeLabel.numberOfLines = 0
@@ -626,6 +631,8 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
+        
         self.awayServingIndicatorView.layer.cornerRadius = self.awayServingIndicatorView.frame.size.width / 2
         self.homeServingIndicatorView.layer.cornerRadius = self.homeServingIndicatorView.frame.size.width / 2
     }
@@ -1130,15 +1137,19 @@ class MatchDetailsViewController: UIViewController {
 
         let assetName = Assets.flagName(withCountryCode: match.venue?.isoCode ?? match.venue?.id ?? "")
         self.headerCompetitionImageView.image =  UIImage(named: assetName)
-
+        self.headerCompetitionImageView.isHidden = false
+        
         if let sportIconImage = UIImage(named: "sport_type_icon_\(match.sport.id)") {
             self.headerCompetitionSportImageView.image =  sportIconImage
+            self.headerCompetitionSportImageView.isHidden = false
         }
         else if let defaultImage = UIImage(named: "sport_type_icon_default") {
             self.headerCompetitionSportImageView.image = defaultImage
+            self.headerCompetitionSportImageView.isHidden = false
         }
         else {
             self.headerCompetitionSportImageView.image = nil
+            self.headerCompetitionSportImageView.isHidden = true
         }
 
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)

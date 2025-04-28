@@ -495,7 +495,7 @@ class MatchDetailsViewModel: NSObject {
                 }
             }, receiveValue: { [weak self] matchLiveData in
                 if let detailedScoresValue = matchLiveData.detailedScores {
-                    var matchDetailedScoresForSport = [sportAlphaCode: detailedScoresValue]
+                    let matchDetailedScoresForSport = [sportAlphaCode: detailedScoresValue]
                     self?.matchDetailedScores.send(matchDetailedScoresForSport)
                 }
 

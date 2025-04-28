@@ -1996,7 +1996,7 @@ extension MatchWidgetCollectionViewCell {
             // We have enought data to show the new odd value and title
             self?.newTitleBoostedOddLabel.text = newOutcome.typeName // same title for both old and new
 
-            var newValueString = OddFormatter.formatOdd(withValue: newOutcome.bettingOffer.decimalOdd)
+            let newValueString = OddFormatter.formatOdd(withValue: newOutcome.bettingOffer.decimalOdd)
             self?.newValueBoostedOddLabel.text = newValueString // The old odd from the old market subscriber
 
             guard
@@ -2119,7 +2119,7 @@ extension MatchWidgetCollectionViewCell {
                 }
                 else {
                     // Hide outcome buttons if we don't have any market
-                    self?.oddsStackView.alpha = 0.2
+                    self?.oddsStackView.alpha = 0.0
                     self?.showSeeAllView()
                 }
             }
@@ -2234,7 +2234,9 @@ extension MatchWidgetCollectionViewCell {
                 }, receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
-
+                    
+                    print("[Debug] \(weakSelf.viewModel?.match.id ?? "") leftOddButtonSubscriber - \(bettingOffer.decimalOdd)")
+                    
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.homeBaseView.isUserInteractionEnabled = false
                         weakSelf.homeBaseView.alpha = 0.5
@@ -2306,6 +2308,8 @@ extension MatchWidgetCollectionViewCell {
 
                     guard let weakSelf = self else { return }
 
+                    print("[Debug] \(weakSelf.viewModel?.match.id ?? "") middleOddButtonSubscriber - \(bettingOffer.decimalOdd)")
+                    
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.drawBaseView.isUserInteractionEnabled = false
                         weakSelf.drawBaseView.alpha = 0.5
@@ -2375,6 +2379,8 @@ extension MatchWidgetCollectionViewCell {
 
                     guard let weakSelf = self else { return }
 
+                    print("[Debug] \(weakSelf.viewModel?.match.id ?? "") rightOddButtonSubscriber - \(bettingOffer.decimalOdd)")
+                    
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.awayBaseView.isUserInteractionEnabled = false
                         weakSelf.awayBaseView.alpha = 0.5
