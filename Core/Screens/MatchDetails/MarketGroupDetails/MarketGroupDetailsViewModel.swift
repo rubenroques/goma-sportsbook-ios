@@ -119,25 +119,9 @@ class MarketGroupDetailsViewModel {
         
         let isBetbuilderSportAllowed = sportCodes.contains(sportIdCode)
         
-        if isBetbuilderSportAllowed {
+        if isBetbuilderSportAllowed && matchStatus.isPreLive {
             
-            if sportIdCode == "FBL" {
-                if matchStatus.isPreLive || matchStatus.isLive {
-                    return true
-                }
-            }
-            else if sportIdCode == "BSK" {
-                if matchStatus.isPreLive || matchStatus.isLive {
-                    return true
-                }
-            }
-            else if sportIdCode == "TNS" {
-                if matchStatus.isLive {
-                    return true
-                }
-            }
-            
-            return false
+            return true
         }
         
         return false
