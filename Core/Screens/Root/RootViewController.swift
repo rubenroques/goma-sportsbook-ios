@@ -1790,6 +1790,9 @@ extension RootViewController {
         if self.selectedTabItem == .home {
             self.homeViewController.scrollToTop()
         }
+//        else {
+//            self.homeViewController.reloadData()
+//        }
 
         self.selectedTabItem = .home
 
@@ -1801,6 +1804,9 @@ extension RootViewController {
         if self.selectedTabItem == .preLive {
             self.preLiveViewController.scrollToTop()
         }
+//        else {
+//            self.homeViewController.reloadData()
+//        }
 
         self.selectedTabItem = .preLive
     }

@@ -265,6 +265,7 @@ class HomeViewController: UIViewController {
     }
 
     func reloadData() {
+        print("[Debug] - ---  ---  ---  ---  table reloadData  ---  ---  ---  --- -") 
         self.tableView.reloadData()
     }
 
@@ -1164,6 +1165,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 return UITableViewCell()
             }
+            
+            print("[Debug] loading cell identifier: MatchLineTableViewCell at section \(indexPath.section), row \(indexPath.row) - \(viewModel.match.id)")
 
             cell.configure(withViewModel: viewModel)
 
@@ -1251,6 +1254,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         }
 
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let identifier = cell.reuseIdentifier ?? "Unknown"
+        print("[Debug] willDisplay cell identifier: \(cell) at section \(indexPath.section), row \(indexPath.row)")
     }
 
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
