@@ -444,7 +444,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.participantsNameLabel.text = teamsText
 
-        self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
+        self.participantsCountryImageView.image = UIImage(named: "market_stats_icon") // 
 
         self.marketSubscriber = Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: market.id)
             .compactMap({ $0 })

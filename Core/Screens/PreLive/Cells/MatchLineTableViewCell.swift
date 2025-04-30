@@ -126,6 +126,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
 
+        print("[Debug] \(self.viewModel?.matchId ?? "") viewModel to nil MatchLineTableCellViewModel")
+        
         self.viewModel = nil
         self.match = nil
 

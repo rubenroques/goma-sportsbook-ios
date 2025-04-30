@@ -20,7 +20,8 @@ class SportRadarEventSecundaryMarketsCoordinator {
 
     // TODO: check why live highlights in home are losing the reference to this subscription.
     // TODO: IMPORTANT: This vars needs to be weak for the auto unsubscribe to work
-    weak var subscription: Subscription?
+    var subscription: Subscription?
+    var liveSubscription: Subscription?
 
     var isActive: Bool {
         var isActive = self.subscription != nil
@@ -30,14 +31,31 @@ class SportRadarEventSecundaryMarketsCoordinator {
             isActive = true
         }
 
-        print("[Debug] \(self.debugMatchId) SREventSecundaryMarketsC.isActive")
+        print("[Debug] \(self.debugMatchId) SREventSecundaryMarketsC.isActive \(isActive)")
 
         return isActive
     }
 
     var eventWithSecundaryMarketsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
-        return self.eventWithSecundaryMarketsSubject
-            .eraseToAnyPublisher()
+        if case let .connected(subscription) = eventWithSecundaryMarketsSubject.value {
+            return self.eventWithSecundaryMarketsSubject
+                .prepend(.connected(subscription: subscription))
+                .eraseToAnyPublisher()
+        }
+        else if case .contentUpdate(_) = eventWithSecundaryMarketsSubject.value {
+            if let subscription = self.subscription {
+                return self.eventWithSecundaryMarketsSubject
+                    .prepend(.connected(subscription: subscription))
+                    .eraseToAnyPublisher()
+            }
+            else {
+                return self.eventWithSecundaryMarketsSubject.eraseToAnyPublisher()
+            }
+        }
+        else {
+            return self.eventWithSecundaryMarketsSubject
+                .eraseToAnyPublisher()
+        }
     }
 
     private var eventWithSecundaryMarketsSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
@@ -47,8 +65,6 @@ class SportRadarEventSecundaryMarketsCoordinator {
     private let session = URLSession.init(configuration: .default)
 
     private var cancellables = Set<AnyCancellable>()
-
-    private let subscriptionAccessQueue = DispatchQueue(label: "com.goma.subscriptionAccessQueue")
 
     var debugMatchId: String
 
@@ -78,7 +94,7 @@ class SportRadarEventSecundaryMarketsCoordinator {
         self.waitingSubscription = true
 
         Publishers.CombineLatest(self.storage.eventPublisher,
-                                 self.eventWithSecundaryMarketsSubject.replaceError(with: .disconnected))
+                                 self.eventWithSecundaryMarketsPublisher.replaceError(with: .disconnected))
         .filter({ storedEvent, eventWithSecundaryMarketsSubject in
             switch eventWithSecundaryMarketsSubject {
             case .connected, .contentUpdate:
@@ -150,23 +166,12 @@ class SportRadarEventSecundaryMarketsCoordinator {
             }, receiveValue: { [weak self] in
                 print("[Debug] \(self?.debugMatchId ?? "") SREvSecMarketsC.subscribeEventMainMarkets - Subscription successful")
                 if let self = self {
-
-                    self.subscriptionAccessQueue.sync {
-                        let subscription = Subscription(contentIdentifier: self.eventMainMarketIdentifier,
-                                                        sessionToken: self.sessionToken,
-                                                        unsubscriber: self)
-
-                        if let currentSubscription = self.subscription {
-                            currentSubscription.associateSubscription(subscription)
-                        }
-                        else {
-                            self.subscription = subscription
-                        }
-
-                        self.eventWithSecundaryMarketsSubject.send(.connected(subscription: subscription))
-
-                        self.subscribeEventSecundaryMarkets()
-                    }
+                    let subscription = Subscription(contentIdentifier: self.eventMainMarketIdentifier,
+                                                    sessionToken: self.sessionToken,
+                                                    unsubscriber: self)
+                    self.subscription = subscription
+                    self.eventWithSecundaryMarketsSubject.send(.connected(subscription: subscription))
+                    self.subscribeEventSecundaryMarkets()
                 }
             })
             .store(in: &self.cancellables)
@@ -213,19 +218,18 @@ class SportRadarEventSecundaryMarketsCoordinator {
                 }
             }, receiveValue: { [weak self] in
                 if let self = self {
-                    self.subscriptionAccessQueue.sync {
-                        let subscription = Subscription(contentIdentifier: self.eventSecundaryMarketsIdentifier,
-                                                        sessionToken: self.sessionToken,
-                                                        unsubscriber: self)
+                    let subscription = Subscription(contentIdentifier: self.eventSecundaryMarketsIdentifier,
+                                                    sessionToken: self.sessionToken,
+                                                    unsubscriber: self)
 
-                        if let currentSubscription = self.subscription {
-                            currentSubscription.associateSubscription(subscription)
-                        }
-
-                        print("[Debug] \(self.debugMatchId) : SREvSecMarketsC.subscribeEventSecundaryMarkets - not waiting for subscription")
-
-                        self.waitingSubscription = false
+                    if let currentSubscription = self.subscription {
+                        currentSubscription.associateSubscription(subscription)
                     }
+
+                    print("[Debug] \(self.debugMatchId) SREvSecMarketsC.subscribeEventSecundaryMarkets associatedSubscription \(subscription)")
+                    print("[Debug] \(self.debugMatchId) SREvSecMarketsC.subscribeEventSecundaryMarkets - not waiting anymore")
+
+                    self.waitingSubscription = false
                 }
             })
             .store(in: &self.cancellables)
@@ -257,7 +261,7 @@ class SportRadarEventSecundaryMarketsCoordinator {
 extension SportRadarEventSecundaryMarketsCoordinator {
 
     func updatedMainMarket(forContentIdentifier identifier: ContentIdentifier, onEvent event: Event) {
-        print("[Debug] \(debugMatchId) SREvSecMarketsC.updatedMainMarket - Identifier: \(identifier)")
+        print("[Debug] \(debugMatchId) SREvSecMarketsC updatedMainMarket: \(identifier)")
         if self.eventMainMarketIdentifier != identifier {
             return
         }
@@ -265,7 +269,7 @@ extension SportRadarEventSecundaryMarketsCoordinator {
     }
 
     func updatedSecundaryMarkets(forContentIdentifier identifier: ContentIdentifier, onEvent event: Event) {
-        print("[Debug] \(debugMatchId) SREvSecMarketsC.storeSecundaryMarkets - Identifier: \(identifier)")
+        print("[Debug] \(debugMatchId) SREvSecMarketsC updatedSecundaryMarkets: \(identifier)")
         if self.eventSecundaryMarketsIdentifier != identifier {
             return
         }
@@ -273,22 +277,15 @@ extension SportRadarEventSecundaryMarketsCoordinator {
     }
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
-        // print("[Debug] \(debugMatchId) SREvSecMarketsC.handleContentUpdate - Content type: \(content.contentIdentifier?.contentType.rawValue ?? "unknown")")
-        if content.contentIdentifier?.contentType == .eventSecundaryMarkets {
-            return
-        }
 
         guard
-            let updatedContentIdentifier = content.contentIdentifier
-        else {
-            return
-        }
-
-        guard
+            let updatedContentIdentifier = content.contentIdentifier,
             self.eventSecundaryMarketsIdentifier == updatedContentIdentifier || self.eventMainMarketIdentifier == updatedContentIdentifier
         else {
             return
         }
+
+        print("[Debug] \(debugMatchId) SREvSecMarketsC.handleContentUpdate - Content type: \(content.contentIdentifier?.contentType.rawValue ?? "unknown")")
 
         switch content {
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):

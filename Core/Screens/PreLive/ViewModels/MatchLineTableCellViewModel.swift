@@ -49,6 +49,8 @@ class MatchLineTableCellViewModel {
     let matchId: String
 
     init(match: Match, status: MatchWidgetStatus = .unknown) {
+        print("[Debug] \(match.id) MatchLineTableCellViewModel init")
+        
         self.statusSubject = CurrentValueSubject<MatchWidgetStatus, Never>(status)
         self.matchSubject = CurrentValueSubject<Match, Never>(match)
         self.matchWidgetCellViewModelSubject = CurrentValueSubject<MatchWidgetCellViewModel, Never>(
@@ -62,7 +64,6 @@ class MatchLineTableCellViewModel {
     }
 
     private func observeMatchValues() {
-
         self.matchPublisher
             .removeDuplicates(by: { oldMatch, newMatch in
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
@@ -80,7 +81,7 @@ class MatchLineTableCellViewModel {
     }
 
     deinit {
-        print("MatchLineTableCellViewModel.deinit")
+        print("[Debug] \(self.matchId) MatchLineTableCellViewModel deinit")
     }
 
     //
@@ -102,6 +103,8 @@ extension MatchLineTableCellViewModel {
     private func loadLiveEventDetails(matchId: String) {
         self.secundaryMarketsPublisher?.cancel()
         self.secundaryMarketsPublisher = nil
+        
+        self.secundaryMarketsSubscription = nil
 
         self.secundaryMarketsPublisher = Publishers.CombineLatest(
             Env.servicesProvider.subscribeEventMarkets(eventId: matchId),
@@ -113,16 +116,28 @@ extension MatchLineTableCellViewModel {
         .receive(on: DispatchQueue.main)
         .sink { [weak self] completion in
             guard let self = self else { return }
+            
         } receiveValue: { [weak self] subscribableContentMatch, marketsAdditionalInfos in
             guard let self = self else { return }
             switch subscribableContentMatch {
             case .connected(subscription: let subscription):
+                print("[Debug] \(self.matchId) stored subscription in vm \(subscription)")
+                
+                print("[Debug2] \(self.matchId) vm stored subscription \(subscription)")
+
                 self.secundaryMarketsSubscription = subscription
             case .contentUpdate(content: let updatedEvent):
                 guard
                     var newMatch = ServiceProviderModelMapper.match(fromEvent: updatedEvent)
                 else {
                     return
+                }
+                
+                print("[Debug2] \(self.matchId) vm received updatedEvent")
+
+                
+                if self.secundaryMarketsSubscription == nil {
+                    print("[Debug] \(self.matchId) self.secundaryMarketsSubscription = nil")
                 }
 
 
@@ -177,7 +192,6 @@ extension MatchLineTableCellViewModel {
                                                     newMarkets: newMatch.markets,
                                                     marketsAdditionalInfo: marketsAdditionalInfos,
                                                     sportId: sportId) ?? []
-
 
             // If we got the event detail via EventSummary
             // the event come has no markets.

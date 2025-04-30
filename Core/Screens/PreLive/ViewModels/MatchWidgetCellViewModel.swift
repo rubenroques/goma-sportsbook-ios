@@ -210,7 +210,6 @@ class MatchWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
 
-
     var matchTimeDetailsPublisher: AnyPublisher<String?, Never> {
         return self.matchPublisher.map { match in
             let details = [match.matchTime, match.detailedStatus]
@@ -238,7 +237,16 @@ class MatchWidgetCellViewModel {
     }
 
     var isDefaultMarketAvailablePublisher: AnyPublisher<Bool, Never> {
-        return self.defaultMarketPublisher.flatMap { defaultMarket in
+        return self.defaultMarketPublisher.map({ market in
+            if let market {
+                return market.isAvailable
+            }
+            return false
+        })
+        .eraseToAnyPublisher()
+        
+        /*
+         return self.defaultMarketPublisher.flatMap { defaultMarket in
             guard
                 let defaultMarketValue = defaultMarket
             else {
@@ -246,9 +254,11 @@ class MatchWidgetCellViewModel {
             }
 
             let isMarketAvailable = defaultMarketValue.isAvailable
-
+            
             // we try to subscribe to it on the lists
+            print("[Debug] isDefaultMarketAvailablePublisher subscribeToEventOnListsMarketUpdates")
             return Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: defaultMarketValue.id)
+                .print("subscribeToEventOnListsMarketUpdates called")
                 .map({ (serviceProviderMarket: ServicesProvider.Market?) -> Bool in
                     if let serviceProviderMarketValue = serviceProviderMarket {
                         let isTradable = serviceProviderMarketValue.isTradable
@@ -264,6 +274,7 @@ class MatchWidgetCellViewModel {
                 .eraseToAnyPublisher()
         }
         .eraseToAnyPublisher()
+        */
     }
 
     var defaultMarketPublisher: AnyPublisher<Market?, Never> {
@@ -446,7 +457,7 @@ class MatchWidgetCellViewModel {
     }
 
     deinit {
-
+        print("[Debug] \(self.match.id) MatchWidgetCellViewModel deinit")
     }
 
     func updateWithMatch(_ match: Match) {

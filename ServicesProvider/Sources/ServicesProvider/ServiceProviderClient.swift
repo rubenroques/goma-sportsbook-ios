@@ -685,16 +685,6 @@ extension ServicesProviderClient {
         return eventsProvider.deleteFavoriteFromList(eventId: eventId)
     }
 
-    public func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return eventsProvider.subscribeToEventAndSecondaryMarkets(withId: id)
-    }
-
     public func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
