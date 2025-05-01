@@ -210,6 +210,9 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private func setupWithMatch(_ newMatch: Match) {
         self.match = newMatch
+        
+        let address = Unmanaged.passUnretained(self).toOpaque()
+        print("[Debug] - ---  ---  ---  ---  collectionView line reloadData  \(address) ---  ---  ---  --- -")
         self.collectionView.reloadData()
     }
 

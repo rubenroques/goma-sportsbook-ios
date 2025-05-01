@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Swift Import Rule
+
+## Importing classes from different folders in Swift
+
+### Rule
+- **Same module, different folders**: No import needed; files can access each other directly
+- **Different modules**: Use `import ModuleName` to access classes from another module
+
+### Examples
+Correct:
+```swift
+// For classes in different folders but same module
+let myClass = MyClass() // No import needed
+
+// For classes in different modules
+import CoreModule
+let coreData = CoreData()
+
+
+Incorrect:
+```swift
+// Don't try to import by file path
+import "../Folder/MyClass.swift"
+
+// Don't use relative imports
+import "./Utils/Helper"
+```
+
+### Remember
+- Swift works at the module level, not the file/folder level
+- Ensure files are added to the correct target in Xcode
+- Package.swift must correctly define targets for SPM projects
