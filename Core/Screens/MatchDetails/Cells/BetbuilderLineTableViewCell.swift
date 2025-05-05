@@ -30,8 +30,6 @@ class BetbuilderLineTableViewCell: UITableViewCell {
 
     var presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode = .multiplesPerLineByType
     
-    var shouldHideBetbuilderLine: ((BetbuilderLineCellViewModel) -> Void)?
-
     // MARK: Lifetime and cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -127,21 +125,6 @@ extension BetbuilderLineTableViewCell: UICollectionViewDataSource, UICollectionV
         }
         
         cell.configure(viewModel: cellViewModel)
-        
-        cell.shouldHideBetbuilderSelection = { [weak self] in
-                guard let self = self, let viewModel = self.viewModel else { return }
-                
-                if let index = viewModel.betBuilderOptions.firstIndex(where: { $0 === cellViewModel }) {
-                    viewModel.betBuilderOptions.remove(at: index)
-                    
-                    self.collectionView.reloadData()
-                    
-                    if viewModel.betBuilderOptions.isEmpty {
-                        self.shouldHideBetbuilderLine?(viewModel)
-                    }
-                    
-                }
-            }
 
         return cell
     }

@@ -36,7 +36,7 @@ class MatchDetailsViewModel: NSObject {
 
     var matchStatsUpdatedPublisher = PassthroughSubject<Void, Never>.init()
     
-    var recommendedBetBuilders: CurrentValueSubject<[RecommendedBetBuilder], Never> = .init([])
+    var recommendedBetBuildersPublisher: CurrentValueSubject<[RecommendedBetBuilder], Never> = .init([])
 
     var shouldRenderFieldWidget: CurrentValueSubject<Bool, Never> = .init(false)
     var fieldWidgetRenderDataType: FieldWidgetRenderDataType?
@@ -272,7 +272,7 @@ class MatchDetailsViewModel: NSObject {
                             }
                         }
                     
-                    self.recommendedBetBuilders.send(filterRecommendedBetBuilders)
+                    self.recommendedBetBuildersPublisher.send(filterRecommendedBetBuilders)
                 }
                 .store(in: &self.cancellables)
         }
