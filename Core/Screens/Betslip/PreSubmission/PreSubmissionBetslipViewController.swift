@@ -1402,7 +1402,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         // Spin Wheel
         if TargetVariables.features.contains(.spinWheel) {
-            self.spinWheelButton.isHidden = false
+            self.spinWheelButton.isHidden = true
         }
         else {
             self.spinWheelButton.isHidden = true

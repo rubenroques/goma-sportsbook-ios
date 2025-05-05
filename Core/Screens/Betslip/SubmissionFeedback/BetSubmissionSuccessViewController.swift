@@ -82,7 +82,6 @@ class BetSubmissionSuccessViewController: UIViewController {
         }
     }
     
-
     init(betPlacedDetailsArray: [BetPlacedDetails], cashbackResultValue: Double? = nil, usedCashback: Bool = false, bettingTickets: [BettingTicket]? = nil) {
         
         self.bettingTickets = bettingTickets

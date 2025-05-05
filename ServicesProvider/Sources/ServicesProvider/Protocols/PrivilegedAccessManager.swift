@@ -109,4 +109,8 @@ protocol PrivilegedAccessManager {
     
     func getReferralLink() -> AnyPublisher<ReferralLink, ServiceProviderError>
     func getReferees() -> AnyPublisher<[Referee], ServiceProviderError>
+    
+    func getWheelEligibility(gameTransId: String) -> AnyPublisher<WheelEligibility, ServiceProviderError>
+    
+    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInResponse, ServiceProviderError>
 }

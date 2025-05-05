@@ -1497,6 +1497,49 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
         }).eraseToAnyPublisher()
     }
+    
+    func getWheelEligibility(gameTransId: String) -> AnyPublisher<WheelEligibility, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getWheelEligibility(gameTransId: gameTransId)
+
+        let publisher: AnyPublisher<SportRadarModels.WheelStatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ wheelStatusResponse -> AnyPublisher<WheelEligibility, ServiceProviderError> in
+
+            if wheelStatusResponse.status == "SUCCESS",
+               let wheelEligibility = wheelStatusResponse.data {
+
+                let mappedWheelEligibility = SportRadarModelMapper.wheelEligibility(fromInternalWheelEligibility: wheelEligibility)
+
+                return Just(mappedWheelEligibility).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: WheelEligibility.self, failure: ServiceProviderError.errorMessage(message: wheelStatusResponse.status)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+    
+    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.wheelOptIn(winBoostId: winBoostId, optInOption: optInOption)
+
+        let publisher: AnyPublisher<SportRadarModels.WheelOptInResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ wheelOptInResponse -> AnyPublisher<WheelOptInResponse, ServiceProviderError> in
+
+            if wheelOptInResponse.status == "SUCCESS" {
+
+                let mappedWheelOptInResponse = SportRadarModelMapper.wheelOptInResponse(fromInternalWheelOptInResponse: wheelOptInResponse)
+
+                return Just(mappedWheelOptInResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: WheelOptInResponse.self, failure: ServiceProviderError.errorMessage(message: wheelOptInResponse.status)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {

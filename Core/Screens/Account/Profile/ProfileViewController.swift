@@ -424,17 +424,47 @@ class ProfileViewController: UIViewController {
 
         self.setupStackView()
 
-//        let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
-//        self.profilePictureBaseView.addGestureRecognizer(testTap)
+        let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
+        self.profilePictureBaseView.addGestureRecognizer(testTap)
         
     }
     
-//    @objc private func testTap() {
-//        
-//        let vc = BetSubmissionSuccessViewController(betPlacedDetailsArray: [], usedCashback: false)
-//        
-//        self.present(vc, animated: true)
-//    }
+    @objc private func testTap() {
+        
+        let betslipId = "246938"
+        let betId = "373340.10"
+        
+        // Split the betId at the decimal point
+        let betIdComponents = betId.split(separator: ".")
+        let betIdBase = betIdComponents[0]
+        let betIdDecimal = betIdComponents.count > 1 ? betIdComponents[1] : ""
+
+        // Remove trailing zeros from the decimal part
+        let trimmedDecimal = betIdDecimal.replacingOccurrences(of: "0+$", with: "", options: .regularExpression)
+
+        // Construct the final ID
+        let gameTransId: String
+        if trimmedDecimal.isEmpty {
+            gameTransId = "\(betslipId)_\(betIdBase)"
+        } else {
+            gameTransId = "\(betslipId)_\(betIdBase).\(trimmedDecimal)"
+        }
+        
+        Env.servicesProvider.getWheelEligibility(gameTransId: gameTransId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    print("FINISHED WINBOOST")
+                case .failure(let failure):
+                    print("ERROR WINBOOST: \(failure)")
+                }
+            }, receiveValue: { [weak self] wheelStatusResponse in
+                
+                print("WHEEL RESPONSE: \(wheelStatusResponse)")
+            })
+            .store(in: &cancellables)
+    }
 
     private func getOptInBonus() {
 

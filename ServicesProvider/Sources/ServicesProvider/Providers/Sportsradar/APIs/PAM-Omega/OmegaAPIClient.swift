@@ -171,6 +171,9 @@ enum OmegaAPIClient {
     
     case getReferralLink
     case getReferees
+    
+    case getWheelEligibility(gameTransId: String)
+    case wheelOptIn(winBoostId: String, optInOption: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -317,6 +320,11 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getReferralLinks"
         case .getReferees:
             return "/ps/ips/getReferees"
+        
+        case .getWheelEligibility:
+            return "/ps/ips/winboost/eligibility"
+        case .wheelOptIn:
+            return "/ps/ips/winboost/opt-in"
         }
     }
     
@@ -859,6 +867,17 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .getReferees:
             return nil
+            
+        case .getWheelEligibility(let gameTransId):
+            return [
+                URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
+                URLQueryItem(name: "gameTranId", value: gameTransId)
+            ]
+        case .wheelOptIn(let winBoostId, let optInOption):
+            return [
+                URLQueryItem(name: "winBoostId", value: winBoostId),
+                URLQueryItem(name: "optIn", value: optInOption)
+            ]
         }
     }
     
@@ -940,6 +959,9 @@ extension OmegaAPIClient: Endpoint {
             
         case .getReferralLink: return .get
         case .getReferees: return .get
+            
+        case .getWheelEligibility: return .get
+        case .wheelOptIn: return .get
         }
     }
     
@@ -1079,6 +1101,9 @@ extension OmegaAPIClient: Endpoint {
             
         case .getReferralLink: return true
         case .getReferees: return true
+            
+        case .getWheelEligibility: return true
+        case .wheelOptIn: return true
         }
     }
     
@@ -1235,6 +1260,8 @@ extension OmegaAPIClient: Endpoint {
         case .verifyMobileCode: return "verifyMobileCode"
         case .getReferralLink: return "getReferralLink"
         case .getReferees: return "getReferees"
+        case .getWheelEligibility: return "getWheelEligibility"
+        case .wheelOptIn: return "wheelOptIn"
         }
     }
 }
