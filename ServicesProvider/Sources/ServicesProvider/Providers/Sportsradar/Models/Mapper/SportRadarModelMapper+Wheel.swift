@@ -31,7 +31,16 @@ extension SportRadarModelMapper {
     
     static func wheelConfiguration(fromInternalWheelConfiguration wheelConfiguration: SportRadarModels.WheelConfiguration) -> WheelConfiguration {
         
-        return WheelConfiguration(id: wheelConfiguration.id)
+        let wheelTiers = wheelConfiguration.tiers.map( {
+            return self.wheelTier(fromInternalWhhelTier: $0)
+        })
+        
+        return WheelConfiguration(id: wheelConfiguration.id, title: wheelConfiguration.title, tiers: wheelTiers)
+    }
+    
+    static func wheelTier(fromInternalWhhelTier wheelTier: SportRadarModels.WheelTier) -> WheelTier {
+        
+        return WheelTier(name: wheelTier.name, chance: wheelTier.chance, boostMultiplier: wheelTier.boostMultiplier)
     }
     
     static func wheelOptInResponse(fromInternalWheelOptInResponse wheelOptInResponse: SportRadarModels.WheelOptInResponse) -> WheelOptInResponse {

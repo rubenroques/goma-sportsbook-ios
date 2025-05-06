@@ -431,8 +431,8 @@ class ProfileViewController: UIViewController {
     
     @objc private func testTap() {
         
-        let betslipId = "246938"
-        let betId = "373340.10"
+        let betslipId = "247097"
+        let betId = "373498.10"
         
         // Split the betId at the decimal point
         let betIdComponents = betId.split(separator: ".")

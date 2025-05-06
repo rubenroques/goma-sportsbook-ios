@@ -46,10 +46,26 @@ public struct WheelStatus: Codable {
 }
 
 public struct WheelConfiguration: Codable {
-    let id: String
+    var id: String
+    var title: String
+    var tiers: [WheelTier]
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
+        case title = "title"
+        case tiers = "tiers"
+    }
+}
+
+public struct WheelTier: Codable {
+    var name: String
+    var chance: Double
+    var boostMultiplier: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case chance = "chance"
+        case boostMultiplier = "boostMultiplier"
     }
 }
 

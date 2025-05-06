@@ -62,9 +62,25 @@ extension SportRadarModels {
 
     struct WheelConfiguration: Codable {
         var id: String
+        var title: String
+        var tiers: [WheelTier]
         
         enum CodingKeys: String, CodingKey {
             case id = "id"
+            case title = "title"
+            case tiers = "tiers"
+        }
+    }
+    
+    struct WheelTier: Codable {
+        var name: String
+        var chance: Double
+        var boostMultiplier: Double
+        
+        enum CodingKeys: String, CodingKey {
+            case name = "name"
+            case chance = "chance"
+            case boostMultiplier = "boostMultiplier"
         }
     }
     
