@@ -933,7 +933,7 @@ class Router {
             return
         }
 
-        let viewModel = SpinWheelViewModel(url: url)
+        let viewModel = SpinWheelViewModel(url: url, prize: "20%")
         let spinWheelViewController = SpinWheelViewController(viewModel: viewModel)
         spinWheelViewController.modalPresentationStyle = .fullScreen
 

@@ -462,8 +462,27 @@ class ProfileViewController: UIViewController {
             }, receiveValue: { [weak self] wheelStatusResponse in
                 
                 print("WHEEL RESPONSE: \(wheelStatusResponse)")
+                
+                self?.openSpinWheel(boostMultiplier: 0.3)
+                
             })
             .store(in: &cancellables)
+    }
+    
+    private func openSpinWheel(boostMultiplier: Double) {
+        
+        let prize = String(format: "%.0f%%", boostMultiplier * 100)
+        
+        if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
+            
+            let spinWheelWebViewModel = SpinWheelViewModel(url: url, prize: prize)
+            
+            let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)
+            
+            spinWheelWebViewController.modalPresentationStyle = .fullScreen
+            
+            self.present(spinWheelWebViewController, animated: true)
+        }
     }
 
     private func getOptInBonus() {

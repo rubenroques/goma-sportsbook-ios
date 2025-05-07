@@ -74,7 +74,7 @@ enum SpinWheelMessage: Codable {
 class SpinWheelViewModel {
     // MARK: - Public Properties
     let url: URL
-
+    let prize: String
     // Action publishers
     var exitPublisher = PassthroughSubject<Void, Never>()
     var messageToWebViewPublisher = PassthroughSubject<SpinWheelMessage, Never>()
@@ -84,8 +84,9 @@ class SpinWheelViewModel {
     private var widgetLoadedTriggered = false
 
     // MARK: - Initialization
-    init(url: URL) {
+    init(url: URL, prize: String) {
         self.url = url
+        self.prize = prize
     }
 
     // MARK: - Public Methods
@@ -117,7 +118,9 @@ class SpinWheelViewModel {
                 .delay(for: .milliseconds(200), scheduler: DispatchQueue.main)
                 .sink { [weak self] _ in
                     print("SpinWheelVM: Delay completed, sending wonPrize message with 20%")
-                    self?.messageToWebViewPublisher.send(.wonPrize(prize: "20%"))
+//                    self?.messageToWebViewPublisher.send(.wonPrize(prize: "20%"))
+                    self?.messageToWebViewPublisher.send(.wonPrize(prize: self?.prize ?? ""))
+
                 }
                 .store(in: &self.cancellables)
         case .exitWheel:

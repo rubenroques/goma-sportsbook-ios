@@ -2514,7 +2514,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
         if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
-            let spinWheelWebViewModel = SpinWheelViewModel(url: url)
+            let spinWheelWebViewModel = SpinWheelViewModel(url: url, prize: "20%")
             let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)
             spinWheelWebViewController.modalPresentationStyle = .fullScreen
             self.present(spinWheelWebViewController, animated: true)
