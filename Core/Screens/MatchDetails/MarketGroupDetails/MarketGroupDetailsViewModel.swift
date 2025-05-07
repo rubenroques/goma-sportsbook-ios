@@ -277,33 +277,105 @@ class MarketGroupDetailsViewModel {
         
     }
     
+//    private func checkAvailableBetbuilderSelections(betbuilderLineCellViewModels: [BetbuilderLineCellViewModel]) {
+//        // Create a structure to track validation results with original indices
+//        var validationResults = [(lineCellViewModel: BetbuilderLineCellViewModel, validOptions: [(option: BetbuilderSelectionCellViewModel, originalIndex: Int)])]()
+//        
+//        // Initialize validation results for each line
+//        for lineCellViewModel in betbuilderLineCellViewModels {
+//            validationResults.append((lineCellViewModel, []))
+//        }
+//        
+//        // Create a dispatch group for synchronization
+//        let group = DispatchGroup()
+//        
+//        for (lineIndex, lineCellViewModel) in betbuilderLineCellViewModels.enumerated() {
+//            
+//            for (optionIndex, betbuilderOption) in lineCellViewModel.betBuilderOptions.enumerated() {
+//                
+//                switch betbuilderOption.fetchedBetbuilderValuePublisher.value {
+//                case .fetched(let alertType):
+//                    
+//                    if case .success = alertType {
+//                        validationResults[lineIndex].validOptions.append((betbuilderOption, optionIndex))
+//                    }
+//                case .notFetched:
+//                    
+//                    group.enter()
+//                    
+//                    let cancellable = betbuilderOption.fetchedBetbuilderValuePublisher
+//                        .filter { state in
+//                            if case .fetched = state {
+//                                return true
+//                            }
+//                            return false
+//                        } // Only proceed when fetched
+//                        .first() // Take only the first fetched value
+//                        .sink { [weak self, weak betbuilderOption, lineIndex, optionIndex] state in
+//                            defer {
+//                                group.leave() // Always leave the group
+//                            }
+//                            
+//                            guard let self = self, let betbuilderOption = betbuilderOption else {
+//                                return
+//                            }
+//                            
+//                            // Check if valid (success)
+//                            if case .fetched(let alertType) = state, case .success = alertType {
+//                                validationResults[lineIndex].validOptions.append((betbuilderOption, optionIndex))
+//                            }
+//                        }
+//                    
+//                    self.cancellables.insert(cancellable)
+//                }
+//            }
+//        }
+//        
+//        // Wait for all validations to complete
+//        group.notify(queue: .main) { [weak self] in
+//            guard let self = self else { return }
+//            
+//            var processedLineCellViewModels = [BetbuilderLineCellViewModel]()
+//            
+//            for result in validationResults {
+//                if result.validOptions.isNotEmpty {
+//                    // Sort the valid options by their original index to preserve order
+//                    let sortedOptions = result.validOptions.sorted { $0.originalIndex < $1.originalIndex }.map { $0.option }
+//                    
+//                    let updatedLine = BetbuilderLineCellViewModel(betBuilderoptions: sortedOptions)
+//                    processedLineCellViewModels.append(updatedLine)
+//                }
+//            }
+//            
+//            self.betbuilderLineCellViewModels = processedLineCellViewModels
+//            
+//            self.checkBetbuilderAvailability()
+//        }
+//    }
+    
     private func checkAvailableBetbuilderSelections(betbuilderLineCellViewModels: [BetbuilderLineCellViewModel]) {
         // Create a structure to track validation results with original indices
-        var validationResults = [(lineCellViewModel: BetbuilderLineCellViewModel, validOptions: [(option: BetbuilderSelectionCellViewModel, originalIndex: Int)])]()
+        var validationResults = [(lineIndex: Int, options: [(option: BetbuilderSelectionCellViewModel, originalIndex: Int)])]()
         
-        // Initialize validation results for each line
-        for lineCellViewModel in betbuilderLineCellViewModels {
-            validationResults.append((lineCellViewModel, []))
-        }
+        // Create an array to hold all the publishers
+        var validationPublishers = [AnyPublisher<(lineIndex: Int, optionIndex: Int, option: BetbuilderSelectionCellViewModel, isValid: Bool), Never>]()
         
-        // Create a dispatch group for synchronization
-        let group = DispatchGroup()
-        
+        // For each line cell view model
         for (lineIndex, lineCellViewModel) in betbuilderLineCellViewModels.enumerated() {
-            
+            // For each betbuilder option
             for (optionIndex, betbuilderOption) in lineCellViewModel.betBuilderOptions.enumerated() {
-                
+                // Check if the value has already been fetched
                 switch betbuilderOption.fetchedBetbuilderValuePublisher.value {
                 case .fetched(let alertType):
+                    // If already fetched, create a publisher that emits immediately
+                    let isValid = alertType == .success
+                    let publisher = Just((lineIndex: lineIndex, optionIndex: optionIndex, option: betbuilderOption, isValid: isValid))
+                        .eraseToAnyPublisher()
+                    validationPublishers.append(publisher)
                     
-                    if case .success = alertType {
-                        validationResults[lineIndex].validOptions.append((betbuilderOption, optionIndex))
-                    }
                 case .notFetched:
-                    
-                    group.enter()
-                    
-                    let cancellable = betbuilderOption.fetchedBetbuilderValuePublisher
+                    // If not fetched or still fetching, create a publisher that waits for the value
+                    let publisher = betbuilderOption.fetchedBetbuilderValuePublisher
                         .filter { state in
                             if case .fetched = state {
                                 return true
@@ -311,46 +383,59 @@ class MarketGroupDetailsViewModel {
                             return false
                         } // Only proceed when fetched
                         .first() // Take only the first fetched value
-                        .sink { [weak self, weak betbuilderOption, lineIndex, optionIndex] state in
-                            defer {
-                                group.leave() // Always leave the group
-                            }
-                            
-                            guard let self = self, let betbuilderOption = betbuilderOption else {
-                                return
-                            }
-                            
-                            // Check if valid (success)
+                        .map { state -> (lineIndex: Int, optionIndex: Int, option: BetbuilderSelectionCellViewModel, isValid: Bool) in
+                            var isValid = false
                             if case .fetched(let alertType) = state, case .success = alertType {
-                                validationResults[lineIndex].validOptions.append((betbuilderOption, optionIndex))
+                                isValid = true
                             }
+                            return (lineIndex: lineIndex, optionIndex: optionIndex, option: betbuilderOption, isValid: isValid)
                         }
-                    
-                    self.cancellables.insert(cancellable)
+                        .eraseToAnyPublisher()
+                    validationPublishers.append(publisher)
                 }
             }
         }
         
-        // Wait for all validations to complete
-        group.notify(queue: .main) { [weak self] in
-            guard let self = self else { return }
-            
-            var processedLineCellViewModels = [BetbuilderLineCellViewModel]()
-            
-            for result in validationResults {
-                if result.validOptions.isNotEmpty {
-                    // Sort the valid options by their original index to preserve order
-                    let sortedOptions = result.validOptions.sorted { $0.originalIndex < $1.originalIndex }.map { $0.option }
-                    
-                    let updatedLine = BetbuilderLineCellViewModel(betBuilderoptions: sortedOptions)
-                    processedLineCellViewModels.append(updatedLine)
+        // Merge all publishers and collect the results
+        Publishers.MergeMany(validationPublishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] results in
+                guard let self = self else { return }
+                
+                // Process the results
+                var processedResults = [Int: [(option: BetbuilderSelectionCellViewModel, originalIndex: Int)]]()
+                
+                for result in results {
+                    if result.isValid {
+                        if processedResults[result.lineIndex] == nil {
+                            processedResults[result.lineIndex] = []
+                        }
+                        processedResults[result.lineIndex]?.append((result.option, result.optionIndex))
+                    }
                 }
+                
+                // Create new line cell view models with only valid options in original order
+                var processedLineCellViewModels = [BetbuilderLineCellViewModel]()
+                
+                for (lineIndex, options) in processedResults.sorted(by: { $0.key < $1.key }) {
+                    if options.isNotEmpty {
+                        // Sort the valid options by their original index to preserve order
+                        let sortedOptions = options.sorted { $0.originalIndex < $1.originalIndex }.map { $0.option }
+                        
+                        // Create a new line with only valid options in original order
+                        let updatedLine = BetbuilderLineCellViewModel(betBuilderoptions: sortedOptions)
+                        processedLineCellViewModels.append(updatedLine)
+                    }
+                }
+                
+                // Update with the processed line cell view models
+                self.betbuilderLineCellViewModels = processedLineCellViewModels
+                
+                // Check if we have any valid betbuilder options to display
+                self.checkBetbuilderAvailability()
             }
-            
-            self.betbuilderLineCellViewModels = processedLineCellViewModels
-            
-            self.checkBetbuilderAvailability()
-        }
+            .store(in: &self.cancellables)
     }
     
     private func checkBetbuilderAvailability() {
