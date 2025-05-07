@@ -30,6 +30,8 @@ class BetbuilderLineTableViewCell: UITableViewCell {
 
     var presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode = .multiplesPerLineByType
     
+    var shouldOpenBetslip: (() -> Void)?
+    
     // MARK: Lifetime and cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -125,6 +127,10 @@ extension BetbuilderLineTableViewCell: UICollectionViewDataSource, UICollectionV
         }
         
         cell.configure(viewModel: cellViewModel)
+        
+        cell.shouldOpenBetslip = { [weak self] in
+            self?.shouldOpenBetslip?()
+        }
 
         return cell
     }

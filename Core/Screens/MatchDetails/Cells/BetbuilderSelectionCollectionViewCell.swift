@@ -17,10 +17,9 @@ class BetbuilderSelectionCellViewModel {
     
     var isBetbuilderSelectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var fetchedBetbuilderValuePublisher: CurrentValueSubject<BetbuilderFetchedState, Never> = .init(.notFetched)
-
-    private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
-    
+        
     // MARK: Private properties
+    private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
     private var cancellables = Set<AnyCancellable>()
     
     init(betSelections: [BettingTicket]) {
@@ -167,6 +166,8 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    
+    var shouldOpenBetslip: (() -> Void)?
             
     // MARK: Lifetime and cycle
     override init(frame: CGRect) {
@@ -332,6 +333,8 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                     
                 }
                 
+                self.shouldOpenBetslip?()
+
             }
             
         }

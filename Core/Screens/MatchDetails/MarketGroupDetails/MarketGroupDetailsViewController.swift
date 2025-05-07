@@ -247,6 +247,17 @@ class MarketGroupDetailsViewController: UIViewController {
     func getMarketGroupId() -> String {
         return self.viewModel.marketGroupId
     }
+    
+    func openBetslip() {
+        
+        let betslipViewController = BetslipViewController()
+        
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+        
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
 }
 
 // MARK: - TableView Protocols
@@ -275,6 +286,10 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             let viewModel = self.viewModel.getBetbuilderLineCellViewModel(withIndex: indexPath.row)
             
             cell.configure(withViewModel: viewModel, presentationMode: self.viewModel.betbuilderPresentationMode)
+            
+            cell.shouldOpenBetslip = { [weak self] in
+                self?.openBetslip()
+            }
             
             return cell
         }
