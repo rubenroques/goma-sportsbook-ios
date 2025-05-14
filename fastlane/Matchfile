@@ -9,7 +9,10 @@ username("ruben@gomadevelopment.pt") # Your Apple Developer Portal username
 app_identifier([
 	"com.gomagaming.betsson",
 	"fr.betsson.ios.app",
-	"fr.betsson.ios.app.betssonNotificationsService"
+	"fr.betsson.ios.app.betssonNotificationsService",
+	"com.gomagaming.betssoncm.prod",
+	"com.gomagaming.betssoncm.dev",
+	"com.gomagaming.betssoncm.stg"
 
 #	"com.gomagaming.goma",
 #	"com.gomagaming.gomasportradar",
