@@ -15,6 +15,8 @@ class SpinWheelViewController: UIViewController, WKScriptMessageHandler, WKNavig
     private var webView: WKWebView!
     private let viewModel: SpinWheelViewModel
     private var cancellables: Set<AnyCancellable> = []
+    
+    var shouldUpdateLayout: (() -> Void)?
 
     // MARK: - Initialization
     init(viewModel: SpinWheelViewModel) {
@@ -79,6 +81,7 @@ class SpinWheelViewController: UIViewController, WKScriptMessageHandler, WKNavig
         self.viewModel.exitPublisher
             .sink { [weak self] _ in
                 print("SpinWheel: Received exit command")
+                self?.shouldUpdateLayout?()
                 self?.dismiss(animated: true)
             }
             .store(in: &self.cancellables)
@@ -98,7 +101,7 @@ class SpinWheelViewController: UIViewController, WKScriptMessageHandler, WKNavig
             if let jsonString = String(data: jsonData, encoding: .utf8) {
                 let jsCode = "window.postMessage(\(jsonString), '*');"
                 print("SpinWheel: Executing JS: \(jsCode)")
-
+                
                 self.webView.evaluateJavaScript(jsCode) { result, error in
                     if let error = error {
                         print("SpinWheel: Error sending message to webView: \(error)")

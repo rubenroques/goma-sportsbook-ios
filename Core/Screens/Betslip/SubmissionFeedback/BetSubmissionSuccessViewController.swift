@@ -797,7 +797,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     
     private func openSpinWheel(boostMultiplier: Double) {
         
-        self.configureWinBoostLayout()
+//        self.configureWinBoostLayout()
         self.wheelBetStatus = .awarded
         
         let prize = String(format: "%.0f%%", boostMultiplier * 100)
@@ -809,6 +809,10 @@ class BetSubmissionSuccessViewController: UIViewController {
             let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)
             
             spinWheelWebViewController.modalPresentationStyle = .fullScreen
+            
+            spinWheelWebViewController.shouldUpdateLayout = { [weak self] in
+                self?.configureWinBoostLayout()
+            }
             
             self.present(spinWheelWebViewController, animated: true)
         }
