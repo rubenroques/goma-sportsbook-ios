@@ -174,6 +174,7 @@ enum OmegaAPIClient {
     
     case getWheelEligibility(gameTransId: String)
     case wheelOptIn(winBoostId: String, optInOption: String)
+    case getGrantedWinBoosts(gameTransIds: [String])
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -324,15 +325,17 @@ extension OmegaAPIClient: Endpoint {
         case .getWheelEligibility:
             return "/ps/ips/winboost/eligibility"
         case .wheelOptIn:
-            return "/ps/ips/winboost/opt-in"
+            return "/ps/ips/winboost/accept"
+        case .getGrantedWinBoosts:
+            return "/ps/ips/winboost/granted"
         }
     }
     
     var query: [URLQueryItem]? {
         switch self {
         case .login(let username, let password):
-//            return [URLQueryItem(name: "username", value: username),
-//                    URLQueryItem(name: "password", value: password)]
+            //            return [URLQueryItem(name: "username", value: username),
+            //                    URLQueryItem(name: "password", value: password)]
             return nil
         case .openSession:
             return [URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
@@ -341,13 +344,13 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .playerInfo:
             return nil
-
+            
         case .checkCredentialEmail(let email):
             return [URLQueryItem(name: "field", value: "email"),
                     URLQueryItem(name: "value", value: email)]
         case .checkUsername(let username):
             return [URLQueryItem(name: "userId", value: username)]
-
+            
         case .quickSignup(let email, let username, let password, let birthDate,
                           let mobilePrefix, let mobileNumber, let countryIsoCode, let currencyCode):
             let dateFormatter = DateFormatter()
@@ -366,7 +369,7 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "birthDate", value: birthDateString),
                 URLQueryItem(name: "mobile", value: phoneNumber)
             ]
-
+            
         case .signUp(let email,
                      let username,
                      let password,
@@ -394,11 +397,11 @@ extension OmegaAPIClient: Endpoint {
                      let consentedIds,
                      let unconsentedIds,
                      let mobileVerificationRequestId):
-
+            
             let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
-
+            
             var query: [URLQueryItem] = []
-
+            
             query.append(URLQueryItem(name: "username", value: username))
             query.append(URLQueryItem(name: "password", value: password))
             query.append(URLQueryItem(name: "email", value: email))
@@ -407,7 +410,7 @@ extension OmegaAPIClient: Endpoint {
             query.append(URLQueryItem(name: "mobile", value: phoneNumber))
             query.append(URLQueryItem(name: "city", value: city))
             query.append(URLQueryItem(name: "country", value: countryIso2Code))
-
+            
             query.append(URLQueryItem(name: "firstName", value: firstName))
             query.append(URLQueryItem(name: "lastName", value: lastName))
             
@@ -417,24 +420,24 @@ extension OmegaAPIClient: Endpoint {
             
             query.append(URLQueryItem(name: "gender", value: gender))
             query.append(URLQueryItem(name: "address", value: address))
-
+            
             query.append(URLQueryItem(name: "postalCode", value: postalCode))
             query.append(URLQueryItem(name: "streetNumber", value: streetNumber))
             query.append(URLQueryItem(name: "birthDepartment", value: birthDepartment))
             query.append(URLQueryItem(name: "birthCity", value: birthCity))
             query.append(URLQueryItem(name: "birthCountry", value: birthCountry))
-
+            
             let dateFromatter = DateFormatter()
             dateFromatter.dateFormat = "yyyy-MM-dd"
             let birthDateString = dateFromatter.string(from: birthDate)
             query.append(URLQueryItem(name: "birthDate", value: birthDateString))
-
-
+            
+            
             if let bonusCode = bonusCode { query.append(URLQueryItem(name: "bonusCode", value: bonusCode)) }
             if let receiveMarketingEmails = receiveMarketingEmails {
                 query.append(URLQueryItem(name: "receiveEmail", value: receiveMarketingEmails ? "true" : "false"))
             }
-
+            
             if let mobileVerificationRequestIdValue = mobileVerificationRequestId {
                 query.append(URLQueryItem(name: "verificationRequestId", value: mobileVerificationRequestIdValue))
             }
@@ -452,7 +455,7 @@ extension OmegaAPIClient: Endpoint {
             if let godfatherCode {
                 query.append(URLQueryItem(name: "referralCode", value: "\(godfatherCode)"))
             }
-
+            
             for consentedId in consentedIds {
                 query.append(URLQueryItem(name: "consentedVersions[]", value: consentedId))
             }
@@ -463,7 +466,7 @@ extension OmegaAPIClient: Endpoint {
             
             
             return query
-
+            
         case .updateExtraInfo(let placeOfBirth, let address2):
             var query: [URLQueryItem] = []
             let extraInfo = """
@@ -533,26 +536,26 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .forgotPassword(let email, let secretQuestion, let secretAnswer):
             var queryItemsURL: [URLQueryItem] = []
-
+            
             let queryItem = URLQueryItem(name: "email", value: email)
             queryItemsURL.append(queryItem)
-
+            
             if secretQuestion != nil {
                 let queryItem = URLQueryItem(name: "secretQuestion", value: secretQuestion)
                 queryItemsURL.append(queryItem)
             }
-
+            
             if secretAnswer != nil {
                 let queryItem = URLQueryItem(name: "secretAnswer", value: secretAnswer)
                 queryItemsURL.append(queryItem)
             }
-
+            
             return queryItemsURL
         case .updatePassword(let oldPassword, let newPassword):
             return [URLQueryItem(name: "oldPassword", value: oldPassword),
                     URLQueryItem(name: "newPassword", value: newPassword)
             ]
-
+            
         case .updateWeeklyDepositLimits(let newLimit):
             let limitFormated = String(format: "%.2f", newLimit)
             return [URLQueryItem(name: "weeklyLimit", value: limitFormated)]
@@ -567,27 +570,27 @@ extension OmegaAPIClient: Endpoint {
             ]
         case .lockPlayer(let isPermanent, let lockPeriodUnit, let lockPeriod):
             var queryItemsURL: [URLQueryItem] = []
-
+            
             if isPermanent != nil {
                 let queryItem = URLQueryItem(name: "isPermanent", value: "true")
                 queryItemsURL.append(queryItem)
             }
-
+            
             if lockPeriodUnit != nil {
                 let queryItem = URLQueryItem(name: "lockPeriodUnit", value: lockPeriodUnit)
                 queryItemsURL.append(queryItem)
             }
-
+            
             if lockPeriod != nil {
                 let queryItem = URLQueryItem(name: "lockPeriod", value: lockPeriod)
                 queryItemsURL.append(queryItem)
             }
-
+            
             let queryItem = URLQueryItem(name: "lockType", value: "TIMEOUT")
             queryItemsURL.append(queryItem)
-
+            
             return queryItemsURL
-
+            
         case .getPersonalDepositLimits:
             return nil
         case .getLimits:
@@ -596,12 +599,12 @@ extension OmegaAPIClient: Endpoint {
             return [URLQueryItem(name: "limitTypes", value: limitType),
                     URLQueryItem(name: "periodTypes", value: periodType)
             ]
-
+            
         case .getBalance:
             return nil
         case .getCashbackBalance:
             return nil
-
+            
         case .quickSignupCompletion(let firstName, let lastName, let birthDate, let gender, let mobileNumber,
                                     let address, let province, let city, let postalCode, let country, let cardId, let securityQuestion, let securityAnswer):
             var query: [URLQueryItem] = []
@@ -637,17 +640,17 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .uploadMultipleUserDocuments:
             return nil
-
+            
         case .getPayments:
-
+            
             return nil
         case .processDeposit(let paymentMethod, let amount, let option):
             let localeCode = Locale.current.languageCode
             let localeRegion = Locale.current.regionCode
             let locale = "\(localeCode ?? "fr")-\(localeRegion ?? "FR")"
-
+            
             return [
-
+                
                 URLQueryItem(name: "paymentMethod", value: paymentMethod),
                 URLQueryItem(name: "amount", value: "\(amount)"),
                 URLQueryItem(name: "option", value: option),
@@ -656,7 +659,7 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "channel", value: "iOS"),
                 URLQueryItem(name: "threeDSNative", value: "true")
             ]
-
+            
         case .processWithdrawal(let withdrawalMethod, let amount, let conversionId):
             var query = [
                 
@@ -671,7 +674,7 @@ extension OmegaAPIClient: Endpoint {
             return query
         case .prepareWithdrawal(let withdrawalMethod):
             return [
-
+                
                 URLQueryItem(name: "paymentMethod", value: withdrawalMethod),
                 URLQueryItem(name: "action", value: "GET_EXCHANGE_INFO")
             ]
@@ -707,7 +710,7 @@ extension OmegaAPIClient: Endpoint {
                 query.append(URLQueryItem(name: "encryptedCardNumber", value: encryptedCardNumberValue))
             }
             return query
-
+            
         case .cancelDeposit(let paymentId):
             return [
                 URLQueryItem(name: "paymentId", value: paymentId)
@@ -720,73 +723,73 @@ extension OmegaAPIClient: Endpoint {
             
         case .getWithdrawalsMethods:
             return nil
-
+            
         case .getPaymentInformation:
             return nil
-
+            
         case .addPaymentInformation(let type, let fields):
             return [
-
+                
                 URLQueryItem(name: "type", value: type),
                 URLQueryItem(name: "fields", value: fields)
             ]
-
+            
         case .getTransactionsHistory(let startDate, let endDate, let transactionType, let pageNumber, let pageSize):
             var queryItemsURL: [URLQueryItem] = []
-
+            
             let startDateQueryItem = URLQueryItem(name: "startDateTime", value: startDate)
             queryItemsURL.append(startDateQueryItem)
-
+            
             let endDateQueryItem = URLQueryItem(name: "endDateTime", value: endDate)
             queryItemsURL.append(endDateQueryItem)
-
+            
             if let transactionType {
                 for tranType in transactionType {
                     let queryItem = URLQueryItem(name: "tranType", value: tranType)
                     queryItemsURL.append(queryItem)
                 }
             }
-
+            
             if let pageNumber {
                 let queryItem = URLQueryItem(name: "pageNum", value: "\(pageNumber)")
                 queryItemsURL.append(queryItem)
             }
-
+            
             if let pageSize {
                 let queryItem = URLQueryItem(name: "pageSize", value: "\(pageSize)")
                 queryItemsURL.append(queryItem)
             }
-
+            
             return queryItemsURL
-
+            
         case .getGrantedBonuses:
             return nil
-
+            
         case .redeemBonus(let code):
             return [
                 URLQueryItem(name: "bonusCode", value: code)
             ]
-
+            
         case .getAvailableBonuses:
             return nil
-
+            
         case .redeemAvailableBonuses(let partyId, let bonusId):
             return [
                 URLQueryItem(name: "partyId", value: partyId),
                 URLQueryItem(name: "optInId", value: bonusId),
             ]
-
+            
         case .cancelBonus(let bonusId):
             return [
                 URLQueryItem(name: "bonusId", value: bonusId)
             ]
-
+            
         case .optOutBonus(let partyId, let bonusId):
             return [
                 URLQueryItem(name: "partyId", value: partyId),
                 URLQueryItem(name: "bonusId", value: bonusId),
             ]
-
+            
         case .contactUs(let firstName, let lastName, let email, let subject, let message):
             return [
                 URLQueryItem(name: "firstName", value: firstName),
@@ -795,56 +798,56 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "subject", value: subject),
                 URLQueryItem(name: "message", value: message)
             ]
-
+            
         case .contactSupport:
             return nil
-
+            
         case .getAllConsents:
             return nil
         case .getUserConsents:
             return nil
-
+            
         case .setUserConsents(let consentVersionIds, let unconsentVersionIds):
-
+            
             var queryItemsURL: [URLQueryItem] = []
-
-
+            
+            
             if let consentVersionIds {
                 for consentId in consentVersionIds {
                     let queryItem = URLQueryItem(name: "consentedVersions", value: "\(consentId)")
                     queryItemsURL.append(queryItem)
                 }
             }
-
+            
             if let unconsentVersionIds {
                 for unconsentId in unconsentVersionIds {
                     let queryItem = URLQueryItem(name: "unConsentedVersions", value: "\(unconsentId)")
                     queryItemsURL.append(queryItem)
                 }
             }
-
+            
             return queryItemsURL
-
+            
         case .getSumsubAccessToken(let userId, let levelName, _, _):
             return [
-
+                
                 URLQueryItem(name: "userId", value: userId),
                 URLQueryItem(name: "levelName", value: levelName)
-//                URLQueryItem(name: "ttlInSecs", value: "600")
-
+                //                URLQueryItem(name: "ttlInSecs", value: "600")
+                
             ]
-
+            
         case .getSumsubApplicantData:
             return nil
-
+            
         case .generateDocumentTypeToken(let docType):
             return [
-
+                
                 URLQueryItem(name: "target", value: "SUMSUB"),
                 URLQueryItem(name: "docType", value: docType)
-
+                
             ]
-
+            
         case .checkDocumentationData:
             return [
                 URLQueryItem(name: "target", value: "SUMSUB"),
@@ -856,13 +859,13 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "verificationType", value: "MOBILE"),
                 URLQueryItem(name: "verificationValue", value: mobileNumber)
             ]
-        
+            
         case .verifyMobileCode(let code, let requestId):
             return [
                 URLQueryItem(name: "verificationRequestId", value: requestId),
                 URLQueryItem(name: "verificationCode", value: code)
             ]
-
+            
         case .getReferralLink:
             return nil
         case .getReferees:
@@ -876,11 +879,18 @@ extension OmegaAPIClient: Endpoint {
         case .wheelOptIn(let winBoostId, let optInOption):
             return [
                 URLQueryItem(name: "winBoostId", value: winBoostId),
-                URLQueryItem(name: "optIn", value: optInOption)
+                URLQueryItem(name: "accepted", value: optInOption)
+            ]
+        case .getGrantedWinBoosts(let gameTransIds):
+            
+            let gameTransIdsString = gameTransIds.joined(separator: ",")
+            
+            return [
+                URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
+                URLQueryItem(name: "gameTranIds", value: gameTransIdsString)
             ]
         }
     }
-    
     
     var method: HTTP.Method {
         switch self {
@@ -962,6 +972,7 @@ extension OmegaAPIClient: Endpoint {
             
         case .getWheelEligibility: return .get
         case .wheelOptIn: return .get
+        case .getGrantedWinBoosts: return .get
         }
     }
     
@@ -1104,6 +1115,7 @@ extension OmegaAPIClient: Endpoint {
             
         case .getWheelEligibility: return true
         case .wheelOptIn: return true
+        case .getGrantedWinBoosts: return true
         }
     }
     
@@ -1262,6 +1274,7 @@ extension OmegaAPIClient: Endpoint {
         case .getReferees: return "getReferees"
         case .getWheelEligibility: return "getWheelEligibility"
         case .wheelOptIn: return "wheelOptIn"
+        case .getGrantedWinBoosts: return "getGrantedWinBoosts"
         }
     }
 }

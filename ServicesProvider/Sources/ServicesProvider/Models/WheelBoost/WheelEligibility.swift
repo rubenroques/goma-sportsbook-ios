@@ -8,9 +8,9 @@
 import Foundation
 
 public struct WheelStatusResponse: Codable {
-    let status: String
-    let message: String?
-    let data: WheelEligibility?
+    public let status: String
+    public let message: String?
+    public let data: WheelEligibility?
     
     enum CodingKeys: String, CodingKey {
         case status = "status"
@@ -20,9 +20,9 @@ public struct WheelStatusResponse: Codable {
 }
 
 public struct WheelEligibility: Codable {
-    let productCode: String
-    let gameTransId: String
-    let winBoosts: [WheelStatus]
+    public let productCode: String
+    public let gameTransId: String
+    public let winBoosts: [WheelStatus]
     
     enum CodingKeys: String, CodingKey {
         case productCode = "productCode"
@@ -32,12 +32,14 @@ public struct WheelEligibility: Codable {
 }
 
 public struct WheelStatus: Codable {
-    let gameTransId: String?
-    let status: String
-    let message: String?
-    let configuration: WheelConfiguration?
+    public let winBoostId: String?
+    public let gameTransId: String?
+    public let status: String
+    public let message: String?
+    public let configuration: WheelConfiguration?
     
     enum CodingKeys: String, CodingKey {
+        case winBoostId = "winBoostId"
         case gameTransId = "gameTranId"
         case status = "status"
         case message = "message"
@@ -46,9 +48,9 @@ public struct WheelStatus: Codable {
 }
 
 public struct WheelConfiguration: Codable {
-    var id: String
-    var title: String
-    var tiers: [WheelTier]
+    public var id: String
+    public var title: String
+    public var tiers: [WheelTier]
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -58,9 +60,9 @@ public struct WheelConfiguration: Codable {
 }
 
 public struct WheelTier: Codable {
-    var name: String
-    var chance: Double
-    var boostMultiplier: Double
+    public var name: String
+    public var chance: Double
+    public var boostMultiplier: Double
     
     enum CodingKeys: String, CodingKey {
         case name = "name"
@@ -69,12 +71,66 @@ public struct WheelTier: Codable {
     }
 }
 
-public struct WheelOptInResponse: Codable {
-    let status: String
-    let message: String?
+public struct WheelOptInData: Codable {
+    public let status: String
+    public let winBoostId: String?
+    public let gameTranId: String?
+    public let awardedTier: WheelAwardedTier?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case winBoostId = "winBoostId"
+        case gameTranId = "gameTranId"
+        case awardedTier = "awardedTier"
+    }
+}
+
+public struct WheelAwardedTier: Codable {
+    public let configurationId: String?
+    public let name: String
+    public let boostMultiplier: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case configurationId = "configurationId"
+        case name = "name"
+        case boostMultiplier = "boostMultiplier"
+    }
+}
+
+public struct GrantedWinBoostsResponse: Codable {
+    public let status: String
+    public let message: String?
+    public let data: [GrantedWinBoosts]?
     
     enum CodingKeys: String, CodingKey {
         case status = "status"
         case message = "message"
+        case data = "data"
+    }
+}
+
+public struct GrantedWinBoosts: Codable {
+    public let gameTranId: String
+    public let winBoosts: [GrantedWinBoostInfo]
+    
+    enum CodingKeys: String, CodingKey {
+        case gameTranId = "gameTranId"
+        case winBoosts = "winBoosts"
+    }
+}
+
+public struct GrantedWinBoostInfo: Codable {
+    public let winBoostId: String
+    public let gameTranId: String
+    public let status: String
+    public let awardedTier: WheelAwardedTier?
+    public let boostAmount: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case winBoostId = "winBoostId"
+        case gameTranId = "gameTranId"
+        case status = "status"
+        case awardedTier = "awardedTier"
+        case boostAmount = "boostAmount"
     }
 }

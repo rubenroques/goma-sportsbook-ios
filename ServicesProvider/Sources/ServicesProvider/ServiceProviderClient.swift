@@ -1582,6 +1582,26 @@ extension ServicesProviderClient {
 
         return privilegedAccessManager.getWheelEligibility(gameTransId: gameTransId)
     }
+    
+    public func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInData, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.wheelOptIn(winBoostId: winBoostId, optInOption: optInOption)
+    }
+    
+    public func getGrantedWinBoosts(gameTransIds: [String]) -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getGrantedWinBoosts(gameTransIds: gameTransIds)
+    }
 }
 
 // AnalyticsProvider

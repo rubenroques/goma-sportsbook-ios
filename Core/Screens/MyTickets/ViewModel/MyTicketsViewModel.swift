@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Combine
+import ServicesProvider
 
 enum MyTicketsType: Int {
     case opened = 0
@@ -53,6 +54,10 @@ class MyTicketsViewModel: NSObject {
     private var resolvedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     private var openedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     private var wonMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    
+    private var openedGrantedWinBoosts = [GrantedWinBoosts]()
+    private var resolvedGrantedWinBoosts = [GrantedWinBoosts]()
+    private var wonGrantedWinBoosts = [GrantedWinBoosts]()
 
     var isLoadingTickets: CurrentValueSubject<Bool, Never> = .init(true)
     
@@ -169,6 +174,9 @@ class MyTicketsViewModel: NSObject {
                 nextTickets.append(contentsOf: betHistoryEntries)
                 self.openedMyTickets.send(nextTickets)
             }
+            
+            self.processOpenGrantedWinBoosts(betEntries: betHistoryEntries)
+
         case .resolved:
             if self.resolvedMyTickets.value.isEmpty {
                 self.resolvedMyTickets.send(betHistoryEntries)
@@ -178,6 +186,9 @@ class MyTicketsViewModel: NSObject {
                 nextTickets.append(contentsOf: betHistoryEntries)
                 self.resolvedMyTickets.send(nextTickets)
             }
+            
+            self.processResolvedGrantedWinBoosts(betEntries: betHistoryEntries)
+
         case .won:
             if self.wonMyTickets.value.isEmpty {
                 self.wonMyTickets.send(betHistoryEntries)
@@ -187,11 +198,14 @@ class MyTicketsViewModel: NSObject {
                 nextTickets.append(contentsOf: betHistoryEntries)
                 self.wonMyTickets.send(nextTickets)
             }
+            
+            self.processWonGrantedWinBoosts(betEntries: betHistoryEntries)
+
         default:
             ()
         }
 
-        self.listStatePublisher.send(.loaded)
+//        self.listStatePublisher.send(.loaded)
 
     }
 
@@ -231,6 +245,8 @@ class MyTicketsViewModel: NSObject {
                 let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
 
                 if let bettingHistoryEntries = bettingHistoryResponse.betList {
+                    
+                    self.processResolvedGrantedWinBoosts(betEntries: bettingHistoryEntries)
 
                     if bettingHistoryEntries.count < self.recordsPerPage {
                         self.hasNextPage = false
@@ -252,7 +268,6 @@ class MyTicketsViewModel: NSObject {
             }
             .store(in: &cancellables)
     }
-    
     
     // Get alowed bets first
     func loadOpenedTickets(page: Int, isNextPage: Bool = false) {
@@ -301,7 +316,7 @@ class MyTicketsViewModel: NSObject {
 
                 let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
                 if let bettingHistoryEntries = bettingHistoryResponse.betList {
-
+                    
                     if bettingHistoryEntries.count < self.recordsPerPage {
                         self.hasNextPage = false
                     }
@@ -394,6 +409,188 @@ class MyTicketsViewModel: NSObject {
 
     }
     
+    private func processOpenGrantedWinBoosts(betEntries: [BetHistoryEntry]) {
+        
+        var openGameTranIds = [String]()
+        
+        for betEntry in betEntries {
+            
+            let betslipId = "\(betEntry.betslipId ?? 0)"
+            let betId = betEntry.betId
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+
+            if !openGameTranIds.contains(gameTransId) {
+                openGameTranIds.append(gameTransId)
+            }
+        }
+        
+        // Split the array into chunks of 10 elements
+        let chunkedGameTransIds = stride(from: 0, to: openGameTranIds.count, by: 10).map {
+            Array(openGameTranIds[$0..<min($0 + 10, openGameTranIds.count)])
+        }
+        
+        // Create a publisher for each chunk that handles errors
+        let publishers = chunkedGameTransIds.map { chunk -> AnyPublisher<[GrantedWinBoosts], Never> in
+            print("Getting win boosts from chunk: \(chunk)")
+            
+            return Env.servicesProvider.getGrantedWinBoosts(gameTransIds: chunk)
+                .catch { error -> AnyPublisher<[GrantedWinBoosts], Never> in
+                    // Log the error but continue with empty results
+                    print("Error fetching win boosts for chunk: \(error)")
+                    return Just([]).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allResults in
+                guard let self = self else { return }
+                
+                let mergedResults = allResults.flatMap { $0 }
+                
+                print("COMBINED OPEN GRANTED WIN BOOSTS: \(mergedResults.count) results")
+                
+                if self.openedGrantedWinBoosts.isEmpty {
+                    self.openedGrantedWinBoosts = mergedResults
+                }
+                else {
+                    var newWinBoosts = self.openedGrantedWinBoosts
+                    newWinBoosts.append(contentsOf: mergedResults)
+                    self.openedGrantedWinBoosts = newWinBoosts
+                }
+                
+                self.listStatePublisher.send(.loaded)
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    private func processResolvedGrantedWinBoosts(betEntries: [BetHistoryEntry]) {
+        
+        var openGameTranIds = [String]()
+        
+        for betEntry in betEntries {
+            
+            let betslipId = "\(betEntry.betslipId ?? 0)"
+            let betId = betEntry.betId
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+            
+            if !openGameTranIds.contains(gameTransId) {
+                openGameTranIds.append(gameTransId)
+            }
+        }
+        
+        // Split the array into chunks of 10 elements
+        let chunkedGameTransIds = stride(from: 0, to: openGameTranIds.count, by: 10).map {
+            Array(openGameTranIds[$0..<min($0 + 10, openGameTranIds.count)])
+        }
+        
+        // Create a publisher for each chunk that handles errors
+        let publishers = chunkedGameTransIds.map { chunk -> AnyPublisher<[GrantedWinBoosts], Never> in
+            print("Getting win boosts from chunk: \(chunk)")
+            
+            return Env.servicesProvider.getGrantedWinBoosts(gameTransIds: chunk)
+                .catch { error -> AnyPublisher<[GrantedWinBoosts], Never> in
+                    // Log the error but continue with empty results
+                    print("Error fetching win boosts for chunk: \(error)")
+                    return Just([]).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allResults in
+                guard let self = self else { return }
+                
+                let mergedResults = allResults.flatMap { $0 }
+                
+                print("COMBINED RESOLVED GRANTED WIN BOOSTS: \(mergedResults.count) results")
+                
+                if self.resolvedGrantedWinBoosts.isEmpty {
+                    self.resolvedGrantedWinBoosts = mergedResults
+                }
+                else {
+                    var newWinBoosts = self.resolvedGrantedWinBoosts
+                    newWinBoosts.append(contentsOf: mergedResults)
+                    self.resolvedGrantedWinBoosts = newWinBoosts
+                }
+                
+                self.listStatePublisher.send(.loaded)
+
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    private func processWonGrantedWinBoosts(betEntries: [BetHistoryEntry]) {
+        
+        var openGameTranIds = [String]()
+        
+        for betEntry in betEntries {
+            
+            let betslipId = "\(betEntry.betslipId ?? 0)"
+            let betId = betEntry.betId
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+            
+            if !openGameTranIds.contains(gameTransId) {
+                openGameTranIds.append(gameTransId)
+            }
+        }
+        
+        // Split the array into chunks of 10 elements
+        let chunkedGameTransIds = stride(from: 0, to: openGameTranIds.count, by: 10).map {
+            Array(openGameTranIds[$0..<min($0 + 10, openGameTranIds.count)])
+        }
+        
+        // Create a publisher for each chunk that handles errors
+        let publishers = chunkedGameTransIds.map { chunk -> AnyPublisher<[GrantedWinBoosts], Never> in
+            print("Getting win boosts from chunk: \(chunk)")
+            
+            return Env.servicesProvider.getGrantedWinBoosts(gameTransIds: chunk)
+                .catch { error -> AnyPublisher<[GrantedWinBoosts], Never> in
+                    // Log the error but continue with empty results
+                    print("Error fetching win boosts for chunk: \(error)")
+                    return Just([]).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allResults in
+                guard let self = self else { return }
+
+                let mergedResults = allResults.flatMap { $0 }
+                
+                print("COMBINED WON GRANTED WIN BOOSTS: \(mergedResults.count) results")
+                
+                if self.wonGrantedWinBoosts.isEmpty {
+                    self.wonGrantedWinBoosts = mergedResults
+                }
+                else {
+                    var newWinBoosts = self.wonGrantedWinBoosts
+                    newWinBoosts.append(contentsOf: mergedResults)
+                    self.wonGrantedWinBoosts = newWinBoosts
+                }
+                
+                self.listStatePublisher.send(.loaded)
+
+            }
+            .store(in: &cancellables)
+        
+    }
+    
     private func getDateString(date: Date, isEndDate: Bool = false) -> String {
 
         // Set initial and end date hours
@@ -425,6 +622,26 @@ class MyTicketsViewModel: NSObject {
         let dateString = self.dateFormatter.string(from: finalDate).appending(".000")
 
         return dateString
+    }
+    
+    func getGameTransId(betId: String, betslipId: String) -> String {
+        
+        let betIdComponents = betId.split(separator: ".")
+        let betIdBase = betIdComponents[0]
+        let betIdDecimal = betIdComponents.count > 1 ? betIdComponents[1] : ""
+        
+        let trimmedDecimal = betIdDecimal.replacingOccurrences(of: "0+$", with: "", options: .regularExpression)
+        
+        let gameTransId: String
+        
+        if trimmedDecimal.isEmpty {
+            gameTransId = "\(betslipId)_\(betIdBase)"
+        }
+        else {
+            gameTransId = "\(betslipId)_\(betIdBase).\(trimmedDecimal)"
+        }
+        
+        return gameTransId
     }
 
     func refresh() {
@@ -619,8 +836,51 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             default:
                 cell.showPartialCashoutSliderView = false
             }
+            
+            let betId = ticketValue.betId
+            let betslipId = "\(ticketValue.betslipId ?? 0)"
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+            
+            var grantedWinBoost: GrantedWinBoostInfo?
+            
+            switch self.myTicketsTypePublisher.value {
+            case .opened:
+                let matchingWinBoost = self.openedGrantedWinBoosts.first { grantedWinBoost in
+                    return grantedWinBoost.gameTranId == gameTransId
+                }
+                
+                if let matchingWinBoost = matchingWinBoost?.winBoosts.first {
+                    grantedWinBoost = matchingWinBoost
+                }
+                else {
+                    print("No matching win boost found for gameTransId: \(gameTransId)")
+                }
+            case .resolved:
+                let matchingWinBoost = self.resolvedGrantedWinBoosts.first { grantedWinBoost in
+                    return grantedWinBoost.gameTranId == gameTransId
+                }
+                
+                if let matchingWinBoost = matchingWinBoost?.winBoosts.first {
+                    grantedWinBoost = matchingWinBoost
+                }
+                else {
+                    print("No matching win boost found for gameTransId: \(gameTransId)")
+                }
+            case .won:
+                let matchingWinBoost = self.wonGrantedWinBoosts.first { grantedWinBoost in
+                    return grantedWinBoost.gameTranId == gameTransId
+                }
+                
+                if let matchingWinBoost = matchingWinBoost?.winBoosts.first {
+                    grantedWinBoost = matchingWinBoost
+                }
+                else {
+                    print("No matching win boost found for gameTransId: \(gameTransId)")
+                }
+            }
 
-            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel, grantedWinBoost: grantedWinBoost)
 
             cell.tappedShareAction = { [weak self] cellSnapshotImage, ticketValue in
                 if let ticketStatus = ticketValue.status, let betslipId = ticketValue.betslipId {

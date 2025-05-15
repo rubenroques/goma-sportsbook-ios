@@ -37,6 +37,9 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var navigationView: UIView!
     @IBOutlet private weak var backButton: UIButton!
     
+    @IBOutlet private weak var spinWheelBaseView: UIView!
+    @IBOutlet private weak var spinWheelButton: UIButton!
+    
     // Constraints
     @IBOutlet private weak var topGradientViewCenterConstraint: NSLayoutConstraint!
     @IBOutlet private weak var topGradientViewHeightConstraint: NSLayoutConstraint!
@@ -53,6 +56,34 @@ class BetSubmissionSuccessViewController: UIViewController {
         animationView.loopMode = .playOnce
         
         return animationView
+    }()
+    
+    lazy var spinWheelDisabledView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+        return view
+    }()
+    
+    lazy var spinWheelLoadingBaseView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var spinWheelActivityIndicatorView: UIActivityIndicatorView = {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .medium)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }()
+    
+    lazy var spinWheelTooltipView: InfoActionDialogView = {
+        let view = InfoActionDialogView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0
+        return view
     }()
 
     private var totalOddsValue: String
@@ -81,6 +112,37 @@ class BetSubmissionSuccessViewController: UIViewController {
             self.loadingBaseView.isHidden = !isLoading
         }
     }
+    
+    var isSpinWheelEnabled: Bool = false {
+        didSet {
+            self.spinWheelDisabledView.isHidden = isSpinWheelEnabled
+            self.spinWheelButton.isEnabled = isSpinWheelEnabled
+        }
+    }
+    
+    var isLoadingSpinWheel: Bool = false {
+        didSet {
+            self.spinWheelLoadingBaseView.isHidden = !isLoadingSpinWheel
+        }
+    }
+    
+    var boostMultiplierPublisher: CurrentValueSubject<Double, Never> = .init(0.0)
+    
+    var wheelBetStatus: WheelBetStatus = .pending {
+        didSet {
+            if wheelBetStatus == .eligible {
+                self.configureSpinWheelButton(isEnabled: true)
+            }
+            else {
+                self.configureSpinWheelButton(isEnabled: false)
+            }
+        }
+    }
+    
+    var betHistoryEntries = [BetHistoryEntry]()
+    
+    var eligibleBetWheelInfo: BetWheelInfo?
+    var wheelAwardedTier: WheelAwardedTier?
     
     init(betPlacedDetailsArray: [BetPlacedDetails], cashbackResultValue: Double? = nil, usedCashback: Bool = false, bettingTickets: [BettingTicket]? = nil) {
         
@@ -130,6 +192,14 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         StyleHelper.styleButton(button: self.continueButton)
         self.continueButton.setTitle(localized("continue_"), for: .normal)
+        
+        StyleHelper.styleButtonWithTheme(button: self.spinWheelButton,
+                                         titleColor: UIColor.App.buttonTextPrimary,
+                                         titleDisabledColor: UIColor.App.buttonTextDisableSecondary,
+                                         backgroundColor: UIColor.App.buttonBackgroundSecondary,
+                                         backgroundDisabledColor: UIColor.App.buttonBackgroundSecondary.withAlphaComponent(0.5),
+                                         backgroundHighlightedColor: UIColor.App.buttonBackgroundSecondary)
+        self.spinWheelButton.setTitle(localized("coup_boost"), for: .normal)
 
         self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
         self.checkboxLabel.text = localized("keep_bet")
@@ -171,7 +241,70 @@ class BetSubmissionSuccessViewController: UIViewController {
             self.topGradientViewHeightConstraint.isActive = false
             self.topGradientViewCenterConstraint.isActive = true
         }
+        
+        self.spinWheelBaseView.addSubview(self.spinWheelDisabledView)
+        self.spinWheelBaseView.bringSubviewToFront(self.spinWheelDisabledView)
 
+        NSLayoutConstraint.activate([
+            self.spinWheelDisabledView.leadingAnchor.constraint(equalTo: self.spinWheelButton.leadingAnchor),
+            self.spinWheelDisabledView.trailingAnchor.constraint(equalTo: self.spinWheelButton.trailingAnchor),
+            self.spinWheelDisabledView.topAnchor.constraint(equalTo: self.spinWheelButton.topAnchor),
+            self.spinWheelDisabledView.bottomAnchor.constraint(equalTo: self.spinWheelButton.bottomAnchor)
+        ])
+        
+        self.spinWheelDisabledView.addSubview(self.spinWheelLoadingBaseView)
+        
+        self.spinWheelLoadingBaseView.addSubview(self.spinWheelActivityIndicatorView)
+        
+        self.spinWheelDisabledView.bringSubviewToFront(self.spinWheelLoadingBaseView)
+        
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.spinWheelLoadingBaseView.topAnchor.constraint(equalTo: self.spinWheelDisabledView.topAnchor),
+            self.spinWheelLoadingBaseView.leadingAnchor.constraint(equalTo: self.spinWheelDisabledView.leadingAnchor),
+            self.spinWheelLoadingBaseView.trailingAnchor.constraint(equalTo: self.spinWheelDisabledView.trailingAnchor),
+            self.spinWheelLoadingBaseView.bottomAnchor.constraint(equalTo: self.spinWheelDisabledView.bottomAnchor),
+
+            self.spinWheelActivityIndicatorView.centerXAnchor.constraint(equalTo: self.spinWheelLoadingBaseView.centerXAnchor),
+            self.spinWheelActivityIndicatorView.centerYAnchor.constraint(equalTo: self.spinWheelLoadingBaseView.centerYAnchor)
+        ])
+        
+        // Add tap gesture to the disabled view
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDisabledSpinWheel))
+        self.spinWheelDisabledView.addGestureRecognizer(tapGesture)
+                
+        self.isSpinWheelEnabled = false
+
+        self.getWheelEligibility()
+        
+        // Spin Wheel Tooltip
+        self.spinWheelTooltipView.configure(title: localized("spin_wheel_tooltip_title"),
+                                            description: "\(localized("spin_wheel_tooltip_description_title"))\n\(localized("spin_wheel_tooltip_description_text"))",
+                                            linkText: localized("spin_wheel_tooltip_link_text"),
+                                            actionLink: localized("spin_wheel_tooltip_info_link_url"))
+        
+        self.view.addSubview(self.spinWheelTooltipView)
+        self.view.bringSubviewToFront(self.spinWheelTooltipView)
+        
+        NSLayoutConstraint.activate([
+            self.spinWheelTooltipView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
+            self.spinWheelTooltipView.bottomAnchor.constraint(equalTo: self.spinWheelButton.topAnchor, constant: -10)
+        ])
+        
+        self.spinWheelTooltipView.shouldOpenActionLink = { [weak self] actionLink in
+            self?.openExternalUrl(actionLink: actionLink)
+        }
+        
+        self.spinWheelTooltipView.shouldCloseDialog = { [weak self] in
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                self?.spinWheelTooltipView.alpha = 0
+            })
+        }
+        
+        let mainViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapMainView))
+           mainViewTapGesture.cancelsTouchesInView = false
+           self.view.addGestureRecognizer(mainViewTapGesture)
     }
     
     private func resizeTopViewAndAnimate() {
@@ -227,6 +360,9 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.shapeView.layer.mask = shapeLayer
         self.shapeView.layer.masksToBounds = true
+                
+        self.spinWheelDisabledView.layer.cornerRadius = CornerRadius.button
+        self.spinWheelDisabledView.layer.masksToBounds = true
 
         self.view.layoutIfNeeded()
     }
@@ -271,6 +407,12 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.backButton.backgroundColor = .clear
 
         self.betSuccessAnimationView.backgroundColor = .clear
+        
+        self.spinWheelBaseView.backgroundColor = .clear
+        
+        self.spinWheelDisabledView.backgroundColor = .clear
+        
+        self.spinWheelLoadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
     }
     
     private func configureBetEntries() {
@@ -346,6 +488,8 @@ class BetSubmissionSuccessViewController: UIViewController {
                 }
             }
         }
+        
+        self.betHistoryEntries = betHistoryEntries
         
         self.configureBetCards(withBetHistoryEntries: betHistoryEntries)
         self.isLoading = false
@@ -429,12 +573,27 @@ class BetSubmissionSuccessViewController: UIViewController {
         let sharedTicketCardView = SharedTicketCardView()
 
         let betCardViewModel = MyTicketCellViewModel(ticket: betHistory, allowedCashback: false)
+        
+        var betWheelInfo: BetWheelInfo?
+        var wheelAwardedTier: WheelAwardedTier?
+        
+        if let eligibleBetWheelInfo = self.eligibleBetWheelInfo,
+           let currentWheelAwardedTier = self.wheelAwardedTier {
+            
+            if betHistory.betId == eligibleBetWheelInfo.betId {
+                
+                betWheelInfo = eligibleBetWheelInfo
+                wheelAwardedTier = currentWheelAwardedTier
+            }
+        }
 
         sharedTicketCardView.configure(withBetHistoryEntry: betHistory,
                                        countryCodes: [],
                                        viewModel: betCardViewModel,
                                        cashbackValue: self.cashbackResultValue,
-                                       usedCashback: self.usedCashback)
+                                       usedCashback: self.usedCashback,
+                                       betWheelInfo: betWheelInfo,
+                                       wheelAwardedTier: wheelAwardedTier)
 
         sharedTicketCardView.didTappedSharebet = { [weak self] snapshot in
             self?.ticketSnapshots[betHistory.betId] = snapshot
@@ -453,9 +612,251 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.betCardsStackView.addArrangedSubview(sharedTicketCardView)
 
     }
+    
+    private func getWheelEligibility() {
+        print("getWheelEligibility function started")
+        
+        // Create array to store retry subjects
+        var retrySubjects: [PassthroughSubject<Int, Never>] = []
+        
+        // Create publishers for each bet
+        let publishers = self.betPlacedDetailsArray.map { betPlacedDetail -> AnyPublisher<BetWheelInfo, Never> in
+            let betslipId = betPlacedDetail.response.betslipId ?? ""
+            let betId = betPlacedDetail.response.betId ?? ""
+            
+            print("Setting up publisher for bet - betslipId: \(betslipId), betId: \(betId)")
+            
+            // Skip if missing required IDs
+            guard !betslipId.isEmpty, !betId.isEmpty else {
+                return Just(BetWheelInfo(betId: betId, gameTranId: "", wheelBetStatus: .notEligible, winBoostId: nil)).eraseToAnyPublisher()
+            }
+            
+            // Split the betId at the decimal point
+            let betIdComponents = betId.split(separator: ".")
+            let betIdBase = betIdComponents[0]
+            let betIdDecimal = betIdComponents.count > 1 ? betIdComponents[1] : ""
+            
+            // Remove trailing zeros from the decimal part
+            let trimmedDecimal = betIdDecimal.replacingOccurrences(of: "0+$", with: "", options: .regularExpression)
+            
+            // Construct the final ID
+            let gameTransId: String
+            if trimmedDecimal.isEmpty {
+                gameTransId = "\(betslipId)_\(betIdBase)"
+            }
+            else {
+                gameTransId = "\(betslipId)_\(betIdBase).\(trimmedDecimal)"
+            }
+            
+            print("Generated gameTransId: \(gameTransId)")
+            
+            // Create a subject for retries
+            let retrySubject = PassthroughSubject<Int, Never>()
+            retrySubjects.append(retrySubject)
+            
+            let attempt = 1
+            
+            return retrySubject
+                .flatMap { attempt -> AnyPublisher<BetWheelInfo, Never> in
+                    print("Attempt #\(attempt) for \(gameTransId)")
+                    
+                    return Env.servicesProvider.getWheelEligibility(gameTransId: gameTransId)
+                        .map { wheelEligibility -> BetWheelInfo in
+                            if let winBoost = wheelEligibility.winBoosts.first {
+                                switch winBoost.status {
+                                case "ELIGIBLE":
+                                    print("Found eligible boost for \(gameTransId)")
+                                    return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .eligible, winBoostId: wheelEligibility.winBoosts.first?.winBoostId)
+                                    
+                                case "NOT_ELIGIBLE":
+                                    print("Bet is not eligible for \(gameTransId)")
+                                    return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil)
+                                    
+                                default:
+                                    return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .pending, winBoostId: nil)
+                                }
+                            }
+                            return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .pending, winBoostId: nil)
+                        }
+                        .catch { error -> AnyPublisher<BetWheelInfo, Never> in
+                            print("Error for \(gameTransId): \(error)")
+                            return Just(BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil)).eraseToAnyPublisher()
+                        }
+                        .eraseToAnyPublisher()
+                }
+                .timeout(.seconds(30), scheduler: DispatchQueue.main) // Total timeout for all attempts
+                .handleEvents(receiveOutput: { result in
+                    // Only continue retrying if we haven't found an eligible or not_eligible status
+                    if result.wheelBetStatus == .pending {
+                        // Schedule next attempt after 3 seconds if no definitive status found
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            retrySubject.send(attempt + 1)
+                        }
+                    }
+                })
+                .first(where: { result in
+                    // Stop if we found an eligible boost or if the bet is not eligible
+                    return result.wheelBetStatus != .pending
+                })
+                .replaceError(with: BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil))
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] results in
+                print("All eligibility checks completed. Results: \(results)")
+                
+                let hasEligibleBet = results.contains { result in
+                    return result.wheelBetStatus == .eligible
+                }
+                
+                if hasEligibleBet {
+                    
+                    self?.wheelBetStatus = .eligible
+                    
+                    // Find the highest boost multiplier if needed
+                    if let eligibleBet = results.first(where: { $0.wheelBetStatus == .eligible }) {
+                        
+                        self?.eligibleBetWheelInfo = eligibleBet
+                    }
+                } else {
+                    
+                    self?.wheelBetStatus = .notEligible
+                    self?.boostMultiplierPublisher.send(0.0)
+                    
+                }
+                
+                self?.isLoadingSpinWheel = false
+                                
+            }
+            .store(in: &cancellables)
+        
+        // Start all retry subjects
+        retrySubjects.forEach { subject in
+            subject.send(1)
+        }
+        
+        print("getWheelEligibility setup complete")
+    }
+    
+    private func getBoostMultiplier(betWheelInfo: BetWheelInfo) {
+        
+        if let winBoostId = betWheelInfo.winBoostId {
+            
+            Env.servicesProvider.wheelOptIn(winBoostId: winBoostId, optInOption: "true")
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    
+                    switch completion {
+                    case .finished:
+                        print("FINISHED WHEEL OPTIN")
+                    case .failure(let error):
+                        print("WHEEL OPTIN ERROR: \(error)")
+                    }
+                }, receiveValue: { [weak self] wheelOptInData in
+                    
+                    if let wheelAwardedTier = wheelOptInData.awardedTier {
+                        
+                        self?.wheelAwardedTier = wheelAwardedTier
+                        
+                        self?.openSpinWheel(boostMultiplier: wheelAwardedTier.boostMultiplier)
+                    }
+                })
+                .store(in: &cancellables)
+        }
 
-    @IBAction private func didTapContinueButton() {
+    }
+    
+    private func winBoostOptOut() {
+        
+        if let eligibleBetWheelInfo = self.eligibleBetWheelInfo,
+           let winBoostId = eligibleBetWheelInfo.winBoostId {
+            
+            Env.servicesProvider.wheelOptIn(winBoostId: winBoostId, optInOption: "false")
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    
+                    switch completion {
+                    case .finished:
+                        print("FINISHED WHEEL OPTOUT")
+                    case .failure(let error):
+                        print("WHEEL OPTOUT ERROR: \(error)")
+                    }
+                }, receiveValue: { [weak self] wheelOptInData in
+                    
+                    print("WHEEL OPTOUT RESPONSE: \(wheelOptInData)")
+                    
+                    self?.continueBetFlow()
+                })
+                .store(in: &cancellables)
+        }
+    }
+    
+    private func openSpinWheel(boostMultiplier: Double) {
+        
+        self.configureWinBoostLayout()
+        self.wheelBetStatus = .awarded
+        
+        let prize = String(format: "%.0f%%", boostMultiplier * 100)
+        
+        if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
+            
+            let spinWheelWebViewModel = SpinWheelViewModel(url: url, prize: prize)
+            
+            let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)
+            
+            spinWheelWebViewController.modalPresentationStyle = .fullScreen
+            
+            self.present(spinWheelWebViewController, animated: true)
+        }
+        
+    }
+    
+    private func configureWinBoostLayout() {
+        
+        self.configureBetCards(withBetHistoryEntries: self.betHistoryEntries)
+        
+        self.topImageView.image = UIImage(named: "sucess_wheel_banner")
+        
+        self.spinWheelBaseView.isHidden = true
+        
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+    }
+    
+    private func showSpinWheelAlert() {
+        
+        let alert = UIAlertController(title: localized("spin_wheel_dialog_title"),
+                                      message: localized("spin_wheel_dialog_message"),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
 
+        alert.addAction(UIAlertAction(title: localized("confirm"), style: .default, handler: { [weak self] _ in
+            if self?.wheelBetStatus == .eligible {
+                self?.winBoostOptOut()
+            }
+            else {
+                self?.continueBetFlow()
+            }
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func showWheelAwardedTierErrorAlert() {
+        
+        let alert = UIAlertController(title: localized("error"),
+                                      message: localized("error"),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func continueBetFlow() {
         if !isChecked {
             Env.betslipManager.clearAllBettingTickets()
             self.willDismissAction?()
@@ -470,7 +871,45 @@ class BetSubmissionSuccessViewController: UIViewController {
 //            self.dismiss(animated: true, completion: nil)
 //        }
     }
+    
+    private func openExternalUrl(actionLink: String) {
+        
+        if let url = URL(string: actionLink) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    private func configureSpinWheelButton(isEnabled: Bool) {
+        
+        self.isSpinWheelEnabled = isEnabled
+        
+        if isEnabled {
+            self.spinWheelButton.setImage(UIImage(named: "rocket_wheel_icon"), for: .normal)
+        }
+        else {
+            self.spinWheelButton.setImage(UIImage(named: "question_wheel_icon"), for: .normal)
+        }
+    }
 
+    @IBAction private func didTapContinueButton() {
+
+        switch self.wheelBetStatus {
+        case .pending, .eligible:
+            self.showSpinWheelAlert()
+        case .notEligible, .awarded:
+            self.continueBetFlow()
+        }
+        
+    }
+    
+    @IBAction func didTapSpinWheelButton() {
+        
+        if let eligibleBetWheelInfo = self.eligibleBetWheelInfo {
+            self.getBoostMultiplier(betWheelInfo: eligibleBetWheelInfo)
+        }
+        
+    }
+    
     @IBAction private func didTapBackButton() {
 
         if !isChecked {
@@ -490,4 +929,33 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.isChecked = !isChecked
     }
 
+    @objc private func didTapMainView() {
+        
+        if self.spinWheelTooltipView.alpha > 0 {
+            UIView.animate(withDuration: 0.5) {
+                self.spinWheelTooltipView.alpha = 0
+            }
+        }
+    }
+    
+    @objc private func didTapDisabledSpinWheel() {
+                
+        UIView.animate(withDuration: 0.5, animations: {
+            self.spinWheelTooltipView.alpha = 1
+        })
+    }
+}
+
+enum WheelBetStatus {
+    case pending
+    case notEligible
+    case eligible
+    case awarded
+}
+
+struct BetWheelInfo {
+    let betId: String
+    let gameTranId: String
+    let wheelBetStatus: WheelBetStatus
+    let winBoostId: String?
 }

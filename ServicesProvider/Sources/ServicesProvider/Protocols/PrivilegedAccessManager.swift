@@ -112,5 +112,7 @@ protocol PrivilegedAccessManager {
     
     func getWheelEligibility(gameTransId: String) -> AnyPublisher<WheelEligibility, ServiceProviderError>
     
-    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInResponse, ServiceProviderError>
+    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInData, ServiceProviderError>
+    
+    func getGrantedWinBoosts(gameTransIds: [String]) -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError>
 }

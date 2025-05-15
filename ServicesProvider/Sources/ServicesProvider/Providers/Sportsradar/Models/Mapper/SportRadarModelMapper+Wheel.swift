@@ -26,7 +26,7 @@ extension SportRadarModelMapper {
             mappedWheelConfiguration = self.wheelConfiguration(fromInternalWheelConfiguration: wheelConfiguration)
         }
         
-        return WheelStatus(gameTransId: wheelStatus.gameTransId, status: wheelStatus.status, message: wheelStatus.message, configuration: mappedWheelConfiguration)
+        return WheelStatus(winBoostId: wheelStatus.winBoostId, gameTransId: wheelStatus.gameTransId, status: wheelStatus.status, message: wheelStatus.message, configuration: mappedWheelConfiguration)
     }
     
     static func wheelConfiguration(fromInternalWheelConfiguration wheelConfiguration: SportRadarModels.WheelConfiguration) -> WheelConfiguration {
@@ -43,8 +43,40 @@ extension SportRadarModelMapper {
         return WheelTier(name: wheelTier.name, chance: wheelTier.chance, boostMultiplier: wheelTier.boostMultiplier)
     }
     
-    static func wheelOptInResponse(fromInternalWheelOptInResponse wheelOptInResponse: SportRadarModels.WheelOptInResponse) -> WheelOptInResponse {
+    static func wheelOptInData(fromInternalWheelOptInData wheelOptInData: SportRadarModels.WheelOptInData) -> WheelOptInData {
         
-        return WheelOptInResponse(status: wheelOptInResponse.status, message: wheelOptInResponse.message)
+        var awardedTier: WheelAwardedTier?
+        
+        if let wheelAwardedTier = wheelOptInData.awardedTier {
+            awardedTier = self.wheelAwardedTier(fromInternalWheelAwardedTier: wheelAwardedTier)
+        }
+        
+        return WheelOptInData(status: wheelOptInData.status, winBoostId: wheelOptInData.winBoostId, gameTranId: wheelOptInData.gameTranId, awardedTier: awardedTier)
+    }
+    
+    static func wheelAwardedTier(fromInternalWheelAwardedTier wheelAwardedTier: SportRadarModels.WheelAwardedTier) -> WheelAwardedTier {
+        
+        return WheelAwardedTier(configurationId: wheelAwardedTier.configurationId, name: wheelAwardedTier.name, boostMultiplier: wheelAwardedTier.boostMultiplier)
+    }
+    
+    static func grantedWinBoosts(fromInternalGrantedWinBoosts grantedWinBoosts: SportRadarModels.GrantedWinBoosts) -> GrantedWinBoosts {
+        
+        let winBoosts = grantedWinBoosts.winBoosts.map({
+            return self.grantedWinBoostInfo(fromInternalGrantedWinBoostInfo: $0)
+        })
+        
+        return GrantedWinBoosts(gameTranId: grantedWinBoosts.gameTranId, winBoosts: winBoosts)
+    }
+    
+    static func grantedWinBoostInfo(fromInternalGrantedWinBoostInfo grantedWinBoostInfo: SportRadarModels.GrantedWinBoostInfo) -> GrantedWinBoostInfo {
+        
+        var mappedWheelAwardedTier: WheelAwardedTier?
+        
+        if let awardedTier = grantedWinBoostInfo.awardedTier {
+            mappedWheelAwardedTier = self.wheelAwardedTier(fromInternalWheelAwardedTier: awardedTier)
+        }
+        
+        
+        return GrantedWinBoostInfo(winBoostId: grantedWinBoostInfo.winBoostId, gameTranId: grantedWinBoostInfo.gameTranId, status: grantedWinBoostInfo.status, awardedTier: mappedWheelAwardedTier, boostAmount: grantedWinBoostInfo.boostAmount)
     }
 }

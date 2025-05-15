@@ -431,8 +431,8 @@ class ProfileViewController: UIViewController {
     
     @objc private func testTap() {
         
-        let betslipId = "247097"
-        let betId = "373498.10"
+        let betslipId = "247254"
+        let betId = "373634.10"
         
         // Split the betId at the decimal point
         let betIdComponents = betId.split(separator: ".")
@@ -446,7 +446,8 @@ class ProfileViewController: UIViewController {
         let gameTransId: String
         if trimmedDecimal.isEmpty {
             gameTransId = "\(betslipId)_\(betIdBase)"
-        } else {
+        }
+        else {
             gameTransId = "\(betslipId)_\(betIdBase).\(trimmedDecimal)"
         }
         
@@ -463,7 +464,7 @@ class ProfileViewController: UIViewController {
                 
                 print("WHEEL RESPONSE: \(wheelStatusResponse)")
                 
-                self?.openSpinWheel(boostMultiplier: 0.3)
+                self?.openSpinWheel(boostMultiplier: 0.5)
                 
             })
             .store(in: &cancellables)

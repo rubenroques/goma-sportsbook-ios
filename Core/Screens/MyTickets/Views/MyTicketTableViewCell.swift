@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class MyTicketTableViewCell: UITableViewCell {
 
@@ -70,6 +71,8 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var minimumCashoutValueLabel: UILabel!
     @IBOutlet private weak var maximumCashoutValueLabel: UILabel!
     
+    @IBOutlet private weak var winBoostBaseView: UIView!
+    
     @IBOutlet private weak var multisliderZeroHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var multisliderNormalHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var partialCashoutButtonTopSliderConstraint: NSLayoutConstraint!
@@ -78,6 +81,12 @@ class MyTicketTableViewCell: UITableViewCell {
     // Custom views
     lazy var learnMoreBaseView: CashbackLearnMoreView = {
         let view = CashbackLearnMoreView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var winBoostView: WinBoostInfoView = {
+        let view = WinBoostInfoView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -140,6 +149,8 @@ class MyTicketTableViewCell: UITableViewCell {
             self.partialCashoutSliderView.isUserInteractionEnabled = !isPartialCashoutDisabled
         }
     }
+    
+    var partialCashoutPotentialWinnings: Double?
 
     var needsHeightRedraw: ((Bool) -> Void)?
     var tappedShareAction: ((UIImage, BetHistoryEntry) -> Void) = { _, _ in }
@@ -294,6 +305,16 @@ class MyTicketTableViewCell: UITableViewCell {
         
         self.partialCashoutButtonTopViewConstraint.isActive = !partialCashoutEnabled
         self.partialCashoutButtonTopSliderConstraint.isActive = partialCashoutEnabled
+        
+        self.winBoostBaseView.addSubview(self.winBoostView)
+        
+        NSLayoutConstraint.activate([
+            self.winBoostView.leadingAnchor.constraint(equalTo: self.winBoostBaseView.leadingAnchor, constant: 12),
+            self.winBoostView.trailingAnchor.constraint(equalTo: self.winBoostBaseView.trailingAnchor, constant: -12),
+            self.winBoostView.centerYAnchor.constraint(equalTo: self.winBoostBaseView.centerYAnchor)
+        ])
+        
+        self.winBoostBaseView.isHidden = true
 
         self.setupWithTheme()
     }
@@ -334,6 +355,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.hasCashback = false
 
         self.usedCashback = false
+        
+        self.partialCashoutPotentialWinnings = nil
 
         self.minimumCashoutValueLabel.text = ""
         self.maximumCashoutValueLabel.text = ""
@@ -435,6 +458,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.cashbackUsedBaseView.backgroundColor = UIColor.App.highlightSecondary
 
         self.cashbackUsedTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        
+        self.winBoostBaseView.backgroundColor = .clear
     }
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
@@ -456,8 +481,8 @@ class MyTicketTableViewCell: UITableViewCell {
             }
         }
     }
-
-    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel) {
+    
+    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel, grantedWinBoost: GrantedWinBoostInfo? = nil) {
 
         self.betHistoryEntry = betHistoryEntry
         self.viewModel = viewModel
@@ -690,15 +715,20 @@ class MyTicketTableViewCell: UITableViewCell {
 
             // Original amount
             let originalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betHistoryEntry.totalBetAmount ?? 0.0))
+            
             self.originalAmountValueLabel.text = "\(localized("original")):\n \(originalBetAmountString ?? "")"
 
             // New bet amount
             let newBetAmount = (betHistoryEntry.totalBetAmount ?? 0.0) - partialCashoutStake
+            
             let totalNewBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: newBetAmount))
             self.betAmountSubtitleLabel.text = totalNewBetAmountString
 
             // New Possible Winnings
-            let newMaxWinnings = newBetAmount*(betHistoryEntry.maxWinning ?? 0.0)
+            let newMaxWinnings = newBetAmount * (betHistoryEntry.totalPriceValue ?? 0.0) * Double(betHistoryEntry.numberOfSelections ?? 0)
+            
+            self.partialCashoutPotentialWinnings = newMaxWinnings
+            
             let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: newMaxWinnings))
             self.winningsSubtitleLabel.text = maxWinningsString
 
@@ -780,6 +810,29 @@ class MyTicketTableViewCell: UITableViewCell {
             })
             .store(in: &self.cancellables)
 
+        if let grantedWinBoost {
+            
+            if let awardedTier = grantedWinBoost.awardedTier,
+               let maxWinnings = betHistoryEntry.maxWinning {
+            
+               var winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings * awardedTier.boostMultiplier))
+                
+                if let partialCashoutPotentialWinnings = self.partialCashoutPotentialWinnings {
+                    winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: partialCashoutPotentialWinnings * awardedTier.boostMultiplier))
+                }
+                
+                let prize = String(format: "%.0f%%", awardedTier.boostMultiplier * 100)
+                
+                self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: prize, value: winValue ?? "")
+            }
+            else if let boostAmount = grantedWinBoost.boostAmount,
+                    let winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: boostAmount)) {
+                                
+                self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: "", value: winValue)
+            }
+            
+            self.winBoostBaseView.isHidden = false
+        }
     }
 
     func setupPartialCashoutSlider() {

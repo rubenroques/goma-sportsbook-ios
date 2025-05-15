@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ServicesProvider
 
 class SharedTicketCardView: UIView {
 
@@ -32,6 +33,8 @@ class SharedTicketCardView: UIView {
     private lazy var cashbackIconImageView: UIImageView = Self.createCashbackIconImageView()
     private lazy var cashbackUsedBaseView: UIView = Self.createCashbackUsedBaseView()
     private lazy var cashbackUsedTitleLabel: UILabel = Self.createCashbackUsedTitleLabel()
+    private lazy var bottomContainerStackView: UIStackView = Self.createBottomContainerStackView()
+    private lazy var winBoostInfoView: WinBoostInfoView = Self.createWinBoostInfoView()
 
     private var betHistoryEntry: BetHistoryEntry?
 
@@ -156,7 +159,13 @@ class SharedTicketCardView: UIView {
         self.cashbackUsedTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
-    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel, cashbackValue: Double? = nil, usedCashback: Bool) {
+    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry,
+                   countryCodes: [String],
+                   viewModel: MyTicketCellViewModel,
+                   cashbackValue: Double? = nil,
+                   usedCashback: Bool,
+                   betWheelInfo: BetWheelInfo?,
+                   wheelAwardedTier: WheelAwardedTier?) {
 
         self.betHistoryEntry = betHistoryEntry
 
@@ -211,6 +220,21 @@ class SharedTicketCardView: UIView {
         }
 
         self.usedCashback = usedCashback
+        
+        if let betWheelInfo,
+           let wheelAwardedTier,
+           let maxWinnings = betHistoryEntry.maxWinning,
+           let winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings * wheelAwardedTier.boostMultiplier)){
+            
+            let prize = String(format: "%.0f%%", wheelAwardedTier.boostMultiplier * 100)
+            
+            self.winBoostInfoView.configure(title: localized("coup_de_boost"), subtitle: prize, value: winValue)
+            
+            self.winBoostInfoView.isHidden = false
+            
+            self.baseView.setNeedsLayout()
+            self.baseView.layoutIfNeeded()
+        }
         
     }
 
@@ -414,6 +438,22 @@ extension SharedTicketCardView {
         label.textAlignment = .left
         return label
     }
+    
+    private static func createBottomContainerStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 10
+        return stackView
+    }
+    
+    private static func createWinBoostInfoView() -> WinBoostInfoView {
+        let view = WinBoostInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
 
     private func setupSubviews() {
         self.addSubview(self.baseView)
@@ -428,8 +468,11 @@ extension SharedTicketCardView {
 
         self.betCardsBaseView.addSubview(self.betCardsStackView)
 
-        self.baseView.addSubview(self.bottomBaseView)
+//        self.baseView.addSubview(self.bottomBaseView)
+        self.baseView.addSubview(self.bottomContainerStackView)
 
+        self.bottomContainerStackView.addArrangedSubview(self.bottomBaseView)
+        
         self.bottomBaseView.addSubview(self.bottomTitlesStackView)
 
         self.bottomBaseView.addSubview(self.bottomSeparatorLineView)
@@ -455,6 +498,8 @@ extension SharedTicketCardView {
         self.baseView.addSubview(self.cashbackUsedBaseView)
 
         self.cashbackUsedBaseView.addSubview(self.cashbackUsedTitleLabel)
+        
+        self.bottomContainerStackView.addArrangedSubview(self.winBoostInfoView)
 
         self.initConstraints()
     }
@@ -489,11 +534,16 @@ extension SharedTicketCardView {
             self.betCardsStackView.trailingAnchor.constraint(equalTo: self.betCardsBaseView.trailingAnchor),
             self.betCardsStackView.topAnchor.constraint(equalTo: self.betCardsBaseView.topAnchor),
             self.betCardsStackView.bottomAnchor.constraint(equalTo: self.betCardsBaseView.bottomAnchor),
+            
+            self.bottomContainerStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.bottomContainerStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.bottomContainerStackView.topAnchor.constraint(equalTo: self.betCardsBaseView.bottomAnchor, constant: 12),
+            self.bottomContainerStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -8),
 
-            self.bottomBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
-            self.bottomBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.bottomBaseView.topAnchor.constraint(equalTo: self.betCardsBaseView.bottomAnchor, constant: 12),
-            self.bottomBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -14),
+            self.bottomBaseView.leadingAnchor.constraint(equalTo: self.bottomContainerStackView.leadingAnchor),
+            self.bottomBaseView.trailingAnchor.constraint(equalTo: self.bottomContainerStackView.trailingAnchor),
+//            self.bottomBaseView.topAnchor.constraint(equalTo: self.betCardsBaseView.bottomAnchor, constant: 12),
+//            self.bottomBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -14),
 //            self.bottomBaseView.heightAnchor.constraint(equalToConstant: 55),
 
             self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 25),
@@ -526,7 +576,10 @@ extension SharedTicketCardView {
             self.cashbackUsedTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackUsedBaseView.leadingAnchor, constant: 8),
             self.cashbackUsedTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackUsedBaseView.trailingAnchor, constant: -8),
             self.cashbackUsedTitleLabel.topAnchor.constraint(equalTo: cashbackUsedBaseView.topAnchor, constant: 3),
-            self.cashbackUsedTitleLabel.bottomAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: -3)
+            self.cashbackUsedTitleLabel.bottomAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: -3),
+            
+            self.winBoostInfoView.leadingAnchor.constraint(equalTo: self.bottomContainerStackView.leadingAnchor, constant: 16),
+            self.winBoostInfoView.trailingAnchor.constraint(equalTo: self.bottomContainerStackView.trailingAnchor, constant: -16)
 
         ])
 

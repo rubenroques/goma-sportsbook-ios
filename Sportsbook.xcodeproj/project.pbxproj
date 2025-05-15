@@ -5358,6 +5358,26 @@
 		658A4CC52B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */; };
 		658A4CC62B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */; };
 		65A4BA092C09E58B00279143 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A4BA072C09E54700279143 /* AdServices.framework */; };
+		65ABC47A2DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC47B2DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC47C2DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC47D2DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC47E2DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC47F2DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC4802DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC4812DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC4822DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC4832DD4A3920043051C /* InfoActionDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */; };
+		65ABC4852DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC4862DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC4872DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC4882DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC4892DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC48A2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC48B2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC48C2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC48D2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65ABC48E2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
 		65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884172C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
@@ -9765,6 +9785,8 @@
 		658A4CB52B9F6C4800F73772 /* Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referrals.swift; sourceTree = "<group>"; };
 		658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Referrals.swift"; sourceTree = "<group>"; };
 		65A4BA072C09E54700279143 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
+		65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoActionDialogView.swift; sourceTree = "<group>"; };
+		65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinBoostInfoView.swift; sourceTree = "<group>"; };
 		65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		65F8841D2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetitionDetailRootViewController.swift; sourceTree = "<group>"; };
 		65F884272C1C43D300A56983 /* BannerTournamentTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTournamentTableViewHeader.swift; sourceTree = "<group>"; };
@@ -11909,6 +11931,8 @@
 				655E20092B28A14700C95337 /* TextSectionView.swift */,
 				655E20122B29CB7E00C95337 /* TextSubsectionView.swift */,
 				653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */,
+				65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */,
+				65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -17322,6 +17346,7 @@
 				450B7A2E28F58574009229E3 /* MyFavoritesViewController.swift in Sources */,
 				450B7A2F28F58574009229E3 /* TipsCellViewModel.swift in Sources */,
 				450B7A3128F58574009229E3 /* InAppMessageTableViewCell.swift in Sources */,
+				65ABC47A2DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				450B7A3228F58574009229E3 /* PreSubmissionBetslipViewController.swift in Sources */,
 				450B7A3328F58574009229E3 /* DropDownSelectionView.swift in Sources */,
 				450B7A3428F58574009229E3 /* PolicyLinkView.swift in Sources */,
@@ -17397,6 +17422,7 @@
 				450B7A6728F58574009229E3 /* AddFriendCellViewModel.swift in Sources */,
 				450B7A6828F58574009229E3 /* Debounce.swift in Sources */,
 				45644F9F2C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				65ABC48A2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				450B7A6928F58574009229E3 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				6550BFD72D6F350A00270C58 /* IconTitleHeaderFooterView.swift in Sources */,
 				450B7A6B28F58574009229E3 /* ConversationsViewController.swift in Sources */,
@@ -18190,6 +18216,7 @@
 				45DB8DA12A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				457CBB72282D27D000ED0F00 /* PolicyLinkView.swift in Sources */,
 				A9B331C7288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */,
+				65ABC4832DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				457CBB74282D27D000ED0F00 /* HomeFilterOptions.swift in Sources */,
 				457CBB75282D27D000ED0F00 /* Aggregator.swift in Sources */,
 				457CBB76282D27D000ED0F00 /* OutrightMarketDetailsViewModel.swift in Sources */,
@@ -18265,6 +18292,7 @@
 				457CBB9B282D27D000ED0F00 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				A92548152A28F84D0056F832 /* IdentificationDocsViewController.swift in Sources */,
 				45B6E235284151E5001B570C /* EditGroupAddUserViewController.swift in Sources */,
+				65ABC4872DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				457CBB9D282D27D000ED0F00 /* ConversationsViewController.swift in Sources */,
 				6550BFDA2D6F350A00270C58 /* IconTitleHeaderFooterView.swift in Sources */,
 				A9958C7329705D62001474E2 /* DocumentView.swift in Sources */,
@@ -18590,6 +18618,7 @@
 				457CBD38282D2CD100ED0F00 /* HeadToHeadCardStatsView.swift in Sources */,
 				A98EC7EA288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				457CBD39282D2CD100ED0F00 /* AppearanceViewModel.swift in Sources */,
+				65ABC4882DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				457CBD3B282D2CD100ED0F00 /* CompetitionFilterTableViewCell.swift in Sources */,
 				45B6E223283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				452B9D252C1890160032363F /* SystemBettingTicketDataSource.swift in Sources */,
@@ -18776,6 +18805,7 @@
 				457CBDB1282D2CD100ED0F00 /* EmailVerificationTableViewCell.swift in Sources */,
 				455AE1322A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */,
 				A9A7B52C29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
+				65ABC47C2DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				A98EFDA7287C66B000655A26 /* SharedTicketCardView.swift in Sources */,
 				457CBDB2282D2CD100ED0F00 /* ForbiddenLocationViewController.swift in Sources */,
 				457CBDB3282D2CD100ED0F00 /* OddFormatter.swift in Sources */,
@@ -19664,6 +19694,7 @@
 				A986D34528CB473700AF95D7 /* TipsCellViewModel.swift in Sources */,
 				A9B331C5288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */,
 				4589C8F2282024E400243547 /* PreSubmissionBetslipViewController.swift in Sources */,
+				65ABC4802DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				4589C8F3282024E400243547 /* DropDownSelectionView.swift in Sources */,
 				4589C8F4282024E400243547 /* PolicyLinkView.swift in Sources */,
 				4589C8F6282024E400243547 /* HomeFilterOptions.swift in Sources */,
@@ -19739,6 +19770,7 @@
 				4589C91B282024E400243547 /* Debounce.swift in Sources */,
 				4589C91C282024E400243547 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45644FA12C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				65ABC48B2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				4589C9DF2820279500243547 /* TargetVariables.swift in Sources */,
 				6550BFD42D6F350A00270C58 /* IconTitleHeaderFooterView.swift in Sources */,
 				4589C91D282024E400243547 /* ConversationsViewController.swift in Sources */,
@@ -20402,6 +20434,7 @@
 				45A3324D298976BA008181E9 /* CompetitionDetailsViewController.swift in Sources */,
 				45A3324E298976BA008181E9 /* MyFavoritesViewController.swift in Sources */,
 				45A3324F298976BA008181E9 /* TipsCellViewModel.swift in Sources */,
+				65ABC47E2DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				45A33251298976BA008181E9 /* InAppMessageTableViewCell.swift in Sources */,
 				45A33252298976BA008181E9 /* PreSubmissionBetslipViewController.swift in Sources */,
 				45A33253298976BA008181E9 /* DropDownSelectionView.swift in Sources */,
@@ -20477,6 +20510,7 @@
 				45A33288298976BA008181E9 /* AddFriendCellViewModel.swift in Sources */,
 				45A33289298976BA008181E9 /* Debounce.swift in Sources */,
 				45644FA52C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				65ABC4862DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				45A3328A298976BA008181E9 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				6550BFD22D6F350A00270C58 /* IconTitleHeaderFooterView.swift in Sources */,
 				45A3328B298976BA008181E9 /* ConversationsViewController.swift in Sources */,
@@ -21140,6 +21174,7 @@
 				45A6BD4528246A7500D9B416 /* OddsViewController.swift in Sources */,
 				A90FB7CB29AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
 				A9BA04242A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */,
+				65ABC47D2DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				A93FE2112A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				A91A05BC29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				45A6BD4628246A7500D9B416 /* CompetitionDetailsViewController.swift in Sources */,
@@ -21215,6 +21250,7 @@
 				45A6BD7228246A7500D9B416 /* FriendsListViewModel.swift in Sources */,
 				45A6BD7328246A7500D9B416 /* Debounce.swift in Sources */,
 				45644FA42C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				65ABC48D2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				45A6BD7428246A7500D9B416 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				6550BFD92D6F350A00270C58 /* IconTitleHeaderFooterView.swift in Sources */,
 				45A6BD7528246A7500D9B416 /* ConversationsViewController.swift in Sources */,
@@ -21878,6 +21914,7 @@
 				45F6BD052AB3732C00C81DE1 /* CompetitionDetailsViewController.swift in Sources */,
 				45F6BD062AB3732C00C81DE1 /* MyFavoritesViewController.swift in Sources */,
 				45F6BD072AB3732C00C81DE1 /* TipsCellViewModel.swift in Sources */,
+				65ABC4812DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				45F6BD082AB3732C00C81DE1 /* InAppMessageTableViewCell.swift in Sources */,
 				45F6BD092AB3732C00C81DE1 /* PreSubmissionBetslipViewController.swift in Sources */,
 				45F6BD0A2AB3732C00C81DE1 /* DropDownSelectionView.swift in Sources */,
@@ -21953,6 +21990,7 @@
 				45F6BD492AB3732C00C81DE1 /* AddFriendCellViewModel.swift in Sources */,
 				45F6BD4A2AB3732C00C81DE1 /* Debounce.swift in Sources */,
 				45644FA02C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
+				65ABC48E2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				45F6BD4B2AB3732C00C81DE1 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				6550BFD52D6F350A00270C58 /* IconTitleHeaderFooterView.swift in Sources */,
 				45F6BD4C2AB3732C00C81DE1 /* ConversationsViewController.swift in Sources */,
@@ -22286,6 +22324,7 @@
 				A9C3416528F9A74A0055360B /* MyTicketTableViewCell.swift in Sources */,
 				A90C372329C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				459EF2982BC01AD20098A7F6 /* ScoreView.swift in Sources */,
+				65ABC4892DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				A9C3416628F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				4542DFEC2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				A9C3416728F9A74A0055360B /* SportMatchLineViewModel.swift in Sources */,
@@ -22472,6 +22511,7 @@
 				A9C3420528F9A74A0055360B /* PreviewChatCellViewModel.swift in Sources */,
 				A9C3420628F9A74A0055360B /* BannerCellViewModel.swift in Sources */,
 				A9C3420728F9A74A0055360B /* EmailVerificationTableViewCell.swift in Sources */,
+				65ABC47B2DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				45D64AF52B6002F70092DA8E /* BoostedBetConfirmationView.swift in Sources */,
 				A9C3420828F9A74A0055360B /* ForbiddenLocationViewController.swift in Sources */,
 				A9C3420928F9A74A0055360B /* SharedTicketCardView.swift in Sources */,
@@ -23360,6 +23400,7 @@
 				CE12A3812D31347E0022BDF7 /* TipsCellViewModel.swift in Sources */,
 				CE12A3822D31347E0022BDF7 /* InAppMessageTableViewCell.swift in Sources */,
 				CE12A3832D31347E0022BDF7 /* PreSubmissionBetslipViewController.swift in Sources */,
+				65ABC47F2DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				CE12A3842D31347E0022BDF7 /* DropDownSelectionView.swift in Sources */,
 				CE12A3852D31347E0022BDF7 /* PolicyLinkView.swift in Sources */,
 				CE12A3862D31347E0022BDF7 /* HomeFilterOptions.swift in Sources */,
@@ -23435,6 +23476,7 @@
 				CE12A3CB2D31347E0022BDF7 /* Debounce.swift in Sources */,
 				CE12A3CC2D31347E0022BDF7 /* OpenStatsButton.swift in Sources */,
 				CE12A3CD2D31347E0022BDF7 /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				65ABC48C2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				CE12A3CE2D31347E0022BDF7 /* ConversationsViewController.swift in Sources */,
 				6550BFD62D6F350A00270C58 /* IconTitleHeaderFooterView.swift in Sources */,
 				CE12A3CF2D31347E0022BDF7 /* WithdrawResponse.swift in Sources */,
@@ -24098,6 +24140,7 @@
 				CEA568512D5A58D800696793 /* UploadDocumentsInformationView.swift in Sources */,
 				CEA568522D5A58D800696793 /* GenericErrorViewController.swift in Sources */,
 				CEA568532D5A58D800696793 /* CloseAccountViewController.swift in Sources */,
+				65ABC4822DD4A3920043051C /* InfoActionDialogView.swift in Sources */,
 				CEA568542D5A58D800696793 /* CompetitionDetailsViewController.swift in Sources */,
 				CEA568552D5A58D800696793 /* TipsCellViewModel.swift in Sources */,
 				CEA568562D5A58D800696793 /* MyFavoritesViewController.swift in Sources */,
@@ -24173,6 +24216,7 @@
 				CEA5689C2D5A58D800696793 /* OpenStatsButton.swift in Sources */,
 				CEA5689D2D5A58D800696793 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				CEA5689E2D5A58D800696793 /* ConversationsViewController.swift in Sources */,
+				65ABC4852DD4D03A0043051C /* WinBoostInfoView.swift in Sources */,
 				CEA5689F2D5A58D800696793 /* CardsCollectionViewLayout.swift in Sources */,
 				6550BFD32D6F350A00270C58 /* IconTitleHeaderFooterView.swift in Sources */,
 				CEA568A02D5A58D800696793 /* RegisterErrorViewController.swift in Sources */,
@@ -24726,7 +24770,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103907;
+				CURRENT_PROJECT_VERSION = 103914;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -24758,7 +24802,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103907;
+				CURRENT_PROJECT_VERSION = 103914;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -24854,7 +24898,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103907;
+				CURRENT_PROJECT_VERSION = 103914;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -24886,7 +24930,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103907;
+				CURRENT_PROJECT_VERSION = 103914;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -24918,7 +24962,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103907;
+				CURRENT_PROJECT_VERSION = 103914;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -24963,7 +25007,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103907;
+				CURRENT_PROJECT_VERSION = 103914;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;

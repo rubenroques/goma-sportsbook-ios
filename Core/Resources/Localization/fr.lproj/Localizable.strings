@@ -2102,3 +2102,15 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "leave_questionnaire" = "Êtes-vous sûr de vouloir partir ?";
 
 "back_home" = "Retour à la page d'accueil";
+"coup_boost" = "Coup de Boost";
+
+"spin_wheel_tooltip_title" = " TU VEUX TOURNER LA ROUE ?";
+"spin_wheel_tooltip_description_title" = "Il te faut :";
+"spin_wheel_tooltip_description_text" = "• Un pari live \n• Une cote > 1.80 \n• Une mise minimum de 5€";
+
+"spin_wheel_tooltip_link_text" = "+ Infos";
+
+"spin_wheel_dialog_title" = " Tu es sûr ?";
+"spin_wheel_dialog_message" = "Ton pari est éligible au Coup de Boost ! Si tu cliques sur Continuer, tu ne pourras plus tourner la roue du Coup de boost de la journée.";
+"spin_wheel_tooltip_info_link_url" = "https://betsson.fr";
+"coup_de_boost" = "Coup de Boost";

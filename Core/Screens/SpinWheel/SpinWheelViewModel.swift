@@ -118,8 +118,20 @@ class SpinWheelViewModel {
                 .delay(for: .milliseconds(200), scheduler: DispatchQueue.main)
                 .sink { [weak self] _ in
                     print("SpinWheelVM: Delay completed, sending wonPrize message with 20%")
-//                    self?.messageToWebViewPublisher.send(.wonPrize(prize: "20%"))
+                    
                     self?.messageToWebViewPublisher.send(.wonPrize(prize: self?.prize ?? ""))
+                    
+                    // Start 20-second timer for auto-exit
+                    Just(())
+                        .delay(for: .seconds(20), scheduler: DispatchQueue.main)
+                        .sink { [weak self] _ in
+                            // Only exit if we haven't already exited manually
+                            if let self = self {
+                                print("SpinWheelVM: 20-second timeout reached, auto-exiting wheel")
+                                self.exitPublisher.send()
+                            }
+                        }
+                        .store(in: &self!.cancellables)
 
                 }
                 .store(in: &self.cancellables)

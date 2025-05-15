@@ -1520,23 +1520,54 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
     
-    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInResponse, ServiceProviderError> {
+    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInData, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.wheelOptIn(winBoostId: winBoostId, optInOption: optInOption)
 
-        let publisher: AnyPublisher<SportRadarModels.WheelOptInResponse, ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<SportRadarModels.WheelOptInData, ServiceProviderError> = self.connector.request(endpoint)
 
-        return publisher.flatMap({ wheelOptInResponse -> AnyPublisher<WheelOptInResponse, ServiceProviderError> in
+        return publisher.flatMap({ wheelOptInData -> AnyPublisher<WheelOptInData, ServiceProviderError> in
 
-            if wheelOptInResponse.status == "SUCCESS" {
+            if wheelOptInData.status == "ACCEPTED" || wheelOptInData.status == "REJECTED" {
 
-                let mappedWheelOptInResponse = SportRadarModelMapper.wheelOptInResponse(fromInternalWheelOptInResponse: wheelOptInResponse)
-
-                return Just(mappedWheelOptInResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                let mappedWheelOptInData = SportRadarModelMapper.wheelOptInData(fromInternalWheelOptInData: wheelOptInData)
+                    
+                return Just(mappedWheelOptInData).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 
             }
             else {
-                return Fail(outputType: WheelOptInResponse.self, failure: ServiceProviderError.errorMessage(message: wheelOptInResponse.status)).eraseToAnyPublisher()
+                return Fail(outputType: WheelOptInData.self, failure: ServiceProviderError.errorMessage(message: wheelOptInData.status)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+    
+    func getGrantedWinBoosts(gameTransIds: [String]) -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getGrantedWinBoosts(gameTransIds: gameTransIds)
+
+        let publisher: AnyPublisher<SportRadarModels.GrantedWinBoostsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ grantedWinBoostsResponse -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError> in
+
+            if grantedWinBoostsResponse.status == "SUCCESS",
+               let grantedWinBoosts = grantedWinBoostsResponse.data{
+
+                let mappedGrantedWinBoosts = grantedWinBoosts.map({
+                    return SportRadarModelMapper.grantedWinBoosts(fromInternalGrantedWinBoosts: $0)
+                })
+                
+                // Filter the mapped win boosts to only include those with status "ACCEPTED" or "AWARDED"
+                let filteredWinBoosts = mappedGrantedWinBoosts.filter { grantedWinBoost in
+                    return grantedWinBoost.winBoosts.contains { winBoost in
+                        return winBoost.status == "ACCEPTED" || winBoost.status == "AWARDED"
+                    }
+                }
+                    
+                return Just(filteredWinBoosts).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: [GrantedWinBoosts].self, failure: ServiceProviderError.errorMessage(message: grantedWinBoostsResponse.status)).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }

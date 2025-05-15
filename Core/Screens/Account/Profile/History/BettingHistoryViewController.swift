@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class BettingHistoryViewController: UIViewController {
 
@@ -329,8 +330,53 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
             default:
                 cell.showPartialCashoutSliderView = false
             }
+            
+            let betId = ticketValue.betId
+            let betslipId = "\(ticketValue.betslipId ?? 0)"
+            
+            let gameTransId = self.viewModel.getGameTransId(betId: betId, betslipId: betslipId)
+            
+            var grantedWinBoost: GrantedWinBoostInfo?
+            
+            switch self.viewModel.bettingTicketsType {
+            case .opened:
+                let matchingWinBoost = self.viewModel.openedGrantedWinBoosts.first { grantedWinBoost in
+                    return grantedWinBoost.gameTranId == gameTransId
+                }
+                
+                if let matchingWinBoost = matchingWinBoost?.winBoosts.first {
+                    grantedWinBoost = matchingWinBoost
+                }
+                else {
+                    print("No matching win boost found for gameTransId: \(gameTransId)")
+                }
+            case .resolved:
+                let matchingWinBoost = self.viewModel.resolvedGrantedWinBoosts.first { grantedWinBoost in
+                    return grantedWinBoost.gameTranId == gameTransId
+                }
+                
+                if let matchingWinBoost = matchingWinBoost?.winBoosts.first {
+                    grantedWinBoost = matchingWinBoost
+                }
+                else {
+                    print("No matching win boost found for gameTransId: \(gameTransId)")
+                }
+            case .won:
+                let matchingWinBoost = self.viewModel.wonGrantedWinBoosts.first { grantedWinBoost in
+                    return grantedWinBoost.gameTranId == gameTransId
+                }
+                
+                if let matchingWinBoost = matchingWinBoost?.winBoosts.first {
+                    grantedWinBoost = matchingWinBoost
+                }
+                else {
+                    print("No matching win boost found for gameTransId: \(gameTransId)")
+                }
+            case .cashout:
+                ()
+            }
 
-            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel, grantedWinBoost: grantedWinBoost)
 
             cell.tappedShareAction = { [weak self] cellSnapshotImage, ticketValue in
                 if let ticketStatus = ticketValue.status {

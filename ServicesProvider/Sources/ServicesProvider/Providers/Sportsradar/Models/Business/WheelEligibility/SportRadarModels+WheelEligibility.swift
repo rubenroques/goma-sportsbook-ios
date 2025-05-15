@@ -34,12 +34,14 @@ extension SportRadarModels {
     }
 
     struct WheelStatus: Codable {
+        var winBoostId: String?
         var gameTransId: String?
         var status: String
         var message: String?
         var configuration: WheelConfiguration?
         
         enum CodingKeys: String, CodingKey {
+            case winBoostId = "winBoostId"
             case gameTransId = "gameTranId"
             case status = "status"
             case message = "message"
@@ -48,6 +50,8 @@ extension SportRadarModels {
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            self.winBoostId = try container.decodeIfPresent(String.self, forKey: .winBoostId)
             
             self.gameTransId = try container.decodeIfPresent(String.self, forKey: .gameTransId)
             
@@ -84,13 +88,97 @@ extension SportRadarModels {
         }
     }
     
-    struct WheelOptInResponse: Codable {
+    struct WheelOptInData: Codable {
+        let status: String
+        let winBoostId: String?
+        let gameTranId: String?
+        let awardedTier: WheelAwardedTier?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case winBoostId = "winBoostId"
+            case gameTranId = "gameTranId"
+            case awardedTier = "awardedTier"
+        }
+    }
+    
+    struct WheelAwardedTier: Codable {
+        let configurationId: String?
+        let name: String
+        let boostMultiplier: Double
+        
+        enum CodingKeys: String, CodingKey {
+            case configurationId = "configurationId"
+            case name = "name"
+            case boostMultiplier = "boostMultiplier"
+        }
+    }
+    
+    struct GrantedWinBoostsResponse: Codable {
         let status: String
         let message: String?
+        let data: [GrantedWinBoosts]?
         
         enum CodingKeys: String, CodingKey {
             case status = "status"
             case message = "message"
+            case data = "data"
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            status = try container.decode(String.self, forKey: .status)
+            message = try container.decodeIfPresent(String.self, forKey: .message)
+            
+            // Handle the case where data might be an empty array
+            do {
+                data = try container.decodeIfPresent([GrantedWinBoosts].self, forKey: .data)
+            } catch {
+                // If decoding as array fails, check if it's an empty array
+                if let dataValue = try? container.decodeIfPresent(EmptyResponse.self, forKey: .data) {
+                    if dataValue.isEmpty {
+                        data = []
+                    } else {
+                        throw error
+                    }
+                } else {
+                    data = nil
+                }
+            }
+        }
+    }
+
+    struct GrantedWinBoosts: Codable {
+        let gameTranId: String
+        let winBoosts: [GrantedWinBoostInfo]
+        
+        enum CodingKeys: String, CodingKey {
+            case gameTranId = "gameTranId"
+            case winBoosts = "winBoosts"
+        }
+    }
+
+    struct GrantedWinBoostInfo: Codable {
+        let winBoostId: String
+        let gameTranId: String
+        let status: String
+        let awardedTier: WheelAwardedTier?
+        let boostAmount: Double?
+        
+        enum CodingKeys: String, CodingKey {
+            case winBoostId = "winBoostId"
+            case gameTranId = "gameTranId"
+            case status = "status"
+            case awardedTier = "awardedTier"
+            case boostAmount = "boostAmount"
+        }
+    }
+    
+    // Helper struct to detect empty arrays or objects
+    struct EmptyResponse: Codable {
+        var isEmpty: Bool {
+            return true
         }
     }
 }
