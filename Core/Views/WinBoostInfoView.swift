@@ -62,7 +62,7 @@ class WinBoostInfoView: UIView {
         
         self.titleLabel.textColor = UIColor.App.textPrimary
         
-        self.subtitleLabel.textColor = UIColor.App.separatorLineHighlightSecondary
+        self.subtitleLabel.textColor = UIColor.App.highlightPrimary
         
         self.valueLabel.textColor = UIColor.App.textPrimary
 

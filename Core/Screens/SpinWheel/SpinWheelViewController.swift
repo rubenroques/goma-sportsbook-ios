@@ -43,30 +43,69 @@ class SpinWheelViewController: UIViewController, WKScriptMessageHandler, WKNavig
         print("SpinWheel: Setting up WebView")
         let configuration = WKWebViewConfiguration()
         let userContentController = WKUserContentController()
-
+        
         userContentController.add(self, name: "hostApp")
         configuration.userContentController = userContentController
-
+        
+        // Create gradient view first
+        let gradientView = UIView()
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create gradient layer
+        let gradientLayer = CAGradientLayer()
+        
+        // Set gradient colors - using custom colors or system colors
+        gradientLayer.colors = [
+            UIColor.App.backgroundGradient1.cgColor,
+            UIColor.App.backgroundGradient2.cgColor
+        ]
+        
+        // Set gradient direction (top to bottom)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        
+        // Add gradient layer to the view
+        gradientView.layer.addSublayer(gradientLayer)
+        
+        // Add views to hierarchy - gradient first, then webView
+        self.view.addSubview(gradientView)
+        
+        // Create and configure webView
         self.webView = WKWebView(frame: .zero, configuration: configuration)
         self.webView.navigationDelegate = self
         self.webView.translatesAutoresizingMaskIntoConstraints = false
-
-        // Set background color to match web content
-        self.webView.backgroundColor = .black
+        
+        // Make webView transparent
+        self.webView.backgroundColor = .clear
         self.webView.isOpaque = false
-
+        self.webView.scrollView.backgroundColor = .clear
+        
         // Ensure WebView ignores safe areas
         self.webView.insetsLayoutMarginsFromSafeArea = false
-
+        
         self.view.addSubview(self.webView)
-
+        
         NSLayoutConstraint.activate([
+            // Gradient view fills the entire view
+            gradientView.topAnchor.constraint(equalTo: view.topAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
             self.webView.topAnchor.constraint(equalTo: view.topAnchor),
             self.webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             self.webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             self.webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
+        
+        // Update gradient frame when view layout changes
+        gradientView.layoutIfNeeded()
+        
+        // Set gradient layer frame
+        gradientLayer.frame = gradientView.bounds
+        
         print("SpinWheel: WebView setup completed")
+        
     }
 
     private func setupBindings() {

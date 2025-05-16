@@ -423,56 +423,17 @@ class ProfileViewController: UIViewController {
         self.verifyUserActivationConditions()
 
         self.setupStackView()
-
+        
+        #if DEBUG
         let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
         self.profilePictureBaseView.addGestureRecognizer(testTap)
-        
+        #endif
+
     }
     
     @objc private func testTap() {
         
-        let betslipId = "247254"
-        let betId = "373634.10"
-        
-        // Split the betId at the decimal point
-        let betIdComponents = betId.split(separator: ".")
-        let betIdBase = betIdComponents[0]
-        let betIdDecimal = betIdComponents.count > 1 ? betIdComponents[1] : ""
-
-        // Remove trailing zeros from the decimal part
-        let trimmedDecimal = betIdDecimal.replacingOccurrences(of: "0+$", with: "", options: .regularExpression)
-
-        // Construct the final ID
-        let gameTransId: String
-        if trimmedDecimal.isEmpty {
-            gameTransId = "\(betslipId)_\(betIdBase)"
-        }
-        else {
-            gameTransId = "\(betslipId)_\(betIdBase).\(trimmedDecimal)"
-        }
-        
-        Env.servicesProvider.getWheelEligibility(gameTransId: gameTransId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    print("FINISHED WINBOOST")
-                case .failure(let failure):
-                    print("ERROR WINBOOST: \(failure)")
-                }
-            }, receiveValue: { [weak self] wheelStatusResponse in
-                
-                print("WHEEL RESPONSE: \(wheelStatusResponse)")
-                
-                self?.openSpinWheel(boostMultiplier: 0.5)
-                
-            })
-            .store(in: &cancellables)
-    }
-    
-    private func openSpinWheel(boostMultiplier: Double) {
-        
-        let prize = String(format: "%.0f%%", boostMultiplier * 100)
+        let prize = String(format: "%.0f%%", 0.2 * 100)
         
         if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
             
@@ -484,6 +445,7 @@ class ProfileViewController: UIViewController {
             
             self.present(spinWheelWebViewController, animated: true)
         }
+        
     }
 
     private func getOptInBonus() {
