@@ -242,6 +242,13 @@ class BetSubmissionSuccessViewController: UIViewController {
             self.topGradientViewCenterConstraint.isActive = true
         }
         
+        if TargetVariables.features.contains(.spinWheel) {
+            self.spinWheelBaseView.isHidden = false
+        }
+        else {
+            self.spinWheelBaseView.isHidden = true
+        }
+        
         self.spinWheelBaseView.addSubview(self.spinWheelDisabledView)
         self.spinWheelBaseView.bringSubviewToFront(self.spinWheelDisabledView)
 
@@ -274,8 +281,13 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.spinWheelDisabledView.addGestureRecognizer(tapGesture)
                 
         self.isSpinWheelEnabled = false
-
-        self.getWheelEligibility()
+        
+        if TargetVariables.features.contains(.spinWheel) {
+            self.getWheelEligibility()
+        }
+        else {
+            self.wheelBetStatus = .notEligible
+        }
         
         // Spin Wheel Tooltip
         self.spinWheelTooltipView.configure(title: localized("spin_wheel_tooltip_title"),

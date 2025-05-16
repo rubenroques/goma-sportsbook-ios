@@ -1400,13 +1400,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.spinWheelButton.setTitle("Turnoyer!", for: .normal)
         self.spinWheelButton.titleLabel?.font = AppFont.with(type: .bold, size: 18)
 
-        // Spin Wheel
-        if TargetVariables.features.contains(.spinWheel) {
-            self.spinWheelButton.isHidden = true
-        }
-        else {
-            self.spinWheelButton.isHidden = true
-        }
+        self.spinWheelButton.isHidden = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
