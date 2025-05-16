@@ -7529,6 +7529,30 @@
 		CED11C432DD6366500F65785 /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CED11C422DD6366500F65785 /* PresentationProvider */; };
 		CED11C452DD6366B00F65785 /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CED11C442DD6366B00F65785 /* PresentationProvider */; };
 		CED11C472DD6367200F65785 /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CED11C462DD6367200F65785 /* PresentationProvider */; };
+		CED11C492DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */; };
+		CED11C4A2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */; };
+		CED11C4B2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */; };
+		CED11C4C2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */; };
+		CED11C4D2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */; };
+		CED11C4E2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */; };
+		CED11C4F2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */; };
+		CED11C502DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */; };
+		CED11C522DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */; };
+		CED11C532DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */; };
+		CED11C542DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */; };
+		CED11C552DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */; };
+		CED11C562DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */; };
+		CED11C572DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */; };
+		CED11C582DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */; };
+		CED11C592DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */; };
+		CED11C5B2DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
+		CED11C5C2DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
+		CED11C5D2DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
+		CED11C5E2DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
+		CED11C5F2DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
+		CED11C602DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
+		CED11C612DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
+		CED11C622DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
 		CED5D8F12D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D42D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift */; };
 		CED5D8F22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift */; };
 		CED5D8F32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift */; };
@@ -9760,6 +9784,9 @@
 		CEC57BD62D53C74900EA0D60 /* zendesk_support.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
 		CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEndpoints.swift; sourceTree = "<group>"; };
 		CED11C412DD6357B00F65785 /* PresentationProvider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PresentationProvider; sourceTree = "<group>"; };
+		CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationConfigurationStore.swift; sourceTree = "<group>"; };
+		CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootAdaptiveViewController.swift; sourceTree = "<group>"; };
+		CED11C5A2DD77D5100F65785 /* RootActionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootActionable.swift; sourceTree = "<group>"; };
 		CED5D8D22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CED5D8D32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
 		CED5D8D42D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
@@ -10777,6 +10804,7 @@
 				454E0A902732A78A00794E0C /* BetslipManager.swift */,
 				455A0D1526BD9F4D00EC572D /* GeoLocationManager.swift */,
 				A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */,
+				CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */,
 				45DDBAB926F2406100A73E45 /* UserSessionStore.swift */,
 				45EF54092709E81C00D1E13E /* PopUpStore.swift */,
 				A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */,
@@ -10834,6 +10862,8 @@
 			isa = PBXGroup;
 			children = (
 				455C962626FE11CA00456F30 /* RootViewController.swift */,
+				CED11C5A2DD77D5100F65785 /* RootActionable.swift */,
+				CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -17055,6 +17085,7 @@
 				CED5D97A2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				A9527C2D2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				450B798E28F58574009229E3 /* SearchEvent.swift in Sources */,
+				CED11C622DD77D5100F65785 /* RootActionable.swift in Sources */,
 				450B798F28F58574009229E3 /* UserRankingPositionTableViewCell.swift in Sources */,
 				450B799128F58574009229E3 /* MatchOddsContent.swift in Sources */,
 				450B799328F58574009229E3 /* BetSubmissionSuccessViewController.swift in Sources */,
@@ -17148,6 +17179,7 @@
 				450B79E228F58574009229E3 /* BannerInfo.swift in Sources */,
 				450B79E328F58574009229E3 /* LiveEventsViewModel.swift in Sources */,
 				450B79E528F58574009229E3 /* SharedTicketBetLineView.swift in Sources */,
+				CED11C4D2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */,
 				450B79E728F58574009229E3 /* ShareTicketFriendGroupViewModel.swift in Sources */,
 				450B79E828F58574009229E3 /* WithdrawViewController.swift in Sources */,
 				65F8842A2C1C43D300A56983 /* BannerTournamentTableViewHeader.swift in Sources */,
@@ -17337,6 +17369,7 @@
 				450B7A4928F58574009229E3 /* QuickBetViewController.swift in Sources */,
 				6584F9002BA0B84200E317EA /* EmptyReferralView.swift in Sources */,
 				455AE1352A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
+				CED11C522DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */,
 				450B7A4B28F58574009229E3 /* CompetitionDetailsViewModel.swift in Sources */,
 				A9D533FA2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				450B7A4C28F58574009229E3 /* SportsbookTarget.swift in Sources */,
@@ -17946,6 +17979,7 @@
 				CED5D9212D944B7100429306 /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CED5D9232D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CED5D9262D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CED11C5D2DD77D5100F65785 /* RootActionable.swift in Sources */,
 				A9527C2C2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				45A331A7298976BA008181E9 /* UserBalance.swift in Sources */,
 				45A331A8298976BA008181E9 /* SearchEvent.swift in Sources */,
@@ -18039,6 +18073,7 @@
 				45A331FF298976BA008181E9 /* CheckboxButton.swift in Sources */,
 				A9C2D52429C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
 				45A33201298976BA008181E9 /* BannerInfo.swift in Sources */,
+				CED11C4A2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */,
 				45A33202298976BA008181E9 /* LiveEventsViewModel.swift in Sources */,
 				45A33204298976BA008181E9 /* SharedTicketBetLineView.swift in Sources */,
 				45A33206298976BA008181E9 /* ShareTicketFriendGroupViewModel.swift in Sources */,
@@ -18228,6 +18263,7 @@
 				A93FE2042A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				6584F8FE2BA0B84200E317EA /* EmptyReferralView.swift in Sources */,
 				45A33269298976BA008181E9 /* QuickBetViewController.swift in Sources */,
+				CED11C542DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */,
 				455AE1342A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				45A3326B298976BA008181E9 /* CompetitionDetailsViewModel.swift in Sources */,
 				A9D533F92A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
@@ -18807,6 +18843,7 @@
 				CED5D8F72D944B7100429306 /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CED5D8F92D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CED5D8FC2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CED11C602DD77D5100F65785 /* RootActionable.swift in Sources */,
 				45F6BC562AB3732C00C81DE1 /* InfoDialogView.swift in Sources */,
 				45F6BC572AB3732C00C81DE1 /* UserBalance.swift in Sources */,
 				45F6BC582AB3732C00C81DE1 /* SearchEvent.swift in Sources */,
@@ -18900,6 +18937,7 @@
 				45F6BCB52AB3732C00C81DE1 /* ResponsibleGamingViewController.swift in Sources */,
 				45F6BCB62AB3732C00C81DE1 /* CheckboxButton.swift in Sources */,
 				45F6BCB72AB3732C00C81DE1 /* IBANProofViewController.swift in Sources */,
+				CED11C4B2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */,
 				45F6BCB92AB3732C00C81DE1 /* BannerInfo.swift in Sources */,
 				45F6BCBA2AB3732C00C81DE1 /* LiveEventsViewModel.swift in Sources */,
 				45F6BCBB2AB3732C00C81DE1 /* SharedTicketBetLineView.swift in Sources */,
@@ -19089,6 +19127,7 @@
 				45F6BD222AB3732C00C81DE1 /* GenericSuccessViewController.swift in Sources */,
 				6584F8FF2BA0B84200E317EA /* EmptyReferralView.swift in Sources */,
 				45F6BD232AB3732C00C81DE1 /* QuickBetViewController.swift in Sources */,
+				CED11C562DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */,
 				45F6BD242AB3732C00C81DE1 /* MakeYourBetTableViewCell.swift in Sources */,
 				45F6BD262AB3732C00C81DE1 /* CompetitionDetailsViewModel.swift in Sources */,
 				45F6BD272AB3732C00C81DE1 /* CashbackLearnMoreView.swift in Sources */,
@@ -19695,6 +19734,7 @@
 				CE12A2DE2D31347E0022BDF7 /* TipInfoView.swift in Sources */,
 				CE12A2DF2D31347E0022BDF7 /* UserDefaults.swift in Sources */,
 				CE12A2E02D31347E0022BDF7 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
+				CED11C582DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */,
 				CE12A2E12D31347E0022BDF7 /* ActivationAlertView.swift in Sources */,
 				CE12A2E22D31347E0022BDF7 /* Internationalization.swift in Sources */,
 				CE12A2E32D31347E0022BDF7 /* CasinoWebViewController.swift in Sources */,
@@ -19811,6 +19851,7 @@
 				CE12A35F2D31347E0022BDF7 /* String+Extensions.swift in Sources */,
 				CE0C6C862D54877400EAD26B /* CompetitionSectionHeader.swift in Sources */,
 				CE12A3602D31347E0022BDF7 /* ScoreView.swift in Sources */,
+				CED11C5C2DD77D5100F65785 /* RootActionable.swift in Sources */,
 				CE12A3612D31347E0022BDF7 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				CE12A3622D31347E0022BDF7 /* StaticHomeViewTemplateDataSource.swift in Sources */,
 				65EFF37C2D831C1100F1FC57 /* Promotions.swift in Sources */,
@@ -20039,6 +20080,7 @@
 				CE7E805B2D7A721D00A5558A /* PreviewTableViewController.swift in Sources */,
 				65EFF2FE2D80889100F1FC57 /* PromotionTableViewCell.swift in Sources */,
 				CE12A3F22D31347E0022BDF7 /* TitleDropdownView.swift in Sources */,
+				CED11C4E2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */,
 				CE12A3F32D31347E0022BDF7 /* TopBarAlternateView.swift in Sources */,
 				CE12A3F42D31347E0022BDF7 /* MarketWidgetCellViewModel.swift in Sources */,
 				658425772DA6B1F400BD5434 /* ServiceProviderModelMapper+FeaturedTips.swift in Sources */,
@@ -20538,6 +20580,7 @@
 				CE8F24D82DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE8F24D92DD371350071238E /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CE8F24DA2DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CED11C5F2DD77D5100F65785 /* RootActionable.swift in Sources */,
 				CE8F24DB2DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CE8F24DC2DD371350071238E /* InfoDialogView.swift in Sources */,
 				CE8F24DD2DD371350071238E /* UserBalance.swift in Sources */,
@@ -20631,6 +20674,7 @@
 				CE8F25352DD371350071238E /* ResponsibleGamingViewController.swift in Sources */,
 				CE8F25362DD371350071238E /* CheckboxButton.swift in Sources */,
 				CE8F25372DD371350071238E /* IBANProofViewController.swift in Sources */,
+				CED11C502DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */,
 				CE8F25382DD371350071238E /* BannerInfo.swift in Sources */,
 				CE8F25392DD371350071238E /* LiveEventsViewModel.swift in Sources */,
 				CE8F253A2DD371350071238E /* SharedTicketBetLineView.swift in Sources */,
@@ -20820,6 +20864,7 @@
 				CE8F25F32DD371350071238E /* GenericSuccessViewController.swift in Sources */,
 				CE8F25F42DD371350071238E /* EmptyReferralView.swift in Sources */,
 				CE8F25F52DD371350071238E /* QuickBetViewController.swift in Sources */,
+				CED11C552DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */,
 				CE8F25F62DD371350071238E /* MakeYourBetTableViewCell.swift in Sources */,
 				CE8F25F72DD371350071238E /* CompetitionDetailsViewModel.swift in Sources */,
 				CE8F25F82DD371350071238E /* CashbackLearnMoreView.swift in Sources */,
@@ -21399,6 +21444,7 @@
 				CEB3A2492DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A24A2DD379800024043B /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CEB3A24B2DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CED11C5E2DD77D5100F65785 /* RootActionable.swift in Sources */,
 				CEB3A24C2DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEB3A24D2DD379800024043B /* InfoDialogView.swift in Sources */,
 				CEB3A24E2DD379800024043B /* UserBalance.swift in Sources */,
@@ -21492,6 +21538,7 @@
 				CEB3A2A62DD379800024043B /* ResponsibleGamingViewController.swift in Sources */,
 				CEB3A2A72DD379800024043B /* CheckboxButton.swift in Sources */,
 				CEB3A2A82DD379800024043B /* IBANProofViewController.swift in Sources */,
+				CED11C4C2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */,
 				CEB3A2A92DD379800024043B /* BannerInfo.swift in Sources */,
 				CEB3A2AA2DD379800024043B /* LiveEventsViewModel.swift in Sources */,
 				CEB3A2AB2DD379800024043B /* SharedTicketBetLineView.swift in Sources */,
@@ -21681,6 +21728,7 @@
 				CEB3A3642DD379800024043B /* GenericSuccessViewController.swift in Sources */,
 				CEB3A3652DD379800024043B /* EmptyReferralView.swift in Sources */,
 				CEB3A3662DD379800024043B /* QuickBetViewController.swift in Sources */,
+				CED11C592DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */,
 				CEB3A3672DD379800024043B /* MakeYourBetTableViewCell.swift in Sources */,
 				CEB3A3682DD379800024043B /* CompetitionDetailsViewModel.swift in Sources */,
 				CEB3A3692DD379800024043B /* CashbackLearnMoreView.swift in Sources */,
@@ -22260,6 +22308,7 @@
 				CEB3A6D22DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A6D32DD379890024043B /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CEB3A6D42DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
+				CED11C612DD77D5100F65785 /* RootActionable.swift in Sources */,
 				CEB3A6D52DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEB3A6D62DD379890024043B /* InfoDialogView.swift in Sources */,
 				CEB3A6D72DD379890024043B /* UserBalance.swift in Sources */,
@@ -22353,6 +22402,7 @@
 				CEB3A72F2DD379890024043B /* ResponsibleGamingViewController.swift in Sources */,
 				CEB3A7302DD379890024043B /* CheckboxButton.swift in Sources */,
 				CEB3A7312DD379890024043B /* IBANProofViewController.swift in Sources */,
+				CED11C492DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */,
 				CEB3A7322DD379890024043B /* BannerInfo.swift in Sources */,
 				CEB3A7332DD379890024043B /* LiveEventsViewModel.swift in Sources */,
 				CEB3A7342DD379890024043B /* SharedTicketBetLineView.swift in Sources */,
@@ -22542,6 +22592,7 @@
 				CEB3A7ED2DD379890024043B /* GenericSuccessViewController.swift in Sources */,
 				CEB3A7EE2DD379890024043B /* EmptyReferralView.swift in Sources */,
 				CEB3A7EF2DD379890024043B /* QuickBetViewController.swift in Sources */,
+				CED11C532DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */,
 				CEB3A7F02DD379890024043B /* MakeYourBetTableViewCell.swift in Sources */,
 				CEB3A7F12DD379890024043B /* CompetitionDetailsViewModel.swift in Sources */,
 				CEB3A7F22DD379890024043B /* CashbackLearnMoreView.swift in Sources */,
@@ -22704,6 +22755,7 @@
 				CEF193C32DA834E900C81F12 /* (null) in Sources */,
 				CEF193C42DA834E900C81F12 /* UploadDocuments.swift in Sources */,
 				CEF193C52DA834E900C81F12 /* GeoLocationManager.swift in Sources */,
+				CED11C4F2DD761AB00F65785 /* PresentationConfigurationStore.swift in Sources */,
 				CEF193C62DA834E900C81F12 /* PersonalInfoViewController.swift in Sources */,
 				CEF193C72DA834E900C81F12 /* UserConsentStatus.swift in Sources */,
 				CEF193C82DA834E900C81F12 /* SharedBetData.swift in Sources */,
@@ -23231,6 +23283,7 @@
 				CEF1959C2DA834E900C81F12 /* Observable.swift in Sources */,
 				CEF1959D2DA834E900C81F12 /* LinkPresentationItemSource.swift in Sources */,
 				CEF1959E2DA834E900C81F12 /* GenericAvatarWarningViewController.swift in Sources */,
+				CED11C572DD777F600F65785 /* RootAdaptiveViewController.swift in Sources */,
 				CEF1959F2DA834E900C81F12 /* OddsFormat.swift in Sources */,
 				CEF195A02DA834E900C81F12 /* MarketOutcomeRelation.swift in Sources */,
 				CEF195A12DA834E900C81F12 /* EveryMatrixModel.swift in Sources */,
@@ -23338,6 +23391,7 @@
 				CEF196072DA834E900C81F12 /* Logger.swift in Sources */,
 				CEF196082DA834E900C81F12 /* NavControllerTransitionCoordinator.swift in Sources */,
 				CEF196092DA834E900C81F12 /* GamesNotificationViewModel.swift in Sources */,
+				CED11C5B2DD77D5100F65785 /* RootActionable.swift in Sources */,
 				CEF1960A2DA834E900C81F12 /* (null) in Sources */,
 				CEF1960B2DA834E900C81F12 /* ShiftViewOptions.swift in Sources */,
 				CEF1960D2DA834E900C81F12 /* OddOutcomesSortingHelper.swift in Sources */,

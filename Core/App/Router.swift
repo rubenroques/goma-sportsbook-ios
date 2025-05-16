@@ -38,7 +38,7 @@ class Router {
         UIApplication.shared.windows.first?.rootViewController
     }
 
-    var mainRootViewController: RootViewController?
+    var rootActionable: RootActionable?
 
     private var cancellables = Set<AnyCancellable>()
     private var showingDebugViewController: Bool = false
@@ -95,12 +95,20 @@ class Router {
     }
 
     func showPostLoadingFlow() {
-
+        
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
-            let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
-            self.mainRootViewController = rootViewController
-            bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
+            
+            if TargetVariables.useAdaptiveRootViewController {
+                let rootViewController = RootAdaptiveViewController(defaultSport: Env.sportsStore.defaultSport)
+                self.rootActionable = rootViewController
+                bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
+            }
+            else {
+                let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
+                self.rootActionable = rootViewController
+                bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
+            }
         }
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
@@ -259,7 +267,6 @@ class Router {
     }
     
     func openPushNotificationRoute(_ route: Route) {
-        
         Publishers.CombineLatest(Env.servicesProvider.eventsConnectionStatePublisher, Env.userSessionStore.isLoadingUserSessionPublisher)
             .filter({ connection, isLoading in
                 connection == .connected && isLoading == false
@@ -412,7 +419,7 @@ class Router {
             switch appSharedState {
             case .inactiveApp:
                 
-                if let rootViewController = self.mainRootViewController {
+                if let rootViewController = self.rootActionable {
 
                     rootViewController.openMatchDetail(matchId: matchId)
                 }
@@ -433,7 +440,7 @@ class Router {
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
-                        if let rootViewController = self?.mainRootViewController {
+                        if let rootViewController = self?.rootActionable {
                             
                             rootViewController.openMatchDetail(matchId: matchId)
                             
@@ -488,7 +495,7 @@ class Router {
             switch appSharedState {
             case .inactiveApp:
                 
-                if let rootViewController = self.mainRootViewController {
+                if let rootViewController = self.rootActionable {
                     rootViewController.openBetslipModalWithShareData(ticketToken: token)
                 }
                 
@@ -505,7 +512,7 @@ class Router {
                     .sink(receiveCompletion: { _ in
                         
                     }, receiveValue: { [weak self] _ in
-                        if let rootViewController = self?.mainRootViewController {
+                        if let rootViewController = self?.rootActionable {
                             
                             rootViewController.openBetslipModalWithShareData(ticketToken: token)
                         }
@@ -592,7 +599,7 @@ class Router {
             switch appSharedState {
             case .inactiveApp:
                 
-                if let rootViewController = self.mainRootViewController {
+                if let rootViewController = self.rootActionable {
 
                     rootViewController.openCompetitionDetail(competitionId: competitionId)
                 }
@@ -613,7 +620,7 @@ class Router {
                     .sink(receiveCompletion: { _ in
                         
                     }, receiveValue: { [weak self] _ in
-                        if let rootViewController = self?.mainRootViewController {
+                        if let rootViewController = self?.rootActionable {
                             
                             rootViewController.openCompetitionDetail(competitionId: competitionId)
                             
@@ -636,7 +643,7 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let rootViewController = self.mainRootViewController {
+        if let rootViewController = self.rootActionable {
 
             rootViewController.openContactSettings()
         }
@@ -658,7 +665,7 @@ class Router {
             switch appSharedState {
             case .inactiveApp:
                 
-                if let rootViewController = self.mainRootViewController {
+                if let rootViewController = self.rootActionable {
 
                     rootViewController.openBetswipe()
                 }
@@ -678,7 +685,7 @@ class Router {
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
-                            if let rootViewController = self?.mainRootViewController {
+                            if let rootViewController = self?.rootActionable {
 
                                 rootViewController.openBetswipe()
 
@@ -702,7 +709,7 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let rootViewController = self.mainRootViewController {
+        if let rootViewController = self.rootActionable {
 
             rootViewController.openDeposit()
         }
@@ -720,7 +727,7 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let rootViewController = self.mainRootViewController {
+        if let rootViewController = self.rootActionable {
 
             rootViewController.openBonus()
         }
@@ -738,7 +745,7 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let rootViewController = self.mainRootViewController {
+        if let rootViewController = self.rootActionable {
 
             rootViewController.openDocuments()
         }
@@ -756,7 +763,7 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let rootViewController = self.mainRootViewController {
+        if let rootViewController = self.rootActionable {
 
             rootViewController.openCustomerSupport()
         }
@@ -778,7 +785,7 @@ class Router {
             switch appSharedState {
             case .inactiveApp:
                 
-                if let rootViewController = self.mainRootViewController {
+                if let rootViewController = self.rootActionable {
 
                     rootViewController.openFavorites()
                 }
@@ -798,7 +805,7 @@ class Router {
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
-                            if let rootViewController = self?.mainRootViewController {
+                            if let rootViewController = self?.rootActionable {
 
                                 rootViewController.openFavorites()
 
@@ -822,7 +829,7 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
         
-        if let rootViewController = self.mainRootViewController {
+        if let rootViewController = self.rootActionable {
             
             rootViewController.openPromotions()
         }
@@ -840,7 +847,7 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let rootViewController = self.mainRootViewController {
+        if let rootViewController = self.rootActionable {
 
             rootViewController.openRegisterWithCode(code: code)
         }
@@ -858,7 +865,7 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let rootViewController = self.mainRootViewController {
+        if let rootViewController = self.rootActionable {
 
             rootViewController.openResponsibleForm()
         }

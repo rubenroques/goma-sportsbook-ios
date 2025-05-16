@@ -16,7 +16,8 @@ import AdyenComponents
 import OptimoveSDK
 import ServicesProvider
 
-class RootViewController: UIViewController, RootActionable {
+class RootAdaptiveViewController: UIViewController, RootActionable {
+    
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
@@ -1678,7 +1679,7 @@ class RootViewController: UIViewController, RootActionable {
 }
 
 // MARK: Bottom bar items
-extension RootViewController {
+extension RootAdaptiveViewController {
 
     // Tab functions
     func selectHomeTabBarItem() {
@@ -2016,7 +2017,7 @@ extension RootViewController {
 }
 
 // MARK: App States
-extension RootViewController {
+extension RootAdaptiveViewController {
 
     // App States
     func unlockAppWithUser() {
@@ -2076,7 +2077,7 @@ extension RootViewController {
 }
 
 // MARK: Popups
-extension RootViewController {
+extension RootAdaptiveViewController {
 
     func requestPopUpContent() {
         if TargetVariables.hasFeatureEnabled(feature: .homePopUps) {
@@ -2172,7 +2173,7 @@ extension RootViewController {
 }
 
 // MARK: - Shake Gesture Handling
-extension RootViewController {
+extension RootAdaptiveViewController {
 
     override var canBecomeFirstResponder: Bool {
         return true
@@ -2192,7 +2193,7 @@ extension RootViewController {
     }
 }
 
-extension RootViewController {
+extension RootAdaptiveViewController {
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -3281,29 +3282,5 @@ extension RootViewController {
 
         // Update layout
         self.view.layoutIfNeeded()
-    }
-}
-
-class RootViewModel:NSObject {
-    
-    // Mark: Public properties
-    enum TabItem {
-        case home
-        case preLive
-        case live
-        case tips
-        case cashback
-        case tickets
-        case featuredCompetition
-        case casino
-    }
-    
-    // MARK: Lifetime and Cycle
-    override init() {
-  
-        super.init()
-        
-        AnalyticsClient.sendEvent(event: .appStart)
-
     }
 }

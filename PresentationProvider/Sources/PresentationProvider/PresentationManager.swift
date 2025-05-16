@@ -18,11 +18,11 @@ public class PresentationManager: PresentationConfigurationServicing {
         public init(
             useLocalFallback: Bool = true,
             localFileName: String = "presentation_config.json",
-            localBundle: Bundle = .main
+            localBundle: Bundle? = nil
         ) {
             self.useLocalFallback = useLocalFallback
             self.localFileName = localFileName
-            self.localBundle = localBundle
+            self.localBundle = localBundle ?? Bundle.module
         }
     }
 

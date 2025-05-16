@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import FirebaseMessaging
 import Reachability
+import ServicesProvider
 
 class SplashViewController: UIViewController {
 
@@ -26,10 +27,10 @@ class SplashViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         self.reachability = try? Reachability()
 
         self.reachability?.whenUnreachable = { _ in
@@ -39,47 +40,55 @@ class SplashViewController: UIViewController {
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
-        
+
         // Start theme
         ThemeService.shared.fetchThemeFromServer()
-        
+
+        // Load presentation configuration
+        Env.presentationConfigurationStore.loadConfiguration()
+
         // Env.appSession.isLoadingAppSettingsPublisher,
-        self.isLoadingBootDataSubscription = Publishers.CombineLatest(
+        self.isLoadingBootDataSubscription = Publishers.CombineLatest3(
             Env.sportsStore.activeSportsPublisher,
-            Env.servicesProvider.preFetchHomeContent())
-            .map({ loadableContent, preFetchedHomeContent -> Bool in
-                switch loadableContent { // isLoading?
-                case .loading, .idle:
-                    // we need to wait for the request result
-                    return true
-                case .loaded, .failed:
-                    // We received a result, the next screen needs to be
-                    // presented even if the result is a failed request
-                    return false
+            Env.servicesProvider.preFetchHomeContent(),
+            Env.presentationConfigurationStore.loadState
+                .map { state -> Bool in
+                // Check if the presentation configuration is loaded
+                if case .loaded = state {
+                    return true // Configuration is loaded
                 }
-            })
-            .map({ !$0 })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
+                return false // Configuration is not loaded yet or failed
+            }
+            .setFailureType(to: ServiceProviderError.self)
+        )
+        .map({ sportsLoadState, _, presentationConfigLoaded -> Bool in
+            // Only return true if:
+            // 1. Sports are loaded or failed (not loading or idle)
+            // 2. Presentation configuration is loaded
+
+            let sportsLoaded = sportsLoadState != .loading && sportsLoadState != .idle
+            return sportsLoaded && presentationConfigLoaded
+        })
+        .receive(on: DispatchQueue.main)
+        .sink(receiveCompletion: { [weak self] completion in
+            switch completion {
+            case .finished:
+                break
+            case .failure(let failure):
+                switch failure {
+                case .invalidUserLocation:
+                    self?.invalidLocationDetected()
+                default:
                     break
-                case .failure(let failure):
-                    switch failure {
-                    case .invalidUserLocation:
-                        self?.invalidLocationDetected()
-                    default:
-                        break
-                    }
                 }
-            }, receiveValue: { [weak self] loadedBootData in
-                if loadedBootData {
-                    self?.splashLoadingCompleted()
-                }
-            })
-            
+            }
+        }, receiveValue: { [weak self] allRequirementsLoaded in
+            if allRequirementsLoaded {
+                self?.splashLoadingCompleted()
+            }
+        })
     }
-    
+
     func splashLoadingCompleted() {
         self.isLoadingBootDataSubscription = nil
         self.loadingCompleted()
@@ -90,5 +99,5 @@ class SplashViewController: UIViewController {
         forbiddenAccessViewController.modalPresentationStyle = .fullScreen
         self.present(forbiddenAccessViewController, animated: false, completion: nil)
     }
-    
+
 }

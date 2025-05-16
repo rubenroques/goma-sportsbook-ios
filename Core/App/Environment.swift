@@ -17,6 +17,9 @@ class Environment {
 
     let gomaNetworkClient: GomaGamingServiceClient = GomaGamingServiceClient()
 
+    /// Centralized store for presentation configuration
+    let presentationConfigurationStore: PresentationConfigurationStore = PresentationConfigurationStore()
+
     lazy var servicesProvider: ServicesProvider.Client = {
 
         var serviceProviderEnvironment: ServicesProvider.Configuration.Environment
@@ -40,12 +43,6 @@ class Environment {
         }
 
         return client
-    }()
-    
-    lazy var presentationProvider: PresentationProvider.PresentationManager = {
-        var config = PresentationProvider.PresentationManager.Configuration() //(useLocalFallback: <#T##Bool#>, localFileName: <#T##String#>, localBundle: <#T##Bundle#>)
-        let manager = PresentationProvider.PresentationManager(configuration: config)
-        return manager
     }()
 
     let betslipManager: BetslipManager = BetslipManager()
