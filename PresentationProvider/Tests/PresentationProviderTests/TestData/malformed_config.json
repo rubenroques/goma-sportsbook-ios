@@ -1,0 +1,5 @@
+{
+  "tabBarItems": [
+    {"id": "test", "title": "Test Title", "iconName": "test.icon", "viewControllerIdentifier": "TestVC", "order": 0
+  ]
+} 

@@ -7,6 +7,7 @@
 
 import Foundation
 import ServicesProvider
+import PresentationProvider
 
 let Env = Environment() // swiftlint:disable:this identifier_name
 
@@ -39,6 +40,12 @@ class Environment {
         }
 
         return client
+    }()
+    
+    lazy var presentationProvider: PresentationProvider.PresentationManager = {
+        var config = PresentationProvider.PresentationManager.Configuration() //(useLocalFallback: <#T##Bool#>, localFileName: <#T##String#>, localBundle: <#T##Bundle#>)
+        let manager = PresentationProvider.PresentationManager(configuration: config)
+        return manager
     }()
 
     let betslipManager: BetslipManager = BetslipManager()

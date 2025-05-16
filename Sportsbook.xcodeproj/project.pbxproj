@@ -7526,6 +7526,9 @@
 		CECF6A212D68D534003ABDDF /* URLEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */; };
 		CECF6A222D68D534003ABDDF /* URLEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */; };
 		CECF6A242D68D534003ABDDF /* URLEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */; };
+		CED11C432DD6366500F65785 /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CED11C422DD6366500F65785 /* PresentationProvider */; };
+		CED11C452DD6366B00F65785 /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CED11C442DD6366B00F65785 /* PresentationProvider */; };
+		CED11C472DD6367200F65785 /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CED11C462DD6367200F65785 /* PresentationProvider */; };
 		CED5D8F12D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D42D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift */; };
 		CED5D8F22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift */; };
 		CED5D8F32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift */; };
@@ -9756,6 +9759,7 @@
 		CEB9BB842DB6575900E8084B /* ActionButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtonTableViewCell.swift; sourceTree = "<group>"; };
 		CEC57BD62D53C74900EA0D60 /* zendesk_support.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
 		CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEndpoints.swift; sourceTree = "<group>"; };
+		CED11C412DD6357B00F65785 /* PresentationProvider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PresentationProvider; sourceTree = "<group>"; };
 		CED5D8D22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CED5D8D32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
 		CED5D8D42D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
@@ -10081,6 +10085,7 @@
 				CE8F265E2DD371350071238E /* DictionaryCoding in Frameworks */,
 				CE8F265F2DD371350071238E /* Lottie in Frameworks */,
 				CE8F26602DD371350071238E /* Trademob in Frameworks */,
+				CED11C432DD6366500F65785 /* PresentationProvider in Frameworks */,
 				CE8F26612DD371350071238E /* Adjust in Frameworks */,
 				CE8F26622DD371350071238E /* Reachability in Frameworks */,
 				CE8F26632DD371350071238E /* AdyenComponents in Frameworks */,
@@ -10135,6 +10140,7 @@
 				CEB3A3CF2DD379800024043B /* DictionaryCoding in Frameworks */,
 				CEB3A3D02DD379800024043B /* Lottie in Frameworks */,
 				CEB3A3D12DD379800024043B /* Trademob in Frameworks */,
+				CED11C452DD6366B00F65785 /* PresentationProvider in Frameworks */,
 				CEB3A3D22DD379800024043B /* Adjust in Frameworks */,
 				CEB3A3D32DD379800024043B /* Reachability in Frameworks */,
 				CEB3A3D42DD379800024043B /* AdyenComponents in Frameworks */,
@@ -10189,6 +10195,7 @@
 				CEB3A8582DD379890024043B /* DictionaryCoding in Frameworks */,
 				CEB3A8592DD379890024043B /* Lottie in Frameworks */,
 				CEB3A85A2DD379890024043B /* Trademob in Frameworks */,
+				CED11C472DD6367200F65785 /* PresentationProvider in Frameworks */,
 				CEB3A85B2DD379890024043B /* Adjust in Frameworks */,
 				CEB3A85C2DD379890024043B /* Reachability in Frameworks */,
 				CEB3A85D2DD379890024043B /* AdyenComponents in Frameworks */,
@@ -10594,6 +10601,7 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				CED11C412DD6357B00F65785 /* PresentationProvider */,
 				4593DD142CBF2EAF00C52C42 /* GomaAssets */,
 				451ABD6D29CC755B0062641F /* HeaderTextField */,
 				45BB5542298351CD00684F83 /* AdresseFrancaise */,
@@ -14696,6 +14704,7 @@
 				CE8F22FA2DD371350071238E /* FirebaseFirestore */,
 				CE8F22FC2DD371350071238E /* FirebaseFirestoreSwift */,
 				CE8F22FD2DD371350071238E /* AdresseFrancaise */,
+				CED11C422DD6366500F65785 /* PresentationProvider */,
 			);
 			productName = Sportsbook;
 			productReference = CE8F272A2DD371350071238E /* BetssonCM PROD.app */;
@@ -14762,6 +14771,7 @@
 				CEB3A0672DD379800024043B /* FirebaseFirestore */,
 				CEB3A0692DD379800024043B /* FirebaseFirestoreSwift */,
 				CEB3A06A2DD379800024043B /* AdresseFrancaise */,
+				CED11C442DD6366B00F65785 /* PresentationProvider */,
 			);
 			productName = Sportsbook;
 			productReference = CEB3A4AF2DD379800024043B /* BetssonCM STG.app */;
@@ -14828,6 +14838,7 @@
 				CEB3A4F02DD379890024043B /* FirebaseFirestore */,
 				CEB3A4F22DD379890024043B /* FirebaseFirestoreSwift */,
 				CEB3A4F32DD379890024043B /* AdresseFrancaise */,
+				CED11C462DD6367200F65785 /* PresentationProvider */,
 			);
 			productName = Sportsbook;
 			productReference = CEB3A9382DD379890024043B /* BetssonCM DEV.app */;
@@ -26808,6 +26819,18 @@
 		CEB3A4F32DD379890024043B /* AdresseFrancaise */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AdresseFrancaise;
+		};
+		CED11C422DD6366500F65785 /* PresentationProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PresentationProvider;
+		};
+		CED11C442DD6366B00F65785 /* PresentationProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PresentationProvider;
+		};
+		CED11C462DD6367200F65785 /* PresentationProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PresentationProvider;
 		};
 		CEEFD45D2D88C0BA00AE4301 /* AdresseFrancaise */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -1,0 +1,58 @@
+{
+    "tabItems": [
+        {
+            "id": "sports",
+            "route": "sports",
+            "label": "Sports",
+            "switchToNavbar": "sports"
+        },
+        {
+            "id": "live",
+            "route": "sports/live",
+            "label": "Live"
+        },
+        {
+            "id": "mybets",
+            "route": "sports/mybets",
+            "label": "My Bets"
+        },
+        {
+            "id": "searchSports",
+            "route": "sports/search",
+            "label": "Search"
+        },
+        {
+            "id": "casino",
+            "route": "casino",
+            "label": "Casino",
+            "switchToNavbar": "casino"
+        },
+        {
+            "id": "virtuals",
+            "route": "casino/virtuals",
+            "label": "Virtuals"
+        },
+        {
+            "id": "aviator",
+            "route": "casino/aviator",
+            "label": "Aviator"
+        },
+        {
+            "id": "searchCasino",
+            "route": "casino/search",
+            "label": "Search"
+        }
+    ],
+    "navbars": [
+        {
+            "name": "sports",
+            "route": "sports",
+            "tabs": ["sports", "live", "mybets", "searchSports", "casino"]
+        },
+        {
+            "name": "casino",
+            "route": "casino",
+            "tabs": ["sports", "virtuals", "aviator", "searchCasino", "casino"]
+        }
+    ]
+} 
