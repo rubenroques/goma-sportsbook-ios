@@ -55,9 +55,19 @@ class SpinWheelViewController: UIViewController, WKScriptMessageHandler, WKNavig
         let gradientLayer = CAGradientLayer()
         
         // Set gradient colors - using custom colors or system colors
+//        gradientLayer.colors = [
+//            UIColor.App.backgroundGradient1.cgColor,
+//            UIColor.App.backgroundGradient2.cgColor
+//        ]
+        
+        // Set gradient colors using RGB values
+        let topColor = UIColor(red: 0/255, green: 27/255, blue: 61/255, alpha: 1.0)
+        let bottomColor = UIColor(red: 5/255, green: 0/255, blue: 25/255, alpha: 1.0)
+        
+        // Set gradient colors
         gradientLayer.colors = [
-            UIColor.App.backgroundGradient1.cgColor,
-            UIColor.App.backgroundGradient2.cgColor
+            topColor.cgColor,
+            bottomColor.cgColor
         ]
         
         // Set gradient direction (top to bottom)
