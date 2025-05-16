@@ -197,7 +197,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6dB-Ev-5zh">
-                                <rect key="frame" x="0.0" y="367" width="472" height="341"/>
+                                <rect key="frame" x="0.0" y="367" width="472" height="353"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="od3-Q5-lI2">
                                         <rect key="frame" x="0.0" y="0.0" width="472" height="341"/>
@@ -439,7 +439,7 @@
                                 <constraints>
                                     <constraint firstItem="od3-Q5-lI2" firstAttribute="top" secondItem="6dB-Ev-5zh" secondAttribute="top" id="Eh6-GS-9Kg"/>
                                     <constraint firstAttribute="trailing" secondItem="od3-Q5-lI2" secondAttribute="trailing" id="cFO-cl-0zm"/>
-                                    <constraint firstAttribute="bottom" secondItem="od3-Q5-lI2" secondAttribute="bottom" id="hoO-Kr-Sqs"/>
+                                    <constraint firstAttribute="bottom" secondItem="od3-Q5-lI2" secondAttribute="bottom" constant="12" id="hoO-Kr-Sqs"/>
                                     <constraint firstItem="od3-Q5-lI2" firstAttribute="leading" secondItem="6dB-Ev-5zh" secondAttribute="leading" id="ifN-rg-XIU"/>
                                 </constraints>
                             </view>
@@ -466,7 +466,7 @@
                             <constraint firstAttribute="trailing" secondItem="kAq-e8-CXE" secondAttribute="trailing" id="HSk-rU-mtQ"/>
                             <constraint firstItem="3sD-Ev-YhE" firstAttribute="top" secondItem="Tt6-nr-mqM" secondAttribute="top" id="Hog-Sp-dkf"/>
                             <constraint firstAttribute="trailing" secondItem="6dB-Ev-5zh" secondAttribute="trailing" id="Qae-Db-ph7"/>
-                            <constraint firstAttribute="bottom" secondItem="6dB-Ev-5zh" secondAttribute="bottom" constant="12" id="Ray-1t-2t7"/>
+                            <constraint firstAttribute="bottom" secondItem="6dB-Ev-5zh" secondAttribute="bottom" id="Ray-1t-2t7"/>
                             <constraint firstItem="th4-zS-Yw2" firstAttribute="leading" secondItem="Tt6-nr-mqM" secondAttribute="leading" id="XIr-ht-HLL"/>
                             <constraint firstItem="FTm-sF-tcl" firstAttribute="top" secondItem="th4-zS-Yw2" secondAttribute="bottom" id="XvH-CI-gSc"/>
                             <constraint firstItem="3sD-Ev-YhE" firstAttribute="leading" secondItem="Tt6-nr-mqM" secondAttribute="leading" id="arq-lM-jYm"/>
