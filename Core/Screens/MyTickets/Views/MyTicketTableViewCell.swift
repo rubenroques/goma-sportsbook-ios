@@ -725,7 +725,7 @@ class MyTicketTableViewCell: UITableViewCell {
             self.betAmountSubtitleLabel.text = totalNewBetAmountString
 
             // New Possible Winnings
-            let newMaxWinnings = newBetAmount * (betHistoryEntry.totalPriceValue ?? 0.0) * Double(betHistoryEntry.numberOfSelections ?? 0)
+            let newMaxWinnings = newBetAmount * (betHistoryEntry.totalPriceValue ?? 0.0)
             
             self.partialCashoutPotentialWinnings = newMaxWinnings
             
