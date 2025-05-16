@@ -72,6 +72,10 @@ class HeroCardTableViewCell: UITableViewCell {
             HeroCardSecondaryMarketCollectionViewCell.self,
             forCellWithReuseIdentifier: HeroCardSecondaryMarketCollectionViewCell.identifier
         )
+        self.collectionView.register(
+            UICollectionViewCell.self,
+            forCellWithReuseIdentifier: UICollectionViewCell.identifier
+        )
         
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
@@ -351,7 +355,7 @@ extension HeroCardTableViewCell: UICollectionViewDelegate, UICollectionViewDataS
                 let match = self.viewModel?.match,
                 let market = self.viewModel?.match.markets[safe: indexPath.row]
             else {
-                fatalError()
+                return UICollectionViewCell()
             }
             cell.configure(market: market, match: match)
             return cell
@@ -362,7 +366,7 @@ extension HeroCardTableViewCell: UICollectionViewDelegate, UICollectionViewDataS
                 let match = self.viewModel?.match,
                 let market = self.viewModel?.match.markets[safe: indexPath.row]
             else {
-                fatalError()
+                return UICollectionViewCell()
             }
             cell.configure(market: market, match: match)
             return cell

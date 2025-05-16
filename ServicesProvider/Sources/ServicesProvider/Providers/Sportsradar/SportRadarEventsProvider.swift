@@ -93,7 +93,6 @@ class SportRadarEventsProvider: EventsProvider {
     private var eventDetailsCoordinators: [String: SportRadarEventDetailsCoordinator] = [:]
     private var liveEventDetailsCoordinators: [String: SportRadarLiveEventDataCoordinator] = [:]
     private var marketUpdatesCoordinators: [String: SportRadarMarketDetailsCoordinator] = [:]
-
     private var eventsSecundaryMarketsUpdatesCoordinators: [String: SportRadarEventSecundaryMarketsCoordinator] = [:]
 
     private var competitionEventsPublisher: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
@@ -128,6 +127,10 @@ class SportRadarEventsProvider: EventsProvider {
         self.marketUpdatesCoordinators = self.marketUpdatesCoordinators.filter { $0.value.isActive }
         for marketUpdatesCoordinator in self.marketUpdatesCoordinators.values {
             marketUpdatesCoordinator.reconnect(withNewSessionToken: newSocketToken)
+        }
+        
+        for eventMarketsCoordinators in self.getValidEventMarketsCoordinators() {
+            eventMarketsCoordinators.reconnect(withNewSessionToken: newSocketToken)
         }
     }
 
@@ -696,7 +699,6 @@ class SportRadarEventsProvider: EventsProvider {
         return Fail(error: ServiceProviderError.resourceNotFound).eraseToAnyPublisher()
     }
 
-
     public func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
 
         // events lists
@@ -730,25 +732,25 @@ class SportRadarEventsProvider: EventsProvider {
 
     public func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
 
+        // print("[Debug] subscribeToEventOnListsOutcomeUpdates called")
+        
         // events lists
         for paginator in self.eventsPaginators.values {
-            if paginator.containsOutcome(withid: id), let publisher = paginator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
+            if let publisher = paginator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
 
         // event details
-        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
-            if eventDetailsCoordinator.containsOutcome(withid: id),
-               let publisher = eventDetailsCoordinator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
+        for eventDetailsCoordinator in self.eventDetailsCoordinators.values {
+            if let publisher = eventDetailsCoordinator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
 
         // Secundary Markets - event details
-        for eventMarketsCoordinator in self.getValidEventMarketsCoordinators() {
-            if eventMarketsCoordinator.containsOutcome(withid: id),
-               let publisher = eventMarketsCoordinator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
+        for eventMarketsCoordinator in self.eventsSecundaryMarketsUpdatesCoordinators.values {
+            if let publisher = eventMarketsCoordinator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -765,16 +767,15 @@ class SportRadarEventsProvider: EventsProvider {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        // contentType -> liveDataSummaryAdvancedListBySportType
         let contentType: ContentType = ContentType.market
         // contentId -> FBL/0 -> /0 means page 0 of pagination
         let contentRoute = ContentRoute.market(marketId: marketId)
 
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
-        if let coordinators = self.marketUpdatesCoordinators[marketId], coordinators.isActive {
+        if let coordinator = self.marketUpdatesCoordinators[marketId], coordinator.isActive {
             print("[Debug] \(eventId) via Betslip SRMarketDetailsC marketUpdatesCoordinators \(marketId) isActive")
-            return coordinators.marketPublisher
+            return coordinator.marketPublisher
         }
         else {
             print("[Debug] \(eventId) via Betslip SRMarketDetailsC marketUpdatesCoordinators \(marketId) not active, creating new")
@@ -938,14 +939,14 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func updateEventSecundaryMarkets(forContentIdentifier identifier: ContentIdentifier, event: Event) {
-        for eventDetailsCoordinator in self.getValidEventMarketsCoordinators() {
+        for eventDetailsCoordinator in self.eventsSecundaryMarketsUpdatesCoordinators.values {
             eventDetailsCoordinator.updatedSecundaryMarkets(forContentIdentifier: identifier,
                                                             onEvent: event)
         }
     }
 
     func updateEventMainMarket(forContentIdentifier identifier: ContentIdentifier, event: Event) {
-        for eventDetailsCoordinator in self.getValidEventMarketsCoordinators() {
+        for eventDetailsCoordinator in self.eventsSecundaryMarketsUpdatesCoordinators.values {
             eventDetailsCoordinator.updatedMainMarket(forContentIdentifier: identifier,
                                                             onEvent: event)
         }
@@ -957,11 +958,11 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
             contentIdentifierPaginator.handleContentUpdate(content)
         }
 
-        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
+        for eventDetailsCoordinator in self.eventDetailsCoordinators.values {
             eventDetailsCoordinator.handleContentUpdate(content)
         }
 
-        for liveEventDetailsCoordinator in self.getValidLiveEventDetailsCoordinators() {
+        for liveEventDetailsCoordinator in self.liveEventDetailsCoordinators.values {
             liveEventDetailsCoordinator.handleContentUpdate(content)
         }
 
@@ -969,7 +970,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
             marketUpdatesCoordinator.handleContentUpdate(content)
         }
 
-        for secundaryMarketsCoordinators in self.getValidEventMarketsCoordinators() {
+        for secundaryMarketsCoordinators in self.eventsSecundaryMarketsUpdatesCoordinators.values {
             secundaryMarketsCoordinators.handleContentUpdate(content)
         }
     }
@@ -2093,7 +2094,13 @@ extension SportRadarEventsProvider {
                     return fullEvent.eventId.split(separator: ":").last
                 }
                 .map(String.init)
+            
+            #if DEBUG
+            return eventsIds // ["4094549.1"] // a way to select the events we need to test in live widget
+            #else
             return eventsIds
+            #endif
+            
         })
         .mapError({ error in
             return error
@@ -2133,19 +2140,7 @@ extension SportRadarEventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
-    func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
-    }
-
 }
-
-//
-//extension SportRadarEventsProvider: UnsubscriptionController {
-//    func getSuggestedBets() -> {
-//
-//    }
-//}
-//
 
 extension SportRadarEventsProvider: UnsubscriptionController {
 
@@ -2474,25 +2469,28 @@ extension SportRadarEventsProvider {
         }
     }
 
-
-    // MARK: - Event Markets Coordinators
+    // MARK: - Event Secundary Markets Coordinators
+    func filteredValidEventMarketsCoordinators() -> [String: SportRadarEventSecundaryMarketsCoordinator] {
+        return self.eventsSecundaryMarketsUpdatesCoordinators.filter({ $0.value.isActive })
+    }
+    
     func getValidEventMarketsCoordinators() -> [SportRadarEventSecundaryMarketsCoordinator] {
         return self.coordinatorsQueue.sync {
-            self.eventsSecundaryMarketsUpdatesCoordinators = self.eventsSecundaryMarketsUpdatesCoordinators.filter({ $0.value.isActive })
+            self.eventsSecundaryMarketsUpdatesCoordinators = self.filteredValidEventMarketsCoordinators()
             return Array(self.eventsSecundaryMarketsUpdatesCoordinators.values)
         }
     }
 
     func getValidEventMarketsCoordinator(forKey key: String) -> SportRadarEventSecundaryMarketsCoordinator? {
         return self.coordinatorsQueue.sync {
-            self.eventsSecundaryMarketsUpdatesCoordinators = self.eventsSecundaryMarketsUpdatesCoordinators.filter({ $0.value.isActive })
+            self.eventsSecundaryMarketsUpdatesCoordinators = self.filteredValidEventMarketsCoordinators()
             return self.eventsSecundaryMarketsUpdatesCoordinators[key]
         }
     }
 
     func addEventMarketsCoordinator(_ coordinator: SportRadarEventSecundaryMarketsCoordinator, withKey key: String) {
         self.coordinatorsQueue.sync {
-            self.eventsSecundaryMarketsUpdatesCoordinators = self.eventsSecundaryMarketsUpdatesCoordinators.filter({ $0.value.isActive })
+            self.eventsSecundaryMarketsUpdatesCoordinators = self.filteredValidEventMarketsCoordinators()
             self.eventsSecundaryMarketsUpdatesCoordinators[key] = coordinator
         }
     }

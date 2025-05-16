@@ -144,7 +144,7 @@ extension SportRadarModels {
             self.homeName = try container.decodeIfPresent(String.self, forKey: .homeName)
             
             #if DEBUG
-            self.homeName = (try container.decodeIfPresent(String.self, forKey: .homeName) ?? "") + self.id
+            self.homeName = self.id + "-" + (try container.decodeIfPresent(String.self, forKey: .homeName) ?? "")
             #endif
             
             self.awayName = try container.decodeIfPresent(String.self, forKey: .awayName)

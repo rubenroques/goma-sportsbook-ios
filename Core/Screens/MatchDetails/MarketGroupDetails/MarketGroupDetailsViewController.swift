@@ -30,9 +30,9 @@ class MarketGroupDetailsViewController: UIViewController {
 
     weak var innerTableViewScrollDelegate: InnerTableViewScrollDelegate?
 
-    private var presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode = .multiplesPerLineByType
+//    private var presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode = .multiplesPerLineByType
 
-    var shouldShowBetbuilderSection: Bool = false
+//    var shouldShowBetbuilderSection: Bool = false
     
     //
     // MARK: - Stored Properties for Scroll Delegate
@@ -71,8 +71,6 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.register(BetbuilderLineTableViewCell.self, forCellReuseIdentifier: BetbuilderLineTableViewCell.identifier)
         self.tableView.register(IconTitleHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: IconTitleHeaderFooterView.identifier)
         
-        self.presentationMode = TargetVariables.popularBetbuilderPresentationMode
-
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.showLoading()
@@ -129,6 +127,13 @@ class MarketGroupDetailsViewController: UIViewController {
                 self.betBuilderGrayoutsState = betBuilderGrayoutsState
                 self.reloadTableView()
             }
+            .store(in: &cancellables)
+        
+        viewModel.shouldReloadDataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
             .store(in: &cancellables)
         
     }
@@ -215,7 +220,11 @@ class MarketGroupDetailsViewController: UIViewController {
     @objc func toggleExpandAll(sender: UIButton) {
         if self.isCollapsedMarketGroupIds.isEmpty {
             // Add all to collapsed
-            for row in 0..<self.viewModel.numberOfRows() {
+            let sections = self.viewModel.numberOfSections()
+            
+            let marketSection = sections == 1 ? 0 : 1
+            
+            for row in 0..<self.viewModel.numberOfRows(section: marketSection) {
                 if let marketGroupOrganizer = self.viewModel.marketGroupOrganizer(forRow: row) {
                     self.isCollapsedMarketGroupIds.insert(marketGroupOrganizer.marketId)
                 }
@@ -231,131 +240,23 @@ class MarketGroupDetailsViewController: UIViewController {
     
     func setupRecommendedBetBuilder(recommendedBetBuilder: [RecommendedBetBuilder]) {
         
-        var betbuilderLineCellViewModels = [BetbuilderLineCellViewModel]()
-        
-        switch self.presentationMode {
-        case .onePerLine:
-            for betbuilder in recommendedBetBuilder {
-                
-                let bettingTickets = betbuilder.selections.map({
-                    return ServiceProviderModelMapper.bettingTicket(fromRecommendedBetbuilderSelection: $0)
-                })
-                
-                var mappedBettingTickets = [BettingTicket]()
-                
-                for bettingTicket in bettingTickets {
-                    
-                    if let marketFound = self.viewModel.getMarketById(marketId: bettingTicket.marketId) {
-                        
-                        let outcomeFound = marketFound.outcomes.filter({
-                            $0.id == bettingTicket.outcomeId
-                        }).first
-                        
-                        let newBettingTicket = BettingTicket(
-                            id: bettingTicket.id,
-                            outcomeId: bettingTicket.outcomeId,
-                            marketId: bettingTicket.marketId,
-                            matchId: bettingTicket.matchId,
-                            decimalOdd: bettingTicket.decimalOdd,
-                            isAvailable: bettingTicket.isAvailable,
-                            matchDescription: bettingTicket.matchDescription,
-                            marketDescription: marketFound.name,
-                            outcomeDescription: outcomeFound?.translatedName ?? bettingTicket.outcomeDescription,
-                            homeParticipantName: bettingTicket.homeParticipantName,
-                            awayParticipantName: bettingTicket.awayParticipantName,
-                            sportIdCode: bettingTicket.sportIdCode
-                        )
-                        
-                        mappedBettingTickets.append(newBettingTicket)
-                    }
-                }
-                
-                if mappedBettingTickets.count == 3 {
-                    let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: mappedBettingTickets)
-                    
-                    let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: [betbuilderCellViewModel])
-                    
-                    betbuilderLineCellViewModels.append(betbuilderLineCellViewModel)
-                }
-            }
-        case .multiplesPerLineByType:
-            
-            var betbuilderSelectionCellViewModels = [BetbuilderSelectionCellViewModel]()
-            
-            for betbuilder in recommendedBetBuilder {
-                
-                let bettingTickets = betbuilder.selections.map({
-                    return ServiceProviderModelMapper.bettingTicket(fromRecommendedBetbuilderSelection: $0)
-                })
-                
-                var mappedBettingTickets = [BettingTicket]()
-                
-                for bettingTicket in bettingTickets {
-                    
-                    if let marketFound = self.viewModel.getMarketById(marketId: bettingTicket.marketId) {
-                        
-                        let outcomeFound = marketFound.outcomes.filter({
-                            $0.id == bettingTicket.outcomeId
-                        }).first
-                        
-                        let newBettingTicket = BettingTicket(
-                            id: bettingTicket.id,
-                            outcomeId: bettingTicket.outcomeId,
-                            marketId: bettingTicket.marketId,
-                            matchId: bettingTicket.matchId,
-                            decimalOdd: bettingTicket.decimalOdd,
-                            isAvailable: bettingTicket.isAvailable,
-                            matchDescription: bettingTicket.matchDescription,
-                            marketDescription: marketFound.name,
-                            outcomeDescription: outcomeFound?.translatedName ?? bettingTicket.outcomeDescription,
-                            homeParticipantName: bettingTicket.homeParticipantName,
-                            awayParticipantName: bettingTicket.awayParticipantName,
-                            sportIdCode: bettingTicket.sportIdCode
-                        )
-                        
-                        mappedBettingTickets.append(newBettingTicket)
-                    }
-                }
-                
-                if mappedBettingTickets.count == 3 {
-                    let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: mappedBettingTickets)
-                    
-                    betbuilderSelectionCellViewModels.append(betbuilderCellViewModel)
-                }
-            }
-            
-            if betbuilderSelectionCellViewModels.isNotEmpty {
-                let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: betbuilderSelectionCellViewModels)
-                
-                betbuilderLineCellViewModels.append(betbuilderLineCellViewModel)
-            }
-        }
-        
-        self.viewModel.betbuilderLineCellViewModels = betbuilderLineCellViewModels
-        
-        self.checkBetbuilderAvailability()
-    }
-    
-    private func hideBetbuilderLineCell(viewModel: BetbuilderLineCellViewModel) {
-        
-           if let index = self.viewModel.betbuilderLineCellViewModels.firstIndex(where: { $0 === viewModel }) {
-            self.viewModel.betbuilderLineCellViewModels.remove(at: index)
-            
-               self.checkBetbuilderAvailability()
-        }
-    }
-    
-    private func checkBetbuilderAvailability() {
-        
-        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder &&
-        !self.viewModel.betbuilderLineCellViewModels.isEmpty && self.viewModel.shouldShowPopularBetbuilderForSport()
-        
-        self.reloadTableView()
+        self.viewModel.setupRecommendedBetBuilder(recommendedBetBuilder: recommendedBetBuilder)
         
     }
     
     func getMarketGroupId() -> String {
         return self.viewModel.marketGroupId
+    }
+    
+    func openBetslip() {
+        
+        let betslipViewController = BetslipViewController()
+        
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+        
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 }
 
@@ -365,45 +266,36 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return self.shouldShowBetbuilderSection ? self.viewModel.numberOfSections() + 1 : self.viewModel.numberOfSections()
+        return self.viewModel.numberOfSections()
 
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if self.shouldShowBetbuilderSection && section == 0 {
-            switch presentationMode {
-            case .onePerLine:
-                return self.viewModel.betbuilderCellViewModels.count
-            case .multiplesPerLineByType:
-                return 1
-            }
-        }
-        
-        return self.viewModel.numberOfRows()
+        return self.viewModel.numberOfRows(section: section)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if self.shouldShowBetbuilderSection && indexPath.section == 0 {
+        if self.viewModel.shouldShowBetbuilderSection && indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: BetbuilderLineTableViewCell.identifier) as? BetbuilderLineTableViewCell else {
                 return UITableViewCell()
             }
             
             // Configure the cell with the options
-            let viewModel = self.viewModel.getBetbuilderLineCellViewModel(withIndex: indexPath.row, presentationMode: self.presentationMode)
+            let viewModel = self.viewModel.getBetbuilderLineCellViewModel(withIndex: indexPath.row)
             
-            cell.configure(withViewModel: viewModel, presentationMode: self.presentationMode)
+            cell.configure(withViewModel: viewModel, presentationMode: self.viewModel.betbuilderPresentationMode)
             
-            cell.shouldHideBetbuilderLine = { [weak self] cellViewModel in
-                self?.hideBetbuilderLineCell(viewModel: cellViewModel)
+            cell.shouldOpenBetslip = { [weak self] in
+                self?.openBetslip()
             }
             
             return cell
         }
         
         // For other sections, use the existing logic but adjust the section index
-        let adjustedIndexPath = shouldShowBetbuilderSection ?
+        let adjustedIndexPath = self.viewModel.shouldShowBetbuilderSection ?
         IndexPath(row: indexPath.row, section: indexPath.section - 1) : indexPath
         
         guard
@@ -548,14 +440,14 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.shouldShowBetbuilderSection && indexPath.section == 0 {
+        if self.viewModel.shouldShowBetbuilderSection && indexPath.section == 0 {
             return 200
         }
         return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.shouldShowBetbuilderSection && indexPath.section == 0 {
+        if self.viewModel.shouldShowBetbuilderSection && indexPath.section == 0 {
             return 200
         }
         return 120
@@ -570,7 +462,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 //    }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if self.shouldShowBetbuilderSection && section == 0 {
+        if self.viewModel.shouldShowBetbuilderSection && section == 0 {
             // Popular betbuilder section header
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: IconTitleHeaderFooterView.identifier) as? IconTitleHeaderFooterView

@@ -1441,7 +1441,6 @@ extension RootViewController {
             }
             
             homeViewControllerLoaded = true
-
         }
 
         if case .preLive = tab, !preLiveViewControllerLoaded {
@@ -1790,9 +1789,9 @@ extension RootViewController {
         if self.selectedTabItem == .home {
             self.homeViewController.scrollToTop()
         }
-//        else {
-//            self.homeViewController.reloadData()
-//        }
+        else if self.homeViewControllerLoaded {
+            self.homeViewController.reloadData()
+        }
 
         self.selectedTabItem = .home
 
@@ -1804,9 +1803,9 @@ extension RootViewController {
         if self.selectedTabItem == .preLive {
             self.preLiveViewController.scrollToTop()
         }
-//        else {
-//            self.homeViewController.reloadData()
-//        }
+        else if self.preLiveViewControllerLoaded  {
+            self.preLiveViewController.reloadData()
+        }
 
         self.selectedTabItem = .preLive
     }
@@ -1817,7 +1816,10 @@ extension RootViewController {
         if self.selectedTabItem == .live {
             self.liveEventsViewController.scrollToTop()
         }
-
+        else if self.liveEventsViewControllerLoaded {
+            self.liveEventsViewController.reloadData()
+        }
+        
         self.selectedTabItem = .live
     }
 

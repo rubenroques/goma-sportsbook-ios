@@ -840,7 +840,7 @@ class MatchDetailsViewController: UIViewController {
             })
             .store(in: &self.cancellables)
         
-        self.viewModel.recommendedBetBuilders
+        self.viewModel.recommendedBetBuildersPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] recommendedBetBuilder in
                 
@@ -1036,7 +1036,7 @@ class MatchDetailsViewController: UIViewController {
     
     func reloadRecommendedBetbuilders() {
         
-        let recommendedBetbuilder = self.viewModel.recommendedBetBuilders.value
+        let recommendedBetbuilder = self.viewModel.recommendedBetBuildersPublisher.value
         
         if recommendedBetbuilder.isNotEmpty {
             self.configureRecommendedBetBuilder(recommendedBetBuilder: recommendedBetbuilder)

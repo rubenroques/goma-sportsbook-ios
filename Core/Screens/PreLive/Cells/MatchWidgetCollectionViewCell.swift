@@ -2235,7 +2235,7 @@ extension MatchWidgetCollectionViewCell {
 
                     guard let weakSelf = self else { return }
                     
-                    print("[Debug] \(weakSelf.viewModel?.match.id ?? "") leftOddButtonSubscriber - \(bettingOffer.decimalOdd)")
+                    // print("[Debug] \(weakSelf.viewModel?.match.id ?? "") leftOddButtonSubscriber - \(bettingOffer.decimalOdd)")
                     
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.homeBaseView.isUserInteractionEnabled = false
@@ -2308,7 +2308,7 @@ extension MatchWidgetCollectionViewCell {
 
                     guard let weakSelf = self else { return }
 
-                    print("[Debug] \(weakSelf.viewModel?.match.id ?? "") middleOddButtonSubscriber - \(bettingOffer.decimalOdd)")
+                    // print("[Debug] \(weakSelf.viewModel?.match.id ?? "") middleOddButtonSubscriber - \(bettingOffer.decimalOdd)")
                     
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.drawBaseView.isUserInteractionEnabled = false
@@ -2379,7 +2379,7 @@ extension MatchWidgetCollectionViewCell {
 
                     guard let weakSelf = self else { return }
 
-                    print("[Debug] \(weakSelf.viewModel?.match.id ?? "") rightOddButtonSubscriber - \(bettingOffer.decimalOdd)")
+                    // print("[Debug] \(weakSelf.viewModel?.match.id ?? "") rightOddButtonSubscriber - \(bettingOffer.decimalOdd)")
                     
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                         weakSelf.awayBaseView.isUserInteractionEnabled = false

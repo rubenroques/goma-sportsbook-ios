@@ -16,11 +16,10 @@ class BetbuilderSelectionCellViewModel {
     var totalOdd: CurrentValueSubject<Double, Never> = .init(0.0)
     
     var isBetbuilderSelectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
-    var isBetbuilderInvalid: CurrentValueSubject<Bool, Never> = .init(false)
-    
-    private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
-    
+    var fetchedBetbuilderValuePublisher: CurrentValueSubject<BetbuilderFetchedState, Never> = .init(.notFetched)
+        
     // MARK: Private properties
+    private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
     private var cancellables = Set<AnyCancellable>()
     
     init(betSelections: [BettingTicket]) {
@@ -43,11 +42,14 @@ class BetbuilderSelectionCellViewModel {
                     print("BetBuilder Total Odd finished")
                 case .failure(let error):
                     print("BetBuilder Total Odd failure \(error)")
-                    self?.isBetbuilderInvalid.send(true)
+                    self?.fetchedBetbuilderValuePublisher.send(.fetched(fetchType: .error))
+
                 }
             }, receiveValue: { [weak self] betBuilderCalculateResponse in
                 
                 self?.totalOdd.send(betBuilderCalculateResponse.totalOdd)
+                
+                self?.fetchedBetbuilderValuePublisher.send(.fetched(fetchType: .success))
             })
             .store(in: &cancellables)
                 
@@ -165,8 +167,8 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var shouldHideBetbuilderSelection: (() -> Void)?
-        
+    var shouldOpenBetslip: (() -> Void)?
+            
     // MARK: Lifetime and cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -307,16 +309,6 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                 self?.isBetbuilderSelected = isBetbuilderSelected
             })
             .store(in: &cancellables)
-        
-        viewModel.isBetbuilderInvalid
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isBetbuilderInvalid in
-                
-                if isBetbuilderInvalid {
-                    self?.shouldHideBetbuilderSelection?()
-                }
-            })
-            .store(in: &cancellables)
 
     }
     
@@ -341,6 +333,8 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
                     
                 }
                 
+                self.shouldOpenBetslip?()
+
             }
             
         }
@@ -586,4 +580,9 @@ extension BetbuilderSelectionCollectionViewCell {
         ])
         
     }
+}
+
+enum BetbuilderFetchedState {
+    case notFetched
+    case fetched(fetchType: AlertType)
 }

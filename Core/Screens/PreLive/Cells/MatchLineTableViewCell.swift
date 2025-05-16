@@ -126,6 +126,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
 
+        print("[Debug] \(self.viewModel?.matchId ?? "") viewModel to nil MatchLineTableCellViewModel")
+        
         self.viewModel = nil
         self.match = nil
 
@@ -208,6 +210,9 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private func setupWithMatch(_ newMatch: Match) {
         self.match = newMatch
+        
+        let address = Unmanaged.passUnretained(self).toOpaque()
+        print("[Debug] - ---  ---  ---  ---  collectionView line reloadData  \(address) ---  ---  ---  --- -")
         self.collectionView.reloadData()
     }
 

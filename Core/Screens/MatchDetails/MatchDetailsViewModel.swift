@@ -36,7 +36,7 @@ class MatchDetailsViewModel: NSObject {
 
     var matchStatsUpdatedPublisher = PassthroughSubject<Void, Never>.init()
     
-    var recommendedBetBuilders: CurrentValueSubject<[RecommendedBetBuilder], Never> = .init([])
+    var recommendedBetBuildersPublisher: CurrentValueSubject<[RecommendedBetBuilder], Never> = .init([])
 
     var shouldRenderFieldWidget: CurrentValueSubject<Bool, Never> = .init(false)
     var fieldWidgetRenderDataType: FieldWidgetRenderDataType?
@@ -233,49 +233,104 @@ class MatchDetailsViewModel: NSObject {
             .store(in: &self.cancellables)
         
         if TargetVariables.features.contains(.popularBetBuilder) {
-            self.matchCurrentValueSubject
-                .compactMap { (loadableContent: LoadableContent<Match>) -> String? in
-                    switch loadableContent {
-                    case .loaded(let match):
-                        return match.trackableReference
-                    case .loading, .failed, .idle:
-                        return nil
-                    }
-                }
-                .removeDuplicates()
-            // Explicitly provide return type to help compiler choose the right flatMap overload
-                .flatMap( { (matchTrackableReference: String) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> in
-                    return Env.servicesProvider.getRecommendedBetBuilders(eventId: matchTrackableReference, multibetsCount: 5, selectionsCount: 3, userId: nil)
-                        .eraseToAnyPublisher()
-                })
-                .catch { error -> AnyPublisher<RecommendedBetBuilders, Never> in
-                    print("Error retrieving data: \(error)")
-                    let emptyValue = RecommendedBetBuilders(recommendations: [])
-                    return Just(emptyValue).eraseToAnyPublisher()
-                }
-                .sink { recommendedBetBuilders in
-                    
-                    let filterRecommendedBetBuilders = recommendedBetBuilders.recommendations
-                        .filter { $0.selections.count >= 3 }
-                        .uniqued { builder1, builder2 in
-                            guard builder1.selections.count == builder2.selections.count else {
-                                return false
-                            }
-                            
-                            let sortedSelections1 = builder1.selections.sorted { $0.outcomeId < $1.outcomeId }
-                            let sortedSelections2 = builder2.selections.sorted { $0.outcomeId < $1.outcomeId }
-                            
-                            return zip(sortedSelections1, sortedSelections2).allSatisfy { sel1, sel2 in
-                                sel1.eventId == sel2.eventId &&
-                                sel1.marketId == sel2.marketId &&
-                                sel1.outcomeId == sel2.outcomeId
-                            }
+            Publishers.CombineLatest(
+                self.matchCurrentValueSubject
+                    .compactMap { (loadableContent: LoadableContent<Match>) -> String? in
+                        switch loadableContent {
+                        case .loaded(let match):
+                            return match.trackableReference
+                        case .loading, .failed, .idle:
+                            return nil
                         }
-                    
-                    self.recommendedBetBuilders.send(filterRecommendedBetBuilders)
-                }
-                .store(in: &self.cancellables)
+                    }
+                    .removeDuplicates(),
+                self.marketGroupsState
+                    .compactMap { (marketGroupsState: LoadableContent<[MarketGroup]>) -> Bool? in
+                        switch marketGroupsState {
+                        case .loaded:
+                            return true
+                        case .loading, .failed, .idle:
+                            return nil
+                        }
+                    }
+                    .removeDuplicates()
+            )
+            .flatMap { (matchTrackableReference: String, _) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> in
+                return Env.servicesProvider.getRecommendedBetBuilders(eventId: matchTrackableReference, multibetsCount: 5, selectionsCount: 3, userId: nil)
+                    .eraseToAnyPublisher()
+            }
+            .catch { error -> AnyPublisher<RecommendedBetBuilders, Never> in
+                print("Error retrieving data: \(error)")
+                let emptyValue = RecommendedBetBuilders(recommendations: [])
+                return Just(emptyValue).eraseToAnyPublisher()
+            }
+            .sink { recommendedBetBuilders in
+                
+                let filterRecommendedBetBuilders = recommendedBetBuilders.recommendations
+                    .filter { $0.selections.count >= 3 }
+                    .uniqued { builder1, builder2 in
+                        guard builder1.selections.count == builder2.selections.count else {
+                            return false
+                        }
+                        
+                        let sortedSelections1 = builder1.selections.sorted { $0.outcomeId < $1.outcomeId }
+                        let sortedSelections2 = builder2.selections.sorted { $0.outcomeId < $1.outcomeId }
+                        
+                        return zip(sortedSelections1, sortedSelections2).allSatisfy { sel1, sel2 in
+                            sel1.eventId == sel2.eventId &&
+                            sel1.marketId == sel2.marketId &&
+                            sel1.outcomeId == sel2.outcomeId
+                        }
+                    }
+                
+                self.recommendedBetBuildersPublisher.send(filterRecommendedBetBuilders)
+            }
+            .store(in: &self.cancellables)
         }
+//        if TargetVariables.features.contains(.popularBetBuilder) {
+//            self.matchCurrentValueSubject
+//                .compactMap { (loadableContent: LoadableContent<Match>) -> String? in
+//                    switch loadableContent {
+//                    case .loaded(let match):
+//                        return match.trackableReference
+//                    case .loading, .failed, .idle:
+//                        return nil
+//                    }
+//                }
+//                .removeDuplicates()
+//            // Explicitly provide return type to help compiler choose the right flatMap overload
+//                .flatMap( { (matchTrackableReference: String) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> in
+//                    return Env.servicesProvider.getRecommendedBetBuilders(eventId: matchTrackableReference, multibetsCount: 5, selectionsCount: 3, userId: nil)
+//                        .eraseToAnyPublisher()
+//                })
+//                .catch { error -> AnyPublisher<RecommendedBetBuilders, Never> in
+//                    print("Error retrieving data: \(error)")
+//                    let emptyValue = RecommendedBetBuilders(recommendations: [])
+//                    return Just(emptyValue).eraseToAnyPublisher()
+//                }
+//                .sink { recommendedBetBuilders in
+//                    
+//                    let filterRecommendedBetBuilders = recommendedBetBuilders.recommendations
+//                        .filter { $0.selections.count >= 3 }
+//                        .uniqued { builder1, builder2 in
+//                            guard builder1.selections.count == builder2.selections.count else {
+//                                return false
+//                            }
+//                            
+//                            let sortedSelections1 = builder1.selections.sorted { $0.outcomeId < $1.outcomeId }
+//                            let sortedSelections2 = builder2.selections.sorted { $0.outcomeId < $1.outcomeId }
+//                            
+//                            return zip(sortedSelections1, sortedSelections2).allSatisfy { sel1, sel2 in
+//                                sel1.eventId == sel2.eventId &&
+//                                sel1.marketId == sel2.marketId &&
+//                                sel1.outcomeId == sel2.outcomeId
+//                            }
+//                        }
+//                    
+//                    self.recommendedBetBuildersPublisher.send(filterRecommendedBetBuilders)
+//                }
+//                .store(in: &self.cancellables)
+//        }
 
 //        Publishers.CombineLatest(
 //            self.matchCurrentValueSubject
@@ -473,7 +528,6 @@ class MatchDetailsViewModel: NSObject {
         }
 
     }
-
 
     private func subscribeMatchLiveDataOnLists(withId matchId: String, sportAlphaCode: String) {
         Env.servicesProvider.subscribeToEventOnListsLiveDataUpdates(withId: matchId)
