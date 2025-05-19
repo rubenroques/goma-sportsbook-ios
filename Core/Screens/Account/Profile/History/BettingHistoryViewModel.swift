@@ -51,6 +51,7 @@ class BettingHistoryViewModel {
     var openedGrantedWinBoosts = [GrantedWinBoosts]()
     var resolvedGrantedWinBoosts = [GrantedWinBoosts]()
     var wonGrantedWinBoosts = [GrantedWinBoosts]()
+    var cashoutGrantedWinBoosts = [GrantedWinBoosts]()
 
     var requestAlertAction: ((String, String) -> Void)?
     var showCashoutSuspendedAction: (() -> Void)?
@@ -221,6 +222,9 @@ class BettingHistoryViewModel {
                 nextTickets.append(contentsOf: betHistoryEntries)
                 self.cashoutTickets.send(nextTickets)
             }
+            
+            self.processCashoutGrantedWinBoosts(betEntries: betHistoryEntries)
+
         }
 
         self.listStatePublisher.send(.loaded)
@@ -615,6 +619,67 @@ class BettingHistoryViewModel {
                     var newWinBoosts = self.wonGrantedWinBoosts
                     newWinBoosts.append(contentsOf: mergedResults)
                     self.wonGrantedWinBoosts = newWinBoosts
+                }
+                
+                self.listStatePublisher.send(.loaded)
+
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    private func processCashoutGrantedWinBoosts(betEntries: [BetHistoryEntry]) {
+        
+        var openGameTranIds = [String]()
+        
+        for betEntry in betEntries {
+            
+            let betslipId = "\(betEntry.betslipId ?? 0)"
+            let betId = betEntry.betId
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+            
+            if !openGameTranIds.contains(gameTransId) {
+                openGameTranIds.append(gameTransId)
+            }
+        }
+        
+        // Split the array into chunks of 10 elements
+        let chunkedGameTransIds = stride(from: 0, to: openGameTranIds.count, by: 10).map {
+            Array(openGameTranIds[$0..<min($0 + 10, openGameTranIds.count)])
+        }
+        
+        // Create a publisher for each chunk that handles errors
+        let publishers = chunkedGameTransIds.map { chunk -> AnyPublisher<[GrantedWinBoosts], Never> in
+            print("Getting win boosts from chunk: \(chunk)")
+            
+            return Env.servicesProvider.getGrantedWinBoosts(gameTransIds: chunk)
+                .catch { error -> AnyPublisher<[GrantedWinBoosts], Never> in
+                    // Log the error but continue with empty results
+                    print("Error fetching win boosts for chunk: \(error)")
+                    return Just([]).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allResults in
+                guard let self = self else { return }
+
+                let mergedResults = allResults.flatMap { $0 }
+                
+                print("COMBINED CASHOUT GRANTED WIN BOOSTS: \(mergedResults.count) results")
+                
+                if self.cashoutGrantedWinBoosts.isEmpty {
+                    self.cashoutGrantedWinBoosts = mergedResults
+                }
+                else {
+                    var newWinBoosts = self.cashoutGrantedWinBoosts
+                    newWinBoosts.append(contentsOf: mergedResults)
+                    self.cashoutGrantedWinBoosts = newWinBoosts
                 }
                 
                 self.listStatePublisher.send(.loaded)

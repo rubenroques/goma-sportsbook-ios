@@ -27,7 +27,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tt6-nr-mqM">
-                        <rect key="frame" x="12" y="10" width="472" height="720"/>
+                        <rect key="frame" x="12" y="10" width="472" height="728"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="th4-zS-Yw2">
                                 <rect key="frame" x="0.0" y="0.0" width="472" height="8"/>
@@ -197,10 +197,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6dB-Ev-5zh">
-                                <rect key="frame" x="0.0" y="367" width="472" height="353"/>
+                                <rect key="frame" x="0.0" y="367" width="472" height="361"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="od3-Q5-lI2">
-                                        <rect key="frame" x="0.0" y="0.0" width="472" height="341"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="od3-Q5-lI2">
+                                        <rect key="frame" x="0.0" y="0.0" width="472" height="349"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tGl-kg-Fyb">
                                                 <rect key="frame" x="0.0" y="0.0" width="472" height="59"/>
@@ -319,14 +319,14 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oyF-Jz-xb1">
-                                                <rect key="frame" x="0.0" y="92" width="472" height="40"/>
+                                                <rect key="frame" x="0.0" y="94" width="472" height="42"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="aTC-mH-HfG"/>
+                                                    <constraint firstAttribute="height" constant="42" id="aTC-mH-HfG"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BLE-kd-Pbd">
-                                                <rect key="frame" x="0.0" y="136" width="472" height="69"/>
+                                                <rect key="frame" x="0.0" y="142" width="472" height="69"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a2o-OR-1K7">
                                                         <rect key="frame" x="12" y="17" width="448" height="35"/>
@@ -352,7 +352,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VSd-xK-xek">
-                                                <rect key="frame" x="10" y="209" width="452" height="132"/>
+                                                <rect key="frame" x="10" y="217" width="452" height="132"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hiU-AP-953">
                                                         <rect key="frame" x="12" y="0.0" width="428" height="80"/>
@@ -444,10 +444,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3sD-Ev-YhE">
-                                <rect key="frame" x="0.0" y="0.0" width="472" height="720"/>
+                                <rect key="frame" x="0.0" y="0.0" width="472" height="728"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="q1c-HF-zYC">
-                                        <rect key="frame" x="217.5" y="341.5" width="37" height="37"/>
+                                        <rect key="frame" x="217.5" y="345.5" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.4015159354304636" colorSpace="custom" customColorSpace="sRGB"/>
@@ -543,7 +543,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="buttonBackgroundSecondary">
-            <color red="0.29803921568627451" green="0.31764705882352939" blue="0.68235294117647061" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.36862745098039218" green="0.52941176470588236" blue="0.89803921568627454" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="textPrimary">
             <color red="0.070588235294117646" green="0.074509803921568626" blue="0.086274509803921567" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

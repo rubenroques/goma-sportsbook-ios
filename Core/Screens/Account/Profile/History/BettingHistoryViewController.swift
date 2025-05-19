@@ -373,7 +373,16 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
                     print("No matching win boost found for gameTransId: \(gameTransId)")
                 }
             case .cashout:
-                ()
+                let matchingWinBoost = self.viewModel.cashoutGrantedWinBoosts.first { grantedWinBoost in
+                    return grantedWinBoost.gameTranId == gameTransId
+                }
+                
+                if let matchingWinBoost = matchingWinBoost?.winBoosts.first {
+                    grantedWinBoost = matchingWinBoost
+                }
+                else {
+                    print("No matching win boost found for gameTransId: \(gameTransId)")
+                }
             }
 
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel, grantedWinBoost: grantedWinBoost)

@@ -433,7 +433,7 @@ class ProfileViewController: UIViewController {
     
     @objc private func testTap() {
         
-        let prize = String(format: "%.0f%%", 0.2 * 100)
+        let prize = "+" + String(format: "%.0f%%", 0.2 * 100)
         
         if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
             

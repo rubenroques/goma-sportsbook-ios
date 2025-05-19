@@ -90,6 +90,16 @@ class MyTicketTableViewCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    lazy var winBoostCenterYConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+    
+    lazy var winBoostBottomConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
 
     private var betHistoryEntry: BetHistoryEntry?
 
@@ -308,10 +318,21 @@ class MyTicketTableViewCell: UITableViewCell {
         
         self.winBoostBaseView.addSubview(self.winBoostView)
         
+        self.winBoostCenterYConstraint = self.winBoostView.centerYAnchor.constraint(
+            equalTo: self.winBoostBaseView.centerYAnchor
+        )
+        
+        self.winBoostCenterYConstraint.isActive = true
+        
+        self.winBoostBottomConstraint = self.winBoostView.bottomAnchor.constraint(
+            equalTo: self.winBoostBaseView.bottomAnchor
+        )
+        
+        self.winBoostBottomConstraint.isActive = false
+        
         NSLayoutConstraint.activate([
             self.winBoostView.leadingAnchor.constraint(equalTo: self.winBoostBaseView.leadingAnchor, constant: 12),
-            self.winBoostView.trailingAnchor.constraint(equalTo: self.winBoostBaseView.trailingAnchor, constant: -12),
-            self.winBoostView.centerYAnchor.constraint(equalTo: self.winBoostBaseView.centerYAnchor)
+            self.winBoostView.trailingAnchor.constraint(equalTo: self.winBoostBaseView.trailingAnchor, constant: -12)
         ])
         
         self.winBoostBaseView.isHidden = true
@@ -360,6 +381,8 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.minimumCashoutValueLabel.text = ""
         self.maximumCashoutValueLabel.text = ""
+        
+        self.winBoostBaseView.isHidden = true
     }
 
     override func layoutSubviews() {
@@ -459,7 +482,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.cashbackUsedTitleLabel.textColor = UIColor.App.buttonTextPrimary
         
-        self.winBoostBaseView.backgroundColor = .clear
+        self.winBoostBaseView.backgroundColor = UIColor.App.backgroundSecondary
     }
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
@@ -821,7 +844,7 @@ class MyTicketTableViewCell: UITableViewCell {
                     winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: partialCashoutPotentialWinnings * awardedTier.boostMultiplier))
                 }
                 
-                let prize = String(format: "%.0f%%", awardedTier.boostMultiplier * 100)
+                let prize = "+" + String(format: "%.0f%%", awardedTier.boostMultiplier * 100)
                 
                 self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: prize, value: winValue ?? "")
             }
@@ -831,8 +854,17 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: "", value: winValue)
             }
             
+            if betHistoryEntry.status?.uppercased() != "OPENED" {
+                self.winBoostCenterYConstraint.isActive = false
+                
+                self.winBoostBottomConstraint.isActive = true
+                
+                self.contentView.layoutIfNeeded()
+            }
+            
             self.winBoostBaseView.isHidden = false
         }
+        
     }
 
     func setupPartialCashoutSlider() {
@@ -998,14 +1030,16 @@ class MyTicketTableViewCell: UITableViewCell {
     }
 
     private func resetHighlightedCard() {
-        self.bottomBaseView.backgroundColor = .clear
+//        self.bottomBaseView.backgroundColor = .clear
+        self.bottomStackView.backgroundColor = .clear
         self.topStatusView.backgroundColor = .clear
 
         self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 
     private func highlightCard(withColor color: UIColor) {
-        self.bottomBaseView.backgroundColor = color
+//        self.bottomBaseView.backgroundColor = color
+        self.bottomStackView.backgroundColor = color
         self.topStatusView.backgroundColor = color
 
         self.bottomSeparatorLineView.backgroundColor = .white
