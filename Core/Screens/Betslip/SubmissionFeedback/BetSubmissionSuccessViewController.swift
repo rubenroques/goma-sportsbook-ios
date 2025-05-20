@@ -812,7 +812,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 //        self.configureWinBoostLayout()
         self.wheelBetStatus = .awarded
         
-        let prize = "+" + String(format: "%.0f%%", boostMultiplier * 100)
+        let prize = String(format: "%.0f%%", boostMultiplier * 100)
         
         if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
             
