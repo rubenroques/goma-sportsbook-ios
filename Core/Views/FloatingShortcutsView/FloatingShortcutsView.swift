@@ -96,7 +96,17 @@ class FloatingShortcutsView: UIView {
             .store(in: &cancellables)
         
         Env.betslipManager.bettingTicketsPublisher
-            .receive(on: DispatchQueue.main)
+            .filter({ bettingTickets in
+                if bettingTickets.count == 1 {
+                    // betslip with a single bet can animate
+                    return true
+                }
+                if Set(bettingTickets.map(\.matchId)).count >= bettingTickets.count {
+                    // betslip with all selections from diff events can animate
+                    return true
+                }
+                return false
+            })
             .dropFirst()
             .map({ orderedSet -> Double in
                 let newArray = orderedSet.map { $0.decimalOdd }
@@ -105,6 +115,7 @@ class FloatingShortcutsView: UIView {
             })
             .filter({ $0 >= 1 })
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
                 self?.triggerFlipperAnimation(withValue: multiplier)
@@ -192,6 +203,11 @@ class FloatingShortcutsView: UIView {
     func triggerFlipperAnimation(withValue value: Double) {
         
         if value > 100_000 {
+            return
+        }
+        
+        if value == 1 {
+            self.flipNumberView.setNumber(value, animated: false)
             return
         }
         

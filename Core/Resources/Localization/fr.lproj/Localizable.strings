@@ -2106,7 +2106,7 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 
 "spin_wheel_tooltip_title" = " TU VEUX TOURNER LA ROUE ?";
 "spin_wheel_tooltip_description_title" = "Il te faut :";
-"spin_wheel_tooltip_description_text" = "• Un pari live \n• Une cote > 1.80 \n• Une mise minimum de 5€";
+"spin_wheel_tooltip_description_text" = "• Un pari live \n• Une cote minimum de 1.80 \n• Une mise minimum de 5€";
 
 "spin_wheel_tooltip_link_text" = "+ Infos";
 

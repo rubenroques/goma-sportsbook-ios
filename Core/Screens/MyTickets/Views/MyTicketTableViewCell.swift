@@ -850,7 +850,7 @@ class MyTicketTableViewCell: UITableViewCell {
             }
             else if let boostAmount = grantedWinBoost.boostAmount,
                     let winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: boostAmount)) {
-                                
+                           
                 self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: "", value: winValue)
             }
             
