@@ -55,7 +55,7 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
 
     static var topCompetitionWidgetVersion: TopCompetitionWidgetVersion { get }
     
-    static var useAdaptiveRootViewController: Bool
+    static var useAdaptiveRootViewController: Bool { get }
 }
 
 enum SportsbookTargetFeatures: Codable, CaseIterable {

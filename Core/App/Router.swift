@@ -96,6 +96,12 @@ class Router {
 
     func showPostLoadingFlow() {
         
+        #if DEBUG
+        let testRootViewController = TestRootViewController()
+        self.rootWindow.rootViewController = testRootViewController
+        return
+        #endif
+        
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
             

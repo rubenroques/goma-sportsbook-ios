@@ -7553,6 +7553,30 @@
 		CED11C602DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
 		CED11C612DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
 		CED11C622DD77D5100F65785 /* RootActionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C5A2DD77D5100F65785 /* RootActionable.swift */; };
+		CED11C652DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */; };
+		CED11C662DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */; };
+		CED11C672DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */; };
+		CED11C682DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */; };
+		CED11C692DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */; };
+		CED11C6A2DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */; };
+		CED11C6B2DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */; };
+		CED11C6C2DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */; };
+		CED11C6E2DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */; };
+		CED11C6F2DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */; };
+		CED11C702DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */; };
+		CED11C712DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */; };
+		CED11C722DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */; };
+		CED11C732DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */; };
+		CED11C742DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */; };
+		CED11C752DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */; };
+		CED11C772DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */; };
+		CED11C782DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */; };
+		CED11C792DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */; };
+		CED11C7A2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */; };
+		CED11C7B2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */; };
+		CED11C7C2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */; };
+		CED11C7D2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */; };
+		CED11C7E2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */; };
 		CED5D8F12D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D42D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift */; };
 		CED5D8F22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift */; };
 		CED5D8F32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5D8D22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift */; };
@@ -9787,6 +9811,9 @@
 		CED11C482DD761AB00F65785 /* PresentationConfigurationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationConfigurationStore.swift; sourceTree = "<group>"; };
 		CED11C512DD777F600F65785 /* RootAdaptiveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootAdaptiveViewController.swift; sourceTree = "<group>"; };
 		CED11C5A2DD77D5100F65785 /* RootActionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootActionable.swift; sourceTree = "<group>"; };
+		CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveTabBarItemView.swift; sourceTree = "<group>"; };
+		CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveTabBarViewModel.swift; sourceTree = "<group>"; };
+		CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveTabBarView.swift; sourceTree = "<group>"; };
 		CED5D8D22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CED5D8D32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
 		CED5D8D42D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClassicMatchWidgetCollectionViewCell+Interactions.swift"; sourceTree = "<group>"; };
@@ -11255,6 +11282,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CED11C632DD783F300F65785 /* AdaptiveTabBarView */,
 				65CD19AE2D946FE900CA23E0 /* Notifications */,
 				65EFF3122D81DF7A00F1FC57 /* Promotions */,
 				CE0C6C912D56327E00EAD26B /* SmallToolTipView */,
@@ -14159,6 +14187,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		CED11C632DD783F300F65785 /* AdaptiveTabBarView */ = {
+			isa = PBXGroup;
+			children = (
+				CED11C762DD7842A00F65785 /* AdaptiveTabBarView.swift */,
+				CED11C6D2DD7841000F65785 /* AdaptiveTabBarViewModel.swift */,
+				CED11C642DD7840600F65785 /* AdaptiveTabBarItemView.swift */,
+			);
+			path = AdaptiveTabBarView;
+			sourceTree = "<group>";
+		};
 		CED5D8D72D944B7100429306 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -16752,6 +16790,7 @@
 				450B789928F58574009229E3 /* ShareTicketChoiceViewModel.swift in Sources */,
 				450B789C28F58574009229E3 /* AggregatorRepositoryType.swift in Sources */,
 				A9958C7029705D62001474E2 /* DocumentView.swift in Sources */,
+				CED11C6F2DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */,
 				450B789E28F58574009229E3 /* PopularDetailsViewController.swift in Sources */,
 				CE7E80332D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE7E80342D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -16763,6 +16802,7 @@
 				A9A2923F2A61597C00A7C334 /* UserGodfatherView.swift in Sources */,
 				A9BA04102A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
 				65238E022C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
+				CED11C7E2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */,
 				450B78A328F58574009229E3 /* Date+Extension.swift in Sources */,
 				450B78A428F58574009229E3 /* LiveDetailsViewController.swift in Sources */,
 				450B78A528F58574009229E3 /* GomaGamingServiceClient.swift in Sources */,
@@ -17437,6 +17477,7 @@
 				450B7A7928F58574009229E3 /* UserInfoMultipleCardView.swift in Sources */,
 				450B7A7B28F58574009229E3 /* KDCircularProgress.swift in Sources */,
 				45ECD76E2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
+				CED11C652DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */,
 				450B7A7C28F58574009229E3 /* MessagesViewModel.swift in Sources */,
 				CEA565B32D5A308800696793 /* DummyWidgetShowcaseHomeViewTemplateDataSource.swift in Sources */,
 				450B7A7D28F58574009229E3 /* CasinoGameDetailViewController.swift in Sources */,
@@ -17646,6 +17687,7 @@
 				45A330AA298976BA008181E9 /* ShareTicketChoiceViewModel.swift in Sources */,
 				45A330AD298976BA008181E9 /* AggregatorRepositoryType.swift in Sources */,
 				45A330AE298976BA008181E9 /* DocumentView.swift in Sources */,
+				CED11C702DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */,
 				45A330B0298976BA008181E9 /* PopularDetailsViewController.swift in Sources */,
 				CE7E80362D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE7E80372D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -17657,6 +17699,7 @@
 				A9A2923E2A61597C00A7C334 /* UserGodfatherView.swift in Sources */,
 				A9BA040F2A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
 				65238E002C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
+				CED11C7D2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */,
 				45A330B5298976BA008181E9 /* Date+Extension.swift in Sources */,
 				45A330B6298976BA008181E9 /* LiveDetailsViewController.swift in Sources */,
 				45A330B7298976BA008181E9 /* GomaGamingServiceClient.swift in Sources */,
@@ -18331,6 +18374,7 @@
 				45A33299298976BA008181E9 /* UserInfoMultipleCardView.swift in Sources */,
 				45A3329B298976BA008181E9 /* KDCircularProgress.swift in Sources */,
 				45ECD76D2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
+				CED11C662DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */,
 				45A3329C298976BA008181E9 /* MessagesViewModel.swift in Sources */,
 				CEA565B02D5A308800696793 /* DummyWidgetShowcaseHomeViewTemplateDataSource.swift in Sources */,
 				45A3329D298976BA008181E9 /* CasinoGameDetailViewController.swift in Sources */,
@@ -18510,6 +18554,7 @@
 				45F6BB472AB3732C00C81DE1 /* ShareTicketChoiceViewModel.swift in Sources */,
 				45F6BB4A2AB3732C00C81DE1 /* AggregatorRepositoryType.swift in Sources */,
 				45F6BB4B2AB3732C00C81DE1 /* DocumentView.swift in Sources */,
+				CED11C732DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */,
 				45F6BB4C2AB3732C00C81DE1 /* PopularDetailsViewController.swift in Sources */,
 				CE7E801E2D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE7E801F2D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -18521,6 +18566,7 @@
 				45F6BB522AB3732C00C81DE1 /* UserGodfatherView.swift in Sources */,
 				45F6BB532AB3732C00C81DE1 /* ManualUploadDocumentsViewController.swift in Sources */,
 				65238E012C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
+				CED11C7A2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */,
 				45F6BB542AB3732C00C81DE1 /* Date+Extension.swift in Sources */,
 				45F6BB552AB3732C00C81DE1 /* LiveDetailsViewController.swift in Sources */,
 				45F6BB562AB3732C00C81DE1 /* GomaGamingServiceClient.swift in Sources */,
@@ -19195,6 +19241,7 @@
 				45F6BD602AB3732C00C81DE1 /* UserInfoMultipleCardView.swift in Sources */,
 				45F6BD622AB3732C00C81DE1 /* KDCircularProgress.swift in Sources */,
 				45F6BD632AB3732C00C81DE1 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
+				CED11C672DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */,
 				45F6BD642AB3732C00C81DE1 /* MessagesViewModel.swift in Sources */,
 				CEA565B12D5A308800696793 /* DummyWidgetShowcaseHomeViewTemplateDataSource.swift in Sources */,
 				45F6BD652AB3732C00C81DE1 /* CasinoGameDetailViewController.swift in Sources */,
@@ -19338,6 +19385,7 @@
 				CE5B558C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CE5B558D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B558E2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				CED11C7B2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */,
 				CE5B558F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B55902D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CE5B55912D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -19432,6 +19480,7 @@
 				CE12A1DA2D31347E0022BDF7 /* GomaGamingService.swift in Sources */,
 				CE12A1DC2D31347E0022BDF7 /* AppDelegate.swift in Sources */,
 				CE12A1DE2D31347E0022BDF7 /* UIImage+Extensions.swift in Sources */,
+				CED11C6E2DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */,
 				CE12A1DF2D31347E0022BDF7 /* MultipleBettingTicketDataSource.swift in Sources */,
 				CE12A1E22D31347E0022BDF7 /* MyGamesRootViewController.swift in Sources */,
 				CE12A1E32D31347E0022BDF7 /* PreSubmissionBetslipViewModel.swift in Sources */,
@@ -19500,6 +19549,7 @@
 				CE12A22A2D31347E0022BDF7 /* PopUpDetails.swift in Sources */,
 				CE12A22B2D31347E0022BDF7 /* RunningPlatform.swift in Sources */,
 				CE12A22C2D31347E0022BDF7 /* AppModels.swift in Sources */,
+				CED11C692DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */,
 				CE12A22E2D31347E0022BDF7 /* HeadToHeadCardStatsView.swift in Sources */,
 				65EFF30B2D81DEB600F1FC57 /* PromotionDetailViewController.swift in Sources */,
 				CE12A22F2D31347E0022BDF7 /* AppearanceViewModel.swift in Sources */,
@@ -20247,6 +20297,7 @@
 				CE8F238C2DD371350071238E /* ShareTicketChoiceViewModel.swift in Sources */,
 				CE8F238D2DD371350071238E /* AggregatorRepositoryType.swift in Sources */,
 				CE8F238E2DD371350071238E /* DocumentView.swift in Sources */,
+				CED11C752DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */,
 				CE8F238F2DD371350071238E /* PopularDetailsViewController.swift in Sources */,
 				CE8F23902DD371350071238E /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE8F23912DD371350071238E /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -20258,6 +20309,7 @@
 				CE8F23972DD371350071238E /* UserGodfatherView.swift in Sources */,
 				CE8F23982DD371350071238E /* ManualUploadDocumentsViewController.swift in Sources */,
 				CE8F23992DD371350071238E /* FeaturedCompetition.swift in Sources */,
+				CED11C7C2DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */,
 				CE8F239A2DD371350071238E /* Date+Extension.swift in Sources */,
 				CE8F239B2DD371350071238E /* LiveDetailsViewController.swift in Sources */,
 				CE8F239C2DD371350071238E /* GomaGamingServiceClient.swift in Sources */,
@@ -20932,6 +20984,7 @@
 				CE8F26362DD371350071238E /* UserInfoMultipleCardView.swift in Sources */,
 				CE8F26372DD371350071238E /* KDCircularProgress.swift in Sources */,
 				CE8F26382DD371350071238E /* PromotedCompetitionLineTableViewCell.swift in Sources */,
+				CED11C682DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */,
 				CE8F26392DD371350071238E /* MessagesViewModel.swift in Sources */,
 				CE8F263A2DD371350071238E /* DummyWidgetShowcaseHomeViewTemplateDataSource.swift in Sources */,
 				CE8F263B2DD371350071238E /* CasinoGameDetailViewController.swift in Sources */,
@@ -21111,6 +21164,7 @@
 				CEB3A0F92DD379800024043B /* ShareTicketChoiceViewModel.swift in Sources */,
 				CEB3A0FA2DD379800024043B /* AggregatorRepositoryType.swift in Sources */,
 				CEB3A0FB2DD379800024043B /* DocumentView.swift in Sources */,
+				CED11C712DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */,
 				CEB3A0FC2DD379800024043B /* PopularDetailsViewController.swift in Sources */,
 				CEB3A0FD2DD379800024043B /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CEB3A0FE2DD379800024043B /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -21122,6 +21176,7 @@
 				CEB3A1042DD379800024043B /* UserGodfatherView.swift in Sources */,
 				CEB3A1052DD379800024043B /* ManualUploadDocumentsViewController.swift in Sources */,
 				CEB3A1062DD379800024043B /* FeaturedCompetition.swift in Sources */,
+				CED11C772DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */,
 				CEB3A1072DD379800024043B /* Date+Extension.swift in Sources */,
 				CEB3A1082DD379800024043B /* LiveDetailsViewController.swift in Sources */,
 				CEB3A1092DD379800024043B /* GomaGamingServiceClient.swift in Sources */,
@@ -21796,6 +21851,7 @@
 				CEB3A3A72DD379800024043B /* UserInfoMultipleCardView.swift in Sources */,
 				CEB3A3A82DD379800024043B /* KDCircularProgress.swift in Sources */,
 				CEB3A3A92DD379800024043B /* PromotedCompetitionLineTableViewCell.swift in Sources */,
+				CED11C6A2DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */,
 				CEB3A3AA2DD379800024043B /* MessagesViewModel.swift in Sources */,
 				CEB3A3AB2DD379800024043B /* DummyWidgetShowcaseHomeViewTemplateDataSource.swift in Sources */,
 				CEB3A3AC2DD379800024043B /* CasinoGameDetailViewController.swift in Sources */,
@@ -21975,6 +22031,7 @@
 				CEB3A5822DD379890024043B /* ShareTicketChoiceViewModel.swift in Sources */,
 				CEB3A5832DD379890024043B /* AggregatorRepositoryType.swift in Sources */,
 				CEB3A5842DD379890024043B /* DocumentView.swift in Sources */,
+				CED11C742DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */,
 				CEB3A5852DD379890024043B /* PopularDetailsViewController.swift in Sources */,
 				CEB3A5862DD379890024043B /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CEB3A5872DD379890024043B /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -21986,6 +22043,7 @@
 				CEB3A58D2DD379890024043B /* UserGodfatherView.swift in Sources */,
 				CEB3A58E2DD379890024043B /* ManualUploadDocumentsViewController.swift in Sources */,
 				CEB3A58F2DD379890024043B /* FeaturedCompetition.swift in Sources */,
+				CED11C782DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */,
 				CEB3A5902DD379890024043B /* Date+Extension.swift in Sources */,
 				CEB3A5912DD379890024043B /* LiveDetailsViewController.swift in Sources */,
 				CEB3A5922DD379890024043B /* GomaGamingServiceClient.swift in Sources */,
@@ -22660,6 +22718,7 @@
 				CEB3A8302DD379890024043B /* UserInfoMultipleCardView.swift in Sources */,
 				CEB3A8312DD379890024043B /* KDCircularProgress.swift in Sources */,
 				CEB3A8322DD379890024043B /* PromotedCompetitionLineTableViewCell.swift in Sources */,
+				CED11C6B2DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */,
 				CEB3A8332DD379890024043B /* MessagesViewModel.swift in Sources */,
 				CEB3A8342DD379890024043B /* DummyWidgetShowcaseHomeViewTemplateDataSource.swift in Sources */,
 				CEB3A8352DD379890024043B /* CasinoGameDetailViewController.swift in Sources */,
@@ -22791,7 +22850,9 @@
 				CEB9BB972DB659F800E8084B /* ListBlockView.swift in Sources */,
 				CEB9BB982DB659F800E8084B /* TitleBlockView.swift in Sources */,
 				CEB9BB992DB659F800E8084B /* ImageBlockView.swift in Sources */,
+				CED11C792DD7842A00F65785 /* AdaptiveTabBarView.swift in Sources */,
 				CEB9BB9A2DB659F800E8084B /* ActionButtonBlockView.swift in Sources */,
+				CED11C6C2DD7840600F65785 /* AdaptiveTabBarItemView.swift in Sources */,
 				CEB9BB9B2DB659F800E8084B /* BulletItemBlockView.swift in Sources */,
 				CEF193DD2DA834E900C81F12 /* SocialAppItemCollectionViewCell.swift in Sources */,
 				CEF193DE2DA834E900C81F12 /* Constants.swift in Sources */,
@@ -22892,6 +22953,7 @@
 				CEF194382DA834E900C81F12 /* PasswordUpdateViewController.swift in Sources */,
 				CEF194392DA834E900C81F12 /* ExtraDocsViewModel.swift in Sources */,
 				CEF1943A2DA834E900C81F12 /* SearchV2Response.swift in Sources */,
+				CED11C722DD7841000F65785 /* AdaptiveTabBarViewModel.swift in Sources */,
 				CEF1943B2DA834E900C81F12 /* MultiSlider+Internal.swift in Sources */,
 				CEF1943C2DA834E900C81F12 /* SupportTicketResponse.swift in Sources */,
 				CEF1943D2DA834E900C81F12 /* Cashout.swift in Sources */,

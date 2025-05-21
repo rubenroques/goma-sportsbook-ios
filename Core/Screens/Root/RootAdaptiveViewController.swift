@@ -17,7 +17,7 @@ import OptimoveSDK
 import ServicesProvider
 
 class RootAdaptiveViewController: UIViewController, RootActionable {
-    
+
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
@@ -147,21 +147,21 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
     // MARK: Public properties
     // Child view controllers
     lazy var homeViewController = HomeViewController()
-    
+
     lazy var preLiveViewController: PreLiveEventsViewController = {
         let defaultSport = Env.sportsStore.defaultSport
         let viewModel = PreLiveEventsViewModel(selectedSport: defaultSport)
         let preLiveEventsViewController = PreLiveEventsViewController(viewModel: viewModel)
         return preLiveEventsViewController
     }()
-    
+
     lazy var liveEventsViewController: LiveEventsViewController = {
         let defaultLiveSport = Env.sportsStore.defaultLiveSport
         let liveEventsViewModel = LiveEventsViewModel(selectedSport: defaultLiveSport)
         let liveEventsViewController = LiveEventsViewController(viewModel: liveEventsViewModel)
         return liveEventsViewController
     }()
-    
+
     lazy var tipsRootViewController = TipsRootViewController()
     lazy var cashbackViewController = CashbackRootViewController()
     lazy var myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 0))
@@ -171,7 +171,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
         if let competitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
 
             let topCompetitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
-            
+
             let featuredCompetitionDetailRootViewController = FeaturedCompetitionDetailRootViewController(viewModel: topCompetitionDetailsViewModel)
 
             return featuredCompetitionDetailRootViewController
@@ -452,7 +452,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
             .store(in: &cancellables)
 
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -514,7 +514,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
 
         let featuredCompetitionTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapFeaturedCompetitionTabItem))
         self.featuredCompetitionButtonBaseView.addGestureRecognizer(featuredCompetitionTapGesture)
-        
+
         let cashbackTapgesture = UITapGestureRecognizer(target: self, action: #selector(didTapCashbackTabItem))
         self.cashbackButtonBaseView.addGestureRecognizer(cashbackTapgesture)
 
@@ -566,7 +566,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
         else {
             self.myTicketsButtonBaseView.isHidden = true
         }
-        
+
         if TargetVariables.hasFeatureEnabled(feature: .userWalletBalance) {
             self.accountValueBaseView.isHidden = false
             Env.userSessionStore.refreshUserWallet()
@@ -581,15 +581,15 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
             featuredCompetition.id != nil
         {
             self.featuredCompetitionButtonBaseView.isHidden = false
-            
+
             // Set bottom banner icon
             if let bottomBarIcon = featuredCompetition.bottomBarIcon,
                let url = URL(string: "\(bottomBarIcon)") {
-                
+
                 self.featuredCompetitionIconImageView.kf.setImage(with: url)
-                
+
             }
-            
+
             // Set bottom banner name
             if let bottomBarName = featuredCompetition.bottomBarName {
                 self.featuredCompetitionTitleLabel.text = bottomBarName
@@ -643,7 +643,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
 
         //
         if TargetVariables.shouldUseBlurEffectTabBar {
-            
+
             self.bottomBackgroundView.backgroundColor = .clear
 
             let blurEffect = UIBlurEffect(style: .regular)
@@ -910,7 +910,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
     }
 
     func openBetslipModalWithShareData(ticketToken: String) {
-        
+
         let betslipViewModel = BetslipViewModel(startScreen: .sharedBet(ticketToken))
         let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
 
@@ -962,19 +962,19 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
 
         self.present(Router.navigationController(with: matchDetailsViewController), animated: true, completion: nil)
     }
-    
+
     func openCompetitionDetail(competitionId: String) {
-        
+
         let sport = Sport(id: "", name: "Sport", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
-        
+
         let topCompetitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
         let topCompetitionDetailsViewController = TopCompetitionDetailsViewController(viewModel: topCompetitionDetailsViewModel)
-        
+
         let navigationController = Router.navigationController(with: topCompetitionDetailsViewController)
-        
+
         self.present(navigationController, animated: true, completion: nil)
     }
-    
+
     func openContactSettings() {
         Env.userSessionStore.isLoadingUserSessionPublisher
             .filter({ $0 == false })
@@ -983,214 +983,214 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
             .sink(receiveValue: { [weak self] _ in
                 if Env.userSessionStore.isUserLogged() {
                     let contactSettingsViewModel = ContactSettingsViewModel()
-                    
+
                     let contactSettingsViewController = ContactSettingsViewController(viewModel: contactSettingsViewModel)
-                    
+
                     let navigationController = Router.navigationController(with: contactSettingsViewController)
-                    
+
                     self?.present(navigationController, animated: true, completion: nil)
                 }
                 else {
-                    
+
                     let loginViewController = LoginViewController()
-                    
+
                     let navigationViewController = Router.navigationController(with: loginViewController)
-                    
+
                     loginViewController.hasPendingRedirect = true
-                    
+
                     loginViewController.needsRedirect = { [weak self] in
                         self?.openContactSettings()
                     }
-                    
+
                     self?.present(navigationViewController, animated: true, completion: nil)
                 }
             })
             .store(in: &cancellables)
     }
-    
+
     func openBetswipe() {
-        
+
         self.homeViewController.openBetSwipe()
     }
-    
+
     func openDeposit() {
         Env.userSessionStore.isLoadingUserSessionPublisher
             .filter({ $0 == false })
             .receive(on: DispatchQueue.main)
             .first()
             .sink(receiveValue: { [weak self] _ in
-                
+
                 if Env.userSessionStore.isUserLogged() {
                     let depositViewController = DepositViewController()
-                    
+
                     depositViewController.shouldRefreshUserWallet = {
                         Env.userSessionStore.refreshUserWallet()
                     }
-                    
+
                     let navigationController = Router.navigationController(with: depositViewController)
-                    
+
                     self?.present(navigationController, animated: true, completion: nil)
                 }
                 else {
-                    
+
                     let loginViewController = LoginViewController()
-                    
+
                     let navigationViewController = Router.navigationController(with: loginViewController)
-                    
+
                     loginViewController.hasPendingRedirect = true
-                    
+
                     loginViewController.needsRedirect = { [weak self] in
                         self?.openDeposit()
                     }
-                    
+
                     self?.present(navigationViewController, animated: true, completion: nil)
                 }
-                
+
             })
             .store(in: &cancellables)
     }
-    
+
     func openBonus() {
         Env.userSessionStore.isLoadingUserSessionPublisher
             .filter({ $0 == false })
             .receive(on: DispatchQueue.main)
             .first()
             .sink(receiveValue: { [weak self] _ in
-                
+
                 if Env.userSessionStore.isUserLogged() {
                     let bonusRootViewController = BonusRootViewController(viewModel: BonusRootViewModel(startTabIndex: 0))
-                    
+
                     let navigationController = Router.navigationController(with: bonusRootViewController)
-                    
+
                     self?.present(navigationController, animated: true, completion: nil)
                 }
                 else {
-                    
+
                     let loginViewController = LoginViewController()
-                    
+
                     let navigationViewController = Router.navigationController(with: loginViewController)
-                    
+
                     loginViewController.hasPendingRedirect = true
-                    
+
                     loginViewController.needsRedirect = { [weak self] in
                         self?.openBonus()
                     }
-                    
+
                     self?.present(navigationViewController, animated: true, completion: nil)
                 }
-                
+
             })
             .store(in: &cancellables)
     }
-    
+
     func openDocuments() {
-        
+
         Env.userSessionStore.isLoadingUserSessionPublisher
             .filter({ $0 == false })
             .receive(on: DispatchQueue.main)
             .first()
             .sink(receiveValue: { [weak self] _ in
-                
+
                 if Env.userSessionStore.isUserLogged() {
                     let documentsRootViewModel = DocumentsRootViewModel()
-                    
+
                     let documentsRootViewController = DocumentsRootViewController(viewModel: documentsRootViewModel)
-                    
+
                     let navigationController = Router.navigationController(with: documentsRootViewController)
-                    
+
                     self?.present(navigationController, animated: true, completion: nil)
                 }
                 else {
-                    
+
                     let loginViewController = LoginViewController()
-                    
+
                     let navigationViewController = Router.navigationController(with: loginViewController)
-                    
+
                     loginViewController.hasPendingRedirect = true
-                    
+
                     loginViewController.needsRedirect = { [weak self] in
                         self?.openDocuments()
                     }
-                    
+
                     self?.present(navigationViewController, animated: true, completion: nil)
                 }
-                
+
             })
             .store(in: &cancellables)
-        
+
     }
-    
+
     func openCustomerSupport() {
-        
+
         //        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
         //
         //        let navigationController = Router.navigationController(with: supportViewController)
         //
         //        self.present(navigationController, animated: true, completion: nil)
-        
+
         if let url = URL(string: TargetVariables.links.support.helpCenter) {
             UIApplication.shared.open(url)
         }
-        
+
     }
-    
+
     func openFavorites() {
-        
+
         Env.userSessionStore.isLoadingUserSessionPublisher
             .filter({ $0 == false })
             .receive(on: DispatchQueue.main)
             .first()
             .sink(receiveValue: { [weak self] _ in
-                
+
                 if Env.userSessionStore.isUserLogged() {
                     let myFavoritesViewController = MyFavoritesRootViewController()
-                    
+
                     let navigationController = Router.navigationController(with: myFavoritesViewController)
-                    
+
                     self?.present(navigationController, animated: true, completion: nil)
                 }
                 else {
-                    
+
                     let loginViewController = LoginViewController()
-                    
+
                     let navigationViewController = Router.navigationController(with: loginViewController)
-                    
+
                     loginViewController.hasPendingRedirect = true
-                    
+
                     loginViewController.needsRedirect = { [weak self] in
                         self?.openFavorites()
                     }
-                    
+
                     self?.present(navigationViewController, animated: true, completion: nil)
                 }
-                
+
             })
             .store(in: &cancellables)
-        
+
     }
-    
+
     func openPromotions() {
-        
+
         let promotionsWebViewModel = PromotionsWebViewModel()
         let appLanguage = "fr"
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
         let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
-        
+
         if let url = URL(string: urlString) {
-            
+
             let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-            
+
             let navigationController = Router.navigationController(with: promotionsWebViewController)
-            
+
             promotionsWebViewController.openHomeAction = { [weak self] in
                 self?.dismiss(animated: true)
             }
-            
+
             promotionsWebViewController.openLiveAction = { [weak self] in
                 self?.dismiss(animated: true)
                 self?.selectLiveTabBarItem()
             }
-            
+
             promotionsWebViewController.openBetSwipeAction = { [weak self] in
                 self?.dismiss(animated: true, completion: {
                     self?.openBetswipe()
@@ -1201,55 +1201,55 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
                     self?.presentRegisterScreen()
                 })
             }
-            
+
             promotionsWebViewController.openContactSettingsAction = { [weak self] in
                 self?.dismiss(animated: true, completion: {
                     self?.openContactSettings()
                 })
             }
-            
+
             self.present(navigationController, animated: true, completion: nil)
         }
     }
-    
+
     func openRegisterWithCode(code: String) {
-        
+
         self.presentRegisterScreen(withReferralCode: code)
     }
-    
+
     func openResponsibleForm() {
-        
+
         Env.userSessionStore.isLoadingUserSessionPublisher
             .filter({ $0 == false })
             .receive(on: DispatchQueue.main)
             .first()
             .sink(receiveValue: { [weak self] _ in
-                
+
                 if Env.userSessionStore.isUserLogged() {
                     let bettingPracticesViewController = BettingPracticesViewController()
-                    
+
                     let navigationController = Router.navigationController(with: bettingPracticesViewController)
-                    
+
                     self?.present(navigationController, animated: true, completion: nil)
                 }
                 else {
-                    
+
                     let loginViewController = LoginViewController()
-                    
+
                     let navigationViewController = Router.navigationController(with: loginViewController)
-                    
+
                     loginViewController.hasPendingRedirect = true
-                    
+
                     loginViewController.needsRedirect = { [weak self] in
                         self?.openResponsibleForm()
                     }
-                    
+
                     self?.present(navigationViewController, animated: true, completion: nil)
                 }
-                
+
             })
             .store(in: &cancellables)
-        
+
     }
 
     private func openExternalVideo(fromURL url: URL) {
@@ -1319,7 +1319,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
     }
-    
+
     private func presentRegisterScreen(withReferralCode: String? = nil) {
         let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true, referralCode: withReferralCode))
         self.present(loginViewController, animated: true, completion: nil)
@@ -1336,7 +1336,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] limitsValidation, loginFlowSuccess in
                 if !limitsValidation.valid && loginFlowSuccess {
-                    
+
                     self?.showLimitsScreenOnRegister(limits: limitsValidation.limits)
                 }
             }
@@ -1350,9 +1350,9 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
         }
 
         let limitsOnRegisterViewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider, limits: limits)
-        
+
         limitsOnRegisterViewModel.hasRollingWeeklyLimits = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits
-        
+
         let limitsOnRegisterViewController = LimitsOnRegisterViewController.init(viewModel: limitsOnRegisterViewModel)
 
         limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in
@@ -1516,7 +1516,7 @@ class RootAdaptiveViewController: UIViewController, RootActionable {
             self.casinoViewController.navigationItem.hidesBackButton = true
             self.addChildViewController(self.casinoViewController, toView: self.casinoBaseView)
         }
-        
+
         if case .cashback = tab, !cashbackViewControllerLoaded {
             self.addChildViewController(self.cashbackViewController, toView: self.cashbackBaseView)
 
@@ -1752,7 +1752,7 @@ extension RootAdaptiveViewController {
 
         self.redrawButtonButtons()
     }
-    
+
     func selectCashbackTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .cashback)
 
@@ -3283,4 +3283,65 @@ extension RootAdaptiveViewController {
         // Update layout
         self.view.layoutIfNeeded()
     }
+}
+
+class TestRootViewController: UIViewController, RootActionable {
+
+    lazy var tabBarBaseView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .red
+        return view
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.view.addSubview(self.tabBarBaseView)
+
+        NSLayoutConstraint.activate([
+            self.tabBarBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.tabBarBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.tabBarBaseView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.tabBarBaseView.heightAnchor.constraint(equalToConstant: 52)
+        ])
+
+        let adaptiveTabBarViewModel = AdaptiveTabBarViewModel.init(configStore: Env.presentationConfigurationStore)
+        let adaptiveTabBarView = AdaptiveTabBarView(viewModel: adaptiveTabBarViewModel)
+        self.tabBarBaseView.addSubview(adaptiveTabBarView)
+
+        NSLayoutConstraint.activate([
+            adaptiveTabBarView.leadingAnchor.constraint(equalTo: self.tabBarBaseView.leadingAnchor),
+            adaptiveTabBarView.trailingAnchor.constraint(equalTo: self.tabBarBaseView.trailingAnchor),
+            adaptiveTabBarView.topAnchor.constraint(equalTo: self.tabBarBaseView.topAnchor),
+            adaptiveTabBarView.bottomAnchor.constraint(equalTo: self.tabBarBaseView.bottomAnchor)
+        ])
+    }
+
+    func openMatchDetail(matchId: String) { }
+
+    func openBetslipModalWithShareData(ticketToken: String) { }
+
+    func openCompetitionDetail(competitionId: String) { }
+
+    func openContactSettings() { }
+
+    func openBetswipe() { }
+
+    func openDeposit() { }
+
+    func openBonus() { }
+
+    func openDocuments() { }
+
+    func openCustomerSupport() { }
+
+    func openFavorites() { }
+
+    func openPromotions() { }
+
+    func openRegisterWithCode(code: String) { }
+
+    func openResponsibleForm() { }
+
 }
