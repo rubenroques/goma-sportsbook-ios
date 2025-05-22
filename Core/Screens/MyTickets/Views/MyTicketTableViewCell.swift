@@ -837,21 +837,29 @@ class MyTicketTableViewCell: UITableViewCell {
             
             if let awardedTier = grantedWinBoost.awardedTier,
                let maxWinnings = betHistoryEntry.maxWinning {
-            
-               var winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings * awardedTier.boostMultiplier))
+                
+                let winValue = (maxWinnings * awardedTier.boostMultiplier) > 500 ? 500 : maxWinnings * awardedTier.boostMultiplier
+                
+                var winValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: winValue))
                 
                 if let partialCashoutPotentialWinnings = self.partialCashoutPotentialWinnings {
-                    winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: partialCashoutPotentialWinnings * awardedTier.boostMultiplier))
+                    
+                    var winValue = (partialCashoutPotentialWinnings * awardedTier.boostMultiplier) > 500 ? 500 : partialCashoutPotentialWinnings * awardedTier.boostMultiplier
+
+                    winValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: winValue))
                 }
                 
                 let prize = "+" + String(format: "%.0f%%", awardedTier.boostMultiplier * 100)
                 
-                self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: prize, value: winValue ?? "")
+                self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: prize, value: winValueString ?? "")
             }
-            else if let boostAmount = grantedWinBoost.boostAmount,
-                    let winValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: boostAmount)) {
+            else if let boostAmount = grantedWinBoost.boostAmount {
+                
+                let winValue = boostAmount > 500 ? 500 : boostAmount
+                
+                let winValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: winValue))
                            
-                self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: "", value: winValue)
+                self.winBoostView.configure(title: localized("coup_de_boost"), subtitle: "", value: winValueString ?? "")
             }
             
             if betHistoryEntry.status?.uppercased() != "OPENED" {
