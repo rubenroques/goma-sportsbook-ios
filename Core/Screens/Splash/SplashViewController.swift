@@ -13,6 +13,10 @@ import ServicesProvider
 
 class SplashViewController: UIViewController {
 
+    // MARK: - Private Properties
+    private lazy var brandImageView: UIImageView = Self.createBrandImageView()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+
     private var isLoadingBootDataSubscription: AnyCancellable?
     private var loadingCompleted: () -> Void
     private var reachability: Reachability?
@@ -20,12 +24,18 @@ class SplashViewController: UIViewController {
     init(loadingCompleted: @escaping () -> Void) {
         self.loadingCompleted = loadingCompleted
 
-        super.init(nibName: "SplashViewController", bundle: nil)
+        super.init(nibName: nil, bundle: nil)
     }
 
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = UIColor(named: "backgroundPrimary")
+        setupSubviews()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -49,9 +59,15 @@ class SplashViewController: UIViewController {
 
         // Env.appSession.isLoadingAppSettingsPublisher,
         self.isLoadingBootDataSubscription = Publishers.CombineLatest3(
-            Env.sportsStore.activeSportsPublisher,
-            Env.servicesProvider.preFetchHomeContent(),
-            Env.presentationConfigurationStore.loadState
+            Env.sportsStore.activeSportsPublisher.map({ input in
+                return input
+            }),
+            Env.servicesProvider.preFetchHomeContent().map({ input in
+                return input
+            }),
+            Env.presentationConfigurationStore.loadState.map({ input in
+                return input
+            })
                 .map { state -> Bool in
                 // Check if the presentation configuration is loaded
                 if case .loaded = state {
@@ -100,4 +116,55 @@ class SplashViewController: UIViewController {
         self.present(forbiddenAccessViewController, animated: false, completion: nil)
     }
 
+}
+
+// MARK: - Private Methods
+private extension SplashViewController {
+    
+    func setupSubviews() {
+        view.addSubview(brandImageView)
+        view.addSubview(activityIndicatorView)
+        
+        initConstraints()
+    }
+    
+    func initConstraints() {
+        NSLayoutConstraint.activate([
+            // Brand Image View Constraints
+            brandImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            brandImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
+            brandImageView.widthAnchor.constraint(equalTo: brandImageView.heightAnchor, multiplier: 1.0),
+            brandImageView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -100),
+            brandImageView.widthAnchor.constraint(lessThanOrEqualToConstant: 1000),
+            view.safeAreaLayoutGuide.trailingAnchor.constraint(greaterThanOrEqualTo: brandImageView.trailingAnchor, constant: 50),
+            
+            // Activity Indicator View Constraints
+            activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: activityIndicatorView.bottomAnchor, constant: 16)
+        ])
+    }
+    
+}
+
+// MARK: - Factory Methods
+private extension SplashViewController {
+    
+    static func createBrandImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "brand_icon_variation_new")
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.isUserInteractionEnabled = false
+        return imageView
+    }
+    
+    static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.color = UIColor.label
+        activityIndicator.startAnimating()
+        return activityIndicator
+    }
+    
 }

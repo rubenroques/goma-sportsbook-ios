@@ -52,7 +52,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var serviceProviderType: ServiceProviderType {
-        return .sportradar
+        return .everymatrix
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {
@@ -60,7 +60,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback, .legalAgeWarning, .mixMatch, .featuredCompetitionInTabBar]
+        return []
     }
     
     static var userRequiredFeatures: [SportsbookTargetFeatures] {

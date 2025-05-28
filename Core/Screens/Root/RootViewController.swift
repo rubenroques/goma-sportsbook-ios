@@ -3284,7 +3284,7 @@ extension RootViewController {
     }
 }
 
-class RootViewModel:NSObject {
+class RootViewModel: NSObject {
     
     // Mark: Public properties
     enum TabItem {
