@@ -39,7 +39,7 @@ extension UserDefaults {
     var appearanceMode: AppearanceMode {
         get {
             if let appearanceModeInt = self.value(forKey: UserDefaultsKey.appearanceMode.key) as? Int {
-                return AppearanceMode(rawValue: appearanceModeInt) ?? .dark
+                return AppearanceMode(rawValue: appearanceModeInt) ?? .device
             }
 
             self.setValue(AppearanceMode.dark.rawValue, forKey: UserDefaultsKey.appearanceMode.key)

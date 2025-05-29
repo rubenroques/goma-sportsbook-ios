@@ -38,9 +38,6 @@ class BonusViewModel {
 
     var bonusBannersUrlPublisher: CurrentValueSubject<[String: URL], Never> = .init([:])
 
-    var requestBonusDetail: ((EveryMatrix.ApplicableBonus) -> Void)?
-    var requestApplyBonus: ((EveryMatrix.ApplicableBonus) -> Void)?
-
     var hasQueuedBonus: CurrentValueSubject<Bool, Never> = .init(false)
     // var shouldReloadAllBonusData: PassthroughSubject<Void, Never> = .init()
     var shouldShowAlert: ((AlertType) -> Void)?

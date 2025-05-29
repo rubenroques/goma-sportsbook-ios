@@ -142,7 +142,7 @@ class BonusAvailableTableViewCell: UITableViewCell {
             .store(in: &cancellables)
     }
 
-//    func setupBonus(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+//    func setupBonus(bonus: ApplicableBonus, bonusBannerUrl: URL? = nil) {
 //
 //        self.titleLabel.text = bonus.name
 //

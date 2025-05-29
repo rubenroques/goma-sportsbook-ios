@@ -20,27 +20,7 @@ class SearchViewModel: NSObject {
 
     var hasDoneSearch: Bool = false
     var isEmptySearch: Bool = true
-
-    // Processed match info variables
-    var matches: [EveryMatrix.Match] = []
-    var tournaments: [EveryMatrix.Tournament] = []
-    var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
-    var matchesInfoForMatch: [String: Set<String> ] = [:]
-    var matchesInfoForMatchPublisher: CurrentValueSubject<[String], Never> = .init([])
-    var marketsForMatch: [String: Set<String>] = [:]
-    var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
-    var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]
-    var bettingOffers: [String: EveryMatrix.BettingOffer] = [:]
-    var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
-    var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
-    var bettingOutcomesForMarket: [String: Set<String>] = [:]
-    var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
-    var mainMarketsOrder: OrderedSet<String> = []
-
-    var includeSettings: [String] = ["BETTING_OFFERS", "EVENT_INFO"]
-    var bettingTypeIdsSettings: [Int] = [69, 466, 112, 76, 9]
-    var eventStatuses: [Int] = [1, 2]
-
+    
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
     var isLiveSearch: Bool = false
@@ -109,20 +89,6 @@ class SearchViewModel: NSObject {
 
         self.searchMatchesPublisher.value = [:]
         self.sportMatchesArrayPublisher.value = []
-        self.matches = []
-        self.tournaments = []
-        self.matchesInfo = [:]
-        self.matchesInfoForMatch = [:]
-        self.matchesInfoForMatchPublisher.value = []
-        self.marketsForMatch = [:]
-        self.marketOutcomeRelations = [:]
-        self.betOutcomes = [:]
-        self.bettingOffers = [:]
-        self.marketsPublishers = [:]
-        self.bettingOfferPublishers = [:]
-        self.bettingOutcomesForMarket = [:]
-        self.mainMarkets = [:]
-        self.mainMarketsOrder = []
     }
 
     func fetchSearchInfo(searchQuery: String) {
@@ -167,24 +133,8 @@ class SearchViewModel: NSObject {
     }
 
     func setSportMatchesArray() {
-
-        // Set Competitions
-        for competition in self.tournaments {
-
-            if let sportId = competition.sportId {
-
-                if self.searchMatchesPublisher.value[sportId] != nil {
-                    let searchCompetition = SearchEvent.competition(competition)
-                    self.searchMatchesPublisher.value[sportId]?.append(searchCompetition)
-                }
-                else {
-                    let searchCompetition = SearchEvent.competition(competition)
-                    self.searchMatchesPublisher.value[sportId] = [searchCompetition]
-                }
-            }
-
-        }
-
+        
+        //
         for (key, event) in searchMatchesPublisher.value {
                 let sportMatch = SportMatches(sportType: key, matches: event)
                 sportMatchesArrayPublisher.value.append(sportMatch)
@@ -270,38 +220,4 @@ class SearchViewModel: NSObject {
 struct SportMatches {
     var sportType: String
     var matches: [SearchEvent]
-}
-
-extension SearchViewModel: AggregatorStore {
-
-    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>? {
-        return marketsPublishers[id]?.eraseToAnyPublisher()
-    }
-
-    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
-        return bettingOfferPublishers[id]?.eraseToAnyPublisher()
-    }
-
-    func hasMatchesInfoForMatch(withId id: String) -> Bool {
-        if matchesInfoForMatchPublisher.value.contains(id) {
-            return true
-        }
-
-        return false
-    }
-
-    func matchesInfoForMatchListPublisher() -> CurrentValueSubject<[String], Never>? {
-        let matchesInfoForMatchPublisher = matchesInfoForMatchPublisher
-        return matchesInfoForMatchPublisher
-    }
-
-    func matchesInfoForMatchList() -> [String: Set<String> ] {
-        let matchesInfoForMatch = matchesInfoForMatch
-        return matchesInfoForMatch
-    }
-
-    func matchesInfoList() -> [String: EveryMatrix.MatchInfo] {
-        let matchesInfo = matchesInfo
-        return matchesInfo
-    }
 }

@@ -110,7 +110,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 //                                                      language: "en",
 //                                                      bettingOfferId: outcome.bettingOffer.id)
 //
-//        self.oddUpdatesPublisher = Env. em .manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//        self.oddUpdatesPublisher = Env. em .manager.registerOnEndpoint(endpoint, decodingType: Aggregator.self)
 //            .receive(on: DispatchQueue.main)
 //            .sink(receiveCompletion: { completion in
 //                switch completion {

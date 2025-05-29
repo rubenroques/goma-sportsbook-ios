@@ -15,15 +15,14 @@ class ProfileLimitsManagementViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-//    var depositLimit: EveryMatrix.Limit?
-//    var wageringLimit: EveryMatrix.Limit?
-    var wageringLimitPerDay: EveryMatrix.Limit?
-    var wageringLimitPerWeek: EveryMatrix.Limit?
-    var wageringLimitPerMonth: EveryMatrix.Limit?
-//    var lossLimit: EveryMatrix.Limit?
-    var lossLimitPerDay: EveryMatrix.Limit?
-    var lossLimitPerWeek: EveryMatrix.Limit?
-    var lossLimitPerMonth: EveryMatrix.Limit?
+
+    var wageringLimitPerDay: Limit?
+    var wageringLimitPerWeek: Limit?
+    var wageringLimitPerMonth: Limit?
+
+    var lossLimitPerDay: Limit?
+    var lossLimitPerWeek: Limit?
+    var lossLimitPerMonth: Limit?
 
     var limitsLoadedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
@@ -268,7 +267,7 @@ class ProfileLimitsManagementViewModel: NSObject {
         self.limitsLoadedPublisher.send(true)
     }
 
-//    private func setLimitsData(limitsResponse: EveryMatrix.LimitsResponse) {
+//    private func setLimitsData(limitsResponse: LimitsResponse) {
 //
 //        self.depositLimit = limitsResponse.deposit
 //        self.wageringLimit = limitsResponse.wagering
@@ -510,7 +509,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 //        var limitCurrentPeriodString = ""
 //        var limitAmountTextfieldChanged = false
 //        var limitPeriodChanged = false
-////        var limitCurrentObject: EveryMatrix.LimitInfo?
+////        var limitCurrentObject: LimitInfo?
 //        var limitCurrentObject: LimitInfo?
 //
 //        if limitType == "deposit" {
@@ -556,9 +555,9 @@ class ProfileLimitsManagementViewModel: NSObject {
 //        }
 //    }
 
-//    func getWageringOption() -> EveryMatrix.Limit? {
+//    func getWageringOption() -> Limit? {
 //
-//        var wageringOption: EveryMatrix.Limit? = self.wageringLimit
+//        var wageringOption: Limit? = self.wageringLimit
 //
 //        if self.wageringLimitPerDay?.current != nil {
 //            wageringOption = self.wageringLimitPerDay
@@ -582,9 +581,9 @@ class ProfileLimitsManagementViewModel: NSObject {
 //        return wageringOption
 //    }
 //
-//    func getLossOption() -> EveryMatrix.Limit? {
+//    func getLossOption() -> Limit? {
 //
-//        var lossOption: EveryMatrix.Limit? = self.lossLimit
+//        var lossOption: Limit? = self.lossLimit
 //
 //        if self.lossLimitPerDay?.current != nil {
 //            lossOption = self.lossLimitPerDay

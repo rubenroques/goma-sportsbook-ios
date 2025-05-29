@@ -259,7 +259,7 @@ extension PhonePrefixSelectorViewController: UITableViewDelegate {
 //
 //    private func convertCountries(_ countries: [Country]) -> [String] {
 //
-//        var originaCountry: EveryMatrix.Country?
+//        var originaCountry: Country?
 //        var countryPhoneList: [String] = []
 //
 //        for country in countries {

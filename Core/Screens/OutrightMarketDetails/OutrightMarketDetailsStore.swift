@@ -12,16 +12,9 @@ import OrderedCollections
 class OutrightMarketDetailsStore {
     
     // MARK: - Private Properties
-    private var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
     
     private var marketsForGroup: [String: OrderedSet<String>] = [:]   // [Group ID: [Markets IDs] ]
-    private var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]     // [Market: Content]
-    private var bettingOffers: [String: EveryMatrix.BettingOffer] = [:] // [OutcomeId: Content]
-    
-    private var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
-    private var bettingOutcomesForMarket: [String: Set<String>] = [:]
-    private var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
-    
+        
     private var markets: [Market] = []
     
     // MARK: - Lifetime and Cycle

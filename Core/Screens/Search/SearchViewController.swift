@@ -323,7 +323,7 @@ class SearchViewController: UIViewController {
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
-    private func openCompetitionDetailsScreen(competition: EveryMatrix.Tournament) {
+    private func openCompetitionDetailsScreen(competition: Tournament) {
         // TODO: This sport is incomplete
         let sport = Sport(id: competition.sportId ?? "", name: "", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
         let competitionId = competition.id

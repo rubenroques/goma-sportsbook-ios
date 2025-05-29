@@ -77,7 +77,13 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        // return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        var sport = SportType.init(name: "Football")
+        sport.numberEvents = 10
+        
+        return Just(SubscribableContent.contentUpdate(content: [sport]))
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
     }
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {

@@ -43,3 +43,14 @@ struct BetPotencialReturn: Codable {
     var numberOfBets: Int
     var totalOdd: Double
 }
+
+struct BetslipTicketSelection: Decodable {
+
+    var id: String
+    var currentOdd: Double
+
+    enum CodingKeys: String, CodingKey {
+        case id = "bettingOfferId"
+        case currentOdd = "priceValue"
+    }
+}

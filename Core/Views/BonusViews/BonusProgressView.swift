@@ -80,7 +80,7 @@ class BonusProgressView: UIView {
 
     func setupColoredLabel(label: UILabel, text: String, color: UIColor) {
         let fullString = text
-        var splitString = fullString.components(separatedBy: "/")
+        let splitString = fullString.components(separatedBy: "/")
         let coloredString = splitString[0]
         let range = (fullString as NSString).range(of: coloredString)
 
@@ -90,7 +90,7 @@ class BonusProgressView: UIView {
         label.attributedText = mutableAttributedString
     }
 
-    func testSetupProgressInfo(bonus: EveryMatrix.GrantedBonus, progressType: ProgressType) {
+    func testSetupProgressInfo(bonus: GrantedBonus, progressType: ProgressType) {
 
         var bonusColor = UIColor.App.textPrimary
         var remainingAmount = 5.0

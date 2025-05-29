@@ -347,7 +347,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
             return
         }
 //
-//        let form = EveryMatrix.SimpleRegisterForm(email: email,
+//        let form = SimpleRegisterForm(email: email,
 //                                                  username: username,
 //                                                  password: password,
 //                                                  birthDate: birthDate,

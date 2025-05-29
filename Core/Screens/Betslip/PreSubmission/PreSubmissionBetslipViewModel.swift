@@ -12,7 +12,6 @@ import ServicesProvider
 class PreSubmissionBetslipViewModel {
 
     // MARK: Public Properties
-    var bonusBTetslipArrayPublisher: CurrentValueSubject<[BonusBetslip], Never> = .init([])
     var sharedBetsPublisher: CurrentValueSubject<LoadableContent<[BettingTicket]>, Never> = .init(LoadableContent.idle)
     var isPartialBetSelection: CurrentValueSubject<Bool, Never> = .init(false)
     var isUnavailableBetSelection: CurrentValueSubject<Bool, Never> = .init(false)
@@ -216,9 +215,4 @@ class PreSubmissionBetslipViewModel {
 
     }
 
-}
-
-struct BonusBetslip {
-    let bonus: EveryMatrix.GrantedBonus
-    let bonusType: GrantedBonusType
 }

@@ -57,6 +57,11 @@ class SplashViewController: UIViewController {
         // Load presentation configuration
         Env.presentationConfigurationStore.loadConfiguration()
 
+        #if DEBUG
+        self.splashLoadingCompleted()
+        return
+        #endif
+        
         // Env.appSession.isLoadingAppSettingsPublisher,
         self.isLoadingBootDataSubscription = Publishers.CombineLatest3(
             Env.sportsStore.activeSportsPublisher.map({ input in

@@ -35,9 +35,7 @@ class TransactionsHistoryViewModel {
     var transactionTypePublisher: CurrentValueSubject<TransactionsType, Never> = .init(.deposit)
     var startDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
     var endDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
-//    var transactionsPublisher: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
-//    var depositTransactions: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
-//    var withdrawTransactions: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+
     var transactionsPublisher: CurrentValueSubject<[TransactionHistory], Never> = .init([])
 
     var allTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])

@@ -47,7 +47,6 @@ class FullRegisterDocumentsViewController: UIViewController {
                           "public.text"]
     var cancellables = Set<AnyCancellable>()
     var registerForm: FullRegisterUserForm
-    var profile: EveryMatrix.UserProfile?
 
     init(registerForm: FullRegisterUserForm) {
         self.registerForm = registerForm
@@ -208,31 +207,6 @@ class FullRegisterDocumentsViewController: UIViewController {
     }
 
     @IBAction func submitAction() {
-        
-//        guard let profile = profile else {
-//            return
-//        }
-//
-//        let gender = registerForm.title == "Mr." ? "M" : "F"
-//        let form = EveryMatrix.ProfileForm(email: profile.email,
-//                                           title: registerForm.title,
-//                                           gender: gender,
-//                                           firstname: registerForm.firstName,
-//                                           surname: registerForm.lastName,
-//                                           birthDate: profile.birthDate,
-//                                           country: registerForm.country,
-//                                           address1: registerForm.address1,
-//                                           address2: registerForm.address2,
-//                                           city: registerForm.city,
-//                                           postalCode: registerForm.postalCode,
-//                                           mobile: profile.mobile,
-//                                           mobilePrefix: profile.mobilePrefix,
-//                                           phone: profile.phone,
-//                                           phonePrefix: profile.phonePrefix,
-//                                           personalID: registerForm.personalID,
-//                                           securityQuestion: registerForm.securityQuestion,
-//                                           securityAnswer: registerForm.securityAnswer)
-//
         var serviceProviderCountry: SharedModels.Country?
         if let countryValue = self.registerForm.country {
             serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
@@ -256,7 +230,6 @@ class FullRegisterDocumentsViewController: UIViewController {
                                                               securityAnswer: registerForm.securityAnswer)
         
         self.fullRegisterProfile(form: form)
-
     }
 
     private func fullRegisterProfile(form: ServicesProvider.UpdateUserProfileForm) {

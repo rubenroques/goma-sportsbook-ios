@@ -29,7 +29,6 @@ class RootAdaptiveViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
-    private lazy var topBarView: UIView = Self.createTopBarView()
 
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var mainContainerView: UIView = Self.createMainContainerView()
@@ -233,30 +232,19 @@ class RootAdaptiveViewController: UIViewController {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        if TargetVariables.shouldUseGradientBackgrounds {
-            self.topSafeAreaView.backgroundColor = .clear
-            self.topBarView.backgroundColor = .clear
-
-            self.containerView.backgroundColor = .clear
-            self.mainContainerView.backgroundColor = .clear
-        }
-        else {
-            self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-            self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
-
-            self.containerView.backgroundColor = .clear
-            self.mainContainerView.backgroundColor = UIColor.App.backgroundPrimary
-        }
-
-        if TargetVariables.shouldUseBlurEffectTabBar {
-            self.tabBarView.backgroundColor = .clear
-            self.bottomSafeAreaView.backgroundColor = .clear
-        }
-        else {
-            self.tabBarView.backgroundColor = UIColor.App.backgroundSecondary
-            self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundSecondary
-        }
-
+        #if DEBUG
+        self.topSafeAreaView.backgroundColor = .purple
+        self.bottomSafeAreaView.backgroundColor = .blue
+        
+        self.topBarContainerBaseView.backgroundColor = .orange
+        self.containerView.backgroundColor = .green
+        
+        self.tabBarView.backgroundColor = .red
+        #endif
+        
+        self.mainContainerView.backgroundColor = UIColor.App.backgroundPrimary
+        
+        //
         self.isLoadingUserSessionView.tintColor = UIColor.App.textSecondary
         self.isLoadingUserSessionView.color = UIColor.App.textSecondary
 
@@ -582,36 +570,6 @@ extension RootAdaptiveViewController {
         return view
     }
 
-    private static func createTopBarView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createProfileStackView() -> UIStackView {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 4
-        return stackView
-    }
-
-    private static func createAccountStackView() -> UIStackView {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 4
-        return stackView
-    }
-
-    private static func createTopGradientBackgroundView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
     private static func createContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -722,342 +680,6 @@ extension RootAdaptiveViewController {
         return view
     }
 
-    private static func createCasinoBottomView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createSportsButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createSportsIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "tabbar_sports_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createSportsTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("sports")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createHomeButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createHomeIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "tabbar_home_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createHomeTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("home")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createLiveButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createLiveIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "tabbar_live_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createLiveTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("live")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createTipsButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createTipsIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "tabbar_tips_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createTipsTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("tips")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createCashbackButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createCashbackIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "cashback_bar_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createCashbackTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("cashback")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createMyTicketsButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createMyTicketsIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "tabbar_my_tickets"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createMyTicketsTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("my_tickets")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createFeaturedCompetitionButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createFeaturedCompetitionIconImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createFeaturedCompetitionTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("featured_competition")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createCasinoButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createCasinoIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "casino_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createCasinoTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("casino")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createSportsbookButtonBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createSportsbookIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "sportsbook_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createSportsbookTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.text = localized("sportsbook")
-        label.font = AppFont.with(type: .bold, size: 10)
-        return label
-    }
-
-    private static func createProfileBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createProfilePictureBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        view.layer.cornerRadius = 15
-        view.clipsToBounds = true
-        return view
-    }
-
-    private static func createProfilePictureBaseInnerView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createProfilePictureImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "empty_user_image"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        return imageView
-    }
-
-    private static func createAnonymousUserMenuBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createAnonymousUserMenuImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "side_menu_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createSearchButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "search_bar_icon"), for: .normal)
-        return button
-    }
-
-    private static func createLogoImageBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createLogoImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "logo_horizontal_left"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createLoginBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createLoginButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("login"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
-        button.setTitleColor(UIColor.App.bubblesPrimary, for: .normal)
-        return button
-    }
-
-    private static func createAccountValueBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        view.isUserInteractionEnabled = true
-        return view
-    }
-
-    private static func createAccountValueView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundSecondary
-        view.layer.cornerRadius = 13.5
-        view.clipsToBounds = true
-        return view
-    }
-
-    private static func createAccountPlusView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.highlightSecondary
-        view.layer.cornerRadius = 9.5
-        view.clipsToBounds = true
-        return view
-    }
-
-    private static func createAccountValueLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("loading")
-        label.font = AppFont.with(type: .bold, size: 12)
-        label.textAlignment = .center
-        return label
-    }
-
-    private static func createAccountPlusImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "plus_small_icon"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createNotificationCounterView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createNotificationCounterLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .semibold, size: 12)
-        label.textAlignment = .center
-        return label
-    }
 
     private static func createLocalAuthenticationBaseView() -> UIView {
         let view = UIView()
@@ -1089,22 +711,10 @@ extension RootAdaptiveViewController {
     }
 
     //
-    private static func createOverlayWindow() -> PassthroughWindow {
-        var overlayWindow: PassthroughWindow = PassthroughWindow(frame: UIScreen.main.bounds)
-        overlayWindow.windowLevel = .alert
-        return overlayWindow
-    }
-
     private static func createBlockingWindow() -> BlockingWindow {
         var blockingWindow: BlockingWindow = BlockingWindow(frame: UIScreen.main.bounds)
         blockingWindow.windowLevel = .statusBar
         return blockingWindow
-    }
-
-    private static func createTopBarAlternateView() -> TopBarView {
-        let topBar = TopBarView()
-        topBar.translatesAutoresizingMaskIntoConstraints = false
-        return topBar
     }
 
     // Constraints
@@ -1131,9 +741,6 @@ extension RootAdaptiveViewController {
         view.addSubview(containerView)
         view.addSubview(bottomSafeAreaView)
         view.addSubview(localAuthenticationBaseView)
-
-        // Add top bar elements
-        topBarContainerBaseView.addSubview(topBarView)
 
         // Setup container views
         containerView.addSubview(mainContainerView)
@@ -1163,32 +770,25 @@ extension RootAdaptiveViewController {
             self.topBarContainerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topBarContainerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topBarContainerBaseView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-
-            self.topBarView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
-            self.topBarView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
-            self.topBarView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
-            self.topBarView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
-            self.topBarView.heightAnchor.constraint(equalToConstant: 64),
-
+            self.topBarContainerBaseView.heightAnchor.constraint(equalToConstant: 64),
+            
             // Container View
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
-            self.containerView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             // Main Container View
             self.mainContainerView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-//            self.mainContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-//            self.mainContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.mainContainerView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
-            self.mainContainerView.widthAnchor.constraint(equalTo: self.containerView.widthAnchor),
-
+            self.mainContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.mainContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.mainContainerView.bottomAnchor.constraint(equalTo: self.tabBarView.topAnchor),
+            
             // Tab Bar
-            self.tabBarView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
-            self.tabBarView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
-
-            self.tabBarView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
-            self.tabBarView.heightAnchor.constraint(equalToConstant: 52),
+            self.tabBarView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.tabBarView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.tabBarView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+            self.tabBarView.heightAnchor.constraint(equalToConstant: 56),
 
             // Bottom Safe Area
             self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
