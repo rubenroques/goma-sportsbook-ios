@@ -50,6 +50,7 @@ let commonDependencies: [Target.Dependency] = [
     .product(name: "CountrySelectionFeature", package: "CountrySelectionFeature"),
     .product(name: "SharedModels", package: "SharedModels"),
     .product(name: "Extensions", package: "Extensions"),
+    .product(name: "GomaUI", package: "GomaUI"),
 ]
 
 let package = Package(
@@ -94,6 +95,7 @@ let package = Package(
         .package(name: "RegisterFlow", path: "../RegisterFlow"),
         .package(name: "HeaderTextField", path: "../HeaderTextField"),
         .package(name: "CountrySelectionFeature", path: "../CountrySelectionFeature"),
+        .package(name: "GomaUI", path: "./GomaUI"),
     ],
     targets: [
         .target(name: "Betsson PROD", dependencies: commonDependencies),

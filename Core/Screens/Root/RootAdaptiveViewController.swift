@@ -15,13 +15,43 @@ import AdyenDropIn
 import AdyenComponents
 import OptimoveSDK
 import ServicesProvider
+import GomaUI
 
-protocol RootAdaptiveScreenViewModelProtocol {
-    
+class RootAdaptiveScreenViewModel {
+
+    @Published var currentScreen: ScreenType?
+
+    var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
+    var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
+
+    init(multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol = MockMultiWidgetToolbarViewModel.defaultMock,
+         adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock)
+    {
+        self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel
+        self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
+    }
+
+    // MARK: - Screen Management
+    func presentScreen(_ screenType: ScreenType) {
+        currentScreen = screenType
+    }
+
+    func hideCurrentScreen() {
+        currentScreen = nil
+    }
+
 }
 
-class RootAdaptiveScreenViewModel: RootAdaptiveScreenViewModelProtocol {
-    
+enum ScreenType {
+    case home
+    case nextUpEvents
+    case inPlayEvents
+    // Add more screens here as needed
+    // case preLive
+    // case live
+    // case tips
+    // case casino
+    // etc.
 }
 
 class RootAdaptiveViewController: UIViewController {
@@ -29,14 +59,16 @@ class RootAdaptiveViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
+    private var widgetToolBarView: MultiWidgetToolbarView!
 
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var mainContainerView: UIView = Self.createMainContainerView()
 
     private lazy var tabBarView: UIView = Self.createTabBarView()
- 
+    private var adaptiveTabBarView: AdaptiveTabBarView!
+
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
-    
+
     // Authentication Views
     private lazy var localAuthenticationBaseView: UIView = Self.createLocalAuthenticationBaseView()
     private lazy var unlockAppButton: UIButton = Self.createUnlockAppButton()
@@ -45,9 +77,28 @@ class RootAdaptiveViewController: UIViewController {
 
     private lazy var blockingWindow: BlockingWindow = Self.createBlockingWindow()
 
-    // Constraints
-    private var viewModel: RootAdaptiveScreenViewModelProtocol
+    //
+    // Embeded View Controllers
+    private lazy var homeBaseView: UIView = Self.createHomeBaseView()
+    private lazy var homeViewController = HomeViewController()
+    private var homeViewControllerLoaded: Bool = false
 
+    private lazy var nextUpEventsBaseView: UIView = Self.createNextUpEventsBaseView()
+    private lazy var nextUpEventsViewController: NextUpEventsViewController = {
+        let viewModel = NextUpEventsViewModel()
+        return NextUpEventsViewController(viewModel: viewModel)
+    }()
+    private var nextUpEventsViewControllerLoaded: Bool = false
+
+    private lazy var inPlayEventsBaseView: UIView = Self.createInPlayEventsBaseView()
+    private lazy var inPlayEventsViewController: InPlayEventsViewController = {
+        let viewModel = InPlayEventsViewModel()
+        return InPlayEventsViewController(viewModel: viewModel)
+    }()
+    private var inPlayEventsViewControllerLoaded: Bool = false
+
+    // Constraints
+    private var viewModel: RootAdaptiveScreenViewModel
 
     // General properties
     var isLocalAuthenticationCoveringView: Bool = true {
@@ -75,10 +126,12 @@ class RootAdaptiveViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and cycle
-    init(viewModel: RootAdaptiveScreenViewModelProtocol ) {
-        
+    init(viewModel: RootAdaptiveScreenViewModel) {
         self.viewModel = viewModel
-        
+
+        self.adaptiveTabBarView = AdaptiveTabBarView(viewModel: viewModel.adaptiveTabBarViewModel)
+        self.widgetToolBarView = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -137,7 +190,6 @@ class RootAdaptiveViewController: UIViewController {
             .sink { userProfile in
                 if let userProfile = userProfile {
                     // self.screenState = .logged(user: userProfile)
-
                 }
                 else {
                     self.screenState = .anonymous
@@ -164,6 +216,9 @@ class RootAdaptiveViewController: UIViewController {
 
         self.isLoadingUserSessionView.isHidden = true
 
+        // MARK: - Reactive Bindings for Screen Management
+        self.setupScreenBindings()
+
         // Add blur effect
         self.localAuthenticationBaseView.backgroundColor = .clear
 
@@ -184,6 +239,11 @@ class RootAdaptiveViewController: UIViewController {
         self.showLocalAuthenticationCoveringViewIfNeeded()
 
         self.authenticateUser()
+
+        // Set default screen on startup
+        DispatchQueue.main.async {
+            self.viewModel.presentScreen(.nextUpEvents)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -199,7 +259,7 @@ class RootAdaptiveViewController: UIViewController {
                     //
                 }
                 else {
-                    
+
                 }
             }
             .store(in: &cancellables)
@@ -229,21 +289,20 @@ class RootAdaptiveViewController: UIViewController {
     }
 
     func setupWithTheme() {
-
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         #if DEBUG
         self.topSafeAreaView.backgroundColor = .purple
         self.bottomSafeAreaView.backgroundColor = .blue
-        
+
         self.topBarContainerBaseView.backgroundColor = .orange
         self.containerView.backgroundColor = .green
-        
+
         self.tabBarView.backgroundColor = .red
         #endif
-        
+
         self.mainContainerView.backgroundColor = UIColor.App.backgroundPrimary
-        
+
         //
         self.isLoadingUserSessionView.tintColor = UIColor.App.textSecondary
         self.isLoadingUserSessionView.color = UIColor.App.textSecondary
@@ -253,6 +312,43 @@ class RootAdaptiveViewController: UIViewController {
 
         self.cancelUnlockAppButton.backgroundColor = .systemGray
         self.cancelUnlockAppButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+    }
+
+    //
+
+    // MARK: - Reactive Bindings for Screen Management
+    private func setupScreenBindings() {
+        // React to screen changes
+        viewModel.$currentScreen
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] screenType in
+                if let screenType = screenType {
+                    self?.presentScreen(screenType)
+                } else {
+                    self?.hideAllScreens()
+                }
+            }
+            .store(in: &cancellables)
+
+        // Setup tab bar integration
+        adaptiveTabBarView.onTabSelected = { [weak self] tabItem in
+            self?.handleTabSelection(tabItem)
+        }
+    }
+
+    // MARK: - Tab Bar Integration
+    private func handleTabSelection(_ tabItem: TabItem) {
+        switch tabItem.identifier {
+        case .nextUpEvents:
+            viewModel.presentScreen(.nextUpEvents)
+        case .inPlayEvents:
+            viewModel.presentScreen(.inPlayEvents)
+        case .sportsHome:
+            viewModel.presentScreen(.home)
+        default:
+            // Handle other tab selections or keep current screen
+            break
+        }
     }
 
     // MARK: Functions
@@ -440,7 +536,7 @@ class RootAdaptiveViewController: UIViewController {
     }
 
     @objc private func didTapProfileButton() {
-        
+
     }
 
     @objc private func didTapAccountValue() {
@@ -453,7 +549,87 @@ class RootAdaptiveViewController: UIViewController {
     }
 
     @objc private func didTapAnonymousButton() {
-        
+
+    }
+
+    // MARK: - Generic Screen Presentation
+    private func presentChildViewController<T: UIViewController>(
+        _ viewController: T,
+        in baseView: UIView,
+        loadedFlag: inout Bool
+    )
+    {
+        guard !loadedFlag else {
+            baseView.isHidden = false
+            return
+        }
+
+        guard let subView = viewController.view  else {
+            return
+        }
+
+        viewController.willMove(toParent: self)
+
+        self.addChild(viewController)
+
+        baseView.addSubview(subView)
+
+        subView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            subView.topAnchor.constraint(equalTo: baseView.topAnchor),
+            subView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor),
+            subView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor),
+            subView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor)
+        ])
+
+        viewController.didMove(toParent: self)
+        loadedFlag = true
+
+        baseView.isHidden = false
+    }
+
+
+    private func hideAllScreens() {
+        nextUpEventsBaseView.isHidden = true
+        inPlayEventsBaseView.isHidden = true
+        // Add more base views here as you add more screens
+        // homeBaseView.isHidden = true
+        // preLiveBaseView.isHidden = true
+        // etc.
+    }
+
+    private func presentScreen(_ screenType: ScreenType) {
+        self.hideAllScreens()
+
+        switch screenType {
+        case .home:
+            presentChildViewController(
+                homeViewController,
+                in: homeBaseView,
+                loadedFlag: &homeViewControllerLoaded
+            )
+        case .nextUpEvents:
+            presentChildViewController(
+                nextUpEventsViewController,
+                in: nextUpEventsBaseView,
+                loadedFlag: &nextUpEventsViewControllerLoaded
+            )
+        case .inPlayEvents:
+            presentChildViewController(
+                inPlayEventsViewController,
+                in: inPlayEventsBaseView,
+                loadedFlag: &inPlayEventsViewControllerLoaded
+            )
+        // Add more cases here as you add more screens
+        }
+    }
+
+    @objc private func didTapShowEventsButton() {
+        viewModel.presentScreen(.nextUpEvents)
+    }
+
+    @objc private func didTapShowInPlayEventsButton() {
+        viewModel.presentScreen(.inPlayEvents)
     }
 
 }
@@ -516,10 +692,10 @@ extension RootAdaptiveViewController {
         // self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Inactive")
     }
-    
+
     //
     //
-    
+
     // MARK: Actions
     @objc private func windowDidResignKeyNotification(_ notification: NSNotification) {
         if let actorWindow = notification.object as? UIWindow {
@@ -532,7 +708,7 @@ extension RootAdaptiveViewController {
            //
         }
     }
-    
+
 }
 
 
@@ -578,11 +754,11 @@ extension RootAdaptiveViewController {
 
     private static func createMainContainerView() -> UIView {
         let view = UIView()
-        
+
         #if DEBUG
         view.backgroundColor = .systemBlue
         #endif
-        
+
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
@@ -657,6 +833,40 @@ extension RootAdaptiveViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+
+    private static func createNextUpEventsBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createInPlayEventsBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createShowEventsButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Show Next Up Events", for: .normal)
+        button.backgroundColor = UIColor.systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        return button
+    }
+
+    private static func createShowInPlayEventsButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Show In-Play Events", for: .normal)
+        button.backgroundColor = UIColor.systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        return button
     }
 
     private static func createTabBarView() -> UIView {
@@ -738,15 +948,24 @@ extension RootAdaptiveViewController {
         // Add main container views
         view.addSubview(topSafeAreaView)
         view.addSubview(topBarContainerBaseView)
+
+        topBarContainerBaseView.addSubview(widgetToolBarView)
+
         view.addSubview(containerView)
         view.addSubview(bottomSafeAreaView)
         view.addSubview(localAuthenticationBaseView)
 
+        tabBarView.addSubview(adaptiveTabBarView)
+
         // Setup container views
         containerView.addSubview(mainContainerView)
 
+        // Add base views for child view controllers
+        mainContainerView.addSubview(nextUpEventsBaseView)
+        mainContainerView.addSubview(inPlayEventsBaseView)
+
         // Setup tab bar
-        mainContainerView.addSubview(tabBarView)
+        containerView.addSubview(tabBarView)
 
         localAuthenticationBaseView.addSubview(unlockAppButton)
         localAuthenticationBaseView.addSubview(cancelUnlockAppButton)
@@ -770,8 +989,13 @@ extension RootAdaptiveViewController {
             self.topBarContainerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topBarContainerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topBarContainerBaseView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.topBarContainerBaseView.heightAnchor.constraint(equalToConstant: 64),
-            
+            // self.topBarContainerBaseView.heightAnchor.constraint(equalToConstant: 64),
+
+            self.widgetToolBarView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
+            self.widgetToolBarView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
+            self.widgetToolBarView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
+            self.widgetToolBarView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
+
             // Container View
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -783,12 +1007,29 @@ extension RootAdaptiveViewController {
             self.mainContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.mainContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.mainContainerView.bottomAnchor.constraint(equalTo: self.tabBarView.topAnchor),
-            
+
+            // Next Up Events Base View
+            self.nextUpEventsBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.nextUpEventsBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.nextUpEventsBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.nextUpEventsBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
+            // In Play Events Base View
+            self.inPlayEventsBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.inPlayEventsBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.inPlayEventsBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.inPlayEventsBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
             // Tab Bar
             self.tabBarView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.tabBarView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.tabBarView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
             self.tabBarView.heightAnchor.constraint(equalToConstant: 56),
+
+            self.adaptiveTabBarView.leadingAnchor.constraint(equalTo: self.tabBarView.leadingAnchor),
+            self.adaptiveTabBarView.trailingAnchor.constraint(equalTo: self.tabBarView.trailingAnchor),
+            self.adaptiveTabBarView.bottomAnchor.constraint(equalTo: self.tabBarView.bottomAnchor),
+            self.adaptiveTabBarView.topAnchor.constraint(equalTo: self.tabBarView.topAnchor),
 
             // Bottom Safe Area
             self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -814,7 +1055,8 @@ extension RootAdaptiveViewController {
 
             // Loading User Session View
             self.isLoadingUserSessionView.centerXAnchor.constraint(equalTo: self.localAuthenticationBaseView.centerXAnchor),
-            self.isLoadingUserSessionView.centerYAnchor.constraint(equalTo: self.localAuthenticationBaseView.centerYAnchor)
+            self.isLoadingUserSessionView.centerYAnchor.constraint(equalTo: self.localAuthenticationBaseView.centerYAnchor),
+
         ])
 
     }
@@ -823,55 +1065,55 @@ extension RootAdaptiveViewController {
 
 extension RootAdaptiveViewController: RootActionable {
     func openMatchDetail(matchId: String) {
-        
+
     }
-    
+
     func openBetslipModalWithShareData(ticketToken: String) {
-        
+
     }
-    
+
     func openCompetitionDetail(competitionId: String) {
-        
+
     }
-    
+
     func openContactSettings() {
-        
+
     }
-    
+
     func openBetswipe() {
-        
+
     }
-    
+
     func openDeposit() {
-        
+
     }
-    
+
     func openBonus() {
-        
+
     }
-    
+
     func openDocuments() {
-        
+
     }
-    
+
     func openCustomerSupport() {
-        
+
     }
-    
+
     func openFavorites() {
-        
+
     }
-    
+
     func openPromotions() {
-        
+
     }
-    
+
     func openRegisterWithCode(code: String) {
-        
+
     }
-    
+
     func openResponsibleForm() {
-        
+
     }
-    
+
 }
