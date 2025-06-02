@@ -1,4 +1,5 @@
 import UIKit
+import GomaUI
 
 struct AppFont {
 
@@ -55,6 +56,31 @@ struct AppFont {
            }
        }
    }
+}
+
+// MARK: - SwiftUI Font Extension
+import GomaUI
+extension AppFont.AppFontType {
+
+    static func fontTypeFrom(styleProviderFontType fontType: StyleProvider.FontType) -> AppFont.AppFontType {
+        switch fontType {
+        case .thin:
+            return Self.thin
+        case .light:
+            return Self.light
+        case .regular:
+            return Self.regular
+        case .medium:
+            return Self.medium
+        case .bold:
+            return Self.bold
+        case .semibold:
+            return Self.semibold
+        case .heavy:
+            return Self.heavy
+        }
+    }
+
 }
 
 // MARK: - SwiftUI Font Extension

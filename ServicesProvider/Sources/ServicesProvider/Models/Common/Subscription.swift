@@ -8,12 +8,18 @@
 import Foundation
 import Extensions
 
+// not used
+public protocol SubscriptionIdentifiable {
+    var subscriptionIdentifier: String { get }
+    var unsubscribeDetails: String { get }
+}
+
 public protocol UnsubscriptionController: AnyObject {
     func unsubscribe(subscription: Subscription)
 }
 
 public class Subscription: Hashable, Identifiable {
-
+    
     public var id: String
 
     public var contentIdentifier: ContentIdentifier
@@ -22,6 +28,12 @@ public class Subscription: Hashable, Identifiable {
     var associatedSubscriptions: [Subscription] = []
     private weak var unsubscriber: UnsubscriptionController?
 
+    init (id: String) {
+        self.id = id
+        self.sessionToken = ""
+        self.contentIdentifier = ContentIdentifier(contentType: ContentType.allSports, contentRoute: ContentRoute.allSports)
+    }
+    
     init(contentIdentifier: ContentIdentifier, sessionToken: String, unsubscriber: UnsubscriptionController) {
         self.contentIdentifier = contentIdentifier
         self.sessionToken = sessionToken

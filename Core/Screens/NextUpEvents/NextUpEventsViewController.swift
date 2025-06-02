@@ -168,6 +168,17 @@ class NextUpEventsViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+    
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
+    }
+
+    public func setupWithTheme() {
+        self.quickLinksTabBarView.updateTheme()
+    }
 
     private func setupBindings() {
         viewModel.onEventsUpdated = { [weak self] in

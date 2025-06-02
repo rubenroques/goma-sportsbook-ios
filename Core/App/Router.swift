@@ -69,6 +69,11 @@ class Router {
 
     func makeKeyAndVisible() {
 
+        #if DEBUG
+        // manual theme override
+        // self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
+        //
+        #else
         if TargetVariables.supportedThemes == AppearanceMode.allCases {
             self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
         }
@@ -81,7 +86,9 @@ class Router {
         else {
             self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
         }
-
+        #endif
+        
+        // Setup StyleProviderColors
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
@@ -89,7 +96,7 @@ class Router {
         self.rootWindow.rootViewController = splashViewController
         self.rootWindow.makeKeyAndVisible()
     }
-    
+
     @objc func applicationDidBecomeActive(notification: NSNotification) {
 
     }
@@ -97,7 +104,7 @@ class Router {
     func showPostLoadingFlow() {
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
-            
+
             if TargetVariables.useAdaptiveRootViewController {
                 let viewModel = RootAdaptiveScreenViewModel()
                 let rootViewController = RootAdaptiveViewController(viewModel: viewModel)
@@ -113,11 +120,11 @@ class Router {
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
-        
+
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()
         self.subscribeToNotificationsOpened()
-        
+
         self.rootWindow.rootViewController = bootRootViewController
     }
 
@@ -125,7 +132,7 @@ class Router {
         Env.businessSettingsSocket.maintenanceModePublisher
             .receive(on: DispatchQueue.main)
             .sink { maintenanceMode in
-                
+
                 switch maintenanceMode {
                 case .enabled(let message):
                     self.showUnderMaintenanceScreen(withReason: message)
@@ -194,10 +201,10 @@ class Router {
                         self.hideUpdatedTermsConditionsViewController()
                     }
                 }
-                
+
             }
             .store(in: &self.cancellables)
-        
+
         Env.locationManager.locationStatus
             .receive(on: DispatchQueue.main)
             .sink { locationStatus in
@@ -265,7 +272,7 @@ class Router {
         self.appSharedState = .activeApp
         self.openRoute(route)
     }
-    
+
     func openPushNotificationRoute(_ route: Route) {
         Publishers.CombineLatest(Env.servicesProvider.eventsConnectionStatePublisher, Env.userSessionStore.isLoadingUserSessionPublisher)
             .filter({ connection, isLoading in
@@ -281,7 +288,7 @@ class Router {
     }
 
     func openRoute(_ route: Route) {
-        
+
         switch route {
         case .openBet(let id):
             self.showMyTickets(ticketType: MyTicketsType.opened, ticketId: id)
@@ -328,7 +335,7 @@ class Router {
         self.rootWindow.rootViewController = maintenanceViewController
         self.rootWindow.makeKeyAndVisible()
     }
-    
+
     func showUnderMaintenanceScreen(withReason reason: String) {
         if let presentedViewController = self.rootViewController?.presentedViewController {
             if !(presentedViewController is MaintenanceViewController) {
@@ -374,7 +381,7 @@ class Router {
             }
 
         let serverVersion = Env.businessSettingsSocket.clientSettings.currentAppVersion
-        
+
         return currentVersion.compare(serverVersion, options: .numeric) == .orderedAscending
     }
 
@@ -418,14 +425,14 @@ class Router {
         if let appSharedState = self.appSharedState {
             switch appSharedState {
             case .inactiveApp:
-                
+
                 if let rootViewController = self.rootActionable {
 
                     rootViewController.openMatchDetail(matchId: matchId)
                 }
                 else {
                     if let currentViewController = self.rootViewController as? RootViewController {
-                        
+
                         currentViewController.openMatchDetail(matchId: matchId)
 
                     }
@@ -441,14 +448,14 @@ class Router {
 
                     }, receiveValue: { [weak self] _ in
                         if let rootViewController = self?.rootActionable {
-                            
+
                             rootViewController.openMatchDetail(matchId: matchId)
-                            
+
                         }
                         else {
                             if let currentViewController = self?.rootViewController as? RootViewController {
                                 currentViewController.openMatchDetail(matchId: matchId)
-                                
+
                             }
                         }
 
@@ -456,18 +463,18 @@ class Router {
                     .store(in: &cancellables)
             }
         }
-        
+
     }
 
     func showMyTickets(ticketType: MyTicketsType, ticketId: String) {
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
-        
+
         let betslipViewModel = BetslipViewModel(startScreen: .myTickets(ticketType, ticketId))
 
         let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
-        
+
         let navigationViewController = Router.navigationController(with: betslipViewController)
         self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
     }
@@ -476,11 +483,11 @@ class Router {
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
-        
+
         let betslipViewModel = BetslipViewModel()
 
         let betslipViewController = BetslipViewController(viewModel: betslipViewModel)
-        
+
         let navigationViewController = Router.navigationController(with: betslipViewController)
         self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
     }
@@ -494,15 +501,15 @@ class Router {
         if let appSharedState = self.appSharedState {
             switch appSharedState {
             case .inactiveApp:
-                
+
                 if let rootViewController = self.rootActionable {
                     rootViewController.openBetslipModalWithShareData(ticketToken: token)
                 }
-                
+
                 if let currentViewController = self.rootViewController as? RootViewController {
                     currentViewController.openBetslipModalWithShareData(ticketToken: token)
                 }
-                
+
             case .activeApp:
 
                 Env.servicesProvider.eventsConnectionStatePublisher
@@ -510,15 +517,15 @@ class Router {
                     .receive(on: DispatchQueue.main)
                     .first()
                     .sink(receiveCompletion: { _ in
-                        
+
                     }, receiveValue: { [weak self] _ in
                         if let rootViewController = self?.rootActionable {
-                            
+
                             rootViewController.openBetslipModalWithShareData(ticketToken: token)
                         }
                         else {
                             if let currentViewController = self?.rootViewController as? RootViewController {
-                                
+
                                 currentViewController.openBetslipModalWithShareData(ticketToken: token)
                             }
                         }
@@ -558,7 +565,7 @@ class Router {
             presentedViewController.dismiss(animated: true, completion: nil)
         }
     }
-    
+
     //
     // Updated terms
     func showUpdatedTermsConditionsViewController() {
@@ -585,12 +592,12 @@ class Router {
             presentedViewController.dismiss(animated: true, completion: nil)
         }
     }
-    
+
     //
     //
     //
     func showCompetitionDetailsScreen(competitionId: String) {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -598,14 +605,14 @@ class Router {
         if let appSharedState = self.appSharedState {
             switch appSharedState {
             case .inactiveApp:
-                
+
                 if let rootViewController = self.rootActionable {
 
                     rootViewController.openCompetitionDetail(competitionId: competitionId)
                 }
                 else {
                     if let currentViewController = self.rootViewController as? RootViewController {
-                        
+
                         currentViewController.openCompetitionDetail(competitionId: competitionId)
 
                     }
@@ -618,17 +625,17 @@ class Router {
                     .receive(on: DispatchQueue.main)
                     .first()
                     .sink(receiveCompletion: { _ in
-                        
+
                     }, receiveValue: { [weak self] _ in
                         if let rootViewController = self?.rootActionable {
-                            
+
                             rootViewController.openCompetitionDetail(competitionId: competitionId)
-                            
+
                         }
                         else {
                             if let currentViewController = self?.rootViewController as? RootViewController {
                                 currentViewController.openCompetitionDetail(competitionId: competitionId)
-                                
+
                             }
                         }
                     })
@@ -636,9 +643,9 @@ class Router {
             }
         }
     }
-    
+
     func showContactSettings() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -649,14 +656,14 @@ class Router {
         }
         else {
             if let currentViewController = self.rootViewController as? RootViewController {
-                
+
                 currentViewController.openContactSettings()
             }
         }
     }
-    
+
     func showBetswipe() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -664,14 +671,14 @@ class Router {
         if let appSharedState = self.appSharedState {
             switch appSharedState {
             case .inactiveApp:
-                
+
                 if let rootViewController = self.rootActionable {
 
                     rootViewController.openBetswipe()
                 }
                 else {
                     if let currentViewController = self.rootViewController as? RootViewController {
-                        
+
                         currentViewController.openBetswipe()
                     }
                 }
@@ -702,9 +709,9 @@ class Router {
             }
         }
     }
-    
+
     func showDeposit() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -715,14 +722,14 @@ class Router {
         }
         else {
             if let currentViewController = self.rootViewController as? RootViewController {
-                
+
                 currentViewController.openDeposit()
             }
         }
     }
-    
+
     func showBonus() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -733,14 +740,14 @@ class Router {
         }
         else {
             if let currentViewController = self.rootViewController as? RootViewController {
-                
+
                 currentViewController.openBonus()
             }
         }
     }
-    
+
     func showDocuments() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -751,14 +758,14 @@ class Router {
         }
         else {
             if let currentViewController = self.rootViewController as? RootViewController {
-                
+
                 currentViewController.openDocuments()
             }
         }
     }
-    
+
     func showCustomerSupport() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -769,14 +776,14 @@ class Router {
         }
         else {
             if let currentViewController = self.rootViewController as? RootViewController {
-                
+
                 currentViewController.openCustomerSupport()
             }
         }
     }
-    
+
     func showFavorites() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -784,14 +791,14 @@ class Router {
         if let appSharedState = self.appSharedState {
             switch appSharedState {
             case .inactiveApp:
-                
+
                 if let rootViewController = self.rootActionable {
 
                     rootViewController.openFavorites()
                 }
                 else {
                     if let currentViewController = self.rootViewController as? RootViewController {
-                        
+
                         currentViewController.openFavorites()
                     }
                 }
@@ -822,27 +829,27 @@ class Router {
             }
         }
     }
-    
+
     func showPromotions() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
-        
+
         if let rootViewController = self.rootActionable {
-            
+
             rootViewController.openPromotions()
         }
         else {
             if let currentViewController = self.rootViewController as? RootViewController {
-                
+
                 currentViewController.openPromotions()
             }
         }
     }
-    
+
     func showRegisterWithCode(code: String) {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -853,14 +860,14 @@ class Router {
         }
         else {
             if let currentViewController = self.rootViewController as? RootViewController {
-                
+
                 currentViewController.openRegisterWithCode(code: code)
             }
         }
     }
-    
+
     func showResponsibleForm() {
-                
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -871,7 +878,7 @@ class Router {
         }
         else {
             if let currentViewController = self.rootViewController as? RootViewController {
-                
+
                 currentViewController.openResponsibleForm()
             }
         }

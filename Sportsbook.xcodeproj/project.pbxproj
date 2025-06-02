@@ -3642,6 +3642,14 @@
 		CE63A8322DE9D80400E1FF01 /* InPlayEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A82B2DE9D80400E1FF01 /* InPlayEventsViewController.swift */; };
 		CE63A8332DE9D80400E1FF01 /* InPlayEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A82B2DE9D80400E1FF01 /* InPlayEventsViewController.swift */; };
 		CE63A8342DE9D80400E1FF01 /* InPlayEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A82B2DE9D80400E1FF01 /* InPlayEventsViewController.swift */; };
+		CE63A8362DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
+		CE63A8372DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
+		CE63A8382DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
+		CE63A8392DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
+		CE63A83A2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
+		CE63A83B2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
+		CE63A83C2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
+		CE63A83D2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
 		CE794C292D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C162D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift */; };
 		CE794C2A2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C132D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift */; };
 		CE794C2B2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C172D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift */; };
@@ -9372,6 +9380,7 @@
 		CE612A9B2D91645F00F911CF /* MarketOutcomesLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOutcomesLineView.swift; sourceTree = "<group>"; };
 		CE63A8212DE9D2FB00E1FF01 /* NextUpEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextUpEventsViewController.swift; sourceTree = "<group>"; };
 		CE63A82B2DE9D80400E1FF01 /* InPlayEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InPlayEventsViewController.swift; sourceTree = "<group>"; };
+		CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StyleProviderColors+Converter.swift"; sourceTree = "<group>"; };
 		CE794C122D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CE794C132D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CE794C142D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
@@ -13786,6 +13795,7 @@
 				CEEDD22D2DADE1D90048A5B0 /* Generated */,
 				CEEDD22F2DADE1D90048A5B0 /* ThemeService.swift */,
 				CEEDD2502DAE64DF0048A5B0 /* ColorExtension+Loader.swift */,
+				CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */,
 				CEEDD22B2DADE1D90048A5B0 /* Theme.swift */,
 			);
 			path = Theme;
@@ -16839,6 +16849,7 @@
 				65CD19E52D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
 				65CD18782D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD18792D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
+				CE63A8382DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */,
 				65CD187A2D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				65CD187B2D9469EA00CA23E0 /* ChatSettingsViewController.swift in Sources */,
 				65CD187C2D9469EA00CA23E0 /* BetSelectionCellViewModel.swift in Sources */,
@@ -17702,6 +17713,7 @@
 				65CD19002D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD19012D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
 				65CD19E22D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
+				CE63A83B2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */,
 				65CD19022D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD19032D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD19042D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -18535,6 +18547,7 @@
 				65CD19452D9469EA00CA23E0 /* EditGroupViewController.swift in Sources */,
 				65CD19462D9469EA00CA23E0 /* AddFriendCellViewModel.swift in Sources */,
 				65CD19E82D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */,
+				CE63A8362DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */,
 				65CD19472D9469EA00CA23E0 /* ConversationsViewController.swift in Sources */,
 				65CD19482D9469EA00CA23E0 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				65CD19492D9469EA00CA23E0 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -18829,6 +18842,7 @@
 				CE5B55952D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B55962D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CE5B55972D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				CE63A83A2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */,
 				CE5B55982D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CE5B55992D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
 				CE5B559A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
@@ -20210,6 +20224,7 @@
 				CE8F25A42DD371350071238E /* EditGroupViewController.swift in Sources */,
 				CE8F25A52DD371350071238E /* AddFriendCellViewModel.swift in Sources */,
 				CE8F25A62DD371350071238E /* BetslipViewModel.swift in Sources */,
+				CE63A83C2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */,
 				CE8F25A72DD371350071238E /* ConversationsViewController.swift in Sources */,
 				CE8F25A82DD371350071238E /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				CE8F25A92DD371350071238E /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -21043,6 +21058,7 @@
 				CEB3A3152DD379800024043B /* EditGroupViewController.swift in Sources */,
 				CEB3A3162DD379800024043B /* AddFriendCellViewModel.swift in Sources */,
 				CEB3A3172DD379800024043B /* BetslipViewModel.swift in Sources */,
+				CE63A8372DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */,
 				CEB3A3182DD379800024043B /* ConversationsViewController.swift in Sources */,
 				CEB3A3192DD379800024043B /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				CEB3A31A2DD379800024043B /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -21876,6 +21892,7 @@
 				CEB3A79E2DD379890024043B /* EditGroupViewController.swift in Sources */,
 				CEB3A79F2DD379890024043B /* AddFriendCellViewModel.swift in Sources */,
 				CEB3A7A02DD379890024043B /* BetslipViewModel.swift in Sources */,
+				CE63A8392DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */,
 				CEB3A7A12DD379890024043B /* ConversationsViewController.swift in Sources */,
 				CEB3A7A22DD379890024043B /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				CEB3A7A32DD379890024043B /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -22763,6 +22780,7 @@
 				CEF1962D2DA834E900C81F12 /* DropDownSelectionView.swift in Sources */,
 				CEF1962E2DA834E900C81F12 /* PolicyLinkView.swift in Sources */,
 				CEF1962F2DA834E900C81F12 /* DeveloperSettingsViewController.swift in Sources */,
+				CE63A83D2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */,
 				CEF196302DA834E900C81F12 /* HomeFilterOptions.swift in Sources */,
 				CEF196312DA834E900C81F12 /* MarketOutcomesLineView.swift in Sources */,
 				CEF196322DA834E900C81F12 /* PreviewModelsHelper.swift in Sources */,

@@ -7,6 +7,8 @@
 
 import Foundation
 import Combine
+import UIKit
+import GomaUI
 
 class Bootstrap {
 
@@ -15,8 +17,9 @@ class Bootstrap {
     private var environment: Environment?
     private var cancellables = Set<AnyCancellable>()
 
-    private var bootTriggerCancelable: AnyCancellable?
-    
+    private var bootTriggerCancellable: AnyCancellable?
+    private var themeCancellable: AnyCancellable?
+
     init(router: Router) {
         self.router = router
     }
@@ -36,8 +39,11 @@ class Bootstrap {
 
         // Prepare the router for boot
         self.setSupportedLanguages()
-        
-        self.bootTriggerCancelable = environment.businessSettingsSocket.maintenanceModePublisher
+
+        // Setup GomaUI components (Colors and Fonts)
+        self.setupGomaUIComponents()
+
+        self.bootTriggerCancellable = environment.businessSettingsSocket.maintenanceModePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] maintenanceModeType in
                 switch maintenanceModeType {
@@ -46,21 +52,38 @@ class Bootstrap {
                 case .disabled:
                     self?.connectServiceProvider()
                     self?.router.makeKeyAndVisible()
-                    self?.bootTriggerCancelable?.cancel()
+                    self?.bootTriggerCancellable?.cancel()
                 case .unknown:
                     break
                 }
             })
-        
+
     }
-    
+
     func setSupportedLanguages() {
         // Force the target supported languages
         let targetSupportedLanguages = TargetVariables.supportedLanguages.map(\.languageCode)
         UserDefaults.standard.set(targetSupportedLanguages, forKey: "AppleLanguages")
         UserDefaults.standard.synchronize()
     }
-    
+
+    func setupGomaUIComponents() {
+        // Setup GomaUI components StyleProviderColors
+        self.themeCancellable = ThemeService.shared.themePublisher
+            // we need to map the app theme to GomaUI StyleProviderColors structure
+            .map(StyleProviderColors.create(fromTheme:))
+            .receive(on: DispatchQueue.main)
+            .sink { (styleProviderColors: StyleProviderColors) in
+                GomaUI.StyleProvider.customize(colors: styleProviderColors)
+            }
+
+        // Setup GomaUI components Fonts
+        GomaUI.StyleProvider.setFontProvider({ (type: StyleProvider.FontType, size: CGFloat) -> UIFont in
+            let appFont = AppFont.AppFontType.fontTypeFrom(styleProviderFontType: type)
+            return AppFont.with(type: appFont, size: size)
+        })
+    }
+
     func connectServiceProvider() {
 
         guard let environment = self.environment else { return }

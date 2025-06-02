@@ -16,8 +16,15 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     var connector: EveryMatrixConnector
 
+    // MARK: - Paginators for different subscription types
+    private var prelivePaginator: PreLiveMatchesPaginator?
+
     init(connector: EveryMatrixConnector) {
         self.connector = connector
+    }
+
+    deinit {
+        prelivePaginator?.unsubscribe()
     }
 
     func connect() {
@@ -37,11 +44,32 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, eventCount: Int?, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        // Clean up any existing paginator
+        prelivePaginator?.unsubscribe()
+
+        // Use sportType ID, fallback to "1" (football) if not available
+        let sportId = sportType.numericId ?? "1"
+
+        // Create new paginator with custom configuration if provided
+        let numberOfEvents = eventCount ?? 50
+        let numberOfMarkets = 10 // Default value, could be made configurable
+
+        prelivePaginator = PreLiveMatchesPaginator(
+            connector: connector,
+            sportId: sportId,
+            numberOfEvents: numberOfEvents,
+            numberOfMarkets: numberOfMarkets
+        )
+
+        return prelivePaginator!.subscribe()
     }
 
     func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        guard let paginator = prelivePaginator else {
+            return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
+        }
+
+        return paginator.loadNextPage()
     }
 
     func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
@@ -80,7 +108,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         // return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
         var sport = SportType.init(name: "Football")
         sport.numberEvents = 10
-        
+
         return Just(SubscribableContent.contentUpdate(content: [sport]))
             .setFailureType(to: ServiceProviderError.self)
             .eraseToAnyPublisher()
