@@ -55,6 +55,11 @@ class SportTypeStore {
     private func getSports() {
         self.activeSportsCurrentValueSubject.send(.loading)
 
+        #if DEBUG
+        self.activeSportsCurrentValueSubject.send(.loaded([self.defaultSport]))
+        return
+        #endif
+        
         Env.servicesProvider.subscribeSportTypes()
             .retry(3)
             .receive(on: DispatchQueue.main)

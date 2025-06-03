@@ -32,8 +32,8 @@ class PreLiveMatchesPaginator {
     // MARK: - Initialization
     init(connector: EveryMatrixConnector,
          sportId: String,
-         numberOfEvents: Int = 50,
-         numberOfMarkets: Int = 10) {
+         numberOfEvents: Int = 10,
+         numberOfMarkets: Int = 5) {
         self.connector = connector
         self.store = EveryMatrix.EntityStore()
         self.sportId = sportId
@@ -160,7 +160,7 @@ class PreLiveMatchesPaginator {
     /// Build EventsGroups from stored entities
     private func buildEventsGroups() -> [EventsGroup] {
         let hierarchicalMatches = buildHierarchicalMatches()
-        
+
         // Group matches by competition/category for better organization
         return EveryMatrixModelMapper.eventsGroups(
             fromInternalMatches: hierarchicalMatches,

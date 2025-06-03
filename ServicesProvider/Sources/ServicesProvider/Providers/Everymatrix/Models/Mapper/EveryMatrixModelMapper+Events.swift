@@ -150,12 +150,12 @@ extension EveryMatrixModelMapper {
 
 // MARK: - Convenience Extensions
 extension EveryMatrixModelMapper {
-    
+
     /// Convert a single match to an EventsGroup
     static func eventsGroup(fromInternalMatch internalMatch: EveryMatrix.Match) -> EventsGroup {
         return eventsGroup(fromInternalMatches: [internalMatch])
     }
-    
+
     /// Filter and convert matches by sport
     static func eventsGroup(fromInternalMatches internalMatches: [EveryMatrix.Match], sportId: String) -> EventsGroup {
         let filteredMatches = internalMatches.filter { match in
@@ -163,7 +163,7 @@ extension EveryMatrixModelMapper {
         }
         return eventsGroup(fromInternalMatches: filteredMatches)
     }
-    
+
     /// Convert matches with grouping by competition/category
     static func eventsGroups(fromInternalMatches internalMatches: [EveryMatrix.Match], groupByCategory: Bool = false) -> [EventsGroup] {
         if groupByCategory {
@@ -171,7 +171,7 @@ extension EveryMatrixModelMapper {
             let groupedMatches = Dictionary(grouping: internalMatches) { match in
                 match.category?.id ?? "unknown"
             }
-            
+
             return groupedMatches.map { (categoryId, matches) in
                 let events = matches.map(Self.event(fromInternalMatch:))
                 return EventsGroup(events: events, marketGroupId: categoryId, title: matches.first?.category?.name)
@@ -181,4 +181,4 @@ extension EveryMatrixModelMapper {
             return [eventsGroup(fromInternalMatches: internalMatches)]
         }
     }
-} 
+}

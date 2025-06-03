@@ -68,10 +68,11 @@ public class Client {
     public func connect() {
         switch self.providerType {
         case .everymatrix:
-            let everyMatrixConnector = EveryMatrixConnector(wampManager: WAMPManager())
             
-            self.eventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector)
-            
+            // This will trigger the connection to the EM WAMP socket
+            let wampConnectionManaget = WAMPManager()
+            let everyMatrixConnector = EveryMatrixConnector(wampManager: wampConnectionManaget)
+                        
             everyMatrixConnector.connectionStatePublisher
                 .sink(receiveCompletion: { completion in
 
@@ -80,6 +81,9 @@ public class Client {
                 }).store(in: &self.cancellables)
             
             
+            self.eventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector)
+
+        // 
         case .goma:
             guard let deviceUUID = self.configuration.deviceUUID else {
                 fatalError("GOMA API service provider required a deviceIdentifier")
@@ -122,6 +126,8 @@ public class Client {
                                                                              connector: omegaConnector)
 
             self.privilegedAccessManager = sportRadarPrivilegedAccessManager
+            
+            // This will trigger the connection to the SR socket
             let eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator,
                                                            socketConnector: SportRadarSocketConnector(),
                                                            restConnector: SportRadarRestConnector())

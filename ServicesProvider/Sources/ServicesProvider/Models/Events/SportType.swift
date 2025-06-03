@@ -50,6 +50,19 @@ public struct SportType: Codable, Equatable, Hashable {
         self.numberOutrightMarkets = 0
         self.numberLiveEvents = 0
     }
+    
+    public static var defaultFootball: SportType {
+        return .init(
+            name: "Football",
+            numericId: "1",
+            alphaId: "FBL",
+            iconId: "1",
+            showEventCategory: false,
+            numberEvents: 0,
+            numberOutrightEvents: 0,
+            numberOutrightMarkets: 0,
+            numberLiveEvents: 0)
+    }
 }
 
 // TODO: TASK André - Este devia ser o unico modelo publico

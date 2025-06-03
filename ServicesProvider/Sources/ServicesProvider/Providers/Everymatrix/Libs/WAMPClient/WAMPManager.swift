@@ -19,6 +19,11 @@ enum WAMPSubscriptionContent<T> {
     case disconnect
 }
 
+enum WAMPConnectionState {
+    case connected
+    case disconnected
+}
+
 final class WAMPManager {
     
     private var globalCancellable = Set<AnyCancellable>()
@@ -27,15 +32,24 @@ final class WAMPManager {
     
     private var cancellables = Set<AnyCancellable>()
     
+    var connectionStatePublisher: AnyPublisher<WAMPConnectionState, Never> {
+        return self.connectionStateSubject.eraseToAnyPublisher()
+    }
+    private var connectionStateSubject = CurrentValueSubject<WAMPConnectionState, Never>(.disconnected)
+    
     var swampSession: SSWampSession?
     var userAgentExtractionWebView: WKWebView?
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
-    let origin = "https://clientsample-sports-stage.everymatrix.com/"
+    let origin = "https://sportsbook-stage.gomagaming.com"
     
     init() {
-        
         print("WAMPManager init")
         
+        self.swampSession = self.createSwampSession()
+        
+        self.connect()
+        
+        /*
         DispatchQueue.main.async {
             
             self.userAgentExtractionWebView = WKWebView()
@@ -73,13 +87,21 @@ final class WAMPManager {
                 }
             }
         }
+        */
     }
-    
-    
-    
-    //    class func destroySharedInstance() {
-    //        sharedInstance = nil
-    //    }
+
+    func createSwampSession() -> SSWampSession {
+        let swampSession = SSWampSession(
+            realm: WAMPSocketParams.realm,
+            transport: WebSocketSSWampTransport(
+                wsEndpoint: URL(string: WAMPSocketParams.wsEndPoint)!,
+                userAgent: "iOS/Native/URLSession 1.0 CFNetwork Darwin",
+                origin: self.origin
+            )
+        )
+        
+        return swampSession
+    }
     
     func destroySwampSession() {
         self.disconnect()
@@ -119,7 +141,6 @@ final class WAMPManager {
                                  3 - Session is terminated because another login occurred. When the same user is logging in a different place, all the previous logged-in sessions will be terminated.
                                  5 - Session is terminated because of the preset limitation time has been reached. If the session time limitation is enabled in Self Exclusion mode, all the sessions will be terminated when this time is reached.
                                  6 - Session is terminated because self exclusion is enabled.
-                                 
                                  */
                                 
                                 if code == 1 {
@@ -383,49 +404,56 @@ final class WAMPManager {
         
         let args: [String: Any] = endpoint.kwargs ?? [:]
         
-        print("WAMPManager registerOnEndpoint - url:\(endpoint.procedure), args:\(args)")
+        print("WAMPManager.registerOnEndpoint - url:\(endpoint.procedure), args:\(args)")
         
-        swampSession.register(endpoint.procedure, options: args,
-                              onSuccess: { (registration: WAMPRegistration) in
-            subject.send(WAMPSubscriptionContent.connect(publisherIdentifiable: registration))
-            
-            if let initialDumpEndpoint = endpoint.intiailDumpRequest {
-                self.getModel(router: initialDumpEndpoint, initialDumpProcedure: endpoint.procedure, decodingType: decodingType)
-                    .sink { completion in
-                        if case .failure(let error) = completion {
-                            subject.send(WAMPSubscriptionContent.disconnect)
-                            subject.send(completion: .failure(error))
-                        }
-                    } receiveValue: { decoded in
-                        subject.send(.initialContent(decoded))
+        swampSession.register(
+            endpoint.procedure,
+            options: args,
+            onSuccess:
+                { (registration: WAMPRegistration) in
+                    
+                    subject.send(WAMPSubscriptionContent.connect(publisherIdentifiable: registration))
+                    
+                    if let initialDumpEndpoint = endpoint.intiailDumpRequest {
+                        self.getModel(router: initialDumpEndpoint, initialDumpProcedure: endpoint.procedure, decodingType: decodingType)
+                            .sink { completion in
+                                if case .failure(let error) = completion {
+                                    subject.send(WAMPSubscriptionContent.disconnect)
+                                    subject.send(completion: .failure(error))
+                                }
+                            } receiveValue: { decoded in
+                                subject.send(.initialContent(decoded))
+                            }
+                            .store(in: &self.globalCancellable)
                     }
-                    .store(in: &self.globalCancellable)
-            }
-        },
-                              onError: { (details: [String: Any], errorStr: String) in
-            subject.send(WAMPSubscriptionContent.disconnect)
-            subject.send(completion: .failure(.requestError(value: errorStr)))
-        },
-                              onEvent: { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
-            do {
-                if kwResults != nil {
-                    let decoder = DictionaryDecoder()
-                    decoder.dateDecodingStrategy = .iso8601
-                    let decoded = try decoder.decode(decodingType, from: kwResults!)
-                    subject.send(.updatedContent(decoded))
-                }
-                else {
-                    subject.send(completion: .failure(.noResultsReceived))
-                }
-            }
-            catch {
-                subject.send(completion: .failure( .decodingError(value: error.localizedDescription) ))
-            }
-        })
+                },
+            onError:
+                { (details: [String: Any], errorStr: String) in
+                    subject.send(WAMPSubscriptionContent.disconnect)
+                    subject.send(completion: .failure(.requestError(value: errorStr)))
+                },
+            onEvent:
+                { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
+                    do {
+                        if kwResults != nil {
+                            let decoder = DictionaryDecoder()
+                            decoder.dateDecodingStrategy = .iso8601
+                            let decoded = try decoder.decode(decodingType, from: kwResults!)
+                            subject.send(.updatedContent(decoded))
+                        }
+                        else {
+                            subject.send(completion: .failure(.noResultsReceived))
+                        }
+                    }
+                    catch {
+                        subject.send(completion: .failure( .decodingError(value: error.localizedDescription) ))
+                    }
+                })
+        
         return subject.handleEvents(receiveOutput: { content in
             
         }, receiveCompletion: { completion in
-            print("completion \(completion)")
+            print("WAMPManager.completion \(completion)")
         }, receiveCancel: {
             
         }).eraseToAnyPublisher()
@@ -472,6 +500,8 @@ extension WAMPManager: SSWampSessionDelegate {
     
     func ssWampSessionConnected(_ session: SSWampSession, sessionId: Int) {
         
+        self.connectionStateSubject.send(.connected)
+        
         NotificationCenter.default.post(name: .socketConnected, object: nil)
         
         sessionStateChanged()
@@ -485,6 +515,9 @@ extension WAMPManager: SSWampSessionDelegate {
     }
     
     func ssWampSessionEnded(_ reason: String) {
+        
+        self.connectionStateSubject.send(.disconnected)
+        
         NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
         NotificationCenter.default.post(name: .socketDisconnected, object: nil)
     }

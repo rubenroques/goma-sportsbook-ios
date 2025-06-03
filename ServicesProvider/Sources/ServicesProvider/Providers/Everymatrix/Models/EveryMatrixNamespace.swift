@@ -16,7 +16,7 @@ extension EveryMatrix {
     /// Protocol for all entities that can be stored and referenced
     protocol Entity: Codable, Identifiable {
         var id: String { get }
-        var rawType: String { get }
+        static var rawType: String { get }
     }
 
     /// Protocol for entities that can contain references to other entities
@@ -26,7 +26,7 @@ extension EveryMatrix {
 
     struct SportDTO: Entity {
         let id: String
-        let rawType: String
+        static let rawType: String = "SPORT"
         let name: String
         let shortName: String
         let isVirtual: Bool
@@ -51,7 +51,7 @@ extension EveryMatrix {
 
     struct MatchDTO: Entity, EntityContainer {
         let id: String
-        let rawType: String
+        static let rawType: String = "MATCH"
         let typeId: String
         let sportId: String
         let parentId: String
@@ -102,7 +102,7 @@ extension EveryMatrix {
 
     struct MarketDTO: Entity, EntityContainer {
         let id: String
-        let rawType: String = "MARKET"
+        static let rawType: String = "MARKET"
         let name: String
         let shortName: String
         let displayKey: String
@@ -139,7 +139,7 @@ extension EveryMatrix {
 
     struct OutcomeDTO: Entity, EntityContainer {
         let id: String
-        let rawType: String = "OUTCOME"
+        static let rawType: String = "OUTCOME"
         let typeId: String
         let statusId: String
         let eventId: String
@@ -169,7 +169,7 @@ extension EveryMatrix {
 
     struct BettingOfferDTO: Entity, EntityContainer {
         let id: String
-        let rawType: String = "BETTING_OFFER"
+        static let rawType: String = "BETTING_OFFER"
         let providerId: String
         let outcomeId: String
         let bettingTypeId: String
@@ -190,7 +190,7 @@ extension EveryMatrix {
 
     struct LocationDTO: Entity {
         let id: String
-        let rawType: String = "LOCATION"
+        static let rawType: String = "LOCATION"
         let typeId: String
         let name: String
         let shortName: String
@@ -199,7 +199,7 @@ extension EveryMatrix {
 
     struct EventCategoryDTO: Entity {
         let id: String
-        let rawType: String = "EVENT_CATEGORY"
+        static let rawType: String = "EVENT_CATEGORY"
         let sportId: String
         let sportName: String
         let name: String
@@ -215,14 +215,14 @@ extension EveryMatrix {
 
     struct MarketOutcomeRelationDTO: Entity {
         let id: String
-        let rawType: String = "MARKET_OUTCOME_RELATION"
+        static let rawType: String = "MARKET_OUTCOME_RELATION"
         let marketId: String
         let outcomeId: String
     }
 
     struct MainMarketDTO: Entity {
         let id: String
-        let rawType: String = "MAIN_MARKET"
+        static let rawType: String = "MAIN_MARKET"
         let bettingTypeId: String
         let eventPartId: String
         let sportId: String
@@ -233,8 +233,21 @@ extension EveryMatrix {
         let outright: Bool
     }
 
-    // MARK: - Aggregator Response
+    // DTOs that were missing from example.txt
+    struct MarketInfoDTO: Entity {
+        let id: String
+        static let rawType: String = "MARKET_INFO"
+        let marketInfo: String
+        let displayKey: String
+    }
 
+    struct NextMatchesNumberDTO: Entity {
+        let id: String
+        static let rawType: String = "NEXT_MATCHES_NUMBER"
+        let numberOfNextEvents: Int
+    }
+
+    // MARK: - Aggregator Response
     struct AggregatorResponse: Codable {
         let version: String
         let format: String
@@ -336,20 +349,6 @@ extension EveryMatrix {
         }
     }
 
-    // DTOs that were missing from example.txt
-    struct MarketInfoDTO: Entity {
-        let id: String
-        let rawType: String = "MARKET_INFO"
-        let marketInfo: String
-        let displayKey: String
-    }
-
-    struct NextMatchesNumberDTO: Entity {
-        let id: String
-        let rawType: String = "NEXT_MATCHES_NUMBER"
-        let numberOfNextEvents: Int
-    }
-
     // MARK: - Response Parser
 
     struct ResponseParser {
@@ -392,7 +391,6 @@ extension EveryMatrix {
     // MARK: -  Models (for UI)
     struct Sport: Identifiable, Hashable {
         let id: String
-        let rawType: String?
         let name: String
         let shortName: String?
         let isVirtual: Bool?
@@ -639,7 +637,6 @@ extension EveryMatrix {
         static func build(from sport: SportDTO, store: EntityStore) -> Sport? {
             return Sport(
                 id: sport.id,
-                rawType: sport.rawType,
                 name: sport.name,
                 shortName: sport.shortName,
                 isVirtual: sport.isVirtual,
@@ -686,7 +683,6 @@ extension EveryMatrix {
     }
 
     // MARK: - Base Entity Store
-
     class EntityStore: ObservableObject {
         @Published private var entities: [String: [String: any Entity]] = [:]
         private let queue = DispatchQueue(label: "entity.store.queue", attributes: .concurrent)
@@ -694,7 +690,7 @@ extension EveryMatrix {
         // Store entity by type and id
         func store<T: Entity>(_ entity: T) {
             queue.async(flags: .barrier) { [weak self] in
-                let type = entity.rawType
+                let type = T.rawType
                 if self?.entities[type] == nil {
                     self?.entities[type] = [:]
                 }
@@ -705,7 +701,7 @@ extension EveryMatrix {
         // Retrieve entity by type and id
         func get<T: Entity>(_ type: T.Type, id: String) -> T? {
             return queue.sync {
-                guard let typeDict = entities[String(describing: type)] else { return nil }
+                guard let typeDict = entities[T.rawType] else { return nil }
                 return typeDict[id] as? T
             }
         }
@@ -713,7 +709,7 @@ extension EveryMatrix {
         // Get all entities of a specific type
         func getAll<T: Entity>(_ type: T.Type) -> [T] {
             return queue.sync {
-                guard let typeDict = entities[String(describing: type)] else { return [] }
+                guard let typeDict = entities[T.rawType] else { return [] }
                 return typeDict.values.compactMap { $0 as? T }
             }
         }
@@ -722,7 +718,7 @@ extension EveryMatrix {
         func store<T: Entity>(_ entities: [T]) {
             queue.async(flags: .barrier) { [weak self] in
                 for entity in entities {
-                    let type = entity.rawType
+                    let type = T.rawType
                     if self?.entities[type] == nil {
                         self?.entities[type] = [:]
                     }

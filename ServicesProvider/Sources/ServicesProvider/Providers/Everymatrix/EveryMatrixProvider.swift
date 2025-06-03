@@ -26,11 +26,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     deinit {
         prelivePaginator?.unsubscribe()
     }
-
-    func connect() {
-        self.connector.connect()
-    }
-
+    
     func reconnectIfNeeded() {
         self.connector.forceReconnect()
     }
@@ -51,8 +47,8 @@ class EveryMatrixEventsProvider: EventsProvider {
         let sportId = sportType.numericId ?? "1"
 
         // Create new paginator with custom configuration if provided
-        let numberOfEvents = eventCount ?? 50
-        let numberOfMarkets = 10 // Default value, could be made configurable
+        let numberOfEvents = eventCount ?? 10
+        let numberOfMarkets = 5 // Default value, could be made configurable
 
         prelivePaginator = PreLiveMatchesPaginator(
             connector: connector,

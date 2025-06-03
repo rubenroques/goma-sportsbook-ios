@@ -21,6 +21,8 @@ class SplashViewController: UIViewController {
     private var loadingCompleted: () -> Void
     private var reachability: Reachability?
 
+    private var cancellables: Set<AnyCancellable> = []
+    
     init(loadingCompleted: @escaping () -> Void) {
         self.loadingCompleted = loadingCompleted
 
@@ -57,10 +59,49 @@ class SplashViewController: UIViewController {
         // Load presentation configuration
         Env.presentationConfigurationStore.loadConfiguration()
 
-        #if DEBUG
-        self.splashLoadingCompleted()
+//        #if DEBUG
+//        self.splashLoadingCompleted()
+//        return
+//        #endif
+        
+        
+        Env.sportsStore.activeSportsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("activeSportsPublisher: completion \(completion)")
+            } receiveValue: { [weak self] sportsLoadingState in
+                print("Sports: \(sportsLoadingState)")
+                
+                switch sportsLoadingState {
+                case .idle:
+                    break
+                case .loading:
+                    break
+                case .loaded(let sportsData):
+                    self?.splashLoadingCompleted()
+                case .failed:
+                    break
+                }
+            }
+            .store(in: &self.cancellables)
+        
+        Env.presentationConfigurationStore.loadState
+            .sink { completion in
+                print("configurationStore: completion \(completion)")
+            } receiveValue: { configurationStore in
+                print("configurationStore: \(configurationStore)")
+            }
+            .store(in: &self.cancellables)
+
+        Env.servicesProvider.preFetchHomeContent()
+            .sink { completion in
+                print("preFetchHomeContent: completion \(completion)")
+            } receiveValue: { preFetchHomeContent in
+                print("preFetchHomeContent: \(preFetchHomeContent)")
+            }
+            .store(in: &self.cancellables)
+        
         return
-        #endif
         
         // Env.appSession.isLoadingAppSettingsPublisher,
         self.isLoadingBootDataSubscription = Publishers.CombineLatest3(

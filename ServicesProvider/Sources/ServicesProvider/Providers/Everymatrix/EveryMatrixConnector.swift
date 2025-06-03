@@ -4,49 +4,48 @@ import Combine
 class EveryMatrixConnector: Connector {
     // MARK: - Properties
     private let wampManager: WAMPManager
+    
+    private var connectionCancellable: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
 
-    private let serialQueue = DispatchQueue(label: "com.everymatrix.connector.queue")
+    private let serialQueue = DispatchQueue(label: "com.goma.wamp.connector.queue")
     private let connectionStateSubject = CurrentValueSubject<ConnectorState, Never>(.disconnected)
 
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
-        return self.connectionStateSubject.eraseToAnyPublisher()
+        return self.wampManager.connectionStatePublisher.map { wampConnectionState in
+            switch wampConnectionState {
+            case .connected: return ConnectorState.connected
+            case .disconnected: return ConnectorState.disconnected
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     // MARK: - Initialization
     init(wampManager: WAMPManager = WAMPManager()) {
         self.wampManager = wampManager
-        self.setupNotificationHandling()
+        
+        // self.setupNotificationHandling()
+        
+        self.connectionCancellable = self.wampManager.connectionStatePublisher
+            .sink { wampConnectionState in
+                switch wampConnectionState {
+                case .connected:
+                    print("EveryMatrixConnector init wamp connected")
+                case .disconnected:
+                    print("EveryMatrixConnector init wamp disconnected")
+                }
+            }
     }
 
     // MARK: - Connection Management
     private func setupNotificationHandling() {
-        NotificationCenter.default.publisher(for: .socketConnected)
-            .receive(on: serialQueue)
-            .sink { [weak self] _ in
-                self?.handleConnectionStateChange(.connected)
-            }
-            .store(in: &cancellables)
-
-        NotificationCenter.default.publisher(for: .socketDisconnected)
-            .receive(on: serialQueue)
-            .sink { [weak self] _ in
-                self?.handleConnectionStateChange(.disconnected)
-            }
-            .store(in: &cancellables)
-
         NotificationCenter.default.publisher(for: .userSessionDisconnected)
             .receive(on: serialQueue)
-            .sink { [weak self] _ in
-                self?.handleConnectionStateChange(.disconnected)
+            .sink { _ in
+                fatalError("userSessionDisconnected not handled")
             }
             .store(in: &cancellables)
-    }
-
-    private func handleConnectionStateChange(_ state: ConnectorState) {
-        self.serialQueue.async { [weak self] in
-            self?.connectionStateSubject.send(state)
-        }
     }
 
     // MARK: - Public Methods
@@ -74,41 +73,7 @@ class EveryMatrixConnector: Connector {
 
             // Attempt reconnection
             self.wampManager.connect()
-
-            // Start monitoring reconnection attempt
-            self.monitorReconnection()
         }
-    }
-
-    private func monitorReconnection() {
-        // Create a timeout timer
-        let timeoutInterval: TimeInterval = 10.0
-        var attempts = 0
-        let maxAttempts = 3
-
-        Timer.publish(every: 1.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-
-                self.serialQueue.async {
-                    if self.wampManager.isConnected {
-                        self.handleConnectionStateChange(.connected)
-                        return
-                    }
-
-                    attempts += 1
-                    if attempts >= maxAttempts {
-                        // If we've exceeded max attempts, give up and notify failure
-                        self.handleConnectionStateChange(.disconnected)
-                        return
-                    }
-
-                    // Try reconnecting again
-                    self.wampManager.connect()
-                }
-            }
-            .store(in: &cancellables)
     }
 
     func isConnected() -> Bool {
@@ -135,11 +100,11 @@ class EveryMatrixConnector: Connector {
                 }
                 .eraseToAnyPublisher()
         }
-    }
+    } 
 
     func subscribe<T: Codable>(_ router: WAMPRouter) -> AnyPublisher<WAMPSubscriptionContent<T>, ServiceProviderError> {
         return self.serialQueue.sync {
-            self.wampManager.subscribeEndpoint(router, decodingType: T.self)
+            self.wampManager.registerOnEndpoint(router, decodingType: T.self)
                 .mapError { error -> ServiceProviderError in
                     switch error {
                     case .notConnected:
@@ -160,7 +125,7 @@ class EveryMatrixConnector: Connector {
 
     func unsubscribe(_ subscription: EndpointPublisherIdentifiable) {
         serialQueue.async { [weak self] in
-            self?.wampManager.unsubscribeFromEndpoint(endpointPublisherIdentifiable: subscription)
+            self?.wampManager.unregisterFromEndpoint(endpointPublisherIdentifiable: subscription)
         }
     }
 }
