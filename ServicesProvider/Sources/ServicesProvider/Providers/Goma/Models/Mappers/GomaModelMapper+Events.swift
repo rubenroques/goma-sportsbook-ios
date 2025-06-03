@@ -112,6 +112,7 @@ extension GomaModelMapper {
                       name: internalMarket.name,
                       outcomes: outcomes,
                       marketTypeId: internalMarket.groupId,
+                      marketTypeName: internalMarket.groupId,
                       marketFilterId: internalMarket.groupId,
                       eventMarketTypeId: internalMarket.groupId,
                       eventName: nil,

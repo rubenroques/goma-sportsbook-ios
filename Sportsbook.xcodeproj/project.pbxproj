@@ -3650,6 +3650,22 @@
 		CE63A83B2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
 		CE63A83C2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
 		CE63A83D2DEC658600E1FF01 /* StyleProviderColors+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */; };
+		CE63A8402DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */; };
+		CE63A8412DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */; };
+		CE63A8422DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */; };
+		CE63A8432DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */; };
+		CE63A8442DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */; };
+		CE63A8452DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */; };
+		CE63A8462DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */; };
+		CE63A8472DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */; };
+		CE63A8482DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */; };
+		CE63A8492DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */; };
+		CE63A84A2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */; };
+		CE63A84B2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */; };
+		CE63A84C2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */; };
+		CE63A84D2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */; };
+		CE63A84E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */; };
+		CE63A84F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */; };
 		CE794C292D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C162D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift */; };
 		CE794C2A2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C132D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift */; };
 		CE794C2B2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C172D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift */; };
@@ -9381,6 +9397,8 @@
 		CE63A8212DE9D2FB00E1FF01 /* NextUpEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextUpEventsViewController.swift; sourceTree = "<group>"; };
 		CE63A82B2DE9D80400E1FF01 /* InPlayEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InPlayEventsViewController.swift; sourceTree = "<group>"; };
 		CE63A8352DEC658600E1FF01 /* StyleProviderColors+Converter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StyleProviderColors+Converter.swift"; sourceTree = "<group>"; };
+		CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroupCardsViewController.swift; sourceTree = "<group>"; };
+		CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextUpEventsMarketGroupSelectorViewModel.swift; sourceTree = "<group>"; };
 		CE794C122D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CE794C132D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CE794C142D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
@@ -13208,6 +13226,8 @@
 			isa = PBXGroup;
 			children = (
 				CE63A8212DE9D2FB00E1FF01 /* NextUpEventsViewController.swift */,
+				CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */,
+				CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */,
 			);
 			path = NextUpEvents;
 			sourceTree = "<group>";
@@ -16695,6 +16715,8 @@
 				CEEFDEA02D8C1C7200630F7E /* MatchWidgetCellViewModel+Presentation.swift in Sources */,
 				A90FB7DC29B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				450B79B728F58574009229E3 /* MyTicketCellViewModel.swift in Sources */,
+				CE63A8422DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */,
+				CE63A8432DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */,
 				A96FAEF72982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				CE7E80032D79494B00A5558A /* UserDefaults+DeveloperMode.swift in Sources */,
 				450B79BA28F58574009229E3 /* Observable.swift in Sources */,
@@ -17559,6 +17581,8 @@
 				45A331CE298976BA008181E9 /* Loadable.swift in Sources */,
 				45A331CF298976BA008181E9 /* MyTicketBetLineView.swift in Sources */,
 				45A331D0298976BA008181E9 /* HomeViewController.swift in Sources */,
+				CE63A84C2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */,
+				CE63A84D2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */,
 				CEEFDEA82D8C1C7200630F7E /* MatchWidgetCellViewModel+Presentation.swift in Sources */,
 				A90FB7DB29B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				45A331D3298976BA008181E9 /* MyTicketCellViewModel.swift in Sources */,
@@ -18393,6 +18417,8 @@
 				45F6BC812AB3732C00C81DE1 /* Loadable.swift in Sources */,
 				45F6BC822AB3732C00C81DE1 /* MyTicketBetLineView.swift in Sources */,
 				45F6BC832AB3732C00C81DE1 /* HomeViewController.swift in Sources */,
+				CE63A84E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */,
+				CE63A84F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */,
 				CEEFDEA12D8C1C7200630F7E /* MatchWidgetCellViewModel+Presentation.swift in Sources */,
 				45F6BC852AB3732C00C81DE1 /* SelfExclusionViewModel.swift in Sources */,
 				45F6BC872AB3732C00C81DE1 /* MyTicketCellViewModel.swift in Sources */,
@@ -18813,6 +18839,8 @@
 				CE12A1802D31347E0022BDF7 /* OddsViewModel.swift in Sources */,
 				CE12A1812D31347E0022BDF7 /* GenericAvatarErrorViewController.swift in Sources */,
 				CE12A1822D31347E0022BDF7 /* BonusProgressViewModel.swift in Sources */,
+				CE63A8482DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */,
+				CE63A8492DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */,
 				CE12A1832D31347E0022BDF7 /* SportSelectionViewController.swift in Sources */,
 				CE12A1852D31347E0022BDF7 /* MyGamesViewModel.swift in Sources */,
 				CE12A1872D31347E0022BDF7 /* RadioButton.swift in Sources */,
@@ -20070,6 +20098,8 @@
 				CE8F24FE2DD371350071238E /* OddFormatter.swift in Sources */,
 				CE8F24FF2DD371350071238E /* Loadable.swift in Sources */,
 				CE8F25002DD371350071238E /* MyTicketBetLineView.swift in Sources */,
+				CE63A8442DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */,
+				CE63A8452DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */,
 				CE8F25012DD371350071238E /* HomeViewController.swift in Sources */,
 				CE8F25022DD371350071238E /* MatchWidgetCellViewModel+Presentation.swift in Sources */,
 				CE8F25032DD371350071238E /* SelfExclusionViewModel.swift in Sources */,
@@ -20904,6 +20934,8 @@
 				CEB3A26F2DD379800024043B /* OddFormatter.swift in Sources */,
 				CEB3A2702DD379800024043B /* Loadable.swift in Sources */,
 				CEB3A2712DD379800024043B /* MyTicketBetLineView.swift in Sources */,
+				CE63A8462DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */,
+				CE63A8472DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */,
 				CEB3A2722DD379800024043B /* HomeViewController.swift in Sources */,
 				CEB3A2732DD379800024043B /* MatchWidgetCellViewModel+Presentation.swift in Sources */,
 				CEB3A2742DD379800024043B /* SelfExclusionViewModel.swift in Sources */,
@@ -21738,6 +21770,8 @@
 				CEB3A6F82DD379890024043B /* OddFormatter.swift in Sources */,
 				CEB3A6F92DD379890024043B /* Loadable.swift in Sources */,
 				CEB3A6FA2DD379890024043B /* MyTicketBetLineView.swift in Sources */,
+				CE63A8402DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */,
+				CE63A8412DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */,
 				CEB3A6FB2DD379890024043B /* HomeViewController.swift in Sources */,
 				CEB3A6FC2DD379890024043B /* MatchWidgetCellViewModel+Presentation.swift in Sources */,
 				CEB3A6FD2DD379890024043B /* SelfExclusionViewModel.swift in Sources */,
@@ -22332,6 +22366,8 @@
 				CEF1947C2DA834E900C81F12 /* (null) in Sources */,
 				CEF1947D2DA834E900C81F12 /* (null) in Sources */,
 				CEF1947E2DA834E900C81F12 /* MultipleBettingTicketTableViewCell.swift in Sources */,
+				CE63A84A2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift in Sources */,
+				CE63A84B2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift in Sources */,
 				CEB2367D2DAD0EC100260B5B /* FriendRequestView.swift in Sources */,
 				CEF1947F2DA834E900C81F12 /* Throttler.swift in Sources */,
 				CEF194822DA834E900C81F12 /* PopularDetailsViewModel.swift in Sources */,

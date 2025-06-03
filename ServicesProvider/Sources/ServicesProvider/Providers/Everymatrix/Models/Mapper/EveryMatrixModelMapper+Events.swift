@@ -91,6 +91,7 @@ extension EveryMatrixModelMapper {
             name: internalMarket.name,
             outcomes: outcomes,
             marketTypeId: marketTypeId,
+            marketTypeName: marketTypeName,
             marketFilterId: nil, // Not available in EveryMatrix
             eventMarketTypeId: nil, // Not available in EveryMatrix
             eventName: nil, // Not available at market level

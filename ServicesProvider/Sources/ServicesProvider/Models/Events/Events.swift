@@ -336,7 +336,10 @@ public class Market: Codable, Equatable, Hashable, Identifiable {
     public var id: String
     public var name: String
     public var outcomes: [Outcome]
+    
     public var marketTypeId: String?
+    public var marketTypeName: String?
+    
     public var marketFilterId: String?
     public var eventMarketTypeId: String?
     public var eventName: String?
@@ -368,6 +371,7 @@ public class Market: Codable, Equatable, Hashable, Identifiable {
         case name = "name"
         case outcomes = "outcomes"
         case marketTypeId = "marketTypeId"
+        case marketTypeName = "marketTypeName"
         case marketFilterId = "marketFilterId"
         case eventMarketTypeId = "eventMarketTypeId"
         case eventName = "eventName"
@@ -391,7 +395,10 @@ public class Market: Codable, Equatable, Hashable, Identifiable {
     public init(id: String,
                 name: String,
                 outcomes: [Outcome],
+                
                 marketTypeId: String?,
+                marketTypeName: String?,
+                
                 marketFilterId: String?,
                 eventMarketTypeId: String?,
                 eventName: String?,
@@ -417,6 +424,7 @@ public class Market: Codable, Equatable, Hashable, Identifiable {
         self.name = name
         self.outcomes = outcomes
         self.marketTypeId = marketTypeId
+        self.marketTypeName = marketTypeName
         self.marketFilterId = marketFilterId
         self.eventMarketTypeId = eventMarketTypeId
         self.eventName = eventName

@@ -200,6 +200,7 @@ extension SportRadarModelMapper {
                       name: internalMarket.name,
                       outcomes: outcomes,
                       marketTypeId: internalMarket.marketTypeId,
+                      marketTypeName: internalMarket.marketTypeId,
                       marketFilterId: internalMarket.marketFilterId,
                       eventMarketTypeId: internalMarket.eventMarketTypeId,
                       eventName: internalMarket.eventName,

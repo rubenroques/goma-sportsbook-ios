@@ -82,6 +82,8 @@ struct Market: Hashable {
     var outcomes: [Outcome]
 
     var marketTypeId: String?
+    var marketTypeName: String?
+    
     var eventName: String?
     var isMainOutright: Bool?
     var eventMarketCount: Int?
@@ -117,6 +119,7 @@ struct Market: Hashable {
          bettingTypeId: String?,
          outcomes: [Outcome],
          marketTypeId: String? = nil,
+         marketTypeName: String? = nil,
          eventName: String? = nil,
          isMainOutright: Bool? = nil,
          eventMarketCount: Int? = nil,
@@ -145,6 +148,7 @@ struct Market: Hashable {
         self.bettingTypeId = bettingTypeId
         self.outcomes = outcomes
         self.marketTypeId = marketTypeId
+        self.marketTypeName = marketTypeName
         self.eventName = eventName
         self.isMainOutright = isMainOutright
         self.eventMarketCount = eventMarketCount

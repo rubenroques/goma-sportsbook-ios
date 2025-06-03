@@ -212,6 +212,7 @@ extension ServiceProviderModelMapper {
                       bettingTypeId: market.eventMarketTypeId,
                       outcomes: mappedOutcomes,
                       marketTypeId: market.marketTypeId,
+                      marketTypeName: market.marketTypeName,
                       eventName: market.eventName,
                       isMainOutright: market.isMainOutright,
                       eventMarketCount: market.eventMarketCount,
