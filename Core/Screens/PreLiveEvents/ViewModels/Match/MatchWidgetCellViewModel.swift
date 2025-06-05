@@ -330,7 +330,7 @@ class MatchWidgetCellViewModel {
 
     //
     // MatchHeaderViewModel
-    let matchHeaderViewModel = MatchHeaderViewModel()
+    let matchHeaderViewModel = LegacyMatchHeaderViewModel()
 
     // MatchInfoViewModel
     let matchInfoViewModel = MatchInfoViewModel()

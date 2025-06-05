@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "splash beflag-orange_ios 1.png",
+      "filename" : "Betsson@2x 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "splash beflag-white_ios 1.png",
+      "filename" : "Betsson@2x 3.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "splash beflag-orange_ios.png",
+      "filename" : "Betsson@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "splash beflag-white_ios.png",
+      "filename" : "Betsson@2x 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "splash beflag-orange_ios@2x.png",
+      "filename" : "Betsson@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "splash beflag-white_ios@2x.png",
+      "filename" : "Betsson@3x 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

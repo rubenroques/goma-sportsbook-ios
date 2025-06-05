@@ -266,8 +266,10 @@ extension ThemeColors {
         cardBorderLineGradient3: "#ff6600",
         boostedOddsGradient1: "#ff6600",
         boostedOddsGradient2: "#ffd900",
-        backgroundGradientDark: "#fff0e6",
-        backgroundGradientLight: "#fff0e6",
+        
+        backgroundGradientDark: "#FF6600",
+        backgroundGradientLight: "#FFB300",
+        
         backgroundGradient1: "#ffca99",
         backgroundGradient2: "#f0ede5",
         topBarGradient1: "#ff6600",
@@ -390,8 +392,10 @@ extension ThemeColors {
         cardBorderLineGradient3: "#b15533",
         boostedOddsGradient1: "#ff6600",
         boostedOddsGradient2: "#ffd900",
-        backgroundGradientDark: "#192024",
-        backgroundGradientLight: "#000306",
+        
+        backgroundGradientDark: "#FF6600",
+        backgroundGradientLight: "#FFB300",
+        
         backgroundGradient1: "#001b3d",
         backgroundGradient2: "#050019",
         topBarGradient1: "#01025b",

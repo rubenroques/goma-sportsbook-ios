@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 // MARK: - ViewModel
-class MatchHeaderViewModel {
+class LegacyMatchHeaderViewModel {
 
     // MARK: Publishers
     private(set) var competitionNamePublisher = CurrentValueSubject<String?, Never>(nil)
@@ -104,7 +104,7 @@ class MatchHeaderView: UIView {
     private lazy var favoritesButton: UIButton = Self.createFavoritesButton()
 
     // MARK: ViewModel
-    private var viewModel: MatchHeaderViewModel?
+    private var viewModel: LegacyMatchHeaderViewModel?
     private var cancellables = Set<AnyCancellable>()
 
     //
@@ -157,7 +157,7 @@ class MatchHeaderView: UIView {
     }
 
     // MARK: Configuration
-    func configure(with viewModel: MatchHeaderViewModel) {
+    func configure(with viewModel: LegacyMatchHeaderViewModel) {
         self.viewModel = viewModel
         self.setupBindings()
     }
@@ -346,7 +346,7 @@ extension MatchHeaderView {
 
                 PreviewUIView {
                     let view = MatchHeaderView()
-                    let viewModel = MatchHeaderViewModel(
+                    let viewModel = LegacyMatchHeaderViewModel(
                         competitionName: "Premier League",
                         countryImageName: "GB",
                         isFavorite: false,
@@ -367,7 +367,7 @@ extension MatchHeaderView {
 
                 PreviewUIView {
                     let view = MatchHeaderView()
-                    let viewModel = MatchHeaderViewModel(
+                    let viewModel = LegacyMatchHeaderViewModel(
                         competitionName: "La Liga",
                         countryImageName: "ES",
                         isFavorite: true,
@@ -388,7 +388,7 @@ extension MatchHeaderView {
 
                 PreviewUIView {
                     let view = MatchHeaderView()
-                    let viewModel = MatchHeaderViewModel(
+                    let viewModel = LegacyMatchHeaderViewModel(
                         competitionName: "Serie A",
                         countryImageName: "IT",
                         isFavorite: true,

@@ -428,6 +428,8 @@ extension EveryMatrix {
         let startTime: Date
         let sport: Sport?
         let venue: Location?
+        let competitionId: String?
+        let competitionName: String?
         let category: EventCategory?
         let homeParticipant: Participant?
         let awayParticipant: Participant?
@@ -526,6 +528,8 @@ extension EveryMatrix {
                 startTime: Date(timeIntervalSince1970: TimeInterval(match.startTime / 1000)),
                 sport: sport,
                 venue: venue,
+                competitionId: match.parentId,
+                competitionName: match.parentName,
                 category: category,
                 homeParticipant: Match.Participant(
                     id: match.homeParticipantId,

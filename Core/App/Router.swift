@@ -71,7 +71,7 @@ class Router {
 
         #if DEBUG
         // manual theme override
-        // self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
+        self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         //
         #else
         if TargetVariables.supportedThemes == AppearanceMode.allCases {
@@ -88,19 +88,37 @@ class Router {
         }
         #endif
         
-        // Setup StyleProviderColors
-        let splashViewController = SplashViewController(loadingCompleted: {
-            self.showPostLoadingFlow()
-        })
-
-        self.rootWindow.rootViewController = splashViewController
-        self.rootWindow.makeKeyAndVisible()
+        if TargetVariables.useAdaptiveRootViewController {
+            let splashInformativeViewController = SplashInformativeViewController(loadingCompleted: {
+                self.showDemoPostLoadingFlow()
+            })
+            self.rootWindow.rootViewController = splashInformativeViewController
+            self.rootWindow.makeKeyAndVisible()
+        }
+        else {
+            let splashViewController = SplashViewController(loadingCompleted: {
+                self.showPostLoadingFlow()
+            })
+            self.rootWindow.rootViewController = splashViewController
+            self.rootWindow.makeKeyAndVisible()
+        }
     }
 
     @objc func applicationDidBecomeActive(notification: NSNotification) {
 
     }
 
+    func showDemoPostLoadingFlow() {
+        var bootRootViewController: UIViewController
+        
+        let viewModel = RootAdaptiveScreenViewModel()
+        let rootViewController = RootAdaptiveViewController(viewModel: viewModel)
+        self.rootActionable = rootViewController
+        bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
+
+        self.rootWindow.rootViewController = bootRootViewController
+    }
+    
     func showPostLoadingFlow() {
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {

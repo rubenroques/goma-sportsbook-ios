@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,19 +17,32 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_gradient_background" translatesAutoresizingMaskIntoConstraints="NO" id="yk6-qg-FMl">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="brand_icon_variation_new" translatesAutoresizingMaskIntoConstraints="NO" id="8gj-oC-TVC">
-                                <rect key="frame" x="50" y="271" width="314" height="314"/>
+                                <rect key="frame" x="137" y="164" width="140" height="24"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="1000" id="Pki-7r-qsz"/>
-                                    <constraint firstAttribute="width" secondItem="8gj-oC-TVC" secondAttribute="height" multiplier="15:15" id="Q4A-tx-fqE"/>
+                                    <constraint firstAttribute="height" constant="24" id="o8y-Cx-dW1"/>
+                                    <constraint firstAttribute="width" constant="140" id="wLe-s3-2St"/>
                                 </constraints>
                             </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="CwC-iE-YPi">
+                                <rect key="frame" x="188.66666666666666" y="429.66666666666669" width="37" height="37"/>
+                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="backgroundPrimary"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="yk6-qg-FMl" secondAttribute="trailing" id="8Nq-Xw-bR1"/>
+                            <constraint firstItem="yk6-qg-FMl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Nkv-sg-QOX"/>
                             <constraint firstItem="8gj-oC-TVC" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Q8X-4Y-yQK"/>
-                            <constraint firstItem="8gj-oC-TVC" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-20" id="VqU-HY-Rie"/>
+                            <constraint firstItem="CwC-iE-YPi" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Sde-zv-EVh"/>
+                            <constraint firstItem="yk6-qg-FMl" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="ZBy-Pa-mFP"/>
+                            <constraint firstItem="8gj-oC-TVC" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="120" id="dyR-9F-p4V"/>
+                            <constraint firstAttribute="bottom" secondItem="yk6-qg-FMl" secondAttribute="bottom" id="gyG-ue-ogc"/>
+                            <constraint firstItem="CwC-iE-YPi" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="mr8-eE-r9h"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="8gj-oC-TVC" secondAttribute="trailing" constant="50" id="qK4-Ef-GEe"/>
                         </constraints>
                     </view>
@@ -41,7 +54,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="brand_icon_variation_new" width="1902" height="269.33334350585938"/>
+        <image name="brand_icon_variation_new" width="100" height="18"/>
+        <image name="splash_gradient_background" width="1000" height="1000"/>
         <namedColor name="backgroundPrimary">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

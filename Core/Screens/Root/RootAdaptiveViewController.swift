@@ -7,13 +7,7 @@
 
 import UIKit
 import Combine
-import WebKit
 import LocalAuthentication
-import RegisterFlow
-import Adyen
-import AdyenDropIn
-import AdyenComponents
-import OptimoveSDK
 import ServicesProvider
 import GomaUI
 
@@ -23,12 +17,20 @@ class RootAdaptiveScreenViewModel {
 
     var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
     var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
+    var floatingOverlayViewModel: FloatingOverlayViewModelProtocol
+
+    private var cancellables = Set<AnyCancellable>()
+    private var lastActiveTabBarID: TabBarIdentifier?
 
     init(multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol = MockMultiWidgetToolbarViewModel.defaultMock,
-         adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock)
+         adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
+         floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel())
     {
         self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel
         self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
+        self.floatingOverlayViewModel = floatingOverlayViewModel
+
+        setupTabBarBinding()
     }
 
     // MARK: - Screen Management
@@ -40,18 +42,53 @@ class RootAdaptiveScreenViewModel {
         currentScreen = nil
     }
 
+    // MARK: - Private Methods
+    private func setupTabBarBinding() {
+        // Listen to tab bar active bar id changes
+        adaptiveTabBarViewModel.displayStatePublisher
+            .sink { [weak self] displayState in
+                self?.lastActiveTabBarID = displayState.activeTabBarID
+            }
+            .store(in: &cancellables)
+
+        // Listen to tab bar state changes
+        adaptiveTabBarViewModel.displayStatePublisher
+            .dropFirst()
+            .sink { [weak self] displayState in
+                self?.handleTabBarChange(displayState)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func handleTabBarChange(_ displayState: AdaptiveTabBarDisplayState) {
+
+        if lastActiveTabBarID != displayState.activeTabBarID {
+            switch displayState.activeTabBarID {
+            case .home:
+                // Switched to Sportsbook
+                floatingOverlayViewModel.show(mode: .sportsbook, duration: 3.0)
+            case .casino:
+                // Switched to Casino
+                floatingOverlayViewModel.show(mode: .casino, duration: 3.0)
+            }
+        }
+    }
+
 }
 
 enum ScreenType {
+    // Sportsbook tab items
     case home
     case nextUpEvents
     case inPlayEvents
-    // Add more screens here as needed
-    // case preLive
-    // case live
-    // case tips
-    // case casino
-    // etc.
+    case myBets
+    case search
+
+    // Casino tab items
+    case casinoHome
+    case casinoVirtualSports
+    case casinoAviatorGame
+    case casinoSearch
 }
 
 class RootAdaptiveViewController: UIViewController {
@@ -68,6 +105,10 @@ class RootAdaptiveViewController: UIViewController {
     private var adaptiveTabBarView: AdaptiveTabBarView!
 
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
+    private var combinedTabBarBlurView: UIVisualEffectView?
+
+    // FloatingOverlay
+    private var floatingOverlayView: FloatingOverlayView!
 
     // Authentication Views
     private lazy var localAuthenticationBaseView: UIView = Self.createLocalAuthenticationBaseView()
@@ -96,6 +137,31 @@ class RootAdaptiveViewController: UIViewController {
         return InPlayEventsViewController(viewModel: viewModel)
     }()
     private var inPlayEventsViewControllerLoaded: Bool = false
+
+    // Dummy view controllers for unimplemented screens
+    private lazy var inPlayDummyViewController = DummyViewController(displayText: "Live Events")
+    private lazy var myBetsDummyViewController = DummyViewController(displayText: "My Bets")
+    private lazy var searchDummyViewController = DummyViewController(displayText: "Search")
+    private lazy var casinoHomeDummyViewController = DummyViewController(displayText: "Casino Home")
+    private lazy var casinoTablesDummyViewController = DummyViewController(displayText: "Virtual Sports")
+    private lazy var casinoJackpotsDummyViewController = DummyViewController(displayText: "Aviator")
+    private lazy var casinoSearchDummyViewController = DummyViewController(displayText: "Casino Search")
+
+    // Base views for dummy screens
+    private lazy var myBetsBaseView: UIView = Self.createBaseView()
+    private lazy var searchBaseView: UIView = Self.createBaseView()
+    private lazy var casinoHomeBaseView: UIView = Self.createBaseView()
+    private lazy var casinoTablesBaseView: UIView = Self.createBaseView()
+    private lazy var casinoJackpotsBaseView: UIView = Self.createBaseView()
+    private lazy var casinoSearchBaseView: UIView = Self.createBaseView()
+
+    // Loaded flags
+    private var myBetsViewControllerLoaded: Bool = false
+    private var searchViewControllerLoaded: Bool = false
+    private var casinoHomeViewControllerLoaded: Bool = false
+    private var casinoTablesViewControllerLoaded: Bool = false
+    private var casinoJackpotsViewControllerLoaded: Bool = false
+    private var casinoSearchViewControllerLoaded: Bool = false
 
     // Constraints
     private var viewModel: RootAdaptiveScreenViewModel
@@ -130,7 +196,10 @@ class RootAdaptiveViewController: UIViewController {
         self.viewModel = viewModel
 
         self.adaptiveTabBarView = AdaptiveTabBarView(viewModel: viewModel.adaptiveTabBarViewModel)
+        self.adaptiveTabBarView.backgroundMode = .transparent // Use transparent mode with combined blur
         self.widgetToolBarView = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
+        self.floatingOverlayView = FloatingOverlayView(viewModel: viewModel.floatingOverlayViewModel)
+        self.floatingOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -291,15 +360,13 @@ class RootAdaptiveViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        #if DEBUG
-        self.topSafeAreaView.backgroundColor = .purple
-        self.bottomSafeAreaView.backgroundColor = .blue
+        self.topSafeAreaView.backgroundColor = UIColor.App.topBarGradient1
+        self.setupCombinedTabBarBlur()
 
-        self.topBarContainerBaseView.backgroundColor = .orange
-        self.containerView.backgroundColor = .green
+        self.topBarContainerBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.tabBarView.backgroundColor = .red
-        #endif
+        // Tab bar background is handled by setupCombinedTabBarBlur()
 
         self.mainContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -312,6 +379,32 @@ class RootAdaptiveViewController: UIViewController {
 
         self.cancelUnlockAppButton.backgroundColor = .systemGray
         self.cancelUnlockAppButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+    }
+
+    private func setupCombinedTabBarBlur() {
+        // Clear backgrounds for both tab bar and bottom safe area
+        self.tabBarView.backgroundColor = .clear
+        self.bottomSafeAreaView.backgroundColor = .clear
+        
+        // Remove existing blur if any
+        combinedTabBarBlurView?.removeFromSuperview()
+        
+        // Create blur effect - using thin material for subtle effect
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Store reference and add to container view
+        combinedTabBarBlurView = blurEffectView
+        containerView.insertSubview(blurEffectView, belowSubview: tabBarView)
+        
+        // Constrain blur view to span from tab bar top to bottom safe area bottom
+        NSLayoutConstraint.activate([
+            blurEffectView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            blurEffectView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            blurEffectView.topAnchor.constraint(equalTo: tabBarView.topAnchor),
+            blurEffectView.bottomAnchor.constraint(equalTo: bottomSafeAreaView.bottomAnchor)
+        ])
     }
 
     //
@@ -339,10 +432,26 @@ class RootAdaptiveViewController: UIViewController {
     // MARK: - Tab Bar Integration
     private func handleTabSelection(_ tabItem: TabItem) {
         switch tabItem.identifier {
+        // Sportsbook tabs
         case .nextUpEvents:
             viewModel.presentScreen(.nextUpEvents)
         case .inPlayEvents:
             viewModel.presentScreen(.inPlayEvents)
+        case .myBets:
+            viewModel.presentScreen(.myBets)
+        case .sportsSearch:
+            viewModel.presentScreen(.search)
+
+        // Casino tabs
+        case .casinoHome:
+            viewModel.presentScreen(.casinoHome)
+        case .casinoVirtualSports:
+            viewModel.presentScreen(.casinoVirtualSports)
+        case .casinoAviatorGame:
+            viewModel.presentScreen(.casinoAviatorGame)
+        case .casinoSearch:
+            viewModel.presentScreen(.casinoSearch)
+
         case .sportsHome:
             viewModel.presentScreen(.home)
         default:
@@ -592,10 +701,13 @@ class RootAdaptiveViewController: UIViewController {
     private func hideAllScreens() {
         nextUpEventsBaseView.isHidden = true
         inPlayEventsBaseView.isHidden = true
-        // Add more base views here as you add more screens
-        // homeBaseView.isHidden = true
-        // preLiveBaseView.isHidden = true
-        // etc.
+        homeBaseView.isHidden = true
+        myBetsBaseView.isHidden = true
+        searchBaseView.isHidden = true
+        casinoHomeBaseView.isHidden = true
+        casinoTablesBaseView.isHidden = true
+        casinoJackpotsBaseView.isHidden = true
+        casinoSearchBaseView.isHidden = true
     }
 
     private func presentScreen(_ screenType: ScreenType) {
@@ -615,12 +727,48 @@ class RootAdaptiveViewController: UIViewController {
                 loadedFlag: &nextUpEventsViewControllerLoaded
             )
         case .inPlayEvents:
+            // Use dummy instead of real controller
             presentChildViewController(
-                inPlayEventsViewController,
+                inPlayDummyViewController,
                 in: inPlayEventsBaseView,
                 loadedFlag: &inPlayEventsViewControllerLoaded
             )
-        // Add more cases here as you add more screens
+        case .myBets:
+            presentChildViewController(
+                myBetsDummyViewController,
+                in: myBetsBaseView,
+                loadedFlag: &myBetsViewControllerLoaded
+            )
+        case .search:
+            presentChildViewController(
+                searchDummyViewController,
+                in: searchBaseView,
+                loadedFlag: &searchViewControllerLoaded
+            )
+        case .casinoHome:
+            presentChildViewController(
+                casinoHomeDummyViewController,
+                in: casinoHomeBaseView,
+                loadedFlag: &casinoHomeViewControllerLoaded
+            )
+        case .casinoVirtualSports:
+            presentChildViewController(
+                casinoTablesDummyViewController,
+                in: casinoTablesBaseView,
+                loadedFlag: &casinoTablesViewControllerLoaded
+            )
+        case .casinoAviatorGame:
+            presentChildViewController(
+                casinoJackpotsDummyViewController,
+                in: casinoJackpotsBaseView,
+                loadedFlag: &casinoJackpotsViewControllerLoaded
+            )
+        case .casinoSearch:
+            presentChildViewController(
+                casinoSearchDummyViewController,
+                in: casinoSearchBaseView,
+                loadedFlag: &casinoSearchViewControllerLoaded
+            )
         }
     }
 
@@ -847,6 +995,12 @@ extension RootAdaptiveViewController {
         return view
     }
 
+    private static func createBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createShowEventsButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -961,8 +1115,15 @@ extension RootAdaptiveViewController {
         containerView.addSubview(mainContainerView)
 
         // Add base views for child view controllers
+        mainContainerView.addSubview(homeBaseView)
         mainContainerView.addSubview(nextUpEventsBaseView)
         mainContainerView.addSubview(inPlayEventsBaseView)
+        mainContainerView.addSubview(myBetsBaseView)
+        mainContainerView.addSubview(searchBaseView)
+        mainContainerView.addSubview(casinoHomeBaseView)
+        mainContainerView.addSubview(casinoTablesBaseView)
+        mainContainerView.addSubview(casinoJackpotsBaseView)
+        mainContainerView.addSubview(casinoSearchBaseView)
 
         // Setup tab bar
         containerView.addSubview(tabBarView)
@@ -972,6 +1133,9 @@ extension RootAdaptiveViewController {
         localAuthenticationBaseView.addSubview(isLoadingUserSessionView)
 
         view.bringSubviewToFront(topBarContainerBaseView)
+
+        // Add floating overlay at the top of the view hierarchy
+        view.addSubview(floatingOverlayView)
 
         initConstraints()
     }
@@ -1002,11 +1166,11 @@ extension RootAdaptiveViewController {
             self.containerView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
-            // Main Container View
+            // Main Container View - extend behind tab bar for blur effect
             self.mainContainerView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.mainContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.mainContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.mainContainerView.bottomAnchor.constraint(equalTo: self.tabBarView.topAnchor),
+            self.mainContainerView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
 
             // Next Up Events Base View
             self.nextUpEventsBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
@@ -1019,6 +1183,48 @@ extension RootAdaptiveViewController {
             self.inPlayEventsBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
             self.inPlayEventsBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
             self.inPlayEventsBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
+            // Home Base View
+            self.homeBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.homeBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.homeBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.homeBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
+            // My Bets Base View
+            self.myBetsBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.myBetsBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.myBetsBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.myBetsBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
+            // Search Base View
+            self.searchBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.searchBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.searchBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.searchBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
+            // Casino Home Base View
+            self.casinoHomeBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.casinoHomeBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.casinoHomeBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.casinoHomeBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
+            // Casino Tables Base View
+            self.casinoTablesBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.casinoTablesBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.casinoTablesBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.casinoTablesBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
+            // Casino Jackpots Base View
+            self.casinoJackpotsBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.casinoJackpotsBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.casinoJackpotsBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.casinoJackpotsBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+
+            // Casino Search Base View
+            self.casinoSearchBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.casinoSearchBaseView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.casinoSearchBaseView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.casinoSearchBaseView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
 
             // Tab Bar
             self.tabBarView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
@@ -1057,6 +1263,9 @@ extension RootAdaptiveViewController {
             self.isLoadingUserSessionView.centerXAnchor.constraint(equalTo: self.localAuthenticationBaseView.centerXAnchor),
             self.isLoadingUserSessionView.centerYAnchor.constraint(equalTo: self.localAuthenticationBaseView.centerYAnchor),
 
+            // Floating Overlay View
+            self.floatingOverlayView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.floatingOverlayView.bottomAnchor.constraint(equalTo: self.adaptiveTabBarView.topAnchor, constant: -32),
         ])
 
     }
