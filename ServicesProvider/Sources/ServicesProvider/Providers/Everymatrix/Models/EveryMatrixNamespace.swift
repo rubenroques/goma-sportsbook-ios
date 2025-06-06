@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 enum EveryMatrix {
 
@@ -255,7 +256,147 @@ extension EveryMatrix {
         let records: [EntityRecord]
     }
 
+    // MARK: - Change Types
+    enum ChangeType: String, Codable {
+        case create = "CREATE"
+        case update = "UPDATE"
+        case delete = "DELETE"
+    }
+
+    // MARK: - Entity Record with Change Support
     enum EntityRecord: Codable {
+        // INITIAL_DUMP records (full entities)
+        case sport(SportDTO)
+        case match(MatchDTO)
+        case market(MarketDTO)
+        case outcome(OutcomeDTO)
+        case bettingOffer(BettingOfferDTO)
+        case location(LocationDTO)
+        case eventCategory(EventCategoryDTO)
+        case marketOutcomeRelation(MarketOutcomeRelationDTO)
+        case mainMarket(MainMarketDTO)
+        case marketInfo(MarketInfoDTO)
+        case nextMatchesNumber(NextMatchesNumberDTO)
+
+        // UPDATE/DELETE/CREATE records with change metadata
+        case changeRecord(ChangeRecord)
+        case unknown(type: String)
+
+        private enum CodingKeys: String, CodingKey {
+            case type = "_type"
+            case entityType
+            case changeType
+            case id
+            case entity
+            case changedProperties
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            // Check if this is a change record (has changeType)
+            if container.contains(.changeType) {
+                let changeRecord = try ChangeRecord(from: decoder)
+                self = .changeRecord(changeRecord)
+                return
+            }
+
+            // Otherwise, decode as original entity type
+            let type = try container.decode(String.self, forKey: .type)
+
+            switch type {
+            case "SPORT":
+                let sport = try SportDTO(from: decoder)
+                self = .sport(sport)
+            case "MATCH":
+                let match = try MatchDTO(from: decoder)
+                self = .match(match)
+            case "MARKET":
+                let market = try MarketDTO(from: decoder)
+                self = .market(market)
+            case "OUTCOME":
+                let outcome = try OutcomeDTO(from: decoder)
+                self = .outcome(outcome)
+            case "BETTING_OFFER":
+                let offer = try BettingOfferDTO(from: decoder)
+                self = .bettingOffer(offer)
+            case "LOCATION":
+                let location = try LocationDTO(from: decoder)
+                self = .location(location)
+            case "EVENT_CATEGORY":
+                let category = try EventCategoryDTO(from: decoder)
+                self = .eventCategory(category)
+            case "MARKET_OUTCOME_RELATION":
+                let relation = try MarketOutcomeRelationDTO(from: decoder)
+                self = .marketOutcomeRelation(relation)
+            case "MAIN_MARKET":
+                let mainMarket = try MainMarketDTO(from: decoder)
+                self = .mainMarket(mainMarket)
+            case "MARKET_INFO":
+                let marketInfo = try MarketInfoDTO(from: decoder)
+                self = .marketInfo(marketInfo)
+            case "NEXT_MATCHES_NUMBER":
+                let nextMatches = try NextMatchesNumberDTO(from: decoder)
+                self = .nextMatchesNumber(nextMatches)
+            default:
+                self = .unknown(type: type)
+            }
+        }
+
+        func encode(to encoder: Encoder) throws {
+            switch self {
+            case .sport(let dto):
+                try dto.encode(to: encoder)
+            case .match(let dto):
+                try dto.encode(to: encoder)
+            case .market(let dto):
+                try dto.encode(to: encoder)
+            case .outcome(let dto):
+                try dto.encode(to: encoder)
+            case .bettingOffer(let dto):
+                try dto.encode(to: encoder)
+            case .location(let dto):
+                try dto.encode(to: encoder)
+            case .eventCategory(let dto):
+                try dto.encode(to: encoder)
+            case .marketOutcomeRelation(let dto):
+                try dto.encode(to: encoder)
+            case .mainMarket(let dto):
+                try dto.encode(to: encoder)
+            case .marketInfo(let dto):
+                try dto.encode(to: encoder)
+            case .nextMatchesNumber(let dto):
+                try dto.encode(to: encoder)
+            case .changeRecord(let record):
+                try record.encode(to: encoder)
+            case .unknown:
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                if case .unknown(let type) = self {
+                    try container.encode(type, forKey: .type)
+                }
+            }
+        }
+    }
+
+    // MARK: - Change Record Structure
+    struct ChangeRecord: Codable {
+        let changeType: ChangeType
+        let entityType: String
+        let id: String
+        let entity: EntityData?  // For CREATE operations
+        let changedProperties: [String: AnyCodable]?  // For UPDATE operations
+
+        private enum CodingKeys: String, CodingKey {
+            case changeType
+            case entityType
+            case id
+            case entity
+            case changedProperties
+        }
+    }
+
+    // MARK: - Entity Data Union
+    enum EntityData: Codable {
         case sport(SportDTO)
         case match(MatchDTO)
         case market(MarketDTO)
@@ -349,12 +490,59 @@ extension EveryMatrix {
         }
     }
 
+    // MARK: - AnyCodable for changedProperties
+    struct AnyCodable: Codable {
+        let value: Any
+
+        init<T>(_ value: T?) {
+            self.value = value ?? ()
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+
+            if let bool = try? container.decode(Bool.self) {
+                value = bool
+            } else if let int = try? container.decode(Int.self) {
+                value = int
+            } else if let double = try? container.decode(Double.self) {
+                value = double
+            } else if let string = try? container.decode(String.self) {
+                value = string
+            } else if container.decodeNil() {
+                value = ()
+            } else {
+                throw DecodingError.dataCorrupted(
+                    DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Unable to decode value")
+                )
+            }
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+
+            switch value {
+            case let bool as Bool:
+                try container.encode(bool)
+            case let int as Int:
+                try container.encode(int)
+            case let double as Double:
+                try container.encode(double)
+            case let string as String:
+                try container.encode(string)
+            default:
+                try container.encodeNil()
+            }
+        }
+    }
+
     // MARK: - Response Parser
 
     struct ResponseParser {
         static func parseAndStore(response: AggregatorResponse, in store: EntityStore) {
             for record in response.records {
                 switch record {
+                // INITIAL_DUMP records - store full entities
                 case .sport(let dto):
                     store.store(dto)
                 case .match(let dto):
@@ -377,9 +565,67 @@ extension EveryMatrix {
                     store.store(dto)
                 case .nextMatchesNumber(let dto):
                     store.store(dto)
+                
+                // UPDATE/DELETE/CREATE records - handle changes
+                case .changeRecord(let changeRecord):
+                    handleChangeRecord(changeRecord, in: store)
+                
                 case .unknown(let type):
                     print("Unknown entity type: \(type)")
                 }
+            }
+        }
+        
+        private static func handleChangeRecord(_ change: ChangeRecord, in store: EntityStore) {
+            switch change.changeType {
+            case .create:
+                // CREATE: Store the full entity
+                guard let entityData = change.entity else {
+                    print("CREATE change record missing entity data for \(change.entityType):\(change.id)")
+                    return
+                }
+                storeEntityData(entityData, in: store)
+                
+            case .update:
+                // UPDATE: Merge changedProperties with existing entity
+                guard let changedProperties = change.changedProperties else {
+                    print("UPDATE change record missing changedProperties for \(change.entityType):\(change.id)")
+                    return
+                }
+                store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                
+            case .delete:
+                // DELETE: Remove entity from store
+                store.deleteEntity(type: change.entityType, id: change.id)
+            }
+        }
+        
+        private static func storeEntityData(_ entityData: EntityData, in store: EntityStore) {
+            switch entityData {
+            case .sport(let dto):
+                store.store(dto)
+            case .match(let dto):
+                store.store(dto)
+            case .market(let dto):
+                store.store(dto)
+            case .outcome(let dto):
+                store.store(dto)
+            case .bettingOffer(let dto):
+                store.store(dto)
+            case .location(let dto):
+                store.store(dto)
+            case .eventCategory(let dto):
+                store.store(dto)
+            case .marketOutcomeRelation(let dto):
+                store.store(dto)
+            case .mainMarket(let dto):
+                store.store(dto)
+            case .marketInfo(let dto):
+                store.store(dto)
+            case .nextMatchesNumber(let dto):
+                store.store(dto)
+            case .unknown(let type):
+                print("Unknown entity data type: \(type)")
             }
         }
     }
@@ -690,6 +936,11 @@ extension EveryMatrix {
     class EntityStore: ObservableObject {
         @Published private var entities: [String: [String: any Entity]] = [:]
         private let queue = DispatchQueue(label: "entity.store.queue", attributes: .concurrent)
+        
+        // MARK: - Publisher Infrastructure
+        private var entityPublishers: [String: [String: PassthroughSubject<(any Entity)?, Never>]] = [:]
+        private let publisherQueue = DispatchQueue(label: "entity.publisher.queue", attributes: .concurrent)
+        private var cancellables = Set<AnyCancellable>()
 
         // Store entity by type and id
         func store<T: Entity>(_ entity: T) {
@@ -699,6 +950,9 @@ extension EveryMatrix {
                     self?.entities[type] = [:]
                 }
                 self?.entities[type]?[entity.id] = entity
+                
+                // Notify observers of the change
+                self?.notifyEntityChange(entity)
             }
         }
 
@@ -727,6 +981,9 @@ extension EveryMatrix {
                         self?.entities[type] = [:]
                     }
                     self?.entities[type]?[entity.id] = entity
+                    
+                    // Notify observers of each change
+                    self?.notifyEntityChange(entity)
                 }
             }
         }
@@ -735,6 +992,203 @@ extension EveryMatrix {
         func clear() {
             queue.async(flags: .barrier) { [weak self] in
                 self?.entities.removeAll()
+            }
+        }
+        
+        // Update entity with changed properties
+        func updateEntity(type entityType: String, id: String, changedProperties: [String: AnyCodable]) {
+            queue.async(flags: .barrier) { [weak self] in
+                guard let existingEntity = self?.entities[entityType]?[id] else {
+                    print("Cannot update entity \(entityType):\(id) - entity not found")
+                    return
+                }
+                
+                // Create updated entity by merging changed properties
+                let updatedEntity = self?.mergeChangedProperties(entity: existingEntity, changes: changedProperties)
+                
+                if let updatedEntity = updatedEntity {
+                    self?.entities[entityType]?[id] = updatedEntity
+                    
+                    // Notify observers of the update
+                    self?.notifyEntityChange(updatedEntity)
+                }
+            }
+        }
+        
+        // Delete entity from store
+        func deleteEntity(type entityType: String, id: String) {
+            queue.async(flags: .barrier) { [weak self] in
+                self?.entities[entityType]?[id] = nil
+                print("Deleted entity \(entityType):\(id)")
+                
+                // Notify observers of the deletion
+                self?.notifyEntityDeletion(entityType: entityType, id: id)
+            }
+        }
+        
+        // Helper method to merge changed properties into existing entity
+        private func mergeChangedProperties(entity: any Entity, changes: [String: AnyCodable]) -> (any Entity)? {
+            // This is complex because we need to create a new instance with updated properties
+            // For now, we'll use a reflection-based approach
+            
+            // Convert entity to JSON, update properties, and decode back
+            do {
+                let encoder = JSONEncoder()
+                let decoder = JSONDecoder()
+                
+                // Encode existing entity to JSON
+                var entityData = try encoder.encode(entity)
+                var json = try JSONSerialization.jsonObject(with: entityData) as? [String: Any] ?? [:]
+                
+                // Apply changed properties
+                for (key, value) in changes {
+                    json[key] = value.value
+                }
+                
+                // Encode back to data
+                entityData = try JSONSerialization.data(withJSONObject: json)
+                
+                // Decode to appropriate type based on entity type
+                switch type(of: entity).rawType {
+                case "SPORT":
+                    return try decoder.decode(SportDTO.self, from: entityData)
+                case "MATCH":
+                    return try decoder.decode(MatchDTO.self, from: entityData)
+                case "MARKET":
+                    return try decoder.decode(MarketDTO.self, from: entityData)
+                case "OUTCOME":
+                    return try decoder.decode(OutcomeDTO.self, from: entityData)
+                case "BETTING_OFFER":
+                    return try decoder.decode(BettingOfferDTO.self, from: entityData)
+                case "LOCATION":
+                    return try decoder.decode(LocationDTO.self, from: entityData)
+                case "EVENT_CATEGORY":
+                    return try decoder.decode(EventCategoryDTO.self, from: entityData)
+                case "MARKET_OUTCOME_RELATION":
+                    return try decoder.decode(MarketOutcomeRelationDTO.self, from: entityData)
+                case "MAIN_MARKET":
+                    return try decoder.decode(MainMarketDTO.self, from: entityData)
+                case "MARKET_INFO":
+                    return try decoder.decode(MarketInfoDTO.self, from: entityData)
+                case "NEXT_MATCHES_NUMBER":
+                    return try decoder.decode(NextMatchesNumberDTO.self, from: entityData)
+                default:
+                    print("Unknown entity type for merge: \(type(of: entity).rawType)")
+                    return nil
+                }
+            } catch {
+                print("Failed to merge changed properties for \(type(of: entity).rawType):\(entity.id) - \(error)")
+                return nil
+            }
+        }
+        
+        // MARK: - Entity Observation Methods
+        
+        /// Observe changes to a specific entity by type and ID
+        func observeEntity<T: Entity>(_ type: T.Type, id: String) -> AnyPublisher<T?, Never> {
+            return publisherQueue.sync { [weak self] in
+                guard let self = self else {
+                    return Just(nil).eraseToAnyPublisher()
+                }
+                
+                // Get current entity value
+                let currentEntity = self.queue.sync {
+                    self.entities[T.rawType]?[id] as? T
+                }
+                
+                // Get or create publisher for this entity
+                let publisher = self.getOrCreatePublisher(entityType: T.rawType, id: id)
+                
+                // Return current value immediately, then future changes
+                return Just(currentEntity)
+                    .merge(with: publisher.compactMap { $0 as? T })
+                    .removeDuplicates { entity1, entity2 in
+                        // Basic deduplication - can be enhanced per entity type
+                        entity1?.id == entity2?.id
+                    }
+                    .eraseToAnyPublisher()
+            }
+        }
+        
+        /// Convenience method to observe market changes
+        func observeMarket(id: String) -> AnyPublisher<MarketDTO?, Never> {
+            return observeEntity(MarketDTO.self, id: id)
+        }
+        
+        /// Convenience method to observe outcome changes  
+        func observeOutcome(id: String) -> AnyPublisher<OutcomeDTO?, Never> {
+            return observeEntity(OutcomeDTO.self, id: id)
+        }
+        
+        /// Convenience method to observe betting offer changes
+        func observeBettingOffer(id: String) -> AnyPublisher<BettingOfferDTO?, Never> {
+            return observeEntity(BettingOfferDTO.self, id: id)
+        }
+        
+        /// Convenience method to observe match changes
+        func observeMatch(id: String) -> AnyPublisher<MatchDTO?, Never> {
+            return observeEntity(MatchDTO.self, id: id)
+        }
+        
+        // MARK: - Publisher Management
+        
+        private func getOrCreatePublisher(entityType: String, id: String) -> PassthroughSubject<(any Entity)?, Never> {
+            publisherQueue.sync(flags: .barrier) { [weak self] in
+                guard let self = self else {
+                    return PassthroughSubject<(any Entity)?, Never>()
+                }
+                
+                if self.entityPublishers[entityType] == nil {
+                    self.entityPublishers[entityType] = [:]
+                }
+                
+                if let existingPublisher = self.entityPublishers[entityType]?[id] {
+                    return existingPublisher
+                }
+                
+                let newPublisher = PassthroughSubject<(any Entity)?, Never>()
+                self.entityPublishers[entityType]?[id] = newPublisher
+                
+                return newPublisher
+            }
+        }
+        
+        private func notifyEntityChange(_ entity: (any Entity)?) {
+            guard let entity = entity else {
+                // Handle deletion case - notify with nil
+                return
+            }
+            
+            let entityType = type(of: entity).rawType
+            let id = entity.id
+            
+            publisherQueue.async { [weak self] in
+                self?.entityPublishers[entityType]?[id]?.send(entity)
+            }
+        }
+        
+        private func notifyEntityDeletion(entityType: String, id: String) {
+            publisherQueue.async { [weak self] in
+                self?.entityPublishers[entityType]?[id]?.send(nil)
+            }
+        }
+        
+        // MARK: - Publisher Cleanup
+        
+        private func cleanupUnusedPublishers() {
+            publisherQueue.async(flags: .barrier) { [weak self] in
+                guard let self = self else { return }
+                
+                // Remove publishers with no active subscribers
+                // This is a simplified cleanup - can be enhanced with subscription counting
+                for (entityType, publishersDict) in self.entityPublishers {
+                    let filteredDict = publishersDict.filter { (_, publisher) in
+                        // Keep publishers that have active subscriptions
+                        // For now, we'll keep all publishers for simplicity
+                        return true
+                    }
+                    self.entityPublishers[entityType] = filteredDict
+                }
             }
         }
     }

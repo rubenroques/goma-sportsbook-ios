@@ -119,11 +119,47 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        // Ensure we have an active paginator with a subscription
+        guard let paginator = prelivePaginator else {
+            return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
+        }
+        
+        // Access the paginator's entity store
+        return paginator.entityStore.observeMarket(id: id)
+            .compactMap { marketDTO -> EveryMatrix.Market? in
+                guard let marketDTO = marketDTO else { return nil }
+                
+                // Build hierarchical market from DTO
+                return EveryMatrix.MarketBuilder.build(from: marketDTO, store: paginator.entityStore)
+            }
+            .compactMap { market -> Market? in
+                // Map internal model to domain model using existing mapper
+                return EveryMatrixModelMapper.market(fromInternalMarket: market)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
     }
 
     func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        // Ensure we have an active paginator with a subscription
+        guard let paginator = prelivePaginator else {
+            return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
+        }
+        
+        // Access the paginator's entity store
+        return paginator.entityStore.observeOutcome(id: id)
+            .compactMap { outcomeDTO -> EveryMatrix.Outcome? in
+                guard let outcomeDTO = outcomeDTO else { return nil }
+                
+                // Build hierarchical outcome from DTO
+                return EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: paginator.entityStore)
+            }
+            .compactMap { outcome -> Outcome? in
+                // Map internal model to domain model using existing mapper
+                return EveryMatrixModelMapper.outcome(fromInternalOutcome: outcome)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
     }
 
     func getMarketGroups(forEvent event: Event, includeMixMatchGroup: Bool, includeAllMarketsGroup: Bool) -> AnyPublisher<[MarketGroup], Never> {

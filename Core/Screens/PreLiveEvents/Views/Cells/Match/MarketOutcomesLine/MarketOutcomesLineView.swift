@@ -11,7 +11,7 @@ import Combine
 import ServicesProvider
 
 // MARK: - ViewModel
-class MarketOutcomesLineViewModel {
+class LegacyMarketOutcomesLineViewModel {
     // MARK: Outcome Types
     enum OutcomeType {
         case left
@@ -191,13 +191,13 @@ class MarketOutcomesLineView: UIView {
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
 
     // MARK: Callback Closures
-    var onOutcomeSelected: ((MarketOutcomesLineViewModel.OutcomeType) -> Void)?
-    var onOutcomeDeselected: ((MarketOutcomesLineViewModel.OutcomeType) -> Void)?
-    var onOutcomeLongPress: ((MarketOutcomesLineViewModel.OutcomeType) -> Void)?
+    var onOutcomeSelected: ((LegacyMarketOutcomesLineViewModel.OutcomeType) -> Void)?
+    var onOutcomeDeselected: ((LegacyMarketOutcomesLineViewModel.OutcomeType) -> Void)?
+    var onOutcomeLongPress: ((LegacyMarketOutcomesLineViewModel.OutcomeType) -> Void)?
     var onSeeAllTapped: (() -> Void)?
 
     // MARK: ViewModel
-    private var viewModel: MarketOutcomesLineViewModel?
+    private var viewModel: LegacyMarketOutcomesLineViewModel?
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime Cycle
@@ -280,7 +280,7 @@ class MarketOutcomesLineView: UIView {
     }
 
     // MARK: Configuration
-    func configure(with viewModel: MarketOutcomesLineViewModel) {
+    func configure(with viewModel: LegacyMarketOutcomesLineViewModel) {
         self.viewModel = viewModel
         self.setupBindings()
     }
@@ -852,23 +852,23 @@ extension MarketOutcomesLineView {
             // Normal state with three outcomes
             PreviewUIView {
                 let view = MarketOutcomesLineView()
-                let viewModel = MarketOutcomesLineViewModel(
+                let viewModel = LegacyMarketOutcomesLineViewModel(
                     displayMode: .normal,
-                    leftOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    leftOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Home",
                         value: "1.85",
                         oddsChangeDirection: .none,
                         isSelected: false,
                         isDisabled: false
                     ),
-                    middleOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    middleOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Draw",
                         value: "3.55",
                         oddsChangeDirection: .none,
                         isSelected: false,
                         isDisabled: false
                     ),
-                    rightOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    rightOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Away",
                         value: "4.20",
                         oddsChangeDirection: .none,
@@ -889,23 +889,23 @@ extension MarketOutcomesLineView {
             // Selected state
             PreviewUIView {
                 let view = MarketOutcomesLineView()
-                let viewModel = MarketOutcomesLineViewModel(
+                let viewModel = LegacyMarketOutcomesLineViewModel(
                     displayMode: .normal,
-                    leftOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    leftOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Home",
                         value: "1.85",
                         oddsChangeDirection: .none,
                         isSelected: true,
                         isDisabled: false
                     ),
-                    middleOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    middleOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Draw",
                         value: "3.55",
                         oddsChangeDirection: .none,
                         isSelected: false,
                         isDisabled: false
                     ),
-                    rightOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    rightOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Away",
                         value: "4.20",
                         oddsChangeDirection: .none,
@@ -926,23 +926,23 @@ extension MarketOutcomesLineView {
             // Disabled state
             PreviewUIView {
                 let view = MarketOutcomesLineView()
-                let viewModel = MarketOutcomesLineViewModel(
+                let viewModel = LegacyMarketOutcomesLineViewModel(
                     displayMode: .normal,
-                    leftOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    leftOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Home",
                         value: "1.85",
                         oddsChangeDirection: .none,
                         isSelected: false,
                         isDisabled: true
                     ),
-                    middleOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    middleOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Draw",
                         value: "3.55",
                         oddsChangeDirection: .none,
                         isSelected: false,
                         isDisabled: false
                     ),
-                    rightOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    rightOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Away",
                         value: "4.20",
                         oddsChangeDirection: .none,
@@ -963,23 +963,23 @@ extension MarketOutcomesLineView {
             // Odds change state
             PreviewUIView {
                 let view = MarketOutcomesLineView()
-                let viewModel = MarketOutcomesLineViewModel(
+                let viewModel = LegacyMarketOutcomesLineViewModel(
                     displayMode: .normal,
-                    leftOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    leftOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Home",
                         value: "1.85",
                         oddsChangeDirection: .up,
                         isSelected: false,
                         isDisabled: false
                     ),
-                    middleOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    middleOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Draw",
                         value: "3.55",
                         oddsChangeDirection: .none,
                         isSelected: false,
                         isDisabled: false
                     ),
-                    rightOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    rightOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Away",
                         value: "4.20",
                         oddsChangeDirection: .down,
@@ -1000,16 +1000,16 @@ extension MarketOutcomesLineView {
             // Two-way market
             PreviewUIView {
                 let view = MarketOutcomesLineView()
-                let viewModel = MarketOutcomesLineViewModel(
+                let viewModel = LegacyMarketOutcomesLineViewModel(
                     displayMode: .normal,
-                    leftOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    leftOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Under",
                         value: "1.95",
                         oddsChangeDirection: .none,
                         isSelected: false,
                         isDisabled: false
                     ),
-                    rightOutcome: MarketOutcomesLineViewModel.OutcomeInfo(
+                    rightOutcome: LegacyMarketOutcomesLineViewModel.OutcomeInfo(
                         title: "Over",
                         value: "1.85",
                         oddsChangeDirection: .none,
@@ -1031,7 +1031,7 @@ extension MarketOutcomesLineView {
             // Suspended state
             PreviewUIView {
                 let view = MarketOutcomesLineView()
-                let viewModel = MarketOutcomesLineViewModel(
+                let viewModel = LegacyMarketOutcomesLineViewModel(
                     displayMode: .suspended,
                     suspendedText: "Suspended"
                 )
@@ -1048,7 +1048,7 @@ extension MarketOutcomesLineView {
             // See all state
             PreviewUIView {
                 let view = MarketOutcomesLineView()
-                let viewModel = MarketOutcomesLineViewModel(
+                let viewModel = LegacyMarketOutcomesLineViewModel(
                     displayMode: .seeAll,
                     seeAllText: "See All Markets"
                 )

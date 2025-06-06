@@ -18,6 +18,12 @@ class PreLiveMatchesPaginator {
     // MARK: - Dependencies
     private let connector: EveryMatrixConnector
     private let store: EveryMatrix.EntityStore
+    
+    // MARK: - Public Access
+    /// Access to the entity store for granular subscriptions
+    var entityStore: EveryMatrix.EntityStore {
+        return store
+    }
 
     // MARK: - State Management
     private var currentSubscription: EndpointPublisherIdentifiable?

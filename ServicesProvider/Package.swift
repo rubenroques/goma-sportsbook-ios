@@ -22,6 +22,7 @@ let package = Package(
     //  .package(url: "https://github.com/daltoniam/Starscream.git", .upToNextMajor(from: "4.0.0")),
         .package(url: "https://github.com/rubenroques/Starscream.git", branch: "native-socket" ),
         .package(url: "https://github.com/airbnb/lottie-spm.git", .upToNextMajor(from: "4.2.0")),
+        .package(url: "https://github.com/elegantchaos/DictionaryCoding.git", .upToNextMajor(from: "1.0.9")),
         .package(name: "SharedModels", path: "../SharedModels"),
         .package(name: "Extensions", path: "../Extensions"),
     ],
@@ -33,6 +34,7 @@ let package = Package(
             dependencies: [
                 .product(name: "OrderedCollections", package: "swift-collections"),
                 .product(name: "Lottie", package: "lottie-spm"),
+                "DictionaryCoding",
                 "Starscream",
                 "SharedModels",
                 "Extensions",
