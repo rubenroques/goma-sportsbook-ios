@@ -7410,6 +7410,22 @@
 		CEC4282D2DF1DB8C0077A12F /* MarketNamePillLabelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428272DF1DB8C0077A12F /* MarketNamePillLabelViewModel.swift */; };
 		CEC4282E2DF1DB8C0077A12F /* MarketNamePillLabelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428272DF1DB8C0077A12F /* MarketNamePillLabelViewModel.swift */; };
 		CEC4282F2DF1DB8C0077A12F /* MarketNamePillLabelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428272DF1DB8C0077A12F /* MarketNamePillLabelViewModel.swift */; };
+		CEC428322DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */; };
+		CEC428332DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */; };
+		CEC428342DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */; };
+		CEC428352DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */; };
+		CEC428362DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */; };
+		CEC428372DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */; };
+		CEC428382DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */; };
+		CEC428392DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */; };
+		CEC4283A2DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */; };
+		CEC4283B2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */; };
+		CEC4283C2DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */; };
+		CEC4283D2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */; };
+		CEC4283E2DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */; };
+		CEC4283F2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */; };
+		CEC428402DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */; };
+		CEC428412DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */; };
 		CEC57BD72D53C74900EA0D60 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = CEC57BD62D53C74900EA0D60 /* zendesk_support.html */; };
 		CEC57BD82D53C74900EA0D60 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = CEC57BD62D53C74900EA0D60 /* zendesk_support.html */; };
 		CECF6A202D68D534003ABDDF /* URLEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */; };
@@ -9614,6 +9630,8 @@
 		CEC428142DF167120077A12F /* SplashInformativeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashInformativeViewController.swift; sourceTree = "<group>"; };
 		CEC4281D2DF1ADB20077A12F /* DummyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyViewController.swift; sourceTree = "<group>"; };
 		CEC428272DF1DB8C0077A12F /* MarketNamePillLabelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketNamePillLabelViewModel.swift; sourceTree = "<group>"; };
+		CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillSelectorBarCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBannerSliderCollectionViewCell.swift; sourceTree = "<group>"; };
 		CEC57BD62D53C74900EA0D60 /* zendesk_support.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
 		CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEndpoints.swift; sourceTree = "<group>"; };
 		CED11C412DD6357B00F65785 /* PresentationProvider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PresentationProvider; sourceTree = "<group>"; };
@@ -13321,10 +13339,12 @@
 				CE63A8212DE9D2FB00E1FF01 /* NextUpEventsViewController.swift */,
 				CE63A8592DEF8B9800E1FF01 /* NextUpEventsViewModel.swift */,
 				CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */,
+				CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */,
 				CEC428272DF1DB8C0077A12F /* MarketNamePillLabelViewModel.swift */,
 				CE63A8502DEF878200E1FF01 /* MarketGroupCardsViewModel.swift */,
 				CE7BCEC12DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift */,
-				CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */,
+				CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */,
+				CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */,
 			);
 			path = NextUpEvents;
 			sourceTree = "<group>";
@@ -16792,6 +16812,8 @@
 				CED5D9702D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CED5D9712D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CED5D9752D944B7100429306 /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
+				CEC4283E2DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				CEC4283F2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CED5D9772D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CED5D97A2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				A9527C2D2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
@@ -17668,6 +17690,8 @@
 				45A331A5298976BA008181E9 /* LoadingSpinnerViewController.swift in Sources */,
 				655E20132B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				CED5D91B2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEC428342DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				CEC428352DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CED5D91C2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CED5D91D2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CED5D9212D944B7100429306 /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
@@ -18514,6 +18538,8 @@
 				45F6BC542AB3732C00C81DE1 /* LoadingSpinnerViewController.swift in Sources */,
 				655E20142B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				CED5D8F12D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CEC4283C2DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				CEC4283D2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CED5D8F22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CED5D8F32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CED5D8F72D944B7100429306 /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
@@ -19154,6 +19180,8 @@
 				CECF6A202D68D534003ABDDF /* URLEndpoints.swift in Sources */,
 				CE12A2202D31347E0022BDF7 /* OptionRadioView.swift in Sources */,
 				CE12A2212D31347E0022BDF7 /* RequestLocationAccessViewController.swift in Sources */,
+				CEC428402DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				CEC428412DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CE12A2222D31347E0022BDF7 /* BoostedBetConfirmationView.swift in Sources */,
 				CE12A2232D31347E0022BDF7 /* ServiceProviderType.swift in Sources */,
 				CE12A2252D31347E0022BDF7 /* MyTicketTableViewCell.swift in Sources */,
@@ -20215,6 +20243,8 @@
 				CE8F24D12DD371350071238E /* RegisterSuccessViewController.swift in Sources */,
 				CE8F24D42DD371350071238E /* LoadingSpinnerViewController.swift in Sources */,
 				CE8F24D52DD371350071238E /* TextSubsectionView.swift in Sources */,
+				CEC428382DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				CEC428392DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CE8F24D62DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CE8F24D72DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE8F24D82DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
@@ -21061,6 +21091,8 @@
 				CEB3A2422DD379800024043B /* RegisterSuccessViewController.swift in Sources */,
 				CEB3A2452DD379800024043B /* LoadingSpinnerViewController.swift in Sources */,
 				CEB3A2462DD379800024043B /* TextSubsectionView.swift in Sources */,
+				CEC4283A2DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				CEC4283B2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CEB3A2472DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEB3A2482DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CEB3A2492DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
@@ -21907,6 +21939,8 @@
 				CEB3A6CB2DD379890024043B /* RegisterSuccessViewController.swift in Sources */,
 				CEB3A6CE2DD379890024043B /* LoadingSpinnerViewController.swift in Sources */,
 				CEB3A6CF2DD379890024043B /* TextSubsectionView.swift in Sources */,
+				CEC428322DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				CEC428332DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CEB3A6D02DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEB3A6D12DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CEB3A6D22DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
@@ -22393,6 +22427,8 @@
 				CEF193DE2DA834E900C81F12 /* Constants.swift in Sources */,
 				CEB9BB8B2DB658DB00E8084B /* PromotionsViewController.swift in Sources */,
 				CEB9BB8C2DB658DB00E8084B /* PromotionTableViewCell.swift in Sources */,
+				CEC428362DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				CEC428372DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CEB9BB8D2DB658DB00E8084B /* PromotionDetailViewController.swift in Sources */,
 				CEB9BB8E2DB658DB00E8084B /* PromotionCollectionViewCell.swift in Sources */,
 				CEB9BB8F2DB658DB00E8084B /* PromotionLineTableViewCell.swift in Sources */,
@@ -23743,7 +23779,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 200012;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/BetssonCM/Misc-PROD/BetssonCM-PROD-Info.plist";
@@ -23752,7 +23788,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 0.1.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -23776,7 +23812,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 200012;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/BetssonCM/Misc-PROD/BetssonCM-PROD-Info.plist";
@@ -23785,7 +23821,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 0.1.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -23809,7 +23845,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 200012;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/BetssonCM/Misc-STG/BetssonCM-STG-Info.plist";
@@ -23818,7 +23854,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 0.1.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -23842,7 +23878,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 200012;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/BetssonCM/Misc-STG/BetssonCM-STG-Info.plist";
@@ -23851,7 +23887,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 0.1.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -23875,7 +23911,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 200012;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/BetssonCM/Misc-DEV/BetssonCM-DEV-Info.plist";
@@ -23884,7 +23920,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 0.1.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -23908,7 +23944,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 200012;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/BetssonCM/Misc-DEV/BetssonCM-DEV-Info.plist";
@@ -23917,7 +23953,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 0.1.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";

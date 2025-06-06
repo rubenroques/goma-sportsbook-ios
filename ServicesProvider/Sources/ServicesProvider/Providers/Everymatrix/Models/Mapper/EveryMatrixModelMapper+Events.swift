@@ -32,8 +32,9 @@ extension EveryMatrixModelMapper {
         }
 
         // Convert EveryMatrix.Market array to external Market array
-        let markets = internalMatch.markets.map(Self.market(fromInternalMarket:))
-
+        var markets = internalMatch.markets.map(Self.market(fromInternalMarket:))
+        markets = markets.sorted { $0.id < $1.id }
+        
         // Convert match status
         let eventStatus = Self.eventStatus(fromInternalMatchStatus: internalMatch.status)
 
@@ -80,8 +81,17 @@ extension EveryMatrixModelMapper {
 
     static func market(fromInternalMarket internalMarket: EveryMatrix.Market) -> Market {
         // Convert EveryMatrix.Outcome array to external Outcome array
-        let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
-
+        var outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
+        outcomes = outcomes.sorted { outcome1, outcome2 in
+            if let orderValue1 = outcome1.orderValue, let sortValue1 = Self.sortValue(forOutcomeHeaderKey: orderValue1),
+               let orderValue2 = outcome2.orderValue, let sortValue2 = Self.sortValue(forOutcomeHeaderKey: orderValue2) {
+                sortValue1 < sortValue2
+            }
+            else {
+                outcome1.id < outcome2.id
+            }
+        }
+        
         // Map betting type information
         let marketTypeId = internalMarket.bettingType?.id ?? ""
         let marketTypeName = internalMarket.bettingType?.name ?? ""
@@ -125,7 +135,7 @@ extension EveryMatrixModelMapper {
             name: internalOutcome.name,
             odd: OddFormat.decimal(odd: odds),
             marketId: nil, // Not available at outcome level
-            orderValue: nil, // Not available in EveryMatrix
+            orderValue: internalOutcome.headerNameKey, // position in home/draw/away
             externalReference: nil, // Not available in EveryMatrix
             isTradable: isTradable,
             isTerminated: !isTradable,
@@ -180,6 +190,97 @@ extension EveryMatrixModelMapper {
         } else {
             // Return all matches in a single group
             return [eventsGroup(fromInternalMatches: internalMatches)]
+        }
+    }
+}
+
+extension EveryMatrixModelMapper {
+    
+    static func sortValue(forOutcomeHeaderKey key: String) -> Int? {
+        
+        switch key.lowercased() {
+        case "yes": return 10
+        case "no": return 20
+            
+        case "oui": return 10
+        case "non": return 20
+            
+        case "home": return 10
+        case "draw": return 20
+        case "none": return 21
+        case "": return 22
+        case "away": return 30
+            
+        case "domicile": return 10
+        case "nul": return 20
+        case "aucun": return 21
+        case "extérieur": return 30
+            
+        case "home_draw": return 10
+        case "home_away": return 20
+        case "away_draw": return 30
+            
+        case "over": return 10
+        case "under": return 20
+            
+        case "plus": return 10
+        case "moins": return 20
+            
+        case "odd": return 10
+        case "even": return 20
+            
+        case "impair": return 10
+        case "pair": return 20
+            
+        case "exact": return 10
+        case "range": return 20
+        case "more_than": return 30
+            
+        case "in_90_minutes": return 10
+        case "in_extra_time": return 20
+        case "on_penalties": return 30
+            
+        case "home-true": return 10
+        case "home-false": return 15
+        case "-true": return 20
+        case "-false": return 25
+        case "away-true": return 30
+        case "away-false": return 35
+            
+        case "home_draw-true": return 10
+        case "home_draw-false": return 15
+        case "home_away-true": return 20
+        case "home_away-false": return 25
+        case "away_draw-true": return 30
+        case "away_draw-false": return 35
+            
+        case "over-true": return 10
+        case "over-false": return 15
+        case "under-true": return 20
+        case "under-false": return 25
+            
+        case "odd-true": return 10
+        case "odd-false": return 15
+        case "even-true": return 20
+        case "even-false": return 25
+            
+        case "yes-true": return 10
+        case "yes-false": return 15
+        case "no-true": return 20
+        case "no-false": return 25
+            
+        case "true": return 10
+        case "false": return 20
+            
+        case "vrai": return 10
+        case "faux": return 20
+            
+        case "h": return 10
+        case "d": return 20
+        case "a": return 30
+            
+        default:
+            return nil
         }
     }
 }

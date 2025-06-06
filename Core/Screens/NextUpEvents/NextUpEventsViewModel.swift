@@ -40,7 +40,7 @@ class NextUpEventsViewModel: ObservableObject {
 
     init(sportType: SportType = SportType.defaultFootball) {
         self.sportType = sportType
-        self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.sportsMockViewModel
+        self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.marketGroupSelectorViewModel = NextUpEventsMarketGroupSelectorViewModel()
 
         setupBindings()

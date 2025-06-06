@@ -11,6 +11,10 @@ import LocalAuthentication
 import ServicesProvider
 import GomaUI
 
+// MARK: - Temporary Milestone Build Flag
+// TODO: Remove this after milestone 1 build
+var HIDE_MILESTONE_2_FEATURES = true // swiftlint:disable:this identifier_name
+
 class RootAdaptiveScreenViewModel {
 
     @Published var currentScreen: ScreenType?
@@ -97,6 +101,13 @@ class RootAdaptiveViewController: UIViewController {
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
     private var widgetToolBarView: MultiWidgetToolbarView!
+    private lazy var orangePlaceholderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.App.topBarGradient1
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = !HIDE_MILESTONE_2_FEATURES
+        return view
+    }()
 
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var mainContainerView: UIView = Self.createMainContainerView()
@@ -1104,6 +1115,10 @@ extension RootAdaptiveViewController {
         view.addSubview(topBarContainerBaseView)
 
         topBarContainerBaseView.addSubview(widgetToolBarView)
+        topBarContainerBaseView.addSubview(orangePlaceholderView)
+        
+        // Hide widget toolbar if milestone 2 features are hidden
+        widgetToolBarView.isHidden = HIDE_MILESTONE_2_FEATURES
 
         view.addSubview(containerView)
         view.addSubview(bottomSafeAreaView)
@@ -1159,6 +1174,12 @@ extension RootAdaptiveViewController {
             self.widgetToolBarView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
             self.widgetToolBarView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
             self.widgetToolBarView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
+            
+            // Orange placeholder view (same constraints as widget toolbar)
+            self.orangePlaceholderView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
+            self.orangePlaceholderView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
+            self.orangePlaceholderView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
+            self.orangePlaceholderView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
 
             // Container View
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
