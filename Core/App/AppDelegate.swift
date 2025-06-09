@@ -29,14 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         Logger.log("App Started")
 
         //
-        // If the app is running for previews, return true
-//        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
-//            print("App is running for previews")
-//            return true
-//        }
-//
-        
-        //
         // External Localization tool
         #if DEBUG
         let phraseConfiguration = PhraseConfiguration()

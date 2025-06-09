@@ -210,8 +210,6 @@ extension TallOddsMatchCardViewModel {
     
     private static func createMarketLines(from markets: [Market]) -> [MarketLineData] {
         return markets.compactMap { market in
-            guard !market.outcomes.isEmpty else { return nil }
-            
             let outcomes = market.outcomes.map { outcome in
                 MarketOutcomeData(
                     id: outcome.id,
@@ -233,8 +231,7 @@ extension TallOddsMatchCardViewModel {
                 middleOutcome: outcomes.count == 3 ? outcomes[1] : nil,
                 rightOutcome: outcomes.last,
                 displayMode: displayMode,
-                lineType: lineType,
-                isLineDisabled: !market.isAvailable
+                lineType: lineType
             )
         }
     }
