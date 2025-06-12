@@ -376,15 +376,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     private func openRoute(_ route: Route, onApplication application: UIApplication) {
 
         if application.applicationState == .active {
-
             self.bootstrap.router.openedNotificationRouteWhileActive(route)
         }
         else if application.applicationState == .inactive {
-
             self.bootstrap.router.configureStartingRoute(route)
         }
         else if application.applicationState == .background {
-
             self.bootstrap.router.configureStartingRoute(route)
         }
 

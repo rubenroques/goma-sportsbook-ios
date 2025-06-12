@@ -5,6 +5,9 @@
       location = "group:Sportsbook.xcodeproj">
    </FileRef>
    <FileRef
-      location = "container:../GomaUI/GomaUI.xcodeproj">
+      location = "container:GomaUI/GomaUIDemo.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:GomaUI/GomaUI">
    </FileRef>
 </Workspace>

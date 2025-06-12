@@ -1,0 +1,560 @@
+import UIKit
+import SwiftUI
+import Combine
+
+public class MatchHeaderView: UIView {
+
+    // MARK: - Private Properties
+    private lazy var favoritesIconImageView: UIImageView = Self.createFavoritesIconImageView()
+    private lazy var sportTypeImageView: UIImageView = Self.createSportTypeImageView()
+    private lazy var locationFlagImageView: UIImageView = Self.createLocationFlagImageView()
+    private lazy var competitionNameLabel: UILabel = Self.createCompetitionNameLabel()
+    private lazy var favoritesButton: UIButton = Self.createFavoritesButton()
+    private lazy var matchTimeLabel: UILabel = Self.createMatchTimeLabel()
+    private lazy var liveIndicatorView: UIView = Self.createLiveIndicatorView()
+    private lazy var rightContentStackView: UIStackView = Self.createRightContentStackView()
+    private lazy var leftContentStackView: UIStackView = Self.createLeftContentStackView()
+    private lazy var mainContentStackView: UIStackView = Self.createMainContentStackView()
+
+    // MARK: - ViewModel & Reactive
+    private var viewModel: MatchHeaderViewModelProtocol?
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - Constants
+    private static let height: CGFloat = 17
+    private static let iconSpacing: CGFloat = 8
+    private static let buttonTouchArea: CGFloat = 40
+
+    // MARK: - Initialization
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupSubviews()
+        setupConstraints()
+        setupStyling()
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupSubviews()
+        setupConstraints()
+        setupStyling()
+    }
+
+    public convenience init(viewModel: MatchHeaderViewModelProtocol) {
+        self.init(frame: .zero)
+        configure(with: viewModel)
+    }
+
+    public override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
+    }
+
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Ensure the country flag image view is circular
+        updateLocationFlagCornerRadius()
+    }
+
+    private func updateLocationFlagCornerRadius() {
+        let radius = locationFlagImageView.frame.width / 2
+        locationFlagImageView.layer.cornerRadius = radius
+        locationFlagImageView.clipsToBounds = true
+        locationFlagImageView.layer.masksToBounds = true
+    }
+
+    // MARK: - Public Configuration
+    public func configure(with viewModel: MatchHeaderViewModelProtocol) {
+        self.viewModel = viewModel
+        setupBindings()
+    }
+
+    public func cleanupForReuse() {
+        viewModel = nil
+        competitionNameLabel.text = nil
+        matchTimeLabel.text = nil
+
+        locationFlagImageView.image = UIImage(systemName: "globe")
+
+        let configuration = UIImage.SymbolConfiguration(weight: .semibold)
+        favoritesIconImageView.image = UIImage(systemName: "star", withConfiguration: configuration)?.withRenderingMode(.alwaysTemplate)
+
+        sportTypeImageView.image = UIImage(systemName: "soccerball")
+
+        cancellables.removeAll()
+    }
+}
+
+// MARK: - Private Setup Methods
+extension MatchHeaderView {
+
+    private func setupStyling() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
+
+        // Use StyleProvider for consistent theming
+        competitionNameLabel.textColor = StyleProvider.Color.highlightPrimary
+        matchTimeLabel.textColor = StyleProvider.Color.highlightTertiary
+
+        favoritesButton.backgroundColor = .clear
+    }
+
+    private func setupBindings() {
+        guard let viewModel = viewModel else { return }
+
+        // Clear previous cancellables
+        cancellables.removeAll()
+
+        // Bind competition name
+        viewModel.competitionNamePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] name in
+                self?.competitionNameLabel.text = name
+            }
+            .store(in: &cancellables)
+
+        // Bind country flag image - custom image takes precedence
+        viewModel.countryFlagImagePublisher
+            .combineLatest(viewModel.countryFlagImageNamePublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] customImage, imageName in
+                if let customImage = customImage {
+                    // Use custom UIImage if provided
+                    self?.locationFlagImageView.image = customImage
+                    self?.locationFlagImageView.tintColor = nil // Remove tint for custom images
+                    // Ensure corner radius is applied after image change
+                    DispatchQueue.main.async {
+                        self?.updateLocationFlagCornerRadius()
+                    }
+                }
+            }
+            .store(in: &cancellables)
+
+        // Bind sport icon image - custom image takes precedence
+        viewModel.sportIconImagePublisher
+            .combineLatest(viewModel.sportIconImageNamePublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] customImage, imageName in
+                if let customImage = customImage {
+                    // Use custom UIImage if provided
+                    self?.sportTypeImageView.image = customImage.withRenderingMode(.alwaysTemplate)
+                    self?.sportTypeImageView.tintColor = StyleProvider.Color.highlightPrimary
+                }
+            }
+            .store(in: &cancellables)
+
+        // Bind favorite state
+        viewModel.isFavoritePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFavorite in
+                let starSymbol = isFavorite ? "star.fill" : "star"
+                let configuration = UIImage.SymbolConfiguration(weight: .semibold)
+                self?.favoritesIconImageView.image = UIImage(
+                    systemName: starSymbol,
+                    withConfiguration: configuration)?
+                    .withRenderingMode(.alwaysTemplate)
+                
+                self?.favoritesIconImageView.tintColor = StyleProvider.Color.favorites
+            }
+            .store(in: &cancellables)
+
+        // Bind match time
+        viewModel.matchTimePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] matchTime in
+                self?.matchTimeLabel.text = matchTime
+                self?.matchTimeLabel.isHidden = matchTime == nil || matchTime?.isEmpty == true
+            }
+            .store(in: &cancellables)
+
+        // Bind live state
+        viewModel.isLivePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLive in
+                self?.liveIndicatorView.isHidden = !isLive
+            }
+            .store(in: &cancellables)
+
+        // Bind unified visual state
+        viewModel.visualStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] visualState in
+                self?.updateAppearance(for: visualState)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func updateAppearance(for visualState: MatchHeaderVisualState) {
+        switch visualState {
+        case .standard:
+            setElementsVisible(favorite: true, country: true, sport: true, enabled: true)
+
+        case .disabled:
+            setElementsVisible(favorite: true, country: true, sport: true, enabled: false)
+
+        case .favoriteOnly:
+            setElementsVisible(favorite: true, country: false, sport: false, enabled: true)
+
+        case .minimal:
+            setElementsVisible(favorite: false, country: false, sport: false, enabled: true)
+        }
+    }
+
+    private func setElementsVisible(favorite: Bool, country: Bool, sport: Bool, enabled: Bool) {
+        // Set visibility
+        favoritesIconImageView.isHidden = !favorite
+        favoritesButton.isHidden = !favorite
+        locationFlagImageView.isHidden = !country
+        sportTypeImageView.isHidden = !sport
+
+        // Match time is always visible when available
+        // Its visibility is controlled by the data binding
+
+        // Set interaction state
+        favoritesButton.isEnabled = enabled
+        isUserInteractionEnabled = enabled
+
+        // Set visual disabled state
+        let alpha: CGFloat = enabled ? 1.0 : 0.6
+        favoritesIconImageView.alpha = alpha
+        sportTypeImageView.alpha = alpha
+        locationFlagImageView.alpha = alpha
+        competitionNameLabel.alpha = alpha
+        matchTimeLabel.alpha = alpha
+    }
+
+    @objc private func favoriteButtonTapped() {
+        viewModel?.toggleFavorite()
+    }
+}
+
+// MARK: - Factory Methods
+extension MatchHeaderView {
+
+    private static func createFavoritesIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        let configuration = UIImage.SymbolConfiguration(weight: .semibold)
+        imageView.image = UIImage(systemName: "star", withConfiguration: configuration)?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = StyleProvider.Color.favorites
+        return imageView
+    }
+
+    private static func createSportTypeImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemName: "soccerball")
+        imageView.tintColor = StyleProvider.Color.textSecondary
+        return imageView
+    }
+
+    private static func createLocationFlagImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(systemName: "globe")
+        imageView.tintColor = StyleProvider.Color.textSecondary
+        return imageView
+    }
+
+    private static func createCompetitionNameLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .medium, size: 11)
+        label.numberOfLines = 1
+        return label
+    }
+
+    private static func createFavoritesButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .clear
+        return button
+    }
+
+    private static func createMatchTimeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .bold, size: 10)
+        label.numberOfLines = 1
+        label.textAlignment = .right
+        return label
+    }
+
+    private static func createLeftContentStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 4 // Reduced spacing for better design match
+        stackView.alignment = .center
+        return stackView
+    }
+
+    private static func createRightContentStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 6
+        stackView.alignment = .center
+        return stackView
+    }
+
+    private static func createMainContentStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .center
+        return stackView
+    }
+
+    private static func createLiveIndicatorView() -> UIView {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.backgroundColor = UIColor(red: 1.0, green: 0.231, blue: 0.188, alpha: 1.0) // Red color
+        containerView.isHidden = true // Hidden by default
+
+        // Calculate pill shape corner radius based on height
+        let liveIndicatorHeight: CGFloat = 22 // 3 + 14 + 3 (padding + content + padding)
+        containerView.layer.cornerRadius = liveIndicatorHeight / 2
+
+        // Create the stack view for content
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 4
+        stackView.alignment = .center
+
+        // Create "LIVE" label
+        let liveLabel = UILabel()
+        liveLabel.text = "LIVE"
+        liveLabel.font = StyleProvider.fontWith(type: .bold, size: 10)
+        liveLabel.textColor = .white
+
+        // Create play icon
+        let playIcon = UIImageView()
+        let config = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
+        playIcon.image = UIImage(systemName: "play.circle.fill", withConfiguration: config)
+        playIcon.tintColor = .white
+        playIcon.contentMode = .scaleAspectFit
+
+        stackView.addArrangedSubview(liveLabel)
+        stackView.addArrangedSubview(playIcon)
+
+        containerView.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            stackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 3),
+            stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -3),
+
+            playIcon.widthAnchor.constraint(equalToConstant: 14),
+            playIcon.heightAnchor.constraint(equalToConstant: 14),
+
+            // Set explicit height for the container
+            containerView.heightAnchor.constraint(equalToConstant: liveIndicatorHeight)
+        ])
+
+        return containerView
+    }
+}
+
+// MARK: - Layout Setup
+extension MatchHeaderView {
+
+    private func setupSubviews() {
+        // Add icons to left content stack view
+        leftContentStackView.addArrangedSubview(favoritesIconImageView)
+        leftContentStackView.addArrangedSubview(sportTypeImageView)
+        leftContentStackView.addArrangedSubview(locationFlagImageView)
+        leftContentStackView.addArrangedSubview(competitionNameLabel)
+
+        // Add match time and live indicator to right content stack view
+        rightContentStackView.addArrangedSubview(matchTimeLabel)
+        rightContentStackView.addArrangedSubview(liveIndicatorView)
+
+        // Add left content and right content to main stack view
+        mainContentStackView.addArrangedSubview(leftContentStackView)
+        mainContentStackView.addArrangedSubview(rightContentStackView)
+
+        // Add main stack view to the view
+        addSubview(mainContentStackView)
+        addSubview(favoritesButton)
+
+        favoritesButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+    }
+
+    private func setupConstraints() {
+        // Set content priorities first
+        competitionNameLabel.setContentHuggingPriority(UILayoutPriority(249), for: .horizontal)
+        competitionNameLabel.setContentCompressionResistancePriority(UILayoutPriority(749), for: .horizontal)
+        matchTimeLabel.setContentHuggingPriority(UILayoutPriority(251), for: .horizontal)
+        matchTimeLabel.setContentCompressionResistancePriority(UILayoutPriority(751), for: .horizontal)
+
+        NSLayoutConstraint.activate([
+            // Height constraint for the view
+            heightAnchor.constraint(equalToConstant: Self.height),
+
+            // Main stack view - fills the entire view
+            mainContentStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            mainContentStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            mainContentStackView.topAnchor.constraint(equalTo: topAnchor),
+            mainContentStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            // Icon size constraints
+            favoritesIconImageView.widthAnchor.constraint(equalToConstant: Self.height),
+            favoritesIconImageView.heightAnchor.constraint(equalToConstant: Self.height),
+
+            sportTypeImageView.widthAnchor.constraint(equalToConstant: Self.height),
+            sportTypeImageView.heightAnchor.constraint(equalToConstant: Self.height),
+
+            locationFlagImageView.widthAnchor.constraint(equalToConstant: Self.height),
+            locationFlagImageView.heightAnchor.constraint(equalToConstant: Self.height),
+
+            // Favorites button - invisible overlay for touch handling
+            favoritesButton.centerXAnchor.constraint(equalTo: favoritesIconImageView.centerXAnchor),
+            favoritesButton.centerYAnchor.constraint(equalTo: favoritesIconImageView.centerYAnchor),
+            favoritesButton.widthAnchor.constraint(equalToConstant: Self.buttonTouchArea),
+            favoritesButton.heightAnchor.constraint(equalToConstant: Self.buttonTouchArea),
+        ])
+    }
+}
+
+// MARK: - SwiftUI Previews
+@available(iOS 17.0, *)
+#Preview("MatchHeaderView - All States") {
+    ScrollView {
+        VStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Standard Premier League")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                MatchHeaderViewPreview {
+                    let view = MatchHeaderView()
+                    view.configure(with: MockMatchHeaderViewModel.premierLeagueHeader)
+                    return view
+                }
+                .frame(width: 300, height: 17)
+                .padding()
+                .background(Color(StyleProvider.Color.backgroundColor))
+                .cornerRadius(8)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("La Liga (Favorited)")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                MatchHeaderViewPreview {
+                    let view = MatchHeaderView()
+                    view.configure(with: MockMatchHeaderViewModel.laLigaFavoriteHeader)
+                    return view
+                }
+                .frame(width: 300, height: 17)
+                .padding()
+                .background(Color(StyleProvider.Color.backgroundColor))
+                .cornerRadius(8)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Serie A Basketball")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                MatchHeaderViewPreview {
+                    let view = MatchHeaderView()
+                    view.configure(with: MockMatchHeaderViewModel.serieABasketballHeader)
+                    return view
+                }
+                .frame(width: 300, height: 17)
+                .padding()
+                .background(Color(StyleProvider.Color.backgroundColor))
+                .cornerRadius(8)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Disabled State")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                MatchHeaderViewPreview {
+                    let view = MatchHeaderView()
+                    view.configure(with: MockMatchHeaderViewModel.disabledNBAHeader)
+                    return view
+                }
+                .frame(width: 300, height: 17)
+                .padding()
+                .background(Color(StyleProvider.Color.backgroundColor))
+                .cornerRadius(8)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Minimal Mode")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                MatchHeaderViewPreview {
+                    let view = MatchHeaderView()
+                    view.configure(with: MockMatchHeaderViewModel.minimalModeHeader)
+                    return view
+                }
+                .frame(width: 300, height: 17)
+                .padding()
+                .background(Color(StyleProvider.Color.backgroundColor))
+                .cornerRadius(8)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Favorite Only Mode")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                MatchHeaderViewPreview {
+                    let view = MatchHeaderView()
+                    view.configure(with: MockMatchHeaderViewModel.favoriteOnlyHeader)
+                    return view
+                }
+                .frame(width: 300, height: 17)
+                .padding()
+                .background(Color(StyleProvider.Color.backgroundColor))
+                .cornerRadius(8)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Long Competition Name")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                MatchHeaderViewPreview {
+                    let view = MatchHeaderView()
+                    view.configure(with: MockMatchHeaderViewModel.longNameHeader)
+                    return view
+                }
+                .frame(width: 300, height: 17)
+                .padding()
+                .background(Color(StyleProvider.Color.backgroundColor))
+                .cornerRadius(8)
+            }
+        }
+        .padding()
+    }
+}
+
+// Helper for UIView previews in SwiftUI
+struct MatchHeaderViewPreview: UIViewRepresentable {
+    let viewFactory: () -> UIView
+
+    func makeUIView(context: Context) -> UIView {
+        return viewFactory()
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        // No updates needed
+    }
+}

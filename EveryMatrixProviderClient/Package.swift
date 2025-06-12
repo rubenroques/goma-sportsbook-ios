@@ -19,7 +19,7 @@ let package = Package(
         // Add OrderedCollections here
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.2.0"),
         .package(url: "https://github.com/elegantchaos/DictionaryCoding.git", from: "1.0.9"),
-        .package(url: "https://github.com/daltoniam/Starscream.git", from: "4.0.6")
+        .package(url: "https://github.com/rroques/Starscream.git", from: "4.0.6")
 
     ],
     targets: [

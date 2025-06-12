@@ -69,73 +69,37 @@ class Router {
 
     func makeKeyAndVisible() {
 
-        // TODO HIDE_MILESTONE_2_FEATURES
-        self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-//        #if DEBUG
-//        // manual theme override
-//        self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-//        //
-//        #else
-//        if TargetVariables.supportedThemes == AppearanceMode.allCases {
-//            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
-//        }
-//        else if TargetVariables.supportedThemes == [AppearanceMode.dark] {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
-//        }
-//        else if TargetVariables.supportedThemes == [AppearanceMode.light] {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-//        }
-//        else {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
-//        }
-//        #endif
-        
-        if TargetVariables.useAdaptiveRootViewController {
-            let splashInformativeViewController = SplashInformativeViewController(loadingCompleted: {
-                self.showDemoPostLoadingFlow()
-            })
-            self.rootWindow.rootViewController = splashInformativeViewController
-            self.rootWindow.makeKeyAndVisible()
+        if TargetVariables.supportedThemes == AppearanceMode.allCases {
+            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
+        }
+        else if TargetVariables.supportedThemes == [AppearanceMode.dark] {
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
+        }
+        else if TargetVariables.supportedThemes == [AppearanceMode.light] {
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         }
         else {
-            let splashViewController = SplashViewController(loadingCompleted: {
-                self.showPostLoadingFlow()
-            })
-            self.rootWindow.rootViewController = splashViewController
-            self.rootWindow.makeKeyAndVisible()
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
         }
+        
+        let splashViewController = SplashViewController(loadingCompleted: {
+            self.showPostLoadingFlow()
+        })
+        self.rootWindow.rootViewController = splashViewController
+        self.rootWindow.makeKeyAndVisible()
+        
     }
 
     @objc func applicationDidBecomeActive(notification: NSNotification) {
 
     }
 
-    func showDemoPostLoadingFlow() {
-        var bootRootViewController: UIViewController
-        
-        let viewModel = RootAdaptiveScreenViewModel()
-        let rootViewController = RootAdaptiveViewController(viewModel: viewModel)
-        self.rootActionable = rootViewController
-        bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
-
-        self.rootWindow.rootViewController = bootRootViewController
-    }
-    
     func showPostLoadingFlow() {
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
-
-            if TargetVariables.useAdaptiveRootViewController {
-                let viewModel = RootAdaptiveScreenViewModel()
-                let rootViewController = RootAdaptiveViewController(viewModel: viewModel)
-                self.rootActionable = rootViewController
-                bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
-            }
-            else {
-                let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
-                self.rootActionable = rootViewController
-                bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
-            }
+            let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
+            self.rootActionable = rootViewController
+            bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
         }
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()

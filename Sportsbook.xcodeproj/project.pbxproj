@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -2643,7 +2643,15 @@
 		A9FEF5752AB8630600CB638F /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
 		A9FEF5762AB8630B00CB638F /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
 		CE0599742DE8B94200E9DDFA /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE0599732DE8B94200E9DDFA /* GomaUI */; };
-		CE0599AB2DE8BDB600E9DDFA /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE0599AA2DE8BDB600E9DDFA /* GomaUI */; };
+		CE05AAD32DFB85E800D20357 /* Bootstrap+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */; };
+		CE05AAD42DFB85E800D20357 /* Router+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */; };
+		CE05AAD52DFB85E800D20357 /* AppDelegate+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD02DFB85E800D20357 /* AppDelegate+BetssonCM.swift */; };
+		CE05AAD62DFB85E800D20357 /* Bootstrap+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */; };
+		CE05AAD72DFB85E800D20357 /* Router+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */; };
+		CE05AAD82DFB85E800D20357 /* AppDelegate+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD02DFB85E800D20357 /* AppDelegate+BetssonCM.swift */; };
+		CE05AAD92DFB85E800D20357 /* Bootstrap+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */; };
+		CE05AADA2DFB85E800D20357 /* Router+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */; };
+		CE05AADB2DFB85E800D20357 /* AppDelegate+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD02DFB85E800D20357 /* AppDelegate+BetssonCM.swift */; };
 		CE0AEAAB2D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AEAA92D8A41EE007CCFC3 /* MatchHeaderView.swift */; };
 		CE0AEAAE2D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AEAA92D8A41EE007CCFC3 /* MatchHeaderView.swift */; };
 		CE0AEAB02D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AEAA92D8A41EE007CCFC3 /* MatchHeaderView.swift */; };
@@ -3925,7 +3933,6 @@
 		CE8F23932DD371350071238E /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
 		CE8F23942DD371350071238E /* BonusRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45505F4C28058EB900D4B53E /* BonusRootViewController.swift */; };
 		CE8F23952DD371350071238E /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
-		CE8F23962DD371350071238E /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0D2326BDE88D00EC572D /* Router.swift */; };
 		CE8F23972DD371350071238E /* UserGodfatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2923D2A61597C00A7C334 /* UserGodfatherView.swift */; };
 		CE8F23982DD371350071238E /* ManualUploadDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA040E2A3099FA007880FC /* ManualUploadDocumentsViewController.swift */; };
 		CE8F23992DD371350071238E /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
@@ -3958,12 +3965,10 @@
 		CE8F23B72DD371350071238E /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2897226C32E8600BCD5DA /* Authenticator.swift */; };
 		CE8F23B82DD371350071238E /* Changeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CDC26BD9D9000EC572D /* Changeable.swift */; };
 		CE8F23B92DD371350071238E /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
-		CE8F23BA2DD371350071238E /* Bootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CA526F28D2E00E69D65 /* Bootstrap.swift */; };
 		CE8F23BB2DD371350071238E /* SimpleRegisterSendEmailCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */; };
 		CE8F23BC2DD371350071238E /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
 		CE8F23BD2DD371350071238E /* BonusActiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A0127D0E92B008BAF41 /* BonusActiveTableViewCell.swift */; };
 		CE8F23BE2DD371350071238E /* GomaGamingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */; };
-		CE8F23BF2DD371350071238E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C5326BD902C00EC572D /* AppDelegate.swift */; };
 		CE8F23C02DD371350071238E /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CD026BD9D9000EC572D /* UIImage+Extensions.swift */; };
 		CE8F23C12DD371350071238E /* MultipleBettingTicketDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D142C188FEF0032363F /* MultipleBettingTicketDataSource.swift */; };
 		CE8F23C22DD371350071238E /* MyGamesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64562A7A5CB3002A6984 /* MyGamesRootViewController.swift */; };
@@ -5446,7 +5451,6 @@
 		CEB3A1002DD379800024043B /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
 		CEB3A1012DD379800024043B /* BonusRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45505F4C28058EB900D4B53E /* BonusRootViewController.swift */; };
 		CEB3A1022DD379800024043B /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
-		CEB3A1032DD379800024043B /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0D2326BDE88D00EC572D /* Router.swift */; };
 		CEB3A1042DD379800024043B /* UserGodfatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2923D2A61597C00A7C334 /* UserGodfatherView.swift */; };
 		CEB3A1052DD379800024043B /* ManualUploadDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA040E2A3099FA007880FC /* ManualUploadDocumentsViewController.swift */; };
 		CEB3A1062DD379800024043B /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
@@ -5479,12 +5483,10 @@
 		CEB3A1242DD379800024043B /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2897226C32E8600BCD5DA /* Authenticator.swift */; };
 		CEB3A1252DD379800024043B /* Changeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CDC26BD9D9000EC572D /* Changeable.swift */; };
 		CEB3A1262DD379800024043B /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
-		CEB3A1272DD379800024043B /* Bootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CA526F28D2E00E69D65 /* Bootstrap.swift */; };
 		CEB3A1282DD379800024043B /* SimpleRegisterSendEmailCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */; };
 		CEB3A1292DD379800024043B /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
 		CEB3A12A2DD379800024043B /* BonusActiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A0127D0E92B008BAF41 /* BonusActiveTableViewCell.swift */; };
 		CEB3A12B2DD379800024043B /* GomaGamingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */; };
-		CEB3A12C2DD379800024043B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C5326BD902C00EC572D /* AppDelegate.swift */; };
 		CEB3A12D2DD379800024043B /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CD026BD9D9000EC572D /* UIImage+Extensions.swift */; };
 		CEB3A12E2DD379800024043B /* MultipleBettingTicketDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D142C188FEF0032363F /* MultipleBettingTicketDataSource.swift */; };
 		CEB3A12F2DD379800024043B /* MyGamesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64562A7A5CB3002A6984 /* MyGamesRootViewController.swift */; };
@@ -6462,7 +6464,6 @@
 		CEB3A5892DD379890024043B /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
 		CEB3A58A2DD379890024043B /* BonusRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45505F4C28058EB900D4B53E /* BonusRootViewController.swift */; };
 		CEB3A58B2DD379890024043B /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
-		CEB3A58C2DD379890024043B /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0D2326BDE88D00EC572D /* Router.swift */; };
 		CEB3A58D2DD379890024043B /* UserGodfatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2923D2A61597C00A7C334 /* UserGodfatherView.swift */; };
 		CEB3A58E2DD379890024043B /* ManualUploadDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA040E2A3099FA007880FC /* ManualUploadDocumentsViewController.swift */; };
 		CEB3A58F2DD379890024043B /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
@@ -6495,12 +6496,10 @@
 		CEB3A5AD2DD379890024043B /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2897226C32E8600BCD5DA /* Authenticator.swift */; };
 		CEB3A5AE2DD379890024043B /* Changeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CDC26BD9D9000EC572D /* Changeable.swift */; };
 		CEB3A5AF2DD379890024043B /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
-		CEB3A5B02DD379890024043B /* Bootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CA526F28D2E00E69D65 /* Bootstrap.swift */; };
 		CEB3A5B12DD379890024043B /* SimpleRegisterSendEmailCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */; };
 		CEB3A5B22DD379890024043B /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
 		CEB3A5B32DD379890024043B /* BonusActiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A0127D0E92B008BAF41 /* BonusActiveTableViewCell.swift */; };
 		CEB3A5B42DD379890024043B /* GomaGamingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */; };
-		CEB3A5B52DD379890024043B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C5326BD902C00EC572D /* AppDelegate.swift */; };
 		CEB3A5B62DD379890024043B /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CD026BD9D9000EC572D /* UIImage+Extensions.swift */; };
 		CEB3A5B72DD379890024043B /* MultipleBettingTicketDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D142C188FEF0032363F /* MultipleBettingTicketDataSource.swift */; };
 		CEB3A5B82DD379890024043B /* MyGamesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64562A7A5CB3002A6984 /* MyGamesRootViewController.swift */; };
@@ -8862,7 +8861,6 @@
 		45936CAF270EEFA200E8260E /* LoadableContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableContent.swift; sourceTree = "<group>"; };
 		45936CB2270EF02200E8260E /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		45936CB5270EF04500E8260E /* SportType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportType.swift; sourceTree = "<group>"; };
-		4593DD142CBF2EAF00C52C42 /* GomaAssets */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GomaAssets; sourceTree = "<group>"; };
 		459709FF2C5C8AB200E8F91D /* PromotedBetslip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotedBetslip.swift; sourceTree = "<group>"; };
 		459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsCollectionViewLayout.swift; sourceTree = "<group>"; };
 		459EF26F2BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Scores.swift"; sourceTree = "<group>"; };
@@ -9425,6 +9423,9 @@
 		A9FB6D5128C645C800E3FE58 /* RankingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsViewController.swift; sourceTree = "<group>"; };
 		A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewController.swift; sourceTree = "<group>"; };
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
+		CE05AAD02DFB85E800D20357 /* AppDelegate+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+BetssonCM.swift"; sourceTree = "<group>"; };
+		CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bootstrap+BetssonCM.swift"; sourceTree = "<group>"; };
+		CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Router+BetssonCM.swift"; sourceTree = "<group>"; };
 		CE0AEAA92D8A41EE007CCFC3 /* MatchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchHeaderView.swift; sourceTree = "<group>"; };
 		CE0C6C712D54746500EAD26B /* CompetitionsFiltersViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsFiltersViewSwiftUI.swift; sourceTree = "<group>"; };
 		CE0C6C7B2D5483DA00EAD26B /* CompetitionFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterCell.swift; sourceTree = "<group>"; };
@@ -10073,7 +10074,6 @@
 				CEB3A3EB2DD379800024043B /* OptimoveCore in Frameworks */,
 				CEB3A3EC2DD379800024043B /* Criteo in Frameworks */,
 				CEB3A3ED2DD379800024043B /* CountrySelectionFeature in Frameworks */,
-				CE0599AB2DE8BDB600E9DDFA /* GomaUI in Frameworks */,
 				CEB3A3EE2DD379800024043B /* SwiftPrettyPrint in Frameworks */,
 				CEB3A3EF2DD379800024043B /* SweeterSwift in Frameworks */,
 				CEB3A3F02DD379800024043B /* Starscream in Frameworks */,
@@ -10510,7 +10510,6 @@
 			children = (
 				CE3BF9EB2DE76DFC0084D27F /* EveryMatrixProviderClient */,
 				CED11C412DD6357B00F65785 /* PresentationProvider */,
-				4593DD142CBF2EAF00C52C42 /* GomaAssets */,
 				451ABD6D29CC755B0062641F /* HeaderTextField */,
 				45BB5542298351CD00684F83 /* AdresseFrancaise */,
 				45DD5303297ED57100DBC2AA /* CountrySelectionFeature */,
@@ -13149,6 +13148,16 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		CE05AACF2DFB857F00D20357 /* Boot */ = {
+			isa = PBXGroup;
+			children = (
+				CE05AAD02DFB85E800D20357 /* AppDelegate+BetssonCM.swift */,
+				CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */,
+				CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */,
+			);
+			path = Boot;
+			sourceTree = "<group>";
+		};
 		CE0C6C912D56327E00EAD26B /* SmallToolTipView */ = {
 			isa = PBXGroup;
 			children = (
@@ -13876,6 +13885,7 @@
 		CEB3A0082DD379510024043B /* BetssonCM */ = {
 			isa = PBXGroup;
 			children = (
+				CE05AACF2DFB857F00D20357 /* Boot */,
 				CEB39FF12DD379510024043B /* Assets */,
 				CEB39FF32DD379510024043B /* LaunchScreen */,
 				CEB39FF62DD379510024043B /* Misc-DEV */,
@@ -14581,7 +14591,6 @@
 				CEB3A06A2DD379800024043B /* AdresseFrancaise */,
 				CED11C442DD6366B00F65785 /* PresentationProvider */,
 				CE0599732DE8B94200E9DDFA /* GomaUI */,
-				CE0599AA2DE8BDB600E9DDFA /* GomaUI */,
 			);
 			productName = Sportsbook;
 			productReference = CEB3A4AF2DD379800024043B /* BetssonCM STG.app */;
@@ -14768,7 +14777,6 @@
 				A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */,
 				459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */,
 				659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */,
-				CE0599A92DE8BDB600E9DDFA /* XCLocalSwiftPackageReference "../GomaUI/GomaUI" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -19976,7 +19984,6 @@
 				CE8F23932DD371350071238E /* InAppMessageCellViewModel.swift in Sources */,
 				CE8F23942DD371350071238E /* BonusRootViewController.swift in Sources */,
 				CE8F23952DD371350071238E /* DepositSuccessViewController.swift in Sources */,
-				CE8F23962DD371350071238E /* Router.swift in Sources */,
 				CE8F23972DD371350071238E /* UserGodfatherView.swift in Sources */,
 				CE8F23982DD371350071238E /* ManualUploadDocumentsViewController.swift in Sources */,
 				CE8F23992DD371350071238E /* FeaturedCompetition.swift in Sources */,
@@ -20009,12 +20016,10 @@
 				CE8F23B72DD371350071238E /* Authenticator.swift in Sources */,
 				CE8F23B82DD371350071238E /* Changeable.swift in Sources */,
 				CE8F23B92DD371350071238E /* HomeFilterViewController.swift in Sources */,
-				CE8F23BA2DD371350071238E /* Bootstrap.swift in Sources */,
 				CE8F23BB2DD371350071238E /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
 				CE8F23BC2DD371350071238E /* QuickBetViewModel.swift in Sources */,
 				CE8F23BD2DD371350071238E /* BonusActiveTableViewCell.swift in Sources */,
 				CE8F23BE2DD371350071238E /* GomaGamingService.swift in Sources */,
-				CE8F23BF2DD371350071238E /* AppDelegate.swift in Sources */,
 				CE8F23C02DD371350071238E /* UIImage+Extensions.swift in Sources */,
 				CE8F23C12DD371350071238E /* MultipleBettingTicketDataSource.swift in Sources */,
 				CE8F23C22DD371350071238E /* MyGamesRootViewController.swift in Sources */,
@@ -20656,6 +20661,9 @@
 				CE8F26442DD371350071238E /* PromotionTableViewCell.swift in Sources */,
 				CE8F26462DD371350071238E /* TitleDropdownView.swift in Sources */,
 				CE8F26472DD371350071238E /* TopBarAlternateView.swift in Sources */,
+				CE05AAD92DFB85E800D20357 /* Bootstrap+BetssonCM.swift in Sources */,
+				CE05AADA2DFB85E800D20357 /* Router+BetssonCM.swift in Sources */,
+				CE05AADB2DFB85E800D20357 /* AppDelegate+BetssonCM.swift in Sources */,
 				CE8F26482DD371350071238E /* ServiceProviderModelMapper+FeaturedTips.swift in Sources */,
 				CE8F26492DD371350071238E /* PromotionCollectionViewCell.swift in Sources */,
 				CE8F264A2DD371350071238E /* MarketWidgetCellViewModel.swift in Sources */,
@@ -20827,7 +20835,6 @@
 				CEB3A1002DD379800024043B /* InAppMessageCellViewModel.swift in Sources */,
 				CEB3A1012DD379800024043B /* BonusRootViewController.swift in Sources */,
 				CEB3A1022DD379800024043B /* DepositSuccessViewController.swift in Sources */,
-				CEB3A1032DD379800024043B /* Router.swift in Sources */,
 				CEB3A1042DD379800024043B /* UserGodfatherView.swift in Sources */,
 				CEB3A1052DD379800024043B /* ManualUploadDocumentsViewController.swift in Sources */,
 				CEB3A1062DD379800024043B /* FeaturedCompetition.swift in Sources */,
@@ -20860,12 +20867,10 @@
 				CEB3A1242DD379800024043B /* Authenticator.swift in Sources */,
 				CEB3A1252DD379800024043B /* Changeable.swift in Sources */,
 				CEB3A1262DD379800024043B /* HomeFilterViewController.swift in Sources */,
-				CEB3A1272DD379800024043B /* Bootstrap.swift in Sources */,
 				CEB3A1282DD379800024043B /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
 				CEB3A1292DD379800024043B /* QuickBetViewModel.swift in Sources */,
 				CEB3A12A2DD379800024043B /* BonusActiveTableViewCell.swift in Sources */,
 				CEB3A12B2DD379800024043B /* GomaGamingService.swift in Sources */,
-				CEB3A12C2DD379800024043B /* AppDelegate.swift in Sources */,
 				CEB3A12D2DD379800024043B /* UIImage+Extensions.swift in Sources */,
 				CEB3A12E2DD379800024043B /* MultipleBettingTicketDataSource.swift in Sources */,
 				CEB3A12F2DD379800024043B /* MyGamesRootViewController.swift in Sources */,
@@ -21507,6 +21512,9 @@
 				CEB3A3B52DD379800024043B /* PromotionTableViewCell.swift in Sources */,
 				CEB3A3B72DD379800024043B /* TitleDropdownView.swift in Sources */,
 				CEB3A3B82DD379800024043B /* TopBarAlternateView.swift in Sources */,
+				CE05AAD32DFB85E800D20357 /* Bootstrap+BetssonCM.swift in Sources */,
+				CE05AAD42DFB85E800D20357 /* Router+BetssonCM.swift in Sources */,
+				CE05AAD52DFB85E800D20357 /* AppDelegate+BetssonCM.swift in Sources */,
 				CEB3A3B92DD379800024043B /* ServiceProviderModelMapper+FeaturedTips.swift in Sources */,
 				CEB3A3BA2DD379800024043B /* PromotionCollectionViewCell.swift in Sources */,
 				CEB3A3BB2DD379800024043B /* MarketWidgetCellViewModel.swift in Sources */,
@@ -21678,7 +21686,6 @@
 				CEB3A5892DD379890024043B /* InAppMessageCellViewModel.swift in Sources */,
 				CEB3A58A2DD379890024043B /* BonusRootViewController.swift in Sources */,
 				CEB3A58B2DD379890024043B /* DepositSuccessViewController.swift in Sources */,
-				CEB3A58C2DD379890024043B /* Router.swift in Sources */,
 				CEB3A58D2DD379890024043B /* UserGodfatherView.swift in Sources */,
 				CEB3A58E2DD379890024043B /* ManualUploadDocumentsViewController.swift in Sources */,
 				CEB3A58F2DD379890024043B /* FeaturedCompetition.swift in Sources */,
@@ -21711,12 +21718,10 @@
 				CEB3A5AD2DD379890024043B /* Authenticator.swift in Sources */,
 				CEB3A5AE2DD379890024043B /* Changeable.swift in Sources */,
 				CEB3A5AF2DD379890024043B /* HomeFilterViewController.swift in Sources */,
-				CEB3A5B02DD379890024043B /* Bootstrap.swift in Sources */,
 				CEB3A5B12DD379890024043B /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
 				CEB3A5B22DD379890024043B /* QuickBetViewModel.swift in Sources */,
 				CEB3A5B32DD379890024043B /* BonusActiveTableViewCell.swift in Sources */,
 				CEB3A5B42DD379890024043B /* GomaGamingService.swift in Sources */,
-				CEB3A5B52DD379890024043B /* AppDelegate.swift in Sources */,
 				CEB3A5B62DD379890024043B /* UIImage+Extensions.swift in Sources */,
 				CEB3A5B72DD379890024043B /* MultipleBettingTicketDataSource.swift in Sources */,
 				CEB3A5B82DD379890024043B /* MyGamesRootViewController.swift in Sources */,
@@ -22358,6 +22363,9 @@
 				CEB3A83E2DD379890024043B /* PromotionTableViewCell.swift in Sources */,
 				CEB3A8402DD379890024043B /* TitleDropdownView.swift in Sources */,
 				CEB3A8412DD379890024043B /* TopBarAlternateView.swift in Sources */,
+				CE05AAD62DFB85E800D20357 /* Bootstrap+BetssonCM.swift in Sources */,
+				CE05AAD72DFB85E800D20357 /* Router+BetssonCM.swift in Sources */,
+				CE05AAD82DFB85E800D20357 /* AppDelegate+BetssonCM.swift in Sources */,
 				CEB3A8422DD379890024043B /* ServiceProviderModelMapper+FeaturedTips.swift in Sources */,
 				CEB3A8432DD379890024043B /* PromotionCollectionViewCell.swift in Sources */,
 				CEB3A8442DD379890024043B /* MarketWidgetCellViewModel.swift in Sources */,
@@ -24192,13 +24200,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		CE0599A92DE8BDB600E9DDFA /* XCLocalSwiftPackageReference "../GomaUI/GomaUI" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../GomaUI/GomaUI;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		450B782528F58574009229E3 /* XCRemoteSwiftPackageReference "Reachability" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -25610,10 +25611,6 @@
 			productName = AdyenDropIn;
 		};
 		CE0599732DE8B94200E9DDFA /* GomaUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GomaUI;
-		};
-		CE0599AA2DE8BDB600E9DDFA /* GomaUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GomaUI;
 		};
