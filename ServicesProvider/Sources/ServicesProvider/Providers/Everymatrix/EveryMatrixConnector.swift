@@ -41,7 +41,7 @@ class EveryMatrixConnector: Connector {
     // MARK: - Connection Management
     private func setupNotificationHandling() {
         NotificationCenter.default.publisher(for: .userSessionDisconnected)
-            .receive(on: serialQueue)
+            .receive(on: self.serialQueue)
             .sink { _ in
                 fatalError("userSessionDisconnected not handled")
             }
@@ -62,14 +62,14 @@ class EveryMatrixConnector: Connector {
     }
 
     func forceReconnect() {
-        serialQueue.async { [weak self] in
+        self.serialQueue.async { [weak self] in
             guard let self = self else { return }
 
             // First disconnect
             self.wampManager.disconnect()
 
             // Wait for a short delay to ensure clean disconnect
-            Thread.sleep(forTimeInterval: 0.5)
+            Thread.sleep(forTimeInterval: 0.1)
 
             // Attempt reconnection
             self.wampManager.connect()
@@ -77,7 +77,7 @@ class EveryMatrixConnector: Connector {
     }
 
     func isConnected() -> Bool {
-        return serialQueue.sync { self.wampManager.isConnected }
+        return self.serialQueue.sync { self.wampManager.isConnected }
     }
 
     // MARK: - Request Methods

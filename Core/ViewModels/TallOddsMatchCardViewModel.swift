@@ -5,9 +5,9 @@ import GomaUI
 final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<TallOddsMatchCardDisplayState, Never>
-    private let matchHeaderViewModelSubject: CurrentValueSubject<MatchHeaderViewModelProtocol, Never>
-    private let marketInfoLineViewModelSubject: CurrentValueSubject<MarketInfoLineViewModelProtocol, Never>
-    private let marketOutcomesViewModelSubject: CurrentValueSubject<MarketOutcomesMultiLineViewModelProtocol, Never>
+    fileprivate let matchHeaderViewModelSubject: CurrentValueSubject<MatchHeaderViewModelProtocol, Never>
+    fileprivate let marketInfoLineViewModelSubject: CurrentValueSubject<MarketInfoLineViewModelProtocol, Never>
+    fileprivate let marketOutcomesViewModelSubject: CurrentValueSubject<MarketOutcomesMultiLineViewModelProtocol, Never>
     
     // MARK: - Logging Properties
     private let creationTime: CFAbsoluteTime
@@ -61,7 +61,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     // MARK: - Initialization
     init(matchData: TallOddsMatchData) {
         self.creationTime = CFAbsoluteTimeGetCurrent()
-        print("[TallOdds] Creating TallOddsMatchCardViewModel for match: \(matchData.matchId) at time: \(String(format: "%.3f", creationTime))")
+        print("[TallOddsMatchCardViewModel] Creating VM for match: \(matchData.matchId) at time: \(String(format: "%.3f", creationTime))")
         self.matchData = matchData
         
         // Create initial display state from match data
@@ -85,6 +85,11 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         self.marketOutcomesViewModelSubject = CurrentValueSubject(outcomesViewModel)
         
         print("[TallOdds] Initialized all subjects for match: \(matchData.matchId)")
+    }
+    
+    // MARK: - Cleanup
+    deinit {
+        print("[TallOddsMatchCardViewModel] 🔴 DEINIT - matchId: \(matchData.matchId)")
     }
     
     // MARK: - TallOddsMatchCardViewModelProtocol
@@ -123,6 +128,13 @@ extension TallOddsMatchCardViewModel {
     private static func createMarketOutcomesViewModel(from marketGroupData: MarketGroupData) -> MarketOutcomesMultiLineViewModelProtocol {
         return MarketOutcomesMultiLineViewModel(marketGroupData: marketGroupData)
     }
+    
+    private static func createMarketOutcomesViewModel(from markets: [Market], marketTypeId: String) -> MarketOutcomesMultiLineViewModelProtocol {
+        return MarketOutcomesMultiLineViewModel.createWithDirectLineViewModels(
+            from: markets,
+            marketTypeId: marketTypeId
+        )
+    }
 }
 
 // MARK: - Factory for Creating from Real Match Data
@@ -131,8 +143,61 @@ extension TallOddsMatchCardViewModel {
     /// Creates a TallOddsMatchCardViewModel from real Match and Market data
     static func create(from match: Match, relevantMarkets: [Market], marketTypeId: String) -> TallOddsMatchCardViewModel {
         print("[TallOdds] Creating TallOddsMatchCardViewModel from Match data - ID: \(match.id), Markets: \(relevantMarkets.count), MarketType: \(marketTypeId)")
-        let matchData = extractMatchData(from: match, relevantMarkets: relevantMarkets, marketTypeId: marketTypeId)
-        return TallOddsMatchCardViewModel(matchData: matchData)
+        
+        // Create with direct production view models that have real-time subscriptions
+        return createWithProductionViewModels(from: match, relevantMarkets: relevantMarkets, marketTypeId: marketTypeId)
+    }
+    
+    /// Creates a TallOddsMatchCardViewModel with production view models that have real-time subscriptions
+    private static func createWithProductionViewModels(from match: Match, relevantMarkets: [Market], marketTypeId: String) -> TallOddsMatchCardViewModel {
+        // 1. Create MatchHeaderData
+        let matchHeaderData = MatchHeaderData(
+            id: match.id,
+            competitionName: match.competitionName,
+            countryFlagImageName: extractCountryFlag(from: match),
+            sportIconImageName: extractSportIcon(from: match),
+            isFavorite: false, // TODO: Check with favorites service when available
+            visualState: .standard,
+            matchTime: formatMatchTime(from: match),
+            isLive: match.status.isLive
+        )
+        
+        // 2. Create MarketInfoData
+        let firstMarket = relevantMarkets.first
+        let marketInfoData = MarketInfoData(
+            marketName: firstMarket?.marketTypeName ?? firstMarket?.name ?? "Markets",
+            marketCount: match.numberTotalOfMarkets,
+            icons: createMarketIcons(from: relevantMarkets, match: match)
+        )
+        
+        // Create child view models
+        let headerViewModel = createMatchHeaderViewModel(from: matchHeaderData)
+        let marketInfoViewModel = createMarketInfoLineViewModel(from: marketInfoData)
+        let outcomesViewModel = createMarketOutcomesViewModel(from: relevantMarkets, marketTypeId: marketTypeId)
+        
+        // Create initial display state
+        let initialDisplayState = TallOddsMatchCardDisplayState(
+            matchId: match.id,
+            homeParticipantName: match.homeParticipant.name,
+            awayParticipantName: match.awayParticipant.name
+        )
+        
+        // Create the view model directly with production child view models
+        let viewModel = TallOddsMatchCardViewModel(matchData: TallOddsMatchData(
+            matchId: match.id,
+            leagueInfo: matchHeaderData,
+            homeParticipantName: match.homeParticipant.name,
+            awayParticipantName: match.awayParticipant.name,
+            marketInfo: marketInfoData,
+            outcomes: MarketGroupData(id: marketTypeId, marketLines: [])  // Empty, not used in production
+        ))
+        
+        // Override the subjects with production view models
+        viewModel.matchHeaderViewModelSubject.send(headerViewModel)
+        viewModel.marketInfoLineViewModelSubject.send(marketInfoViewModel)
+        viewModel.marketOutcomesViewModelSubject.send(outcomesViewModel)
+        
+        return viewModel
     }
     
     private static func extractMatchData(from match: Match, relevantMarkets: [Market], marketTypeId: String) -> TallOddsMatchData {
@@ -235,4 +300,6 @@ extension TallOddsMatchCardViewModel {
             )
         }
     }
+    
+    
 }

@@ -3498,6 +3498,30 @@
 		CE3575852D92B3F5009E0029 /* NSLayoutConstraint+Priority.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE35757F2D92B3F5009E0029 /* NSLayoutConstraint+Priority.swift */; };
 		CE3575872D92B3F5009E0029 /* NSLayoutConstraint+Priority.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE35757F2D92B3F5009E0029 /* NSLayoutConstraint+Priority.swift */; };
 		CE3575892D92B3F5009E0029 /* NSLayoutConstraint+Priority.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE35757F2D92B3F5009E0029 /* NSLayoutConstraint+Priority.swift */; };
+		CE4254532DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */; };
+		CE4254542DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */; };
+		CE4254552DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */; };
+		CE4254562DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */; };
+		CE4254572DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */; };
+		CE4254582DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */; };
+		CE4254592DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */; };
+		CE42545A2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */; };
+		CE42545B2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */; };
+		CE42545C2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */; };
+		CE42545D2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */; };
+		CE42545E2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */; };
+		CE42545F2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */; };
+		CE4254602DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */; };
+		CE4254612DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */; };
+		CE4254622DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */; };
+		CE4254642DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */; };
+		CE4254652DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */; };
+		CE4254662DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */; };
+		CE4254672DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */; };
+		CE4254682DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */; };
+		CE4254692DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */; };
+		CE42546A2DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */; };
+		CE42546B2DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */; };
 		CE544FCB2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCD2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCE2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
@@ -9457,6 +9481,9 @@
 		CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Promotional.swift"; sourceTree = "<group>"; };
 		CE35757F2D92B3F5009E0029 /* NSLayoutConstraint+Priority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Priority.swift"; sourceTree = "<group>"; };
 		CE3BF9EB2DE76DFC0084D27F /* EveryMatrixProviderClient */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EveryMatrixProviderClient; sourceTree = "<group>"; };
+		CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOutcomesLineViewModel.swift; sourceTree = "<group>"; };
+		CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutcomeItemViewModel.swift; sourceTree = "<group>"; };
+		CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GomaUIModelMapper+Outcome.swift"; sourceTree = "<group>"; };
 		CE544FC92D07029900AA24CA /* first_deposit_8.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = first_deposit_8.json; sourceTree = "<group>"; };
 		CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
@@ -10346,6 +10373,7 @@
 		453976272933F6D100E747EF /* ModelMappers */ = {
 			isa = PBXGroup;
 			children = (
+				CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */,
 				450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */,
 				CEA6675D2D88357A00C74895 /* ServiceProviderModelMapper+AlertBanner.swift */,
 				45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */,
@@ -13339,11 +13367,11 @@
 				CE63A8212DE9D2FB00E1FF01 /* NextUpEventsViewController.swift */,
 				CE63A8592DEF8B9800E1FF01 /* NextUpEventsViewModel.swift */,
 				CE63A83E2DEF3E7600E1FF01 /* MarketGroupCardsViewController.swift */,
-				CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */,
 				CE63A8502DEF878200E1FF01 /* MarketGroupCardsViewModel.swift */,
 				CE7BCEC12DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift */,
 				CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */,
 				CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */,
+				CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */,
 			);
 			path = NextUpEvents;
 			sourceTree = "<group>";
@@ -13891,6 +13919,8 @@
 			children = (
 				CEC427E62DF0E6520077A12F /* MarketInfoLineViewModel.swift */,
 				CEC427E72DF0E6520077A12F /* MarketOutcomesMultiLineViewModel.swift */,
+				CE4254512DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift */,
+				CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */,
 				CEE5BBDA2DF370F9006E7494 /* MarketNamePillLabelViewModel.swift */,
 				CEC427E82DF0E6520077A12F /* MatchHeaderViewModel.swift */,
 				CEC427E92DF0E6520077A12F /* TallOddsMatchCardViewModel.swift */,
@@ -16556,6 +16586,7 @@
 				653A387B2D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				450B78D628F58574009229E3 /* WelcomeViewController.swift in Sources */,
 				450B78D728F58574009229E3 /* CGPoint+Shift.swift in Sources */,
+				CE4254692DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */,
 				450B78D928F58574009229E3 /* UserSettings.swift in Sources */,
 				450B78DB28F58574009229E3 /* StaticTableViewController.swift in Sources */,
 				450B78DC28F58574009229E3 /* TransactionsTableViewCell.swift in Sources */,
@@ -17038,6 +17069,8 @@
 				65CD18892D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
 				65CD188A2D9469EA00CA23E0 /* SelectFriendCellViewModel.swift in Sources */,
 				65CD188B2D9469EA00CA23E0 /* FriendsListViewController.swift in Sources */,
+				CE4254612DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				CE4254622DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				65CD188C2D9469EA00CA23E0 /* SocialViewController.swift in Sources */,
 				65CD188D2D9469EA00CA23E0 /* ConversationsViewModel.swift in Sources */,
 				65CD188E2D9469EA00CA23E0 /* ReceivedMessageTableViewCell.swift in Sources */,
@@ -17434,6 +17467,7 @@
 				653A38802D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				45A330EB298976BA008181E9 /* CGPoint+Shift.swift in Sources */,
 				45A330ED298976BA008181E9 /* UserSettings.swift in Sources */,
+				CE4254672DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */,
 				45A330EE298976BA008181E9 /* StaticTableViewController.swift in Sources */,
 				45A330EF298976BA008181E9 /* TransactionsTableViewCell.swift in Sources */,
 				45A330F0298976BA008181E9 /* UserRegisterForm.swift in Sources */,
@@ -17916,6 +17950,8 @@
 				65CD19112D9469EA00CA23E0 /* AddFriendViewController.swift in Sources */,
 				65CD19122D9469EA00CA23E0 /* PreviewChatTableViewCell.swift in Sources */,
 				65CD19132D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
+				CE42545B2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				CE42545C2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				65CD19142D9469EA00CA23E0 /* SelectFriendCellViewModel.swift in Sources */,
 				65CD19152D9469EA00CA23E0 /* FriendsListViewController.swift in Sources */,
 				65CD19162D9469EA00CA23E0 /* SocialViewController.swift in Sources */,
@@ -18282,6 +18318,7 @@
 				653A387F2D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				45F6BB872AB3732C00C81DE1 /* CGPoint+Shift.swift in Sources */,
 				45F6BB882AB3732C00C81DE1 /* UserSettings.swift in Sources */,
+				CE4254642DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */,
 				45F6BB892AB3732C00C81DE1 /* StaticTableViewController.swift in Sources */,
 				45F6BB8A2AB3732C00C81DE1 /* TransactionsTableViewCell.swift in Sources */,
 				45F6BB8B2AB3732C00C81DE1 /* UserRegisterForm.swift in Sources */,
@@ -18764,6 +18801,8 @@
 				65CD19562D9469EA00CA23E0 /* AddFriendViewController.swift in Sources */,
 				65CD19572D9469EA00CA23E0 /* PreviewChatTableViewCell.swift in Sources */,
 				65CD19582D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
+				CE4254532DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				CE4254542DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				65CD19592D9469EA00CA23E0 /* SelectFriendCellViewModel.swift in Sources */,
 				65CD195A2D9469EA00CA23E0 /* FriendsListViewController.swift in Sources */,
 				65CD195B2D9469EA00CA23E0 /* SocialViewController.swift in Sources */,
@@ -19166,6 +19205,8 @@
 				CE12A20C2D31347E0022BDF7 /* TransactionsHistoryViewModel.swift in Sources */,
 				CE12A20D2D31347E0022BDF7 /* NetworkError.swift in Sources */,
 				CE12A20E2D31347E0022BDF7 /* FullRegisterAddressCountryViewController.swift in Sources */,
+				CE4254552DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				CE4254562DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				CE12A20F2D31347E0022BDF7 /* TabularViewController.swift in Sources */,
 				CE12A2102D31347E0022BDF7 /* ReferralQRCodeViewController.swift in Sources */,
 				CE12A2122D31347E0022BDF7 /* IBANProofViewModel.swift in Sources */,
@@ -19638,6 +19679,7 @@
 				65CD18592D9469EA00CA23E0 /* FriendProfileViewModel.swift in Sources */,
 				65CD185A2D9469EA00CA23E0 /* AddContactViewModel.swift in Sources */,
 				65CD185B2D9469EA00CA23E0 /* InviteContactTableViewCell.swift in Sources */,
+				CE42546A2DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */,
 				65CD185C2D9469EA00CA23E0 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				65CD185D2D9469EA00CA23E0 /* ListTitleHeaderFooterView.swift in Sources */,
 				65CD185E2D9469EA00CA23E0 /* ChatNotificationsViewModel.swift in Sources */,
@@ -19987,6 +20029,7 @@
 				CE8F23CC2DD371350071238E /* RegisterFlowType.swift in Sources */,
 				CE8F23CD2DD371350071238E /* CGPoint+Shift.swift in Sources */,
 				CE8F23CE2DD371350071238E /* UserSettings.swift in Sources */,
+				CE42546B2DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */,
 				CE8F23CF2DD371350071238E /* StaticTableViewController.swift in Sources */,
 				CE8F23D02DD371350071238E /* TransactionsTableViewCell.swift in Sources */,
 				CE8F23D12DD371350071238E /* UserRegisterForm.swift in Sources */,
@@ -20469,6 +20512,8 @@
 				CE8F25B62DD371350071238E /* AddFriendViewController.swift in Sources */,
 				CE8F25B72DD371350071238E /* PreviewChatTableViewCell.swift in Sources */,
 				CE8F25B82DD371350071238E /* ChatListViewController.swift in Sources */,
+				CE4254592DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				CE42545A2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				CE8F25B92DD371350071238E /* SelectFriendCellViewModel.swift in Sources */,
 				CE8F25BA2DD371350071238E /* FriendsListViewController.swift in Sources */,
 				CE8F25BB2DD371350071238E /* SocialViewController.swift in Sources */,
@@ -20835,6 +20880,7 @@
 				CEB3A1392DD379800024043B /* RegisterFlowType.swift in Sources */,
 				CEB3A13A2DD379800024043B /* CGPoint+Shift.swift in Sources */,
 				CEB3A13B2DD379800024043B /* UserSettings.swift in Sources */,
+				CE4254682DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */,
 				CEB3A13C2DD379800024043B /* StaticTableViewController.swift in Sources */,
 				CEB3A13D2DD379800024043B /* TransactionsTableViewCell.swift in Sources */,
 				CEB3A13E2DD379800024043B /* UserRegisterForm.swift in Sources */,
@@ -21317,6 +21363,8 @@
 				CEB3A3272DD379800024043B /* AddFriendViewController.swift in Sources */,
 				CEB3A3282DD379800024043B /* PreviewChatTableViewCell.swift in Sources */,
 				CEB3A3292DD379800024043B /* ChatListViewController.swift in Sources */,
+				CE4254572DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				CE4254582DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				CEB3A32A2DD379800024043B /* SelectFriendCellViewModel.swift in Sources */,
 				CEB3A32B2DD379800024043B /* FriendsListViewController.swift in Sources */,
 				CEB3A32C2DD379800024043B /* SocialViewController.swift in Sources */,
@@ -21683,6 +21731,7 @@
 				CEB3A5C22DD379890024043B /* RegisterFlowType.swift in Sources */,
 				CEB3A5C32DD379890024043B /* CGPoint+Shift.swift in Sources */,
 				CEB3A5C42DD379890024043B /* UserSettings.swift in Sources */,
+				CE4254662DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */,
 				CEB3A5C52DD379890024043B /* StaticTableViewController.swift in Sources */,
 				CEB3A5C62DD379890024043B /* TransactionsTableViewCell.swift in Sources */,
 				CEB3A5C72DD379890024043B /* UserRegisterForm.swift in Sources */,
@@ -22165,6 +22214,8 @@
 				CEB3A7B02DD379890024043B /* AddFriendViewController.swift in Sources */,
 				CEB3A7B12DD379890024043B /* PreviewChatTableViewCell.swift in Sources */,
 				CEB3A7B22DD379890024043B /* ChatListViewController.swift in Sources */,
+				CE42545D2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				CE42545E2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				CEB3A7B32DD379890024043B /* SelectFriendCellViewModel.swift in Sources */,
 				CEB3A7B42DD379890024043B /* FriendsListViewController.swift in Sources */,
 				CEB3A7B52DD379890024043B /* SocialViewController.swift in Sources */,
@@ -22617,6 +22668,8 @@
 				CEF194962DA834E900C81F12 /* HeadToHeadCardStatsView.swift in Sources */,
 				CEF194972DA834E900C81F12 /* AppearanceViewModel.swift in Sources */,
 				CEF194982DA834E900C81F12 /* ChatTicketStateInMessageView.swift in Sources */,
+				CE42545F2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				CE4254602DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				CEF194992DA834E900C81F12 /* CompetitionFilterTableViewCell.swift in Sources */,
 				CEF1949A2DA834E900C81F12 /* SelfExclusionViewController.swift in Sources */,
 				CEB9BB892DB6575900E8084B /* ActionButtonTableViewCell.swift in Sources */,
@@ -22733,6 +22786,7 @@
 				CEF194F92DA834E900C81F12 /* BetslipErrorView.swift in Sources */,
 				CEF194FA2DA834E900C81F12 /* LinksProviderProtocol.swift in Sources */,
 				CEF194FB2DA834E900C81F12 /* DynamicLinksProvider.swift in Sources */,
+				CE4254652DF6C16C00DB38E7 /* GomaUIModelMapper+Outcome.swift in Sources */,
 				CEF194FC2DA834E900C81F12 /* LinksManagementService.swift in Sources */,
 				CEF194FD2DA834E900C81F12 /* LinksManagementServiceProtocol.swift in Sources */,
 				CEF194FE2DA834E900C81F12 /* StaticLinksProvider.swift in Sources */,

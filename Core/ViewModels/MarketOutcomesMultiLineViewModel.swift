@@ -10,11 +10,7 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
     
     // MARK: - Protocol Conformance
     public var lineViewModelsPublisher: AnyPublisher<[MarketOutcomesLineViewModelProtocol], Never> {
-        lineViewModelsSubject
-            .handleEvents(receiveOutput: { lineViewModels in
-                print("[MarketOutcomes] lineViewModelsPublisher sending \(lineViewModels.count) line view models")
-            })
-            .eraseToAnyPublisher()
+        lineViewModelsSubject.eraseToAnyPublisher()
     }
     
     public var lineViewModels: [MarketOutcomesLineViewModelProtocol] {
@@ -22,17 +18,11 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
     }
     
     public var displayStatePublisher: AnyPublisher<MarketOutcomesMultiLineDisplayState, Never> {
-        displayStateSubject
-            .handleEvents(receiveOutput: { displayState in
-                print("[MarketOutcomes] displayStatePublisher sending state: title=\(displayState.groupTitle ?? "nil"), lineCount=\(displayState.lineCount)")
-            })
-            .eraseToAnyPublisher()
+        displayStateSubject.eraseToAnyPublisher()
     }
     
     // MARK: - Initialization
     init(groupTitle: String? = nil, lineViewModels: [MarketOutcomesLineViewModelProtocol] = []) {
-        print("[MarketOutcomes] Creating MarketOutcomesMultiLineViewModel with \(lineViewModels.count) line view models")
-        
         self.lineViewModelsSubject = CurrentValueSubject(lineViewModels)
         self.displayStateSubject = CurrentValueSubject(
             MarketOutcomesMultiLineDisplayState(
@@ -40,14 +30,10 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
                 lineCount: lineViewModels.count
             )
         )
-        
-        print("[MarketOutcomes] Initialized simplified aggregator with group title: \(groupTitle ?? "nil")")
     }
     
     /// Convenience initializer from MarketGroupData (maintains backward compatibility)
     convenience init(marketGroupData: MarketGroupData) {
-        print("[MarketOutcomes] Creating from MarketGroupData: \(marketGroupData.id), lines: \(marketGroupData.marketLines.count)")
-        
         let lineViewModels = marketGroupData.marketLines.map { lineData in
             Self.createLineViewModel(from: lineData)
         }
@@ -67,12 +53,10 @@ extension MarketOutcomesMultiLineViewModel {
             rightOutcome: lineData.rightOutcome
         )
         
-        // Use Mock for now - in production this could be a real line view model
-        return MockMarketOutcomesLineViewModel(
-            displayMode: lineDisplayState.displayMode,
-            leftOutcome: lineDisplayState.leftOutcome,
-            middleOutcome: lineDisplayState.middleOutcome,
-            rightOutcome: lineDisplayState.rightOutcome
+        // Create production line view model with real-time connections
+        return MarketOutcomesLineViewModel(
+            marketId: lineData.id,
+            initialDisplayState: lineDisplayState
         )
     }
 }
@@ -85,9 +69,6 @@ extension MarketOutcomesMultiLineViewModel {
         from markets: [Market],
         marketTypeId: String
     ) -> MarketOutcomesMultiLineViewModel {
-        
-        print("[MarketOutcomes] Creating from \(markets.count) markets for type: \(marketTypeId)")
-        
         let marketGroupData = extractMarketGroupData(from: markets, marketTypeId: marketTypeId)
         return MarketOutcomesMultiLineViewModel(marketGroupData: marketGroupData)
     }
@@ -97,42 +78,11 @@ extension MarketOutcomesMultiLineViewModel {
         from markets: [Market],
         marketTypeId: String
     ) -> MarketOutcomesMultiLineViewModel {
-        
-        print("[MarketOutcomes] Creating with direct line view models from \(markets.count) markets")
-        
         let lineViewModels = markets.compactMap { market -> MarketOutcomesLineViewModelProtocol? in
             guard !market.outcomes.isEmpty else { return nil }
             
-            // Create outcome data
-            let outcomes = market.outcomes.map { outcome in
-                MarketOutcomeData(
-                    id: outcome.id,
-                    title: outcome.translatedName,
-                    value: String(format: "%.2f", outcome.bettingOffer.decimalOdd),
-                    oddsChangeDirection: .none,
-                    isSelected: false,
-                    isDisabled: !outcome.bettingOffer.isAvailable
-                )
-            }
-            
-            // Determine display mode
-            let displayMode: MarketDisplayMode = outcomes.count == 3 ? .triple : .double
-            
-            // Create line view model directly
-            let lineDisplayState = MarketOutcomesDisplayState(
-                displayMode: displayMode,
-                leftOutcome: outcomes.first,
-                middleOutcome: outcomes.count == 3 ? outcomes[1] : nil,
-                rightOutcome: outcomes.last
-            )
-            
-            // In production, this could be a real line view model with API connections
-            return MockMarketOutcomesLineViewModel(
-                displayMode: lineDisplayState.displayMode,
-                leftOutcome: lineDisplayState.leftOutcome,
-                middleOutcome: lineDisplayState.middleOutcome,
-                rightOutcome: lineDisplayState.rightOutcome
-            )
+            // Create production line view model directly from Market
+            return MarketOutcomesLineViewModel.create(from: market)
         }
         
         // Determine group title based on market type
@@ -189,6 +139,7 @@ extension MarketOutcomesMultiLineViewModel {
     }
     
     private static func determineGroupTitle(for marketTypeId: String) -> String? {
-        fatalError("determineGroupTitle not needed")
+        // Return nil for now - group titles can be determined based on market type if needed
+        return nil
     }
 }

@@ -13,12 +13,18 @@ struct SimpleSubscription: EndpointPublisherIdentifiable {
     var identificationCode: Int
 }
 
+/// Manages subscription to pre-live matches list structure changes and individual entity updates
+/// 
+/// This class provides two types of subscriptions:
+/// 1. Match list structure changes: `subscribe()` - Only emits when matches are added/removed
+/// 2. Individual entity updates: `subscribeToMarketUpdates()`, `subscribeToOutcomeUpdates()`, etc.
+///    These provide real-time updates for specific entities (odds, market data, etc.)
 class PreLiveMatchesPaginator {
 
     // MARK: - Dependencies
     private let connector: EveryMatrixConnector
     private let store: EveryMatrix.EntityStore
-    
+
     // MARK: - Public Access
     /// Access to the entity store for granular subscriptions
     var entityStore: EveryMatrix.EntityStore {
@@ -29,6 +35,7 @@ class PreLiveMatchesPaginator {
     private var currentSubscription: EndpointPublisherIdentifiable?
     private var currentServiceSubscription: Subscription?
     private var cancellables = Set<AnyCancellable>()
+
 
     // MARK: - Configuration
     private let sportId: String
@@ -63,11 +70,13 @@ class PreLiveMatchesPaginator {
         store.clear()
 
         // Create the WAMP router using the existing popularMatchesPublisher case
-        let router = WAMPRouter.popularMatchesPublisher(
+        // I am using this live version to better test the changes in the matches/market/outcomes
+        // TODO: revert to popularMatchesPublisher when the changes are tested
+        let router = WAMPRouter.liveMatchesPublisher( // ) popularMatchesPublisher(
             operatorId: "4093",
             language: "en",
             sportId: sportId,
-            matchesCount: numberOfEvents
+            matchesCount: 1 //numberOfEvents
         )
 
         // Subscribe to the websocket topic
@@ -78,12 +87,12 @@ class PreLiveMatchesPaginator {
                     self?.currentSubscription = subscription
                 }
             })
-            .tryMap { [weak self] (content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) -> SubscribableContent<[EventsGroup]> in
+            .compactMap { [weak self] (content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) -> SubscribableContent<[EventsGroup]>? in
                 guard let self = self else {
-                    throw ServiceProviderError.unknown
+                    return nil
                 }
 
-                return try self.handleSubscriptionContent(content)
+                return try? self.handleSubscriptionContent(content)
             }
             .mapError { error -> ServiceProviderError in
                 if let serviceError = error as? ServiceProviderError {
@@ -119,10 +128,57 @@ class PreLiveMatchesPaginator {
         currentServiceSubscription = nil
         cancellables.removeAll()
     }
-
+    
+    // MARK: - Individual Entity Subscriptions
+    
+    /// Subscribe to market updates for a specific market ID
+    func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+        return store.observeMarket(id: id)
+            .compactMap { marketDTO -> EveryMatrix.Market? in
+                guard let marketDTO = marketDTO else { return nil }
+                
+                // Build hierarchical market from DTO
+                return EveryMatrix.MarketBuilder.build(from: marketDTO, store: self.store)
+            }
+            .compactMap { market -> Market? in
+                // Map internal model to domain model using existing mapper
+                return EveryMatrixModelMapper.market(fromInternalMarket: market)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+    
+    /// Subscribe to outcome updates for a specific outcome ID
+    func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        return store.observeOutcome(id: id)
+            .handleEvents(receiveSubscription: { subscription in
+                print("entityStore.observeOutcome.subscription")
+            }, receiveOutput: { outcome in
+                print("entityStore.observeOutcome.outcome: \(outcome)")
+            }, receiveCompletion: { completion in
+                print("entityStore.observeOutcome.completion: \(completion)")
+            }, receiveCancel: {
+                print("entityStore.observeOutcome.cancel")
+            }, receiveRequest: { demand in
+                print("entityStore.observeOutcome.demand: \(demand)")
+            })
+            .compactMap { outcomeDTO -> EveryMatrix.Outcome? in
+                guard let outcomeDTO = outcomeDTO else { return nil }
+                
+                // Build hierarchical outcome from DTO
+                return EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store)
+            }
+            .compactMap { outcome -> Outcome? in
+                // Map internal model to domain model using existing mapper
+                return EveryMatrixModelMapper.outcome(fromInternalOutcome: outcome)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+    
     // MARK: - Private Methods
 
-    private func handleSubscriptionContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) throws -> SubscribableContent<[EventsGroup]> {
+    private func handleSubscriptionContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) throws -> SubscribableContent<[EventsGroup]>? {
         switch content {
         case .connect(let publisherIdentifiable):
 
@@ -141,13 +197,29 @@ class PreLiveMatchesPaginator {
             return .contentUpdate(content: eventsGroups)
 
         case .updatedContent(let response):
+            // OPTIMIZATION: Only rebuild EventsGroups if match list structure changes
+            // This prevents excessive UI updates for odds/market/outcome changes
+
+            // Get match IDs before update
+            let matchIdsBeforeUpdate = Set(store.getAll(EveryMatrix.MatchDTO.self).map { $0.id })
+
             // Parse and store the updated entities
             EveryMatrix.ResponseParser.parseAndStore(response: response, in: store)
 
-            // Convert stored entities to EventsGroup array
-            let eventsGroups = buildEventsGroups()
-            return .contentUpdate(content: eventsGroups)
+            // Get match IDs after update
+            let matchIdsAfterUpdate = Set(store.getAll(EveryMatrix.MatchDTO.self).map { $0.id })
 
+            // Check if match list structure changed (added or removed matches)
+            if matchIdsBeforeUpdate != matchIdsAfterUpdate {
+                // Match list changed, rebuild and send update
+                let eventsGroups = buildEventsGroups()
+                return .contentUpdate(content: eventsGroups)
+            }
+            
+            // Only content changed (odds, markets, etc.), don't emit any update
+            // Store is already updated, individual entity subscriptions will work
+            return nil
+            
         case .disconnect:
             return .disconnected
         }

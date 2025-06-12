@@ -49,11 +49,6 @@ class MarketGroupCardsViewModel: ObservableObject {
     private weak var scrollPositionCoordinator: ScrollPositionCoordinator?
     private var isReceivingExternalScrollUpdate = false
     
-    // MARK: - Logging Properties
-    private var updateCount: Int = 0
-    private let creationTime: CFAbsoluteTime
-    private var lastUpdateTime: CFAbsoluteTime = 0
-    
     // Mock TallOddsMatchCardViewModels for testing
     private let mockTallOddsViewModels: [TallOddsMatchCardViewModelProtocol] = [
         MockTallOddsMatchCardViewModel.premierLeagueMock,
@@ -63,8 +58,7 @@ class MarketGroupCardsViewModel: ObservableObject {
     ]
 
     init(marketTypeId: String, scrollPositionCoordinator: ScrollPositionCoordinator? = nil) {
-        self.creationTime = CFAbsoluteTimeGetCurrent()
-        print("[MarketGroupCards] Creating MarketGroupCardsViewModel for marketType: \(marketTypeId) at time: \(String(format: "%.3f", creationTime))")
+        print("[MarketGroupCards] Creating MarketGroupCardsViewModel for marketType: \(marketTypeId)")
         self.marketTypeId = marketTypeId
         self.scrollPositionCoordinator = scrollPositionCoordinator
 
@@ -84,31 +78,12 @@ class MarketGroupCardsViewModel: ObservableObject {
 
     // MARK: - Public Methods
     func updateMatches(_ matches: [Match]) {
-        updateCount += 1
-        let currentTime = CFAbsoluteTimeGetCurrent()
-        let timeSinceLastUpdate = lastUpdateTime == 0 ? 0 : currentTime - lastUpdateTime
-        let timeSinceCreation = currentTime - creationTime
-        
-        let longLog = """
-            [MarketGroupCards] updateMatches called with \(matches.count) matches
-            for marketType: \(marketTypeId) | Update #\(updateCount) | 
-            Time since creation: \(String(format: "%.3f", timeSinceCreation))s |
-            Time since last update: \(String(format: "%.3f", timeSinceLastUpdate))s
-        """
-        
-        print("updateMatches: \(longLog)")
-              
         allMatches = matches
         let filtered = filterMatches()
-        print("[MarketGroupCards] Filtered to \(filtered.count) matches for marketType: \(marketTypeId)")
+
         filteredMatches = filtered
         
-        let startTime = CFAbsoluteTimeGetCurrent()
         matchCardData = createMatchCardData(from: filtered)
-        let viewModelCreationTime = CFAbsoluteTimeGetCurrent() - startTime
-        
-        lastUpdateTime = currentTime
-        print("[MarketGroupCards] Created \(matchCardData.count) match card view models in \(String(format: "%.3f", viewModelCreationTime))s for marketType: \(marketTypeId)")
     }
 
     func updateScrollPosition(_ position: CGPoint) {
@@ -136,17 +111,16 @@ class MarketGroupCardsViewModel: ObservableObject {
     }
     
     private func createMatchCardData(from filteredMatches: [FilteredMatchData]) -> [MatchCardData] {
-        return filteredMatches.enumerated().map { index, filteredData in
-            print("[MarketGroupCards] Creating view model \(index + 1)/\(filteredMatches.count) for match: \(filteredData.match.id)")
-            
+        let matchCardsData = filteredMatches.enumerated().map { index, filteredData in
             // Create production view model from real match data
             let tallOddsViewModel = createTallOddsViewModel(from: filteredData)
-            
             return MatchCardData(
                 filteredData: filteredData,
                 tallOddsViewModel: tallOddsViewModel
             )
         }
+        
+        return matchCardsData
     }
     
     // MARK: - Production Implementation

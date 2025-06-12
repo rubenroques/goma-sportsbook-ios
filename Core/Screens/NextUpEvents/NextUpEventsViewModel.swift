@@ -128,18 +128,13 @@ class NextUpEventsViewModel: ObservableObject {
         marketGroupSelectorViewModel.updateWithMatches(matches)
 
         // Update all existing market group ViewModels with new matches
-        let startTime = CFAbsoluteTimeGetCurrent()
         for (marketType, viewModel) in marketGroupCardsViewModels {
-            print("[NextUpEvents] Updating MarketGroupCardsViewModel for marketType: \(marketType)")
             viewModel.updateMatches(matches)
         }
-        let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
 
-        print("[NextUpEvents] Processed \(matches.count) matches and updated \(marketGroupCardsViewModels.count) market group view models in \(String(format: "%.3f", timeElapsed))s")
     }
 
     private func updateMarketGroupViewModels(marketGroups: [MarketGroupTabItemData]) {
-        print("[NextUpEvents] updateMarketGroupViewModels called with \(marketGroups.count) groups")
 
         // Create ViewModels for new market groups
         for marketGroup in marketGroups {
@@ -169,6 +164,6 @@ class NextUpEventsViewModel: ObservableObject {
         }
 
         self.marketGroups = marketGroups
-        print("[NextUpEvents] updateMarketGroupViewModels completed - total view models: \(marketGroupCardsViewModels.count)")
+        
     }
 }

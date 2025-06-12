@@ -26,7 +26,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     deinit {
         prelivePaginator?.unsubscribe()
     }
-    
+
     func reconnectIfNeeded() {
         self.connector.forceReconnect()
     }
@@ -119,46 +119,36 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
-        // Ensure we have an active paginator with a subscription
+        // NOTE: This method name reflects that it subscribes to individual market updates
+        // within the context of an active event list subscription, not changes to the list itself
         guard let paginator = prelivePaginator else {
             return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
         }
-        
-        // Access the paginator's entity store
-        return paginator.entityStore.observeMarket(id: id)
-            .compactMap { marketDTO -> EveryMatrix.Market? in
-                guard let marketDTO = marketDTO else { return nil }
-                
-                // Build hierarchical market from DTO
-                return EveryMatrix.MarketBuilder.build(from: marketDTO, store: paginator.entityStore)
-            }
-            .compactMap { market -> Market? in
-                // Map internal model to domain model using existing mapper
-                return EveryMatrixModelMapper.market(fromInternalMarket: market)
-            }
-            .setFailureType(to: ServiceProviderError.self)
-            .eraseToAnyPublisher()
+
+        // Delegate to paginator's market subscription method
+        return paginator.subscribeToMarketUpdates(withId: id)
     }
 
     func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
-        // Ensure we have an active paginator with a subscription
+        // NOTE: This method name reflects that it subscribes to individual outcome updates  
+        // within the context of an active event list subscription, not changes to the list itself
         guard let paginator = prelivePaginator else {
             return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
         }
-        
-        // Access the paginator's entity store
-        return paginator.entityStore.observeOutcome(id: id)
-            .compactMap { outcomeDTO -> EveryMatrix.Outcome? in
-                guard let outcomeDTO = outcomeDTO else { return nil }
-                
-                // Build hierarchical outcome from DTO
-                return EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: paginator.entityStore)
-            }
-            .compactMap { outcome -> Outcome? in
-                // Map internal model to domain model using existing mapper
-                return EveryMatrixModelMapper.outcome(fromInternalOutcome: outcome)
-            }
-            .setFailureType(to: ServiceProviderError.self)
+
+        // Delegate to paginator's outcome subscription method
+        return paginator.subscribeToOutcomeUpdates(withId: id)
+            .handleEvents(receiveSubscription: { subscription in
+                print("subs outcome updated. receiveSubscription")
+            }, receiveOutput: { output in
+                print("subs outcome updated. receiveOutput")
+            }, receiveCompletion: { completion in
+                print("subs outcome updated. receiveCompletion")
+            }, receiveCancel: {
+                print("subs outcome updated. receiveCancel")
+            }, receiveRequest: { demand in
+                print("subs outcome updated. receiveRequest")
+            })
             .eraseToAnyPublisher()
     }
 

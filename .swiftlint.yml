@@ -46,6 +46,7 @@ force_try:
 #  statement_mode: uncuddled_else
 
 disabled_rules:
+  - empty_count
   - for_where
   - opening_brace
   - trailing_whitespace
