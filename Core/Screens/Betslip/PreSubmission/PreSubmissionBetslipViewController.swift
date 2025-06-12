@@ -2507,6 +2507,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             return
         }
 
+        
         let urlString = TargetVariables.clientBaseUrl + "/odds-boost-spinner/index.html"
         if let url = URL(string: urlString) {
             let spinWheelWebViewModel = SpinWheelViewModel(url: url, prize: "20%")

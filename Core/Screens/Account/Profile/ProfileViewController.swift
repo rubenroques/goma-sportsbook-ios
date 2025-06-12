@@ -432,24 +432,17 @@ class ProfileViewController: UIViewController {
     }
     
     @objc private func testTap() {
-        
         let prize = "+" + String(format: "%.0f%%", 0.2 * 100)
-        
-        if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
-            
+        let urlString = TargetVariables.clientBaseUrl + "/odds-boost-spinner/index.html"
+        if let url = URL(string: urlString) {
             let spinWheelWebViewModel = SpinWheelViewModel(url: url, prize: prize)
-            
             let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)
-            
             spinWheelWebViewController.modalPresentationStyle = .fullScreen
-            
             self.present(spinWheelWebViewController, animated: true)
         }
-        
     }
 
     private func getOptInBonus() {
-
         Env.servicesProvider.getAvailableBonuses()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -460,11 +453,9 @@ class ProfileViewController: UIViewController {
                     print("AVAILABLE BONUSES ERROR: \(error)")
                 }
             }, receiveValue: { [weak self] availableBonuses in
-
                 let filteredBonus = availableBonuses.filter({
                     $0.type == "DEPOSIT"
                 })
-
                 self?.depositOnRegisterViewController?.availableBonuses.send(filteredBonus)
             })
             .store(in: &cancellables)

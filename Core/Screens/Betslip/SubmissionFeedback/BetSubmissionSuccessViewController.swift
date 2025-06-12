@@ -814,18 +814,14 @@ class BetSubmissionSuccessViewController: UIViewController {
         
         let prize = String(format: "%.0f%%", boostMultiplier * 100)
         
-        if let url = URL(string: "https://goma-uat.betsson.fr/odds-boost-spinner/index.html") {
-            
+        let urlString = TargetVariables.clientBaseUrl + "/odds-boost-spinner/index.html"
+        if let url = URL(string: urlString) {
             let spinWheelWebViewModel = SpinWheelViewModel(url: url, prize: prize)
-            
             let spinWheelWebViewController = SpinWheelViewController(viewModel: spinWheelWebViewModel)
-            
             spinWheelWebViewController.modalPresentationStyle = .fullScreen
-            
             spinWheelWebViewController.shouldUpdateLayout = { [weak self] in
                 self?.configureWinBoostLayout()
             }
-            
             self.present(spinWheelWebViewController, animated: true)
         }
         
