@@ -72,11 +72,11 @@ class PreLiveMatchesPaginator {
         // Create the WAMP router using the existing popularMatchesPublisher case
         // I am using this live version to better test the changes in the matches/market/outcomes
         // TODO: revert to popularMatchesPublisher when the changes are tested
-        let router = WAMPRouter.liveMatchesPublisher( // ) popularMatchesPublisher(
+        let router = WAMPRouter.popularMatchesPublisher( // liveMatchesPublisher( // ) popularMatchesPublisher(
             operatorId: "4093",
             language: "en",
             sportId: sportId,
-            matchesCount: 1 //numberOfEvents
+            matchesCount: numberOfEvents // 1
         )
 
         // Subscribe to the websocket topic
