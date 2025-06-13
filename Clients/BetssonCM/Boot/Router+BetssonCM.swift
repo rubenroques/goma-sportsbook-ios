@@ -68,9 +68,9 @@ class Router {
     }
 
     func makeKeyAndVisible() {
-
-        // TODO HIDE_MILESTONE_2_FEATURES
+        
         self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
+        
 //        #if DEBUG
 //        // manual theme override
 //        self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
@@ -103,16 +103,6 @@ class Router {
 
     func showPostLoadingFlow() {
         var bootRootViewController: UIViewController
-        
-        if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
-//            let viewModel = RootAdaptiveScreenViewModel()
-//            let rootViewController = RootAdaptiveViewController(viewModel: viewModel)
-//            self.rootActionable = rootViewController
-//            bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
-        }
-        else {
-            // bootRootViewController = Router.createLoginViewControllerFlow()
-        }
         
         let viewModel = RootAdaptiveScreenViewModel()
         let rootViewController = RootAdaptiveViewController(viewModel: viewModel)

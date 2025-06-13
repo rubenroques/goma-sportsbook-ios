@@ -1,0 +1,477 @@
+Subscription callback [/sports/4093/en/disciplines/BOTH/BOTH] successfully.
+Requesting initial dump for [/sports/4093/en/disciplines/BOTH/BOTH]...
+
+Callback ["/sports/4093/en/disciplines/BOTH/BOTH"] is fired with data =
+{
+"version": "1749798502097",
+"format": "BASIC",
+"messageType": "INITIAL_DUMP",
+"records": [
+{
+"_type": "SPORT",
+"id": "24",
+"name": "Horse Racing",
+"shortName": "Hors",
+"isVirtual": false,
+"numberOfEvents": 882,
+"numberOfMarkets": 882,
+"numberOfBettingOffers": 16806,
+"numberOfLiveEvents": 0,
+"numberOfLiveMarkets": 0,
+"numberOfLiveBettingOffers": 0,
+"numberOfUpcomingMatches": 0,
+"numberOfMatchesWhichWillHaveLiveOdds": "0",
+"childrenIds": [],
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": false,
+"hasOutrights": true
+},
+{
+"_type": "SPORT",
+"id": "3",
+"name": "Tennis",
+"shortName": "Tenn",
+"isVirtual": false,
+"numberOfEvents": 263,
+"numberOfMarkets": 4587,
+"numberOfBettingOffers": 11188,
+"numberOfLiveEvents": 9,
+"numberOfLiveMarkets": 363,
+"numberOfLiveBettingOffers": 1013,
+"numberOfUpcomingMatches": 248,
+"numberOfMatchesWhichWillHaveLiveOdds": "220",
+"childrenIds": [],
+"displayChildren": false,
+"showEventCategory": true,
+"isTopSport": false,
+"hasMatches": true,
+"hasOutrights": true
+},
+{
+"_type": "SPORT",
+"id": "6",
+"name": "Ice Hockey",
+"shortName": "Ice ",
+"isVirtual": false,
+"numberOfEvents": 5,
+"numberOfMarkets": 323,
+"numberOfBettingOffers": 1105,
+"numberOfLiveEvents": 0,
+"numberOfLiveMarkets": 0,
+"numberOfLiveBettingOffers": 0,
+"numberOfUpcomingMatches": 5,
+"numberOfMatchesWhichWillHaveLiveOdds": "3",
+"childrenIds": [],
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": true,
+"hasOutrights": false
+},
+{
+"_type": "SPORT",
+"id": "63",
+"name": "Table Tennis",
+"shortName": "Tabl",
+"isVirtual": false,
+"numberOfEvents": 317,
+"numberOfMarkets": 3965,
+"numberOfBettingOffers": 9749,
+"numberOfLiveEvents": 26,
+"numberOfLiveMarkets": 758,
+"numberOfLiveBettingOffers": 1721,
+"numberOfUpcomingMatches": 291,
+"numberOfMatchesWhichWillHaveLiveOdds": "137",
+"childrenIds": [],
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": true,
+"hasOutrights": false
+},
+{
+"_type": "SPORT",
+"id": "8",
+"name": "Basketball",
+"shortName": "Bask",
+"isVirtual": false,
+"numberOfEvents": 80,
+"numberOfMarkets": 1292,
+"numberOfBettingOffers": 2997,
+"numberOfLiveEvents": 2,
+"numberOfLiveMarkets": 41,
+"numberOfLiveBettingOffers": 88,
+"numberOfUpcomingMatches": 74,
+"numberOfMatchesWhichWillHaveLiveOdds": "48",
+"childrenIds": [],
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": true,
+"hasOutrights": true
+},
+{
+"_type": "SPORT",
+"id": "9",
+"name": "Baseball",
+"shortName": "Base",
+"isVirtual": false,
+"numberOfEvents": 49,
+"numberOfMarkets": 2932,
+"numberOfBettingOffers": 6657,
+"numberOfLiveEvents": 1,
+"numberOfLiveMarkets": 46,
+"numberOfLiveBettingOffers": 154,
+"numberOfUpcomingMatches": 37,
+"numberOfMatchesWhichWillHaveLiveOdds": "29",
+"childrenIds": [],
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": true,
+"hasOutrights": true
+},
+{
+"_type": "SPORT",
+"id": "160",
+"name": "Virtual Harness Racing",
+"shortName": "V. Harness Racing",
+"isVirtual": true,
+"numberOfEvents": 15,
+"numberOfMarkets": 15,
+"numberOfBettingOffers": 150,
+"numberOfLiveEvents": 0,
+"numberOfLiveMarkets": 0,
+"numberOfLiveBettingOffers": 0,
+"numberOfUpcomingMatches": 0,
+"numberOfMatchesWhichWillHaveLiveOdds": "0",
+"parentId": "83",
+"childrenIds": [],
+"parentName": "Virtual Sports",
+"parentShortName": "V. Sports",
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": false,
+"hasOutrights": true
+},
+{
+"_type": "SPORT",
+"id": "87",
+"name": "Virtual Horse Racing",
+"shortName": "V. Horse Racing",
+"isVirtual": true,
+"numberOfEvents": 8,
+"numberOfMarkets": 8,
+"numberOfBettingOffers": 96,
+"numberOfLiveEvents": 0,
+"numberOfLiveMarkets": 0,
+"numberOfLiveBettingOffers": 0,
+"numberOfUpcomingMatches": 0,
+"numberOfMatchesWhichWillHaveLiveOdds": "0",
+"parentId": "83",
+"childrenIds": [],
+"parentName": "Virtual Sports",
+"parentShortName": "V. Sports",
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": false,
+"hasOutrights": true
+},
+{
+"_type": "SPORT",
+"id": "96",
+"name": "eSports",
+"shortName": "eSpo",
+"isVirtual": false,
+"numberOfEvents": 369,
+"numberOfMarkets": 6224,
+"numberOfBettingOffers": 15952,
+"numberOfLiveEvents": 54,
+"numberOfLiveMarkets": 1292,
+"numberOfLiveBettingOffers": 3211,
+"numberOfUpcomingMatches": 311,
+"numberOfMatchesWhichWillHaveLiveOdds": "211",
+"childrenIds": [
+"128",
+"129",
+"130",
+"131",
+"133",
+"134",
+"98",
+"99",
+"100",
+"103",
+"104",
+"105",
+"106",
+"107",
+"171",
+"108",
+"172",
+"109",
+"173",
+"110",
+"112",
+"115",
+"117",
+"120",
+"184",
+"121",
+"122",
+"186",
+"123",
+"124",
+"125",
+"126"
+],
+"displayChildren": true,
+"showEventCategory": false,
+"isTopSport": false,
+"hasMatches": false,
+"hasOutrights": false
+}
+]
+}
+
+---------------------------
+Callback ["/sports/4093/en/disciplines/BOTH/BOTH"] is fired with data =
+{
+"version": "1749798503804",
+"format": "BASIC",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "96",
+"changedProperties": {
+"numberOfMarkets": 6217,
+"numberOfLiveMarkets": 1285,
+"numberOfLiveEvents": 53,
+"numberOfLiveBettingOffers": 3173,
+"numberOfMatchesWhichWillHaveLiveOdds": "211",
+"numberOfEvents": 368,
+"numberOfUpcomingMatches": 311,
+"numberOfBettingOffers": 15914
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "3",
+"changedProperties": {
+"numberOfMarkets": 4581,
+"numberOfLiveMarkets": 357,
+"numberOfLiveEvents": 9,
+"numberOfLiveBettingOffers": 1000,
+"numberOfMatchesWhichWillHaveLiveOdds": "220",
+"numberOfEvents": 263,
+"numberOfUpcomingMatches": 248,
+"numberOfBettingOffers": 11175
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "8",
+"changedProperties": {
+"numberOfMarkets": 1292,
+"numberOfLiveMarkets": 41,
+"numberOfLiveEvents": 2,
+"numberOfLiveBettingOffers": 87,
+"numberOfMatchesWhichWillHaveLiveOdds": "48",
+"numberOfEvents": 80,
+"numberOfUpcomingMatches": 74,
+"numberOfBettingOffers": 2996
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "9",
+"changedProperties": {
+"numberOfMarkets": 2926,
+"numberOfLiveMarkets": 40,
+"numberOfLiveEvents": 1,
+"numberOfLiveBettingOffers": 141,
+"numberOfMatchesWhichWillHaveLiveOdds": "29",
+"numberOfEvents": 49,
+"numberOfUpcomingMatches": 37,
+"numberOfBettingOffers": 6644
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "63",
+"changedProperties": {
+"numberOfMarkets": 3952,
+"numberOfLiveMarkets": 745,
+"numberOfLiveEvents": 26,
+"numberOfLiveBettingOffers": 1687,
+"numberOfMatchesWhichWillHaveLiveOdds": "137",
+"numberOfEvents": 317,
+"numberOfUpcomingMatches": 291,
+"numberOfBettingOffers": 9715
+}
+}
+]
+}
+
+Callback ["/sports/4093/en/disciplines/BOTH/BOTH"] is fired with data =
+{
+"version": "1749798505573",
+"format": "BASIC",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "96",
+"changedProperties": {
+"numberOfMarkets": 6206,
+"numberOfLiveMarkets": 1274,
+"numberOfLiveEvents": 53,
+"numberOfLiveBettingOffers": 3149,
+"numberOfMatchesWhichWillHaveLiveOdds": "211",
+"numberOfEvents": 368,
+"numberOfUpcomingMatches": 311,
+"numberOfBettingOffers": 15890
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "3",
+"changedProperties": {
+"numberOfMarkets": 4579,
+"numberOfLiveMarkets": 355,
+"numberOfLiveEvents": 9,
+"numberOfLiveBettingOffers": 991,
+"numberOfMatchesWhichWillHaveLiveOdds": "220",
+"numberOfEvents": 263,
+"numberOfUpcomingMatches": 248,
+"numberOfBettingOffers": 11166
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "8",
+"changedProperties": {
+"numberOfMarkets": 1301,
+"numberOfLiveMarkets": 41,
+"numberOfLiveEvents": 2,
+"numberOfLiveBettingOffers": 87,
+"numberOfMatchesWhichWillHaveLiveOdds": "48",
+"numberOfEvents": 80,
+"numberOfUpcomingMatches": 74,
+"numberOfBettingOffers": 3013
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "63",
+"changedProperties": {
+"numberOfMarkets": 3962,
+"numberOfLiveMarkets": 755,
+"numberOfLiveEvents": 26,
+"numberOfLiveBettingOffers": 1711,
+"numberOfMatchesWhichWillHaveLiveOdds": "137",
+"numberOfEvents": 317,
+"numberOfUpcomingMatches": 291,
+"numberOfBettingOffers": 9739
+}
+}
+]
+}
+
+Callback ["/sports/4093/en/disciplines/BOTH/BOTH"] is fired with data =
+{
+"version": "1749798507579",
+"format": "BASIC",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "96",
+"changedProperties": {
+"numberOfMarkets": 6207,
+"numberOfLiveMarkets": 1275,
+"numberOfLiveEvents": 53,
+"numberOfLiveBettingOffers": 3149,
+"numberOfMatchesWhichWillHaveLiveOdds": "211",
+"numberOfEvents": 368,
+"numberOfUpcomingMatches": 311,
+"numberOfBettingOffers": 15890
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "64",
+"changedProperties": {
+"numberOfMarkets": 111,
+"numberOfLiveMarkets": 32,
+"numberOfLiveEvents": 5,
+"numberOfLiveBettingOffers": 64,
+"numberOfMatchesWhichWillHaveLiveOdds": "3",
+"numberOfEvents": 12,
+"numberOfUpcomingMatches": 7,
+"numberOfBettingOffers": 230
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "3",
+"changedProperties": {
+"numberOfMarkets": 4587,
+"numberOfLiveMarkets": 363,
+"numberOfLiveEvents": 9,
+"numberOfLiveBettingOffers": 1013,
+"numberOfMatchesWhichWillHaveLiveOdds": "220",
+"numberOfEvents": 263,
+"numberOfUpcomingMatches": 248,
+"numberOfBettingOffers": 11188
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "26",
+"changedProperties": {
+"numberOfMarkets": 553,
+"numberOfLiveMarkets": 11,
+"numberOfLiveEvents": 2,
+"numberOfLiveBettingOffers": 23,
+"numberOfMatchesWhichWillHaveLiveOdds": "12",
+"numberOfEvents": 40,
+"numberOfUpcomingMatches": 31,
+"numberOfBettingOffers": 1659
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "SPORT",
+"id": "63",
+"changedProperties": {
+"numberOfMarkets": 3955,
+"numberOfLiveMarkets": 748,
+"numberOfLiveEvents": 26,
+"numberOfLiveBettingOffers": 1696,
+"numberOfMatchesWhichWillHaveLiveOdds": "137",
+"numberOfEvents": 317,
+"numberOfUpcomingMatches": 291,
+"numberOfBettingOffers": 9724
+}
+}
+]
+}

@@ -61,7 +61,7 @@ enum WAMPRouter {
     case tournamentsPublisher(operatorId: String, language: String, sportId: String)
     case popularTournamentsPublisher(operatorId: String, language: String, sportId: String, tournamentsCount: Int)
     case upcomingTournamentsPublisher(operatorId: String, language: String, sportId: String)
-    case sportsListPublisher(operatorId: String, language: String)
+    case liveSportsPublisher(operatorId: String, language: String)
     case eventCategoryBySport(operatorId: String, language: String, sportId: String)
 
     // UI & Marketing
@@ -167,7 +167,7 @@ enum WAMPRouter {
         case .eventPartScoresPublisher(let operatorId, let language, let matchId):
             return "/sports/\(operatorId)/\(language)/\(matchId)/eventPartScores/small"
 
-        case .sportsListPublisher(let operatorId, let language):
+        case .liveSportsPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/disciplines/LIVE/BOTH"
 
         case .accountBalancePublisher:
@@ -338,10 +338,14 @@ enum WAMPRouter {
             return .sportsInitialDump(topic: self.procedure)
         case .eventPartScoresPublisher:
             return .sportsInitialDump(topic: self.procedure)
-        case .sportsListPublisher:
+        case .liveSportsPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .eventCategoryBySport:
             return .sportsInitialDump(topic: self.procedure)
+            
+        case .sportsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+            
         default:
             return nil
         }

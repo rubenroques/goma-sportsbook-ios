@@ -81,7 +81,7 @@ class SplashInformativeViewController: UIViewController {
         // Load presentation configuration
         Env.presentationConfigurationStore.loadConfiguration()
         
-        Env.sportsStore.activeSportsPublisher
+        self.isLoadingBootDataSubscription = Env.sportsStore.activeSportsPublisher
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("activeSportsPublisher: completion \(completion)")
@@ -99,67 +99,24 @@ class SplashInformativeViewController: UIViewController {
                     break
                 }
             }
-            .store(in: &self.cancellables)
-        
-        Env.presentationConfigurationStore.loadState
-            .sink { completion in
-                print("configurationStore: completion \(completion)")
-            } receiveValue: { configurationStore in
-                print("configurationStore: \(configurationStore)")
-            }
-            .store(in: &self.cancellables)
-        
-        Env.servicesProvider.preFetchHomeContent()
-            .sink { completion in
-                print("preFetchHomeContent: completion \(completion)")
-            } receiveValue: { preFetchHomeContent in
-                print("preFetchHomeContent: \(preFetchHomeContent)")
-            }
-            .store(in: &self.cancellables)
-        
-        return
-        
-        // Original loading logic preserved but commented out
-        self.isLoadingBootDataSubscription = Publishers.CombineLatest3(
-            Env.sportsStore.activeSportsPublisher.map({ input in
-                return input
-            }),
-            Env.servicesProvider.preFetchHomeContent().map({ input in
-                return input
-            }),
-            Env.presentationConfigurationStore.loadState.map({ input in
-                return input
-            })
-            .map { state -> Bool in
-                if case .loaded = state {
-                    return true
-                }
-                return false
-            }
-            .setFailureType(to: ServiceProviderError.self)
-        )
-        .map({ sportsLoadState, _, presentationConfigLoaded -> Bool in
-            let sportsLoaded = sportsLoadState != .loading && sportsLoadState != .idle
-            return sportsLoaded && presentationConfigLoaded
-        })
-        .receive(on: DispatchQueue.main)
-        .sink(receiveCompletion: { [weak self] completion in
-            switch completion {
-            case .finished:
-                break
-            case .failure(let failure):
-                switch failure {
-                case .invalidUserLocation:
-                    self?.invalidLocationDetected()
-                default:
-                    break
-                }
-            }
-        }, receiveValue: { [weak self] allRequirementsLoaded in
-            if allRequirementsLoaded {
-                self?.splashLoadingCompleted()
-            }
-        })
+
+//        
+//        Env.presentationConfigurationStore.loadState
+//            .sink { completion in
+//                print("configurationStore: completion \(completion)")
+//            } receiveValue: { configurationStore in
+//                print("configurationStore: \(configurationStore)")
+//            }
+//            .store(in: &self.cancellables)
+//        
+//        Env.servicesProvider.preFetchHomeContent()
+//            .sink { completion in
+//                print("preFetchHomeContent: completion \(completion)")
+//            } receiveValue: { preFetchHomeContent in
+//                print("preFetchHomeContent: \(preFetchHomeContent)")
+//            }
+//            .store(in: &self.cancellables)
+//
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -170,12 +127,6 @@ class SplashInformativeViewController: UIViewController {
     func splashLoadingCompleted() {
         self.isLoadingBootDataSubscription = nil
         self.loadingCompleted()
-    }
-    
-    func invalidLocationDetected() {
-        let forbiddenAccessViewController = ForbiddenLocationViewController()
-        forbiddenAccessViewController.modalPresentationStyle = .fullScreen
-        self.present(forbiddenAccessViewController, animated: false, completion: nil)
     }
     
 }
@@ -234,7 +185,7 @@ private extension SplashInformativeViewController {
         updateLoadingMessage()
         
         // Start timer to rotate messages
-        messageTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+        messageTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
             self?.updateLoadingMessage()
         }
     }

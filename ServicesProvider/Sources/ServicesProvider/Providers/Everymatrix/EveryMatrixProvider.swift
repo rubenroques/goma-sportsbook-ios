@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SharedModels
 
 class EveryMatrixEventsProvider: EventsProvider {
 
@@ -16,8 +17,12 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     var connector: EveryMatrixConnector
 
-    // MARK: - Paginators for different subscription types
+    // MARK: - Managers for different subscription types
     private var prelivePaginator: PreLiveMatchesPaginator?
+    private var sportsManager: SportsManager?
+
+    private var locationsManager: LocationsManager?
+    private var currentSportType: SportType?
 
     init(connector: EveryMatrixConnector) {
         self.connector = connector
@@ -25,6 +30,8 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     deinit {
         prelivePaginator?.unsubscribe()
+        sportsManager?.unsubscribe()
+        locationsManager?.unsubscribe()
     }
 
     func reconnectIfNeeded() {
@@ -101,13 +108,13 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        // return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-        var sport = SportType.init(name: "Football")
-        sport.numberEvents = 10
+        // Clean up any existing sports manager
+        sportsManager?.unsubscribe()
 
-        return Just(SubscribableContent.contentUpdate(content: [sport]))
-            .setFailureType(to: ServiceProviderError.self)
-            .eraseToAnyPublisher()
+        // Create new sports manager
+        sportsManager = SportsManager(connector: connector)
+
+        return sportsManager!.subscribe()
     }
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
@@ -130,7 +137,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
-        // NOTE: This method name reflects that it subscribes to individual outcome updates  
+        // NOTE: This method name reflects that it subscribes to individual outcome updates
         // within the context of an active event list subscription, not changes to the list itself
         guard let paginator = prelivePaginator else {
             return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
@@ -290,6 +297,35 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+}
+
+extension EveryMatrixEventsProvider {
+
+    // MARK: - Internal Locations Management
+
+    /// Internal method to get locations for a specific sport
+    /// Recreates manager when sport changes for efficient resource usage
+    internal func getLocations(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[Country]>, ServiceProviderError> {
+        // Check if we need to recreate the manager for a different sport
+        if currentSportType != sportType {
+            // Clean up existing manager
+            locationsManager?.unsubscribe()
+
+            // Create new manager for the specified sport
+            locationsManager = LocationsManager(connector: connector, sportId: sportType.numericId ?? "1")
+            currentSportType = sportType
+        }
+
+        if let locationsManager {
+            // Return the subscription from the current manager
+            return locationsManager.subscribe()
+        }
+        else {
+            return Fail(outputType: SubscribableContent<[Country]>.self, failure: ServiceProviderError.resourceNotFound)
+                .eraseToAnyPublisher()
+        }
     }
 
 }

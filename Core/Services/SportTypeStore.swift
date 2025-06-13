@@ -34,7 +34,9 @@ class SportTypeStore {
 
     private var activeSportsCurrentValueSubject: CurrentValueSubject<LoadableContent<[Sport]>, ServiceProviderError> = .init(.idle)
     var activeSportsPublisher: AnyPublisher<LoadableContent<[Sport]>, ServiceProviderError> {
-        return self.activeSportsCurrentValueSubject.eraseToAnyPublisher()
+        return self.activeSportsCurrentValueSubject
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 
     private var liveSportsCountSubscription: ServicesProvider.Subscription?
@@ -55,11 +57,10 @@ class SportTypeStore {
     private func getSports() {
         self.activeSportsCurrentValueSubject.send(.loading)
 
-        #if DEBUG
-        self.activeSportsCurrentValueSubject.send(.loaded([self.defaultSport]))
-        return
-        #endif
+        //self.activeSportsCurrentValueSubject.send(.loaded([self.defaultSport]))
+        //return
         
+        //
         Env.servicesProvider.subscribeSportTypes()
             .retry(3)
             .receive(on: DispatchQueue.main)

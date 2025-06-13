@@ -94,9 +94,6 @@ class NextUpEventsViewController: UIViewController {
     private func setupQuickLinksTabBar() {
         view.addSubview(quickLinksTabBarView)
         quickLinksTabBarView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add white placeholder and hide quick links if milestone 2 features are hidden
-        quickLinksTabBarView.isHidden = HIDE_MILESTONE_2_FEATURES
     }
 
     private func setupLoadingIndicator() {
@@ -106,10 +103,6 @@ class NextUpEventsViewController: UIViewController {
     private func setupConstraints() {
         
         var topConstraint = marketGroupSelectorTabView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor)
-
-        if HIDE_MILESTONE_2_FEATURES {
-            topConstraint = marketGroupSelectorTabView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-        }
         
         NSLayoutConstraint.activate([
             // Quick Links Tab Bar at the very top

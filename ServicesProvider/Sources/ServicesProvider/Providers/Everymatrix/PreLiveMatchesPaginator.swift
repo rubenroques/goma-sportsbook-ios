@@ -19,7 +19,7 @@ struct SimpleSubscription: EndpointPublisherIdentifiable {
 /// 1. Match list structure changes: `subscribe()` - Only emits when matches are added/removed
 /// 2. Individual entity updates: `subscribeToMarketUpdates()`, `subscribeToOutcomeUpdates()`, etc.
 ///    These provide real-time updates for specific entities (odds, market data, etc.)
-class PreLiveMatchesPaginator {
+class PreLiveMatchesPaginator: UnsubscriptionController {
 
     // MARK: - Dependencies
     private let connector: EveryMatrixConnector
@@ -189,8 +189,8 @@ class PreLiveMatchesPaginator {
             return SubscribableContent.connected(subscription: subscription)
 
         case .initialContent(let response):
-            // Parse and store the flat entities
-            EveryMatrix.ResponseParser.parseAndStore(response: response, in: store)
+            // Parse and store the flat entities (MATCH, MARKET, OUTCOME, BETTING_OFFER, and related entities)
+            parseMatchesData(from: response)
 
             // Convert stored entities to EventsGroup array
             let eventsGroups = buildEventsGroups()
@@ -203,8 +203,8 @@ class PreLiveMatchesPaginator {
             // Get match IDs before update
             let matchIdsBeforeUpdate = Set(store.getAll(EveryMatrix.MatchDTO.self).map { $0.id })
 
-            // Parse and store the updated entities
-            EveryMatrix.ResponseParser.parseAndStore(response: response, in: store)
+            // Parse and store the updated entities (MATCH, MARKET, OUTCOME, BETTING_OFFER, and related entities)
+            parseMatchesData(from: response)
 
             // Get match IDs after update
             let matchIdsAfterUpdate = Set(store.getAll(EveryMatrix.MatchDTO.self).map { $0.id })
@@ -251,14 +251,121 @@ class PreLiveMatchesPaginator {
         // This method is now replaced by buildEventsGroups()
         return EveryMatrixModelMapper.eventsGroups(fromInternalMatches: matches)
     }
+    
+    // MARK: - Matches-Specific Parsing
+    
+    /// Parse only MATCH, MARKET, OUTCOME, BETTING_OFFER and related entities from the aggregator response
+    private func parseMatchesData(from response: EveryMatrix.AggregatorResponse) {
+        for record in response.records {
+            switch record {
+            // INITIAL_DUMP records - only process match-related entities
+            case .sport(let dto):
+                store.store(dto)
+            case .match(let dto):
+                store.store(dto)
+            case .market(let dto):
+                store.store(dto)
+            case .outcome(let dto):
+                store.store(dto)
+            case .bettingOffer(let dto):
+                store.store(dto)
+            case .location(let dto):
+                store.store(dto)
+            case .eventCategory(let dto):
+                store.store(dto)
+            case .marketOutcomeRelation(let dto):
+                store.store(dto)
+            case .mainMarket(let dto):
+                store.store(dto)
+            case .marketInfo(let dto):
+                store.store(dto)
+            case .nextMatchesNumber(let dto):
+                store.store(dto)
+                
+            // UPDATE/DELETE/CREATE records - only process match-related changes
+            case .changeRecord(let changeRecord):
+                handleMatchesChangeRecord(changeRecord)
+                
+            case .unknown(let type):
+                print("Unknown match-related entity type: \(type)")
+                // Ignore unknown non-match entities
+            }
+        }
+    }
+    
+    /// Handle change records for match-related entities only
+    private func handleMatchesChangeRecord(_ change: EveryMatrix.ChangeRecord) {
+        
+        switch change.changeType {
+        case .create:
+            // CREATE: Store the full entity if provided
+            if let entityData = change.entity {
+                storeEntityData(entityData)
+            }
+            
+        case .update:
+            // UPDATE: Merge changedProperties
+            guard let changedProperties = change.changedProperties else {
+                print("UPDATE change record missing changedProperties for \(change.entityType):\(change.id)")
+                return
+            }
+            
+            // Apply custom update logic based on entity type
+            if change.entityType == EveryMatrix.BettingOfferDTO.rawType && changedProperties.keys.contains("odds") {
+                // Only update betting offers with odds changes
+                store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                
+            } else if change.entityType == EveryMatrix.MarketDTO.rawType {
+                // Update all market changes
+                
+                // TODO: check which properties we need to observe and update
+                // store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                
+            } else if change.entityType == EveryMatrix.MatchDTO.rawType {
+                // Update all match changes
+                
+                // TODO: check which properties we need to observe and update
+                // store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+            }
+            // Add more entity-specific logic as needed
+            
+        case .delete:
+            // DELETE: Remove entity from store
+            store.deleteEntity(type: change.entityType, id: change.id)
+        }
+    }
+    
+    /// Store entity data from change records
+    private func storeEntityData(_ entityData: EveryMatrix.EntityData) {
+        switch entityData {
+        case .sport(let dto):
+            store.store(dto)
+        case .match(let dto):
+            store.store(dto)
+        case .market(let dto):
+            store.store(dto)
+        case .outcome(let dto):
+            store.store(dto)
+        case .bettingOffer(let dto):
+            store.store(dto)
+        case .location(let dto):
+            store.store(dto)
+        case .eventCategory(let dto):
+            store.store(dto)
+        case .marketOutcomeRelation(let dto):
+            store.store(dto)
+        case .mainMarket(let dto):
+            store.store(dto)
+        case .marketInfo(let dto):
+            store.store(dto)
+        case .nextMatchesNumber(let dto):
+            store.store(dto)
+        case .unknown(let type):
+            print("Unknown entity data type: \(type)")
+        }
+    }
 
-}
-
-// MARK: - UnsubscriptionController Conformance
-extension PreLiveMatchesPaginator: UnsubscriptionController {
     func unsubscribe(subscription: Subscription) {
-        // This is called when the Subscription object is deallocated
-        // We clean up our internal subscription
-        unsubscribe()
+        // 
     }
 }

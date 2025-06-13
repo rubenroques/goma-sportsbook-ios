@@ -19,14 +19,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                 let currentTime = CFAbsoluteTimeGetCurrent()
                 let timeSinceLastUpdate = self?.lastUpdateTime == 0 ? 0 : currentTime - (self?.lastUpdateTime ?? 0)
                 let timeSinceCreation = currentTime - (self?.creationTime ?? 0)
-                
-                let longLog = """
-                [TallOdds] displayStatePublisher sending update for match: \(state.matchId) |
-                Time since creation: \(String(format: "%.3f", timeSinceCreation))s |
-                Time since last update: \(String(format: "%.3f", timeSinceLastUpdate))s
-                """
-                print("displayStatePublisher \(longLog)")
-                
+
                 self?.lastUpdateTime = currentTime
             })
             .eraseToAnyPublisher()

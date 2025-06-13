@@ -11,10 +11,6 @@ import LocalAuthentication
 import ServicesProvider
 import GomaUI
 
-// MARK: - Temporary Milestone Build Flag
-// TODO: Remove this after milestone 1 build
-var HIDE_MILESTONE_2_FEATURES = true // swiftlint:disable:this identifier_name
-
 class RootAdaptiveScreenViewModel {
 
     @Published var currentScreen: ScreenType?
@@ -105,7 +101,6 @@ class RootAdaptiveViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = UIColor.App.topBarGradient1
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.isHidden = !HIDE_MILESTONE_2_FEATURES
         return view
     }()
 
@@ -1116,9 +1111,6 @@ extension RootAdaptiveViewController {
 
         topBarContainerBaseView.addSubview(widgetToolBarView)
         topBarContainerBaseView.addSubview(orangePlaceholderView)
-        
-        // Hide widget toolbar if milestone 2 features are hidden
-        widgetToolBarView.isHidden = HIDE_MILESTONE_2_FEATURES
 
         view.addSubview(containerView)
         view.addSubview(bottomSafeAreaView)
