@@ -255,6 +255,8 @@ extension MatchHeaderView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.layer.borderWidth = 0.5
+        imageView.layer.borderColor = UIColor(red: 0.145, green: 0.149, blue: 0.204, alpha: 1).cgColor
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "globe")
         imageView.tintColor = StyleProvider.Color.textSecondary
@@ -315,11 +317,11 @@ extension MatchHeaderView {
     private static func createLiveIndicatorView() -> UIView {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = UIColor(red: 1.0, green: 0.231, blue: 0.188, alpha: 1.0) // Red color
+        containerView.backgroundColor = StyleProvider.Color.primaryColor
         containerView.isHidden = true // Hidden by default
 
         // Calculate pill shape corner radius based on height
-        let liveIndicatorHeight: CGFloat = 22 // 3 + 14 + 3 (padding + content + padding)
+        let liveIndicatorHeight: CGFloat = 17 // 3 + 14 + 3 (padding + content + padding)
         containerView.layer.cornerRadius = liveIndicatorHeight / 2
 
         // Create the stack view for content
@@ -332,13 +334,13 @@ extension MatchHeaderView {
         // Create "LIVE" label
         let liveLabel = UILabel()
         liveLabel.text = "LIVE"
-        liveLabel.font = StyleProvider.fontWith(type: .bold, size: 10)
+        liveLabel.font = StyleProvider.fontWith(type: .semibold, size: 10)
         liveLabel.textColor = .white
 
         // Create play icon
         let playIcon = UIImageView()
-        let config = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
-        playIcon.image = UIImage(systemName: "play.circle.fill", withConfiguration: config)
+        playIcon.image = UIImage(named: "live_indicator_icon", in: Bundle.module, compatibleWith: nil)?
+            .withRenderingMode(.alwaysTemplate)
         playIcon.tintColor = .white
         playIcon.contentMode = .scaleAspectFit
 
@@ -348,13 +350,13 @@ extension MatchHeaderView {
         containerView.addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 6),
+            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -6),
             stackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 3),
             stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -3),
 
-            playIcon.widthAnchor.constraint(equalToConstant: 14),
-            playIcon.heightAnchor.constraint(equalToConstant: 14),
+            playIcon.widthAnchor.constraint(equalToConstant: 8),
+            playIcon.heightAnchor.constraint(equalToConstant: 8),
 
             // Set explicit height for the container
             containerView.heightAnchor.constraint(equalToConstant: liveIndicatorHeight)

@@ -177,7 +177,7 @@ final public class OutcomeItemView: UIView {
         viewModel.titlePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] title in
-                self?.titleLabel.text = title
+                 self?.titleLabel.text = title
             }
             .store(in: &cancellables)
 

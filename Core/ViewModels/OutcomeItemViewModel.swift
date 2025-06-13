@@ -246,8 +246,10 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         
         // If odds changed, use updateOddsValue to handle direction calculation
         if currentData.value != formattedOdds {
-            print("[OutcomeItemViewModel] 💰 Odds changed for outcomeId: \(outcomeId) - from: \(currentData.value) to: \(formattedOdds)")
+            print("[OutcomeItemViewModel] 💰 Odds changed for outcomeId: \(newTitle) - from: \(currentData.value) to: \(formattedOdds)")
+            
             updateOddsValue(formattedOdds)
+            
             // Then update other properties if needed
             if currentData.title != newTitle || currentData.isDisabled != newIsDisabled {
                 let latestData = displayStateSubject.value.outcomeData

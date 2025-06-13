@@ -1094,7 +1094,8 @@ extension EveryMatrix {
         func deleteEntity(type entityType: String, id: String) {
             queue.async(flags: .barrier) { [weak self] in
                 self?.entities[entityType]?[id] = nil
-                print("Deleted entity \(entityType):\(id)")
+                
+                // print("Deleted entity \(entityType):\(id)")
 
                 // Notify observers of the deletion
                 self?.notifyEntityDeletion(entityType: entityType, id: id)

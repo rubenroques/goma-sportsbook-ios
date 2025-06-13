@@ -11,86 +11,6 @@ import LocalAuthentication
 import ServicesProvider
 import GomaUI
 
-class RootAdaptiveScreenViewModel {
-
-    @Published var currentScreen: ScreenType?
-
-    var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
-    var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
-    var floatingOverlayViewModel: FloatingOverlayViewModelProtocol
-
-    private var cancellables = Set<AnyCancellable>()
-    private var lastActiveTabBarID: TabBarIdentifier?
-
-    init(multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol = MockMultiWidgetToolbarViewModel.defaultMock,
-         adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
-         floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel())
-    {
-        self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel
-        self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
-        self.floatingOverlayViewModel = floatingOverlayViewModel
-
-        setupTabBarBinding()
-    }
-
-    // MARK: - Screen Management
-    func presentScreen(_ screenType: ScreenType) {
-        currentScreen = screenType
-    }
-
-    func hideCurrentScreen() {
-        currentScreen = nil
-    }
-
-    // MARK: - Private Methods
-    private func setupTabBarBinding() {
-        // Listen to tab bar active bar id changes
-        adaptiveTabBarViewModel.displayStatePublisher
-            .sink { [weak self] displayState in
-                self?.lastActiveTabBarID = displayState.activeTabBarID
-            }
-            .store(in: &cancellables)
-
-        // Listen to tab bar state changes
-        adaptiveTabBarViewModel.displayStatePublisher
-            .dropFirst()
-            .sink { [weak self] displayState in
-                self?.handleTabBarChange(displayState)
-            }
-            .store(in: &cancellables)
-    }
-
-    private func handleTabBarChange(_ displayState: AdaptiveTabBarDisplayState) {
-
-        if lastActiveTabBarID != displayState.activeTabBarID {
-            switch displayState.activeTabBarID {
-            case .home:
-                // Switched to Sportsbook
-                floatingOverlayViewModel.show(mode: .sportsbook, duration: 3.0)
-            case .casino:
-                // Switched to Casino
-                floatingOverlayViewModel.show(mode: .casino, duration: 3.0)
-            }
-        }
-    }
-
-}
-
-enum ScreenType {
-    // Sportsbook tab items
-    case home
-    case nextUpEvents
-    case inPlayEvents
-    case myBets
-    case search
-
-    // Casino tab items
-    case casinoHome
-    case casinoVirtualSports
-    case casinoAviatorGame
-    case casinoSearch
-}
-
 class RootAdaptiveViewController: UIViewController {
 
     // MARK: - Private Properties
@@ -145,7 +65,6 @@ class RootAdaptiveViewController: UIViewController {
     private var inPlayEventsViewControllerLoaded: Bool = false
 
     // Dummy view controllers for unimplemented screens
-    private lazy var inPlayDummyViewController = DummyViewController(displayText: "Live Events")
     private lazy var myBetsDummyViewController = DummyViewController(displayText: "My Bets")
     private lazy var searchDummyViewController = DummyViewController(displayText: "Search")
     private lazy var casinoHomeDummyViewController = DummyViewController(displayText: "Casino Home")
@@ -735,7 +654,7 @@ class RootAdaptiveViewController: UIViewController {
         case .inPlayEvents:
             // Use dummy instead of real controller
             presentChildViewController(
-                inPlayDummyViewController,
+                inPlayEventsViewController,
                 in: inPlayEventsBaseView,
                 loadedFlag: &inPlayEventsViewControllerLoaded
             )
@@ -1110,7 +1029,8 @@ extension RootAdaptiveViewController {
         view.addSubview(topBarContainerBaseView)
 
         topBarContainerBaseView.addSubview(widgetToolBarView)
-        topBarContainerBaseView.addSubview(orangePlaceholderView)
+        
+        //topBarContainerBaseView.addSubview(orangePlaceholderView)
 
         view.addSubview(containerView)
         view.addSubview(bottomSafeAreaView)
@@ -1168,10 +1088,10 @@ extension RootAdaptiveViewController {
             self.widgetToolBarView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
             
             // Orange placeholder view (same constraints as widget toolbar)
-            self.orangePlaceholderView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
-            self.orangePlaceholderView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
-            self.orangePlaceholderView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
-            self.orangePlaceholderView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
+            //self.orangePlaceholderView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
+            //self.orangePlaceholderView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
+            //self.orangePlaceholderView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
+            //self.orangePlaceholderView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
 
             // Container View
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
