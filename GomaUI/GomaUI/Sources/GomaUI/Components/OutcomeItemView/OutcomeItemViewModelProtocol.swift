@@ -105,7 +105,6 @@ public struct OutcomeItemOddsChangeEvent: Equatable {
 // MARK: - View Model Protocol
 public protocol OutcomeItemViewModelProtocol {
     // Publishers
-    var displayStatePublisher: AnyPublisher<OutcomeItemDisplayState, Never> { get }
     var oddsChangeEventPublisher: AnyPublisher<OutcomeItemOddsChangeEvent, Never> { get }
 
     // Individual publishers for granular updates

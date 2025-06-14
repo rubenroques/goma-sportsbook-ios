@@ -5,15 +5,14 @@ import UIKit
 final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
     // MARK: - Publishers
-    private let displayStateSubject: CurrentValueSubject<OutcomeItemDisplayState, Never>
+    private let titleSubject: CurrentValueSubject<String, Never>
+    private let valueSubject: CurrentValueSubject<String, Never>
+    private let isSelectedSubject: CurrentValueSubject<Bool, Never>
+    private let isDisabledSubject: CurrentValueSubject<Bool, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OutcomeItemOddsChangeEvent, Never>
 
     // MARK: - Internal Properties
     internal var cancellables = Set<AnyCancellable>()
-
-    public var displayStatePublisher: AnyPublisher<OutcomeItemDisplayState, Never> {
-        return displayStateSubject.eraseToAnyPublisher()
-    }
 
     public var oddsChangeEventPublisher: AnyPublisher<OutcomeItemOddsChangeEvent, Never> {
         return oddsChangeEventSubject.eraseToAnyPublisher()
@@ -21,106 +20,70 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
     // Individual publishers for granular updates
     public var titlePublisher: AnyPublisher<String, Never> {
-        return displayStateSubject
-            .map { $0.outcomeData.title }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
+        return titleSubject.eraseToAnyPublisher()
     }
 
     public var valuePublisher: AnyPublisher<String, Never> {
-        return displayStateSubject
-            .map { $0.outcomeData.value }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
+        return valueSubject.eraseToAnyPublisher()
     }
 
     public var isSelectedPublisher: AnyPublisher<Bool, Never> {
-        return displayStateSubject
-            .map { $0.outcomeData.isSelected }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
+        return isSelectedSubject.eraseToAnyPublisher()
     }
 
     public var isDisabledPublisher: AnyPublisher<Bool, Never> {
-        return displayStateSubject
-            .map { $0.outcomeData.isDisabled }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
+        return isDisabledSubject.eraseToAnyPublisher()
     }
 
     // MARK: - Initialization
     public init(outcomeData: OutcomeItemData) {
-        let initialState = OutcomeItemDisplayState(outcomeData: outcomeData)
-        self.displayStateSubject = CurrentValueSubject(initialState)
+        self.titleSubject = CurrentValueSubject(outcomeData.title)
+        self.valueSubject = CurrentValueSubject(outcomeData.value)
+        self.isSelectedSubject = CurrentValueSubject(outcomeData.isSelected)
+        self.isDisabledSubject = CurrentValueSubject(outcomeData.isDisabled)
         self.oddsChangeEventSubject = PassthroughSubject()
     }
 
     // MARK: - OutcomeItemViewModelProtocol
     public func toggleSelection() -> Bool {
-        let currentData = displayStateSubject.value.outcomeData
-        let newSelectionState = !currentData.isSelected
-
-        let updatedData = OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: currentData.value,
-            oddsChangeDirection: currentData.oddsChangeDirection,
-            isSelected: newSelectionState,
-            isDisabled: currentData.isDisabled,
-            previousValue: currentData.previousValue,
-            changeTimestamp: currentData.changeTimestamp
-        )
-
-        let updatedState = OutcomeItemDisplayState(outcomeData: updatedData)
-        displayStateSubject.send(updatedState)
-
+        let newSelectionState = !isSelectedSubject.value
+        isSelectedSubject.send(newSelectionState)
         return newSelectionState
     }
 
     public func updateValue(_ newValue: String) {
-        let currentData = displayStateSubject.value.outcomeData
-
-        // Create updated outcome with automatic direction calculation
-        let updatedData = currentData.withUpdatedOdds(newValue)
-
+        let currentValue = valueSubject.value
+        
         // Only emit if the value actually changed
-        guard updatedData.value != currentData.value else { return }
-
-        let updatedState = OutcomeItemDisplayState(outcomeData: updatedData)
-        displayStateSubject.send(updatedState)
+        guard newValue != currentValue else { return }
+        
+        // Calculate odds change direction
+        let direction = calculateOddsChangeDirection(from: currentValue, to: newValue)
+        
+        // Update value
+        valueSubject.send(newValue)
 
         // Emit odds change event for animation
         let changeEvent = OutcomeItemOddsChangeEvent(
-            outcomeId: currentData.id,
-            oldValue: currentData.value,
+            outcomeId: titleSubject.value, // Using title as ID for mock
+            oldValue: currentValue,
             newValue: newValue,
-            direction: updatedData.oddsChangeDirection
+            direction: direction
         )
         oddsChangeEventSubject.send(changeEvent)
     }
 
     public func updateValue(_ newValue: String, changeDirection: OddsChangeDirection) {
-        let currentData = displayStateSubject.value.outcomeData
-
-        let updatedData = OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: newValue,
-            oddsChangeDirection: changeDirection,
-            isSelected: currentData.isSelected,
-            isDisabled: currentData.isDisabled,
-            previousValue: currentData.value,
-            changeTimestamp: Date()
-        )
-
-        let updatedState = OutcomeItemDisplayState(outcomeData: updatedData)
-        displayStateSubject.send(updatedState)
+        let currentValue = valueSubject.value
+        
+        // Update value
+        valueSubject.send(newValue)
 
         // Emit odds change event for animation if direction is not none
         if changeDirection != .none {
             let changeEvent = OutcomeItemOddsChangeEvent(
-                outcomeId: currentData.id,
-                oldValue: currentData.value,
+                outcomeId: titleSubject.value, // Using title as ID for mock
+                oldValue: currentValue,
                 newValue: newValue,
                 direction: changeDirection
             )
@@ -129,47 +92,27 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
 
     public func setSelected(_ selected: Bool) {
-        let currentData = displayStateSubject.value.outcomeData
-
-        let updatedData = OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: currentData.value,
-            oddsChangeDirection: currentData.oddsChangeDirection,
-            isSelected: selected,
-            isDisabled: currentData.isDisabled,
-            previousValue: currentData.previousValue,
-            changeTimestamp: currentData.changeTimestamp
-        )
-
-        let updatedState = OutcomeItemDisplayState(outcomeData: updatedData)
-        displayStateSubject.send(updatedState)
+        isSelectedSubject.send(selected)
     }
 
     public func setDisabled(_ disabled: Bool) {
-        let currentData = displayStateSubject.value.outcomeData
-
-        let updatedData = OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: currentData.value,
-            oddsChangeDirection: currentData.oddsChangeDirection,
-            isSelected: currentData.isSelected,
-            isDisabled: disabled,
-            previousValue: currentData.previousValue,
-            changeTimestamp: currentData.changeTimestamp
-        )
-
-        let updatedState = OutcomeItemDisplayState(outcomeData: updatedData)
-        displayStateSubject.send(updatedState)
+        isDisabledSubject.send(disabled)
     }
 
     public func clearOddsChangeIndicator() {
-        let currentData = displayStateSubject.value.outcomeData
-        let clearedData = currentData.withClearedOddsChange()
+        // No longer needed - odds change direction is handled by animation events only
+        // Individual publishers don't track change direction state
+    }
+    
+    // MARK: - Helper Methods
+    private func calculateOddsChangeDirection(from oldValue: String, to newValue: String) -> OddsChangeDirection {
+        guard let oldDecimal = Double(oldValue),
+              let newDecimal = Double(newValue),
+              oldDecimal != newDecimal else {
+            return .none
+        }
 
-        let updatedState = OutcomeItemDisplayState(outcomeData: clearedData)
-        displayStateSubject.send(updatedState)
+        return newDecimal > oldDecimal ? .up : .down
     }
 }
 

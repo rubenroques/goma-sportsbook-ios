@@ -3,6 +3,7 @@ import Combine
 import SwiftUI
 
 final public class PillSelectorBarView: UIView {
+    
     // MARK: - Private Properties
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
@@ -12,6 +13,12 @@ final public class PillSelectorBarView: UIView {
     private var pillViews: [String: PillItemView] = [:]
     private var pillViewModels: [String: MockPillItemViewModel] = [:]
     private var currentDisplayState: PillSelectorBarDisplayState?
+    
+    // Fade overlay views and their masks
+    private let leadingFadeView = UIView()
+    private let trailingFadeView = UIView()
+    private let leadingMask = CAGradientLayer()
+    private let trailingMask = CAGradientLayer()
     
     // MARK: - Layout Constants
     private struct Constants {
@@ -28,6 +35,7 @@ final public class PillSelectorBarView: UIView {
     public init(viewModel: PillSelectorBarViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        
         setupSubviews()
         setupBindings()
     }
@@ -36,46 +44,15 @@ final public class PillSelectorBarView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Setup
-    private func setupSubviews() {
-        backgroundColor = StyleProvider.Color.backgroundColor
-        translatesAutoresizingMaskIntoConstraints = false
-        
-        // Setup scroll view
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.backgroundColor = UIColor.clear
-        scrollView.contentInsetAdjustmentBehavior = .never
-        addSubview(scrollView)
-        
-        // Setup stack view
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.spacing = Constants.pillSpacing
-        stackView.alignment = .center
-        stackView.distribution = .fill
-        scrollView.addSubview(stackView)
-        
-        setupConstraints()
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        updateGradientFrames()
     }
     
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            // Scroll view constraints
-            scrollView.topAnchor.constraint(equalTo: topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.horizontalPadding),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalPadding),
-            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            scrollView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minimumHeight),
-            
-            // Stack view constraints
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            stackView.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor)
-        ])
+    private func updateGradientFrames() {
+        // Update mask frames to match their respective fade views
+        leadingMask.frame = leadingFadeView.bounds
+        trailingMask.frame = trailingFadeView.bounds
     }
     
     private func setupBindings() {
@@ -98,6 +75,7 @@ final public class PillSelectorBarView: UIView {
     
     // MARK: - Rendering
     private func render(state: PillSelectorBarDisplayState) {
+        
         // Store current state for later access
         currentDisplayState = state
         
@@ -141,6 +119,8 @@ final public class PillSelectorBarView: UIView {
             let updatedPillData = pill.updatingSelection(isSelected: pill.id == selectedId)
             let pillViewModel = MockPillItemViewModel(pillData: updatedPillData)
             let pillView = PillItemView(viewModel: pillViewModel)
+            
+            // Let PillItemView determine its own size
             
             // Store references
             pillViews[pill.id] = pillView
@@ -213,6 +193,104 @@ final public class PillSelectorBarView: UIView {
         let scrollableWidth = contentWidth - frameWidth
         return scrollView.contentOffset.x / scrollableWidth
     }
+    
+    // MARK: - Layout
+ 
+    // MARK: - Setup
+    private func setupSubviews() {
+        backgroundColor = StyleProvider.Color.backgroundColor
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        // Setup scroll view
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.backgroundColor = UIColor.clear
+        scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.contentInset = UIEdgeInsets(top: 0,
+                                               left: Constants.horizontalPadding,
+                                               bottom: 0,
+                                               right: Constants.horizontalPadding)
+        addSubview(scrollView)
+        
+        // Setup stack view
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = Constants.pillSpacing
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.backgroundColor = UIColor.clear
+        scrollView.addSubview(stackView)
+        
+        // Setup leading fade view (left side)
+        leadingFadeView.translatesAutoresizingMaskIntoConstraints = false
+        leadingFadeView.backgroundColor = StyleProvider.Color.backgroundColor
+        leadingFadeView.isUserInteractionEnabled = false
+        addSubview(leadingFadeView)
+        
+        // Setup trailing fade view (right side)
+        trailingFadeView.translatesAutoresizingMaskIntoConstraints = false
+        trailingFadeView.backgroundColor = StyleProvider.Color.backgroundColor
+        trailingFadeView.isUserInteractionEnabled = false
+        addSubview(trailingFadeView)
+        
+        // Leading mask: opaque -> transparent (left to right fade)
+        leadingMask.colors = [
+            UIColor.white.withAlphaComponent(1.0).cgColor,  // Opaque (covers content)
+            UIColor.white.withAlphaComponent(1.0).cgColor,  // Opaque (covers content)
+            UIColor.white.withAlphaComponent(0.0).cgColor   // Transparent (reveals content)
+        ]
+        leadingMask.locations = [0.0, 0.2, 1.0]
+        leadingMask.startPoint = CGPoint(x: 0.0, y: 0.5)
+        leadingMask.endPoint = CGPoint(x: 1.0, y: 0.5)
+        leadingFadeView.layer.mask = leadingMask
+        
+        // Trailing mask: transparent -> opaque (right to left fade)
+        trailingMask.colors = [
+            UIColor.white.withAlphaComponent(0.0).cgColor,  // Transparent (reveals content)
+            UIColor.white.withAlphaComponent(1.0).cgColor,   // Opaque (covers content)
+            UIColor.white.withAlphaComponent(1.0).cgColor   // Opaque (covers content)
+        ]
+        trailingMask.locations = [0.0, 0.9, 1.0]
+        trailingMask.startPoint = CGPoint(x: 0.0, y: 0.5)
+        trailingMask.endPoint = CGPoint(x: 1.0, y: 0.5)
+        trailingFadeView.layer.mask = trailingMask
+        
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            // Scroll view constraints
+            scrollView.topAnchor.constraint(equalTo: topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            scrollView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minimumHeight),
+            
+            // Stack view constraints
+            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            stackView.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            // Leading fade view (left side)
+            leadingFadeView.topAnchor.constraint(equalTo: topAnchor),
+            leadingFadeView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            leadingFadeView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            leadingFadeView.widthAnchor.constraint(equalToConstant: Constants.horizontalPadding),
+            
+            // Trailing fade view (right side)
+            trailingFadeView.topAnchor.constraint(equalTo: topAnchor),
+            trailingFadeView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            trailingFadeView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            trailingFadeView.widthAnchor.constraint(equalToConstant: Constants.horizontalPadding)
+        ])
+    }
+    
 }
 
 // MARK: - Intrinsic Content Size
@@ -244,52 +322,102 @@ extension PillData {
 
 @available(iOS 17.0, *)
 #Preview("Sports Categories") {
-    PreviewUIView {
-        PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.sportsCategories)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let pillSelectorView = PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.sportsCategories)
+        pillSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(pillSelectorView)
+        
+        NSLayoutConstraint.activate([
+            pillSelectorView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            pillSelectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            pillSelectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            pillSelectorView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        vc.view.backgroundColor = UIColor.gray
+        return vc
     }
-    .frame(height: 60)
-    .padding()
-    .background(Color(UIColor.systemGroupedBackground))
 }
 
 @available(iOS 17.0, *)
 #Preview("Market Filters") {
-    PreviewUIView {
-        PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.marketFilters)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let pillSelectorView = PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.marketFilters)
+        pillSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(pillSelectorView)
+        
+        NSLayoutConstraint.activate([
+            pillSelectorView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            pillSelectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            pillSelectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            pillSelectorView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        vc.view.backgroundColor = UIColor.gray
+        return vc
     }
-    .frame(height: 60)
-    .padding()
-    .background(Color(UIColor.systemGroupedBackground))
 }
 
 @available(iOS 17.0, *)
 #Preview("Time Periods") {
-    PreviewUIView {
-        PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.timePeriods)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let pillSelectorView = PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.timePeriods)
+        pillSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(pillSelectorView)
+        
+        NSLayoutConstraint.activate([
+            pillSelectorView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            pillSelectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            pillSelectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            pillSelectorView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        vc.view.backgroundColor = UIColor.gray
+        return vc
     }
-    .frame(height: 60)
-    .padding()
-    .background(Color(UIColor.systemGroupedBackground))
 }
 
 @available(iOS 17.0, *)
 #Preview("Read-Only States") {
-    PreviewUIView {
-        PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.readOnlyMarketFilters)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let pillSelectorView = PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.readOnlyMarketFilters)
+        pillSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(pillSelectorView)
+        
+        NSLayoutConstraint.activate([
+            pillSelectorView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            pillSelectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            pillSelectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            pillSelectorView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        vc.view.backgroundColor = UIColor.gray
+        return vc
     }
-    .frame(height: 60)
-    .padding()
-    .background(Color(UIColor.systemGroupedBackground))
 }
 
 @available(iOS 17.0, *)
 #Preview("Football Popular Leagues") {
-    PreviewUIView {
-        PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.footballPopularLeagues)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let pillSelectorView = PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.footballPopularLeagues)
+        pillSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(pillSelectorView)
+        
+        NSLayoutConstraint.activate([
+            pillSelectorView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            pillSelectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            pillSelectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            pillSelectorView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        vc.view.backgroundColor = UIColor.gray
+        return vc
     }
-    .frame(height: 60)
-    .padding()
-    .background(Color(UIColor.systemGroupedBackground))
 }
 
 #endif

@@ -119,6 +119,18 @@ class ComponentsTableViewController: UITableViewController {
             }
         ),
         UIComponent(
+            title: "Pill Selector Bar",
+            description: "Horizontal scrollable collection of pills with fade effects and interactive selection",
+            viewController: PillSelectorBarViewController.self,
+            previewFactory: {
+                let viewModel = MockPillSelectorBarViewModel.marketFilters
+                let pillSelectorBar = PillSelectorBarView(viewModel: viewModel)
+                pillSelectorBar.backgroundColor = StyleProvider.Color.backgroundSecondary
+                pillSelectorBar.layer.cornerRadius = 8
+                return pillSelectorBar
+            }
+        ),
+        UIComponent(
             title: "Pill View",
             description: "Customizable pill-shaped selector with icon and selection state support",
             viewController: PillItemViewController.self,

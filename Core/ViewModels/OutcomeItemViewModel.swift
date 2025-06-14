@@ -11,34 +11,33 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     private let servicesProvider = Env.servicesProvider
     
     // MARK: - Subjects
-    private let displayStateSubject: CurrentValueSubject<GomaUI.OutcomeItemDisplayState, Never>
+    private let titleSubject: CurrentValueSubject<String, Never>
+    private let valueSubject: CurrentValueSubject<String, Never>
+    private let isSelectedSubject: CurrentValueSubject<Bool, Never>
+    private let isDisabledSubject: CurrentValueSubject<Bool, Never>
     private let oddsChangeEventSubject: PassthroughSubject<GomaUI.OutcomeItemOddsChangeEvent, Never>
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Protocol Conformance
-    public var displayStatePublisher: AnyPublisher<GomaUI.OutcomeItemDisplayState, Never> {
-        displayStateSubject.eraseToAnyPublisher()
-    }
-    
     public var oddsChangeEventPublisher: AnyPublisher<GomaUI.OutcomeItemOddsChangeEvent, Never> {
         oddsChangeEventSubject.eraseToAnyPublisher()
     }
     
     // Individual publishers
     public var titlePublisher: AnyPublisher<String, Never> {
-        displayStateSubject.map(\.outcomeData.title).eraseToAnyPublisher()
+        titleSubject.eraseToAnyPublisher()
     }
     
     public var valuePublisher: AnyPublisher<String, Never> {
-        displayStateSubject.map(\.outcomeData.value).eraseToAnyPublisher()
+        valueSubject.eraseToAnyPublisher()
     }
     
     public var isSelectedPublisher: AnyPublisher<Bool, Never> {
-        displayStateSubject.map(\.outcomeData.isSelected).eraseToAnyPublisher()
+        isSelectedSubject.eraseToAnyPublisher()
     }
     
     public var isDisabledPublisher: AnyPublisher<Bool, Never> {
-        displayStateSubject.map(\.outcomeData.isDisabled).eraseToAnyPublisher()
+        isDisabledSubject.eraseToAnyPublisher()
     }
     
     // MARK: - Initialization
@@ -47,7 +46,10 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         initialOutcomeData: GomaUI.OutcomeItemData
     ) {
         self.outcomeId = outcomeId
-        self.displayStateSubject = CurrentValueSubject(GomaUI.OutcomeItemDisplayState(outcomeData: initialOutcomeData))
+        self.titleSubject = CurrentValueSubject(initialOutcomeData.title)
+        self.valueSubject = CurrentValueSubject(initialOutcomeData.value)
+        self.isSelectedSubject = CurrentValueSubject(initialOutcomeData.isSelected)
+        self.isDisabledSubject = CurrentValueSubject(initialOutcomeData.isDisabled)
         self.oddsChangeEventSubject = PassthroughSubject()
         
         print("[OutcomeItemViewModel] 🟢 INIT - outcomeId: \(outcomeId), title: \(initialOutcomeData.title)")
@@ -56,48 +58,19 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     
     // MARK: - Public Methods
     public func toggleSelection() -> Bool {
-        let currentData = displayStateSubject.value.outcomeData
-        let newIsSelected = !currentData.isSelected
-        
-        let newOutcomeData = GomaUI.OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: currentData.value,
-            oddsChangeDirection: currentData.oddsChangeDirection,
-            isSelected: newIsSelected,
-            isDisabled: currentData.isDisabled,
-            previousValue: currentData.previousValue,
-            changeTimestamp: currentData.changeTimestamp
-        )
-        
-        let newState = GomaUI.OutcomeItemDisplayState(outcomeData: newOutcomeData)
-        displayStateSubject.send(newState)
-        
+        let newIsSelected = !isSelectedSubject.value
+        isSelectedSubject.send(newIsSelected)
         return newIsSelected
     }
     
     public func updateOddsValue(_ newValue: String) {
-        let currentData = displayStateSubject.value.outcomeData
-        let previousValue = currentData.value
+        let previousValue = valueSubject.value
         
         // Calculate odds change direction
         let direction = calculateOddsChangeDirection(from: previousValue, to: newValue)
         
-        // Create new outcome data with updated values
-        let newOutcomeData = GomaUI.OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: newValue,
-            oddsChangeDirection: direction,
-            isSelected: currentData.isSelected,
-            isDisabled: currentData.isDisabled,
-            previousValue: previousValue,
-            changeTimestamp: Date()
-        )
-        
-        // Send updated state
-        let newState = GomaUI.OutcomeItemDisplayState(outcomeData: newOutcomeData)
-        displayStateSubject.send(newState)
+        // Update value directly
+        valueSubject.send(newValue)
         
         // Emit odds change event for animations
         if direction != .none {
@@ -113,21 +86,8 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
     
     public func clearOddsChangeIndicator() {
-        let currentData = displayStateSubject.value.outcomeData
-        
-        let newOutcomeData = GomaUI.OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: currentData.value,
-            oddsChangeDirection: .none,
-            isSelected: currentData.isSelected,
-            isDisabled: currentData.isDisabled,
-            previousValue: currentData.previousValue,
-            changeTimestamp: currentData.changeTimestamp
-        )
-        
-        let newState = GomaUI.OutcomeItemDisplayState(outcomeData: newOutcomeData)
-        displayStateSubject.send(newState)
+        // No longer needed - odds change direction is handled by animation events only
+        // Individual publishers don't track change direction state
     }
     
     // MARK: - Protocol Required Methods
@@ -136,28 +96,16 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
     
     public func updateValue(_ newValue: String, changeDirection: GomaUI.OddsChangeDirection) {
-        // For manual direction specification, we'll create the outcome data directly
-        let currentData = displayStateSubject.value.outcomeData
+        let previousValue = valueSubject.value
         
-        let newOutcomeData = GomaUI.OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: newValue,
-            oddsChangeDirection: changeDirection,
-            isSelected: currentData.isSelected,
-            isDisabled: currentData.isDisabled,
-            previousValue: currentData.value,
-            changeTimestamp: Date()
-        )
-        
-        let newState = GomaUI.OutcomeItemDisplayState(outcomeData: newOutcomeData)
-        displayStateSubject.send(newState)
+        // Update value directly
+        valueSubject.send(newValue)
         
         // Emit odds change event if direction is not none
         if changeDirection != .none {
             let changeEvent = GomaUI.OutcomeItemOddsChangeEvent(
                 outcomeId: outcomeId,
-                oldValue: currentData.value,
+                oldValue: previousValue,
                 newValue: newValue,
                 direction: changeDirection,
                 timestamp: Date()
@@ -167,21 +115,7 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
     
     public func setSelected(_ selected: Bool) {
-        let currentData = displayStateSubject.value.outcomeData
-        
-        let newOutcomeData = GomaUI.OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: currentData.value,
-            oddsChangeDirection: currentData.oddsChangeDirection,
-            isSelected: selected,
-            isDisabled: currentData.isDisabled,
-            previousValue: currentData.previousValue,
-            changeTimestamp: currentData.changeTimestamp
-        )
-        
-        let newState = GomaUI.OutcomeItemDisplayState(outcomeData: newOutcomeData)
-        displayStateSubject.send(newState)
+        isSelectedSubject.send(selected)
     }
     
     public func setDisabled(_ disabled: Bool) {
@@ -189,21 +123,7 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
     
     public func updateSuspensionState(isSuspended: Bool) {
-        let currentData = displayStateSubject.value.outcomeData
-        
-        let newOutcomeData = GomaUI.OutcomeItemData(
-            id: currentData.id,
-            title: currentData.title,
-            value: currentData.value,
-            oddsChangeDirection: currentData.oddsChangeDirection,
-            isSelected: currentData.isSelected,
-            isDisabled: isSuspended,
-            previousValue: currentData.previousValue,
-            changeTimestamp: currentData.changeTimestamp
-        )
-        
-        let newState = GomaUI.OutcomeItemDisplayState(outcomeData: newOutcomeData)
-        displayStateSubject.send(newState)
+        isDisabledSubject.send(isSuspended)
     }
     
     // MARK: - Private Methods
@@ -237,49 +157,28 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         // Convert ServicesProvider.Outcome to internal Outcome using mapper
         let outcome = ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: serviceProviderOutcome)
         
-        let currentData = displayStateSubject.value.outcomeData
+        // Get current values
+        let currentTitle = titleSubject.value
+        let currentValue = valueSubject.value
+        let currentIsDisabled = isDisabledSubject.value
         
         // Check if we need to update anything
         let newTitle = outcome.translatedName
         let newIsDisabled = !outcome.bettingOffer.isAvailable
         let formattedOdds = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
         
-        // If odds changed, use updateOddsValue to handle direction calculation
-        if currentData.value != formattedOdds {
-            print("[OutcomeItemViewModel] 💰 Odds changed for outcomeId: \(newTitle) - from: \(currentData.value) to: \(formattedOdds)")
-            
+        // Update individual properties as needed
+        if currentValue != formattedOdds {
+            print("[OutcomeItemViewModel] 💰 Odds changed for outcomeId: \(newTitle) - from: \(currentValue) to: \(formattedOdds)")
             updateOddsValue(formattedOdds)
-            
-            // Then update other properties if needed
-            if currentData.title != newTitle || currentData.isDisabled != newIsDisabled {
-                let latestData = displayStateSubject.value.outcomeData
-                let updatedData = GomaUI.OutcomeItemData(
-                    id: latestData.id,
-                    title: newTitle,
-                    value: latestData.value,
-                    oddsChangeDirection: latestData.oddsChangeDirection,
-                    isSelected: latestData.isSelected,
-                    isDisabled: newIsDisabled,
-                    previousValue: latestData.previousValue,
-                    changeTimestamp: latestData.changeTimestamp
-                )
-                let newState = GomaUI.OutcomeItemDisplayState(outcomeData: updatedData)
-                displayStateSubject.send(newState)
-            }
-        } else if currentData.title != newTitle || currentData.isDisabled != newIsDisabled {
-            // Only title or disabled state changed
-            let updatedData = GomaUI.OutcomeItemData(
-                id: currentData.id,
-                title: newTitle,
-                value: currentData.value,
-                oddsChangeDirection: currentData.oddsChangeDirection,
-                isSelected: currentData.isSelected,
-                isDisabled: newIsDisabled,
-                previousValue: currentData.previousValue,
-                changeTimestamp: currentData.changeTimestamp
-            )
-            let newState = GomaUI.OutcomeItemDisplayState(outcomeData: updatedData)
-            displayStateSubject.send(newState)
+        }
+        
+        if currentTitle != newTitle {
+            titleSubject.send(newTitle)
+        }
+        
+        if currentIsDisabled != newIsDisabled {
+            isDisabledSubject.send(newIsDisabled)
         }
     }
     

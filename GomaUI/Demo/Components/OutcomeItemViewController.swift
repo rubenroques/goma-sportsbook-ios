@@ -36,6 +36,7 @@ class OutcomeItemViewController: UIViewController {
 
     // MARK: - Properties
     private var outcomeViews: [OutcomeItemView] = []
+    private var currentViewModels: [MockOutcomeItemViewModel] = []
     private var currentStateIndex = 0
 
     // Different view model states to demonstrate
@@ -109,8 +110,8 @@ class OutcomeItemViewController: UIViewController {
         outcomeViews.forEach { $0.removeFromSuperview() }
         outcomeViews.removeAll()
 
-        // Create new views with current state
-        let currentViewModels = viewModelStates[currentStateIndex].viewModels
+        // Store current view models for later access
+        currentViewModels = viewModelStates[currentStateIndex].viewModels
 
         for (index, viewModel) in currentViewModels.enumerated() {
             let outcomeView = OutcomeItemView(viewModel: viewModel)
@@ -217,9 +218,19 @@ class OutcomeItemViewController: UIViewController {
             self.toggleFirstOutcome()
         })
 
+        // Clear odds change indicators
+        alertController.addAction(UIAlertAction(title: "Clear Odds Change Indicators", style: .default) { _ in
+            self.clearOddsChangeIndicators()
+        })
+        
         // Disable/Enable random outcome
         alertController.addAction(UIAlertAction(title: "Toggle Random Outcome Disabled", style: .default) { _ in
             self.toggleRandomOutcomeDisabled()
+        })
+        
+        // Test individual publisher updates
+        alertController.addAction(UIAlertAction(title: "Test Individual Publisher Updates", style: .default) { _ in
+            self.testIndividualPublisherUpdates()
         })
 
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
@@ -254,29 +265,68 @@ class OutcomeItemViewController: UIViewController {
     }
 
     private func toggleFirstOutcome() {
-        guard !outcomeViews.isEmpty else { return }
+        guard !currentViewModels.isEmpty else { return }
 
-        let firstOutcome = outcomeViews[0]
-        // The tap will handle the toggle through the view model
-        firstOutcome.onTap()
-
-        showAlert(title: "Selection Toggled", message: "First outcome selection toggled")
+        let firstViewModel = currentViewModels[0]
+        let wasSelected = firstViewModel.toggleSelection()
+        
+        showAlert(title: "Selection Toggled", message: "First outcome is now \(wasSelected ? "selected" : "unselected")")
     }
 
     private func toggleRandomOutcomeDisabled() {
-        guard !outcomeViews.isEmpty else { return }
+        guard !currentViewModels.isEmpty else { return }
 
-        let randomOutcome = outcomeViews.randomElement()!
+        let randomViewModel = currentViewModels.randomElement()!
 
-        // For simplicity, we'll just disable it (in a real app, you'd track the state)
-        randomOutcome.setDisabled(true)
+        // Use the view model's setDisabled method directly
+        randomViewModel.setDisabled(true)
 
         // Re-enable after 3 seconds
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            randomOutcome.setDisabled(false)
+            randomViewModel.setDisabled(false)
         }
 
         showAlert(title: "Outcome Disabled", message: "Random outcome disabled for 3 seconds")
+    }
+    
+    private func clearOddsChangeIndicators() {
+        guard !currentViewModels.isEmpty else { return }
+        
+        currentViewModels.forEach { viewModel in
+            viewModel.clearOddsChangeIndicator()
+        }
+        
+        showAlert(title: "Indicators Cleared", message: "All odds change indicators have been cleared")
+    }
+    
+    private func testIndividualPublisherUpdates() {
+        guard !currentViewModels.isEmpty else { return }
+        
+        // Test updating different properties individually to verify publishers work
+        let testViewModel = currentViewModels.first!
+        
+        print("🧪 Testing individual publisher updates for OutcomeItemViewModel")
+        
+        // Test value update
+        let newValue = String(format: "%.2f", Double.random(in: 1.50...3.00))
+        testViewModel.updateValue(newValue)
+        print("✅ Value updated to \(newValue)")
+        
+        // Test selection toggle
+        let wasSelected = testViewModel.toggleSelection()
+        print("✅ Selection toggled to: \(wasSelected)")
+        
+        // Test disabled state
+        testViewModel.setDisabled(true)
+        print("✅ Outcome disabled")
+        
+        // Re-enable after 1 second
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            testViewModel.setDisabled(false)
+            print("✅ Outcome re-enabled")
+        }
+        
+        showAlert(title: "Publisher Test", message: "Individual publisher updates tested - check console for detailed logs")
     }
 
     // MARK: - Helper Methods
