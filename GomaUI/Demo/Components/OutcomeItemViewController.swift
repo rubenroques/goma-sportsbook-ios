@@ -58,6 +58,16 @@ class OutcomeItemViewController: UIViewController {
             MockOutcomeItemViewModel.homeOutcome,
             MockOutcomeItemViewModel.disabledOutcome,
             MockOutcomeItemViewModel.customOutcome(id: "custom", title: "Custom", value: "2.50", isSelected: true)
+        ]),
+        ("New Loading States", [
+            MockOutcomeItemViewModel.loadingOutcome,
+            MockOutcomeItemViewModel.lockedOutcome,
+            MockOutcomeItemViewModel.unavailableOutcome
+        ]),
+        ("Boosted Outcomes", [
+            MockOutcomeItemViewModel.boostedOutcome,
+            MockOutcomeItemViewModel.boostedOutcomeSelected,
+            MockOutcomeItemViewModel.homeOutcome
         ])
     ]
 
@@ -232,6 +242,19 @@ class OutcomeItemViewController: UIViewController {
         alertController.addAction(UIAlertAction(title: "Test Individual Publisher Updates", style: .default) { _ in
             self.testIndividualPublisherUpdates()
         })
+        
+        // Test new states
+        alertController.addAction(UIAlertAction(title: "Test Loading State", style: .default) { _ in
+            self.testLoadingState()
+        })
+        
+        alertController.addAction(UIAlertAction(title: "Test Locked State", style: .default) { _ in
+            self.testLockedState()
+        })
+        
+        alertController.addAction(UIAlertAction(title: "Test Boosted State", style: .default) { _ in
+            self.testBoostedState()
+        })
 
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
@@ -327,6 +350,52 @@ class OutcomeItemViewController: UIViewController {
         }
         
         showAlert(title: "Publisher Test", message: "Individual publisher updates tested - check console for detailed logs")
+    }
+    
+    private func testLoadingState() {
+        guard !currentViewModels.isEmpty else { return }
+        
+        let randomViewModel = currentViewModels.randomElement()!
+        
+        // Set to loading for 3 seconds
+        randomViewModel.setLoading(true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            randomViewModel.setLoading(false)
+        }
+        
+        showAlert(title: "Loading State", message: "Random outcome set to loading for 3 seconds")
+    }
+    
+    private func testLockedState() {
+        guard !currentViewModels.isEmpty else { return }
+        
+        let randomViewModel = currentViewModels.randomElement()!
+        
+        // Set to locked for 3 seconds
+        randomViewModel.setLocked(true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            randomViewModel.setLocked(false)
+        }
+        
+        showAlert(title: "Locked State", message: "Random outcome locked for 3 seconds")
+    }
+    
+    private func testBoostedState() {
+        guard !currentViewModels.isEmpty else { return }
+        
+        let randomViewModel = currentViewModels.randomElement()!
+        
+        // Toggle boost state
+        randomViewModel.setBoosted(true)
+        
+        // Remove boost after 5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            randomViewModel.setBoosted(false)
+        }
+        
+        showAlert(title: "Boosted State", message: "Random outcome boosted for 5 seconds")
     }
 
     // MARK: - Helper Methods

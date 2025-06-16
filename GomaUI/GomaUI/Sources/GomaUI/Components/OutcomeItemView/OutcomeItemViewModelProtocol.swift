@@ -1,23 +1,71 @@
 import Combine
 import UIKit
 
+// MARK: - Display State Enum
+public enum OutcomeDisplayState: Hashable {
+    case loading
+    case locked
+    case unavailable  // Covers both disabled and no-market cases
+    case normal(isSelected: Bool, isBoosted: Bool)
+    
+    public var isSelected: Bool {
+        switch self {
+        case .normal(let selected, _):
+            return selected
+        case .loading, .locked, .unavailable:
+            return false
+        }
+    }
+    
+    public var canBeSelected: Bool {
+        switch self {
+        case .normal:
+            return true
+        case .loading, .locked, .unavailable:
+            return false
+        }
+    }
+    
+    public var isBoosted: Bool {
+        switch self {
+        case .normal(_, let boosted):
+            return boosted
+        case .loading, .locked, .unavailable:
+            return false
+        }
+    }
+    
+    public var isDisabled: Bool {
+        switch self {
+        case .unavailable:
+            return true
+        case .loading, .locked, .normal:
+            return false
+        }
+    }
+}
+
 // MARK: - Data Models
 public struct OutcomeItemData: Equatable, Hashable {
     public let id: String
     public let title: String
     public let value: String
     public let oddsChangeDirection: OddsChangeDirection
-    public let isSelected: Bool
-    public let isDisabled: Bool
+    public let displayState: OutcomeDisplayState
 
     // For odds change tracking
     public let previousValue: String?
     public let changeTimestamp: Date?
+    
+    // Computed properties for backward compatibility
+    public var isSelected: Bool { displayState.isSelected }
+    public var isDisabled: Bool { displayState.isDisabled }
 
     public init(id: String,
                 title: String,
                 value: String,
                 oddsChangeDirection: OddsChangeDirection = .none,
+                displayState: OutcomeDisplayState? = nil,
                 isSelected: Bool = false,
                 isDisabled: Bool = false,
                 previousValue: String? = nil,
@@ -26,10 +74,17 @@ public struct OutcomeItemData: Equatable, Hashable {
         self.title = title
         self.value = value
         self.oddsChangeDirection = oddsChangeDirection
-        self.isSelected = isSelected
-        self.isDisabled = isDisabled
         self.previousValue = previousValue
         self.changeTimestamp = changeTimestamp
+        
+        // Determine display state - prioritize explicit displayState, then legacy parameters
+        if let displayState = displayState {
+            self.displayState = displayState
+        } else if isDisabled {
+            self.displayState = .unavailable
+        } else {
+            self.displayState = .normal(isSelected: isSelected, isBoosted: false)
+        }
     }
 
     /// Creates a new instance with updated odds value and automatic direction calculation
@@ -40,8 +95,7 @@ public struct OutcomeItemData: Equatable, Hashable {
             title: self.title,
             value: newValue,
             oddsChangeDirection: direction,
-            isSelected: self.isSelected,
-            isDisabled: self.isDisabled,
+            displayState: self.displayState,
             previousValue: self.value,
             changeTimestamp: Date()
         )
@@ -54,11 +108,49 @@ public struct OutcomeItemData: Equatable, Hashable {
             title: self.title,
             value: self.value,
             oddsChangeDirection: .none,
-            isSelected: self.isSelected,
-            isDisabled: self.isDisabled,
+            displayState: self.displayState,
             previousValue: self.previousValue,
             changeTimestamp: self.changeTimestamp
         )
+    }
+    
+    /// Creates a new instance with updated display state
+    public func withDisplayState(_ newDisplayState: OutcomeDisplayState) -> OutcomeItemData {
+        return OutcomeItemData(
+            id: self.id,
+            title: self.title,
+            value: self.value,
+            oddsChangeDirection: self.oddsChangeDirection,
+            displayState: newDisplayState,
+            previousValue: self.previousValue,
+            changeTimestamp: self.changeTimestamp
+        )
+    }
+    
+    /// Creates a new instance with updated selection state (convenience method)
+    public func withSelection(_ selected: Bool) -> OutcomeItemData {
+        let newDisplayState: OutcomeDisplayState
+        switch self.displayState {
+        case .normal(_, let isBoosted):
+            newDisplayState = .normal(isSelected: selected, isBoosted: isBoosted)
+        default:
+            // Can't select non-normal states
+            newDisplayState = self.displayState
+        }
+        return withDisplayState(newDisplayState)
+    }
+    
+    /// Creates a new instance with updated boost state (convenience method)
+    public func withBoost(_ boosted: Bool) -> OutcomeItemData {
+        let newDisplayState: OutcomeDisplayState
+        switch self.displayState {
+        case .normal(let isSelected, _):
+            newDisplayState = .normal(isSelected: isSelected, isBoosted: boosted)
+        default:
+            // Can't boost non-normal states
+            newDisplayState = self.displayState
+        }
+        return withDisplayState(newDisplayState)
     }
 
     private func calculateOddsChangeDirection(from oldValue: String, to newValue: String) -> OddsChangeDirection {
@@ -107,11 +199,14 @@ public protocol OutcomeItemViewModelProtocol {
     // Publishers
     var oddsChangeEventPublisher: AnyPublisher<OutcomeItemOddsChangeEvent, Never> { get }
 
-    // Individual publishers for granular updates
+    // Individual publishers for granular updates (backward compatibility)
     var titlePublisher: AnyPublisher<String, Never> { get }
     var valuePublisher: AnyPublisher<String, Never> { get }
     var isSelectedPublisher: AnyPublisher<Bool, Never> { get }
     var isDisabledPublisher: AnyPublisher<Bool, Never> { get }
+    
+    // New unified state publisher
+    var displayStatePublisher: AnyPublisher<OutcomeDisplayState, Never> { get }
 
     // Actions
     func toggleSelection() -> Bool
@@ -120,4 +215,11 @@ public protocol OutcomeItemViewModelProtocol {
     func setSelected(_ selected: Bool)
     func setDisabled(_ disabled: Bool)
     func clearOddsChangeIndicator()
+    
+    // New unified state actions
+    func setDisplayState(_ state: OutcomeDisplayState)
+    func setLoading(_ loading: Bool)
+    func setLocked(_ locked: Bool)
+    func setUnavailable(_ unavailable: Bool)
+    func setBoosted(_ boosted: Bool)
 } 

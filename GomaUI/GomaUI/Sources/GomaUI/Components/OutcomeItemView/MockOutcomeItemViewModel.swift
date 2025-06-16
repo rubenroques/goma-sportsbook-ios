@@ -5,10 +5,7 @@ import UIKit
 final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
     // MARK: - Publishers
-    private let titleSubject: CurrentValueSubject<String, Never>
-    private let valueSubject: CurrentValueSubject<String, Never>
-    private let isSelectedSubject: CurrentValueSubject<Bool, Never>
-    private let isDisabledSubject: CurrentValueSubject<Bool, Never>
+    private let outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OutcomeItemOddsChangeEvent, Never>
 
     // MARK: - Internal Properties
@@ -20,70 +17,87 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
     // Individual publishers for granular updates
     public var titlePublisher: AnyPublisher<String, Never> {
-        return titleSubject.eraseToAnyPublisher()
+        return outcomeDataSubject.map(\.title).eraseToAnyPublisher()
     }
 
     public var valuePublisher: AnyPublisher<String, Never> {
-        return valueSubject.eraseToAnyPublisher()
+        return outcomeDataSubject.map(\.value).eraseToAnyPublisher()
     }
 
     public var isSelectedPublisher: AnyPublisher<Bool, Never> {
-        return isSelectedSubject.eraseToAnyPublisher()
+        return outcomeDataSubject.map(\.isSelected).eraseToAnyPublisher()
     }
 
     public var isDisabledPublisher: AnyPublisher<Bool, Never> {
-        return isDisabledSubject.eraseToAnyPublisher()
+        return outcomeDataSubject.map(\.isDisabled).eraseToAnyPublisher()
+    }
+    
+    public var displayStatePublisher: AnyPublisher<OutcomeDisplayState, Never> {
+        return outcomeDataSubject.map(\.displayState).eraseToAnyPublisher()
     }
 
     // MARK: - Initialization
     public init(outcomeData: OutcomeItemData) {
-        self.titleSubject = CurrentValueSubject(outcomeData.title)
-        self.valueSubject = CurrentValueSubject(outcomeData.value)
-        self.isSelectedSubject = CurrentValueSubject(outcomeData.isSelected)
-        self.isDisabledSubject = CurrentValueSubject(outcomeData.isDisabled)
+        self.outcomeDataSubject = CurrentValueSubject(outcomeData)
         self.oddsChangeEventSubject = PassthroughSubject()
     }
 
     // MARK: - OutcomeItemViewModelProtocol
     public func toggleSelection() -> Bool {
-        let newSelectionState = !isSelectedSubject.value
-        isSelectedSubject.send(newSelectionState)
+        let currentData = outcomeDataSubject.value
+        
+        // Only allow toggling if in normal state
+        guard case .normal(let isSelected, let isBoosted) = currentData.displayState else {
+            return false // Can't select loading/locked/unavailable states
+        }
+        
+        let newSelectionState = !isSelected
+        let newData = currentData.withSelection(newSelectionState)
+        outcomeDataSubject.send(newData)
+        
         return newSelectionState
     }
 
     public func updateValue(_ newValue: String) {
-        let currentValue = valueSubject.value
+        let currentData = outcomeDataSubject.value
         
         // Only emit if the value actually changed
-        guard newValue != currentValue else { return }
+        guard newValue != currentData.value else { return }
         
-        // Calculate odds change direction
-        let direction = calculateOddsChangeDirection(from: currentValue, to: newValue)
-        
-        // Update value
-        valueSubject.send(newValue)
+        // Update data with new value using withUpdatedOdds factory method
+        let newData = currentData.withUpdatedOdds(newValue)
+        outcomeDataSubject.send(newData)
 
         // Emit odds change event for animation
         let changeEvent = OutcomeItemOddsChangeEvent(
-            outcomeId: titleSubject.value, // Using title as ID for mock
-            oldValue: currentValue,
+            outcomeId: currentData.id,
+            oldValue: currentData.value,
             newValue: newValue,
-            direction: direction
+            direction: newData.oddsChangeDirection
         )
         oddsChangeEventSubject.send(changeEvent)
     }
 
     public func updateValue(_ newValue: String, changeDirection: OddsChangeDirection) {
-        let currentValue = valueSubject.value
+        let currentData = outcomeDataSubject.value
         
-        // Update value
-        valueSubject.send(newValue)
+        // Update data with new value and specified direction
+        let newData = OutcomeItemData(
+            id: currentData.id,
+            title: currentData.title,
+            value: newValue,
+            oddsChangeDirection: changeDirection,
+            displayState: currentData.displayState,
+            previousValue: currentData.value,
+            changeTimestamp: Date()
+        )
+        outcomeDataSubject.send(newData)
 
         // Emit odds change event for animation if direction is not none
         if changeDirection != .none {
             let changeEvent = OutcomeItemOddsChangeEvent(
-                outcomeId: titleSubject.value, // Using title as ID for mock
-                oldValue: currentValue,
+                outcomeId: currentData.id,
+                oldValue: currentData.value,
                 newValue: newValue,
                 direction: changeDirection
             )
@@ -92,16 +106,56 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
 
     public func setSelected(_ selected: Bool) {
-        isSelectedSubject.send(selected)
+        let currentData = outcomeDataSubject.value
+        let newData = currentData.withSelection(selected)
+        outcomeDataSubject.send(newData)
     }
 
     public func setDisabled(_ disabled: Bool) {
-        isDisabledSubject.send(disabled)
+        let currentData = outcomeDataSubject.value
+        let newDisplayState: OutcomeDisplayState = disabled ? .unavailable : .normal(isSelected: false, isBoosted: false)
+        let newData = currentData.withDisplayState(newDisplayState)
+        outcomeDataSubject.send(newData)
+    }
+    
+    // MARK: - New State Actions
+    public func setDisplayState(_ state: OutcomeDisplayState) {
+        let currentData = outcomeDataSubject.value
+        let newData = currentData.withDisplayState(state)
+        outcomeDataSubject.send(newData)
+    }
+    
+    public func setLoading(_ loading: Bool) {
+        let currentData = outcomeDataSubject.value
+        let newDisplayState: OutcomeDisplayState = loading ? .loading : .normal(isSelected: false, isBoosted: false)
+        let newData = currentData.withDisplayState(newDisplayState)
+        outcomeDataSubject.send(newData)
+    }
+    
+    public func setLocked(_ locked: Bool) {
+        let currentData = outcomeDataSubject.value
+        let newDisplayState: OutcomeDisplayState = locked ? .locked : .normal(isSelected: false, isBoosted: false)
+        let newData = currentData.withDisplayState(newDisplayState)
+        outcomeDataSubject.send(newData)
+    }
+    
+    public func setUnavailable(_ unavailable: Bool) {
+        let currentData = outcomeDataSubject.value
+        let newDisplayState: OutcomeDisplayState = unavailable ? .unavailable : .normal(isSelected: false, isBoosted: false)
+        let newData = currentData.withDisplayState(newDisplayState)
+        outcomeDataSubject.send(newData)
+    }
+    
+    public func setBoosted(_ boosted: Bool) {
+        let currentData = outcomeDataSubject.value
+        let newData = currentData.withBoost(boosted)
+        outcomeDataSubject.send(newData)
     }
 
     public func clearOddsChangeIndicator() {
-        // No longer needed - odds change direction is handled by animation events only
-        // Individual publishers don't track change direction state
+        let currentData = outcomeDataSubject.value
+        let newData = currentData.withClearedOddsChange()
+        outcomeDataSubject.send(newData)
     }
     
     // MARK: - Helper Methods
@@ -125,9 +179,7 @@ extension MockOutcomeItemViewModel {
             id: "home",
             title: "Home",
             value: "1.85",
-            oddsChangeDirection: .none,
-            isSelected: true,
-            isDisabled: false
+            displayState: .normal(isSelected: true, isBoosted: false)
         )
         return MockOutcomeItemViewModel(outcomeData: outcomeData)
     }
@@ -138,9 +190,7 @@ extension MockOutcomeItemViewModel {
             id: "draw",
             title: "Draw",
             value: "3.55",
-            oddsChangeDirection: .none,
-            isSelected: false,
-            isDisabled: false
+            displayState: .normal(isSelected: false, isBoosted: false)
         )
         return MockOutcomeItemViewModel(outcomeData: outcomeData)
     }
@@ -151,9 +201,7 @@ extension MockOutcomeItemViewModel {
             id: "away",
             title: "Away",
             value: "4.20",
-            oddsChangeDirection: .none,
-            isSelected: false,
-            isDisabled: false
+            displayState: .normal(isSelected: false, isBoosted: false)
         )
         return MockOutcomeItemViewModel(outcomeData: outcomeData)
     }
@@ -165,8 +213,7 @@ extension MockOutcomeItemViewModel {
             title: "Over 2.5",
             value: "1.95",
             oddsChangeDirection: .up,
-            isSelected: false,
-            isDisabled: false
+            displayState: .normal(isSelected: false, isBoosted: false)
         )
         return MockOutcomeItemViewModel(outcomeData: outcomeData)
     }
@@ -178,21 +225,18 @@ extension MockOutcomeItemViewModel {
             title: "Under 2.5",
             value: "1.80",
             oddsChangeDirection: .down,
-            isSelected: false,
-            isDisabled: false
+            displayState: .normal(isSelected: false, isBoosted: false)
         )
         return MockOutcomeItemViewModel(outcomeData: outcomeData)
     }
 
-    /// Disabled outcome
+    /// Disabled outcome (now unavailable)
     public static var disabledOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "disabled",
             title: "Disabled",
             value: "2.50",
-            oddsChangeDirection: .none,
-            isSelected: false,
-            isDisabled: true
+            displayState: .unavailable
         )
         return MockOutcomeItemViewModel(outcomeData: outcomeData)
     }
@@ -203,14 +247,73 @@ extension MockOutcomeItemViewModel {
                                    value: String,
                                    oddsChangeDirection: OddsChangeDirection = .none,
                                    isSelected: Bool = false,
-                                   isDisabled: Bool = false) -> MockOutcomeItemViewModel {
+                                   isDisabled: Bool = false,
+                                   displayState: OutcomeDisplayState? = nil) -> MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: id,
             title: title,
             value: value,
             oddsChangeDirection: oddsChangeDirection,
+            displayState: displayState,
             isSelected: isSelected,
             isDisabled: isDisabled
+        )
+        return MockOutcomeItemViewModel(outcomeData: outcomeData)
+    }
+    
+    // MARK: - New State Factories
+    
+    /// Loading outcome
+    public static var loadingOutcome: MockOutcomeItemViewModel {
+        let outcomeData = OutcomeItemData(
+            id: "loading",
+            title: "Loading",
+            value: "",
+            displayState: .loading
+        )
+        return MockOutcomeItemViewModel(outcomeData: outcomeData)
+    }
+    
+    /// Locked outcome
+    public static var lockedOutcome: MockOutcomeItemViewModel {
+        let outcomeData = OutcomeItemData(
+            id: "locked",
+            title: "Locked",
+            value: "",
+            displayState: .locked
+        )
+        return MockOutcomeItemViewModel(outcomeData: outcomeData)
+    }
+    
+    /// Unavailable outcome
+    public static var unavailableOutcome: MockOutcomeItemViewModel {
+        let outcomeData = OutcomeItemData(
+            id: "unavailable",
+            title: "Unavailable",
+            value: "-",
+            displayState: .unavailable
+        )
+        return MockOutcomeItemViewModel(outcomeData: outcomeData)
+    }
+    
+    /// Boosted outcome (selected)
+    public static var boostedOutcomeSelected: MockOutcomeItemViewModel {
+        let outcomeData = OutcomeItemData(
+            id: "boosted_selected",
+            title: "Home",
+            value: "2.20",
+            displayState: .normal(isSelected: true, isBoosted: true)
+        )
+        return MockOutcomeItemViewModel(outcomeData: outcomeData)
+    }
+    
+    /// Boosted outcome (unselected)
+    public static var boostedOutcome: MockOutcomeItemViewModel {
+        let outcomeData = OutcomeItemData(
+            id: "boosted",
+            title: "Home",
+            value: "2.20",
+            displayState: .normal(isSelected: false, isBoosted: true)
         )
         return MockOutcomeItemViewModel(outcomeData: outcomeData)
     }
