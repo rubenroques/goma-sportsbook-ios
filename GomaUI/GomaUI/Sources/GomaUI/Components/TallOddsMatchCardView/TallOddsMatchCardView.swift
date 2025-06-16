@@ -13,9 +13,11 @@ final public class TallOddsMatchCardView: UIView {
     // Child components
     private lazy var matchHeaderView = Self.createMatchHeaderView()
     private lazy var participantsContainerView = Self.createParticipantsContainer()
+    private lazy var participantsStackView = Self.createParticipantsStackView()
 
     private lazy var homeParticipantLabel = Self.createParticipantLabel()
     private lazy var awayParticipantLabel = Self.createParticipantLabel()
+    private lazy var scoreView = Self.createScoreView()
 
     private lazy var marketInfoContainer = Self.createMarketInfoContainer()
     private lazy var marketInfoLineView = Self.createMarketInfoLineView()
@@ -78,6 +80,9 @@ final public class TallOddsMatchCardView: UIView {
         // Cleanup MatchHeaderView for reuse (it supports this)
         matchHeaderView.cleanupForReuse()
 
+        // Cleanup ScoreView for reuse
+        scoreView.cleanupForReuse()
+
         // Note: MarketInfoLineView and MarketOutcomesMultiLineView will be reconfigured
         // when new bindings are established using their configure methods
     }
@@ -123,6 +128,14 @@ extension TallOddsMatchCardView {
                 self?.updateMarketOutcomesView(with: outcomesViewModel)
             }
             .store(in: &cancellables)
+
+        // Score View Model
+        viewModel.scoreViewModelPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] scoreViewModel in
+                self?.updateScoreView(with: scoreViewModel)
+            }
+            .store(in: &cancellables)
     }
 
     private func render(state: TallOddsMatchCardDisplayState) {
@@ -132,6 +145,9 @@ extension TallOddsMatchCardView {
         // Update participant labels
         homeParticipantLabel.text = state.homeParticipantName
         awayParticipantLabel.text = state.awayParticipantName
+
+        // Update score visibility based on live state
+        scoreView.isHidden = !state.isLive
     }
 
     // MARK: - Child View Updates
@@ -151,6 +167,12 @@ extension TallOddsMatchCardView {
 
         // Invalidate intrinsic content size after outcomes update (most important for dynamic height)
         invalidateIntrinsicContentSize()
+    }
+
+    private func updateScoreView(with viewModel: ScoreViewModelProtocol?) {
+        if let scoreViewModel = viewModel {
+            scoreView.configure(with: scoreViewModel)
+        }
     }
 
     // MARK: - Actions
@@ -180,8 +202,10 @@ extension TallOddsMatchCardView {
         separatorContainer.addSubview(separatorLine)
 
         // Setup participants container hierarchy
-        participantsContainerView.addSubview(homeParticipantLabel)
-        participantsContainerView.addSubview(awayParticipantLabel)
+        participantsContainerView.addSubview(participantsStackView)
+        participantsContainerView.addSubview(scoreView)
+        participantsStackView.addArrangedSubview(homeParticipantLabel)
+        participantsStackView.addArrangedSubview(awayParticipantLabel)
 
         // Setup market info container hierarchy
         marketInfoContainer.addSubview(marketInfoLineView)
@@ -222,16 +246,20 @@ extension TallOddsMatchCardView {
 
         // Participants container constraints
         NSLayoutConstraint.activate([
-            homeParticipantLabel.topAnchor.constraint(equalTo: participantsContainerView.topAnchor),
-            homeParticipantLabel.leadingAnchor.constraint(equalTo: participantsContainerView.leadingAnchor),
-            homeParticipantLabel.trailingAnchor.constraint(equalTo: participantsContainerView.trailingAnchor),
-            homeParticipantLabel.heightAnchor.constraint(equalToConstant: 20),
+            // Participants stack view (left side)
+            participantsStackView.topAnchor.constraint(equalTo: participantsContainerView.topAnchor),
+            participantsStackView.leadingAnchor.constraint(equalTo: participantsContainerView.leadingAnchor),
+            participantsStackView.bottomAnchor.constraint(equalTo: participantsContainerView.bottomAnchor),
 
-            awayParticipantLabel.topAnchor.constraint(equalTo: homeParticipantLabel.bottomAnchor, constant: 2),
-            awayParticipantLabel.leadingAnchor.constraint(equalTo: participantsContainerView.leadingAnchor),
-            awayParticipantLabel.trailingAnchor.constraint(equalTo: participantsContainerView.trailingAnchor),
-            awayParticipantLabel.bottomAnchor.constraint(equalTo: participantsContainerView.bottomAnchor),
+            // Individual label heights
+            homeParticipantLabel.heightAnchor.constraint(equalToConstant: 20),
             awayParticipantLabel.heightAnchor.constraint(equalToConstant: 20),
+
+            // Score view (right side, aligned with participant names)
+            scoreView.topAnchor.constraint(equalTo: homeParticipantLabel.topAnchor),
+            scoreView.bottomAnchor.constraint(equalTo: awayParticipantLabel.bottomAnchor),
+            scoreView.trailingAnchor.constraint(equalTo: participantsContainerView.trailingAnchor),
+            scoreView.leadingAnchor.constraint(greaterThanOrEqualTo: participantsStackView.trailingAnchor, constant: 8)
         ])
 
         // Market info container constraints
@@ -308,6 +336,16 @@ extension TallOddsMatchCardView {
         return container
     }
 
+    private static func createParticipantsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.distribution = .fill
+        stackView.spacing = 2
+        return stackView
+    }
+
     private static func createMarketInfoContainer() -> UIView {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
@@ -348,6 +386,12 @@ extension TallOddsMatchCardView {
         label.textAlignment = .left
         return label
     }
+    
+    private static func createScoreView() -> ScoreView {
+        let scoreView = ScoreView()
+        scoreView.translatesAutoresizingMaskIntoConstraints = false
+        return scoreView
+    }
 }
 
 
@@ -371,6 +415,16 @@ extension TallOddsMatchCardView {
         return TallOddsMatchCardView(viewModel: viewModel)
     }
     .frame(height: 250)
+    .padding(.horizontal, 16)
+}
+
+@available(iOS 17.0, *)
+#Preview("Live Match with Score") {
+    PreviewUIView {
+        let viewModel = MockTallOddsMatchCardViewModel.liveMock
+        return TallOddsMatchCardView(viewModel: viewModel)
+    }
+    .frame(height: 300)
     .padding(.horizontal, 16)
 }
 #endif

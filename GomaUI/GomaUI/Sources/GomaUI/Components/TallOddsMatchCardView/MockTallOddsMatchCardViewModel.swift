@@ -7,6 +7,7 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
     private let matchHeaderViewModelSubject: CurrentValueSubject<MatchHeaderViewModelProtocol, Never>
     private let marketInfoLineViewModelSubject: CurrentValueSubject<MarketInfoLineViewModelProtocol, Never>
     private let marketOutcomesViewModelSubject: CurrentValueSubject<MarketOutcomesMultiLineViewModelProtocol, Never>
+    private let scoreViewModelSubject: CurrentValueSubject<ScoreViewModelProtocol?, Never>
     
     public var displayStatePublisher: AnyPublisher<TallOddsMatchCardDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
@@ -24,6 +25,10 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
         return marketOutcomesViewModelSubject.eraseToAnyPublisher()
     }
     
+    public var scoreViewModelPublisher: AnyPublisher<ScoreViewModelProtocol?, Never> {
+        return scoreViewModelSubject.eraseToAnyPublisher()
+    }
+    
     private var matchData: TallOddsMatchData
     
     // MARK: - Initialization
@@ -34,7 +39,8 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
         let initialDisplayState = TallOddsMatchCardDisplayState(
             matchId: matchData.matchId,
             homeParticipantName: matchData.homeParticipantName,
-            awayParticipantName: matchData.awayParticipantName
+            awayParticipantName: matchData.awayParticipantName,
+            isLive: matchData.leagueInfo.isLive
         )
         
         // Create child view models
@@ -42,11 +48,16 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
         let marketInfoViewModel = MockMarketInfoLineViewModel(marketInfoData: matchData.marketInfo)
         let outcomesViewModel = MockMarketOutcomesMultiLineViewModel.overUnderMarketGroup // Use available mock for now
         
+        // Create score view model for live matches
+        let scoreViewModel: ScoreViewModelProtocol? = matchData.liveScoreData != nil ? 
+            MockScoreViewModel(scoreCells: matchData.liveScoreData!.scoreCells, visualState: .display) : nil
+        
         // Initialize subjects
         self.displayStateSubject = CurrentValueSubject(initialDisplayState)
         self.matchHeaderViewModelSubject = CurrentValueSubject(headerViewModel)
         self.marketInfoLineViewModelSubject = CurrentValueSubject(marketInfoViewModel)
         self.marketOutcomesViewModelSubject = CurrentValueSubject(outcomesViewModel)
+        self.scoreViewModelSubject = CurrentValueSubject(scoreViewModel)
     }
     
     // MARK: - TallOddsMatchCardViewModelProtocol
@@ -164,6 +175,14 @@ extension MockTallOddsMatchCardViewModel {
             icons: marketIcons
         )
         
+        // Create live score data for football
+        let liveScoreData = LiveScoreData(
+            sportCode: "1", // Football
+            scoreCells: [
+                ScoreDisplayData(id: "main", homeScore: "2", awayScore: "1", style: .simple)
+            ]
+        )
+        
         let matchData = TallOddsMatchData(
             matchId: "chelsea_tottenham_live",
             leagueInfo: MatchHeaderData(
@@ -179,7 +198,8 @@ extension MockTallOddsMatchCardViewModel {
             homeParticipantName: "Chelsea F.C.",
             awayParticipantName: "Tottenham Hotspur",
             marketInfo: marketInfoData,
-            outcomes: MarketGroupData(id: "live_match_markets", marketLines: [])
+            outcomes: MarketGroupData(id: "live_match_markets", marketLines: []),
+            liveScoreData: liveScoreData
         )
         
         return MockTallOddsMatchCardViewModel(matchData: matchData)
