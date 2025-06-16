@@ -156,7 +156,9 @@ public class SortFilterView: UIView {
             .sink(receiveValue: { [weak self] in
                 print("UPDATE SORT UI!")
                 self?.setupOptions()
-                self?.viewModel.selectOption(withId: 0)
+                if let selectedOption = self?.viewModel.selectedOptionId.value {
+                    self?.viewModel.selectOption(withId: selectedOption)
+                }
             })
             .store(in: &cancellables)
     }
@@ -167,6 +169,7 @@ public class SortFilterView: UIView {
     }
     
     private func updateSelection(forOptionId id: Int) {
+        print("UPDATING ID: \(id)")
         optionRows.forEach { row in
             let option = row.viewModel.sortOption
             row.isSelected = option.id == id

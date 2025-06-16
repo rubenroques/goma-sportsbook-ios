@@ -97,8 +97,8 @@ public class LeagueOptionSelectionRowView: UIView {
             
             selectedDot.centerXAnchor.constraint(equalTo: radioButton.centerXAnchor),
             selectedDot.centerYAnchor.constraint(equalTo: radioButton.centerYAnchor),
-            selectedDot.widthAnchor.constraint(equalToConstant: 9),
-            selectedDot.heightAnchor.constraint(equalToConstant: 9),
+            selectedDot.widthAnchor.constraint(equalToConstant: 12),
+            selectedDot.heightAnchor.constraint(equalToConstant: 12),
             
             separatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),

@@ -180,7 +180,7 @@ public class CountryLeagueOptionRowView: UIView {
         leagueRows.forEach { row in
             
             let leagueOption = row.viewModel.leagueOption
-            print("LEAGUE OPTION: \(id)")
+//            print("LEAGUE OPTION: \(id)")
             if leagueOption.id == id {
                 row.isSelected = true
             }

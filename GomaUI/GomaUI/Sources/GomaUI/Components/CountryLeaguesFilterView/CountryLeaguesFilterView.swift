@@ -169,9 +169,11 @@ public class CountryLeaguesFilterView: UIView {
         
         viewModel.shouldRefreshData
             .sink(receiveValue: { [weak self] in
-                print("UPDATE COUNTRY LEAGUES UI!")
+//                print("UPDATE COUNTRY LEAGUES UI!")
                 self?.setupOptions()
-                self?.viewModel.selectedOptionId.send(0)
+                if let selectedOptionId = self?.viewModel.selectedOptionId.value {
+                    self?.viewModel.selectedOptionId.send(selectedOptionId)
+                }
             })
             .store(in: &cancellables)
     }

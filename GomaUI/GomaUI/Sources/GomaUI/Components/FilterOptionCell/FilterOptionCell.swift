@@ -81,6 +81,6 @@ public class FilterOptionCell: UICollectionViewCell {
         
         titleLabel.text = viewModel.filterOptionItem.title
         
-        iconImageView.image = UIImage(systemName: viewModel.filterOptionItem.icon)
+        iconImageView.image = UIImage(named: viewModel.filterOptionItem.icon)
     }
 }

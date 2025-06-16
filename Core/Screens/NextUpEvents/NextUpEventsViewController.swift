@@ -9,6 +9,7 @@ class NextUpEventsViewController: UIViewController {
     private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
     private var pageViewController: UIPageViewController!
     private let quickLinksTabBarView: QuickLinksTabBarView
+    private let generalFilterBarView: GeneralFilterBarView
 
     private let loadingIndicatorView: UIView = {
         let view = UIView()
@@ -40,6 +41,7 @@ class NextUpEventsViewController: UIViewController {
     init(viewModel: NextUpEventsViewModel) {
         self.viewModel = viewModel
         self.quickLinksTabBarView = QuickLinksTabBarView(viewModel: viewModel.quickLinksTabBarViewModel)
+        self.generalFilterBarView = GeneralFilterBarView(viewModel: viewModel.generalFiltersBarViewModel)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -65,6 +67,7 @@ class NextUpEventsViewController: UIViewController {
 
         setupMarketGroupSelectorTabView()
         setupPageViewController()
+        setupGeneralFilterBarView()
         setupQuickLinksTabBar()
         setupLoadingIndicator()
         setupConstraints()
@@ -95,6 +98,11 @@ class NextUpEventsViewController: UIViewController {
         view.addSubview(quickLinksTabBarView)
         quickLinksTabBarView.translatesAutoresizingMaskIntoConstraints = false
     }
+    
+    private func setupGeneralFilterBarView() {
+        view.addSubview(generalFilterBarView)
+        generalFilterBarView.translatesAutoresizingMaskIntoConstraints = false
+    }
 
     private func setupLoadingIndicator() {
         view.addSubview(loadingIndicatorView)
@@ -105,8 +113,13 @@ class NextUpEventsViewController: UIViewController {
         var topConstraint = marketGroupSelectorTabView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor)
         
         NSLayoutConstraint.activate([
+            generalFilterBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            generalFilterBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            generalFilterBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            generalFilterBarView.heightAnchor.constraint(equalToConstant: 56),
+            
             // Quick Links Tab Bar at the very top
-            quickLinksTabBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            quickLinksTabBarView.topAnchor.constraint(equalTo: generalFilterBarView.bottomAnchor),
             quickLinksTabBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             quickLinksTabBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             quickLinksTabBarView.heightAnchor.constraint(equalToConstant: 40),
@@ -157,11 +170,48 @@ class NextUpEventsViewController: UIViewController {
                 self?.setLoadingIndicatorVisible(isLoading)
             }
             .store(in: &cancellables)
+        
+        generalFilterBarView.onMainFilterTapped = { [weak self] in
+            
+            self?.openCombinedFilters()
+        }
+        
+        Env.filterStorage.$currentFilterSelection
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.generalFilterBarView.updateFilterItems(filterOptionItems: Env.filterStorage.selectedFilterOptions)
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: - Data Loading
     private func loadData() {
         viewModel.reloadEvents()
+    }
+    
+    // MARK: Functions
+    private func openCombinedFilters() {
+        
+        let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
+
+        let viewModel = CombinedFiltersViewModel(filterConfiguration: configuration,
+                                                 contextId: "sports")
+        
+        let combinedFiltersViewController = CombinedFiltersViewController( viewModel: viewModel)
+        
+        combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
+            guard let self = self else { return }
+            
+//            self.viewModel.selectedGeneralFilterSelection = combinedGeneralFilterSelection
+//            
+//            // Build filter options for collection view
+//            self.viewModel.selectedFilterOptions = self.viewModel.buildFilterOptions(from: combinedGeneralFilterSelection)
+//            self.generalFilterBarView.updateFilterItems(filterOptionItems: self.viewModel.selectedFilterOptions)
+            
+        }
+        
+        self.navigationController?.pushViewController(combinedFiltersViewController, animated: true)
+        
     }
 
     // MARK: - UI Updates
