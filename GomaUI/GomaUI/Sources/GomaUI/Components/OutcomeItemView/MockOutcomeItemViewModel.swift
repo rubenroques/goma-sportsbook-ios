@@ -118,37 +118,10 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
         outcomeDataSubject.send(newData)
     }
     
-    // MARK: - New State Actions
+    // MARK: - Unified State Action
     public func setDisplayState(_ state: OutcomeDisplayState) {
         let currentData = outcomeDataSubject.value
         let newData = currentData.withDisplayState(state)
-        outcomeDataSubject.send(newData)
-    }
-    
-    public func setLoading(_ loading: Bool) {
-        let currentData = outcomeDataSubject.value
-        let newDisplayState: OutcomeDisplayState = loading ? .loading : .normal(isSelected: false, isBoosted: false)
-        let newData = currentData.withDisplayState(newDisplayState)
-        outcomeDataSubject.send(newData)
-    }
-    
-    public func setLocked(_ locked: Bool) {
-        let currentData = outcomeDataSubject.value
-        let newDisplayState: OutcomeDisplayState = locked ? .locked : .normal(isSelected: false, isBoosted: false)
-        let newData = currentData.withDisplayState(newDisplayState)
-        outcomeDataSubject.send(newData)
-    }
-    
-    public func setUnavailable(_ unavailable: Bool) {
-        let currentData = outcomeDataSubject.value
-        let newDisplayState: OutcomeDisplayState = unavailable ? .unavailable : .normal(isSelected: false, isBoosted: false)
-        let newData = currentData.withDisplayState(newDisplayState)
-        outcomeDataSubject.send(newData)
-    }
-    
-    public func setBoosted(_ boosted: Bool) {
-        let currentData = outcomeDataSubject.value
-        let newData = currentData.withBoost(boosted)
         outcomeDataSubject.send(newData)
     }
 

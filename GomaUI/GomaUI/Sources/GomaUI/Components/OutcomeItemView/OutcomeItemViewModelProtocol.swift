@@ -216,10 +216,6 @@ public protocol OutcomeItemViewModelProtocol {
     func setDisabled(_ disabled: Bool)
     func clearOddsChangeIndicator()
     
-    // New unified state actions
+    // Unified state action
     func setDisplayState(_ state: OutcomeDisplayState)
-    func setLoading(_ loading: Bool)
-    func setLocked(_ locked: Bool)
-    func setUnavailable(_ unavailable: Bool)
-    func setBoosted(_ boosted: Bool)
 } 

@@ -358,10 +358,10 @@ class OutcomeItemViewController: UIViewController {
         let randomViewModel = currentViewModels.randomElement()!
         
         // Set to loading for 3 seconds
-        randomViewModel.setLoading(true)
+        randomViewModel.setDisplayState(.loading)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            randomViewModel.setLoading(false)
+            randomViewModel.setDisplayState(.normal(isSelected: false, isBoosted: false))
         }
         
         showAlert(title: "Loading State", message: "Random outcome set to loading for 3 seconds")
@@ -373,10 +373,10 @@ class OutcomeItemViewController: UIViewController {
         let randomViewModel = currentViewModels.randomElement()!
         
         // Set to locked for 3 seconds
-        randomViewModel.setLocked(true)
+        randomViewModel.setDisplayState(.locked)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            randomViewModel.setLocked(false)
+            randomViewModel.setDisplayState(.normal(isSelected: false, isBoosted: false))
         }
         
         showAlert(title: "Locked State", message: "Random outcome locked for 3 seconds")
@@ -388,11 +388,11 @@ class OutcomeItemViewController: UIViewController {
         let randomViewModel = currentViewModels.randomElement()!
         
         // Toggle boost state
-        randomViewModel.setBoosted(true)
+        randomViewModel.setDisplayState(.normal(isSelected: false, isBoosted: true))
         
         // Remove boost after 5 seconds
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            randomViewModel.setBoosted(false)
+            randomViewModel.setDisplayState(.normal(isSelected: false, isBoosted: false))
         }
         
         showAlert(title: "Boosted State", message: "Random outcome boosted for 5 seconds")

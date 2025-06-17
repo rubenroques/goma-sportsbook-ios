@@ -3,25 +3,16 @@ import UIKit
 import GomaUI
 
 final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
+    
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<TallOddsMatchCardDisplayState, Never>
     fileprivate let matchHeaderViewModelSubject: CurrentValueSubject<MatchHeaderViewModelProtocol, Never>
     fileprivate let marketInfoLineViewModelSubject: CurrentValueSubject<MarketInfoLineViewModelProtocol, Never>
     fileprivate let marketOutcomesViewModelSubject: CurrentValueSubject<MarketOutcomesMultiLineViewModelProtocol, Never>
-    
-    // MARK: - Logging Properties
-    private let creationTime: CFAbsoluteTime
-    private var lastUpdateTime: CFAbsoluteTime = 0
+    fileprivate let scoreViewModelSubject: CurrentValueSubject<ScoreViewModelProtocol?, Never>
     
     public var displayStatePublisher: AnyPublisher<TallOddsMatchCardDisplayState, Never> {
         return displayStateSubject
-            .handleEvents(receiveOutput: { [weak self] state in
-                let currentTime = CFAbsoluteTimeGetCurrent()
-                let timeSinceLastUpdate = self?.lastUpdateTime == 0 ? 0 : currentTime - (self?.lastUpdateTime ?? 0)
-                let timeSinceCreation = currentTime - (self?.creationTime ?? 0)
-
-                self?.lastUpdateTime = currentTime
-            })
             .eraseToAnyPublisher()
     }
     
@@ -49,25 +40,34 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
             .eraseToAnyPublisher()
     }
     
+    public var scoreViewModelPublisher: AnyPublisher<ScoreViewModelProtocol?, Never> {
+        return scoreViewModelSubject
+            .handleEvents(receiveOutput: { _ in
+                print("[TallOdds] scoreViewModelPublisher sending update for match: \(self.matchData.matchId)")
+            })
+            .eraseToAnyPublisher()
+    }
+    
     private let matchData: TallOddsMatchData
     
     // MARK: - Initialization
     init(matchData: TallOddsMatchData) {
-        self.creationTime = CFAbsoluteTimeGetCurrent()
-        print("[TallOddsMatchCardViewModel] Creating VM for match: \(matchData.matchId) at time: \(String(format: "%.3f", creationTime))")
+        print("[TallOddsMatchCardViewModel] Creating VM for match: \(matchData.matchId)")
         self.matchData = matchData
         
         // Create initial display state from match data
         let initialDisplayState = TallOddsMatchCardDisplayState(
             matchId: matchData.matchId,
             homeParticipantName: matchData.homeParticipantName,
-            awayParticipantName: matchData.awayParticipantName
+            awayParticipantName: matchData.awayParticipantName,
+            isLive: matchData.leagueInfo.isLive
         )
         
         // Create child view models from match data
         let headerViewModel = Self.createMatchHeaderViewModel(from: matchData.leagueInfo)
         let marketInfoViewModel = Self.createMarketInfoLineViewModel(from: matchData.marketInfo)
         let outcomesViewModel = Self.createMarketOutcomesViewModel(from: matchData.outcomes)
+        let scoreViewModel = Self.createScoreViewModel(from: matchData.liveScoreData)
         
         print("[TallOdds] Created child view models for match: \(matchData.matchId)")
         
@@ -76,6 +76,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         self.matchHeaderViewModelSubject = CurrentValueSubject(headerViewModel)
         self.marketInfoLineViewModelSubject = CurrentValueSubject(marketInfoViewModel)
         self.marketOutcomesViewModelSubject = CurrentValueSubject(outcomesViewModel)
+        self.scoreViewModelSubject = CurrentValueSubject(scoreViewModel)
         
         print("[TallOdds] Initialized all subjects for match: \(matchData.matchId)")
     }
@@ -120,6 +121,14 @@ extension TallOddsMatchCardViewModel {
     
     private static func createMarketOutcomesViewModel(from marketGroupData: MarketGroupData) -> MarketOutcomesMultiLineViewModelProtocol {
         return MarketOutcomesMultiLineViewModel(marketGroupData: marketGroupData)
+    }
+    
+    private static func createScoreViewModel(from liveScoreData: LiveScoreData?) -> ScoreViewModelProtocol? {
+        guard let liveScoreData = liveScoreData else { return nil }
+        
+        // Import MockScoreViewModel since this is in Core and we need to create a score view model
+        // In production, this would be a proper ScoreViewModel implementation
+        return MockScoreViewModel(scoreCells: liveScoreData.scoreCells, visualState: .display)
     }
     
     private static func createMarketOutcomesViewModel(from markets: [Market], marketTypeId: String) -> MarketOutcomesMultiLineViewModelProtocol {
@@ -172,7 +181,8 @@ extension TallOddsMatchCardViewModel {
         let initialDisplayState = TallOddsMatchCardDisplayState(
             matchId: match.id,
             homeParticipantName: match.homeParticipant.name,
-            awayParticipantName: match.awayParticipant.name
+            awayParticipantName: match.awayParticipant.name,
+            isLive: match.status.isLive
         )
         
         // Create the view model directly with production child view models
@@ -189,6 +199,12 @@ extension TallOddsMatchCardViewModel {
         viewModel.matchHeaderViewModelSubject.send(headerViewModel)
         viewModel.marketInfoLineViewModelSubject.send(marketInfoViewModel)
         viewModel.marketOutcomesViewModelSubject.send(outcomesViewModel)
+        
+        // Create score view model for live matches
+        // TODO: In production, use actual live score data from match.liveScore or similar
+        let scoreViewModel: ScoreViewModelProtocol? = match.status.isLive ? 
+            MockScoreViewModel(scoreCells: [], visualState: .idle) : nil
+        viewModel.scoreViewModelSubject.send(scoreViewModel)
         
         return viewModel
     }

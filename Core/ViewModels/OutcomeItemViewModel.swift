@@ -11,16 +11,18 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     private let servicesProvider = Env.servicesProvider
     
     // MARK: - Subjects
+    private let displayStateSubject: CurrentValueSubject<GomaUI.OutcomeDisplayState, Never>
     private let titleSubject: CurrentValueSubject<String, Never>
     private let valueSubject: CurrentValueSubject<String, Never>
     private let isSelectedSubject: CurrentValueSubject<Bool, Never>
     private let isDisabledSubject: CurrentValueSubject<Bool, Never>
     private let oddsChangeEventSubject: PassthroughSubject<GomaUI.OutcomeItemOddsChangeEvent, Never>
+    
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Protocol Conformance
-    public var oddsChangeEventPublisher: AnyPublisher<GomaUI.OutcomeItemOddsChangeEvent, Never> {
-        oddsChangeEventSubject.eraseToAnyPublisher()
+    public var displayStatePublisher: AnyPublisher<GomaUI.OutcomeDisplayState, Never> {
+        return self.displayStateSubject.eraseToAnyPublisher()
     }
     
     // Individual publishers
@@ -40,6 +42,11 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         isDisabledSubject.eraseToAnyPublisher()
     }
     
+    public var oddsChangeEventPublisher: AnyPublisher<GomaUI.OutcomeItemOddsChangeEvent, Never> {
+        oddsChangeEventSubject.eraseToAnyPublisher()
+    }
+    
+    
     // MARK: - Initialization
     init(
         outcomeId: String,
@@ -51,6 +58,7 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         self.isSelectedSubject = CurrentValueSubject(initialOutcomeData.isSelected)
         self.isDisabledSubject = CurrentValueSubject(initialOutcomeData.isDisabled)
         self.oddsChangeEventSubject = PassthroughSubject()
+        self.displayStateSubject = CurrentValueSubject(initialOutcomeData.displayState)
         
         print("[OutcomeItemViewModel] 🟢 INIT - outcomeId: \(outcomeId), title: \(initialOutcomeData.title)")
         setupOutcomeSubscription()
@@ -83,11 +91,6 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
             )
             oddsChangeEventSubject.send(changeEvent)
         }
-    }
-    
-    public func clearOddsChangeIndicator() {
-        // No longer needed - odds change direction is handled by animation events only
-        // Individual publishers don't track change direction state
     }
     
     // MARK: - Protocol Required Methods
@@ -124,6 +127,19 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     
     public func updateSuspensionState(isSuspended: Bool) {
         isDisabledSubject.send(isSuspended)
+    }
+    
+    public func clearOddsChangeIndicator() {
+        // Clear any pending odds change animations
+        // Implementation depends on the specific animation system used
+    }
+    
+    public func setDisplayState(_ state: GomaUI.OutcomeDisplayState) {
+        displayStateSubject.send(state)
+        
+        // Update individual subjects to maintain backward compatibility
+        isSelectedSubject.send(state.isSelected)
+        isDisabledSubject.send(state.isDisabled)
     }
     
     // MARK: - Private Methods
