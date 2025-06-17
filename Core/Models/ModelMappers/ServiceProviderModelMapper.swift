@@ -406,6 +406,75 @@ extension ServiceProviderModelMapper {
         return competitions
     }
     
+    // Tournament
+    static func competition(fromTournament tournament: ServicesProvider.Tournament) -> Competition {
+        let sport = Sport(id: tournament.id,
+                          name: tournament.sportName ?? "",
+                          alphaId: tournament.sportId,
+                          numericId: tournament.shortSportName,
+                          showEventCategory: false,
+                          liveEventsCount: tournament.numberOfLiveEvents ?? 0,
+                          outrightEventsCount: 0,
+                          eventsCount: tournament.numberOfEvents ?? 0
+        )
+        
+        let location = Location(
+            id: tournament.venueId ?? "",
+            name: tournament.venueName ?? "",
+            isoCode: tournament.shortVenueName ?? ""
+        )
+        
+        return Competition(
+            id: tournament.id,
+            name: tournament.name ?? "",
+            venue: location,
+            sport: sport,
+            numberOutrightMarkets: tournament.numberOfOutrightMarkets ?? 0,
+            outrightMarkets: [],
+            numberEvents: tournament.numberOfEvents + tournament.numberOfLiveEvents
+        )
+    }
+
+    static func competitions(fromTournaments tournaments: [ServicesProvider.Tournament]) -> [Competition] {
+        return tournaments.map(Self.competition(fromTournament:))
+    }
+
+    static func tournament(fromTournament tournament: ServicesProvider.Tournament) -> Tournament {
+        // This creates a copy of the tournament with the same data
+        return Tournament(
+            type: tournament.type,
+            id: tournament.id,
+            idAsString: tournament.idAsString,
+            typeId: tournament.typeId,
+            name: tournament.name,
+            shortName: tournament.shortName,
+            numberOfEvents: tournament.numberOfEvents,
+            numberOfMarkets: tournament.numberOfMarkets,
+            numberOfBettingOffers: tournament.numberOfBettingOffers,
+            numberOfLiveEvents: tournament.numberOfLiveEvents,
+            numberOfLiveMarkets: tournament.numberOfLiveMarkets,
+            numberOfLiveBettingOffers: tournament.numberOfLiveBettingOffers,
+            numberOfOutrightMarkets: tournament.numberOfOutrightMarkets,
+            numberOfUpcomingMatches: tournament.numberOfUpcomingMatches,
+            sportId: tournament.sportId,
+            sportName: tournament.sportName,
+            shortSportName: tournament.shortSportName,
+            venueId: tournament.venueId,
+            venueName: tournament.venueName,
+            shortVenueName: tournament.shortVenueName,
+            categoryId: tournament.categoryId,
+            templateId: tournament.templateId,
+            templateName: tournament.templateName,
+            rootPartId: tournament.rootPartId,
+            rootPartName: tournament.rootPartName,
+            shortRootPartName: tournament.shortRootPartName
+        )
+    }
+
+    static func tournaments(fromTournaments tournaments: [ServicesProvider.Tournament]) -> [Tournament] {
+        return tournaments.map(Self.tournament(fromTournament:))
+    }
+    
     static func suggestedBetslips(fromPromotedBetslips promotedBetslips: [PromotedBetslip]) -> [SuggestedBetslip] {
         return promotedBetslips.map(Self.suggestedBetslip(fromPromotedBetslip:))
     }

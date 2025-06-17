@@ -869,6 +869,14 @@ extension GomaProvider: EventsProvider {
             return SubscribableContent.contentUpdate(content: GomaModelMapper.sportsType(fromSports:sports))
         }).eraseToAnyPublisher()
     }
+    
+    func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeSportTournaments(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     func getEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()

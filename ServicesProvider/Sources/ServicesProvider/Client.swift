@@ -356,7 +356,24 @@ extension Client {
         }
         return eventsProvider.subscribeToEventOnListsOutcomeUpdates(withId: id)
     }
+    
+    public func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int = 10) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribePopularTournaments(forSportType: sportType, tournamentsCount: tournamentsCount)
+    }
 
+    public func subscribeSportTournaments(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeSportTournaments(forSportType: sportType)
+    }
     //
     //
     public func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {

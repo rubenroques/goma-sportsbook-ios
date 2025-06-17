@@ -28,6 +28,8 @@ public class CombinedFiltersViewModel {
     
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init(filterConfiguration: FilterConfiguration,
          contextId: String = "sports") {
         
@@ -37,14 +39,131 @@ public class CombinedFiltersViewModel {
         
         // TEST
         if Env.filterStorage.currentFilterSelection.sportId == 1 {
+
             self.getAllLeagues()
         }
         else {
             self.recheckAllLeagues()
         }
+        
     }
     
     func getAllLeagues() {
+        self.isLoadingPublisher.send(true)
+        
+        let sportType = SportType.defaultFootball
+        
+//        Env.servicesProvider.subscribeSportTournaments(
+//            forSportType: sportType
+//        )
+//        .sink(
+//            receiveCompletion: { completion in
+//                switch completion {
+//                case .finished:
+//                    print("✅ Sport Tournaments subscription completed")
+//                case .failure(let error):
+//                    print("❌ Sport Tournaments subscription failed: \(error)")
+//                }
+//            },
+//            receiveValue: { subscribableContent in
+//                switch subscribableContent {
+//                case .connected(let subscription):
+//                    print("🔗 Connected to Sport Tournaments stream with subscription: \(subscription.id)")
+//                    
+//                case .contentUpdate(let tournaments):
+//                    
+//                    print("Sport tournaments received: \(tournaments)")
+//                    
+//                    let popularCompetitions = ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
+//                    
+////                    self.setupAllLeagues(popularCompetitions: popularCompetitions)
+//                    
+//                case .disconnected:
+//                    print("🔌 Disconnected from Popular Tournaments stream")
+//                }
+//            }
+//        )
+//        .store(in: &cancellables)
+//        
+//        Env.servicesProvider.subscribePopularTournaments(
+//            forSportType: sportType,
+//            tournamentsCount: 10
+//        )
+//        .sink(
+//            receiveCompletion: { completion in
+//                switch completion {
+//                case .finished:
+//                    print("✅ Popular Tournaments subscription completed")
+//                case .failure(let error):
+//                    print("❌ Popular Tournaments subscription failed: \(error)")
+//                }
+//            },
+//            receiveValue: { subscribableContent in
+//                switch subscribableContent {
+//                case .connected(let subscription):
+//                    print("🔗 Connected to Popular Tournaments stream with subscription: \(subscription.id)")
+//                    
+//                case .contentUpdate(let tournaments):
+//                    
+//                    print("Popular tournaments received: \(tournaments)")
+//                    
+//                    let popularCompetitions = ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
+//                    
+////                    self.setupAllLeagues(popularCompetitions: popularCompetitions)
+//                    
+//                case .disconnected:
+//                    print("🔌 Disconnected from Popular Tournaments stream")
+//                }
+//            }
+//        )
+//        .store(in: &cancellables)
+        
+        let sportTournamentsPublisher = Env.servicesProvider.subscribeSportTournaments(forSportType: sportType)
+            .filter { content in
+                if case .contentUpdate = content { return true }
+                return false
+            }
+            .map { content -> [Competition] in
+                if case .contentUpdate(let tournaments) = content {
+                    return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
+                }
+                return []
+            }
+            .prefix(1) // Only take the first .contentUpdate
+
+        let popularTournamentsPublisher = Env.servicesProvider.subscribePopularTournaments(forSportType: sportType, tournamentsCount: 10)
+            .filter { content in
+                if case .contentUpdate = content { return true }
+                return false
+            }
+            .map { content -> [Competition] in
+                if case .contentUpdate(let tournaments) = content {
+                    return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
+                }
+                return []
+            }
+            .prefix(1) // Only take the first .contentUpdate
+
+        Publishers.Zip(sportTournamentsPublisher, popularTournamentsPublisher)
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        print("✅ Both tournaments subscriptions completed")
+                    case .failure(let error):
+                        print("❌ One of the tournaments subscriptions failed: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] sportCompetitions, popularCompetitions in
+                    print("Sport tournaments: \(sportCompetitions)")
+                    print("Popular tournaments: \(popularCompetitions)")
+                    self?.setupAllLeagues(popularCompetitions: popularCompetitions, sportCompetitions: sportCompetitions)
+                }
+            )
+            .store(in: &cancellables)
+    }
+    
+    func setupAllLeagues(popularCompetitions: [Competition], sportCompetitions: [Competition]) {
         isLoadingPublisher.send(true)
         
         popularLeagues.removeAll()
@@ -54,18 +173,29 @@ public class CombinedFiltersViewModel {
         // Popular Leagues
         var allLeaguesOption = SortOption(id: 0, icon: "league_icon", title: "All Popular Leagues", count: 0, iconTintChange: false)
         
-        let newSortOptions = [
-            SortOption(id: 1, icon: "league_icon", title: "Premier League", count: 32, iconTintChange: false),
-            SortOption(id: 16, icon: "league_icon", title: "La Liga", count: 28, iconTintChange: false),
-            SortOption(id: 10, icon: "league_icon", title: "Bundesliga", count: 25, iconTintChange: false),
-            SortOption(id: 13, icon: "league_icon", title: "Serie A", count: 27, iconTintChange: false),
-            SortOption(id: 7, icon: "league_icon", title: "Ligue 1", count: 0, iconTintChange: false),
-            SortOption(id: 19, icon: "league_icon", title: "Champions League", count: 16, iconTintChange: false),
-            SortOption(id: 20, icon: "league_icon", title: "Europa League", count: 12, iconTintChange: false),
-            SortOption(id: 8, icon: "league_icon", title: "MLS", count: 28, iconTintChange: false),
-            SortOption(id: 28, icon: "league_icon", title: "Eredivisie", count: 18, iconTintChange: false),
-            SortOption(id: 24, icon: "league_icon", title: "Primeira Liga", count: 16, iconTintChange: false)
-        ]
+//        let newSortOptions = [
+//            SortOption(id: 1, icon: "league_icon", title: "Premier League", count: 32, iconTintChange: false),
+//            SortOption(id: 16, icon: "league_icon", title: "La Liga", count: 28, iconTintChange: false),
+//            SortOption(id: 10, icon: "league_icon", title: "Bundesliga", count: 25, iconTintChange: false),
+//            SortOption(id: 13, icon: "league_icon", title: "Serie A", count: 27, iconTintChange: false),
+//            SortOption(id: 7, icon: "league_icon", title: "Ligue 1", count: 0, iconTintChange: false),
+//            SortOption(id: 19, icon: "league_icon", title: "Champions League", count: 16, iconTintChange: false),
+//            SortOption(id: 20, icon: "league_icon", title: "Europa League", count: 12, iconTintChange: false),
+//            SortOption(id: 8, icon: "league_icon", title: "MLS", count: 28, iconTintChange: false),
+//            SortOption(id: 28, icon: "league_icon", title: "Eredivisie", count: 18, iconTintChange: false),
+//            SortOption(id: 24, icon: "league_icon", title: "Primeira Liga", count: 16, iconTintChange: false)
+//        ]
+        
+        // Convert competitions to SortOptions
+        let newSortOptions = popularCompetitions.map { competition in
+            SortOption(
+                id: Int(competition.id) ?? 0, // Convert string ID to Int, fallback to 0
+                icon: "league_icon",
+                title: competition.name,
+                count: competition.numberEvents ?? 0,
+                iconTintChange: false
+            )
+        }
         
         let totalCount = newSortOptions.reduce(0) { $0 + $1.count }
         
@@ -1077,6 +1207,7 @@ public extension CombinedFiltersViewController {
 
 #if DEBUG
 import SwiftUI
+import ServicesProvider
 
 @available(iOS 17.0, *)
 struct CombinedFiltersViewController_Preview: PreviewProvider {

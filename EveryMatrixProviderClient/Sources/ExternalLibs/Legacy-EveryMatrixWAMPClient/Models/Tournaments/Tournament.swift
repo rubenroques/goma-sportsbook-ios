@@ -17,10 +17,10 @@ extension EveryMatrix {
         let typeId: String?
         let name: String?
         let shortName: String?
-        let numberOfEvents: Int?
+        let numberOfEvents: Int
         let numberOfMarkets: Int?
         let numberOfBettingOffers: Int?
-        let numberOfLiveEvents: Int?
+        let numberOfLiveEvents: Int
         let numberOfLiveMarkets: Int?
         let numberOfLiveBettingOffers: Int?
         let numberOfOutrightMarkets: Int?

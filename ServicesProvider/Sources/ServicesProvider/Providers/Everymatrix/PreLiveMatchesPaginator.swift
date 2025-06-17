@@ -281,7 +281,8 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 store.store(dto)
             case .nextMatchesNumber(let dto):
                 store.store(dto)
-                
+            case .tournament(let dto):
+                store.store(dto)
             // UPDATE/DELETE/CREATE records - only process match-related changes
             case .changeRecord(let changeRecord):
                 handleMatchesChangeRecord(changeRecord)
@@ -289,6 +290,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             case .unknown(let type):
                 print("Unknown match-related entity type: \(type)")
                 // Ignore unknown non-match entities
+            
             }
         }
     }
@@ -360,8 +362,11 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             store.store(dto)
         case .nextMatchesNumber(let dto):
             store.store(dto)
+        case .tournament(let dto):
+            store.store(dto)
         case .unknown(let type):
             print("Unknown entity data type: \(type)")
+        
         }
     }
 
