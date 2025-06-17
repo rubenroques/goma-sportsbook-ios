@@ -319,6 +319,40 @@ class ComponentsTableViewController: UITableViewController {
                 pillView.layer.cornerRadius = 4
                 return pillView
             }
+        ),
+        UIComponent(
+            title: "Sport Type Selector Item",
+            description: "Individual sport item with icon and text layout, designed for use in sport selection interfaces",
+            viewController: SportTypeSelectorItemViewController.self,
+            previewFactory: {
+                let stackView = UIStackView()
+                stackView.axis = .horizontal
+                stackView.spacing = 8
+                stackView.distribution = .fillEqually
+                
+                let footballItem = SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.footballMock)
+                let basketballItem = SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.basketballMock)
+                
+                footballItem.heightAnchor.constraint(equalToConstant: 56).isActive = true
+                basketballItem.heightAnchor.constraint(equalToConstant: 56).isActive = true
+                
+                stackView.addArrangedSubview(footballItem)
+                stackView.addArrangedSubview(basketballItem)
+                
+                return stackView
+            }
+        ),
+        UIComponent(
+            title: "Sport Type Selector",
+            description: "Full-screen sport selection with 2-column collection view, modal presentation, and selection callbacks",
+            viewController: SportTypeSelectorViewController.self,
+            previewFactory: {
+                let viewModel = MockSportTypeSelectorViewModel.fewSportsMock
+                let selectorView = SportTypeSelectorView(viewModel: viewModel)
+                selectorView.backgroundColor = StyleProvider.Color.backgroundSecondary
+                selectorView.layer.cornerRadius = 8
+                return selectorView
+            }
         )
     ]
 
