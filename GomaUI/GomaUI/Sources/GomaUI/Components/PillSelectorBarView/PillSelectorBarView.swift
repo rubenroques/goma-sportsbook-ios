@@ -198,7 +198,7 @@ final public class PillSelectorBarView: UIView {
  
     // MARK: - Setup
     private func setupSubviews() {
-        backgroundColor = StyleProvider.Color.backgroundColor
+        backgroundColor = StyleProvider.Color.navPills
         translatesAutoresizingMaskIntoConstraints = false
         
         // Setup scroll view
@@ -224,13 +224,13 @@ final public class PillSelectorBarView: UIView {
         
         // Setup leading fade view (left side)
         leadingFadeView.translatesAutoresizingMaskIntoConstraints = false
-        leadingFadeView.backgroundColor = StyleProvider.Color.backgroundColor
+        leadingFadeView.backgroundColor = StyleProvider.Color.navPills
         leadingFadeView.isUserInteractionEnabled = false
         addSubview(leadingFadeView)
         
         // Setup trailing fade view (right side)
         trailingFadeView.translatesAutoresizingMaskIntoConstraints = false
-        trailingFadeView.backgroundColor = StyleProvider.Color.backgroundColor
+        trailingFadeView.backgroundColor = StyleProvider.Color.navPills
         trailingFadeView.isUserInteractionEnabled = false
         addSubview(trailingFadeView)
         
@@ -415,7 +415,7 @@ extension PillData {
             pillSelectorView.heightAnchor.constraint(equalToConstant: 60)
         ])
         
-        vc.view.backgroundColor = UIColor.gray
+        vc.view.backgroundColor = UIColor.lightText
         return vc
     }
 }
