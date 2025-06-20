@@ -31,7 +31,7 @@ public class SportGamesFilterView: UIView {
     private let collapseButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(systemName: "chevron.up")?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = .black
         return button
@@ -50,7 +50,7 @@ public class SportGamesFilterView: UIView {
     private var cancellables = Set<AnyCancellable>()
 
     private var sportCards: [SportCardView] = []
-    public var onSportSelected: ((Int) -> Void)?
+    public var onSportSelected: ((String) -> Void)?
     
     private var isCollapsed: Bool = false {
         didSet {
@@ -150,7 +150,6 @@ public class SportGamesFilterView: UIView {
             
             let cardIndex = index
             card.onTap = { [weak self] selectedId in
-                print("TAPPED ID: \(selectedId)")
                 self?.viewModel.selectOption(withId: selectedId)
             }
             
@@ -169,7 +168,7 @@ public class SportGamesFilterView: UIView {
         viewModel.didTapCollapseButton()
     }
     
-    private func updateSelection(forOptionId id: Int) {
+    private func updateSelection(forOptionId id: String) {
         sportCards.forEach { row in
             row.isSelected = row.viewModel.sportFilter.id == id
             
@@ -205,12 +204,12 @@ public class SportGamesFilterView: UIView {
             let transform = self.isCollapsed ? CGAffineTransform(rotationAngle: .pi) : .identity
             self.collapseButton.transform = transform
             
-            // Force layout update
-            self.layoutIfNeeded()
-            self.superview?.layoutIfNeeded()
         } completion: { _ in
             // Hide the grid after animation when collapsing
             self.gridStackView.isHidden = self.isCollapsed
+            // Force layout update
+            self.layoutIfNeeded()
+            self.superview?.layoutIfNeeded()
         }
     }
     
@@ -228,13 +227,13 @@ struct GamesView_Preview: PreviewProvider {
             containerView.backgroundColor = .systemGray5 // or your preferred gray color
             
             let sportFilters = [
-                SportFilter(id: 1, title: "Football", icon: "sportscourt.fill"),
-                SportFilter(id: 2, title: "Basketball", icon: "basketball.fill"),
-                SportFilter(id: 3, title: "Tennis", icon: "tennis.racket"),
-                SportFilter(id: 4,title: "Cricket", icon: "figure.cricket")
+                SportFilter(id: "1", title: "Football", icon: "sportscourt.fill"),
+                SportFilter(id: "2", title: "Basketball", icon: "basketball.fill"),
+                SportFilter(id: "3", title: "Tennis", icon: "tennis.racket"),
+                SportFilter(id: "4",title: "Cricket", icon: "figure.cricket")
             ]
             
-            let viewModel = MockSportGamesFilterViewModel(title: "Games", sportFilters: sportFilters, selectedId: 1)
+            let viewModel = MockSportGamesFilterViewModel(title: "Games", sportFilters: sportFilters, selectedId: "1")
             let gamesView = SportGamesFilterView(viewModel: viewModel)
             
             // Add gamesView to container with constraints

@@ -69,8 +69,14 @@ class NextUpEventsViewModel: ObservableObject {
     }
 
     private func setupFilters() {
+        
+        let sportFilterOption = self.getSportOption(for: Env.filterStorage.currentFilterSelection.sportId)
+        
+        let sortOption = self.getSortOption(for: Env.filterStorage.currentFilterSelection.sortTypeId)
+        
+        let leagueOption = self.getLeagueOption(for: Env.filterStorage.currentFilterSelection.leagueId)
                 
-        self.generalFiltersBarViewModel.updateFilterOptionItems(filterOptionItems: Env.filterStorage.selectedFilterOptions)
+        self.generalFiltersBarViewModel.updateFilterOptionItems(filterOptionItems: [sportFilterOption])
 
     }
     // MARK: - Public Methods
@@ -181,74 +187,67 @@ class NextUpEventsViewModel: ObservableObject {
     func buildFilterOptions(from selection: GeneralFilterSelection) -> [FilterOptionItem] {
         var options: [FilterOptionItem] = []
         
-        if let sportOption = getSportOption(for: selection.sportId) {
-            options.append(FilterOptionItem(
-                type: .sport,
-                title: sportOption.title,
-                icon: sportOption.icon
-            ))
-        }
+        let sportOption = getSportOption(for: selection.sportId)
         
-        if let sortOption = getSortOption(for: selection.sortTypeId) {
-            options.append(FilterOptionItem(
-                type: .sortBy,
-                title: sortOption.title,
-                icon: sortOption.icon ?? ""
-            ))
-        }
+        let sortOption = getSortOption(for: selection.sortTypeId)
         
-        if let leagueOption = getLeagueOption(for: selection.leagueId) {
-            options.append(FilterOptionItem(
-                type: .league,
-                title: leagueOption.title,
-                icon: leagueOption.icon ?? ""
-            ))
-        }
+//        if let leagueOption = getLeagueOption(for: selection.leagueId) {
+//            options.append(FilterOptionItem(
+//                type: .league,
+//                title: leagueOption.title,
+//                icon: leagueOption.icon ?? ""
+//            ))
+//        }
+        let leagueOption = getLeagueOption(for: selection.leagueId)
         
+        options.append(sportOption)
+        options.append(sortOption)
+        options.append(leagueOption)
+
         return options
     }
     
     // MARK: - Helper Methods for Filter Data
-    private func getSportOption(for sportId: Int) -> (title: String, icon: String)? {
-        let sportOptions = [
-            (id: 1, title: "Football", icon: "sport_type_icon_1"),
-            (id: 2, title: "Basketball", icon: "sport_type_icon_8"),
-            (id: 3, title: "Tennis", icon: "sport_type_icon_3"),
-            (id: 4, title: "Cricket", icon: "sport_type_icon_9")
-        ]
+    private func getSportOption(for sportId: String) -> FilterOptionItem {
+//        let sportOptions = [
+//            (id: "1", title: "Football", icon: "sport_type_icon_1"),
+//            (id: "2", title: "Basketball", icon: "sport_type_icon_8"),
+//            (id: "3", title: "Tennis", icon: "sport_type_icon_3"),
+//            (id: "4", title: "Cricket", icon: "sport_type_icon_9")
+//        ]
         
-        return sportOptions.first { $0.id == sportId }.map { (title: $0.title, icon: $0.icon) }
+        let currentSport = Env.sportsStore.getActiveSports().first(where: {
+            $0.id == sportId
+        })
+        
+        let filterOptionItem = FilterOptionItem(type: .sport, title: "\(currentSport?.name ?? "")", icon: "sport_type_icon_\(currentSport?.id ?? "")")
+        
+        return filterOptionItem
+        
+//        return sportOptions.first { $0.id == sportId }.map { (title: $0.title, icon: $0.icon) }
     }
     
-    private func getSortOption(for sortId: Int) -> SortOption? {
+    private func getSortOption(for sortId: String) -> FilterOptionItem {
         // Replicate the same data structure from createSortFilterViewModel
         let sortOptions = [
-            SortOption(id: 1, icon: "popular_icon", title: "Popular", count: 25),
-            SortOption(id: 2, icon: "timelapse_icon", title: "Upcoming", count: 15),
-            SortOption(id: 3, icon: "favourites_icon", title: "Favourites", count: 0)
+            SortOption(id: "1", icon: "popular_icon", title: "Popular", count: 25),
+            SortOption(id: "2", icon: "timelapse_icon", title: "Upcoming", count: 15),
+            SortOption(id: "3", icon: "favourites_icon", title: "Favourites", count: 0)
         ]
         
-        return sortOptions.first { $0.id == sortId }
+        let currentSortOption = sortOptions.first { $0.id == sortId }
+        
+        return FilterOptionItem(type: .sortBy, title: "\(currentSortOption?.title ?? "")", icon: "\(currentSortOption?.icon ?? "")")
+        
     }
 
-    private func getLeagueOption(for leagueId: Int) -> SortOption? {
-        // Replicate the same data structure from CombinedFiltersViewModel.getPopularLeagues()
-        var allLeaguesOption = SortOption(id: 0, icon: "league_icon", title: "All Popular Leagues", count: 0)
+    private func getLeagueOption(for leagueId: String) -> FilterOptionItem {
+        var allLeaguesOption = SortOption(id: "0", icon: "league_icon", title: "All Popular Leagues", count: 0)
         
-        let leagueOptions = [
-            allLeaguesOption,
-            SortOption(id: 1, icon: "league_icon", title: "Premier League", count: 32),
-            SortOption(id: 16, icon: "league_icon", title: "La Liga", count: 28),
-            SortOption(id: 10, icon: "league_icon", title: "Bundesliga", count: 25),
-            SortOption(id: 13, icon: "league_icon", title: "Serie A", count: 27),
-            SortOption(id: 7, icon: "league_icon", title: "Ligue 1", count: 0),
-            SortOption(id: 19, icon: "league_icon", title: "Champions League", count: 16),
-            SortOption(id: 20, icon: "league_icon", title: "Europa League", count: 12),
-            SortOption(id: 8, icon: "league_icon", title: "MLS", count: 28),
-            SortOption(id: 28, icon: "league_icon", title: "Eredivisie", count: 18),
-            SortOption(id: 24, icon: "league_icon", title: "Primeira Liga", count: 16)
-        ]
+        let currentCompetition = Env.filterStorage.currentCompetitions.first(where: {
+            $0.id == leagueId
+        })
         
-        return leagueOptions.first { $0.id == leagueId }
+        return FilterOptionItem(type: .league, title: "\(currentCompetition?.name ?? allLeaguesOption.title)", icon: "league_icon")
     }
 }

@@ -11,10 +11,10 @@ import Combine
 public class MockCountryLeagueOptionRowViewModel: CountryLeagueOptionRowViewModelProtocol {
 //    public var leagues: [LeagueOption]
     public var countryLeagueOptions: CountryLeagueOptions
-    public var selectedOptionId: CurrentValueSubject<Int, Never>
+    public var selectedOptionId: CurrentValueSubject<String, Never>
     public var isCollapsed: CurrentValueSubject<Bool, Never>
     
-    public init(countryLeaguesOptions: CountryLeagueOptions, selectedLeagueId: Int) {
+    public init(countryLeaguesOptions: CountryLeagueOptions, selectedLeagueId: String) {
         
         self.countryLeagueOptions = countryLeaguesOptions
         self.selectedOptionId = .init(selectedLeagueId)
@@ -33,7 +33,7 @@ public class MockCountryLeagueOptionRowViewModel: CountryLeagueOptionRowViewMode
         isCollapsed.send(!isCollapsed.value)
     }
     
-    public func selectOption(withId id: Int) {
+    public func selectOption(withId id: String) {
         selectedOptionId.send(id)
     }
 }

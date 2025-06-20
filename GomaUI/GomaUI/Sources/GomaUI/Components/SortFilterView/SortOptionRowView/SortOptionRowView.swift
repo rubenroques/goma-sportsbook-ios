@@ -43,7 +43,6 @@ public class SortOptionRowView: UIView {
         label.textColor = StyleProvider.Color.textPrimary
         label.setContentHuggingPriority(.required, for: .horizontal)
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
-            return label
         return label
     }()
     

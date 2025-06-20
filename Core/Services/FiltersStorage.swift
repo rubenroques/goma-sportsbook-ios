@@ -8,25 +8,27 @@
 import Foundation
 import Combine
 import GomaUI
+import ServicesProvider
 
 public class FilterStorage: ObservableObject {
     
     // MARK: - Published Properties
     @Published public var currentFilterSelection: GeneralFilterSelection
-    
+    @Published var currentCompetitions: [Competition] = []
+
     // MARK: - Private Properties
     private let userDefaults = UserDefaults.standard
     private let filterSelectionKey = "user_filter_selection"
     
+    private var cancellables = Set<AnyCancellable>()
+    
     // MARK: - Default Values
     public static let defaultFilterSelection = GeneralFilterSelection(
-        sportId: 1,
+        sportId: "1",
         timeValue: 1.0,
-        sortTypeId: 1,
-        leagueId: 0
+        sortTypeId: "1",
+        leagueId: "all"
     )
-    
-    public var selectedFilterOptions: [FilterOptionItem] = []
     
     // MARK: - Initialization
     public init() {
@@ -34,14 +36,56 @@ public class FilterStorage: ObservableObject {
         self.currentFilterSelection = Self.defaultFilterSelection
         self.currentFilterSelection = self.loadFilterSelection()
         
-        self.selectedFilterOptions = self.buildFilterOptions(from: self.currentFilterSelection)
+    }
+    
+    public func getCurrentCompetitions() {
+        
+        let sportType = SportType(name: "",
+                                  numericId: self.currentFilterSelection.sportId,
+                                  alphaId: self.currentFilterSelection.sportId,
+                                  iconId: nil, showEventCategory: false,
+                                  numberEvents: 0,
+                                  numberOutrightEvents: 0,
+                                  numberOutrightMarkets: 0,
+                                  numberLiveEvents: 0)
+        
+        Env.servicesProvider.subscribeSportTournaments(
+            forSportType: sportType
+        )
+        .sink(
+            receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("✅ Sport Tournaments subscription completed")
+                case .failure(let error):
+                    print("❌ Sport Tournaments subscription failed: \(error)")
+                }
+            },
+            receiveValue: { subscribableContent in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    print("🔗 Connected to Sport Tournaments stream with subscription: \(subscription.id)")
+                    
+                case .contentUpdate(let tournaments):
+                    
+                    print("Sport tournaments received: \(tournaments)")
+                    
+                    let popularCompetitions = ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
+                    
+                    self.currentCompetitions = popularCompetitions
+                    
+                case .disconnected:
+                    print("🔌 Disconnected from Popular Tournaments stream")
+                }
+            }
+        )
+        .store(in: &cancellables)
     }
     
     // MARK: - Public Methods
     
     /// Updates the current filter selection and saves it
     public func updateFilterSelection(_ newSelection: GeneralFilterSelection) {
-        selectedFilterOptions = buildFilterOptions(from: newSelection)
         currentFilterSelection = newSelection
         saveFilterSelection(newSelection)
     }
@@ -96,103 +140,29 @@ public class FilterStorage: ObservableObject {
     }
 
     private func loadFilterSelection() -> GeneralFilterSelection {
-        let sportId = userDefaults.integer(forKey: "\(filterSelectionKey)_sportId")
+        let sportId = userDefaults.string(forKey: "\(filterSelectionKey)_sportId")
         let timeValue = userDefaults.float(forKey: "\(filterSelectionKey)_timeValue")
-        let sortTypeId = userDefaults.integer(forKey: "\(filterSelectionKey)_sortTypeId")
-        let leagueId = userDefaults.integer(forKey: "\(filterSelectionKey)_leagueId")
+        let sortTypeId = userDefaults.string(forKey: "\(filterSelectionKey)_sortTypeId")
+        let leagueId = userDefaults.string(forKey: "\(filterSelectionKey)_leagueId")
 
         // If no values are saved (all return 0), use defaults
-        if sportId == 0 && timeValue == 0.0 && sortTypeId == 0 && leagueId == 0 {
+        if sportId == "0" && timeValue == 0.0 && sortTypeId == "0" && leagueId == "all" {
             return Self.defaultFilterSelection
         }
 
         return GeneralFilterSelection(
-            sportId: sportId,
+            sportId: sportId ?? "1",
             timeValue: timeValue,
-            sortTypeId: sortTypeId,
-            leagueId: leagueId
+            sortTypeId: sortTypeId ?? "0",
+            leagueId: leagueId ?? "all"
         )
     }
     
-    // Filters functions
-    func buildFilterOptions(from selection: GeneralFilterSelection) -> [FilterOptionItem] {
-        var options: [FilterOptionItem] = []
-        
-        if let sportOption = getSportOption(for: selection.sportId) {
-            options.append(FilterOptionItem(
-                type: .sport,
-                title: sportOption.title,
-                icon: sportOption.icon
-            ))
-        }
-        
-        if let sortOption = getSortOption(for: selection.sortTypeId) {
-            options.append(FilterOptionItem(
-                type: .sortBy,
-                title: sortOption.title,
-                icon: sortOption.icon ?? ""
-            ))
-        }
-        
-        if let leagueOption = getLeagueOption(for: selection.leagueId) {
-            options.append(FilterOptionItem(
-                type: .league,
-                title: leagueOption.title,
-                icon: leagueOption.icon ?? ""
-            ))
-        }
-        
-        return options
-    }
-    
-    // MARK: - Helper Methods for Filter Data
-    private func getSportOption(for sportId: Int) -> (title: String, icon: String)? {
-        let sportOptions = [
-            (id: 1, title: "Football", icon: "sport_type_icon_1"),
-            (id: 2, title: "Basketball", icon: "sport_type_icon_8"),
-            (id: 3, title: "Tennis", icon: "sport_type_icon_3"),
-            (id: 4, title: "Cricket", icon: "sport_type_icon_9")
-        ]
-        
-        return sportOptions.first { $0.id == sportId }.map { (title: $0.title, icon: $0.icon) }
-    }
-    
-    private func getSortOption(for sortId: Int) -> SortOption? {
-        // Replicate the same data structure from createSortFilterViewModel
-        let sortOptions = [
-            SortOption(id: 1, icon: "popular_icon", title: "Popular", count: 25),
-            SortOption(id: 2, icon: "timelapse_icon", title: "Upcoming", count: 15),
-            SortOption(id: 3, icon: "favourites_icon", title: "Favourites", count: 0)
-        ]
-        
-        return sortOptions.first { $0.id == sortId }
-    }
-
-    private func getLeagueOption(for leagueId: Int) -> SortOption? {
-        // Replicate the same data structure from CombinedFiltersViewModel.getPopularLeagues()
-        var allLeaguesOption = SortOption(id: 0, icon: "league_icon", title: "All Popular Leagues", count: 0)
-        
-        let leagueOptions = [
-            allLeaguesOption,
-            SortOption(id: 1, icon: "league_icon", title: "Premier League", count: 32),
-            SortOption(id: 16, icon: "league_icon", title: "La Liga", count: 28),
-            SortOption(id: 10, icon: "league_icon", title: "Bundesliga", count: 25),
-            SortOption(id: 13, icon: "league_icon", title: "Serie A", count: 27),
-            SortOption(id: 7, icon: "league_icon", title: "Ligue 1", count: 0),
-            SortOption(id: 19, icon: "league_icon", title: "Champions League", count: 16),
-            SortOption(id: 20, icon: "league_icon", title: "Europa League", count: 12),
-            SortOption(id: 8, icon: "league_icon", title: "MLS", count: 28),
-            SortOption(id: 28, icon: "league_icon", title: "Eredivisie", count: 18),
-            SortOption(id: 24, icon: "league_icon", title: "Primeira Liga", count: 16)
-        ]
-        
-        return leagueOptions.first { $0.id == leagueId }
-    }
 }
 
 public struct GeneralFilterSelection: Codable {
-    var sportId: Int
+    var sportId: String
     var timeValue: Float
-    var sortTypeId: Int
-    var leagueId: Int
+    var sortTypeId: String
+    var leagueId: String
 }

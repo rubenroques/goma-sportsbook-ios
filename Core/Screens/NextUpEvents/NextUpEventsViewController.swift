@@ -178,8 +178,13 @@ class NextUpEventsViewController: UIViewController {
         
         Env.filterStorage.$currentFilterSelection
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.generalFilterBarView.updateFilterItems(filterOptionItems: Env.filterStorage.selectedFilterOptions)
+            .sink(receiveValue: { [weak self] currentFilterSelection in
+                
+                if let viewModel = self?.viewModel {
+                    let selectedFilterOptions = viewModel.buildFilterOptions(from: currentFilterSelection)
+                    
+                    self?.generalFilterBarView.updateFilterItems(filterOptionItems: selectedFilterOptions)
+                }
             })
             .store(in: &cancellables)
     }
