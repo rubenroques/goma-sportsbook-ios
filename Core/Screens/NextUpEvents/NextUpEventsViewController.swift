@@ -50,7 +50,6 @@ class NextUpEventsViewController: UIViewController {
     init(viewModel: NextUpEventsViewModel) {
         self.viewModel = viewModel
         self.quickLinksTabBarView = QuickLinksTabBarView(viewModel: viewModel.quickLinksTabBarViewModel)
-        self.generalFilterBarView = GeneralFilterBarView(viewModel: viewModel.generalFiltersBarViewModel)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -310,7 +309,7 @@ class NextUpEventsViewController: UIViewController {
         let viewModel = CombinedFiltersViewModel(filterConfiguration: configuration,
                                                  contextId: "sports")
         
-        let combinedFiltersViewController = CombinedFiltersViewController( viewModel: viewModel)
+        let combinedFiltersViewController = CombinedFiltersViewController(viewModel: viewModel)
         
         combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
             guard let self = self else { return }
@@ -506,8 +505,7 @@ class NextUpEventsViewController: UIViewController {
     
     // MARK: - Filter Modal
     private func presentFilters() {
-        print("🔍 NextUpEventsViewController: Present filters - TODO: Implement")
-        // TODO: Implement filter modal presentation
+        self.openCombinedFilters()
     }
 }
 

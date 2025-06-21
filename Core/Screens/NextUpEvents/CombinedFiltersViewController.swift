@@ -34,7 +34,6 @@ public class CombinedFiltersViewModel {
         self.currentContextId = contextId
         
         self.getAllLeagues()
-        
     }
     
     func getAllLeagues(sportId: String? = nil) {
