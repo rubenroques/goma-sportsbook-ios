@@ -38,6 +38,12 @@ final public class MockSportTypeSelectorViewModel: SportTypeSelectorViewModelPro
         publishNewState()
     }
     
+    // MARK: - SportTypeSelectorViewModelProtocol
+    public func selectSport(_ sport: SportTypeData) {
+        // Mock implementation - just log the selection
+        print("MockSportTypeSelectorViewModel: Sport selected - \(sport.name)")
+    }
+    
     // MARK: - Helper Methods
     private func publishNewState() {
         let newState = SportTypeSelectorDisplayState(sports: internalSports)

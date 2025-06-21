@@ -3,6 +3,7 @@ import Combine
 import SwiftUI
 
 final public class SportTypeSelectorView: UIView {
+    
     // MARK: - Private Properties
     private var collectionView: UICollectionView!
     private var cancellables = Set<AnyCancellable>()
@@ -99,7 +100,8 @@ extension SportTypeSelectorView: UICollectionViewDelegateFlowLayout {
         let padding: CGFloat = 8 * 3 // left + right + middle spacing
         let availableWidth = collectionView.bounds.width - padding
         let itemWidth = availableWidth / 2
-        return CGSize(width: itemWidth, height: 56)
+        return CGSize(width: itemWidth,
+                      height: SportTypeSelectorItemView.defaultHeight)
     }
 }
 

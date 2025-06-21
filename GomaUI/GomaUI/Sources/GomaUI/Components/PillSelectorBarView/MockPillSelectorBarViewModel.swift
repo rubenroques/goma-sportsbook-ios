@@ -444,7 +444,7 @@ extension MockPillSelectorBarViewModel {
         return MockPillSelectorBarViewModel(barData: barData)
     }
     
-    /// Screenshot recreation - Football, Popular, Al, Filter All Popular Leagues  
+    /// Screenshot recreation - Football, Popular, Al, Filter All Popular Leagues
     public static var footballPopularLeagues: MockPillSelectorBarViewModel {
         let pills = [
             PillData(
@@ -462,8 +462,8 @@ extension MockPillSelectorBarViewModel {
                 isSelected: false  // Gray - unselected
             ),
             PillData(
-                id: "al",
-                title: "Al",
+                id: "all",
+                title: "All",
                 leftIconName: "trophy.fill",
                 showExpandIcon: false,
                 isSelected: false  // Gray - unselected

@@ -17,6 +17,8 @@ class RootAdaptiveViewController: UIViewController {
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
     private var widgetToolBarView: MultiWidgetToolbarView!
+    
+    // TODO: Remove after milestone for top bar
     private lazy var orangePlaceholderView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.App.topBarGradient1
@@ -1024,15 +1026,18 @@ extension RootAdaptiveViewController {
 
     private func setupSubviews() {
 
+        //
+        view.addSubview(containerView)
+        
         // Add main container views
         view.addSubview(topSafeAreaView)
         view.addSubview(topBarContainerBaseView)
 
         topBarContainerBaseView.addSubview(widgetToolBarView)
-        
+
+        //
         //topBarContainerBaseView.addSubview(orangePlaceholderView)
 
-        view.addSubview(containerView)
         view.addSubview(bottomSafeAreaView)
         view.addSubview(localAuthenticationBaseView)
 

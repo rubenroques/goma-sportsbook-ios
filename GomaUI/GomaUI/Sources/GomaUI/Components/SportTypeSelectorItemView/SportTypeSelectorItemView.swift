@@ -3,6 +3,9 @@ import Combine
 import SwiftUI
 
 final public class SportTypeSelectorItemView: UIView {
+    
+    static let defaultHeight: CGFloat = 58
+    
     // MARK: - Private Properties
     private let containerView = UIView()
     private let iconImageView = UIImageView()
@@ -43,28 +46,28 @@ final public class SportTypeSelectorItemView: UIView {
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.tintColor = StyleProvider.Color.textPrimary
         
-        titleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
+        titleLabel.font = StyleProvider.fontWith(type: .medium, size: 12)
         titleLabel.textColor = StyleProvider.Color.textPrimary
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 1
         
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 6),
+            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
             
             iconImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
             iconImageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 24),
-            iconImageView.heightAnchor.constraint(equalToConstant: 24),
+            iconImageView.widthAnchor.constraint(equalToConstant: 23),
+            iconImageView.heightAnchor.constraint(equalToConstant: 23),
             
-            titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 4),
+            titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: -2),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
-            heightAnchor.constraint(equalToConstant: 56)
+            heightAnchor.constraint(equalToConstant: Self.defaultHeight)
         ])
     }
     
@@ -88,29 +91,11 @@ final public class SportTypeSelectorItemView: UIView {
         currentSportData = state.sportData
         titleLabel.text = state.sportData.name
         
-        // Set icon - for now using system images, can be replaced with custom icons
-        let iconName = mapSportToSystemIcon(state.sportData.iconName)
-        iconImageView.image = UIImage(systemName: iconName)
-    }
-    
-    private func mapSportToSystemIcon(_ sportIconName: String) -> String {
-        switch sportIconName.lowercased() {
-        case "football", "soccer":
-            return "soccerball"
-        case "basketball":
-            return "basketball"
-        case "tennis":
-            return "tennisball"
-        case "baseball":
-            return "baseball"
-        case "hockey":
-            return "hockey.puck"
-        case "golf":
-            return "golf.stick.and.ball"
-        case "volleyball":
-            return "volleyball"
-        default:
-            return "sportscourt"
+        // Set icon - support both custom named images and system images
+        if let customImage = UIImage(named: state.sportData.iconName) {
+            iconImageView.image = customImage.withRenderingMode(.alwaysTemplate)
+        } else {
+            iconImageView.image = UIImage(systemName: state.sportData.iconName)
         }
     }
     

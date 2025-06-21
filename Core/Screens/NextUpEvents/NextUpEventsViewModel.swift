@@ -21,6 +21,7 @@ class NextUpEventsViewModel: ObservableObject {
 
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
+    let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: NextUpEventsMarketGroupSelectorViewModel
     private let scrollPositionCoordinator = ScrollPositionCoordinator()
 
@@ -41,9 +42,23 @@ class NextUpEventsViewModel: ObservableObject {
     init(sportType: SportType = SportType.defaultFootball) {
         self.sportType = sportType
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
+        self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = NextUpEventsMarketGroupSelectorViewModel()
 
         setupBindings()
+    }
+    
+    func updateSportType(_ sport: Sport) {
+        // Update the current sport type based on selection
+        // This could trigger reloading of events for the selected sport
+        print("📱 NextUpEventsViewModel: Updating sport type to \(sport.name)")
+        
+        // Update the pill selector to show the new sport
+        pillSelectorBarViewModel.updateCurrentSport(sport)
+        
+        // TODO: Implement sport type change logic
+        // self.sportType = SportType.from(sport)
+        // reloadEvents()
     }
 
     // MARK: - Setup

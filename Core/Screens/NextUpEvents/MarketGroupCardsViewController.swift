@@ -11,7 +11,19 @@ class MarketGroupCardsViewController: UIViewController {
     private let collectionView: UICollectionView
     private var dataSource: UICollectionViewDiffableDataSource<Section, CollectionViewItem>?
     private var cancellables = Set<AnyCancellable>()
-
+    
+    // MARK: - Scroll Tracking
+    weak var scrollDelegate: MarketGroupCardsScrollDelegate?
+    private var lastContentOffset: CGFloat = 0
+    private var scrollDirection: ScrollDirection = .none
+    
+    // MARK: - Configurable Content Inset
+    var topContentInset: CGFloat = 0 {
+        didSet {
+            updateContentInset()
+        }
+    }
+    
     // MARK: - Section Visibility Control
     private var showBannerSection = false
     private var showPillSelectorSection = false
@@ -65,8 +77,7 @@ class MarketGroupCardsViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = UIColor.App.backgroundPrimary
 
-        collectionView.contentInset = .init(top: 0, left: 0, bottom: 54, right: 0)
-        collectionView.scrollIndicatorInsets = .init(top: 4, left: 0, bottom: 60, right: 0)
+        updateContentInset()
         
         collectionView.backgroundColor = UIColor.App.backgroundPrimary
         collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
@@ -356,6 +367,12 @@ class MarketGroupCardsViewController: UIViewController {
     func getCurrentScrollPosition() -> CGPoint {
         return collectionView.contentOffset
     }
+    
+    // MARK: - Content Inset Management
+    private func updateContentInset() {
+        collectionView.contentInset = .init(top: topContentInset, left: 0, bottom: 54, right: 0)
+        collectionView.scrollIndicatorInsets = .init(top: topContentInset + 4, left: 0, bottom: 60, right: 0)
+    }
 }
 
 // MARK: - UICollectionViewDelegate
@@ -364,17 +381,34 @@ extension MarketGroupCardsViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // Notify ViewModel about scroll changes
         viewModel.updateScrollPosition(scrollView.contentOffset)
+        
+        // Calculate scroll direction
+        let currentOffset = scrollView.contentOffset.y
+        if currentOffset > lastContentOffset && currentOffset > 0 {
+            scrollDirection = .down
+        } else if currentOffset < lastContentOffset {
+            scrollDirection = .up
+        } else {
+            scrollDirection = .none
+        }
+        
+        lastContentOffset = currentOffset
+        
+        // Notify delegate
+        scrollDelegate?.marketGroupCardsDidScroll(scrollView, scrollDirection: scrollDirection, in: self)
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // Ensure final position is synced via ViewModel
         viewModel.updateScrollPosition(scrollView.contentOffset)
+        scrollDelegate?.marketGroupCardsDidEndScrolling(scrollView, in: self)
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         // If not decelerating, sync the final position via ViewModel
         if !decelerate {
             viewModel.updateScrollPosition(scrollView.contentOffset)
+            scrollDelegate?.marketGroupCardsDidEndScrolling(scrollView, in: self)
         }
     }
 }

@@ -18,7 +18,7 @@ final public class PillItemView: UIView {
 
     // MARK: - Constants
     private enum Constants {
-        static let cornerRadius: CGFloat = 20.0
+        static let minHeight: CGFloat = 40.0
         static let horizontalPadding: CGFloat = 12.0
         static let verticalPadding: CGFloat = 10.0
         static let iconSize: CGFloat = 22.0
@@ -38,6 +38,12 @@ final public class PillItemView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        containerView.layer.cornerRadius = containerView.frame.height / 2.0
+    }
 
     // MARK: - Setup
     private func setupSubviews() {
@@ -45,7 +51,6 @@ final public class PillItemView: UIView {
 
         // Container setup
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.layer.cornerRadius = Constants.cornerRadius
         containerView.clipsToBounds = true
         containerView.backgroundColor = StyleProvider.Color.pills
         addSubview(containerView)
@@ -72,7 +77,7 @@ final public class PillItemView: UIView {
         // Title label setup
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.textAlignment = .center
-        titleLabel.font = StyleProvider.fontWith(type: .medium, size: 16)
+        titleLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
         titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
@@ -80,13 +85,17 @@ final public class PillItemView: UIView {
         expandIconImageView.translatesAutoresizingMaskIntoConstraints = false
         expandIconImageView.contentMode = .scaleAspectFit
         expandIconImageView.isHidden = true
-        expandIconImageView.image = UIImage(systemName: "chevron.down")
+        expandIconImageView.image = UIImage(named: "expand_vertical_icon",
+                                            in: Bundle.module,
+                                            with: nil)?.withRenderingMode(.alwaysTemplate)
+        expandIconImageView.image?.withTintColor(StyleProvider.Color.highlightPrimary)
         expandIconImageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         expandIconImageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         NSLayoutConstraint.activate([
-            expandIconImageView.widthAnchor.constraint(equalToConstant: Constants.iconSize),
+            expandIconImageView.widthAnchor.constraint(equalToConstant: Constants.iconSize*0.6),
             expandIconImageView.heightAnchor.constraint(equalToConstant: Constants.iconSize)
         ])
+        
 
         // Add views to stack view
         stackView.addArrangedSubview(leftIconImageView)
@@ -117,7 +126,7 @@ final public class PillItemView: UIView {
             stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -Constants.horizontalPadding),
 
             // Height constraint
-            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.iconSize + (Constants.verticalPadding * 2))
+            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minHeight)
         ])
 
     }
@@ -137,7 +146,13 @@ final public class PillItemView: UIView {
             .sink { [weak self] iconName in
                 if let iconName = iconName {
                     self?.leftIconImageView.isHidden = false
-                    self?.leftIconImageView.image = UIImage(named: iconName) ?? UIImage(systemName: iconName)
+                    if let image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate) {
+                        self?.leftIconImageView.image = image
+                        self?.leftIconImageView.tintColor = StyleProvider.Color.highlightPrimary
+                    }
+                    else {
+                        self?.leftIconImageView.image = UIImage(systemName: iconName)
+                    }
                 } else {
                     self?.leftIconImageView.isHidden = true
                 }

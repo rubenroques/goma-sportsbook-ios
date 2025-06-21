@@ -1,11 +1,6 @@
 import UIKit
 import Combine
 
-public protocol SportTypeSelectorViewControllerDelegate: AnyObject {
-    func sportTypeSelectorViewController(_ controller: SportTypeSelectorViewController, didSelectSport sport: SportTypeData)
-    func sportTypeSelectorViewControllerDidCancel(_ controller: SportTypeSelectorViewController)
-}
-
 final public class SportTypeSelectorViewController: UIViewController {
     
     // MARK: - Properties
@@ -13,9 +8,8 @@ final public class SportTypeSelectorViewController: UIViewController {
     private var sportSelectorView: SportTypeSelectorView!
     
     // MARK: - Public Properties
-    public weak var delegate: SportTypeSelectorViewControllerDelegate?
-    public var onSportSelected: ((SportTypeData) -> Void)?
-    public var onCancel: (() -> Void)?
+    public var onSportSelected: ((SportTypeData) -> Void) = { _ in }
+    public var onCancel: (() -> Void) = { }
     
     // MARK: - Initialization
     public init(viewModel: SportTypeSelectorViewModelProtocol) {
@@ -59,9 +53,9 @@ final public class SportTypeSelectorViewController: UIViewController {
         
         sportSelectorView.onSportSelected = { [weak self] sport in
             guard let self = self else { return }
-            self.delegate?.sportTypeSelectorViewController(self, didSelectSport: sport)
-            self.onSportSelected?(sport)
+            self.sportSelected(sport: sport)
         }
+        
         
         view.addSubview(sportSelectorView)
         
@@ -75,8 +69,12 @@ final public class SportTypeSelectorViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func cancelButtonTapped() {
-        delegate?.sportTypeSelectorViewControllerDidCancel(self)
-        onCancel?()
+        self.onCancel()
+    }
+    
+    private func sportSelected(sport: SportTypeData) {
+        self.viewModel.selectSport(sport)
+        self.onSportSelected(sport)
     }
     
     // MARK: - Public Methods

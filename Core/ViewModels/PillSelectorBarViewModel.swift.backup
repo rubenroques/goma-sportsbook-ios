@@ -1,0 +1,246 @@
+import Combine
+import UIKit
+import GomaUI
+
+final class PillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
+    
+    // MARK: - Properties
+    private let displayStateSubject: CurrentValueSubject<PillSelectorBarDisplayState, Never>
+    private let selectionEventSubject = PassthroughSubject<PillSelectionEvent, Never>()
+    
+    public var displayStatePublisher: AnyPublisher<PillSelectorBarDisplayState, Never> {
+        displayStateSubject.eraseToAnyPublisher()
+    }
+    
+    public var selectionEventPublisher: AnyPublisher<PillSelectionEvent, Never> {
+        selectionEventSubject.eraseToAnyPublisher()
+    }
+    
+    // Internal state
+    private var barData: PillSelectorBarData
+    private var isVisible: Bool
+    private var isUserInteractionEnabled: Bool
+    
+    // MARK: - Current State Access
+    public var currentSelectedPillId: String? {
+        barData.selectedPillId
+    }
+    
+    public var currentPills: [PillData] {
+        barData.pills
+    }
+    
+    // MARK: - Callbacks
+    var onShowSportsSelector: (() -> Void)?
+    
+    // MARK: - Current Sport
+    private var currentSport: Sport = Sport(
+        id: "1",
+        name: "Football",
+        alphaId: nil,
+        numericId: nil,
+        showEventCategory: true,
+        liveEventsCount: 0,
+        outrightEventsCount: 0,
+        eventsCount: 0
+    )
+    
+    // MARK: - Initialization
+    init() {
+        // Create sport selector pills
+        let preferredIconName = "sport_type_icon_\(currentSport.id)"
+        let iconName = UIImage(named: preferredIconName) != nil ? preferredIconName : "sport_type_icon_default"
+        
+        let pills = [
+            PillData(
+                id: "sport_selector",
+                title: currentSport.name,
+                leftIconName: iconName,
+                showExpandIcon: true,
+                isSelected: true
+            ),
+            PillData(
+                id: "popular",
+                title: "Popular", 
+                leftIconName: "flame.fill",
+                showExpandIcon: false,
+                isSelected: false
+            ),
+            PillData(
+                id: "al",
+                title: "Al",
+                leftIconName: "trophy.fill",
+                showExpandIcon: false,
+                isSelected: false
+            ),
+            PillData(
+                id: "filter_leagues",
+                title: "All Popular Leagues",
+                leftIconName: "line.3.horizontal.decrease",
+                showExpandIcon: false,
+                isSelected: false
+            )
+        ]
+        
+        self.barData = PillSelectorBarData(
+            id: "sport_popular_leagues",
+            pills: pills,
+            selectedPillId: "sport_selector",
+            isScrollEnabled: true,
+            allowsVisualStateChanges: false
+        )
+        self.isVisible = true
+        self.isUserInteractionEnabled = true
+        
+        // Create initial display state
+        let initialState = PillSelectorBarDisplayState(
+            barData: barData,
+            isVisible: isVisible,
+            isUserInteractionEnabled: isUserInteractionEnabled
+        )
+        self.displayStateSubject = CurrentValueSubject(initialState)
+    }
+    
+    // MARK: - PillSelectorBarViewModelProtocol Implementation
+    public func selectPill(id: String) {
+        print("🏈 PillSelectorBarViewModel: Pill selected - \(id)")
+        
+        // Handle specific actions for different pills
+        switch id {
+        case "sport_selector":
+            onShowSportsSelector?()
+            return
+        case "popular":
+            print("🔥 Popular pill selected - this could show popular matches")
+        case "al":
+            print("🏆 Al pill selected - this could filter by league")
+        case "filter_leagues":
+            print("🔍 Filter leagues pill selected - this could open league selector")
+        default:
+            print("📌 Unknown pill selected: \(id)")
+        }
+        
+        // Update selection if pill exists
+        guard barData.pills.contains(where: { $0.id == id }) else { return }
+        
+        // Update bar data with new selection
+        barData = PillSelectorBarData(
+            id: barData.id,
+            pills: barData.pills,
+            selectedPillId: id,
+            isScrollEnabled: barData.isScrollEnabled,
+            allowsVisualStateChanges: false
+        )
+        
+        // Publish new state
+        publishNewState()
+        
+        // Send selection event for UI feedback (scrolling, haptics, etc.)
+        let selectionEvent = PillSelectionEvent(selectedId: id)
+        selectionEventSubject.send(selectionEvent)
+    }
+    
+    // MARK: - Sport Management
+    public func updateCurrentSport(_ sport: Sport) {
+        currentSport = sport
+        
+        // Update the first pill with new sport info
+        var updatedPills = barData.pills
+        if let firstPill = updatedPills.first {
+            let preferredIconName = "sport_type_icon_\(sport.id)"
+            let iconName = UIImage(named: preferredIconName) != nil ? preferredIconName : "sport_type_icon_default"
+            
+            updatedPills[0] = PillData(
+                id: "sport_selector",
+                title: sport.name,
+                leftIconName: iconName,
+                showExpandIcon: true,
+                isSelected: firstPill.isSelected
+            )
+            
+            barData = PillSelectorBarData(
+                id: barData.id,
+                pills: updatedPills,
+                selectedPillId: barData.selectedPillId,
+                isScrollEnabled: barData.isScrollEnabled,
+                allowsVisualStateChanges: false
+            )
+            publishNewState()
+        }
+    }
+    
+    
+    public func updatePills(_ pills: [PillData]) {
+        barData = PillSelectorBarData(
+            id: barData.id,
+            pills: pills,
+            selectedPillId: barData.selectedPillId,
+            isScrollEnabled: barData.isScrollEnabled,
+            allowsVisualStateChanges: false
+        )
+        publishNewState()
+    }
+    
+    public func addPill(_ pill: PillData) {
+        var updatedPills = barData.pills
+        updatedPills.append(pill)
+        updatePills(updatedPills)
+    }
+    
+    public func removePill(id: String) {
+        let updatedPills = barData.pills.filter { $0.id != id }
+        let newSelectedId = (barData.selectedPillId == id) ? nil : barData.selectedPillId
+        
+        barData = PillSelectorBarData(
+            id: barData.id,
+            pills: updatedPills,
+            selectedPillId: newSelectedId,
+            isScrollEnabled: barData.isScrollEnabled,
+            allowsVisualStateChanges: false
+        )
+        publishNewState()
+    }
+    
+    public func updatePill(_ pill: PillData) {
+        let updatedPills = barData.pills.map { existingPill in
+            existingPill.id == pill.id ? pill : existingPill
+        }
+        updatePills(updatedPills)
+    }
+    
+    public func clearSelection() {
+        barData = PillSelectorBarData(
+            id: barData.id,
+            pills: barData.pills,
+            selectedPillId: nil,
+            isScrollEnabled: barData.isScrollEnabled,
+            allowsVisualStateChanges: false
+        )
+        publishNewState()
+    }
+    
+    public func selectFirstAvailablePill() {
+        guard let firstPill = barData.pills.first else { return }
+        selectPill(id: firstPill.id)
+    }
+    
+    public func setVisible(_ visible: Bool) {
+        isVisible = visible
+        publishNewState()
+    }
+    
+    public func setUserInteractionEnabled(_ enabled: Bool) {
+        isUserInteractionEnabled = enabled
+        publishNewState()
+    }
+    
+    // MARK: - Helper Methods
+    private func publishNewState() {
+        let newState = PillSelectorBarDisplayState(
+            barData: barData,
+            isVisible: isVisible,
+            isUserInteractionEnabled: isUserInteractionEnabled
+        )
+        displayStateSubject.send(newState)
+    }
+}

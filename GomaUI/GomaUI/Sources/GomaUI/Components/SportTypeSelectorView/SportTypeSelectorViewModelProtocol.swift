@@ -13,4 +13,7 @@ public struct SportTypeSelectorDisplayState: Equatable {
 // MARK: - View Model Protocol
 public protocol SportTypeSelectorViewModelProtocol {
     var displayStatePublisher: AnyPublisher<SportTypeSelectorDisplayState, Never> { get }
+    
+    // Handle sport selection
+    func selectSport(_ sport: SportTypeData)
 }
