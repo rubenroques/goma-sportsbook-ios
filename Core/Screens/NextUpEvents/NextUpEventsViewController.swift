@@ -50,6 +50,7 @@ class NextUpEventsViewController: UIViewController {
     init(viewModel: NextUpEventsViewModel) {
         self.viewModel = viewModel
         self.quickLinksTabBarView = QuickLinksTabBarView(viewModel: viewModel.quickLinksTabBarViewModel)
+        self.generalFilterBarView = GeneralFilterBarView(viewModel: viewModel.generalFiltersBarViewModel)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -277,11 +278,53 @@ class NextUpEventsViewController: UIViewController {
                 self?.setLoadingIndicatorVisible(isLoading)
             }
             .store(in: &cancellables)
+        
+        generalFilterBarView.onMainFilterTapped = { [weak self] in
+            
+            self?.openCombinedFilters()
+        }
+        
+        Env.filterStorage.$currentFilterSelection
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] currentFilterSelection in
+                
+                if let viewModel = self?.viewModel {
+                    let selectedFilterOptions = viewModel.buildFilterOptions(from: currentFilterSelection)
+                    
+                    self?.generalFilterBarView.updateFilterItems(filterOptionItems: selectedFilterOptions)
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: - Data Loading
     private func loadData() {
         viewModel.reloadEvents()
+    }
+    
+    // MARK: Functions
+    private func openCombinedFilters() {
+        
+        let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
+
+        let viewModel = CombinedFiltersViewModel(filterConfiguration: configuration,
+                                                 contextId: "sports")
+        
+        let combinedFiltersViewController = CombinedFiltersViewController( viewModel: viewModel)
+        
+        combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
+            guard let self = self else { return }
+            
+//            self.viewModel.selectedGeneralFilterSelection = combinedGeneralFilterSelection
+//            
+//            // Build filter options for collection view
+//            self.viewModel.selectedFilterOptions = self.viewModel.buildFilterOptions(from: combinedGeneralFilterSelection)
+//            self.generalFilterBarView.updateFilterItems(filterOptionItems: self.viewModel.selectedFilterOptions)
+            
+        }
+        
+        self.navigationController?.pushViewController(combinedFiltersViewController, animated: true)
+        
     }
 
     // MARK: - UI Updates

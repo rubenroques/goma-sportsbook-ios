@@ -14,8 +14,8 @@ import Combine
 public protocol SportGamesFilterViewModelProtocol {
     var title: String { get }
     var sportFilters: [SportFilter] { get }
-    var selectedId: CurrentValueSubject<Int, Never> { get set }
+    var selectedId: CurrentValueSubject<String, Never> { get set }
     var sportFilterState: CurrentValueSubject<SportGamesFilterStateType, Never> { get }
-    func selectOption(withId id: Int)
+    func selectOption(withId id: String)
     func didTapCollapseButton()
 }

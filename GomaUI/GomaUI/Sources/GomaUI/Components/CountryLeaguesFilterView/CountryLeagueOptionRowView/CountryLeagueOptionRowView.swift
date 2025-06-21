@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Combine
+import Kingfisher
 
 public class CountryLeagueOptionRowView: UIView {
     // MARK: - Properties
@@ -54,7 +55,7 @@ public class CountryLeagueOptionRowView: UIView {
     private let collapseButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(systemName: "chevron.up")?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = .black
         return button
@@ -93,7 +94,7 @@ public class CountryLeagueOptionRowView: UIView {
     private var leagueRows: [LeagueOptionSelectionRowView] = []
 
     public let viewModel: CountryLeagueOptionRowViewModelProtocol
-    public var didTappedOption: ((Int) -> Void)?
+    public var didTappedOption: ((String) -> Void)?
         
     // MARK: - Initialization
     public init(viewModel: CountryLeagueOptionRowViewModelProtocol) {
@@ -105,6 +106,12 @@ public class CountryLeagueOptionRowView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        iconImageView.layer.cornerRadius = iconImageView.frame.height / 2
+        iconImageView.clipsToBounds = true
     }
     
     // MARK: - Setup
@@ -158,6 +165,9 @@ public class CountryLeagueOptionRowView: UIView {
         ])
         
         collapseButton.addTarget(self, action: #selector(collapseButtonTapped), for: .touchUpInside)
+        
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
     
     private func setupBindings() {
@@ -176,11 +186,10 @@ public class CountryLeagueOptionRowView: UIView {
             .store(in: &cancellables)
     }
     
-    private func updateSelection(forOptionId id: Int) {
+    private func updateSelection(forOptionId id: String) {
         leagueRows.forEach { row in
             
             let leagueOption = row.viewModel.leagueOption
-            print("LEAGUE OPTION: \(id)")
             if leagueOption.id == id {
                 row.isSelected = true
             }
@@ -240,7 +249,17 @@ public class CountryLeagueOptionRowView: UIView {
     public func configure() {
         backgroundColor = isSelected ? StyleProvider.Color.separatorLine : .clear
         leftIndicatorView.isHidden = !isSelected
-        iconImageView.image = UIImage(named: self.viewModel.countryLeagueOptions.icon ?? "")
+        
+//        iconImageView.image = UIImage(named: self.viewModel.countryLeagueOptions.icon ?? "")
+        
+        if let flagIconUrl = self.flagIconURL(for: self.viewModel.countryLeagueOptions.icon ?? "") {
+            iconImageView.kf.setImage(with: flagIconUrl)
+
+        }
+        else {
+            iconImageView.image = UIImage(named: "country_flag_240")
+        }
+
         iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : .black
         titleLabel.text = self.viewModel.countryLeagueOptions.title
         
@@ -267,10 +286,13 @@ public class CountryLeagueOptionRowView: UIView {
         }
     }
     
-    public func updateLeagueSelectionId(leagueId: Int) {
+    public func updateLeagueSelectionId(leagueId: String) {
         if self.viewModel.selectedOptionId.value != leagueId {
             self.viewModel.selectOption(withId: leagueId)
         }
     }
     
+    func flagIconURL(for venueId: String) -> URL? {
+        return URL(string:"https://static.glastcoper.com/omfe-widgets/s/assets/1.10.2/om1/icons/flag/\(venueId).png")
+    }
 }

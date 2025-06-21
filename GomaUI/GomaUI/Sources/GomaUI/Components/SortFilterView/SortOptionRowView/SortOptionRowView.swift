@@ -31,6 +31,8 @@ public class SortOptionRowView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -39,6 +41,8 @@ public class SortOptionRowView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
     
@@ -103,6 +107,7 @@ public class SortOptionRowView: UIView {
             iconImageView.heightAnchor.constraint(equalToConstant: 16),
             
             titleLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: countLabel.leadingAnchor, constant: -4),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             countLabel.trailingAnchor.constraint(equalTo: radioButton.leadingAnchor, constant: -12),

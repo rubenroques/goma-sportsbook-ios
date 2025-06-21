@@ -25,6 +25,9 @@ class EveryMatrixEventsProvider: EventsProvider {
     private var locationsManager: LocationsManager?
     private var currentSportType: SportType?
 
+    private var popularTournamentsManager: PopularTournamentsManager?
+    private var sportTournamentsManager: SportTournamentsManager?
+
     init(connector: EveryMatrixConnector) {
         self.connector = connector
     }
@@ -33,6 +36,8 @@ class EveryMatrixEventsProvider: EventsProvider {
         prelivePaginator?.unsubscribe()
         sportsManager?.unsubscribe()
         locationsManager?.unsubscribe()
+        popularTournamentsManager?.unsubscribe()
+        sportTournamentsManager?.unsubscribe()
     }
 
     func reconnectIfNeeded() {
@@ -196,6 +201,39 @@ class EveryMatrixEventsProvider: EventsProvider {
         } else {
             return Fail(error: ServiceProviderError.errorMessage(message: "Outcome with id \(id) not found in any active paginator")).eraseToAnyPublisher()
         }
+    }
+    
+    func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int = 10) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
+        // Clean up any existing manager
+        popularTournamentsManager?.unsubscribe()
+        
+        // Use sportType ID, fallback to "1" (football) if not available
+        let sportId = sportType.numericId ?? "1"
+        
+        // Create new manager
+        popularTournamentsManager = PopularTournamentsManager(
+            connector: connector,
+            sportId: sportId,
+            tournamentsCount: tournamentsCount
+        )
+        
+        return popularTournamentsManager!.subscribe()
+    }
+    
+    func subscribeSportTournaments(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
+        // Clean up any existing manager
+        sportTournamentsManager?.unsubscribe()
+        
+        // Use sportType ID, fallback to "1" (football) if not available
+        let sportId = sportType.numericId ?? "1"
+        
+        // Create new manager
+        sportTournamentsManager = SportTournamentsManager(
+            connector: connector,
+            sportId: sportId
+        )
+        
+        return sportTournamentsManager!.subscribe()
     }
 
     func getMarketGroups(forEvent event: Event, includeMixMatchGroup: Bool, includeAllMarketsGroup: Bool) -> AnyPublisher<[MarketGroup], Never> {

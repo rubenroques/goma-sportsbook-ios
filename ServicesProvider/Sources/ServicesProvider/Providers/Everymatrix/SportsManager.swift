@@ -136,7 +136,7 @@ class SportsManager {
                 
             // Ignore all other entity types for sports manager
             case .match, .market, .outcome, .bettingOffer, .location, .eventCategory, 
-                 .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber:
+                    .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber, .tournament:
                 break // Ignore non-sport entities
                 
             case .unknown(let type):

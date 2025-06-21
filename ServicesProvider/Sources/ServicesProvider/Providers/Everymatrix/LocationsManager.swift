@@ -137,7 +137,7 @@ class LocationsManager {
                 
             // Ignore all other entity types for locations manager
             case .sport, .match, .market, .outcome, .bettingOffer, .eventCategory, 
-                 .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber:
+                    .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber, .tournament:
                 break // Ignore non-location entities
                 
             case .unknown(let type):

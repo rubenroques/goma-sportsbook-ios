@@ -29,7 +29,7 @@ public class SortFilterView: UIView {
     private let collapseButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(systemName: "chevron.up")?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = .black
         return button
@@ -62,7 +62,7 @@ public class SortFilterView: UIView {
         }
     }
     
-    public var onSortFilterSelected: ((Int) -> Void)?
+    public var onSortFilterSelected: ((String) -> Void)?
 
     // MARK: - Initialization
     public init(viewModel: SortFilterViewModelProtocol) {
@@ -154,9 +154,10 @@ public class SortFilterView: UIView {
         
         viewModel.shouldRefreshData
             .sink(receiveValue: { [weak self] in
-                print("UPDATE SORT UI!")
                 self?.setupOptions()
-                self?.viewModel.selectOption(withId: 0)
+                if let selectedOption = self?.viewModel.selectedOptionId.value {
+                    self?.viewModel.selectOption(withId: selectedOption)
+                }
             })
             .store(in: &cancellables)
     }
@@ -166,7 +167,8 @@ public class SortFilterView: UIView {
         viewModel.toggleCollapse()
     }
     
-    private func updateSelection(forOptionId id: Int) {
+    private func updateSelection(forOptionId id: String) {
+        
         optionRows.forEach { row in
             let option = row.viewModel.sortOption
             row.isSelected = option.id == id
@@ -174,6 +176,7 @@ public class SortFilterView: UIView {
         }
         
         self.onSortFilterSelected?(id)
+
     }
     
     private func updateCollapseState() {
@@ -191,12 +194,12 @@ public class SortFilterView: UIView {
             let transform = self.isCollapsed ? CGAffineTransform(rotationAngle: .pi) : .identity
             self.collapseButton.transform = transform
             
-            // Force layout update
-            self.layoutIfNeeded()
-            self.superview?.layoutIfNeeded()
         } completion: { _ in
             // Hide the grid after animation when collapsing
             self.stackView.isHidden = self.isCollapsed
+            // Force layout update
+            self.layoutIfNeeded()
+            self.superview?.layoutIfNeeded()
         }
     }
 }
@@ -212,9 +215,9 @@ struct SortByView_Preview: PreviewProvider {
             containerView.backgroundColor = .systemGray6
             
             let sortOptions: [SortOption] = [
-                SortOption(id: 1, icon: "flame.fill", title: "Popular", count: 25),
-                SortOption(id: 2, icon: "clock.fill", title: "Upcoming", count: 15),
-                SortOption(id: 3, icon: "heart.fill", title: "Favourites", count: 0)
+                SortOption(id: "1", icon: "flame.fill", title: "Popular", count: 25),
+                SortOption(id: "2", icon: "clock.fill", title: "Upcoming", count: 15),
+                SortOption(id: "3", icon: "heart.fill", title: "Favourites", count: 0)
             ]
             
             let viewModel = MockSortFilterViewModel(title: "Sort By", sortOptions: sortOptions)

@@ -14,7 +14,7 @@ public class SportCardView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .black
+        imageView.tintColor = StyleProvider.Color.textPrimary
         return imageView
     }()
     
@@ -33,7 +33,7 @@ public class SportCardView: UIView {
         }
     }
     
-    public var onTap: ((Int) -> Void)?
+    public var onTap: ((String) -> Void)?
     public let viewModel: SportCardViewModelProtocol
 
     // MARK: - Initialization
@@ -78,8 +78,8 @@ public class SportCardView: UIView {
     
     private func updateAppearance() {
         backgroundColor = isSelected ? StyleProvider.Color.highlightPrimary : .systemGray6
-        iconImageView.tintColor = isSelected ? .white : .black
-        titleLabel.textColor = isSelected ? .white : .black
+        iconImageView.tintColor = isSelected ? StyleProvider.Color.buttonTextPrimary : StyleProvider.Color.textPrimary
+        titleLabel.textColor = isSelected ? StyleProvider.Color.buttonTextPrimary : StyleProvider.Color.textPrimary
     }
     
     @objc private func handleTap() {
@@ -89,6 +89,12 @@ public class SportCardView: UIView {
     // MARK: - Public Methods
     public func configure() {
         titleLabel.text = self.viewModel.sportFilter.title
-        iconImageView.image = UIImage(systemName: self.viewModel.sportFilter.icon ?? "") 
+        
+        if let sportImage = UIImage(named: self.viewModel.sportFilter.icon ?? "") {
+            iconImageView.image = sportImage.withRenderingMode(.alwaysTemplate)
+        }
+        else {
+            iconImageView.image = UIImage(named: "sport_type_icon_default")?.withRenderingMode(.alwaysTemplate)
+        }
     }
 }

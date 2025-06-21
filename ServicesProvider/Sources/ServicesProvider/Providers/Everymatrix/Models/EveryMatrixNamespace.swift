@@ -263,6 +263,47 @@ extension EveryMatrix {
         static let rawType: String = "NEXT_MATCHES_NUMBER"
         let numberOfNextEvents: Int
     }
+    
+    struct TournamentDTO: Entity {
+        let id: String
+        static let rawType: String = "TOURNAMENT"
+        let isTopLevelTournament: Bool
+        let typeId: String
+        let sportId: String
+        let templateId: String
+        let name: String
+        let startTime: Int64
+        let endTime: Int64
+        let venueId: String
+        let statusId: String
+        let rootPartId: String
+        let categoryId: String
+        let allowsLiveOdds: Bool
+        let numberOfMarkets: Int
+        let numberOfBettingOffers: Int
+        let numberOfLiveMarkets: Int
+        let numberOfLiveBettingOffers: Int
+        let typeName: String
+        let sportName: String
+        let shortSportName: String
+        let templateName: String
+        let venueName: String
+        let shortVenueName: String
+        let statusName: String
+        let rootPartName: String
+        let shortRootPartName: String
+        let translatedName: String
+        let shortTranslatedName: String
+        let numberOfEvents: Int
+        let numberOfUpcomingMatches: Int
+        let numberOfOutrightMarkets: Int
+        let numberOfOutrightMarketsForSubtournaments: Int
+        let numberOfLiveEvents: Int
+        let showEventCategory: Bool
+        let categoryName: String
+        let displayChildren: Bool
+        let layoutStyle: String
+    }
 
     // MARK: - Aggregator Response
     struct AggregatorResponse: Codable {
@@ -293,6 +334,7 @@ extension EveryMatrix {
         case mainMarket(MainMarketDTO)
         case marketInfo(MarketInfoDTO)
         case nextMatchesNumber(NextMatchesNumberDTO)
+        case tournament(TournamentDTO)
 
         // UPDATE/DELETE/CREATE records with change metadata
         case changeRecord(ChangeRecord)
@@ -354,6 +396,9 @@ extension EveryMatrix {
             case "NEXT_MATCHES_NUMBER":
                 let nextMatches = try NextMatchesNumberDTO(from: decoder)
                 self = .nextMatchesNumber(nextMatches)
+            case "TOURNAMENT":
+                let tournament = try TournamentDTO(from: decoder)
+                self = .tournament(tournament)
             default:
                 self = .unknown(type: type)
             }
@@ -382,6 +427,8 @@ extension EveryMatrix {
             case .marketInfo(let dto):
                 try dto.encode(to: encoder)
             case .nextMatchesNumber(let dto):
+                try dto.encode(to: encoder)
+            case .tournament(let dto):
                 try dto.encode(to: encoder)
             case .changeRecord(let record):
                 try record.encode(to: encoder)
@@ -433,6 +480,7 @@ extension EveryMatrix {
         case mainMarket(MainMarketDTO)
         case marketInfo(MarketInfoDTO)
         case nextMatchesNumber(NextMatchesNumberDTO)
+        case tournament(TournamentDTO)
         case unknown(type: String)
 
         private enum CodingKeys: String, CodingKey {
@@ -477,6 +525,9 @@ extension EveryMatrix {
             case "NEXT_MATCHES_NUMBER":
                 let nextMatches = try NextMatchesNumberDTO(from: decoder)
                 self = .nextMatchesNumber(nextMatches)
+            case "TOURNAMENT":
+                let tournament = try TournamentDTO(from: decoder)
+                self = .tournament(tournament)
             default:
                 self = .unknown(type: type)
             }
@@ -505,6 +556,8 @@ extension EveryMatrix {
             case .marketInfo(let dto):
                 try dto.encode(to: encoder)
             case .nextMatchesNumber(let dto):
+                try dto.encode(to: encoder)
+            case .tournament(let dto):
                 try dto.encode(to: encoder)
             case .unknown:
                 var container = encoder.container(keyedBy: CodingKeys.self)
@@ -630,7 +683,8 @@ extension EveryMatrix {
                     store.store(dto)
                 case .nextMatchesNumber(let dto):
                     store.store(dto)
-
+                case .tournament(let dto):
+                    store.store(dto)
                 // UPDATE/DELETE/CREATE records - handle changes
                 case .changeRecord(let changeRecord):
                     handleChangeRecord(changeRecord, in: store)
@@ -698,6 +752,8 @@ extension EveryMatrix {
             case .marketInfo(let dto):
                 store.store(dto)
             case .nextMatchesNumber(let dto):
+                store.store(dto)
+            case .tournament(let dto):
                 store.store(dto)
             case .unknown(let type):
                 print("Unknown entity data type: \(type)")
@@ -807,6 +863,35 @@ extension EveryMatrix {
         let isLive: Bool
         let lastChangedTime: Date
         let providerId: String
+    }
+    
+    struct Tournament: Identifiable, Hashable {
+        let type: String
+        let id: String
+        let idAsString: String?
+        let typeId: String?
+        let name: String?
+        let shortName: String?
+        let numberOfEvents: Int
+        let numberOfMarkets: Int?
+        let numberOfBettingOffers: Int?
+        let numberOfLiveEvents: Int
+        let numberOfLiveMarkets: Int?
+        let numberOfLiveBettingOffers: Int?
+        let numberOfOutrightMarkets: Int?
+        let numberOfUpcomingMatches: Int?
+        let sportId: String?
+        let sportName: String?
+        let shortSportName: String?
+        let venueId: String?
+        let venueName: String?
+        let shortVenueName: String?
+        let categoryId: String?
+        let templateId: String?
+        let templateName: String?
+        let rootPartId: String?
+        let rootPartName: String?
+        let shortRootPartName: String?
     }
 
     /// Protocol for building hierarchical objects from flat data
@@ -1006,11 +1091,48 @@ extension EveryMatrix {
             )
         }
     }
+    
+    struct TournamentBuilder: HierarchicalBuilder {
+        typealias FlatType = TournamentDTO
+        typealias OutputType = Tournament
+
+        static func build(from tournament: TournamentDTO, store: EntityStore) -> Tournament? {
+            return Tournament(
+                        type: "TOURNAMENT",
+                        id: tournament.id,
+                        idAsString: nil,
+                        typeId: tournament.typeId,
+                        name: tournament.name,
+                        shortName: tournament.shortTranslatedName,
+                        numberOfEvents: tournament.numberOfEvents,
+                        numberOfMarkets: tournament.numberOfMarkets,
+                        numberOfBettingOffers: tournament.numberOfBettingOffers,
+                        numberOfLiveEvents: tournament.numberOfLiveEvents,
+                        numberOfLiveMarkets: tournament.numberOfLiveMarkets,
+                        numberOfLiveBettingOffers: tournament.numberOfLiveBettingOffers,
+                        numberOfOutrightMarkets: tournament.numberOfOutrightMarkets,
+                        numberOfUpcomingMatches: tournament.numberOfUpcomingMatches,
+                        sportId: tournament.sportId,
+                        sportName: tournament.sportName,
+                        shortSportName: tournament.shortSportName,
+                        venueId: tournament.venueId,
+                        venueName: tournament.venueName,
+                        shortVenueName: tournament.shortVenueName,
+                        categoryId: tournament.categoryId,
+                        templateId: tournament.templateId,
+                        templateName: tournament.templateName,
+                        rootPartId: tournament.rootPartId,
+                        rootPartName: tournament.rootPartName,
+                        shortRootPartName: tournament.shortRootPartName
+                    )
+        }
+    }
 
     // MARK: - Base Entity Store
     class EntityStore: ObservableObject {
         @Published private var entities: [String: [String: any Entity]] = [:]
         private let queue = DispatchQueue(label: "entity.store.queue", attributes: .concurrent)
+        private var entityOrder: [String: [String]] = [:] // [EntityType: [Ordered IDs]]
 
         // MARK: - Publisher Infrastructure
         private var entityPublishers: [String: [String: CurrentValueSubject<(any Entity)?, Never>]] = [:]
@@ -1023,9 +1145,15 @@ extension EveryMatrix {
                 let type = T.rawType
                 if self?.entities[type] == nil {
                     self?.entities[type] = [:]
+                    self?.entityOrder[type] = []
                 }
                 self?.entities[type]?[entity.id] = entity
 
+                // Add to order if not already present
+                if !(self?.entityOrder[type]?.contains(entity.id) ?? false) {
+                    self?.entityOrder[type]?.append(entity.id)
+                }
+                
                 // Notify observers of the change
                 self?.notifyEntityChange(entity)
             }
@@ -1044,6 +1172,18 @@ extension EveryMatrix {
             return queue.sync {
                 guard let typeDict = entities[T.rawType] else { return [] }
                 return typeDict.values.compactMap { $0 as? T }
+            }
+        }
+        
+        // Add method to get entities in original order
+        func getAllInOrder<T: Entity>(_ type: T.Type) -> [T] {
+            return queue.sync {
+                guard let typeDict = entities[T.rawType],
+                      let order = entityOrder[T.rawType] else { return [] }
+                
+                return order.compactMap { id in
+                    typeDict[id] as? T
+                }
             }
         }
 
@@ -1148,6 +1288,8 @@ extension EveryMatrix {
                     return try decoder.decode(MarketInfoDTO.self, from: entityData)
                 case "NEXT_MATCHES_NUMBER":
                     return try decoder.decode(NextMatchesNumberDTO.self, from: entityData)
+                case "TOURNAMENT":
+                    return try decoder.decode(TournamentDTO.self, from: entityData)
                 default:
                     print("Unknown entity type for merge: \(type(of: entity).rawType)")
                     return nil

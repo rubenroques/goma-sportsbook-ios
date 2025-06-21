@@ -23,6 +23,7 @@ class NextUpEventsViewModel: ObservableObject {
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: NextUpEventsMarketGroupSelectorViewModel
+    var generalFiltersBarViewModel: GeneralFilterBarViewModelProtocol
     private let scrollPositionCoordinator = ScrollPositionCoordinator()
 
     // MARK: - Private Properties
@@ -44,8 +45,12 @@ class NextUpEventsViewModel: ObservableObject {
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = NextUpEventsMarketGroupSelectorViewModel()
+                
+        let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter", icon: "filter_icon", actionIcon: "right_arrow_icon")
 
+        self.generalFiltersBarViewModel = MockGeneralFilterBarViewModel(items: [], mainFilterItem: mainFilter)
         setupBindings()
+        setupFilters()
     }
     
     func updateSportType(_ sport: Sport) {
@@ -78,6 +83,17 @@ class NextUpEventsViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
+    private func setupFilters() {
+        
+        let sportFilterOption = self.getSportOption(for: Env.filterStorage.currentFilterSelection.sportId)
+        
+        let sortOption = self.getSortOption(for: Env.filterStorage.currentFilterSelection.sortTypeId)
+        
+        let leagueOption = self.getLeagueOption(for: Env.filterStorage.currentFilterSelection.leagueId)
+                
+        self.generalFiltersBarViewModel.updateFilterOptionItems(filterOptionItems: [sportFilterOption])
+
+    }
     // MARK: - Public Methods
     func reloadEvents(forced: Bool = false) {
         self.loadEvents()
@@ -180,5 +196,73 @@ class NextUpEventsViewModel: ObservableObject {
 
         self.marketGroups = marketGroups
         
+    }
+    
+    // Filters functions
+    func buildFilterOptions(from selection: GeneralFilterSelection) -> [FilterOptionItem] {
+        var options: [FilterOptionItem] = []
+        
+        let sportOption = getSportOption(for: selection.sportId)
+        
+        let sortOption = getSortOption(for: selection.sortTypeId)
+        
+//        if let leagueOption = getLeagueOption(for: selection.leagueId) {
+//            options.append(FilterOptionItem(
+//                type: .league,
+//                title: leagueOption.title,
+//                icon: leagueOption.icon ?? ""
+//            ))
+//        }
+        let leagueOption = getLeagueOption(for: selection.leagueId)
+        
+        options.append(sportOption)
+        options.append(sortOption)
+        options.append(leagueOption)
+
+        return options
+    }
+    
+    // MARK: - Helper Methods for Filter Data
+    private func getSportOption(for sportId: String) -> FilterOptionItem {
+//        let sportOptions = [
+//            (id: "1", title: "Football", icon: "sport_type_icon_1"),
+//            (id: "2", title: "Basketball", icon: "sport_type_icon_8"),
+//            (id: "3", title: "Tennis", icon: "sport_type_icon_3"),
+//            (id: "4", title: "Cricket", icon: "sport_type_icon_9")
+//        ]
+        
+        let currentSport = Env.sportsStore.getActiveSports().first(where: {
+            $0.id == sportId
+        })
+        
+        let filterOptionItem = FilterOptionItem(type: .sport, title: "\(currentSport?.name ?? "")", icon: "sport_type_icon_\(currentSport?.id ?? "")")
+        
+        return filterOptionItem
+        
+//        return sportOptions.first { $0.id == sportId }.map { (title: $0.title, icon: $0.icon) }
+    }
+    
+    private func getSortOption(for sortId: String) -> FilterOptionItem {
+        // Replicate the same data structure from createSortFilterViewModel
+        let sortOptions = [
+            SortOption(id: "1", icon: "popular_icon", title: "Popular", count: 25),
+            SortOption(id: "2", icon: "timelapse_icon", title: "Upcoming", count: 15),
+            SortOption(id: "3", icon: "favourites_icon", title: "Favourites", count: 0)
+        ]
+        
+        let currentSortOption = sortOptions.first { $0.id == sortId }
+        
+        return FilterOptionItem(type: .sortBy, title: "\(currentSortOption?.title ?? "")", icon: "\(currentSortOption?.icon ?? "")")
+        
+    }
+
+    private func getLeagueOption(for leagueId: String) -> FilterOptionItem {
+        var allLeaguesOption = SortOption(id: "0", icon: "league_icon", title: "All Popular Leagues", count: 0)
+        
+        let currentCompetition = Env.filterStorage.currentCompetitions.first(where: {
+            $0.id == leagueId
+        })
+        
+        return FilterOptionItem(type: .league, title: "\(currentCompetition?.name ?? allLeaguesOption.title)", icon: "league_icon")
     }
 }

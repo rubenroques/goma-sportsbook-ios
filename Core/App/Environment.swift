@@ -74,6 +74,8 @@ class Environment {
             servicesProvider: self.servicesProvider
         )
     }()
+    
+    let filterStorage: FilterStorage = FilterStorage()
 
     init() {
 

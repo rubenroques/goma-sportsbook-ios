@@ -22,6 +22,8 @@ public class LeagueOptionSelectionRowView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -30,6 +32,8 @@ public class LeagueOptionSelectionRowView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
     
@@ -84,6 +88,7 @@ public class LeagueOptionSelectionRowView: UIView {
         NSLayoutConstraint.activate([
             
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: countLabel.leadingAnchor, constant: -4),
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             
@@ -97,8 +102,8 @@ public class LeagueOptionSelectionRowView: UIView {
             
             selectedDot.centerXAnchor.constraint(equalTo: radioButton.centerXAnchor),
             selectedDot.centerYAnchor.constraint(equalTo: radioButton.centerYAnchor),
-            selectedDot.widthAnchor.constraint(equalToConstant: 9),
-            selectedDot.heightAnchor.constraint(equalToConstant: 9),
+            selectedDot.widthAnchor.constraint(equalToConstant: 12),
+            selectedDot.heightAnchor.constraint(equalToConstant: 12),
             
             separatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
@@ -135,7 +140,7 @@ public class LeagueOptionSelectionRowView: UIView {
     }
     
     // MARK: - Public Methods
-    public func configure(selectedLeagueId: Int) {
+    public func configure(selectedLeagueId: String) {
         backgroundColor = isSelected ? StyleProvider.Color.separatorLine : .clear
         titleLabel.text = viewModel.leagueOption.title
         countLabel.text = viewModel.leagueOption.count > 0 ? String(viewModel.leagueOption.count) : "No Events"

@@ -63,7 +63,7 @@ public class LeaguesFilterView: UIView {
         }
     }
     
-    public var onLeagueFilterSelected: ((Int) -> Void)?
+    public var onLeagueFilterSelected: ((String) -> Void)?
 
     // MARK: - Initialization
     public init(viewModel: LeaguesFilterViewModelProtocol) {
@@ -155,7 +155,7 @@ public class LeaguesFilterView: UIView {
         viewModel.toggleCollapse()
     }
     
-    private func updateSelection(forOptionId id: Int) {
+    private func updateSelection(forOptionId id: String) {
         optionRows.forEach { row in
             if let option = row.leagueOption {
                 row.isSelected = option.id == id
@@ -202,61 +202,61 @@ struct LeaguesFilterView_Preview: PreviewProvider {
             
             let leagueOptions = [
                 LeagueOption(
-                    id: 1,
+                    id: "1",
                     icon: "trophy.fill",
                     title: "Premier League",
                     count: 32
                 ),
                 LeagueOption(
-                    id: 2,
+                    id: "2",
                     icon: "trophy.fill",
                     title: "La Liga",
                     count: 28
                 ),
                 LeagueOption(
-                    id: 3,
+                    id: "3",
                     icon: "trophy.fill",
                     title: "Bundesliga",
                     count: 25
                 ),
                 LeagueOption(
-                    id: 4,
+                    id: "4",
                     icon: "trophy.fill",
                     title: "Serie A",
                     count: 27
                 ),
                 LeagueOption(
-                    id: 5,
+                    id: "5",
                     icon: "trophy.fill",
                     title: "Ligue 1",
                     count: 0
                 ),
                 LeagueOption(
-                    id: 6,
+                    id: "6",
                     icon: "trophy.fill",
                     title: "Champions League",
                     count: 16
                 ),
                 LeagueOption(
-                    id: 7,
+                    id: "7",
                     icon: "trophy.fill",
                     title: "Europa League",
                     count: 12
                 ),
                 LeagueOption(
-                    id: 8,
+                    id: "8",
                     icon: "trophy.fill",
                     title: "MLS",
                     count: 28
                 ),
                 LeagueOption(
-                    id: 9,
+                    id: "9",
                     icon: "trophy.fill",
                     title: "Eredivisie",
                     count: 18
                 ),
                 LeagueOption(
-                    id: 10,
+                    id: "10",
                     icon: "trophy.fill",
                     title: "Primeira Liga",
                     count: 16

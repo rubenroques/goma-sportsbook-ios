@@ -30,7 +30,7 @@ public class CountryLeaguesFilterView: UIView {
     private let collapseButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(systemName: "chevron.up")?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = .black
         return button
@@ -63,7 +63,7 @@ public class CountryLeaguesFilterView: UIView {
         }
     }
     
-    public var onLeagueFilterSelected: ((Int) -> Void)?
+    public var onLeagueFilterSelected: ((String) -> Void)?
 
     // MARK: - Initialization
     public init(viewModel: CountryLeaguesFilterViewModelProtocol) {
@@ -146,7 +146,7 @@ public class CountryLeaguesFilterView: UIView {
         }
     }
     
-    private func updateViewModels(id: Int) {
+    private func updateViewModels(id: String) {
         countryRows.forEach( { row in
             row.updateLeagueSelectionId(leagueId: id)
         })
@@ -169,9 +169,11 @@ public class CountryLeaguesFilterView: UIView {
         
         viewModel.shouldRefreshData
             .sink(receiveValue: { [weak self] in
-                print("UPDATE COUNTRY LEAGUES UI!")
+//                print("UPDATE COUNTRY LEAGUES UI!")
                 self?.setupOptions()
-                self?.viewModel.selectedOptionId.send(0)
+                if let selectedOptionId = self?.viewModel.selectedOptionId.value {
+                    self?.viewModel.selectedOptionId.send(selectedOptionId)
+                }
             })
             .store(in: &cancellables)
     }
@@ -181,7 +183,7 @@ public class CountryLeaguesFilterView: UIView {
         viewModel.toggleCollapse()
     }
     
-    private func updateSelection(forOptionId id: Int) {
+    private func updateSelection(forOptionId id: String) {
         countryRows.forEach { row in
             
             let option = row.viewModel.countryLeagueOptions
@@ -212,12 +214,13 @@ public class CountryLeaguesFilterView: UIView {
             let transform = self.isCollapsed ? CGAffineTransform(rotationAngle: .pi) : .identity
             self.collapseButton.transform = transform
             
-            // Force layout update
-            self.layoutIfNeeded()
-            self.superview?.layoutIfNeeded()
+            
         } completion: { _ in
             // Hide the grid after animation when collapsing
             self.stackView.isHidden = self.isCollapsed
+            // Force layout update
+            self.layoutIfNeeded()
+            self.superview?.layoutIfNeeded()
         }
     }
 }
@@ -234,73 +237,73 @@ struct CountryLeaguesFilterView_Preview: PreviewProvider {
             
             let countryLeagueOptions = [
                 CountryLeagueOptions(
-                    id: 1,
+                    id: "1",
                     icon: "england_flag",
                     title: "England",
                     leagues: [
-                        LeagueOption(id: 1, icon: nil, title: "Premier League", count: 25),
-                        LeagueOption(id: 2, icon: nil, title: "Championship", count: 24),
-                        LeagueOption(id: 3, icon: nil, title: "League One", count: 22),
-                        LeagueOption(id: 4, icon: nil, title: "League Two", count: 0),
-                        LeagueOption(id: 5, icon: nil, title: "FA Cup", count: 18),
-                        LeagueOption(id: 6, icon: nil, title: "EFL Cup", count: 16)
+                        LeagueOption(id: "1", icon: nil, title: "Premier League", count: 25),
+                        LeagueOption(id: "2", icon: nil, title: "Championship", count: 24),
+                        LeagueOption(id: "3", icon: nil, title: "League One", count: 22),
+                        LeagueOption(id: "4", icon: nil, title: "League Two", count: 0),
+                        LeagueOption(id: "5", icon: nil, title: "FA Cup", count: 18),
+                        LeagueOption(id: "6", icon: nil, title: "EFL Cup", count: 16)
                     ],
                     isExpanded: true
                 ),
                 CountryLeagueOptions(
-                    id: 2,
+                    id: "2",
                     icon: "france_flag",
                     title: "France",
                     leagues: [
-                        LeagueOption(id: 7, icon: nil, title: "Ligue 1", count: 20),
-                        LeagueOption(id: 8, icon: nil, title: "Ligue 2", count: 18),
-                        LeagueOption(id: 9, icon: nil, title: "Coupe de France", count: 12)
+                        LeagueOption(id: "7", icon: nil, title: "Ligue 1", count: 20),
+                        LeagueOption(id: "8", icon: nil, title: "Ligue 2", count: 18),
+                        LeagueOption(id: "9", icon: nil, title: "Coupe de France", count: 12)
                     ],
                     isExpanded: false
                 ),
                 CountryLeagueOptions(
-                    id: 3,
+                    id: "3",
                     icon: "germany_flag",
                     title: "Germany",
                     leagues: [
-                        LeagueOption(id: 10, icon: nil, title: "Bundesliga", count: 18),
-                        LeagueOption(id: 11, icon: nil, title: "2. Bundesliga", count: 18),
-                        LeagueOption(id: 12, icon: nil, title: "DFB-Pokal", count: 14)
+                        LeagueOption(id: "10", icon: nil, title: "Bundesliga", count: 18),
+                        LeagueOption(id: "11", icon: nil, title: "2. Bundesliga", count: 18),
+                        LeagueOption(id: "12", icon: nil, title: "DFB-Pokal", count: 14)
                     ],
                     isExpanded: false
                 ),
                 CountryLeagueOptions(
-                    id: 4,
+                    id: "4",
                     icon: "italy_flag",
                     title: "Italy",
                     leagues: [
-                        LeagueOption(id: 13, icon: nil, title: "Serie A", count: 20),
-                        LeagueOption(id: 14, icon: nil, title: "Serie B", count: 20),
-                        LeagueOption(id: 15, icon: nil, title: "Coppa Italia", count: 16)
+                        LeagueOption(id: "13", icon: nil, title: "Serie A", count: 20),
+                        LeagueOption(id: "14", icon: nil, title: "Serie B", count: 20),
+                        LeagueOption(id: "15", icon: nil, title: "Coppa Italia", count: 16)
                     ],
                     isExpanded: false
                 ),
                 CountryLeagueOptions(
-                    id: 5,
+                    id: "5",
                     icon: "spain_flag",
                     title: "Spain",
                     leagues: [
-                        LeagueOption(id: 16, icon: nil, title: "La Liga", count: 20),
-                        LeagueOption(id: 17, icon: nil, title: "La Liga 2", count: 22),
-                        LeagueOption(id: 18, icon: nil, title: "Copa del Rey", count: 15)
+                        LeagueOption(id: "16", icon: nil, title: "La Liga", count: 20),
+                        LeagueOption(id: "17", icon: nil, title: "La Liga 2", count: 22),
+                        LeagueOption(id: "18", icon: nil, title: "Copa del Rey", count: 15)
                     ],
                     isExpanded: false
                 ),
                 CountryLeagueOptions(
-                    id: 6,
+                    id: "6",
                     icon: "international_flag",
                     title: "International",
                     leagues: [
-                        LeagueOption(id: 19, icon: nil, title: "Champions League", count: 32),
-                        LeagueOption(id: 20, icon: nil, title: "Europa League", count: 24),
-                        LeagueOption(id: 21, icon: nil, title: "Conference League", count: 18),
-                        LeagueOption(id: 22, icon: nil, title: "World Cup Qualifiers", count: 28),
-                        LeagueOption(id: 23, icon: nil, title: "Nations League", count: 16)
+                        LeagueOption(id: "19", icon: nil, title: "Champions League", count: 32),
+                        LeagueOption(id: "20", icon: nil, title: "Europa League", count: 24),
+                        LeagueOption(id: "21", icon: nil, title: "Conference League", count: 18),
+                        LeagueOption(id: "22", icon: nil, title: "World Cup Qualifiers", count: 28),
+                        LeagueOption(id: "23", icon: nil, title: "Nations League", count: 16)
                     ],
                     isExpanded: false
                 )
