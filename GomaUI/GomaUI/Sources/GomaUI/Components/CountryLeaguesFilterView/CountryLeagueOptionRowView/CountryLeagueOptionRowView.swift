@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import Combine
-import Kingfisher
 
 public class CountryLeagueOptionRowView: UIView {
     // MARK: - Properties
@@ -250,14 +249,22 @@ public class CountryLeagueOptionRowView: UIView {
         backgroundColor = isSelected ? StyleProvider.Color.separatorLine : .clear
         leftIndicatorView.isHidden = !isSelected
         
-//        iconImageView.image = UIImage(named: self.viewModel.countryLeagueOptions.icon ?? "")
+        // TODO: Enable Kingfisher later
+//        if let flagIconUrl = self.flagIconURL(for: self.viewModel.countryLeagueOptions.icon ?? "") {
+//            iconImageView.kf.setImage(with: flagIconUrl)
+//
+//        }
+//        else {
+//            iconImageView.image = UIImage(named: "country_flag_240")
+//        }
         
-        if let flagIconUrl = self.flagIconURL(for: self.viewModel.countryLeagueOptions.icon ?? "") {
-            iconImageView.kf.setImage(with: flagIconUrl)
-
-        }
-        else {
-            iconImageView.image = UIImage(named: "country_flag_240")
+        loadFlagImage(for: self.viewModel.countryLeagueOptions.icon ?? "") { image in
+            if let image {
+                self.iconImageView.image = image
+            }
+            else {
+                self.iconImageView.image = UIImage(systemName: "globe")
+            }
         }
 
         iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : .black
@@ -294,5 +301,26 @@ public class CountryLeagueOptionRowView: UIView {
     
     func flagIconURL(for venueId: String) -> URL? {
         return URL(string:"https://static.glastcoper.com/omfe-widgets/s/assets/1.10.2/om1/icons/flag/\(venueId).png")
+    }
+    
+    func loadFlagImage(for venueId: String, completion: @escaping (UIImage?) -> Void) {
+        let urlString = "https://static.glastcoper.com/omfe-widgets/s/assets/1.10.2/om1/icons/flag/\(venueId).png"
+        guard let url = URL(string: urlString) else {
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+            return
+        }
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, let image = UIImage(data: data), error == nil else {
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                completion(image)
+            }
+        }.resume()
     }
 }

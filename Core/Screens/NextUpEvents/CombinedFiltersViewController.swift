@@ -9,310 +9,6 @@ import UIKit
 import Combine
 import GomaUI
 
-public class CombinedFiltersViewModel {
-    
-    var popularLeagues = [SortOption]()
-    var popularCountryLeagues = [CountryLeagueOptions]()
-    var otherCountryLeagues = [CountryLeagueOptions]()
-    
-    var generalFilterSelection: GeneralFilterSelection
-    
-    var filterConfiguration: FilterConfiguration
-    var currentContextId: String
-    
-    var dynamicViewModels: [String: Any] = [:]
-    
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    init(filterConfiguration: FilterConfiguration,
-         contextId: String = "sports") {
-        
-        self.generalFilterSelection = Env.filterStorage.currentFilterSelection
-        self.filterConfiguration = filterConfiguration
-        self.currentContextId = contextId
-        
-        self.getAllLeagues()
-        
-    }
-    
-    func getAllLeagues(sportId: String? = nil) {
-        self.isLoadingPublisher.send(true)
-        
-        var currentSportId = Env.filterStorage.currentFilterSelection.sportId
-        
-        if let sportId {
-            currentSportId = sportId
-        }
-        
-        let currentSport = Env.sportsStore.getActiveSports().first(where: {
-            $0.id == currentSportId
-        })
-        
-        var sportType = SportType(name: currentSport?.name ?? "",
-                                  numericId: currentSport?.numericId ?? "",
-                                  alphaId: currentSport?.alphaId ?? "", iconId: currentSport?.id ?? "",
-                                  showEventCategory: false,
-                                  numberEvents: 0,
-                                  numberOutrightEvents: 0,
-                                  numberOutrightMarkets: 0,
-                                  numberLiveEvents: 0)
-        
-        let sportTournamentsPublisher = Env.servicesProvider.subscribeSportTournaments(forSportType: sportType)
-            .filter { content in
-                if case .contentUpdate = content { return true }
-                return false
-            }
-            .map { content -> [Competition] in
-                if case .contentUpdate(let tournaments) = content {
-                    return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
-                }
-                return []
-            }
-            .prefix(1) // Only take the first .contentUpdate
-
-        let popularTournamentsPublisher = Env.servicesProvider.subscribePopularTournaments(forSportType: sportType, tournamentsCount: 10)
-            .filter { content in
-                if case .contentUpdate = content { return true }
-                return false
-            }
-            .map { content -> [Competition] in
-                if case .contentUpdate(let tournaments) = content {
-                    return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
-                }
-                return []
-            }
-            .prefix(1) // Only take the first .contentUpdate
-
-        Publishers.Zip(sportTournamentsPublisher, popularTournamentsPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        print("All tournaments subscriptions completed")
-                    case .failure(let error):
-                        print("Tournaments subscriptions failed: \(error)")
-                    }
-                },
-                receiveValue: { [weak self] sportCompetitions, popularCompetitions in
-                    
-                    self?.setupAllLeagues(popularCompetitions: popularCompetitions, sportCompetitions: sportCompetitions)
-                }
-            )
-            .store(in: &cancellables)
-    }
-    
-    func setupAllLeagues(popularCompetitions: [Competition], sportCompetitions: [Competition]) {
-        isLoadingPublisher.send(true)
-        
-        popularLeagues.removeAll()
-        popularCountryLeagues.removeAll()
-        otherCountryLeagues.removeAll()
-
-        // Popular Leagues
-        var allLeaguesOption = SortOption(id: "all", icon: "league_icon", title: "All Popular Leagues", count: 0, iconTintChange: false)
-        
-        // Convert competitions to SortOptions
-        let newSortOptions = popularCompetitions.map { competition in
-            SortOption(
-                id: competition.id,
-                icon: "league_icon",
-                title: competition.name,
-                count: competition.numberEvents ?? 0,
-                iconTintChange: false
-            )
-        }
-        
-        let totalCount = newSortOptions.reduce(0) { $0 + $1.count }
-        
-        allLeaguesOption.count = totalCount
-        
-        popularLeagues.append(allLeaguesOption)
-        popularLeagues.append(contentsOf: newSortOptions)
-        
-        // Popular and Other Country Leagues
-        let popularVenueIds: Set<String> = Set(popularCompetitions.compactMap { $0.venue?.id })
-
-        var venueDict: [String: (venueName: String, leagues: [LeagueOption])] = [:]
-        
-        for competition in sportCompetitions {
-            let venueId = competition.venue?.id ?? ""
-            let venueName = competition.venue?.name ?? ""
-            let league = LeagueOption(
-                id: competition.id,
-                icon: nil,
-                title: competition.name,
-                count: competition.numberEvents ?? 0
-            )
-            if var entry = venueDict[venueId] {
-                entry.leagues.append(league)
-                venueDict[venueId] = (venueName: entry.venueName, leagues: entry.leagues)
-            } else {
-                venueDict[venueId] = (venueName: venueName, leagues: [league])
-            }
-        }
-
-        var popularCountryLeaguesArr: [CountryLeagueOptions] = []
-        var otherCountryLeaguesArr: [CountryLeagueOptions] = []
-
-        for (index, (venueId, value)) in venueDict.enumerated() {
-            let countryLeague = CountryLeagueOptions(
-                id: venueId,
-                icon: venueId,
-                title: value.venueName,
-                leagues: value.leagues,
-                isExpanded: index == 0
-            )
-            if popularVenueIds.contains(venueId) {
-                popularCountryLeaguesArr.append(countryLeague)
-            } else {
-                otherCountryLeaguesArr.append(countryLeague)
-            }
-        }
-
-        popularCountryLeagues.append(contentsOf: popularCountryLeaguesArr)
-        otherCountryLeagues.append(contentsOf: otherCountryLeaguesArr)
-        
-        // Sort both arrays alphabetically by title
-        popularCountryLeagues.sort { $0.title < $1.title }
-        otherCountryLeagues.sort { $0.title < $1.title }
-        
-        self.refreshLeaguesFilterData()
-        self.refreshCountryLeaguesFilterData()
-        self.isLoadingPublisher.send(false)
-       
-    }
-    
-    // TEST
-//    func recheckAllLeagues(){
-//        self.isLoadingPublisher.send(true)
-//        
-//        popularLeagues.removeAll()
-//        popularCountryLeagues.removeAll()
-//        otherCountryLeagues.removeAll()
-//
-//        // Popular Leagues
-//        var allLeaguesOption = SortOption(id: "0", icon: "league_icon", title: "All Popular Leagues", count: 0, iconTintChange: false)
-//        
-//        let newSortOptions = [
-//            SortOption(id: "51", icon: "league_icon", title: "NBA", count: 25, iconTintChange: false),
-//            SortOption(id: "52", icon: "league_icon", title: "ACB", count: 10, iconTintChange: false),
-//            SortOption(id: "53", icon: "league_icon", title: "ABA League", count: 8, iconTintChange: false),
-//            SortOption(id: "54", icon: "league_icon", title: "La Liga", count: 13, iconTintChange: false),
-//            SortOption(id: "55", icon: "league_icon", title: "Serie A", count: 0, iconTintChange: false)
-//        ]
-//        
-//        let totalCount = newSortOptions.reduce(0) { $0 + $1.count }
-//        
-//        allLeaguesOption.count = totalCount
-//        
-//        popularLeagues.append(allLeaguesOption)
-//        popularLeagues.append(contentsOf: newSortOptions)
-//        
-//        // Popular Country Leagues
-//        
-//        let countryLeagueOptions = [
-//            CountryLeagueOptions(
-//                id: "1",
-//                icon: "international_flag_icon",
-//                title: "United States",
-//                leagues: [
-//                    LeagueOption(id: "56", icon: nil, title: "NBA", count: 30),
-//                    LeagueOption(id: "57", icon: nil, title: "WNBA", count: 12),
-//                    LeagueOption(id: "58", icon: nil, title: "G League", count: 28)
-//                ],
-//                isExpanded: true
-//            ),
-//            CountryLeagueOptions(
-//                id: "2",
-//                icon: "international_flag_icon",
-//                title: "Spain",
-//                leagues: [
-//                    LeagueOption(id: "59", icon: nil, title: "ACB", count: 18),
-//                    LeagueOption(id: "60", icon: nil, title: "LEB Oro", count: 18)
-//                ],
-//                isExpanded: false
-//            ),
-//            CountryLeagueOptions(
-//                id: "3",
-//                icon: "international_flag_icon",
-//                title: "Turkey",
-//                leagues: [
-//                    LeagueOption(id: "61", icon: nil, title: "ABA League", count: 14)
-//                ],
-//                isExpanded: false
-//            ),
-//            CountryLeagueOptions(
-//                id: "4",
-//                icon: "international_flag_icon",
-//                title: "International",
-//                leagues: [
-//                    LeagueOption(id: "62", icon: nil, title: "EuroLeague", count: 18),
-//                    LeagueOption(id: "63", icon: nil, title: "EuroCup", count: 20),
-//                    LeagueOption(id: "64", icon: nil, title: "FIBA World Cup", count: 32)
-//                ],
-//                isExpanded: false
-//            )
-//        ]
-//        
-//        popularCountryLeagues.append(contentsOf: countryLeagueOptions)
-//        
-//        // Other country leagues
-//        let otherCountryLeagueOptions = [
-//            CountryLeagueOptions(
-//                id: "7",
-//                icon: "international_flag_icon",
-//                title: "Portugal",
-//                leagues: [
-//                    LeagueOption(id: "65", icon: nil, title: "LPB 2025", count: 18)
-//                ],
-//                isExpanded: false
-//            ),
-//            CountryLeagueOptions(
-//                id: "9",
-//                icon: "international_flag_icon",
-//                title: "Netherlands",
-//                leagues: [
-//                    LeagueOption(id: "68", icon: nil, title: "DBL 2025", count: 10)
-//                ],
-//                isExpanded: false
-//            )
-//        ]
-//        
-//        self.otherCountryLeagues.append(contentsOf: otherCountryLeagueOptions)
-//        
-//        // Refresh data
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-//            self?.refreshLeaguesFilterData()
-//            self?.refreshCountryLeaguesFilterData()
-//            self?.isLoadingPublisher.send(false)
-//        }
-//
-//    }
-    
-    private func refreshLeaguesFilterData() {
-        if let leaguesViewModel = dynamicViewModels["leaguesFilter"] as? MockSortFilterViewModel {
-            
-            leaguesViewModel.updateSortOptions(popularLeagues)
-        }
-        
-    }
-    
-    private func refreshCountryLeaguesFilterData() {
-        if let countryLeaguesViewModel = dynamicViewModels["popularCountryLeaguesFilter"] as? MockCountryLeaguesFilterViewModel {
-            
-            countryLeaguesViewModel.updateCountryLeagueOptions(popularCountryLeagues)
-        }
-        
-        if let otherCountryLeaguesViewModel = dynamicViewModels["otherCountryLeaguesFilter"] as? MockCountryLeaguesFilterViewModel {
-            
-            otherCountryLeaguesViewModel.updateCountryLeagueOptions(otherCountryLeagues)
-        }
-    }
-}
-
 public class CombinedFiltersViewController: UIViewController {
     
     // MARK: - Properties
@@ -448,7 +144,6 @@ public class CombinedFiltersViewController: UIViewController {
         setupView()
         
         // Create dynamic view models and setup filter views from configuration
-        createDynamicViewModels(for: viewModel.filterConfiguration, contextId: viewModel.currentContextId)
         setupFilterViewsFromConfiguration(viewModel.filterConfiguration, contextId: viewModel.currentContextId)
         
         setupApplyButton()
@@ -606,8 +301,6 @@ public class CombinedFiltersViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func resetButtonTapped() {
-//        self.viewModel.generalFilterSelection = self.viewModel.defaultFilterSelection
-//        print("RESET FILTERS: \(self.viewModel.generalFilterSelection)")
         Env.filterStorage.resetToDefault()
         self.resetFilters()
         onReset?()
@@ -620,7 +313,6 @@ public class CombinedFiltersViewController: UIViewController {
 
     @objc private func applyButtonTapped() {
         print("APPLIED FILTERS: \(self.viewModel.generalFilterSelection)")
-//        onApply?(self.viewModel.generalFilterSelection)
         Env.filterStorage.updateFilterSelection(self.viewModel.generalFilterSelection)
         self.closeButtonTapped()
     }
@@ -882,9 +574,9 @@ extension CombinedFiltersViewController {
 }
 
 // MARK: - Filter View Models Setup
-extension CombinedFiltersViewController {
+extension CombinedFiltersViewModel {
     
-    private func createDynamicViewModels(for configuration: FilterConfiguration, contextId: String) {
+    func createDynamicViewModels(for configuration: FilterConfiguration, contextId: String) {
         guard let context = configuration.filtersByContext.first(where: { $0.id == contextId }) else {
             return
         }
@@ -895,11 +587,11 @@ extension CombinedFiltersViewController {
             }
             
             let viewModel = createViewModel(for: widget)
-            self.viewModel.dynamicViewModels[widgetId] = viewModel
+            self.dynamicViewModels[widgetId] = viewModel
         }
     }
     
-    private func createViewModel(for widget: FilterWidget) -> Any? {
+    func createViewModel(for widget: FilterWidget) -> Any? {
         switch widget.type {
         case .sportsFilter:
             return createSportGamesViewModel(for: widget)
@@ -931,7 +623,7 @@ extension CombinedFiltersViewController {
         
         return MockSportGamesFilterViewModel(
             title: widget.label, sportFilters: sportFilters,
-            selectedId: viewModel.generalFilterSelection.sportId
+            selectedId: generalFilterSelection.sportId
         )
     }
     
@@ -957,7 +649,7 @@ extension CombinedFiltersViewController {
         
         // Find the index of the time option that matches the current timeValue
         let selectedIndex: Float
-        if let index = timeOptions.firstIndex(where: { $0.value == viewModel.generalFilterSelection.timeValue }) {
+        if let index = timeOptions.firstIndex(where: { $0.value == generalFilterSelection.timeValue }) {
             selectedIndex = Float(index)
         } else {
             selectedIndex = 0.0
@@ -997,11 +689,11 @@ extension CombinedFiltersViewController {
                     )
                 }
             }
-            selectedId = viewModel.generalFilterSelection.sortTypeId
+            selectedId = generalFilterSelection.sortTypeId
         } else if widget.id == "leaguesFilter" {
-            sortOptions = viewModel.popularLeagues
+            sortOptions = popularLeagues
             sortFilterType = .league
-            selectedId = viewModel.generalFilterSelection.leagueId
+            selectedId = generalFilterSelection.leagueId
         }
         
         return MockSortFilterViewModel(
@@ -1016,15 +708,15 @@ extension CombinedFiltersViewController {
         var countryLeagueOptions: [CountryLeagueOptions] = []
         
         if widget.id == "popularCountryLeaguesFilter" {
-            countryLeagueOptions = self.viewModel.popularCountryLeagues
+            countryLeagueOptions = popularCountryLeagues
         } else if widget.id == "otherCountryLeaguesFilter" {
-            countryLeagueOptions = self.viewModel.otherCountryLeagues
+            countryLeagueOptions = otherCountryLeagues
         }
         
         return MockCountryLeaguesFilterViewModel(
             title: widget.label,
             countryLeagueOptions: countryLeagueOptions,
-            selectedId: viewModel.generalFilterSelection.leagueId
+            selectedId: generalFilterSelection.leagueId
         )
     }
     

@@ -156,7 +156,7 @@ final public class PromotionalBonusCardView: UIView {
         setupButtons()
         
         // Setup avatar and count container
-        avatarsAndCountStackView.addArrangedSubview(avatarsStackView)
+//        avatarsAndCountStackView.addArrangedSubview(avatarsStackView)
         avatarsAndCountStackView.addArrangedSubview(playersLabel)
         
         // Setup main content stack

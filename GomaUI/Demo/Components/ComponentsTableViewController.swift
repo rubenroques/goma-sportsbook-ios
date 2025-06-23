@@ -307,7 +307,121 @@ class ComponentsTableViewController: UITableViewController {
                 pillView.layer.cornerRadius = 4
                 return pillView
             }
-        )
+        ),
+        UIComponent(
+            title: "Sport Games Filter",
+            description: "A filter view for selecting sports, using SportGamesFilterView.",
+            viewController: SportGamesFilterViewController.self,
+            previewFactory: {
+                let viewModel = MockSportGamesFilterViewModel(
+                    title: "Sports",
+                    sportFilters: [
+                        SportFilter(id: "1", title: "Football", icon: "sport_icon"),
+                        SportFilter(id: "2", title: "Basketball", icon: "sport_icon"),
+                        SportFilter(id: "3", title: "Tennis", icon: "sport_icon"),
+                        SportFilter(id: "4", title: "Voleyball", icon: "sport_icon")
+                    ],
+                    selectedId: "1"
+                )
+                let filterView = SportGamesFilterView(viewModel: viewModel)
+                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.layer.cornerRadius = 8
+                return filterView
+            }
+        ),
+        UIComponent(
+            title: "Sort Filter View",
+            description: "A filter view for sorting options, using SortFilterView.",
+            viewController: SortFilterViewController.self,
+            previewFactory: {
+                let viewModel = MockSortFilterViewModel(
+                    title: "Sort By",
+                    sortOptions: [
+                        SortOption(id: "1", icon: "flame.fill", title: "Popular", count: 25),
+                        SortOption(id: "2", icon: "clock.fill", title: "Upcoming", count: 15),
+                        SortOption(id: "3", icon: "heart.fill", title: "Favourites", count: 0)
+                    ],
+                    selectedId: "1"
+                )
+                let filterView = SortFilterView(viewModel: viewModel)
+                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.layer.cornerRadius = 8
+                return filterView
+            }
+        ),
+        UIComponent(
+            title: "Country Leagues Filter",
+            description: "A filter view for selecting country leagues, using CountryLeaguesFilterView.",
+            viewController: CountryLeaguesFilterViewController.self,
+            previewFactory: {
+                let viewModel = MockCountryLeaguesFilterViewModel(
+                    title: "Country Leagues",
+                    countryLeagueOptions: [
+                        CountryLeagueOptions(
+                            id: "us",
+                            icon: "us",
+                            title: "United States",
+                            leagues: [
+                                LeagueOption(id: "nba", icon: nil, title: "NBA", count: 30),
+                                LeagueOption(id: "wnba", icon: nil, title: "WNBA", count: 12)
+                            ],
+                            isExpanded: true
+                        ),
+                        CountryLeagueOptions(
+                            id: "es",
+                            icon: "es",
+                            title: "Spain",
+                            leagues: [
+                                LeagueOption(id: "acb", icon: nil, title: "ACB", count: 18),
+                                LeagueOption(id: "leb", icon: nil, title: "LEB Oro", count: 18)
+                            ],
+                            isExpanded: false
+                        )
+                    ],
+                    selectedId: "nba"
+                )
+                let filterView = CountryLeaguesFilterView(viewModel: viewModel)
+                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.layer.cornerRadius = 8
+                return filterView
+            }
+        ),
+        UIComponent(
+            title: "Promotional Bonus Card",
+            description: "A card view for displaying promotional bonuses, using PromotionalBonusCardView.",
+            viewController: PromotionalBonusCardViewController.self,
+            previewFactory: {
+                let viewModel = MockPromotionalBonusCardViewModel.defaultMock
+                let cardView = PromotionalBonusCardView(viewModel: viewModel)
+                cardView.backgroundColor = StyleProvider.Color.backgroundColor
+                cardView.layer.cornerRadius = 12
+                return cardView
+            }
+        ),
+        UIComponent(
+            title: "Promotional Header",
+            description: "A header view for displaying promotional content, using PromotionalHeaderView.",
+            viewController: PromotionalHeaderViewController.self,
+            previewFactory: {
+                let viewModel = MockPromotionalHeaderViewModel.defaultMock
+                let headerView = PromotionalHeaderView(viewModel: viewModel)
+                headerView.backgroundColor = StyleProvider.Color.backgroundColor
+                headerView.layer.cornerRadius = 8
+                return headerView
+            }
+        ),
+        UIComponent(
+            title: "Button View",
+            description: "A customizable button component, using ButtonView.",
+            viewController: ButtonViewController.self,
+            previewFactory: {
+                let viewModel = MockButtonViewModel.solidBackgroundMock
+                let buttonView = ButtonView(viewModel: viewModel)
+                buttonView.backgroundColor = StyleProvider.Color.backgroundColor
+                buttonView.layer.cornerRadius = 8
+                return buttonView
+            }
+        ),
     ]
 
     // MARK: - View Lifecycle

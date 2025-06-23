@@ -2030,6 +2030,14 @@
 		655E20132B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
 		655E20142B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
 		655E20152B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		65602D3D2E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */; };
+		65602D3E2E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */; };
+		65602D3F2E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */; };
+		65602D402E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */; };
+		65602D412E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */; };
+		65602D422E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */; };
+		65602D432E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */; };
+		65602D442E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */; };
 		6561B6102C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
 		6561B6112C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
 		6561B6122C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
@@ -9043,6 +9051,7 @@
 		655E20082B21EA0D00C95337 /* NotificationsService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationsService.entitlements; sourceTree = "<group>"; };
 		655E20092B28A14700C95337 /* TextSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSectionView.swift; sourceTree = "<group>"; };
 		655E20122B29CB7E00C95337 /* TextSubsectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSubsectionView.swift; sourceTree = "<group>"; };
+		65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedFiltersViewModel.swift; sourceTree = "<group>"; };
 		6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardTableViewCell.swift; sourceTree = "<group>"; };
 		6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardMarketCollectionViewCell.swift; sourceTree = "<group>"; };
 		658425662DA543EA00BD5434 /* Ubuntu-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Italic.ttf"; sourceTree = "<group>"; };
@@ -13413,6 +13422,7 @@
 				CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */,
 				CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */,
 				658E2CBC2E00271400FD4940 /* CombinedFiltersViewController.swift */,
+				65602D3C2E099A4800298DA7 /* CombinedFiltersViewModel.swift */,
 			);
 			path = NextUpEvents;
 			sourceTree = "<group>";
@@ -16885,6 +16895,7 @@
 				CED5D9712D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CED5D9752D944B7100429306 /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CEC4283E2DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				65602D442E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */,
 				CEC4283F2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CED5D9772D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CED5D97A2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -17769,6 +17780,7 @@
 				655E20132B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				CED5D91B2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEC428342DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				65602D412E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */,
 				CEC428352DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CED5D91C2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CED5D91D2D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
@@ -18623,6 +18635,7 @@
 				655E20142B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				CED5D8F12D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEC4283C2DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift in Sources */,
+				65602D3F2E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */,
 				CEC4283D2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CED5D8F22D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CED5D8F32D944B7100429306 /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
@@ -19535,6 +19548,7 @@
 				CE7E80042D79494B00A5558A /* UserDefaults+DeveloperMode.swift in Sources */,
 				CE12A2FB2D31347E0022BDF7 /* Observable.swift in Sources */,
 				CE12A2FC2D31347E0022BDF7 /* LinkPresentationItemSource.swift in Sources */,
+				65602D3D2E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */,
 				CE12A2FD2D31347E0022BDF7 /* OddsFormat.swift in Sources */,
 				CE12A2FE2D31347E0022BDF7 /* GenericAvatarWarningViewController.swift in Sources */,
 				CE12A3012D31347E0022BDF7 /* OutrightMarketDetailsViewController.swift in Sources */,
@@ -20340,6 +20354,7 @@
 				CEC428392DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CE8F24D62DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CE8F24D72DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				65602D3E2E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */,
 				CE8F24D82DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE8F24D92DD371350071238E /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CE8F24DA2DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
@@ -21194,6 +21209,7 @@
 				CEC4283B2DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CEB3A2472DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEB3A2482DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				65602D432E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */,
 				CEB3A2492DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A24A2DD379800024043B /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CEB3A24B2DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
@@ -22048,6 +22064,7 @@
 				CEC428332DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift in Sources */,
 				CEB3A6D02DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEB3A6D12DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				65602D422E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */,
 				CEB3A6D22DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A6D32DD379890024043B /* ClassicMatchWidgetCollectionViewCell.swift in Sources */,
 				CEB3A6D42DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Styling.swift in Sources */,
@@ -22834,6 +22851,7 @@
 				CEF194EC2DA834E900C81F12 /* MultiSlider.swift in Sources */,
 				CEF194ED2DA834E900C81F12 /* UserLoginForm.swift in Sources */,
 				CEF194EE2DA834E900C81F12 /* MyCompetitionsViewModel.swift in Sources */,
+				65602D402E099A4800298DA7 /* CombinedFiltersViewModel.swift in Sources */,
 				CEF194F02DA834E900C81F12 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				CEF194F12DA834E900C81F12 /* SearchViewModel.swift in Sources */,
 				CEF194F22DA834E900C81F12 /* MyFavoritesRootViewController.swift in Sources */,
