@@ -112,8 +112,8 @@ extension EveryMatrix {
         let eventId: String
         let eventPartId: String
         let bettingTypeId: String
-        let numberOfOutcomes: Int
-        let scoringUnitId: String
+        let numberOfOutcomes: Int?
+        let scoringUnitId: String?
         let isComplete: Bool
         let isClosed: Bool
         let paramFloat1: Double?
@@ -124,8 +124,8 @@ extension EveryMatrix {
         let isAvailable: Bool
         let notAvailableSince: Int64?
         let shortEventPartName: String
-        let scoringUnitName: String
-        let asianLine: Bool
+        let scoringUnitName: String?
+        let asianLine: Bool?
         let labelName: String?
         let labelStyle: String?
         let allowEachWay: Bool
@@ -1324,13 +1324,11 @@ extension EveryMatrix {
 
         /// Convenience method to observe market changes
         func observeMarket(id: String) -> AnyPublisher<MarketDTO?, Never> {
-            print("ManualDebug: observeMarket(id: \(id)")
             return observeEntity(MarketDTO.self, id: id)
         }
 
         /// Convenience method to observe outcome changes
         func observeOutcome(id: String) -> AnyPublisher<OutcomeDTO?, Never> {
-            print("ManualDebug: observeOutcome(id: \(id)")
             return observeEntity(OutcomeDTO.self, id: id)
         }
 
@@ -1364,8 +1362,6 @@ extension EveryMatrix {
             let newPublisher = CurrentValueSubject<(any Entity)?, Never>(initialValue)
             self.entityPublishers[entityType]?[id] = newPublisher
 
-            print("ManualDebug: Created new publisher for \(entityType)/\(id)")
-            
             return newPublisher
         }
 
@@ -1381,8 +1377,6 @@ extension EveryMatrix {
             publisherQueue.async { [weak self] in
                 // Update CurrentValueSubject with new value if it exists
                 if let publisher = self?.entityPublishers[entityType]?[id] {
-                    // The publisher exists, something has subscribed to this
-                    print("ManualDebug: Notified publisher for \(entityType)/\(id)")
                     publisher.send(entity)
                 }
             }

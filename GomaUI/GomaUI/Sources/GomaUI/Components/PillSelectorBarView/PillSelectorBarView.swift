@@ -76,9 +76,6 @@ final public class PillSelectorBarView: UIView {
     // MARK: - Rendering
     private func render(state: PillSelectorBarDisplayState) {
         
-        // Store current state for later access
-        currentDisplayState = state
-        
         let barData = state.barData
         
         // Update visibility and interaction
@@ -89,6 +86,20 @@ final public class PillSelectorBarView: UIView {
         // Check if we need a full rebuild or just state updates
         let existingIds = Set(pillViews.keys)
         let newIds = Set(barData.pills.map { $0.id })
+        
+        // If allowsVisualStateChanges is false, check if content has actually changed
+        if !barData.allowsVisualStateChanges && existingIds == newIds && !pillViews.isEmpty {
+            // Allow updates if pill content (title, icon) has changed, even in read-only mode
+            let contentHasChanged = hasContentChanged(newPills: barData.pills)
+            if !contentHasChanged {
+                // Store current state for later access before early return
+                currentDisplayState = state
+                return
+            }
+        }
+        
+        // Store current state for later access
+        currentDisplayState = state
         
         // If the pill IDs haven't changed, just update visual states
         if existingIds == newIds && !pillViews.isEmpty {
@@ -117,7 +128,8 @@ final public class PillSelectorBarView: UIView {
     private func createPillViews(for pills: [PillData], selectedId: String?) {
         for pill in pills {
             let updatedPillData = pill.updatingSelection(isSelected: pill.id == selectedId)
-            let pillViewModel = MockPillItemViewModel(pillData: updatedPillData)
+            let isReadOnly = currentDisplayState?.barData.allowsVisualStateChanges == false
+            let pillViewModel = MockPillItemViewModel(pillData: updatedPillData, isReadOnly: isReadOnly)
             let pillView = PillItemView(viewModel: pillViewModel)
             
             // Let PillItemView determine its own size
@@ -143,6 +155,30 @@ final public class PillSelectorBarView: UIView {
                 }
             }
         }
+    }
+    
+    private func hasContentChanged(newPills: [PillData]) -> Bool {
+        // Store current pill data for comparison
+        guard let currentState = currentDisplayState else { return true }
+        let currentPills = currentState.barData.pills
+        
+        // If pill count differs, content has changed
+        guard currentPills.count == newPills.count else { return true }
+        
+        // Compare content properties (ignoring selection state)
+        for (index, newPill) in newPills.enumerated() {
+            let currentPill = currentPills[index]
+            
+            if newPill.id != currentPill.id ||
+               newPill.title != currentPill.title ||
+               newPill.leftIconName != currentPill.leftIconName ||
+               newPill.showExpandIcon != currentPill.showExpandIcon {
+                return true
+            }
+            // Note: We intentionally ignore isSelected to allow selection state preservation
+        }
+        
+        return false
     }
     
     private func clearPillViews() {

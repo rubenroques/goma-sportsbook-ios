@@ -2,7 +2,7 @@ import Combine
 import UIKit
 import GomaUI
 
-final class SportSelectorViewModel: SportTypeSelectorViewModelProtocol {
+final class PreLiveSportSelectorViewModel: SportTypeSelectorViewModelProtocol {
     
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<SportTypeSelectorDisplayState, Never>
@@ -28,7 +28,9 @@ final class SportSelectorViewModel: SportTypeSelectorViewModelProtocol {
         self.sportTypeStore = sportTypeStore
         
         // Get sports synchronously - no need for live updates in modal
-        let activeSports = sportTypeStore.getActiveSports()
+        let activeSports = sportTypeStore.getActiveSports().filter { sport in
+            sport.liveEventsCount > 0 || sport.eventsCount > 0
+        }
         self.internalSports = activeSports.map { Self.sportToSportTypeData($0) }
         
         // Store original sports for data preservation

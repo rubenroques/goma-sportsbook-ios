@@ -35,6 +35,9 @@ public protocol PillItemViewModelProtocol {
     var leftIconNamePublisher: AnyPublisher<String?, Never> { get }
     var showExpandIconPublisher: AnyPublisher<Bool, Never> { get }
     var isSelectedPublisher: AnyPublisher<Bool, Never> { get }
+    
+    // Read-only state - when true, selectPill() should not change the selection state
+    var isReadOnly: Bool { get }
 
     // Actions
     func selectPill()

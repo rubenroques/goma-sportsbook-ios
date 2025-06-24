@@ -148,15 +148,15 @@ class LiveMatchesPaginator: UnsubscriptionController {
     func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
         return store.observeOutcome(id: id)
             .handleEvents(receiveSubscription: { subscription in
-                print("entityStore.observeOutcome.subscription")
+                // print("entityStore.observeOutcome.subscription")
             }, receiveOutput: { outcome in
-                print("entityStore.observeOutcome.outcome: \(outcome)")
+                // print("entityStore.observeOutcome.outcome: \(outcome)")
             }, receiveCompletion: { completion in
-                print("entityStore.observeOutcome.completion: \(completion)")
+                // print("entityStore.observeOutcome.completion: \(completion)")
             }, receiveCancel: {
-                print("entityStore.observeOutcome.cancel")
+                // print("entityStore.observeOutcome.cancel")
             }, receiveRequest: { demand in
-                print("entityStore.observeOutcome.demand: \(demand)")
+                // print("entityStore.observeOutcome.demand: \(demand)")
             })
             .compactMap { outcomeDTO -> EveryMatrix.Outcome? in
                 guard let outcomeDTO = outcomeDTO else { return nil }
@@ -282,7 +282,8 @@ class LiveMatchesPaginator: UnsubscriptionController {
                 store.store(dto)
             case .nextMatchesNumber(let dto):
                 store.store(dto)
-                
+            case .tournament(let dto):
+                store.store(dto)
             // UPDATE/DELETE/CREATE records - only process match-related changes
             case .changeRecord(let changeRecord):
                 handleMatchesChangeRecord(changeRecord)
@@ -360,6 +361,8 @@ class LiveMatchesPaginator: UnsubscriptionController {
         case .marketInfo(let dto):
             store.store(dto)
         case .nextMatchesNumber(let dto):
+            store.store(dto)
+        case .tournament(let dto):
             store.store(dto)
         case .unknown(let type):
             print("Unknown entity data type: \(type)")

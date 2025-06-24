@@ -5,7 +5,6 @@ import UIKit
 public enum MarketGroupTabItemVisualState: Equatable {
     case idle           // Normal unselected state
     case selected       // Tab is currently selected
-    case disabled       // Tab is disabled and non-interactive
 }
 
 // MARK: - Data Models
@@ -33,8 +32,6 @@ extension MarketGroupTabItemVisualState: Hashable {
             hasher.combine("idle")
         case .selected:
             hasher.combine("selected")
-        case .disabled:
-            hasher.combine("disabled")
         }
     }
 }

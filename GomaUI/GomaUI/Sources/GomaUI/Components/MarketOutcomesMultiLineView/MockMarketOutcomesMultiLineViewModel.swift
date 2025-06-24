@@ -46,7 +46,7 @@ final public class MockMarketOutcomesMultiLineViewModel: MarketOutcomesMultiLine
 extension MockMarketOutcomesMultiLineViewModel {
     
     private static func createLineViewModel(from lineData: MarketLineData) -> MarketOutcomesLineViewModelProtocol {
-        let lineDisplayState = MarketOutcomesDisplayState(
+        let lineDisplayState = MarketOutcomesLineDisplayState(
             displayMode: lineData.displayMode,
             leftOutcome: lineData.leftOutcome,
             middleOutcome: lineData.middleOutcome,

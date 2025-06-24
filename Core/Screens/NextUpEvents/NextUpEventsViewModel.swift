@@ -22,12 +22,11 @@ class NextUpEventsViewModel: ObservableObject {
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
     let pillSelectorBarViewModel: PillSelectorBarViewModel
-    let marketGroupSelectorViewModel: NextUpEventsMarketGroupSelectorViewModel
+    let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
     var generalFiltersBarViewModel: GeneralFilterBarViewModelProtocol
-    private let scrollPositionCoordinator = ScrollPositionCoordinator()
 
     // MARK: - Private Properties
-    var sportType: SportType
+    var sport: Sport
     private var eventsStateSubject = CurrentValueSubject<LoadableContent<[Match]>, Never>.init(.loading)
     private var cancellables: Set<AnyCancellable> = []
     private var preLiveMatchesCancellable: AnyCancellable?
@@ -40,30 +39,36 @@ class NextUpEventsViewModel: ObservableObject {
         return self.eventsStateSubject.eraseToAnyPublisher()
     }
 
-    init(sportType: SportType = SportType.defaultFootball) {
-        self.sportType = sportType
+    init(sport: Sport? = nil) {
+        self.sport = sport ?? Env.sportsStore.football
+        
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
-        self.marketGroupSelectorViewModel = NextUpEventsMarketGroupSelectorViewModel()
+        self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
                 
         let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter", icon: "filter_icon", actionIcon: "right_arrow_icon")
 
         self.generalFiltersBarViewModel = MockGeneralFilterBarViewModel(items: [], mainFilterItem: mainFilter)
+        
         setupBindings()
         setupFilters()
     }
     
     func updateSportType(_ sport: Sport) {
-        // Update the current sport type based on selection
-        // This could trigger reloading of events for the selected sport
-        print("📱 NextUpEventsViewModel: Updating sport type to \(sport.name)")
+        print("[NextUpEventsViewModel] 📡 Updating sport type to \(sport.name)")
         
-        // Update the pill selector to show the new sport
+        // Update internal sport
+        self.sport = sport
+        
+        // Update UI
         pillSelectorBarViewModel.updateCurrentSport(sport)
         
-        // TODO: Implement sport type change logic
-        // self.sportType = SportType.from(sport)
-        // reloadEvents()
+        // Update filters
+        let sportFilterOption = FilterOptionItem(type: .sport, title: sport.name, icon: "sport_type_icon_\(sport.id)")
+        generalFiltersBarViewModel.updateFilterOptionItems(filterOptionItems: [sportFilterOption])
+        
+        // Reload events for new sport
+        reloadEvents(forced: true)
     }
 
     // MARK: - Setup
@@ -87,9 +92,9 @@ class NextUpEventsViewModel: ObservableObject {
         
         let sportFilterOption = self.getSportOption(for: Env.filterStorage.currentFilterSelection.sportId)
         
-        let sortOption = self.getSortOption(for: Env.filterStorage.currentFilterSelection.sortTypeId)
+        // let sortOption = self.getSortOption(for: Env.filterStorage.currentFilterSelection.sortTypeId)
         
-        let leagueOption = self.getLeagueOption(for: Env.filterStorage.currentFilterSelection.leagueId)
+        // let leagueOption = self.getLeagueOption(for: Env.filterStorage.currentFilterSelection.leagueId)
                 
         self.generalFiltersBarViewModel.updateFilterOptionItems(filterOptionItems: [sportFilterOption])
 
@@ -127,7 +132,7 @@ class NextUpEventsViewModel: ObservableObject {
         preLiveMatchesCancellable?.cancel()
 
         preLiveMatchesCancellable = Env.servicesProvider.subscribePreLiveMatches(
-            forSportType: sportType,
+            forSportType: ServiceProviderModelMapper.serviceProviderSportType(fromSport: sport),
             sortType: EventListSort.popular)
         .receive(on: DispatchQueue.main)
         .sink { completion in
@@ -135,15 +140,18 @@ class NextUpEventsViewModel: ObservableObject {
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
             switch subscribableContent {
             case .connected(let subscription):
-                print("Connected to pre-live matches subscription \(subscription.id)")
+                print("[NextUpEventsViewModel] 🟢 Connected to pre-live matches subscription \(subscription.id)")
                 break
 
             case .contentUpdate(let content):
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: content)
+                
+                print("[NextUpEventsViewModel] 📡 received pre-live groups \(content.count) mapped to matches \(matches.count)")
+                      
                 self?.processMatches(matches)
 
             case .disconnected:
-                print("Disconnected from pre-live matches subscription")
+                print("[NextUpEventsViewModel] 🔴 Disconnected from pre-live matches subscription")
                 break
             }
         }
@@ -171,10 +179,7 @@ class NextUpEventsViewModel: ObservableObject {
         for marketGroup in marketGroups {
             if marketGroupCardsViewModels[marketGroup.id] == nil {
                 print("[NextUpEvents] Creating new MarketGroupCardsViewModel for market type: \(marketGroup.id)")
-                let marketGroupCardsViewModel = MarketGroupCardsViewModel(
-                    marketTypeId: marketGroup.id,
-                    scrollPositionCoordinator: scrollPositionCoordinator
-                )
+                let marketGroupCardsViewModel = MarketGroupCardsViewModel(marketTypeId: marketGroup.id)
 
                 // Update with current matches
                 marketGroupCardsViewModel.updateMatches(allMatches)
@@ -205,14 +210,6 @@ class NextUpEventsViewModel: ObservableObject {
         let sportOption = getSportOption(for: selection.sportId)
         
         let sortOption = getSortOption(for: selection.sortTypeId)
-        
-//        if let leagueOption = getLeagueOption(for: selection.leagueId) {
-//            options.append(FilterOptionItem(
-//                type: .league,
-//                title: leagueOption.title,
-//                icon: leagueOption.icon ?? ""
-//            ))
-//        }
         let leagueOption = getLeagueOption(for: selection.leagueId)
         
         options.append(sportOption)
@@ -224,22 +221,11 @@ class NextUpEventsViewModel: ObservableObject {
     
     // MARK: - Helper Methods for Filter Data
     private func getSportOption(for sportId: String) -> FilterOptionItem {
-//        let sportOptions = [
-//            (id: "1", title: "Football", icon: "sport_type_icon_1"),
-//            (id: "2", title: "Basketball", icon: "sport_type_icon_8"),
-//            (id: "3", title: "Tennis", icon: "sport_type_icon_3"),
-//            (id: "4", title: "Cricket", icon: "sport_type_icon_9")
-//        ]
-        
         let currentSport = Env.sportsStore.getActiveSports().first(where: {
             $0.id == sportId
         })
-        
         let filterOptionItem = FilterOptionItem(type: .sport, title: "\(currentSport?.name ?? "")", icon: "sport_type_icon_\(currentSport?.id ?? "")")
-        
         return filterOptionItem
-        
-//        return sportOptions.first { $0.id == sportId }.map { (title: $0.title, icon: $0.icon) }
     }
     
     private func getSortOption(for sortId: String) -> FilterOptionItem {
@@ -249,20 +235,15 @@ class NextUpEventsViewModel: ObservableObject {
             SortOption(id: "2", icon: "timelapse_icon", title: "Upcoming", count: 15),
             SortOption(id: "3", icon: "favourites_icon", title: "Favourites", count: 0)
         ]
-        
         let currentSortOption = sortOptions.first { $0.id == sortId }
-        
         return FilterOptionItem(type: .sortBy, title: "\(currentSortOption?.title ?? "")", icon: "\(currentSortOption?.icon ?? "")")
-        
     }
 
     private func getLeagueOption(for leagueId: String) -> FilterOptionItem {
-        var allLeaguesOption = SortOption(id: "0", icon: "league_icon", title: "All Popular Leagues", count: 0)
-        
+        let allLeaguesOption = SortOption(id: "0", icon: "league_icon", title: "All Popular Leagues", count: 0)
         let currentCompetition = Env.filterStorage.currentCompetitions.first(where: {
             $0.id == leagueId
         })
-        
         return FilterOptionItem(type: .league, title: "\(currentCompetition?.name ?? allLeaguesOption.title)", icon: "league_icon")
     }
 }

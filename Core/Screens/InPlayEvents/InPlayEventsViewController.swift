@@ -61,6 +61,9 @@ class InPlayEventsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.quickLinksTabBarView.alpha = 0.0
+        
         setupViews()
         setupBindings()
         loadData()
@@ -151,7 +154,7 @@ class InPlayEventsViewController: UIViewController {
         
         // Create filter button container (red for debugging)
         let filterButtonContainer = UIView()
-        filterButtonContainer.backgroundColor = UIColor.red
+        filterButtonContainer.backgroundColor = UIColor.App.navPills
         filterButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         
         // Create filter pill button
@@ -159,7 +162,7 @@ class InPlayEventsViewController: UIViewController {
             id: "filter",
             title: "Filter",
             leftIconName: "line.3.horizontal.decrease",
-            showExpandIcon: false,
+            showExpandIcon: true,
             isSelected: false
         )
         let filterPillViewModel = MockPillItemViewModel(pillData: filterPillData)
@@ -168,6 +171,7 @@ class InPlayEventsViewController: UIViewController {
         
         // Handle filter button tap
         filterPillView.onPillSelected = { [weak self] in
+            print("🎯 InPlayEventsViewController: Filter pill tapped")
             self?.presentFilters()
         }
         
@@ -189,9 +193,6 @@ class InPlayEventsViewController: UIViewController {
             pillsContainerStackView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
             pillsContainerStackView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
             
-            // Filter container width (should be compact)
-            filterButtonContainer.widthAnchor.constraint(equalToConstant: 80),
-            
             // Filter pill constraints within container (8px padding)
             filterPillView.topAnchor.constraint(equalTo: filterButtonContainer.topAnchor, constant: 8),
             filterPillView.leadingAnchor.constraint(equalTo: filterButtonContainer.leadingAnchor, constant: 8),
@@ -201,8 +202,12 @@ class InPlayEventsViewController: UIViewController {
         ])
         
         // Handle pill selection events
-        pillSelectorBarView.onPillSelected = { pillId in
+        pillSelectorBarView.onPillSelected = { [weak self] pillId in
             print("🎯 InPlayEventsViewController: Pill selected - \(pillId)")
+            if pillId == "sport_selector" {
+                self?.presentSportsSelector()
+            }
+            // Other pills can be handled here as needed
         }
         
         // Handle sports selector modal presentation
@@ -444,14 +449,14 @@ class InPlayEventsViewController: UIViewController {
     // MARK: - Sports Selector Modal
     private func presentSportsSelector() {
         // Create fresh SportSelectorViewModel on-demand
-        let sportSelectorViewModel = SportSelectorViewModel()
+        let sportSelectorViewModel = LiveSportSelectorViewModel()
         let sportsViewController = SportTypeSelectorViewController(viewModel: sportSelectorViewModel)
         
         // Use SportSelectorViewModel callback to get full Sport object
         sportSelectorViewModel.onSportSelected = { [weak self] sport in
             print("🏆 InPlayEventsViewController: Sport selected from modal - \(sport.name)")
             // Update sport via ViewModel
-            self?.viewModel.updateSportType(sport)
+            // TODO: self?.viewModel.updateSportType(sport)
             sportsViewController.dismiss()
         }
         
@@ -466,8 +471,22 @@ class InPlayEventsViewController: UIViewController {
     
     // MARK: - Filter Modal
     private func presentFilters() {
-        print("🔍 InPlayEventsViewController: Present filters - TODO: Implement")
-        // TODO: Implement filter modal presentation
+        print("🔍 InPlayEventsViewController: presentFilters() called")
+        let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
+        
+        let viewModel = CombinedFiltersViewModel(filterConfiguration: configuration,
+                                                 contextId: "sports")
+        
+        let combinedFiltersViewController = CombinedFiltersViewController(viewModel: viewModel)
+        
+        combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
+            guard let self = self else { return }
+            
+            // Filter selection has been applied through Env.filterStorage
+            // The view model can react to filter changes if needed
+        }
+        
+        self.present(combinedFiltersViewController, animated: true)
     }
 }
 

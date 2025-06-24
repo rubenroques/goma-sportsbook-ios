@@ -11,7 +11,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     private let servicesProvider = Env.servicesProvider
     
     // MARK: - Subjects
-    private let marketStateSubject: CurrentValueSubject<MarketOutcomesDisplayState, Never>
+    private let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OddsChangeEvent, Never>
     private var cancellables = Set<AnyCancellable>()
     
@@ -19,7 +19,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     private var outcomeViewModels: [OutcomeType: OutcomeItemViewModel] = [:]
     
     // MARK: - Protocol Conformance
-    public var marketStatePublisher: AnyPublisher<MarketOutcomesDisplayState, Never> {
+    public var marketStatePublisher: AnyPublisher<MarketOutcomesLineDisplayState, Never> {
         marketStateSubject.eraseToAnyPublisher()
     }
     
@@ -30,13 +30,12 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     // MARK: - Initialization
     init(
         marketId: String,
-        initialDisplayState: MarketOutcomesDisplayState
+        initialDisplayState: MarketOutcomesLineDisplayState
     ) {
+        print("[MarketOutcomesLineViewModel] 🟢 INIT create new market outcome line \(marketId)")
         self.marketId = marketId
         self.marketStateSubject = CurrentValueSubject(initialDisplayState)
         self.oddsChangeEventSubject = PassthroughSubject()
-        
-        print("[MarketOutcomesLineViewModel] 🟢 INIT - marketId: \(marketId)")
         
         // Create initial outcome view models
         createOutcomeViewModels(from: initialDisplayState)
@@ -81,7 +80,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     
     public func setDisplayMode(_ mode: MarketDisplayMode) {
         var currentState = marketStateSubject.value
-        let newState = MarketOutcomesDisplayState(
+        let newState = MarketOutcomesLineDisplayState(
             displayMode: mode,
             leftOutcome: currentState.leftOutcome,
             middleOutcome: currentState.middleOutcome,
@@ -103,7 +102,6 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
                     }
                 },
                 receiveValue: { [weak self] serviceProviderMarket in
-                    print("[MarketOutcomesLineViewModel] 📡 Market update received for marketId: \(self?.marketId ?? "unknown")")
                     self?.processMarketUpdate(serviceProviderMarket)
                 }
             )
@@ -173,7 +171,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         }
         
         // Update the display state
-        let newDisplayState = MarketOutcomesDisplayState(
+        let newDisplayState = MarketOutcomesLineDisplayState(
             displayMode: displayMode,
             leftOutcome: newOutcomes[.left],
             middleOutcome: newOutcomes[.middle],
@@ -243,7 +241,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
             .store(in: &cancellables)
     }
     
-    private func createOutcomeViewModels(from displayState: MarketOutcomesDisplayState) {
+    private func createOutcomeViewModels(from displayState: MarketOutcomesLineDisplayState) {
         // Create outcome view models for initial outcomes
         if let leftOutcome = displayState.leftOutcome {
             let leftVM = OutcomeItemViewModel.create(
@@ -280,7 +278,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     }
     
     private func handleMarketSuspension(reason: String) {
-        let suspendedState = MarketOutcomesDisplayState(
+        let suspendedState = MarketOutcomesLineDisplayState(
             displayMode: .suspended(text: reason),
             leftOutcome: nil,
             middleOutcome: nil,
@@ -296,6 +294,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     // MARK: - Cleanup
     deinit {
         print("[MarketOutcomesLineViewModel] 🔴 DEINIT - marketId: \(marketId)")
+        
         cancellables.removeAll()
         outcomeViewModels.removeAll()
     }
@@ -315,10 +314,10 @@ extension MarketOutcomesLineViewModel {
     }
     
     /// Creates initial display state from Market data
-    private static func createDisplayState(from market: Market) -> MarketOutcomesDisplayState {
+    private static func createDisplayState(from market: Market) -> MarketOutcomesLineDisplayState {
         guard market.isAvailable && !market.outcomes.isEmpty else {
-            return MarketOutcomesDisplayState(
-                displayMode: .suspended(text: "Market Suspended"),
+            return MarketOutcomesLineDisplayState(
+                displayMode: .seeAll(text: "See all Markets"),
                 leftOutcome: nil,
                 middleOutcome: nil,
                 rightOutcome: nil
@@ -339,7 +338,7 @@ extension MarketOutcomesLineViewModel {
         let middleOutcome = sortedOutcomes.count > 2 ? createOutcomeData(from: sortedOutcomes[1]) : nil
         let rightOutcome = sortedOutcomes.count > 1 ? createOutcomeData(from: sortedOutcomes[sortedOutcomes.count >= 3 ? 2 : 1]) : nil
         
-        return MarketOutcomesDisplayState(
+        return MarketOutcomesLineDisplayState(
             displayMode: displayMode,
             leftOutcome: leftOutcome,
             middleOutcome: middleOutcome,

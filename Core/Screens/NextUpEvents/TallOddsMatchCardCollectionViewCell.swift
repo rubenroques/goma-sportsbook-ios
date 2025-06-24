@@ -12,7 +12,6 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Properties
     private var tallOddsMatchCardView: TallOddsMatchCardView?
-    private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Cell Identifier
     static let identifier = "TallOddsMatchCardCollectionViewCell"
@@ -30,15 +29,10 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Cell Lifecycle
     override func prepareForReuse() {
-        print("[CollectionCell] prepareForReuse called")
         super.prepareForReuse()
 
         // Prepare the card view for reuse instead of removing it
         tallOddsMatchCardView?.prepareForReuse()
-
-        // Cancel any cell-level publishers
-        cancellables.removeAll()
-        print("[CollectionCell] prepareForReuse completed")
     }
 
     // MARK: - Setup
@@ -50,24 +44,17 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Configuration
     func configure(with viewModel: TallOddsMatchCardViewModelProtocol) {
-        print("[CollectionCell] configure called - cell reuse: \(tallOddsMatchCardView != nil)")
-        
-        // Clear any cell-level publishers
-        cancellables.removeAll()
 
         if let existingCardView = tallOddsMatchCardView {
             // Reuse existing card view - much more efficient for scrolling
-            print("[CollectionCell] Reusing existing card view")
             existingCardView.configure(with: viewModel)
         } else {
             // Create new card view only if one doesn't exist
-            print("[CollectionCell] Creating new card view")
             createAndSetupCardView(with: viewModel)
         }
 
         // Set up action callbacks
         self.setupCardViewActions()
-        print("[CollectionCell] Configuration completed")
     }
 
     // Configure cell position for proper styling
@@ -140,18 +127,7 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
             print("Market info tapped in cell")
         }
     }
-
-//    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-//        let targetSize = CGSize(width: layoutAttributes.frame.width, height: UIView.layoutFittingCompressedSize.height)
-//        layoutAttributes.frame.size = self.contentView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
-//        return layoutAttributes
-//    }
-    
-}
-
-// MARK: - Configuration with Action Handlers
-extension TallOddsMatchCardCollectionViewCell {
-
+ 
     // Alternative configuration method that accepts action handlers
     func configure(
         with viewModel: TallOddsMatchCardViewModelProtocol,

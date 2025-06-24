@@ -65,7 +65,7 @@ public struct SportType: Codable, Equatable, Hashable {
     }
 }
 
-// TODO: TASK André - Este devia ser o unico modelo publico
+// TODO: Este devia ser o unico modelo publico
 
 enum SportTypeInfo: CaseIterable {
 

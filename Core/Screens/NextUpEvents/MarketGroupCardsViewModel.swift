@@ -13,14 +13,6 @@ import GomaUI
 struct FilteredMatchData: Hashable {
     let match: Match
     let relevantMarkets: [Market]
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(match.id)
-    }
-
-    static func == (lhs: FilteredMatchData, rhs: FilteredMatchData) -> Bool {
-        return lhs.match.id == rhs.match.id
-    }
 }
 
 // MARK: - MatchCardData
@@ -29,11 +21,11 @@ struct MatchCardData: Hashable {
     let tallOddsViewModel: TallOddsMatchCardViewModelProtocol
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(filteredData.match.id)
+        hasher.combine(filteredData)
     }
     
     static func == (lhs: MatchCardData, rhs: MatchCardData) -> Bool {
-        return lhs.filteredData.match.id == rhs.filteredData.match.id
+        return lhs.filteredData == rhs.filteredData
     }
 }
 
@@ -41,64 +33,30 @@ struct MatchCardData: Hashable {
 class MarketGroupCardsViewModel: ObservableObject {
     @Published var filteredMatches: [FilteredMatchData] = []
     @Published var matchCardData: [MatchCardData] = []
-    @Published var scrollPosition: CGPoint = .zero
 
     private let marketTypeId: String
     private var allMatches: [Match] = []
     private var cancellables = Set<AnyCancellable>()
-    private weak var scrollPositionCoordinator: ScrollPositionCoordinator?
-    private var isReceivingExternalScrollUpdate = false
     
-    // Mock TallOddsMatchCardViewModels for testing
-    private let mockTallOddsViewModels: [TallOddsMatchCardViewModelProtocol] = [
-        MockTallOddsMatchCardViewModel.premierLeagueMock,
-        MockTallOddsMatchCardViewModel.compactMock,
-        MockTallOddsMatchCardViewModel.bundesliegaMock,
-        MockTallOddsMatchCardViewModel.liveMock
-    ]
-
-    init(marketTypeId: String, scrollPositionCoordinator: ScrollPositionCoordinator? = nil) {
-        print("[MarketGroupCards] Creating MarketGroupCardsViewModel for marketType: \(marketTypeId)")
+    init(marketTypeId: String) {
+        print("[MarketGroupCardsViewModel] 🟢 init for marketType: \(marketTypeId)")
         self.marketTypeId = marketTypeId
-        self.scrollPositionCoordinator = scrollPositionCoordinator
-
-        // Register with coordinator if available
-        if let coordinator = scrollPositionCoordinator {
-            coordinator.addSubscriber(self)
-        }
-        print("[MarketGroupCards] Initialized MarketGroupCardsViewModel for marketType: \(marketTypeId)")
     }
 
     deinit {
-        // Unregister from coordinator
-        if let coordinator = scrollPositionCoordinator {
-            coordinator.removeSubscriber(self)
-        }
+        print("[MarketGroupCardsViewModel] 🔴 deinit")
     }
 
     // MARK: - Public Methods
     func updateMatches(_ matches: [Match]) {
+        print("[MarketGroupCardsViewModel] ♻️ updated with new Matches")
+              
         allMatches = matches
         let filtered = filterMatches()
 
         filteredMatches = filtered
         
         matchCardData = createMatchCardData(from: filtered)
-    }
-
-    func updateScrollPosition(_ position: CGPoint) {
-        // Only update coordinator if this is not an external update
-        guard !isReceivingExternalScrollUpdate else { return }
-
-        scrollPosition = position
-        scrollPositionCoordinator?.updateScrollPosition(position, from: self)
-    }
-
-    func setScrollPosition(_ position: CGPoint) {
-        // This is called by the coordinator, mark as external update
-        isReceivingExternalScrollUpdate = true
-        scrollPosition = position
-        isReceivingExternalScrollUpdate = false
     }
 
     // MARK: - Private Methods

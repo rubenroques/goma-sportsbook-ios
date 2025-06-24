@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import GomaUI
+import ServicesProvider
 
 public class CombinedFiltersViewModel {
     
@@ -49,14 +50,9 @@ public class CombinedFiltersViewModel {
             $0.id == currentSportId
         })
         
-        var sportType = SportType(name: currentSport?.name ?? "",
-                                  numericId: currentSport?.numericId ?? "",
-                                  alphaId: currentSport?.alphaId ?? "", iconId: currentSport?.id ?? "",
-                                  showEventCategory: false,
-                                  numberEvents: 0,
-                                  numberOutrightEvents: 0,
-                                  numberOutrightMarkets: 0,
-                                  numberLiveEvents: 0)
+        let sportType = currentSport != nil 
+            ? ServiceProviderModelMapper.serviceProviderSportType(fromSport: currentSport!)
+            : ServiceProviderModelMapper.serviceProviderSportType(fromSport: Env.sportsStore.defaultSport)
         
         let sportTournamentsPublisher = Env.servicesProvider.subscribeSportTournaments(forSportType: sportType)
             .filter { content in
@@ -635,7 +631,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "sportsFilter",
                 type: .sportsFilter,
-                label: "sports",
+                label: "Sports",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -646,7 +642,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "timeFilter",
                 type: .timeFilter,
-                label: "filter_by_time",
+                label: "Filter by Time",
                 icon: "filterTime",
                 details: FilterDetails(
                     isExpandable: false,
@@ -663,22 +659,22 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "sortByFilter",
                 type: .radioFilterBasic,
-                label: "sort_by",
+                label: "Sort by",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
                     expandedByDefault: true,
                     options: [
-                        FilterOption(id: "popular", label: "popular", value: "popular"),
-                        FilterOption(id: "upcoming", label: "upcoming", value: "upcoming"),
-                        FilterOption(id: "favourites", label: "favourites", value: "favourites")
+                        FilterOption(id: "popular", label: "Popular", value: "popular"),
+                        FilterOption(id: "upcoming", label: "Upcoming", value: "upcoming"),
+                        FilterOption(id: "favourites", label: "Favourites", value: "favourites")
                     ]
                 )
             ),
             FilterWidget(
                 id: "leaguesFilter",
                 type: .radioFilterBasic,
-                label: "leagues",
+                label: "Leagues",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -689,7 +685,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "popularCountryLeaguesFilter",
                 type: .radioFilterAccordion,
-                label: "popular_countries",
+                label: "Popular Countries",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -700,7 +696,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "otherCountryLeaguesFilter",
                 type: .radioFilterAccordion,
-                label: "other_countries",
+                label: "Other Countries",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,

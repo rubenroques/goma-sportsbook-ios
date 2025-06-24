@@ -10,6 +10,9 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
     private let leftIconNameSubject: CurrentValueSubject<String?, Never>
     private let showExpandIconSubject: CurrentValueSubject<Bool, Never>
     private let isSelectedSubject: CurrentValueSubject<Bool, Never>
+    
+    // MARK: - Read-only mode
+    public let isReadOnly: Bool
 
     public var idPublisher: AnyPublisher<String, Never> {
         return idSubject.eraseToAnyPublisher()
@@ -32,16 +35,19 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
     }
 
     // MARK: - Initialization
-    public init(pillData: PillData) {
+    public init(pillData: PillData, isReadOnly: Bool = false) {
         self.idSubject = CurrentValueSubject(pillData.id)
         self.titleSubject = CurrentValueSubject(pillData.title)
         self.leftIconNameSubject = CurrentValueSubject(pillData.leftIconName)
         self.showExpandIconSubject = CurrentValueSubject(pillData.showExpandIcon)
         self.isSelectedSubject = CurrentValueSubject(pillData.isSelected)
+        self.isReadOnly = isReadOnly
     }
 
     // MARK: - PillItemViewModelProtocol
     public func selectPill() {
+        // Don't change selection state if in read-only mode
+        guard !isReadOnly else { return }
         isSelectedSubject.send(!isSelectedSubject.value)
     }
 

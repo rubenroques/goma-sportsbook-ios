@@ -12,47 +12,30 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     fileprivate let scoreViewModelSubject: CurrentValueSubject<ScoreViewModelProtocol?, Never>
     
     public var displayStatePublisher: AnyPublisher<TallOddsMatchCardDisplayState, Never> {
-        return displayStateSubject
-            .eraseToAnyPublisher()
+        return displayStateSubject.eraseToAnyPublisher()
     }
     
     public var matchHeaderViewModelPublisher: AnyPublisher<MatchHeaderViewModelProtocol, Never> {
-        return matchHeaderViewModelSubject
-            .handleEvents(receiveOutput: { _ in
-                print("[TallOdds] matchHeaderViewModelPublisher sending update for match: \(self.matchData.matchId)")
-            })
-            .eraseToAnyPublisher()
+        return matchHeaderViewModelSubject.eraseToAnyPublisher()
     }
     
     public var marketInfoLineViewModelPublisher: AnyPublisher<MarketInfoLineViewModelProtocol, Never> {
-        return marketInfoLineViewModelSubject
-            .handleEvents(receiveOutput: { _ in
-                print("[TallOdds] marketInfoLineViewModelPublisher sending update for match: \(self.matchData.matchId)")
-            })
-            .eraseToAnyPublisher()
+        return marketInfoLineViewModelSubject.eraseToAnyPublisher()
     }
     
     public var marketOutcomesViewModelPublisher: AnyPublisher<MarketOutcomesMultiLineViewModelProtocol, Never> {
-        return marketOutcomesViewModelSubject
-            .handleEvents(receiveOutput: { _ in
-                print("[TallOdds] marketOutcomesViewModelPublisher sending update for match: \(self.matchData.matchId)")
-            })
-            .eraseToAnyPublisher()
+        return marketOutcomesViewModelSubject.eraseToAnyPublisher()
     }
     
     public var scoreViewModelPublisher: AnyPublisher<ScoreViewModelProtocol?, Never> {
-        return scoreViewModelSubject
-            .handleEvents(receiveOutput: { _ in
-                print("[TallOdds] scoreViewModelPublisher sending update for match: \(self.matchData.matchId)")
-            })
-            .eraseToAnyPublisher()
+        return scoreViewModelSubject.eraseToAnyPublisher()
     }
     
     private let matchData: TallOddsMatchData
     
     // MARK: - Initialization
     init(matchData: TallOddsMatchData) {
-        print("[TallOddsMatchCardViewModel] Creating VM for match: \(matchData.matchId)")
+        print("[TallOddsMatchCardViewModel] Creating VM for match: \(matchData.homeParticipantName)-\(matchData.awayParticipantName)")
         self.matchData = matchData
         
         // Create initial display state from match data
@@ -69,16 +52,13 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         let outcomesViewModel = Self.createMarketOutcomesViewModel(from: matchData.outcomes)
         let scoreViewModel = Self.createScoreViewModel(from: matchData.liveScoreData)
         
-        print("[TallOdds] Created child view models for match: \(matchData.matchId)")
-        
         // Initialize subjects
         self.displayStateSubject = CurrentValueSubject(initialDisplayState)
         self.matchHeaderViewModelSubject = CurrentValueSubject(headerViewModel)
         self.marketInfoLineViewModelSubject = CurrentValueSubject(marketInfoViewModel)
         self.marketOutcomesViewModelSubject = CurrentValueSubject(outcomesViewModel)
         self.scoreViewModelSubject = CurrentValueSubject(scoreViewModel)
-        
-        print("[TallOdds] Initialized all subjects for match: \(matchData.matchId)")
+
     }
     
     // MARK: - Cleanup

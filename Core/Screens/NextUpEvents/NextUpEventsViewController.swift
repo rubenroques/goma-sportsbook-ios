@@ -60,6 +60,9 @@ class NextUpEventsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.quickLinksTabBarView.alpha = 0.0
+        
         setupViews()
         setupBindings()
         loadData()
@@ -150,7 +153,7 @@ class NextUpEventsViewController: UIViewController {
         
         // Create filter button container (red for debugging)
         let filterButtonContainer = UIView()
-        filterButtonContainer.backgroundColor = UIColor.red
+        filterButtonContainer.backgroundColor = UIColor.App.navPills
         filterButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         
         // Create filter pill button
@@ -158,7 +161,7 @@ class NextUpEventsViewController: UIViewController {
             id: "filter",
             title: "Filter",
             leftIconName: "line.3.horizontal.decrease",
-            showExpandIcon: false,
+            showExpandIcon: true,
             isSelected: false
         )
         let filterPillViewModel = MockPillItemViewModel(pillData: filterPillData)
@@ -187,10 +190,7 @@ class NextUpEventsViewController: UIViewController {
             pillsContainerStackView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
             pillsContainerStackView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
             pillsContainerStackView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
-            
-            // Filter container width (should be compact)
-            filterButtonContainer.widthAnchor.constraint(equalToConstant: 80),
-            
+
             // Filter pill constraints within container (8px padding)
             filterPillView.topAnchor.constraint(equalTo: filterButtonContainer.topAnchor, constant: 8),
             filterPillView.leadingAnchor.constraint(equalTo: filterButtonContainer.leadingAnchor, constant: 8),
@@ -202,7 +202,10 @@ class NextUpEventsViewController: UIViewController {
         // Handle pill selection events
         pillSelectorBarView.onPillSelected = { [weak self] pillId in
             print("🎯 NextUpEventsViewController: Pill selected - \(pillId)")
-            self?.presentSportsSelector()
+            if pillId == "sport_selector" {
+                self?.presentSportsSelector()
+            }
+            // Other pills can be handled here as needed
         }
         
         // Handle sports selector modal presentation
@@ -278,22 +281,22 @@ class NextUpEventsViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        generalFilterBarView.onMainFilterTapped = { [weak self] in
-            
-            self?.openCombinedFilters()
-        }
+//        generalFilterBarView.onMainFilterTapped = { [weak self] in
+//            
+//            self?.openCombinedFilters()
+//        }
         
-        Env.filterStorage.$currentFilterSelection
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] currentFilterSelection in
-                
-                if let viewModel = self?.viewModel {
-                    let selectedFilterOptions = viewModel.buildFilterOptions(from: currentFilterSelection)
-                    
-                    self?.generalFilterBarView.updateFilterItems(filterOptionItems: selectedFilterOptions)
-                }
-            })
-            .store(in: &cancellables)
+//        Env.filterStorage.$currentFilterSelection
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] currentFilterSelection in
+//                
+//                if let viewModel = self?.viewModel {
+//                    let selectedFilterOptions = viewModel.buildFilterOptions(from: currentFilterSelection)
+//                    
+//                    self?.generalFilterBarView.updateFilterItems(filterOptionItems: selectedFilterOptions)
+//                }
+//            })
+//            .store(in: &cancellables)
     }
 
     // MARK: - Data Loading
@@ -321,9 +324,7 @@ class NextUpEventsViewController: UIViewController {
 //            self.generalFilterBarView.updateFilterItems(filterOptionItems: self.viewModel.selectedFilterOptions)
             
         }
-        
-        self.navigationController?.pushViewController(combinedFiltersViewController, animated: true)
-        
+        self.present(combinedFiltersViewController, animated: true)
     }
 
     // MARK: - UI Updates
@@ -366,8 +367,6 @@ class NextUpEventsViewController: UIViewController {
     }
 
     private func handleMarketGroupSelection(marketGroupId: String) {
-        print("Handling market group selection: \(marketGroupId)")
-
         // Prevent multiple animations at once
         guard !isAnimating else {
             print("Animation already in progress, ignoring selection")
@@ -486,7 +485,7 @@ class NextUpEventsViewController: UIViewController {
     // MARK: - Sports Selector Modal
     private func presentSportsSelector() {
         // Create fresh SportSelectorViewModel on-demand
-        let sportSelectorViewModel = SportSelectorViewModel()
+        let sportSelectorViewModel = PreLiveSportSelectorViewModel()
         let sportsViewController = SportTypeSelectorViewController(viewModel: sportSelectorViewModel)
         
         // Use SportSelectorViewModel callback to get full Sport object

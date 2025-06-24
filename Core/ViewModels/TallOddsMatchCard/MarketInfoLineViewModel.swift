@@ -3,32 +3,24 @@ import Combine
 import UIKit
 
 final class MarketInfoLineViewModel: MarketInfoLineViewModelProtocol {
+    
     // MARK: - Private Properties
     private let displayStateSubject: CurrentValueSubject<MarketInfoLineDisplayState, Never>
     private let marketNamePillViewModelSubject: CurrentValueSubject<MarketNamePillLabelViewModelProtocol, Never>
     
     // MARK: - Published Properties
     public var displayStatePublisher: AnyPublisher<MarketInfoLineDisplayState, Never> {
-        displayStateSubject
-            .handleEvents(receiveOutput: { state in
-                print("[MarketInfo] displayStatePublisher sending update for market: \(state.marketName)")
-            })
-            .eraseToAnyPublisher()
+        return displayStateSubject.eraseToAnyPublisher()
     }
     
     public var marketNamePillViewModelPublisher: AnyPublisher<MarketNamePillLabelViewModelProtocol, Never> {
-        marketNamePillViewModelSubject
-            .handleEvents(receiveOutput: { _ in
-                print("[MarketInfo] marketNamePillViewModelPublisher sending update")
-            })
-            .eraseToAnyPublisher()
+        return marketNamePillViewModelSubject.eraseToAnyPublisher()
     }
     
     private let marketInfoData: MarketInfoData
     
     // MARK: - Initialization
     init(marketInfoData: MarketInfoData) {
-        print("[MarketInfo] Creating MarketInfoLineViewModel for market: \(marketInfoData.marketName)")
         self.marketInfoData = marketInfoData
         
         // Create initial display state
@@ -37,24 +29,18 @@ final class MarketInfoLineViewModel: MarketInfoLineViewModelProtocol {
         // Create market name pill view model
         let marketNamePillViewModel = Self.createMarketNamePillViewModel(from: marketInfoData)
         
-        print("[MarketInfo] Created initial display state and pill view model")
-        
         // Initialize subjects
         self.displayStateSubject = CurrentValueSubject(initialDisplayState)
         self.marketNamePillViewModelSubject = CurrentValueSubject(marketNamePillViewModel)
-        
-        print("[MarketInfo] Initialized subjects for market: \(marketInfoData.marketName)")
     }
     
     // MARK: - Public Methods
     func updateMarketInfo(_ data: MarketInfoData) {
-        print("[MarketInfo] updateMarketInfo called for market: \(data.marketName)")
         let newDisplayState = Self.createDisplayState(from: data)
         let newPillViewModel = Self.createMarketNamePillViewModel(from: data)
         
         displayStateSubject.send(newDisplayState)
         marketNamePillViewModelSubject.send(newPillViewModel)
-        print("[MarketInfo] updateMarketInfo completed for market: \(data.marketName)")
     }
 }
 
@@ -112,7 +98,6 @@ extension MarketInfoLineViewModel {
             icons: icons
         )
     }
-    
     
     private static func determineMarketIcons(from markets: [Market], totalMarketCount: Int) -> [MarketInfoIcon] {
         var icons: [MarketInfoIcon] = []

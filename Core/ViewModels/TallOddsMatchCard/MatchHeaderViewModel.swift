@@ -59,7 +59,6 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     
     // MARK: - Initialization
     init(data: MatchHeaderData) {
-        print("[MatchHeader] Creating MatchHeaderViewModel for match: \(data.id)")
         self.competitionNameSubject = CurrentValueSubject(data.competitionName)
         self.countryFlagImageNameSubject = CurrentValueSubject(data.countryFlagImageName)
         self.sportIconImageNameSubject = CurrentValueSubject(data.sportIconImageName)
@@ -71,9 +70,7 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         // Initialize custom image subjects
         self.countryFlagImageSubject = CurrentValueSubject(nil)
         self.sportIconImageSubject = CurrentValueSubject(nil)
-        
-        print("[MatchHeader] Initialized all subjects for match: \(data.id)")
-        
+
         // Load images from image names if available
         loadInitialImages(data: data)
     }
@@ -82,12 +79,11 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     func toggleFavorite() {
         let currentFavorite = isFavoriteSubject.value
         isFavoriteSubject.send(!currentFavorite)
-        print("Production MatchHeaderViewModel: Favorite toggled to \(!currentFavorite)")
+        
         // TODO: Integrate with favorites service
     }
     
     func updateData(_ data: MatchHeaderData) {
-        print("[MatchHeader] updateData called for match: \(data.id)")
         competitionNameSubject.send(data.competitionName)
         countryFlagImageNameSubject.send(data.countryFlagImageName)
         sportIconImageNameSubject.send(data.sportIconImageName)
@@ -98,7 +94,6 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         
         // Reload images
         loadInitialImages(data: data)
-        print("[MatchHeader] updateData completed for match: \(data.id)")
     }
     
     func setVisualState(_ state: MatchHeaderVisualState) {

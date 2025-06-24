@@ -46,7 +46,7 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
 extension MarketOutcomesMultiLineViewModel {
     
     private static func createLineViewModel(from lineData: MarketLineData) -> MarketOutcomesLineViewModelProtocol {
-        let lineDisplayState = MarketOutcomesDisplayState(
+        let lineDisplayState = MarketOutcomesLineDisplayState(
             displayMode: lineData.displayMode,
             leftOutcome: lineData.leftOutcome,
             middleOutcome: lineData.middleOutcome,

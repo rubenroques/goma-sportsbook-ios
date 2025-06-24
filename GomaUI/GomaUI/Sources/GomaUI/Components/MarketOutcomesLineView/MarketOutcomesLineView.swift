@@ -133,7 +133,7 @@ final public class MarketOutcomesLineView: UIView {
     }
 
     // MARK: - Update Methods
-    private func updateMarketState(_ state: MarketOutcomesDisplayState) {
+    private func updateMarketState(_ state: MarketOutcomesLineDisplayState) {
         // Store current display mode for corner radius calculations
         currentDisplayMode = state.displayMode
         

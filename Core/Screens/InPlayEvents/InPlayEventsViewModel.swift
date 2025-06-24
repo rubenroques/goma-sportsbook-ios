@@ -22,11 +22,10 @@ class InPlayEventsViewModel: ObservableObject {
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
     let pillSelectorBarViewModel: PillSelectorBarViewModel
-    let marketGroupSelectorViewModel: NextUpEventsMarketGroupSelectorViewModel
-    private let scrollPositionCoordinator = ScrollPositionCoordinator()
+    let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
 
     // MARK: - Private Properties
-    var sportType: SportType
+    var sport: Sport
     private var eventsStateSubject = CurrentValueSubject<LoadableContent<[Match]>, Never>.init(.loading)
     private var cancellables: Set<AnyCancellable> = []
     private var preLiveMatchesCancellable: AnyCancellable?
@@ -39,26 +38,52 @@ class InPlayEventsViewModel: ObservableObject {
         return self.eventsStateSubject.eraseToAnyPublisher()
     }
 
-    init(sportType: SportType = SportType.defaultFootball) {
-        self.sportType = sportType
+    init(sport: Sport? = nil) {
+        self.sport = sport ?? Env.sportsStore.football
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
-        self.marketGroupSelectorViewModel = NextUpEventsMarketGroupSelectorViewModel()
+        self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
 
         setupBindings()
     }
     
     func updateSportType(_ sport: Sport) {
-        // Update the current sport type based on selection
-        // This could trigger reloading of events for the selected sport
         print("📱 InPlayEventsViewModel: Updating sport type to \(sport.name)")
         
-        // Update the pill selector to show the new sport
+        // Cancel existing subscription immediately
+        preLiveMatchesCancellable?.cancel()
+        preLiveMatchesCancellable = nil
+        
+        // Clear all current state immediately
+        print("🧹 InPlayEventsViewModel: Clearing existing state for sport change")
+        allMatches = []
+        marketGroups = []
+        selectedMarketGroupId = nil
+        
+        // Set loading state immediately
+        isLoading = true
+        eventsStateSubject.send(.loading)
+        
+        // Clear all market group view models
+        print("🧹 InPlayEventsViewModel: Clearing \(marketGroupCardsViewModels.count) market group view models")
+        for (marketType, viewModel) in marketGroupCardsViewModels {
+            viewModel.updateMatches([]) // Clear matches in each view model
+            print("   - Cleared market group: \(marketType)")
+        }
+        marketGroupCardsViewModels.removeAll()
+        
+        // Update internal sport
+        self.sport = sport
+        
+        // Update UI
         pillSelectorBarViewModel.updateCurrentSport(sport)
         
-        // TODO: Implement sport type change logic
-        // self.sportType = SportType.from(sport)
-        // reloadEvents()
+        // Update market group selector to clear its state
+        marketGroupSelectorViewModel.updateWithMatches([])
+        
+        // Reload events for new sport
+        print("🔄 InPlayEventsViewModel: Starting reload for new sport: \(sport.name)")
+        reloadEvents(forced: true)
     }
 
     // MARK: - Setup
@@ -105,27 +130,40 @@ class InPlayEventsViewModel: ObservableObject {
 
     // MARK: - Private Methods
     private func loadEvents() {
+        print("📡 InPlayEventsViewModel: loadEvents() called for sport: \(sport.name)")
         isLoading = true
         eventsStateSubject.send(.loading)
 
-        preLiveMatchesCancellable?.cancel()
+        // Cancel any existing subscription
+        if preLiveMatchesCancellable != nil {
+            print("🛑 InPlayEventsViewModel: Cancelling existing subscription")
+            preLiveMatchesCancellable?.cancel()
+            preLiveMatchesCancellable = nil
+        }
 
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: sport)
+        print("🔌 InPlayEventsViewModel: Creating new subscription for sport type: \(sportType)")
+        
         preLiveMatchesCancellable = Env.servicesProvider.subscribeLiveMatches(forSportType: sportType)
         .receive(on: DispatchQueue.main)
         .sink { completion in
-            print("subscribePreLiveMatches \(completion)")
+            print("📡 InPlayEventsViewModel: subscribePreLiveMatches completion: \(completion)")
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+            guard let self = self else { return }
+            
             switch subscribableContent {
             case .connected(let subscription):
-                print("Connected to pre-live matches subscription \(subscription.id)")
+                print("✅ InPlayEventsViewModel: Connected to live matches subscription - ID: \(subscription.id), Sport: \(self.sport.name)")
                 break
 
             case .contentUpdate(let content):
+                print("📦 InPlayEventsViewModel: Received content update with \(content.count) event groups for sport: \(self.sport.name)")
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: content)
-                self?.processMatches(matches)
+                print("   - Mapped to \(matches.count) matches")
+                self.processMatches(matches)
 
             case .disconnected:
-                print("Disconnected from pre-live matches subscription")
+                print("🔌 InPlayEventsViewModel: Disconnected from live matches subscription for sport: \(self.sport.name)")
                 break
             }
         }
@@ -153,10 +191,7 @@ class InPlayEventsViewModel: ObservableObject {
         for marketGroup in marketGroups {
             if marketGroupCardsViewModels[marketGroup.id] == nil {
                 print("[NextUpEvents] Creating new MarketGroupCardsViewModel for market type: \(marketGroup.id)")
-                let marketGroupCardsViewModel = MarketGroupCardsViewModel(
-                    marketTypeId: marketGroup.id,
-                    scrollPositionCoordinator: scrollPositionCoordinator
-                )
+                let marketGroupCardsViewModel = MarketGroupCardsViewModel(marketTypeId: marketGroup.id)
 
                 // Update with current matches
                 marketGroupCardsViewModel.updateMatches(allMatches)

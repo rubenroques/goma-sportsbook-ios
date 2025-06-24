@@ -31,8 +31,8 @@ final class PillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
     private var currentSport: Sport = Sport(
         id: "1",
         name: "Football",
-        alphaId: nil,
-        numericId: nil,
+        alphaId: "FBL",
+        numericId: "1",
         showEventCategory: true,
         liveEventsCount: 0,
         outrightEventsCount: 0,

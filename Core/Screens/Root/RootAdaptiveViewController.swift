@@ -124,7 +124,9 @@ class RootAdaptiveViewController: UIViewController {
 
         self.adaptiveTabBarView = AdaptiveTabBarView(viewModel: viewModel.adaptiveTabBarViewModel)
         self.adaptiveTabBarView.backgroundMode = .transparent // Use transparent mode with combined blur
+        
         self.widgetToolBarView = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
+        
         self.floatingOverlayView = FloatingOverlayView(viewModel: viewModel.floatingOverlayViewModel)
         self.floatingOverlayView.translatesAutoresizingMaskIntoConstraints = false
 

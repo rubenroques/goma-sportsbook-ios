@@ -172,30 +172,30 @@ class EveryMatrixEventsProvider: EventsProvider {
             // Delegate to pre-live paginator's outcome subscription method
             return prelivePaginator.subscribeToOutcomeUpdates(withId: id)
                 .handleEvents(receiveSubscription: { subscription in
-                    print("subs outcome updated. receiveSubscription (pre-live)")
+                    // print("subs outcome updated. receiveSubscription (pre-live)")
                 }, receiveOutput: { output in
-                    print("subs outcome updated. receiveOutput (pre-live)")
+                    // print("subs outcome updated. receiveOutput (pre-live)")
                 }, receiveCompletion: { completion in
-                    print("subs outcome updated. receiveCompletion (pre-live)")
+                    // print("subs outcome updated. receiveCompletion (pre-live)")
                 }, receiveCancel: {
-                    print("subs outcome updated. receiveCancel (pre-live)")
+                    // print("subs outcome updated. receiveCancel (pre-live)")
                 }, receiveRequest: { demand in
-                    print("subs outcome updated. receiveRequest (pre-live)")
+                    // print("subs outcome updated. receiveRequest (pre-live)")
                 })
                 .eraseToAnyPublisher()
         } else if let livePaginator = livePaginator, livePaginator.outcomeExists(id: id) {
             // Delegate to live paginator's outcome subscription method
             return livePaginator.subscribeToOutcomeUpdates(withId: id)
                 .handleEvents(receiveSubscription: { subscription in
-                    print("subs outcome updated. receiveSubscription (live)")
+                    // print("subs outcome updated. receiveSubscription (live)")
                 }, receiveOutput: { output in
-                    print("subs outcome updated. receiveOutput (live)")
+                    // print("subs outcome updated. receiveOutput (live)")
                 }, receiveCompletion: { completion in
-                    print("subs outcome updated. receiveCompletion (live)")
+                    // print("subs outcome updated. receiveCompletion (live)")
                 }, receiveCancel: {
-                    print("subs outcome updated. receiveCancel (live)")
+                    // print("subs outcome updated. receiveCancel (live)")
                 }, receiveRequest: { demand in
-                    print("subs outcome updated. receiveRequest (live)")
+                    // print("subs outcome updated. receiveRequest (live)")
                 })
                 .eraseToAnyPublisher()
         } else {

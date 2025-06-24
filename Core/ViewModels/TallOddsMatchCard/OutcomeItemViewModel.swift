@@ -185,15 +185,17 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         
         // Update individual properties as needed
         if currentValue != formattedOdds {
-            print("[OutcomeItemViewModel] 💰 Odds changed for outcomeId: \(newTitle) - from: \(currentValue) to: \(formattedOdds)")
+            print("[OutcomeItemViewModel] Odds changed for outcomeId: \(newTitle) - from: \(currentValue) to: \(formattedOdds)")
             updateOddsValue(formattedOdds)
         }
         
         if currentTitle != newTitle {
+            print("[OutcomeItemViewModel] Title changed for outcomeId: \(newTitle) - from: \(currentValue) to: \(formattedOdds)")
             titleSubject.send(newTitle)
         }
         
         if currentIsDisabled != newIsDisabled {
+            print("[OutcomeItemViewModel] isDisabled changed for outcomeId: \(newTitle) - from: \(currentValue) to: \(formattedOdds)")
             isDisabledSubject.send(newIsDisabled)
         }
     }

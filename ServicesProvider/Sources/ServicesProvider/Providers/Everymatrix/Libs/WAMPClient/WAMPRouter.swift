@@ -130,6 +130,7 @@ enum WAMPRouter {
         case .liveMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/live-matches-aggregator-main/\(sportId)/all-locations/default-event-info/\(matchesCount)/\(marketsCount)"
+
         case .popularMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"

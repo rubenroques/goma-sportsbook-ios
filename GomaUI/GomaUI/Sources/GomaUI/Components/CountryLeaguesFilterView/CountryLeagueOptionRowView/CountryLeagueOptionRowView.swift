@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import Combine
-import Kingfisher
 
 public class CountryLeagueOptionRowView: UIView {
     // MARK: - Properties
@@ -253,7 +252,7 @@ public class CountryLeagueOptionRowView: UIView {
 //        iconImageView.image = UIImage(named: self.viewModel.countryLeagueOptions.icon ?? "")
         
         if let flagIconUrl = self.flagIconURL(for: self.viewModel.countryLeagueOptions.icon ?? "") {
-            iconImageView.kf.setImage(with: flagIconUrl)
+            // iconImageView.kf.setImage(with: flagIconUrl)
 
         }
         else {

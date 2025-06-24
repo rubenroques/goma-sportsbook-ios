@@ -2,7 +2,7 @@ import UIKit
 import Combine
 import GomaUI
 
-class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelProtocol {
+class MarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol {
     
     // MARK: - Private Properties
     private let tabDataSubject: CurrentValueSubject<MarketGroupSelectorTabData, Never>
@@ -12,10 +12,9 @@ class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelP
     // MARK: - Initialization
     init() {
         let initialData = MarketGroupSelectorTabData(
-            id: "next_up_events_market_groups",
+            id: "events_market_groups",
             marketGroups: [],
-            selectedMarketGroupId: nil,
-            visualState: .idle
+            selectedMarketGroupId: nil
         )
         self.tabDataSubject = CurrentValueSubject(initialData)
     }
@@ -33,18 +32,6 @@ class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelP
             .map(\.selectedMarketGroupId)
             .removeDuplicates()
             .eraseToAnyPublisher()
-    }
-    
-    // MARK: - Visual State Publishers
-    var visualStatePublisher: AnyPublisher<MarketGroupSelectorTabVisualState, Never> {
-        tabDataSubject
-            .map(\.visualState)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-    
-    var currentVisualState: MarketGroupSelectorTabVisualState {
-        tabDataSubject.value.visualState
     }
     
     // MARK: - Selection Events
@@ -66,8 +53,9 @@ class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelP
         let currentData = tabDataSubject.value
         
         // Verify the market group exists and is not disabled
-        guard let targetGroup = currentData.marketGroups.first(where: { $0.id == id }),
-              targetGroup.visualState != .disabled else {
+        guard
+            let targetGroup = currentData.marketGroups.first(where: { $0.id == id })
+        else {
             return
         }
         
@@ -78,15 +66,14 @@ class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelP
             MarketGroupTabItemData(
                 id: marketGroup.id,
                 title: marketGroup.title,
-                visualState: marketGroup.id == id ? .selected : (marketGroup.visualState == .disabled ? .disabled : .idle)
+                visualState: marketGroup.id == id ? .selected : .idle
             )
         }
         
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
             marketGroups: updatedMarketGroups,
-            selectedMarketGroupId: id,
-            visualState: currentData.visualState
+            selectedMarketGroupId: id
         )
         
         tabDataSubject.send(updatedData)
@@ -104,19 +91,7 @@ class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelP
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
             marketGroups: marketGroups,
-            selectedMarketGroupId: currentData.selectedMarketGroupId,
-            visualState: marketGroups.isEmpty ? .empty : currentData.visualState
-        )
-        tabDataSubject.send(updatedData)
-    }
-    
-    func setVisualState(_ state: MarketGroupSelectorTabVisualState) {
-        let currentData = tabDataSubject.value
-        let updatedData = MarketGroupSelectorTabData(
-            id: currentData.id,
-            marketGroups: currentData.marketGroups,
-            selectedMarketGroupId: currentData.selectedMarketGroupId,
-            visualState: state
+            selectedMarketGroupId: currentData.selectedMarketGroupId
         )
         tabDataSubject.send(updatedData)
     }
@@ -142,8 +117,7 @@ class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelP
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
             marketGroups: updatedMarketGroups,
-            selectedMarketGroupId: updatedSelectedId,
-            visualState: updatedMarketGroups.isEmpty ? .empty : currentData.visualState
+            selectedMarketGroupId: updatedSelectedId
         )
         
         tabDataSubject.send(updatedData)
@@ -171,8 +145,7 @@ class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelP
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
             marketGroups: updatedMarketGroups,
-            selectedMarketGroupId: nil,
-            visualState: currentData.visualState
+            selectedMarketGroupId: nil
         )
         
         tabDataSubject.send(updatedData)
@@ -185,21 +158,13 @@ class NextUpEventsMarketGroupSelectorViewModel: MarketGroupSelectorTabViewModelP
         }
     }
     
-    func setEnabled(_ enabled: Bool) {
-        setVisualState(enabled ? .idle : .disabled)
-    }
-    
-    func setLoading(_ loading: Bool) {
-        setVisualState(loading ? .loading : .idle)
-    }
-    
     // MARK: - Match Processing Methods
     func updateWithMatches(_ matches: [Match]) {
         let marketGroupTabs = extractMarketTypeTabs(from: matches)
         updateMarketGroups(marketGroupTabs)
         
         // Auto-select first tab if none is selected
-        if currentSelectedMarketGroupId == nil, let firstTab = marketGroupTabs.first {
+        if let firstTab = marketGroupTabs.first {
             selectMarketGroup(id: firstTab.id)
         }
     }

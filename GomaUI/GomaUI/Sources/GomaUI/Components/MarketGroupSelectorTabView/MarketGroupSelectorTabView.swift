@@ -76,6 +76,14 @@ public class MarketGroupSelectorTabView: UIView {
 
         // View styling
         self.backgroundColor = StyleProvider.Color.backgroundPrimary
+        
+        //
+        scrollView.isHidden = false
+        loadingIndicator.stopAnimating()
+        emptyStateLabel.isHidden = true
+        isUserInteractionEnabled = true
+        alpha = 1.0
+        
     }
 
     private func setupConstraints() {
@@ -113,14 +121,6 @@ public class MarketGroupSelectorTabView: UIView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] marketGroups in
                 self?.updateTabItems(marketGroups)
-            }
-            .store(in: &cancellables)
-
-        // Visual state binding
-        viewModel.visualStatePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] visualState in
-                self?.updateVisualState(visualState)
             }
             .store(in: &cancellables)
 
@@ -199,55 +199,6 @@ public class MarketGroupSelectorTabView: UIView {
         tabItemViewModels.removeAll()
     }
 
-    // MARK: - Visual State Updates
-    private func updateVisualState(_ visualState: MarketGroupSelectorTabVisualState) {
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.applyVisualState(visualState)
-        }
-    }
-
-    private func applyVisualState(_ visualState: MarketGroupSelectorTabVisualState) {
-        switch visualState {
-        case .idle:
-            applyIdleState()
-        case .loading:
-            applyLoadingState()
-        case .empty:
-            applyEmptyState()
-        case .disabled:
-            applyDisabledState()
-        }
-    }
-
-    private func applyIdleState() {
-        scrollView.isHidden = false
-        loadingIndicator.stopAnimating()
-        emptyStateLabel.isHidden = true
-        isUserInteractionEnabled = true
-        alpha = 1.0
-    }
-
-    private func applyLoadingState() {
-        scrollView.isHidden = true
-        loadingIndicator.startAnimating()
-        emptyStateLabel.isHidden = true
-        isUserInteractionEnabled = false
-    }
-
-    private func applyEmptyState() {
-        scrollView.isHidden = true
-        loadingIndicator.stopAnimating()
-        emptyStateLabel.isHidden = false
-        isUserInteractionEnabled = false
-    }
-
-    private func applyDisabledState() {
-        scrollView.isHidden = false
-        loadingIndicator.stopAnimating()
-        emptyStateLabel.isHidden = true
-        isUserInteractionEnabled = false
-        alpha = 0.6
-    }
 
     // MARK: - Scrolling and Navigation
     private func scrollToTabItem(id: String, animated: Bool = true) {
