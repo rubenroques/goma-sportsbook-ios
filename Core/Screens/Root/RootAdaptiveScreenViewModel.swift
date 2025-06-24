@@ -64,31 +64,21 @@ class RootAdaptiveScreenViewModel: ObservableObject {
         // Listen to tab bar active bar id changes
         adaptiveTabBarViewModel.displayStatePublisher
             .sink { [weak self] displayState in
+                if self?.lastActiveTabBarID != nil && self?.lastActiveTabBarID != displayState.activeTabBarID {
+                    switch displayState.activeTabBarID {
+                    case .home:
+                        // Switched to Sportsbook
+                        self?.floatingOverlayViewModel.show(mode: .sportsbook, duration: 3.0)
+                    case .casino:
+                        // Switched to Casino
+                        self?.floatingOverlayViewModel.show(mode: .casino, duration: 3.0)
+                    }
+                }
                 self?.lastActiveTabBarID = displayState.activeTabBarID
             }
             .store(in: &cancellables)
 
-        // Listen to tab bar state changes
-        adaptiveTabBarViewModel.displayStatePublisher
-            .dropFirst()
-            .sink { [weak self] displayState in
-                self?.handleTabBarChange(displayState)
-            }
-            .store(in: &cancellables)
     }
 
-    private func handleTabBarChange(_ displayState: AdaptiveTabBarDisplayState) {
-
-        if lastActiveTabBarID != displayState.activeTabBarID {
-            switch displayState.activeTabBarID {
-            case .home:
-                // Switched to Sportsbook
-                floatingOverlayViewModel.show(mode: .sportsbook, duration: 3.0)
-            case .casino:
-                // Switched to Casino
-                floatingOverlayViewModel.show(mode: .casino, duration: 3.0)
-            }
-        }
-    }
 
 }

@@ -609,7 +609,13 @@ public class CombinedFiltersViewController: UIViewController {
     }
     
     @objc private func closeButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
+        if let navigationController = self.navigationController {
+            navigationController.popViewController(animated: true)
+        }
+        else {
+            self.dismiss(animated: true)
+        }
+
         onClose?()
     }
 
