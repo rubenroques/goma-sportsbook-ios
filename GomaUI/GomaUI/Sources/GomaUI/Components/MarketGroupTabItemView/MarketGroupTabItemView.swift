@@ -133,8 +133,6 @@ public class MarketGroupTabItemView: UIView {
             applyIdleState()
         case .selected:
             applySelectedState()
-        case .disabled:
-            applyDisabledState()
         }
     }
 
@@ -154,15 +152,6 @@ public class MarketGroupTabItemView: UIView {
         underlineView.backgroundColor = StyleProvider.Color.highlightPrimary
         isUserInteractionEnabled = true
         alpha = 1.0
-    }
-
-    private func applyDisabledState() {
-        titleLabel.textColor = StyleProvider.Color.textPrimary.withAlphaComponent(0.5)
-        titleLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-        underlineView.isHidden = true
-        underlineView.backgroundColor = .clear
-        isUserInteractionEnabled = false
-        alpha = 0.6
     }
 
 }

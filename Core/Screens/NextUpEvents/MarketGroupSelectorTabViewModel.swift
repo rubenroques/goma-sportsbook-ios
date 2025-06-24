@@ -51,31 +51,17 @@ class MarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol {
     // MARK: - Actions
     func selectMarketGroup(id: String) {
         let currentData = tabDataSubject.value
-        
-        // Verify the market group exists and is not disabled
-        guard
-            let targetGroup = currentData.marketGroups.first(where: { $0.id == id })
-        else {
-            return
-        }
-        
         let previouslySelectedId = currentData.selectedMarketGroupId
         
-        // Update market groups with new selection states
-        let updatedMarketGroups = currentData.marketGroups.map { marketGroup in
-            MarketGroupTabItemData(
-                id: marketGroup.id,
-                title: marketGroup.title,
-                visualState: marketGroup.id == id ? .selected : .idle
-            )
-        }
-        
+        // Only update the selection ID, not the entire market groups array
+        // This avoids recreating all MarketGroupTabItemData objects
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
-            marketGroups: updatedMarketGroups,
+            marketGroups: currentData.marketGroups, // Keep existing array
             selectedMarketGroupId: id
         )
         
+        print("DEBUG: Sending updated data with selectedId: \(id)")
         tabDataSubject.send(updatedData)
         
         // Send selection event
@@ -138,7 +124,7 @@ class MarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol {
             MarketGroupTabItemData(
                 id: marketGroup.id,
                 title: marketGroup.title,
-                visualState: marketGroup.visualState == .disabled ? .disabled : .idle
+                visualState: .idle
             )
         }
         
@@ -152,8 +138,7 @@ class MarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol {
     }
     
     func selectFirstAvailableMarketGroup() {
-        let availableGroup = currentMarketGroups.first { $0.visualState != .disabled }
-        if let firstGroup = availableGroup {
+        if let firstGroup = currentMarketGroups.first {
             selectMarketGroup(id: firstGroup.id)
         }
     }

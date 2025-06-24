@@ -124,6 +124,15 @@ public class MarketGroupSelectorTabView: UIView {
             }
             .store(in: &cancellables)
 
+        // Selection state binding - efficiently update only affected items
+        viewModel.selectedMarketGroupIdPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] selectedId in
+                self?.updateSelectionState(selectedId: selectedId)
+            }
+            .store(in: &cancellables)
+
         // Selection event binding for analytics/logging
         viewModel.selectionEventPublisher
             .receive(on: DispatchQueue.main)
@@ -139,17 +148,14 @@ public class MarketGroupSelectorTabView: UIView {
         let existingIds = Set(tabItemViews.keys)
         let newIds = Set(marketGroups.map { $0.id })
         
-        // If the tab IDs haven't changed, just update visual states
+        // If the tab IDs haven't changed, just update titles (not visual states)
         if existingIds == newIds && !tabItemViews.isEmpty {
-            // Update existing tabs without rebuilding
+            // Update titles only, visual state is handled by updateSelectionState
             for marketGroup in marketGroups {
                 if let tabViewModel = tabItemViewModels[marketGroup.id] {
-                    tabViewModel.updateTabItemData(marketGroup)
+                    tabViewModel.updateTitle(marketGroup.title)
                 }
             }
-            
-            // Don't scroll here - let handleSelectionEvent handle scrolling
-            // to avoid conflicts and preserve user's scroll position
             return
         }
         
@@ -157,19 +163,40 @@ public class MarketGroupSelectorTabView: UIView {
         // Remove existing tab views
         clearTabItems()
 
-        // Create new tab item views
+        // Create new tab item views (without visual state)
         for marketGroup in marketGroups {
             createTabItemView(for: marketGroup)
         }
 
-        // Scroll to selected tab if available (only on initial load/rebuild)
+        // Apply current selection state
         if let selectedId = viewModel.currentSelectedMarketGroupId {
+            updateSelectionState(selectedId: selectedId)
             scrollToTabItem(id: selectedId, animated: false)
         }
     }
+    
+    // Efficiently update only the selection state without recreating items
+    private func updateSelectionState(selectedId: String?) {
+
+        // Update visual states for all items
+        for (id, viewModel) in tabItemViewModels {
+            if viewModel.currentVisualState == .selected && id != selectedId {
+                viewModel.setVisualState(.idle)
+            } else if id == selectedId && viewModel.currentVisualState != .selected {
+                viewModel.setVisualState(.selected)
+            }
+        }
+        
+    }
 
     private func createTabItemView(for marketGroup: MarketGroupTabItemData) {
-        let tabViewModel = MockMarketGroupTabItemViewModel(tabItemData: marketGroup)
+        // Create tab item with idle state initially (selection state managed separately)
+        let tabItemData = MarketGroupTabItemData(
+            id: marketGroup.id,
+            title: marketGroup.title,
+            visualState: .idle  // Always start with idle, updateSelectionState will set correct state
+        )
+        let tabViewModel = MockMarketGroupTabItemViewModel(tabItemData: tabItemData)
         let tabView = MarketGroupTabItemView(viewModel: tabViewModel)
 
         // Store references
