@@ -44,7 +44,7 @@ extension MockDepositBonusInfoViewModel {
     public static var defaultMock: MockDepositBonusInfoViewModel {
         let depositBonusInfo = DepositBonusInfoData(
             id: "deposit_bonus_balance",
-            icon: "gift.fill",
+            icon: "deposit_gift_icon",
             balanceText: "Your deposit + Bonus",
             currencyAmount: "XAF --"
         )

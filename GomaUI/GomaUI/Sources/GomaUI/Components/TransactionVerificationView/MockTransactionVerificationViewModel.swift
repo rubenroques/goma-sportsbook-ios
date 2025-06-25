@@ -67,24 +67,47 @@ public final class MockTransactionVerificationViewModel: TransactionVerification
 
 // MARK: - Factory Methods
 public extension MockTransactionVerificationViewModel {
-    static func defaultMock() -> MockTransactionVerificationViewModel {
+    static var defaultMock: MockTransactionVerificationViewModel {
         let data = TransactionVerificationData(
             title: "USSD Push coming through...",
             subtitle: "We are sending a USSD Push interaction to +237 612345678",
             highlightText: "+237 612345678",
-            topImage: UIImage(systemName: "arrow.2.circlepath")?.withTintColor(StyleProvider.Color.highlightPrimary, renderingMode: .alwaysOriginal),
-            bottomImage: UIImage(systemName: "iphone")?.withTintColor(StyleProvider.Color.textSecondary, renderingMode: .alwaysOriginal)
+            topImage: "arrow.2.circlepath",
+            bottomImage: "iphone"
         )
         
         return MockTransactionVerificationViewModel(data: data)
     }
     
-    static func simpleMock() -> MockTransactionVerificationViewModel {
+    static var simpleMock: MockTransactionVerificationViewModel {
         let data = TransactionVerificationData(
             title: "Received it yet?",
             subtitle: "Follow the prompt to proceed",
-            topImage: UIImage(systemName: "arrow.2.circlepath")?.withTintColor(StyleProvider.Color.highlightPrimary, renderingMode: .alwaysOriginal),
-            bottomImage: UIImage(systemName: "phone.badge.checkmark")?.withTintColor(StyleProvider.Color.highlightPrimary, renderingMode: .alwaysOriginal)
+            topImage: "arrow.2.circlepath",
+            bottomImage: "phone.badge.checkmark"
+        )
+        
+        return MockTransactionVerificationViewModel(data: data)
+    }
+    
+    static var incompletePinMock: MockTransactionVerificationViewModel {
+        let data = TransactionVerificationData(
+            title: "USSD Push coming through...",
+            subtitle: "We are sending a USSD Push interaction to +237 612345678",
+            highlightText: "+237 612345678",
+            topImage: "loader_icon",
+            bottomImage: "incomplete_pin_image"
+        )
+        
+        return MockTransactionVerificationViewModel(data: data)
+    }
+    
+    static var CompletePinMock: MockTransactionVerificationViewModel {
+        let data = TransactionVerificationData(
+            title: "Received it yet?",
+            subtitle: "Follow the prompt to proceed",
+            topImage: "check_icon",
+            bottomImage: "complete_pin_image"
         )
         
         return MockTransactionVerificationViewModel(data: data)

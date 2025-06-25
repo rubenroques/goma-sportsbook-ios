@@ -31,8 +31,8 @@ public final class MockInfoRowViewModel: InfoRowViewModelProtocol {
 }
 
 // MARK: - Factory Methods
-public extension MockInfoRowViewModel {
-    static func defaultMock() -> MockInfoRowViewModel {
+extension MockInfoRowViewModel {
+    public static var defaultMock: MockInfoRowViewModel {
         let data = InfoRowData(
             leftText: "Your Deposit",
             rightText: "XAF 1000"
@@ -41,7 +41,7 @@ public extension MockInfoRowViewModel {
         return MockInfoRowViewModel(data: data)
     }
     
-    static func balanceMock() -> MockInfoRowViewModel {
+    public static var balanceMock: MockInfoRowViewModel {
         let data = InfoRowData(
             leftText: "Account Balance",
             rightText: "XAF 25,000"
@@ -50,7 +50,7 @@ public extension MockInfoRowViewModel {
         return MockInfoRowViewModel(data: data)
     }
     
-    static func customBackgroundMock() -> MockInfoRowViewModel {
+    public static var customBackgroundMock: MockInfoRowViewModel {
         let data = InfoRowData(
             leftText: "Bonus Balance",
             rightText: "XAF 500",

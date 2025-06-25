@@ -70,7 +70,7 @@ public final class MockStepInstructionViewModel: StepInstructionViewModelProtoco
 
 // MARK: - Factory Methods
 public extension MockStepInstructionViewModel {
-    static func defaultMock() -> MockStepInstructionViewModel {
+    static var defaultMock: MockStepInstructionViewModel {
         let data = StepInstructionData(
             stepNumber: 1,
             instructionText: "On the mobile money menu, select x, then select the x option.",
@@ -80,7 +80,7 @@ public extension MockStepInstructionViewModel {
         return MockStepInstructionViewModel(data: data)
     }
     
-    static func customColorMock() -> MockStepInstructionViewModel {
+    static var customColorMock: MockStepInstructionViewModel {
         let data = StepInstructionData(
             stepNumber: 2,
             instructionText: "After you receive a transaction confirmation SMS from your provider, click on the Confirm Payment button below.",
@@ -92,7 +92,7 @@ public extension MockStepInstructionViewModel {
         return MockStepInstructionViewModel(data: data)
     }
     
-    static func multipleHighlightsMock() -> MockStepInstructionViewModel {
+    static var multipleHighlightsMock: MockStepInstructionViewModel {
         let data = StepInstructionData(
             stepNumber: 3,
             instructionText: "You will receive a confirmation SMS on your registered number.",

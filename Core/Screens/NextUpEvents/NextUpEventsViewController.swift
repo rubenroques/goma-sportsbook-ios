@@ -195,7 +195,7 @@ class NextUpEventsViewController: UIViewController {
         
         let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
 
-        let viewModel = CombinedFiltersViewModel(filterConfiguration: configuration,
+        let viewModel = MockCombinedFiltersViewModel(filterConfiguration: configuration,
                                                  contextId: "sports")
         
         let combinedFiltersViewController = CombinedFiltersViewController( viewModel: viewModel)

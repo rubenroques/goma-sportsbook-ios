@@ -117,7 +117,7 @@ public class CombinedFiltersViewController: UIViewController {
     // Dynamic storage for views
     private var dynamicFilterViews: [String: UIView] = [:]
     
-    var viewModel: CombinedFiltersViewModel
+    var viewModel: MockCombinedFiltersViewModel
     
     // Callbacks
     public var onReset: (() -> Void)?
@@ -127,7 +127,7 @@ public class CombinedFiltersViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    public init(viewModel: CombinedFiltersViewModel) {
+    public init(viewModel: MockCombinedFiltersViewModel) {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
@@ -248,7 +248,7 @@ public class CombinedFiltersViewController: UIViewController {
     }
     
     // MARK: Binding
-    private func bind(toViewModel viewModel: CombinedFiltersViewModel) {
+    private func bind(toViewModel viewModel: MockCombinedFiltersViewModel) {
         
         viewModel.isLoadingPublisher
             .sink(receiveValue: { [weak self] isLoading in
@@ -574,9 +574,9 @@ extension CombinedFiltersViewController {
 }
 
 // MARK: - Filter View Models Setup
-extension CombinedFiltersViewModel {
+extension MockCombinedFiltersViewModel {
     
-    func createDynamicViewModels(for configuration: FilterConfiguration, contextId: String) {
+    public func createDynamicViewModels(for configuration: FilterConfiguration, contextId: String) {
         guard let context = configuration.filtersByContext.first(where: { $0.id == contextId }) else {
             return
         }
@@ -591,7 +591,7 @@ extension CombinedFiltersViewModel {
         }
     }
     
-    func createViewModel(for widget: FilterWidget) -> Any? {
+    public func createViewModel(for widget: FilterWidget) -> Any? {
         switch widget.type {
         case .sportsFilter:
             return createSportGamesViewModel(for: widget)
@@ -685,7 +685,7 @@ extension CombinedFiltersViewModel {
                         id: "\(index+1)",
                         icon: iconName,
                         title: option.label,
-                        count: self.getCountForSortOption(option.id)
+                        count: -1
                     )
                 }
             }
@@ -720,21 +720,6 @@ extension CombinedFiltersViewModel {
         )
     }
     
-    // Helper for getting sort count values
-    // TODO: Use actual values when data is available
-    private func getCountForSortOption(_ optionId: String) -> Int {
-        switch optionId {
-        case "popular":
-            return 25
-        case "upcoming":
-            return 15
-        case "favourites":
-            return 0
-        default:
-            return 0
-        }
-    }
-    
 }
 
 // MARK: - Convenience Initializer
@@ -749,7 +734,7 @@ public extension CombinedFiltersViewController {
         
         let configuration = createMockFilterConfiguration()
 
-        let viewModel = CombinedFiltersViewModel(filterConfiguration: configuration,
+        let viewModel = MockCombinedFiltersViewModel(filterConfiguration: configuration,
                                                  contextId: "sports")
         
         return CombinedFiltersViewController( viewModel: viewModel)

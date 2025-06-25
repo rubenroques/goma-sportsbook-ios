@@ -10,7 +10,7 @@ import Combine
 import GomaUI
 import ServicesProvider
 
-public class CombinedFiltersViewModel {
+public class MockCombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     
     var popularLeagues = [SortOption]()
     var popularCountryLeagues = [CountryLeagueOptions]()
@@ -53,7 +53,7 @@ public class CombinedFiltersViewModel {
             $0.id == currentSportId
         })
         
-        var sportType = SportType(name: currentSport?.name ?? "",
+        let sportType = SportType(name: currentSport?.name ?? "",
                                   numericId: currentSport?.numericId ?? "",
                                   alphaId: currentSport?.alphaId ?? "", iconId: currentSport?.id ?? "",
                                   showEventCategory: false,
@@ -188,7 +188,7 @@ public class CombinedFiltersViewModel {
        
     }
     
-    private func refreshLeaguesFilterData() {
+    func refreshLeaguesFilterData() {
         if let leaguesViewModel = dynamicViewModels["leaguesFilter"] as? MockSortFilterViewModel {
             
             leaguesViewModel.updateSortOptions(popularLeagues)
@@ -196,7 +196,7 @@ public class CombinedFiltersViewModel {
         
     }
     
-    private func refreshCountryLeaguesFilterData() {
+    func refreshCountryLeaguesFilterData() {
         if let countryLeaguesViewModel = dynamicViewModels["popularCountryLeaguesFilter"] as? MockCountryLeaguesFilterViewModel {
             
             countryLeaguesViewModel.updateCountryLeagueOptions(popularCountryLeagues)

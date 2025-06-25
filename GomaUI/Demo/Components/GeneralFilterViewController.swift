@@ -176,9 +176,8 @@ class GeneralFilterViewController: UIViewController {
         
         let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
 
-        let viewModel = CombinedFiltersViewModel(filterSelection: selectedGeneralFilterSelection,
-                                                 filterConfiguration: configuration,
-                                                 contextId: "sports")
+        let viewModel: CombinedFiltersViewModelProtocol = MockCombinedFiltersViewModel(filterSelection: selectedGeneralFilterSelection, filterConfiguration: configuration,
+                                                                                       contextId: "sports")
         
         let combinedFiltersViewController = CombinedFiltersViewController( viewModel: viewModel)
         

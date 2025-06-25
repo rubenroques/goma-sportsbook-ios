@@ -55,7 +55,7 @@ public final class InfoRowView: UIView {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    public init(viewModel: InfoRowViewModelProtocol = MockInfoRowViewModel.defaultMock()) {
+    public init(viewModel: InfoRowViewModelProtocol = MockInfoRowViewModel.defaultMock) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -63,7 +63,7 @@ public final class InfoRowView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.viewModel = MockInfoRowViewModel.defaultMock()
+        self.viewModel = MockInfoRowViewModel.defaultMock
         super.init(coder: coder)
         setupViews()
         setupBindings()
@@ -138,19 +138,19 @@ struct InfoRowView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 12) {
             PreviewUIView {
-                InfoRowView(viewModel: MockInfoRowViewModel.defaultMock())
+                InfoRowView(viewModel: MockInfoRowViewModel.defaultMock)
             }
             .frame(height: 60)
             .previewDisplayName("Your Deposit")
             
             PreviewUIView {
-                InfoRowView(viewModel: MockInfoRowViewModel.balanceMock())
+                InfoRowView(viewModel: MockInfoRowViewModel.balanceMock)
             }
             .frame(height: 60)
             .previewDisplayName("Account Balance")
             
             PreviewUIView {
-                InfoRowView(viewModel: MockInfoRowViewModel.customBackgroundMock())
+                InfoRowView(viewModel: MockInfoRowViewModel.customBackgroundMock)
             }
             .frame(height: 60)
             .previewDisplayName("Custom Colors")

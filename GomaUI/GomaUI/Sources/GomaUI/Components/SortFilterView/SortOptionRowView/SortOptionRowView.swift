@@ -175,6 +175,10 @@ public class SortOptionRowView: UIView {
         titleLabel.text = self.viewModel.sortOption.title
         
         countLabel.text = self.viewModel.sortOption.count > 0 ? String(self.viewModel.sortOption.count) : "No Events"
+        
+        if self.viewModel.sortOption.count < 0 {
+            countLabel.isHidden = true
+        }
     }
     
 }

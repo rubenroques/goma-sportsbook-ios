@@ -73,7 +73,7 @@ public final class MockPinDigitEntryViewModel: PinDigitEntryViewModelProtocol {
 
 // MARK: - Factory Methods
 public extension MockPinDigitEntryViewModel {
-    static func defaultMock() -> MockPinDigitEntryViewModel {
+    static var defaultMock: MockPinDigitEntryViewModel {
         let data = PinDigitEntryData(
             digitCount: 4,
             currentPin: ""
@@ -82,25 +82,7 @@ public extension MockPinDigitEntryViewModel {
         return MockPinDigitEntryViewModel(data: data)
     }
     
-    static func partialPinMock() -> MockPinDigitEntryViewModel {
-        let data = PinDigitEntryData(
-            digitCount: 4,
-            currentPin: "12"
-        )
-        
-        return MockPinDigitEntryViewModel(data: data)
-    }
-    
-    static func completePinMock() -> MockPinDigitEntryViewModel {
-        let data = PinDigitEntryData(
-            digitCount: 4,
-            currentPin: "1234"
-        )
-        
-        return MockPinDigitEntryViewModel(data: data)
-    }
-    
-    static func sixDigitMock() -> MockPinDigitEntryViewModel {
+    static var sixDigitMock: MockPinDigitEntryViewModel {
         let data = PinDigitEntryData(
             digitCount: 6,
             currentPin: "123"
@@ -109,7 +91,7 @@ public extension MockPinDigitEntryViewModel {
         return MockPinDigitEntryViewModel(data: data)
     }
     
-    static func eightDigitMock() -> MockPinDigitEntryViewModel {
+    static var eightDigitMock: MockPinDigitEntryViewModel {
         let data = PinDigitEntryData(
             digitCount: 8,
             currentPin: ""

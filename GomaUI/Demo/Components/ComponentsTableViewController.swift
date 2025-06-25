@@ -422,6 +422,114 @@ class ComponentsTableViewController: UITableViewController {
                 return buttonView
             }
         ),
+        UIComponent(
+            title: "Custom Navigation View",
+            description: "A customizable navigation bar, using CustomNavigationView.",
+            viewController: CustomNavigationViewController.self,
+            previewFactory: {
+                let viewModel = MockCustomNavigationViewModel.defaultMock
+                let navView = CustomNavigationView(viewModel: viewModel)
+                navView.backgroundColor = StyleProvider.Color.backgroundColor
+                navView.layer.cornerRadius = 8
+                return navView
+            }
+        ),
+        UIComponent(
+            title: "Amount Pills Container",
+            description: "A container view for selecting amounts, using AmountPillsView.",
+            viewController: AmountPillsContainerViewController.self,
+            previewFactory: {
+                let viewModel = MockAmountPillsViewModel.defaultMock
+                let pillsView = AmountPillsView(viewModel: viewModel)
+                pillsView.backgroundColor = StyleProvider.Color.backgroundColor
+                pillsView.layer.cornerRadius = 8
+                return pillsView
+            }
+        ),
+        UIComponent(
+            title: "Deposit Bonus Info",
+            description: "A view for displaying deposit bonus information, using DepositBonusInfoView.",
+            viewController: DepositBonusInfoViewController.self,
+            previewFactory: {
+                let viewModel = MockDepositBonusInfoViewModel.defaultMock
+                let bonusView = DepositBonusInfoView(viewModel: viewModel)
+                bonusView.backgroundColor = StyleProvider.Color.backgroundColor
+                bonusView.layer.cornerRadius = 8
+                return bonusView
+            }
+        ),
+        UIComponent(
+            title: "Info Row View",
+            description: "A customizable info row component, using InfoRowView.",
+            viewController: InfoRowViewController.self,
+            previewFactory: {
+                let viewModel = MockInfoRowViewModel.defaultMock
+                let infoRowView = InfoRowView(viewModel: viewModel)
+                infoRowView.backgroundColor = StyleProvider.Color.backgroundColor
+                infoRowView.layer.cornerRadius = 8
+                return infoRowView
+            }
+        ),
+        UIComponent(
+            title: "Status Notification View",
+            description: "A notification banner for status messages, using StatusNotificationView.",
+            viewController: StatusNotificationViewController.self,
+            previewFactory: {
+                let viewModel = MockStatusNotificationViewModel.successMock
+                let notificationView = StatusNotificationView(viewModel: viewModel)
+                notificationView.backgroundColor = StyleProvider.Color.backgroundColor
+                notificationView.layer.cornerRadius = 8
+                return notificationView
+            }
+        ),
+        UIComponent(
+            title: "Step Instruction View",
+            description: "A step-by-step instruction component, using StepInstructionView.",
+            viewController: StepInstructionViewController.self,
+            previewFactory: {
+                let viewModel = MockStepInstructionViewModel.defaultMock
+                let stepView = StepInstructionView(viewModel: viewModel)
+                stepView.backgroundColor = StyleProvider.Color.backgroundColor
+                stepView.layer.cornerRadius = 8
+                return stepView
+            }
+        ),
+        UIComponent(
+            title: "Terms Acceptance View",
+            description: "A component for displaying and accepting terms, using TermsAcceptanceView.",
+            viewController: TermsAcceptanceViewController.self,
+            previewFactory: {
+                let viewModel = MockTermsAcceptanceViewModel.defaultMock
+                let termsView = TermsAcceptanceView(viewModel: viewModel)
+                termsView.backgroundColor = StyleProvider.Color.backgroundColor
+                termsView.layer.cornerRadius = 8
+                return termsView
+            }
+        ),
+        UIComponent(
+            title: "Pin Digit Entry View",
+            description: "A PIN digit entry component, using PinDigitEntryView.",
+            viewController: PinDigitEntryViewController.self,
+            previewFactory: {
+                let viewModel = MockPinDigitEntryViewModel.defaultMock
+                let pinView = PinDigitEntryView(viewModel: viewModel)
+                pinView.backgroundColor = StyleProvider.Color.backgroundColor
+                pinView.layer.cornerRadius = 8
+                return pinView
+            }
+        ),
+        UIComponent(
+            title: "Transaction Verification View",
+            description: "A transaction verification component, using TransactionVerificationView.",
+            viewController: TransactionVerificationViewController.self,
+            previewFactory: {
+                let viewModel = MockTransactionVerificationViewModel.defaultMock
+                let verificationView = TransactionVerificationView(viewModel: viewModel)
+                verificationView.backgroundColor = StyleProvider.Color.backgroundColor
+                verificationView.layer.cornerRadius = 8
+                return verificationView
+            }
+        ),
     ]
 
     // MARK: - View Lifecycle

@@ -31,8 +31,8 @@ public final class MockCustomNavigationViewModel: CustomNavigationViewModelProto
 }
 
 // MARK: - Factory Methods
-public extension MockCustomNavigationViewModel {
-    static func defaultMock() -> MockCustomNavigationViewModel {
+extension MockCustomNavigationViewModel {
+    public static var defaultMock: MockCustomNavigationViewModel {
         
         let data = CustomNavigationData(
             logoImage: "betsson_logo",
@@ -42,7 +42,7 @@ public extension MockCustomNavigationViewModel {
         return MockCustomNavigationViewModel(data: data)
     }
     
-    static func blueMock() -> MockCustomNavigationViewModel {
+    public static var blueMock: MockCustomNavigationViewModel {
         
         let data = CustomNavigationData(
             logoImage: "betsson_logo",

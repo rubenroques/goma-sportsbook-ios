@@ -32,7 +32,8 @@ public final class MockStatusNotificationViewModel: StatusNotificationViewModelP
 
 // MARK: - Factory Methods
 public extension MockStatusNotificationViewModel {
-    static func defaultMock() -> MockStatusNotificationViewModel {
+    
+    static var successMock: MockStatusNotificationViewModel {
         let data = StatusNotificationData(
             type: .success,
             message: "Deposit Successful",
@@ -42,17 +43,7 @@ public extension MockStatusNotificationViewModel {
         return MockStatusNotificationViewModel(data: data)
     }
     
-    static func successMock() -> MockStatusNotificationViewModel {
-        let data = StatusNotificationData(
-            type: .success,
-            message: "Deposit Successful",
-            emoji: "🤑"
-        )
-        
-        return MockStatusNotificationViewModel(data: data)
-    }
-    
-    static func errorMock() -> MockStatusNotificationViewModel {
+    static var errorMock: MockStatusNotificationViewModel {
         let data = StatusNotificationData(
             type: .error,
             message: "Transaction Failed",
@@ -62,7 +53,7 @@ public extension MockStatusNotificationViewModel {
         return MockStatusNotificationViewModel(data: data)
     }
     
-    static func warningMock() -> MockStatusNotificationViewModel {
+    static var warningMock: MockStatusNotificationViewModel {
         let data = StatusNotificationData(
             type: .warning,
             message: "Low Balance Warning",
