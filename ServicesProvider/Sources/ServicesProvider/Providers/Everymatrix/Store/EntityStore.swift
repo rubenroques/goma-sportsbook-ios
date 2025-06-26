@@ -9,8 +9,11 @@ import Foundation
 import Combine
 
 extension EveryMatrix {
+    
     class EntityStore: ObservableObject {
+        
         @Published private var entities: [String: [String: any Entity]] = [:]
+        
         private let queue = DispatchQueue(label: "entity.store.queue", attributes: .concurrent)
         private var entityOrder: [String: [String]] = [:] // [EntityType: [Ordered IDs]]
 

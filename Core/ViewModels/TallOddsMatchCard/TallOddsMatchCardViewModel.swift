@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 import GomaUI
+import ServicesProvider
 
 final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
 
@@ -33,6 +34,10 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     
     private let matchData: TallOddsMatchData
     
+    // MARK: - Live Data Properties
+    private var liveDataCancellable: AnyCancellable?
+    private var currentEventLiveData: EventLiveData?
+    
     // MARK: - Initialization
     init(matchData: TallOddsMatchData) {
         print("[TallOddsMatchCardViewModel] Creating VM for match: \(matchData.homeParticipantName)-\(matchData.awayParticipantName)")
@@ -58,12 +63,16 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         self.marketInfoLineViewModelSubject = CurrentValueSubject(marketInfoViewModel)
         self.marketOutcomesViewModelSubject = CurrentValueSubject(outcomesViewModel)
         self.scoreViewModelSubject = CurrentValueSubject(scoreViewModel)
-
+        
+        // Start live data subscription for live matches
+        subscribeToLiveData()
     }
     
     // MARK: - Cleanup
     deinit {
         print("[TallOddsMatchCardViewModel] 🔴 DEINIT - matchId: \(matchData.matchId)")
+        liveDataCancellable?.cancel()
+        liveDataCancellable = nil
     }
     
     // MARK: - TallOddsMatchCardViewModelProtocol
@@ -85,6 +94,133 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     func onMarketInfoTapped() {
         print("Production: Market info tapped for match: \(matchData.matchId)")
         // TODO: Implement market details navigation
+    }
+    
+    // MARK: - Live Data Subscription
+    
+    private func subscribeToLiveData() {
+        guard matchData.leagueInfo.isLive else {
+            print("[TallOddsMatchCardViewModel] 🟡 Skipping live data subscription - match is not live: \(matchData.matchId)")
+            return
+        }
+        
+        print("[TallOddsMatchCardViewModel] 🟢 Starting live data subscription for match: \(matchData.matchId)")
+        
+        liveDataCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: matchData.matchId)
+            .sink(receiveCompletion: { [weak self] completion in
+                print("[TallOddsMatchCardViewModel] 🔴 Live data subscription completed: \(completion) for match: \(self?.matchData.matchId ?? "unknown")")
+            }, receiveValue: { [weak self] subscribableContent in
+                guard let self = self else { return }
+                
+                switch subscribableContent {
+                case .contentUpdate(let eventLiveData):
+                    print("[TallOddsMatchCardViewModel] 📡 Received live data update for match: \(self.matchData.matchId)")
+                    print("  - Home Score: \(eventLiveData.homeScore ?? -1)")
+                    print("  - Away Score: \(eventLiveData.awayScore ?? -1)")
+                    print("  - Status: \(self.eventStatusToString(eventLiveData.status))")
+                    print("  - Match Time: \(eventLiveData.matchTime ?? "nil")")
+                    print("  - Detailed Scores Count: \(eventLiveData.detailedScores?.count ?? 0)")
+                    print("  - Active Player Serving: \(eventLiveData.activePlayerServing?.rawValue ?? "nil")")
+                    
+                    self.currentEventLiveData = eventLiveData
+                    self.updateScoreViewModel(from: eventLiveData)
+                    
+                case .connected(let subscription):
+                    print("[TallOddsMatchCardViewModel] 🟢 Live data connected: \(subscription.id) for match: \(self.matchData.matchId)")
+                    
+                case .disconnected:
+                    print("[TallOddsMatchCardViewModel] 🔴 Live data disconnected for match: \(self.matchData.matchId)")
+                }
+            })
+    }
+    
+    private func updateScoreViewModel(from eventLiveData: EventLiveData) {
+        let liveScoreData = transformEventLiveDataToLiveScoreData(eventLiveData)
+        let newScoreViewModel = Self.createScoreViewModel(from: liveScoreData)
+        
+        print("[TallOddsMatchCardViewModel] 🔄 Updating score ViewModel for match: \(matchData.matchId)")
+        print("  - New score cells count: \(liveScoreData?.scoreCells.count ?? 0)")
+        
+        scoreViewModelSubject.send(newScoreViewModel)
+    }
+    
+    private func transformEventLiveDataToLiveScoreData(_ eventLiveData: EventLiveData) -> LiveScoreData? {
+        var scoreCells: [ScoreDisplayData] = []
+        
+        
+        
+        // Add detailed scores (sets, games, etc.)
+        if let detailedScores = eventLiveData.detailedScores {
+            for (scoreName, score) in detailedScores.sorted(by: { $0.value.sortValue < $1.value.sortValue }) {
+                let scoreCell: ScoreDisplayData
+                
+                switch score {
+                case .set(let index, let home, let away):
+                    scoreCell = ScoreDisplayData(
+                        id: "set-\(scoreName)",
+                        homeScore: home != nil ? "\(home!)" : "-",
+                        awayScore: away != nil ? "\(away!)" : "-",
+                        index: index,
+                        style: .simple
+                    )
+                case .gamePart(let home, let away):
+                    scoreCell = ScoreDisplayData(
+                        id: "game-\(scoreName)",
+                        homeScore: home != nil ? "\(home!)" : "-",
+                        awayScore: away != nil ? "\(away!)" : "-",
+                        style: .background
+                    )
+                case .matchFull(let home, let away):
+                    scoreCell = ScoreDisplayData(
+                        id: "match-\(scoreName)",
+                        homeScore: home != nil ? "\(home!)" : "-",
+                        awayScore: away != nil ? "\(away!)" : "-",
+                        style: .simple
+                    )
+                }
+                
+                scoreCells.append(scoreCell)
+            }
+        }
+
+        if scoreCells.isEmpty {
+            // Add main score if available
+            if let homeScore = eventLiveData.homeScore, let awayScore = eventLiveData.awayScore {
+                let mainScoreCell = ScoreDisplayData(
+                    id: "match",
+                    homeScore: "\(homeScore)",
+                    awayScore: "\(awayScore)",
+                    style: .simple
+                )
+                scoreCells.append(mainScoreCell)
+            }
+        }
+        
+        guard !scoreCells.isEmpty else { return nil }
+        
+        return LiveScoreData(
+            sportCode: extractSportCode(from: matchData),
+            scoreCells: scoreCells
+        )
+    }
+    
+    private func extractSportCode(from matchData: TallOddsMatchData) -> String {
+        // Extract sport code from match data or default to tennis for EVENT_INFO rich data
+        return "tennis" // Could be enhanced to use actual sport detection
+    }
+    
+    private func eventStatusToString(_ status: EventStatus?) -> String {
+        guard let status = status else { return "nil" }
+        switch status {
+        case .unknown:
+            return "unknown"
+        case .notStarted:
+            return "not started"
+        case .inProgress(let detail):
+            return "in progress (\(detail))"
+        case .ended(let detail):
+            return "ended (\(detail))"
+        }
     }
 }
 

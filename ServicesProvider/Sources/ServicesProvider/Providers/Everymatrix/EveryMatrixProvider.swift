@@ -152,8 +152,8 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Observe EVENT_INFO entities for this event from the live matches subscription
         return livePaginator.entityStore.observeEventInfosForEvent(eventId: id)
             .map { [weak self] eventInfos in
-                let eventLiveData = self?.buildEventLiveData(eventId: id, from: eventInfos) 
-                    ?? EventLiveData(id: id, homeScore: nil, awayScore: nil, matchTime: nil, status: nil, detailedScores: nil, activePlayerServing: nil)
+                let empty = EventLiveData(id: id, homeScore: nil, awayScore: nil, matchTime: nil, status: nil, detailedScores: nil, activePlayerServing: nil)
+                let eventLiveData = self?.buildEventLiveData(eventId: id, from: eventInfos) ?? empty
                 return SubscribableContent.contentUpdate(content: eventLiveData)
             }
             .setFailureType(to: ServiceProviderError.self)

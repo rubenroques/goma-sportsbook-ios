@@ -32,7 +32,6 @@ class LiveMatchesPaginator: UnsubscriptionController {
     private var currentServiceSubscription: Subscription?
     private var cancellables = Set<AnyCancellable>()
 
-
     // MARK: - Configuration
     private let sportId: String
     private let numberOfEvents: Int
