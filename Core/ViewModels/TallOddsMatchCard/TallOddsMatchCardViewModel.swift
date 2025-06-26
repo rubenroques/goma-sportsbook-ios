@@ -3,7 +3,7 @@ import UIKit
 import GomaUI
 
 final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
-    
+
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<TallOddsMatchCardDisplayState, Never>
     fileprivate let matchHeaderViewModelSubject: CurrentValueSubject<MatchHeaderViewModelProtocol, Never>

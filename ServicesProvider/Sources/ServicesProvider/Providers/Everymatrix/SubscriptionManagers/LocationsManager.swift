@@ -136,8 +136,9 @@ class LocationsManager {
                 handleLocationsChangeRecord(changeRecord)
                 
             // Ignore all other entity types for locations manager
-            case .sport, .match, .market, .outcome, .bettingOffer, .eventCategory, 
-                    .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber, .tournament:
+            case .sport, .match, .market, .outcome, .bettingOffer, .eventCategory, .eventInfo:
+                break
+            case .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber, .tournament:
                 break // Ignore non-location entities
                 
             case .unknown(let type):

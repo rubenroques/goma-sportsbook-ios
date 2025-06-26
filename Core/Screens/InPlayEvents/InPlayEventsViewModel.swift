@@ -186,7 +186,6 @@ class InPlayEventsViewModel: ObservableObject {
     }
 
     private func updateMarketGroupViewModels(marketGroups: [MarketGroupTabItemData]) {
-
         // Create ViewModels for new market groups
         for marketGroup in marketGroups {
             if marketGroupCardsViewModels[marketGroup.id] == nil {
@@ -210,8 +209,6 @@ class InPlayEventsViewModel: ObservableObject {
             marketGroupCardsViewModels.removeValue(forKey: idToRemove)
             print("[NextUpEvents] Removed MarketGroupCardsViewModel for market type: \(idToRemove)")
         }
-
         self.marketGroups = marketGroups
-        
     }
 }

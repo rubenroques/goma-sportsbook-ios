@@ -159,8 +159,9 @@ class PopularTournamentsManager {
                 handleTournamentsChangeRecord(changeRecord)
                 
             // Ignore all other entity types for tournaments manager
-            case .sport, .match, .market, .outcome, .bettingOffer, .location,
-                 .eventCategory, .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber:
+            case .sport, .match, .market, .outcome, .bettingOffer, .location, .eventInfo:
+                break
+            case .eventCategory, .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber:
                 break // Ignore non-tournament entities
                 
             case .unknown(let type):

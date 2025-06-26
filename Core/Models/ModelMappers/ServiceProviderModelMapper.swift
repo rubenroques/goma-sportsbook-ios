@@ -16,7 +16,7 @@ enum ServiceProviderModelMapper {
 extension ServiceProviderModelMapper {
     
     // Matches
-    static func matches(fromEventsGroups eventsGroups: [EventsGroup]) -> [Match] {
+    static func matches(fromEventsGroups eventsGroups: [ServicesProvider.EventsGroup]) -> [Match] {
         var matches = [Match?]()
         for eventsGroup in eventsGroups {
             for event in eventsGroup.events {
@@ -26,7 +26,7 @@ extension ServiceProviderModelMapper {
         return matches.compactMap({ $0 })
     }
     
-    static func match(fromEventGroup eventGroup: EventsGroup) -> Match? {
+    static func match(fromEventGroup eventGroup: ServicesProvider.EventsGroup) -> Match? {
         if let event = eventGroup.events[safe: 0] {
             return Self.match(fromEvent: event)
         }

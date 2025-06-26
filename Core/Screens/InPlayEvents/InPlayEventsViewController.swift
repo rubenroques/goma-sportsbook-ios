@@ -456,7 +456,7 @@ class InPlayEventsViewController: UIViewController {
         sportSelectorViewModel.onSportSelected = { [weak self] sport in
             print("🏆 InPlayEventsViewController: Sport selected from modal - \(sport.name)")
             // Update sport via ViewModel
-            // TODO: self?.viewModel.updateSportType(sport)
+            self?.viewModel.updateSportType(sport)
             sportsViewController.dismiss()
         }
         

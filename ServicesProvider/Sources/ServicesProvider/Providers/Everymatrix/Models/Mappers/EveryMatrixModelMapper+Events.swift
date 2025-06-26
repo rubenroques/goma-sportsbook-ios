@@ -132,7 +132,7 @@ extension EveryMatrixModelMapper {
 
         return Outcome(
             id: internalOutcome.id,
-            name: internalOutcome.name,
+            name: internalOutcome.shortName ?? internalOutcome.name,
             odd: OddFormat.decimal(odd: odds),
             marketId: nil, // Not available at outcome level
             orderValue: internalOutcome.headerNameKey, // position in home/draw/away

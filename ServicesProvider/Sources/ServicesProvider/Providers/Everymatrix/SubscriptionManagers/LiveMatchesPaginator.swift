@@ -1,5 +1,5 @@
 //
-//  PreLiveMatchesPaginator.swift
+//  LiveMatchesPaginator.swift
 //  ServicesProvider
 //
 //  Created by Ruben Roques on 22/04/2025.
@@ -9,17 +9,13 @@ import Foundation
 import Combine
 
 
-struct SimpleSubscription: EndpointPublisherIdentifiable {
-    var identificationCode: Int
-}
-
 /// Manages subscription to pre-live matches list structure changes and individual entity updates
 /// 
 /// This class provides two types of subscriptions:
 /// 1. Match list structure changes: `subscribe()` - Only emits when matches are added/removed
 /// 2. Individual entity updates: `subscribeToMarketUpdates()`, `subscribeToOutcomeUpdates()`, etc.
 ///    These provide real-time updates for specific entities (odds, market data, etc.)
-class PreLiveMatchesPaginator: UnsubscriptionController {
+class LiveMatchesPaginator: UnsubscriptionController {
 
     // MARK: - Dependencies
     private let connector: EveryMatrixConnector
@@ -72,7 +68,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
         // Create the WAMP router using the existing popularMatchesPublisher case
         // I am using this live version to better test the changes in the matches/market/outcomes
         // TODO: revert to popularMatchesPublisher when the changes are tested
-        let router = WAMPRouter.popularMatchesPublisher( // liveMatchesPublisher( // ) popularMatchesPublisher(
+        let router = WAMPRouter.liveMatchesPublisher( // liveMatchesPublisher( // ) popularMatchesPublisher(
             operatorId: "4093",
             language: "en",
             sportId: sportId,
@@ -168,7 +164,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 // Build hierarchical outcome from DTO
                 return EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store)
             }
-            .compactMap { outcome -> Outcome? in
+            .map { outcome -> Outcome? in
                 // Map internal model to domain model using existing mapper
                 return EveryMatrixModelMapper.outcome(fromInternalOutcome: outcome)
             }
@@ -288,6 +284,9 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 store.store(dto)
             case .tournament(let dto):
                 store.store(dto)
+            case .eventInfo(let dto):
+                store.store(dto)
+                
             // UPDATE/DELETE/CREATE records - only process match-related changes
             case .changeRecord(let changeRecord):
                 handleMatchesChangeRecord(changeRecord)
@@ -295,7 +294,6 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             case .unknown(let type):
                 print("Unknown match-related entity type: \(type)")
                 // Ignore unknown non-match entities
-            
             }
         }
     }
@@ -333,6 +331,10 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 
                 // TODO: check which properties we need to observe and update
                 // store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                
+            } else if change.entityType == EveryMatrix.EventInfoDTO.rawType {
+                // Update EVENT_INFO changes - these are live data updates (scores, time, status)
+                store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
             }
             // Add more entity-specific logic as needed
             
@@ -369,9 +371,10 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             store.store(dto)
         case .tournament(let dto):
             store.store(dto)
+        case .eventInfo(let dto):
+            store.store(dto)
         case .unknown(let type):
             print("Unknown entity data type: \(type)")
-        
         }
     }
 

@@ -145,7 +145,19 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        guard let livePaginator = self.livePaginator else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        // Observe EVENT_INFO entities for this event from the live matches subscription
+        return livePaginator.entityStore.observeEventInfosForEvent(eventId: id)
+            .map { [weak self] eventInfos in
+                let eventLiveData = self?.buildEventLiveData(eventId: id, from: eventInfos) 
+                    ?? EventLiveData(id: id, homeScore: nil, awayScore: nil, matchTime: nil, status: nil, detailedScores: nil, activePlayerServing: nil)
+                return SubscribableContent.contentUpdate(content: eventLiveData)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
     }
 
     func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
@@ -403,6 +415,89 @@ extension EveryMatrixEventsProvider {
             return Fail(outputType: SubscribableContent<[Country]>.self, failure: ServiceProviderError.resourceNotFound)
                 .eraseToAnyPublisher()
         }
+    }
+    
+    // MARK: - Private Helpers
+    
+    private func buildEventLiveData(eventId: String, from eventInfos: [EveryMatrix.EventInfoDTO]) -> EventLiveData {
+        var homeScore: Int?
+        var awayScore: Int?
+        var matchTime: String?
+        var status: EventStatus?
+        var detailedScores: [String: Score] = [:]
+        var activePlayerServing: ActivePlayerServe?
+        
+        for info in eventInfos {
+            switch info.typeId {
+            case "1": // Score
+                if let eventPartName = info.eventPartName {
+                    let homeValue = Int(info.paramFloat1 ?? 0)
+                    let awayValue = Int(info.paramFloat2 ?? 0)
+                    
+                    // Determine score type based on event part name
+                    let score: Score
+                    if eventPartName == "Whole Match" || eventPartName.contains("Match") {
+                        score = .matchFull(home: homeValue, away: awayValue)
+                        // Set main scores for the event
+                        homeScore = homeValue
+                        awayScore = awayValue
+                    } else if eventPartName.contains("Set") {
+                        // Extract set number if possible
+                        let setIndex = extractSetIndex(from: eventPartName)
+                        score = .set(index: setIndex, home: homeValue, away: awayValue)
+                    } else {
+                        // Game part (current game within a set)
+                        score = .gamePart(home: homeValue, away: awayValue)
+                    }
+                    
+                    detailedScores[eventPartName] = score
+                }
+                
+            case "37": // Serve
+                if let participantId = info.paramParticipantId1 {
+                    // We need to determine if this is home or away player
+                    // For now, we'll use a simple logic - could be enhanced with participant mapping
+                    activePlayerServing = .home // Default, could be enhanced
+                }
+                
+            case "92": // Current event status
+                if let statusName = info.paramEventStatusName1?.lowercased() {
+                    switch statusName {
+                    case "not started", "not_started":
+                        status = .notStarted
+                    case "ended", "finished":
+                        status = .ended(statusName)
+                    default:
+                        status = .inProgress(statusName)
+                    }
+                }
+                
+            case "51": // Number of event parts (could indicate current set/period)
+                // Could be used to extract match time or period information
+                break
+                
+            default:
+                // Handle other EVENT_INFO types as needed
+                break
+            }
+        }
+        
+        return EventLiveData(
+            id: eventId,
+            homeScore: homeScore,
+            awayScore: awayScore,
+            matchTime: matchTime,
+            status: status,
+            detailedScores: detailedScores,
+            activePlayerServing: activePlayerServing
+        )
+    }
+    
+    private func extractSetIndex(from eventPartName: String) -> Int {
+        // Extract set number from strings like "1st Set", "2nd Set", etc.
+        let numbers = eventPartName.components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .compactMap { Int($0) }
+        return numbers.first ?? 1
     }
 
 }

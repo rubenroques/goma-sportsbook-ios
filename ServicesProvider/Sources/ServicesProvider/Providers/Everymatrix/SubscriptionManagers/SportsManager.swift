@@ -135,8 +135,11 @@ class SportsManager {
                 handleSportsChangeRecord(changeRecord)
                 
             // Ignore all other entity types for sports manager
-            case .match, .market, .outcome, .bettingOffer, .location, .eventCategory, 
-                    .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber, .tournament:
+            case .match, .market, .outcome, .bettingOffer, .location, .eventCategory:
+                break // Ignore non-sport entities
+            case .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber, .tournament:
+                break // Ignore non-sport entities
+            case .eventInfo:
                 break // Ignore non-sport entities
                 
             case .unknown(let type):
