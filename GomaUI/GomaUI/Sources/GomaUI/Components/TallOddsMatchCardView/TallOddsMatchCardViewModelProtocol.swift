@@ -32,11 +32,9 @@ public struct TallOddsMatchData: Equatable, Hashable {
 
 // MARK: - Live Score Data
 public struct LiveScoreData: Equatable, Hashable {
-    public let sportCode: String
     public let scoreCells: [ScoreDisplayData]
     
-    public init(sportCode: String, scoreCells: [ScoreDisplayData]) {
-        self.sportCode = sportCode
+    public init(scoreCells: [ScoreDisplayData]) {
         self.scoreCells = scoreCells
     }
 }

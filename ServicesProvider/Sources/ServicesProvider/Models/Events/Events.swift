@@ -57,6 +57,15 @@ public enum EventStatus: Hashable {
         default: self = .inProgress(value)
         }
     }
+    
+    public var isInProgress: Bool {
+        switch self {
+        case .inProgress:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 public typealias Events = [Event]

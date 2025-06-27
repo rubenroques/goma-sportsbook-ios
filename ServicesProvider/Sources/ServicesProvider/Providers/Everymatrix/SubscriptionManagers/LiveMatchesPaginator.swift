@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SharedModels
 
 
 /// Manages subscription to pre-live matches list structure changes and individual entity updates
@@ -20,12 +21,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
     // MARK: - Dependencies
     private let connector: EveryMatrixConnector
     private let store: EveryMatrix.EntityStore
-
-    // MARK: - Public Access
-    /// Access to the entity store for granular subscriptions
-    var entityStore: EveryMatrix.EntityStore {
-        return store
-    }
+    private let eventInfoStore: EveryMatrix.EntityStore  // Focused store for MATCH and EVENT_INFO only
 
     // MARK: - State Management
     private var currentSubscription: EndpointPublisherIdentifiable?
@@ -44,6 +40,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
          numberOfMarkets: Int = 5) {
         self.connector = connector
         self.store = EveryMatrix.EntityStore()
+        self.eventInfoStore = EveryMatrix.EntityStore()
         self.sportId = sportId
         self.numberOfEvents = numberOfEvents
         self.numberOfMarkets = numberOfMarkets
@@ -61,18 +58,29 @@ class LiveMatchesPaginator: UnsubscriptionController {
         // Clean up any existing subscription
         unsubscribe()
 
-        // Clear the store for fresh subscription
+        // Clear both stores for fresh subscription
         store.clear()
+        eventInfoStore.clear()
 
         // Create the WAMP router using the existing popularMatchesPublisher case
         // I am using this live version to better test the changes in the matches/market/outcomes
         // TODO: revert to popularMatchesPublisher when the changes are tested
-        let router = WAMPRouter.liveMatchesPublisher( // liveMatchesPublisher( // ) popularMatchesPublisher(
+#if DEBUG
+        let router = WAMPRouter.liveMatchesPublisher(
+            operatorId: "4093",
+            language: "en",
+            sportId: sportId,
+            matchesCount: 1
+        )
+#else
+        let router = WAMPRouter.liveMatchesPublisher(
             operatorId: "4093",
             language: "en",
             sportId: sportId,
             matchesCount: numberOfEvents // 1
         )
+#endif
+        
 
         // Subscribe to the websocket topic
         return connector.subscribe(router)
@@ -176,6 +184,24 @@ class LiveMatchesPaginator: UnsubscriptionController {
         return store.get(EveryMatrix.OutcomeDTO.self, id: id) != nil
     }
     
+    /// Observe EVENT_INFO entities for a specific event using the focused store
+    func observeEventInfosForEvent(eventId: String) -> AnyPublisher<EventLiveData, Never> {
+        print("[LiveMatchesPaginator] observeEventInfosForEvent called for event: \(eventId)")
+        
+        return eventInfoStore.observeEventInfosForEvent(eventId: eventId)
+            .map { [weak self] eventInfos in
+                guard let self = self else {
+                    return EventLiveData(id: eventId, homeScore: nil, awayScore: nil, matchTime: nil, status: nil, detailedScores: nil, activePlayerServing: nil)
+                }
+                
+                // Get the match data for participant mapping
+                let matchData = self.eventInfoStore.get(EveryMatrix.MatchDTO.self, id: eventId)
+                
+                return self.buildEventLiveData(eventId: eventId, from: eventInfos, matchData: matchData)
+            }
+            .eraseToAnyPublisher()
+    }
+    
     // MARK: - Private Methods
 
     private func handleSubscriptionContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) throws -> SubscribableContent<[EventsGroup]>? {
@@ -263,6 +289,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
                 store.store(dto)
             case .match(let dto):
                 store.store(dto)
+                eventInfoStore.store(dto)  // Also store in eventInfo store
             case .market(let dto):
                 store.store(dto)
             case .outcome(let dto):
@@ -285,6 +312,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
                 store.store(dto)
             case .eventInfo(let dto):
                 store.store(dto)
+                eventInfoStore.store(dto)  // Also store in eventInfo store
                 
             // UPDATE/DELETE/CREATE records - only process match-related changes
             case .changeRecord(let changeRecord):
@@ -330,16 +358,24 @@ class LiveMatchesPaginator: UnsubscriptionController {
                 
                 // TODO: check which properties we need to observe and update
                 // store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                // eventInfoStore.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
                 
             } else if change.entityType == EveryMatrix.EventInfoDTO.rawType {
                 // Update EVENT_INFO changes - these are live data updates (scores, time, status)
                 store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                eventInfoStore.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
             }
             // Add more entity-specific logic as needed
             
         case .delete:
             // DELETE: Remove entity from store
             store.deleteEntity(type: change.entityType, id: change.id)
+            
+            // Also delete from eventInfoStore if it's a MATCH or EVENT_INFO
+            if change.entityType == EveryMatrix.MatchDTO.rawType || 
+               change.entityType == EveryMatrix.EventInfoDTO.rawType {
+                eventInfoStore.deleteEntity(type: change.entityType, id: change.id)
+            }
         }
     }
     
@@ -350,6 +386,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
             store.store(dto)
         case .match(let dto):
             store.store(dto)
+            eventInfoStore.store(dto)  // Also store in eventInfo store
         case .market(let dto):
             store.store(dto)
         case .outcome(let dto):
@@ -372,6 +409,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
             store.store(dto)
         case .eventInfo(let dto):
             store.store(dto)
+            eventInfoStore.store(dto)  // Also store in eventInfo store
         case .unknown(let type):
             print("Unknown entity data type: \(type)")
         }
@@ -380,4 +418,106 @@ class LiveMatchesPaginator: UnsubscriptionController {
     func unsubscribe(subscription: Subscription) {
         // 
     }
+    
+    // MARK: - Live Data Building
+    
+    private func buildEventLiveData(eventId: String, from eventInfos: [EveryMatrix.EventInfoDTO], matchData: EveryMatrix.MatchDTO? = nil) -> EventLiveData {
+        var homeScore: Int?
+        var awayScore: Int?
+        var matchTimeMinutes: Int?
+        var eventPartName: String? // For "1st Half", "2nd Half", etc.
+        var status: EventStatus?
+        var detailedScores: [String: Score] = [:]
+        var activePlayerServing: ActivePlayerServe?
+
+        for info in eventInfos {
+            switch info.typeId {
+            case "1": // Score
+                if let eventPartName = info.eventPartName {
+                    let homeValue = Int(info.paramFloat1 ?? 0)
+                    let awayValue = Int(info.paramFloat2 ?? 0)
+                    
+                    // Determine score type based on event part name
+                    let score: Score
+                    if eventPartName == "Whole Match" || eventPartName.contains("Match") {
+                        score = .matchFull(home: homeValue, away: awayValue)
+                        // Set main scores for the event
+                        homeScore = homeValue
+                        awayScore = awayValue
+                    } else if eventPartName.contains("Set") {
+                        // Extract set number if possible
+                        let setIndex = extractSetIndex(from: eventPartName)
+                        score = .set(index: setIndex, home: homeValue, away: awayValue)
+                    } else {
+                        // Game part (current game within a set)
+                        score = .gamePart(home: homeValue, away: awayValue)
+                    }
+                    
+                    detailedScores[eventPartName] = score
+                }
+                
+            case "37": // Serve
+                if let participantId = info.paramParticipantId1,
+                   let match = matchData {
+                    // Determine if serving participant is home or away
+                    if participantId == match.homeParticipantId {
+                        activePlayerServing = .home
+                    } else if participantId == match.awayParticipantId {
+                        activePlayerServing = .away
+                    }
+                    // If participantId doesn't match either, leave activePlayerServing as nil
+                }
+                
+            case "92": // Current event status
+                if let statusName = info.paramEventStatusName1?.lowercased() {
+                    switch statusName {
+                    case "not started", "not_started":
+                        status = .notStarted
+                    case "ended", "finished":
+                        status = .ended(info.paramEventPartName1 ?? statusName)
+                    default:
+                        status = .inProgress(info.paramEventPartName1 ?? statusName)
+                    }
+                }
+                
+            case "95": // Match Time
+                if let minutes = info.paramFloat1 {
+                    matchTimeMinutes = Int(minutes)
+                }
+                
+            // case "51": // Number of event parts (could indicate current set/period)
+            //    break
+                
+            case "278": // Played at
+                // Additional context information
+                break
+                
+            default:
+                // Handle other EVENT_INFO types as needed
+                print("    - Unknown EVENT_INFO typeId: \(info.typeId)")
+                print("      - paramFloat1: \(info.paramFloat1 ?? -1)")
+                print("      - paramFloat2: \(info.paramFloat2 ?? -1)")
+                print("      - eventPartName: \(info.eventPartName ?? "nil")")
+                break
+            }
+        }
+
+        return EventLiveData(
+            id: eventId,
+            homeScore: homeScore,
+            awayScore: awayScore,
+            matchTime: matchTimeMinutes != nil ? "\(matchTimeMinutes!)" : nil,
+            status: status,
+            detailedScores: detailedScores.isEmpty ? nil : detailedScores,
+            activePlayerServing: activePlayerServing
+        )
+    }
+    
+    private func extractSetIndex(from eventPartName: String) -> Int {
+        // Extract set number from strings like "1st Set", "2nd Set", etc.
+        let numbers = eventPartName.components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .compactMap { Int($0) }
+        return numbers.first ?? 1
+    }
+    
 }

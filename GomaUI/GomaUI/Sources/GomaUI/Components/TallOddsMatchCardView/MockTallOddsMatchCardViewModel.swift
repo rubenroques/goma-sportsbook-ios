@@ -177,7 +177,6 @@ extension MockTallOddsMatchCardViewModel {
         
         // Create live score data for football
         let liveScoreData = LiveScoreData(
-            sportCode: "1", // Football
             scoreCells: [
                 ScoreDisplayData(id: "main", homeScore: "2", awayScore: "1", style: .simple)
             ]

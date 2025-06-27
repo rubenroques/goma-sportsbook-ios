@@ -63,6 +63,9 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         self.countryFlagImageNameSubject = CurrentValueSubject(data.countryFlagImageName)
         self.sportIconImageNameSubject = CurrentValueSubject(data.sportIconImageName)
         self.isFavoriteSubject = CurrentValueSubject(data.isFavorite)
+        
+        print("#DEBUG [MatchHeaderViewModel] init data.matchTime: \(data.matchTime ?? "nil") ")
+        
         self.matchTimeSubject = CurrentValueSubject(data.matchTime)
         self.isLiveSubject = CurrentValueSubject(data.isLive)
         self.visualStateSubject = CurrentValueSubject(data.visualState)
@@ -81,19 +84,6 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         isFavoriteSubject.send(!currentFavorite)
         
         // TODO: Integrate with favorites service
-    }
-    
-    func updateData(_ data: MatchHeaderData) {
-        competitionNameSubject.send(data.competitionName)
-        countryFlagImageNameSubject.send(data.countryFlagImageName)
-        sportIconImageNameSubject.send(data.sportIconImageName)
-        isFavoriteSubject.send(data.isFavorite)
-        matchTimeSubject.send(data.matchTime)
-        isLiveSubject.send(data.isLive)
-        visualStateSubject.send(data.visualState)
-        
-        // Reload images
-        loadInitialImages(data: data)
     }
     
     func setVisualState(_ state: MatchHeaderVisualState) {
@@ -212,13 +202,11 @@ extension MatchHeaderViewModel {
         if let matchTime = match.matchTime {
             return matchTime
         }
-        
         if let date = match.date {
             let formatter = DateFormatter()
             formatter.dateFormat = "dd MMM, HH:mm"
             return formatter.string(from: date)
         }
-        
         return nil
     }
 }

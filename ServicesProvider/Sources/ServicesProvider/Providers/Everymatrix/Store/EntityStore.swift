@@ -14,115 +14,98 @@ extension EveryMatrix {
         
         @Published private var entities: [String: [String: any Entity]] = [:]
         
-        private let queue = DispatchQueue(label: "entity.store.queue", attributes: .concurrent)
         private var entityOrder: [String: [String]] = [:] // [EntityType: [Ordered IDs]]
 
         // MARK: - Publisher Infrastructure
         private var entityPublishers: [String: [String: CurrentValueSubject<(any Entity)?, Never>]] = [:]
-        private let publisherQueue = DispatchQueue(label: "entity.publisher.queue", attributes: .concurrent)
+        private var collectionPublishers: [String: CurrentValueSubject<[any Entity], Never>] = [:]
         private var cancellables = Set<AnyCancellable>()
 
         // Store entity by type and id
         func store<T: Entity>(_ entity: T) {
-            queue.async(flags: .barrier) { [weak self] in
-                let type = T.rawType
-                if self?.entities[type] == nil {
-                    self?.entities[type] = [:]
-                    self?.entityOrder[type] = []
-                }
-                self?.entities[type]?[entity.id] = entity
-
-                // Add to order if not already present
-                if !(self?.entityOrder[type]?.contains(entity.id) ?? false) {
-                    self?.entityOrder[type]?.append(entity.id)
-                }
-                
-                // Notify observers of the change
-                self?.notifyEntityChange(entity)
+            let type = T.rawType
+            if entities[type] == nil {
+                entities[type] = [:]
+                entityOrder[type] = []
             }
+            entities[type]?[entity.id] = entity
+
+            // Add to order if not already present
+            if !(entityOrder[type]?.contains(entity.id) ?? false) {
+                entityOrder[type]?.append(entity.id)
+            }
+            
+            // Notify observers of the change
+            notifyEntityChange(entity)
         }
 
         // Retrieve entity by type and id
         func get<T: Entity>(_ type: T.Type, id: String) -> T? {
-            return queue.sync {
-                guard let typeDict = entities[T.rawType] else { return nil }
-                return typeDict[id] as? T
-            }
+            guard let typeDict = entities[T.rawType] else { return nil }
+            return typeDict[id] as? T
         }
 
         // Get all entities of a specific type
         func getAll<T: Entity>(_ type: T.Type) -> [T] {
-            return queue.sync {
-                guard let typeDict = entities[T.rawType] else { return [] }
-                return typeDict.values.compactMap { $0 as? T }
-            }
+            guard let typeDict = entities[T.rawType] else { return [] }
+            return typeDict.values.compactMap { $0 as? T }
         }
         
         // Add method to get entities in original order
         func getAllInOrder<T: Entity>(_ type: T.Type) -> [T] {
-            return queue.sync {
-                guard let typeDict = entities[T.rawType],
-                      let order = entityOrder[T.rawType] else { return [] }
-                
-                return order.compactMap { id in
-                    typeDict[id] as? T
-                }
+            guard let typeDict = entities[T.rawType],
+                  let order = entityOrder[T.rawType] else { return [] }
+            
+            return order.compactMap { id in
+                typeDict[id] as? T
             }
         }
 
         // Store multiple entities
         func store<T: Entity>(_ entities: [T]) {
-            queue.async(flags: .barrier) { [weak self] in
-                for entity in entities {
-                    let type = T.rawType
-                    if self?.entities[type] == nil {
-                        self?.entities[type] = [:]
-                    }
-                    self?.entities[type]?[entity.id] = entity
-
-                    // Notify observers of each change
-                    self?.notifyEntityChange(entity)
+            for entity in entities {
+                let type = T.rawType
+                if self.entities[type] == nil {
+                    self.entities[type] = [:]
                 }
+                self.entities[type]?[entity.id] = entity
+
+                // Notify observers of each change
+                notifyEntityChange(entity)
             }
         }
 
         // Clear all data
         func clear() {
-            queue.async(flags: .barrier) { [weak self] in
-                self?.entities.removeAll()
-            }
+            entities.removeAll()
         }
 
         // Update entity with changed properties
         func updateEntity(type entityType: String, id: String, changedProperties: [String: AnyCodable]) {
-            queue.async(flags: .barrier) { [weak self] in
-                guard let existingEntity = self?.entities[entityType]?[id] else {
-                    print("Cannot update entity \(entityType):\(id) - entity not found")
-                    return
-                }
+            guard let existingEntity = entities[entityType]?[id] else {
+                print("Cannot update entity \(entityType):\(id) - entity not found")
+                return
+            }
 
-                // Create updated entity by merging changed properties
-                let updatedEntity = self?.mergeChangedProperties(entity: existingEntity, changes: changedProperties)
+            // Create updated entity by merging changed properties
+            let updatedEntity = mergeChangedProperties(entity: existingEntity, changes: changedProperties)
 
-                if let updatedEntityValue = updatedEntity {
-                    self?.entities[entityType]?[id] = updatedEntityValue
+            if let updatedEntityValue = updatedEntity {
+                entities[entityType]?[id] = updatedEntityValue
 
-                    // Notify observers of the update
-                    self?.notifyEntityChange(updatedEntityValue)
-                }
+                // Notify observers of the update
+                notifyEntityChange(updatedEntityValue)
             }
         }
 
         // Delete entity from store
         func deleteEntity(type entityType: String, id: String) {
-            queue.async(flags: .barrier) { [weak self] in
-                self?.entities[entityType]?[id] = nil
-                
-                // print("Deleted entity \(entityType):\(id)")
+            entities[entityType]?[id] = nil
+            
+            // print("Deleted entity \(entityType):\(id)")
 
-                // Notify observers of the deletion
-                self?.notifyEntityDeletion(entityType: entityType, id: id)
-            }
+            // Notify observers of the deletion
+            notifyEntityDeletion(entityType: entityType, id: id)
         }
 
         // Helper method to merge changed properties into existing entity
@@ -189,22 +172,14 @@ extension EveryMatrix {
 
         /// Observe changes to a specific entity by type and ID
         func observeEntity<T: Entity>(_ type: T.Type, id: String) -> AnyPublisher<T?, Never> {
-            return self.publisherQueue.sync { [weak self] in
-                guard let self = self else {
-                    return Just(nil).eraseToAnyPublisher()
-                }
+            // Get current entity value
+            let currentEntity = entities[T.rawType]?[id] as? T
 
-                // Get current entity value
-                let currentEntity = self.queue.sync {
-                    self.entities[T.rawType]?[id] as? T
-                }
+            // Get or create publisher for this entity
+            let publisher = getOrCreatePublisher(entityType: T.rawType, id: id, currentValue: currentEntity)
 
-                // Get or create publisher for this entity
-                let publisher = self.getOrCreatePublisher(entityType: T.rawType, id: id, currentValue: currentEntity)
-
-                // Return publisher that already has current value and future changes
-                return publisher.compactMap { $0 as? T }.eraseToAnyPublisher()
-            }
+            // Return publisher that already has current value and future changes
+            return publisher.compactMap { $0 as? T }.eraseToAnyPublisher()
         }
 
         /// Convenience method to observe market changes
@@ -234,21 +209,47 @@ extension EveryMatrix {
         
         /// Observe all EVENT_INFO entities for a specific event
         func observeEventInfosForEvent(eventId: String) -> AnyPublisher<[EventInfoDTO], Never> {
-            return $entities
-                .map { (entitiesDict: [String: [String: any Entity]]) -> [EventInfoDTO] in
-                    return entitiesDict[EventInfoDTO.rawType]?.values.compactMap { entity in
-                        if let eventInfo = entity as? EventInfoDTO,
-                           eventInfo.eventId == eventId {
-                            return eventInfo
-                        }
-                        return nil
-                    } ?? []
+            let collectionKey = "EVENT_INFO_FOR_EVENT_\(eventId)"
+            
+            // Get current EVENT_INFO entities for this event
+            let currentEventInfos = getCurrentEventInfosForEvent(eventId: eventId)
+            
+            // Get or create publisher for this collection
+            let publisher = getOrCreateCollectionPublisher(collectionKey: collectionKey, currentValue: currentEventInfos)
+            
+            // Return publisher that filters and maps to EventInfoDTO
+            return publisher
+                .map { entities in
+                    entities.compactMap { $0 as? EventInfoDTO }
                 }
-                .removeDuplicates()
                 .eraseToAnyPublisher()
         }
 
         // MARK: - Publisher Management
+        
+        /// Get current EVENT_INFO entities for a specific event ID
+        private func getCurrentEventInfosForEvent(eventId: String) -> [any Entity] {
+            return entities[EventInfoDTO.rawType]?.values.compactMap { entity in
+                if let eventInfo = entity as? EventInfoDTO,
+                   eventInfo.eventId == eventId {
+                    return eventInfo
+                }
+                return nil
+            } ?? []
+        }
+        
+        /// Get or create collection publisher with CurrentValueSubject pattern
+        private func getOrCreateCollectionPublisher(collectionKey: String, currentValue: [any Entity]) -> CurrentValueSubject<[any Entity], Never> {
+            if let existingPublisher = collectionPublishers[collectionKey] {
+                return existingPublisher
+            }
+            
+            // Create CurrentValueSubject with current collection value
+            let newPublisher = CurrentValueSubject<[any Entity], Never>(currentValue)
+            collectionPublishers[collectionKey] = newPublisher
+            
+            return newPublisher
+        }
 
         private func getOrCreatePublisher(entityType: String, id: String, currentValue: (any Entity)? = nil) -> CurrentValueSubject<(any Entity)?, Never> {
 
@@ -261,9 +262,7 @@ extension EveryMatrix {
             }
 
             // Create CurrentValueSubject with current value (or nil if not found)
-            let initialValue = currentValue ?? self.queue.sync {
-                self.entities[entityType]?[id]
-            }
+            let initialValue = currentValue ?? entities[entityType]?[id]
             
             let newPublisher = CurrentValueSubject<(any Entity)?, Never>(initialValue)
             self.entityPublishers[entityType]?[id] = newPublisher
@@ -280,38 +279,63 @@ extension EveryMatrix {
             let entityType = type(of: entity).rawType
             let id = entity.id
 
-            publisherQueue.async { [weak self] in
-                // Update CurrentValueSubject with new value if it exists
-                if let publisher = self?.entityPublishers[entityType]?[id] {
-                    publisher.send(entity)
-                }
+            // Update CurrentValueSubject with new value if it exists
+            if let publisher = entityPublishers[entityType]?[id] {
+                publisher.send(entity)
+            }
+            
+            // Update collection publishers if this is an EVENT_INFO
+            if let eventInfo = entity as? EventInfoDTO {
+                updateEventInfoCollectionPublisher(for: eventInfo.eventId)
             }
         }
 
         private func notifyEntityDeletion(entityType: String, id: String) {
-            publisherQueue.async { [weak self] in
-                // Update CurrentValueSubject with nil to indicate deletion
-                self?.entityPublishers[entityType]?[id]?.send(nil)
+            // Update CurrentValueSubject with nil to indicate deletion
+            entityPublishers[entityType]?[id]?.send(nil)
+            
+            // Update collection publishers if this was an EVENT_INFO
+            if entityType == EventInfoDTO.rawType {
+                // We need to find which event this EVENT_INFO belonged to
+                // Since we're deleting, we need to check existing entities to find eventId
+                if let deletedEntity = entities[entityType]?[id] as? EventInfoDTO {
+                    updateEventInfoCollectionPublisher(for: deletedEntity.eventId)
+                }
+            }
+        }
+        
+        /// Update EVENT_INFO collection publisher for a specific event
+        private func updateEventInfoCollectionPublisher(for eventId: String) {
+            let collectionKey = "EVENT_INFO_FOR_EVENT_\(eventId)"
+            
+            // Only update if publisher exists (someone is observing)
+            if let publisher = collectionPublishers[collectionKey] {
+                let currentEventInfos = getCurrentEventInfosForEvent(eventId: eventId)
+                publisher.send(currentEventInfos)
             }
         }
 
         // MARK: - Publisher Cleanup
 
         private func cleanupUnusedPublishers() {
-            publisherQueue.async(flags: .barrier) { [weak self] in
-                guard let self = self else { return }
-
-                // Remove publishers with no active subscribers
-                // This is a simplified cleanup - can be enhanced with subscription counting
-                for (entityType, publishersDict) in self.entityPublishers {
-                    let filteredDict = publishersDict.filter { (_, publisher) in
-                        // Keep publishers that have active subscriptions
-                        // For now, we'll keep all publishers for simplicity
-                        return true
-                    }
-                    self.entityPublishers[entityType] = filteredDict
+            // Remove publishers with no active subscribers
+            // This is a simplified cleanup - can be enhanced with subscription counting
+            for (entityType, publishersDict) in entityPublishers {
+                let filteredDict = publishersDict.filter { (_, publisher) in
+                    // Keep publishers that have active subscriptions
+                    // For now, we'll keep all publishers for simplicity
+                    return true
                 }
+                entityPublishers[entityType] = filteredDict
             }
+            
+            // Cleanup collection publishers as well
+            let filteredCollectionPublishers = collectionPublishers.filter { (_, publisher) in
+                // Keep publishers that have active subscriptions
+                // For now, we'll keep all publishers for simplicity
+                return true
+            }
+            collectionPublishers = filteredCollectionPublishers
         }
     }
 }

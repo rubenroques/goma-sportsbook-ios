@@ -38,10 +38,17 @@ extension EveryMatrixModelMapper {
         // Convert match status
         let eventStatus = Self.eventStatus(fromInternalMatchStatus: internalMatch.status)
 
+        var homeTeamName = internalMatch.homeParticipant?.name ?? ""
+        let awayTeamName = internalMatch.awayParticipant?.name ?? ""
+        
+        #if DEBUG
+        homeTeamName = internalMatch.id + "-" + (internalMatch.homeParticipant?.name ?? "")
+        #endif
+        
         return Event(
             id: internalMatch.id,
-            homeTeamName: internalMatch.homeParticipant?.name ?? "",
-            awayTeamName: internalMatch.awayParticipant?.name ?? "",
+            homeTeamName: homeTeamName,
+            awayTeamName: awayTeamName,
             homeTeamScore: nil, // EveryMatrix doesn't provide scores in match data
             awayTeamScore: nil,
             homeTeamLogoUrl: nil,
@@ -278,6 +285,10 @@ extension EveryMatrixModelMapper {
         case "h": return 10
         case "d": return 20
         case "a": return 30
+            
+        case "1": return 10
+        case "x": return 20
+        case "2": return 30
             
         default:
             return nil

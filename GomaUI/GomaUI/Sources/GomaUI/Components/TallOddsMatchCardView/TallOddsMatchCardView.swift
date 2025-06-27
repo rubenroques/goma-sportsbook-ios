@@ -355,6 +355,7 @@ extension TallOddsMatchCardView {
 
     private static func createMatchHeaderView() -> MatchHeaderView {
         // Create with a mock view model that will be replaced immediately
+        print("#DEBUG: TallOddsMatchCardView.createMatchHeaderView with mock")
         let mockViewModel = MockMatchHeaderViewModel.defaultMock
         let headerView = MatchHeaderView(viewModel: mockViewModel)
         headerView.translatesAutoresizingMaskIntoConstraints = false

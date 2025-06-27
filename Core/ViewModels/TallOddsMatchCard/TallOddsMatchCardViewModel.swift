@@ -62,10 +62,11 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         self.matchHeaderViewModelSubject = CurrentValueSubject(headerViewModel)
         self.marketInfoLineViewModelSubject = CurrentValueSubject(marketInfoViewModel)
         self.marketOutcomesViewModelSubject = CurrentValueSubject(outcomesViewModel)
+        
         self.scoreViewModelSubject = CurrentValueSubject(scoreViewModel)
         
         // Start live data subscription for live matches
-        subscribeToLiveData()
+        self.subscribeToLiveData()
     }
     
     // MARK: - Cleanup
@@ -99,35 +100,31 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     // MARK: - Live Data Subscription
     
     private func subscribeToLiveData() {
-        guard matchData.leagueInfo.isLive else {
-            print("[TallOddsMatchCardViewModel] 🟡 Skipping live data subscription - match is not live: \(matchData.matchId)")
-            return
-        }
-        
         print("[TallOddsMatchCardViewModel] 🟢 Starting live data subscription for match: \(matchData.matchId)")
-        
         liveDataCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: matchData.matchId)
+            .removeDuplicates()
             .sink(receiveCompletion: { [weak self] completion in
                 print("[TallOddsMatchCardViewModel] 🔴 Live data subscription completed: \(completion) for match: \(self?.matchData.matchId ?? "unknown")")
             }, receiveValue: { [weak self] subscribableContent in
                 guard let self = self else { return }
                 
                 switch subscribableContent {
+                case .connected(let subscription):
+                    print("[TallOddsMatchCardViewModel] 🟢 Live data connected: \(subscription.id) for match: \(self.matchData.matchId)")
+                    
                 case .contentUpdate(let eventLiveData):
-                    print("[TallOddsMatchCardViewModel] 📡 Received live data update for match: \(self.matchData.matchId)")
+                    print("#DEBUG: [TallOddsMatchCardViewModel] 📡 Received live data update for match: \(self.matchData.matchId)")
                     print("  - Home Score: \(eventLiveData.homeScore ?? -1)")
                     print("  - Away Score: \(eventLiveData.awayScore ?? -1)")
-                    print("  - Status: \(self.eventStatusToString(eventLiveData.status))")
+                    print("  - Status: \(eventLiveData.status)")
                     print("  - Match Time: \(eventLiveData.matchTime ?? "nil")")
                     print("  - Detailed Scores Count: \(eventLiveData.detailedScores?.count ?? 0)")
                     print("  - Active Player Serving: \(eventLiveData.activePlayerServing?.rawValue ?? "nil")")
                     
                     self.currentEventLiveData = eventLiveData
                     self.updateScoreViewModel(from: eventLiveData)
-                    
-                case .connected(let subscription):
-                    print("[TallOddsMatchCardViewModel] 🟢 Live data connected: \(subscription.id) for match: \(self.matchData.matchId)")
-                    
+                    self.updateMatchHeaderViewModel(from: eventLiveData)
+                
                 case .disconnected:
                     print("[TallOddsMatchCardViewModel] 🔴 Live data disconnected for match: \(self.matchData.matchId)")
                 }
@@ -144,10 +141,26 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         scoreViewModelSubject.send(newScoreViewModel)
     }
     
+    private func updateMatchHeaderViewModel(from eventLiveData: EventLiveData) {
+        // Update match time if available
+        if let matchTime = eventLiveData.matchTime {
+            print("#DEBUG: [TallOddsMatchCardViewModel] 🕐 Updating match time: \(matchTime)")
+            if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
+                headerViewModel.updateMatchTime(matchTime)
+            }
+        }
+        
+        // Update live status based on event status
+        if let status = eventLiveData.status {
+            let isLive = status.isInProgress
+            if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
+                headerViewModel.updateIsLive(isLive)
+            }
+        }
+    }
+    
     private func transformEventLiveDataToLiveScoreData(_ eventLiveData: EventLiveData) -> LiveScoreData? {
         var scoreCells: [ScoreDisplayData] = []
-        
-        
         
         // Add detailed scores (sets, games, etc.)
         if let detailedScores = eventLiveData.detailedScores {
@@ -199,7 +212,6 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         guard !scoreCells.isEmpty else { return nil }
         
         return LiveScoreData(
-            sportCode: extractSportCode(from: matchData),
             scoreCells: scoreCells
         )
     }
@@ -209,19 +221,6 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         return "tennis" // Could be enhanced to use actual sport detection
     }
     
-    private func eventStatusToString(_ status: EventStatus?) -> String {
-        guard let status = status else { return "nil" }
-        switch status {
-        case .unknown:
-            return "unknown"
-        case .notStarted:
-            return "not started"
-        case .inProgress(let detail):
-            return "in progress (\(detail))"
-        case .ended(let detail):
-            return "ended (\(detail))"
-        }
-    }
 }
 
 // MARK: - Factory Methods for Child ViewModels
@@ -241,9 +240,6 @@ extension TallOddsMatchCardViewModel {
     
     private static func createScoreViewModel(from liveScoreData: LiveScoreData?) -> ScoreViewModelProtocol? {
         guard let liveScoreData = liveScoreData else { return nil }
-        
-        // Import MockScoreViewModel since this is in Core and we need to create a score view model
-        // In production, this would be a proper ScoreViewModel implementation
         return MockScoreViewModel(scoreCells: liveScoreData.scoreCells, visualState: .display)
     }
     
@@ -260,23 +256,15 @@ extension TallOddsMatchCardViewModel {
     
     /// Creates a TallOddsMatchCardViewModel from real Match and Market data
     static func create(from match: Match, relevantMarkets: [Market], marketTypeId: String) -> TallOddsMatchCardViewModel {
-        print("[TallOdds] Creating TallOddsMatchCardViewModel from Match data - ID: \(match.id), Markets: \(relevantMarkets.count), MarketType: \(marketTypeId)")
-        
-        // Create with direct production view models that have real-time subscriptions
-        return createWithProductionViewModels(from: match, relevantMarkets: relevantMarkets, marketTypeId: marketTypeId)
-    }
-    
-    /// Creates a TallOddsMatchCardViewModel with production view models that have real-time subscriptions
-    private static func createWithProductionViewModels(from match: Match, relevantMarkets: [Market], marketTypeId: String) -> TallOddsMatchCardViewModel {
         // 1. Create MatchHeaderData
         let matchHeaderData = MatchHeaderData(
             id: match.id,
             competitionName: match.competitionName,
-            countryFlagImageName: extractCountryFlag(from: match),
-            sportIconImageName: extractSportIcon(from: match),
+            countryFlagImageName: Self.extractCountryFlag(from: match),
+            sportIconImageName: Self.extractSportIcon(from: match),
             isFavorite: false, // TODO: Check with favorites service when available
             visualState: .standard,
-            matchTime: formatMatchTime(from: match),
+            matchTime: Self.formatMatchTime(from: match),
             isLive: match.status.isLive
         )
         
@@ -288,79 +276,23 @@ extension TallOddsMatchCardViewModel {
             icons: createMarketIcons(from: relevantMarkets, match: match)
         )
         
-        // Create child view models
-        let headerViewModel = createMatchHeaderViewModel(from: matchHeaderData)
-        let marketInfoViewModel = createMarketInfoLineViewModel(from: marketInfoData)
         let outcomesViewModel = createMarketOutcomesViewModel(from: relevantMarkets, marketTypeId: marketTypeId)
         
-        // Create initial display state
-        let initialDisplayState = TallOddsMatchCardDisplayState(
-            matchId: match.id,
-            homeParticipantName: match.homeParticipant.name,
-            awayParticipantName: match.awayParticipant.name,
-            isLive: match.status.isLive
-        )
-        
         // Create the view model directly with production child view models
-        let viewModel = TallOddsMatchCardViewModel(matchData: TallOddsMatchData(
+        let tallOddsMatchData = TallOddsMatchData(
             matchId: match.id,
             leagueInfo: matchHeaderData,
             homeParticipantName: match.homeParticipant.name,
             awayParticipantName: match.awayParticipant.name,
             marketInfo: marketInfoData,
-            outcomes: MarketGroupData(id: marketTypeId, marketLines: [])  // Empty, not used in production
-        ))
+            outcomes: MarketGroupData(id: marketTypeId, marketLines: [])
+        )
         
-        // Override the subjects with production view models
-        viewModel.matchHeaderViewModelSubject.send(headerViewModel)
-        viewModel.marketInfoLineViewModelSubject.send(marketInfoViewModel)
+        let viewModel = TallOddsMatchCardViewModel(matchData: tallOddsMatchData)
+
         viewModel.marketOutcomesViewModelSubject.send(outcomesViewModel)
-        
-        // Create score view model for live matches
-        // TODO: In production, use actual live score data from match.liveScore or similar
-        let scoreViewModel: ScoreViewModelProtocol? = match.status.isLive ? 
-            MockScoreViewModel(scoreCells: [], visualState: .idle) : nil
-        viewModel.scoreViewModelSubject.send(scoreViewModel)
-        
+
         return viewModel
-    }
-    
-    private static func extractMatchData(from match: Match, relevantMarkets: [Market], marketTypeId: String) -> TallOddsMatchData {
-        
-        // 1. Create MatchHeaderData from match
-        let matchHeaderData = MatchHeaderData(
-            id: match.id,
-            competitionName: match.competitionName,
-            countryFlagImageName: extractCountryFlag(from: match),
-            sportIconImageName: extractSportIcon(from: match),
-            isFavorite: false, // TODO: Check with favorites service when available
-            visualState: .standard,
-            matchTime: formatMatchTime(from: match),
-            isLive: match.status.isLive
-        )
-        
-        // 2. Create MarketInfoData from relevant markets
-        let firstMarket = relevantMarkets.first
-        let marketInfoData = MarketInfoData(
-            marketName: firstMarket?.marketTypeName ?? firstMarket?.name ?? "Markets",
-            marketCount: match.numberTotalOfMarkets,
-            icons: createMarketIcons(from: relevantMarkets, match: match)
-        )
-        
-        // 3. Create MarketGroupData from markets and outcomes
-        let marketGroupData = MarketGroupData(
-            id: marketTypeId,
-            marketLines: createMarketLines(from: relevantMarkets)
-        )
-        
-        return TallOddsMatchData(
-            matchId: match.id,
-            leagueInfo: matchHeaderData,
-            homeParticipantName: match.homeParticipant.name,
-            awayParticipantName: match.awayParticipant.name,
-            marketInfo: marketInfoData,
-            outcomes: marketGroupData
-        )
     }
     
     // MARK: - Helper Methods
@@ -378,16 +310,13 @@ extension TallOddsMatchCardViewModel {
         if let matchTime = match.matchTime {
             return matchTime
         }
-        
         if let date = match.date {
             let formatter = DateFormatter()
             formatter.dateFormat = "dd MMM, HH:mm"
             return formatter.string(from: date)
         }
-        
         return nil
     }
-    
     
     private static func createMarketIcons(from markets: [Market], match: Match) -> [MarketInfoIcon] {
         var icons: [MarketInfoIcon] = []
@@ -397,34 +326,5 @@ extension TallOddsMatchCardViewModel {
         icons.append(MarketInfoIcon(type: .statistics, isVisible: true))
         return icons
     }
-    
-    private static func createMarketLines(from markets: [Market]) -> [MarketLineData] {
-        return markets.compactMap { market in
-            let outcomes = market.outcomes.map { outcome in
-                MarketOutcomeData(
-                    id: outcome.id,
-                    title: outcome.translatedName,
-                    value: String(format: "%.2f", outcome.bettingOffer.decimalOdd),
-                    oddsChangeDirection: .none,
-                    isSelected: false,
-                    isDisabled: !outcome.bettingOffer.isAvailable
-                )
-            }
-            
-            // Determine line structure based on number of outcomes
-            let lineType: MarketLineType = outcomes.count == 3 ? .threeColumn : .twoColumn
-            let displayMode: MarketDisplayMode = outcomes.count == 3 ? .triple : .double
-            
-            return MarketLineData(
-                id: market.id,
-                leftOutcome: outcomes.first,
-                middleOutcome: outcomes.count == 3 ? outcomes[1] : nil,
-                rightOutcome: outcomes.last,
-                displayMode: displayMode,
-                lineType: lineType
-            )
-        }
-    }
-    
     
 }

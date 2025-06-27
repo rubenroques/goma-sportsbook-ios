@@ -34,7 +34,6 @@ class MarketGroupCardsViewController: UIViewController {
 
     // MARK: - Initialization
     init(viewModel: MarketGroupCardsViewModel) {
-        print("[MarketGroupCardsViewController] 🟢 init viewModel: \(viewModel.matchCardData.first?.filteredData.match.homeParticipant.name ?? "")")
         self.viewModel = viewModel
 
         // Create collection view with list-like layout
@@ -167,18 +166,18 @@ class MarketGroupCardsViewController: UIViewController {
     // MARK: - ViewModel Binding
     private func bindToViewModel() {
         // Bind to match card data from ViewModel
-        viewModel.$matchCardData
+        viewModel.$matchCardsData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] matchCardData in
-                print("[MarketGroupCardsVC] 📥 VIEWMODEL UPDATE RECEIVED at - \(matchCardData.count) matches with relevantMarkets")
-                self?.updateCollectionView(with: matchCardData)
+            .sink { [weak self] matchCardsData in
+                print("[MarketGroupCardsVC] 📥 VIEWMODEL UPDATE RECEIVED at - \(matchCardsData.count) matches with relevantMarkets")
+                self?.updateCollectionView(with: matchCardsData)
             }
             .store(in: &cancellables)
 
     }
 
     // MARK: - UI Update Methods
-    private func updateCollectionView(with matchCardData: [MatchCardData]) {
+    private func updateCollectionView(with matchCardsData: [MatchCardData]) {
         guard let dataSource = dataSource else { return }
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, CollectionViewItem>()
@@ -187,24 +186,13 @@ class MarketGroupCardsViewController: UIViewController {
         snapshot.appendSections(Section.allCases)
 
         // Match cards section - always show
-        let matchCardItems = matchCardData.map { CollectionViewItem.matchCard($0) }
-        snapshot.appendItems(matchCardItems, toSection: .matchCards)
+        let matchCardsItems = matchCardsData.map { CollectionViewItem.matchCard($0) }
+        snapshot.appendItems(matchCardsItems, toSection: .matchCards)
 
         dataSource.apply(snapshot, animatingDifferences: false, completion: { [weak self] in
             self?.collectionView.layoutIfNeeded()
             self?.collectionView.collectionViewLayout.invalidateLayout()
         })
-    }
-
-    private func getCurrentMatchCardData() -> [MatchCardData]? {
-        // Get current match card data from the snapshot
-        let snapshot = dataSource?.snapshot()
-        return snapshot?.itemIdentifiers(inSection: .matchCards).compactMap { item in
-            if case .matchCard(let data) = item {
-                return data
-            }
-            return nil
-        }
     }
 
     func getCurrentScrollPosition() -> CGPoint {

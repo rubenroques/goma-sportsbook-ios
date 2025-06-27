@@ -63,7 +63,13 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
     
     // MARK: - Initialization
     public init(matchHeaderData: MatchHeaderData) {
-        updateData(matchHeaderData)
+        competitionNameSubject.send(matchHeaderData.competitionName)
+        countryFlagImageNameSubject.send(matchHeaderData.countryFlagImageName)
+        sportIconImageNameSubject.send(matchHeaderData.sportIconImageName)
+        isFavoriteSubject.send(matchHeaderData.isFavorite)
+        visualStateSubject.send(matchHeaderData.visualState)
+        matchTimeSubject.send(matchHeaderData.matchTime)
+        isLiveSubject.send(matchHeaderData.isLive)
     }
     
     // MARK: - Actions
@@ -71,16 +77,6 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
         let newValue = !isFavoriteSubject.value
         isFavoriteSubject.send(newValue)
         favoriteToggleCallback?(newValue)
-    }
-    
-    public func updateData(_ data: MatchHeaderData) {
-        competitionNameSubject.send(data.competitionName)
-        countryFlagImageNameSubject.send(data.countryFlagImageName)
-        sportIconImageNameSubject.send(data.sportIconImageName)
-        isFavoriteSubject.send(data.isFavorite)
-        visualStateSubject.send(data.visualState)
-        matchTimeSubject.send(data.matchTime)
-        isLiveSubject.send(data.isLive)
     }
     
     public func setVisualState(_ state: MatchHeaderVisualState) {

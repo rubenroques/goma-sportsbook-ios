@@ -42,7 +42,9 @@ public class MatchHeaderView: UIView {
 
     public convenience init(viewModel: MatchHeaderViewModelProtocol) {
         self.init(frame: .zero)
-        configure(with: viewModel)
+        
+        self.viewModel = viewModel
+        setupBindings()
     }
 
     public override var intrinsicContentSize: CGSize {
@@ -115,26 +117,20 @@ extension MatchHeaderView {
 
         // Bind country flag image - custom image takes precedence
         viewModel.countryFlagImagePublisher
-            .combineLatest(viewModel.countryFlagImageNamePublisher)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] customImage, imageName in
+            .sink { [weak self] customImage in
                 if let customImage = customImage {
                     // Use custom UIImage if provided
                     self?.locationFlagImageView.image = customImage
                     self?.locationFlagImageView.tintColor = nil // Remove tint for custom images
-                    // Ensure corner radius is applied after image change
-                    DispatchQueue.main.async {
-                        self?.updateLocationFlagCornerRadius()
-                    }
                 }
             }
             .store(in: &cancellables)
 
         // Bind sport icon image - custom image takes precedence
         viewModel.sportIconImagePublisher
-            .combineLatest(viewModel.sportIconImageNamePublisher)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] customImage, imageName in
+            .sink { [weak self] customImage in
                 if let customImage = customImage {
                     // Use custom UIImage if provided
                     self?.sportTypeImageView.image = customImage.withRenderingMode(.alwaysTemplate)
@@ -160,8 +156,10 @@ extension MatchHeaderView {
 
         // Bind match time
         viewModel.matchTimePublisher
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] matchTime in
+                print("#DEBUG: MatchHeaderView matchTimePublisher received: \(matchTime ?? "nil")")
                 self?.matchTimeLabel.text = matchTime
                 self?.matchTimeLabel.isHidden = matchTime == nil || matchTime?.isEmpty == true
             }
@@ -169,6 +167,7 @@ extension MatchHeaderView {
 
         // Bind live state
         viewModel.isLivePublisher
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLive in
                 self?.liveIndicatorView.isHidden = !isLive
@@ -177,6 +176,7 @@ extension MatchHeaderView {
 
         // Bind unified visual state
         viewModel.visualStatePublisher
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] visualState in
                 self?.updateAppearance(for: visualState)

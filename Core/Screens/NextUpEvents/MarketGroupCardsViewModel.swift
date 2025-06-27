@@ -32,7 +32,7 @@ struct MatchCardData: Hashable {
 // MARK: - MarketGroupCardsViewModel
 class MarketGroupCardsViewModel: ObservableObject {
     @Published var filteredMatches: [FilteredMatchData] = []
-    @Published var matchCardData: [MatchCardData] = []
+    @Published var matchCardsData: [MatchCardData] = []
 
     private let marketTypeId: String
     private var allMatches: [Match] = []
@@ -50,13 +50,13 @@ class MarketGroupCardsViewModel: ObservableObject {
     // MARK: - Public Methods
     func updateMatches(_ matches: [Match]) {
         print("[MarketGroupCardsViewModel] ♻️ updated with new Matches")
-              
-        allMatches = matches
+
+        self.allMatches = matches
         let filtered = filterMatches()
 
-        filteredMatches = filtered
+        self.filteredMatches = filtered
         
-        matchCardData = createMatchCardData(from: filtered)
+        self.matchCardsData = self.createMatchCardsData(from: filtered)
     }
 
     // MARK: - Private Methods
@@ -68,7 +68,7 @@ class MarketGroupCardsViewModel: ObservableObject {
         }
     }
     
-    private func createMatchCardData(from filteredMatches: [FilteredMatchData]) -> [MatchCardData] {
+    private func createMatchCardsData(from filteredMatches: [FilteredMatchData]) -> [MatchCardData] {
         let matchCardsData = filteredMatches.enumerated().map { index, filteredData in
             // Create production view model from real match data
             let tallOddsViewModel = createTallOddsViewModel(from: filteredData)

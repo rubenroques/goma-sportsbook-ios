@@ -77,7 +77,7 @@ public protocol MatchHeaderViewModelProtocol {
 
     // Actions
     func toggleFavorite()
-    func updateData(_ data: MatchHeaderData)
+    
     func setVisualState(_ state: MatchHeaderVisualState)
     func updateCompetitionName(_ name: String)
     func updateCountryFlag(_ imageName: String?)
