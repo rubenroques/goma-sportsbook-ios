@@ -47,7 +47,7 @@ public final class StepInstructionView: UIView {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    public init(viewModel: StepInstructionViewModelProtocol = MockStepInstructionViewModel.defaultMock()) {
+    public init(viewModel: StepInstructionViewModelProtocol = MockStepInstructionViewModel.defaultMock) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -55,7 +55,7 @@ public final class StepInstructionView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.viewModel = MockStepInstructionViewModel.defaultMock()
+        self.viewModel = MockStepInstructionViewModel.defaultMock
         super.init(coder: coder)
         setupViews()
         setupBindings()
@@ -133,19 +133,19 @@ struct StepInstructionView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
             PreviewUIView {
-                StepInstructionView(viewModel: MockStepInstructionViewModel.defaultMock())
+                StepInstructionView(viewModel: MockStepInstructionViewModel.defaultMock)
             }
             .previewDisplayName("Mobile Money Step")
             .frame(height: 48)
             
             PreviewUIView {
-                StepInstructionView(viewModel: MockStepInstructionViewModel.customColorMock())
+                StepInstructionView(viewModel: MockStepInstructionViewModel.customColorMock)
             }
             .previewDisplayName("Second Step")
             .frame(height: 48)
 
             PreviewUIView {
-                StepInstructionView(viewModel: MockStepInstructionViewModel.multipleHighlightsMock())
+                StepInstructionView(viewModel: MockStepInstructionViewModel.multipleHighlightsMock)
             }
             .previewDisplayName("Custom Color")
             .frame(height: 48)

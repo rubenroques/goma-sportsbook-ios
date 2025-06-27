@@ -353,7 +353,229 @@ class ComponentsTableViewController: UITableViewController {
                 selectorView.layer.cornerRadius = 8
                 return selectorView
             }
-        )
+        ),
+        UIComponent(
+            title: "Sport Games Filter",
+            description: "A filter view for selecting sports, using SportGamesFilterView.",
+            viewController: SportGamesFilterViewController.self,
+            previewFactory: {
+                let viewModel = MockSportGamesFilterViewModel(
+                    title: "Sports",
+                    sportFilters: [
+                        SportFilter(id: "1", title: "Football", icon: "sport_icon"),
+                        SportFilter(id: "2", title: "Basketball", icon: "sport_icon"),
+                        SportFilter(id: "3", title: "Tennis", icon: "sport_icon"),
+                        SportFilter(id: "4", title: "Voleyball", icon: "sport_icon")
+                    ],
+                    selectedId: "1"
+                )
+                let filterView = SportGamesFilterView(viewModel: viewModel)
+                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.layer.cornerRadius = 8
+                return filterView
+            }
+        ),
+        UIComponent(
+            title: "Sort Filter View",
+            description: "A filter view for sorting options, using SortFilterView.",
+            viewController: SortFilterViewController.self,
+            previewFactory: {
+                let viewModel = MockSortFilterViewModel(
+                    title: "Sort By",
+                    sortOptions: [
+                        SortOption(id: "1", icon: "flame.fill", title: "Popular", count: 25),
+                        SortOption(id: "2", icon: "clock.fill", title: "Upcoming", count: 15),
+                        SortOption(id: "3", icon: "heart.fill", title: "Favourites", count: 0)
+                    ],
+                    selectedId: "1"
+                )
+                let filterView = SortFilterView(viewModel: viewModel)
+                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.layer.cornerRadius = 8
+                return filterView
+            }
+        ),
+        UIComponent(
+            title: "Country Leagues Filter",
+            description: "A filter view for selecting country leagues, using CountryLeaguesFilterView.",
+            viewController: CountryLeaguesFilterViewController.self,
+            previewFactory: {
+                let viewModel = MockCountryLeaguesFilterViewModel(
+                    title: "Country Leagues",
+                    countryLeagueOptions: [
+                        CountryLeagueOptions(
+                            id: "us",
+                            icon: "us",
+                            title: "United States",
+                            leagues: [
+                                LeagueOption(id: "nba", icon: nil, title: "NBA", count: 30),
+                                LeagueOption(id: "wnba", icon: nil, title: "WNBA", count: 12)
+                            ],
+                            isExpanded: true
+                        ),
+                        CountryLeagueOptions(
+                            id: "es",
+                            icon: "es",
+                            title: "Spain",
+                            leagues: [
+                                LeagueOption(id: "acb", icon: nil, title: "ACB", count: 18),
+                                LeagueOption(id: "leb", icon: nil, title: "LEB Oro", count: 18)
+                            ],
+                            isExpanded: false
+                        )
+                    ],
+                    selectedId: "nba"
+                )
+                let filterView = CountryLeaguesFilterView(viewModel: viewModel)
+                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.layer.cornerRadius = 8
+                return filterView
+            }
+        ),
+        UIComponent(
+            title: "Promotional Bonus Card",
+            description: "A card view for displaying promotional bonuses, using PromotionalBonusCardView.",
+            viewController: PromotionalBonusCardViewController.self,
+            previewFactory: {
+                let viewModel = MockPromotionalBonusCardViewModel.defaultMock
+                let cardView = PromotionalBonusCardView(viewModel: viewModel)
+                cardView.backgroundColor = StyleProvider.Color.backgroundColor
+                cardView.layer.cornerRadius = 12
+                return cardView
+            }
+        ),
+        UIComponent(
+            title: "Promotional Header",
+            description: "A header view for displaying promotional content, using PromotionalHeaderView.",
+            viewController: PromotionalHeaderViewController.self,
+            previewFactory: {
+                let viewModel = MockPromotionalHeaderViewModel.defaultMock
+                let headerView = PromotionalHeaderView(viewModel: viewModel)
+                headerView.backgroundColor = StyleProvider.Color.backgroundColor
+                headerView.layer.cornerRadius = 8
+                return headerView
+            }
+        ),
+        UIComponent(
+            title: "Button View",
+            description: "A customizable button component, using ButtonView.",
+            viewController: ButtonViewController.self,
+            previewFactory: {
+                let viewModel = MockButtonViewModel.solidBackgroundMock
+                let buttonView = ButtonView(viewModel: viewModel)
+                buttonView.backgroundColor = StyleProvider.Color.backgroundColor
+                buttonView.layer.cornerRadius = 8
+                return buttonView
+            }
+        ),
+        UIComponent(
+            title: "Custom Navigation View",
+            description: "A customizable navigation bar, using CustomNavigationView.",
+            viewController: CustomNavigationViewController.self,
+            previewFactory: {
+                let viewModel = MockCustomNavigationViewModel.defaultMock
+                let navView = CustomNavigationView(viewModel: viewModel)
+                navView.backgroundColor = StyleProvider.Color.backgroundColor
+                navView.layer.cornerRadius = 8
+                return navView
+            }
+        ),
+        UIComponent(
+            title: "Amount Pills Container",
+            description: "A container view for selecting amounts, using AmountPillsView.",
+            viewController: AmountPillsContainerViewController.self,
+            previewFactory: {
+                let viewModel = MockAmountPillsViewModel.defaultMock
+                let pillsView = AmountPillsView(viewModel: viewModel)
+                pillsView.backgroundColor = StyleProvider.Color.backgroundColor
+                pillsView.layer.cornerRadius = 8
+                return pillsView
+            }
+        ),
+        UIComponent(
+            title: "Deposit Bonus Info",
+            description: "A view for displaying deposit bonus information, using DepositBonusInfoView.",
+            viewController: DepositBonusInfoViewController.self,
+            previewFactory: {
+                let viewModel = MockDepositBonusInfoViewModel.defaultMock
+                let bonusView = DepositBonusInfoView(viewModel: viewModel)
+                bonusView.backgroundColor = StyleProvider.Color.backgroundColor
+                bonusView.layer.cornerRadius = 8
+                return bonusView
+            }
+        ),
+        UIComponent(
+            title: "Info Row View",
+            description: "A customizable info row component, using InfoRowView.",
+            viewController: InfoRowViewController.self,
+            previewFactory: {
+                let viewModel = MockInfoRowViewModel.defaultMock
+                let infoRowView = InfoRowView(viewModel: viewModel)
+                infoRowView.backgroundColor = StyleProvider.Color.backgroundColor
+                infoRowView.layer.cornerRadius = 8
+                return infoRowView
+            }
+        ),
+        UIComponent(
+            title: "Status Notification View",
+            description: "A notification banner for status messages, using StatusNotificationView.",
+            viewController: StatusNotificationViewController.self,
+            previewFactory: {
+                let viewModel = MockStatusNotificationViewModel.successMock
+                let notificationView = StatusNotificationView(viewModel: viewModel)
+                notificationView.backgroundColor = StyleProvider.Color.backgroundColor
+                notificationView.layer.cornerRadius = 8
+                return notificationView
+            }
+        ),
+        UIComponent(
+            title: "Step Instruction View",
+            description: "A step-by-step instruction component, using StepInstructionView.",
+            viewController: StepInstructionViewController.self,
+            previewFactory: {
+                let viewModel = MockStepInstructionViewModel.defaultMock
+                let stepView = StepInstructionView(viewModel: viewModel)
+                stepView.backgroundColor = StyleProvider.Color.backgroundColor
+                stepView.layer.cornerRadius = 8
+                return stepView
+            }
+        ),
+        UIComponent(
+            title: "Terms Acceptance View",
+            description: "A component for displaying and accepting terms, using TermsAcceptanceView.",
+            viewController: TermsAcceptanceViewController.self,
+            previewFactory: {
+                let viewModel = MockTermsAcceptanceViewModel.defaultMock
+                let termsView = TermsAcceptanceView(viewModel: viewModel)
+                termsView.backgroundColor = StyleProvider.Color.backgroundColor
+                termsView.layer.cornerRadius = 8
+                return termsView
+            }
+        ),
+        UIComponent(
+            title: "Pin Digit Entry View",
+            description: "A PIN digit entry component, using PinDigitEntryView.",
+            viewController: PinDigitEntryViewController.self,
+            previewFactory: {
+                let viewModel = MockPinDigitEntryViewModel.defaultMock
+                let pinView = PinDigitEntryView(viewModel: viewModel)
+                pinView.backgroundColor = StyleProvider.Color.backgroundColor
+                pinView.layer.cornerRadius = 8
+                return pinView
+            }
+        ),
+        UIComponent(
+            title: "Transaction Verification View",
+            description: "A transaction verification component, using TransactionVerificationView.",
+            viewController: TransactionVerificationViewController.self,
+            previewFactory: {
+                let viewModel = MockTransactionVerificationViewModel.defaultMock
+                let verificationView = TransactionVerificationView(viewModel: viewModel)
+                verificationView.backgroundColor = StyleProvider.Color.backgroundColor
+                verificationView.layer.cornerRadius = 8
+                return verificationView
+            }
+        ),
     ]
 
     // MARK: - View Lifecycle

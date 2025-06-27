@@ -70,7 +70,7 @@ public final class StatusNotificationView: UIView {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    public init(viewModel: StatusNotificationViewModelProtocol = MockStatusNotificationViewModel.defaultMock()) {
+    public init(viewModel: StatusNotificationViewModelProtocol = MockStatusNotificationViewModel.successMock) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -78,7 +78,7 @@ public final class StatusNotificationView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.viewModel = MockStatusNotificationViewModel.defaultMock()
+        self.viewModel = MockStatusNotificationViewModel.successMock
         super.init(coder: coder)
         setupViews()
         setupBindings()
@@ -146,19 +146,19 @@ struct StatusNotificationView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 16) {
             PreviewUIView {
-                StatusNotificationView(viewModel: MockStatusNotificationViewModel.successMock())
+                StatusNotificationView(viewModel: MockStatusNotificationViewModel.successMock)
             }
             .frame(height: 48)
             .previewDisplayName("Success")
             
             PreviewUIView {
-                StatusNotificationView(viewModel: MockStatusNotificationViewModel.errorMock())
+                StatusNotificationView(viewModel: MockStatusNotificationViewModel.errorMock)
             }
             .frame(height: 48)
             .previewDisplayName("Error")
             
             PreviewUIView {
-                StatusNotificationView(viewModel: MockStatusNotificationViewModel.warningMock())
+                StatusNotificationView(viewModel: MockStatusNotificationViewModel.warningMock)
             }
             .frame(height: 48)
             .previewDisplayName("Alert")

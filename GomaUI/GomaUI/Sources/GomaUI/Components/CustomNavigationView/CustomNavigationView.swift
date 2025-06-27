@@ -46,7 +46,7 @@ public final class CustomNavigationView: UIView {
     public var onCloseTapped: (() -> Void) = { }
     
     // MARK: - Initialization
-    public init(viewModel: CustomNavigationViewModelProtocol = MockCustomNavigationViewModel.defaultMock()) {
+    public init(viewModel: CustomNavigationViewModelProtocol = MockCustomNavigationViewModel.defaultMock) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -54,7 +54,7 @@ public final class CustomNavigationView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.viewModel = MockCustomNavigationViewModel.defaultMock()
+        self.viewModel = MockCustomNavigationViewModel.defaultMock
         super.init(coder: coder)
         setupViews()
         setupBindings()
@@ -140,13 +140,13 @@ struct CustomNavigationView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
             PreviewUIView {
-                CustomNavigationView(viewModel: MockCustomNavigationViewModel.defaultMock())
+                CustomNavigationView(viewModel: MockCustomNavigationViewModel.defaultMock)
             }
             .frame(height: 80)
             .previewDisplayName("Betsson Style")
             
             PreviewUIView {
-                CustomNavigationView(viewModel: MockCustomNavigationViewModel.blueMock())
+                CustomNavigationView(viewModel: MockCustomNavigationViewModel.blueMock)
             }
             .frame(height: 80)
             .previewDisplayName("Blue Style")

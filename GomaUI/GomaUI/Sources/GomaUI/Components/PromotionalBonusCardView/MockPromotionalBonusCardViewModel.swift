@@ -63,48 +63,28 @@ extension MockPromotionalBonusCardViewModel {
         return MockPromotionalBonusCardViewModel(cardData: cardData)
     }
     
-    /// Alternative promotion mock
-    public static var welcomeBonusMock: MockPromotionalBonusCardViewModel {
+    /// No gradient mock
+    public static var noGradientMock: MockPromotionalBonusCardViewModel {
         let userAvatars = [
-            UserAvatar(id: "user1", imageName: nil), // Will use placeholder
-            UserAvatar(id: "user2", imageName: nil),
-            UserAvatar(id: "user3", imageName: nil)
+            UserAvatar(id: "user1", imageName: "avatar1"),
+            UserAvatar(id: "user2", imageName: "avatar2"),
+            UserAvatar(id: "user3", imageName: "avatar3"),
+            UserAvatar(id: "user4", imageName: "avatar4")
         ]
         
         let cardData = PromotionalBonusCardData(
-            id: "welcome_bonus",
-            headerText: "Welcome Bonus",
-            mainTitle: "Get 100% match bonus up to XAF 5000",
+            id: "betsson_double",
+            headerText: "The Betsson Double",
+            mainTitle: "Deposit XAF 1000 and play with XAF 2000",
             userAvatars: userAvatars,
-            playersCount: "8.2k",
-            backgroundImageName: nil,
-            claimButtonTitle: "Get Welcome Bonus",
+            playersCount: "12.6k",
+            backgroundImageName: "promo_card_background",
+            hasGradientView: false,
+            claimButtonTitle: "Claim bonus",
             termsButtonTitle: "Terms and Conditions"
         )
         
         return MockPromotionalBonusCardViewModel(cardData: cardData)
     }
     
-    /// Weekend special mock
-    public static var weekendSpecialMock: MockPromotionalBonusCardViewModel {
-        let userAvatars = [
-            UserAvatar(id: "user1", imageName: nil),
-            UserAvatar(id: "user2", imageName: nil),
-            UserAvatar(id: "user3", imageName: nil),
-            UserAvatar(id: "user4", imageName: nil)
-        ]
-        
-        let cardData = PromotionalBonusCardData(
-            id: "weekend_special",
-            headerText: "Weekend Special",
-            mainTitle: "50% Bonus on all deposits this weekend",
-            userAvatars: userAvatars,
-            playersCount: "3.1k",
-            backgroundImageName: nil,
-            claimButtonTitle: "Claim Weekend Bonus",
-            termsButtonTitle: "View Terms"
-        )
-        
-        return MockPromotionalBonusCardViewModel(cardData: cardData)
-    }
 }

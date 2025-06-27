@@ -15,16 +15,16 @@ public struct TransactionVerificationData {
     public let title: String
     public let subtitle: String
     public let highlightText: String?
-    public let topImage: UIImage?
-    public let bottomImage: UIImage?
+    public let topImage: String?
+    public let bottomImage: String?
     
     public init(
         id: String = UUID().uuidString,
         title: String,
         subtitle: String,
         highlightText: String? = nil,
-        topImage: UIImage? = nil,
-        bottomImage: UIImage? = nil
+        topImage: String? = nil,
+        bottomImage: String? = nil
     ) {
         self.id = id
         self.title = title

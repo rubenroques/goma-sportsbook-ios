@@ -58,7 +58,7 @@ public final class TermsAcceptanceView: UIView {
     public var onPrivacyLinkTapped: (() -> Void) = { }
     
     // MARK: - Initialization
-    public init(viewModel: TermsAcceptanceViewModelProtocol = MockTermsAcceptanceViewModel.defaultMock()) {
+    public init(viewModel: TermsAcceptanceViewModelProtocol = MockTermsAcceptanceViewModel.defaultMock) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -67,7 +67,7 @@ public final class TermsAcceptanceView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.viewModel = MockTermsAcceptanceViewModel.defaultMock()
+        self.viewModel = MockTermsAcceptanceViewModel.defaultMock
         super.init(coder: coder)
         setupViews()
         setupBindings()
@@ -219,19 +219,19 @@ struct TermsAcceptanceView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
             PreviewUIView {
-                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.defaultMock())
+                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.defaultMock)
             }
             .frame(height: 80)
             .previewDisplayName("Unchecked")
             
             PreviewUIView {
-                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.acceptedMock())
+                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.acceptedMock)
             }
             .frame(height: 80)
             .previewDisplayName("Accepted")
             
             PreviewUIView {
-                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.shortTextMock())
+                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.shortTextMock)
             }
             .frame(height: 60)
             .previewDisplayName("Short Text")

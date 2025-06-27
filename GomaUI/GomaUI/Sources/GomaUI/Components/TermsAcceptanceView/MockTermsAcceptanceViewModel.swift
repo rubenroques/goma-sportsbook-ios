@@ -95,7 +95,7 @@ public final class MockTermsAcceptanceViewModel: TermsAcceptanceViewModelProtoco
 
 // MARK: - Factory Methods
 public extension MockTermsAcceptanceViewModel {
-    static func defaultMock() -> MockTermsAcceptanceViewModel {
+    static var defaultMock: MockTermsAcceptanceViewModel {
         let data = TermsAcceptanceData(
             fullText: "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy",
             termsText: "Terms and Conditions",
@@ -106,7 +106,7 @@ public extension MockTermsAcceptanceViewModel {
         return MockTermsAcceptanceViewModel(data: data)
     }
     
-    static func acceptedMock() -> MockTermsAcceptanceViewModel {
+    static var acceptedMock: MockTermsAcceptanceViewModel {
         let data = TermsAcceptanceData(
             fullText: "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy",
             termsText: "Terms and Conditions",
@@ -117,7 +117,7 @@ public extension MockTermsAcceptanceViewModel {
         return MockTermsAcceptanceViewModel(data: data)
     }
     
-    static func shortTextMock() -> MockTermsAcceptanceViewModel {
+    static var shortTextMock: MockTermsAcceptanceViewModel {
         let data = TermsAcceptanceData(
             fullText: "I accept the Terms and Privacy Policy",
             termsText: "Terms",
@@ -128,14 +128,4 @@ public extension MockTermsAcceptanceViewModel {
         return MockTermsAcceptanceViewModel(data: data)
     }
     
-    static func customTextMock() -> MockTermsAcceptanceViewModel {
-        let data = TermsAcceptanceData(
-            fullText: "Please review our User Agreement and Cookie Policy before proceeding",
-            termsText: "User Agreement",
-            privacyText: "Cookie Policy",
-            isAccepted: false
-        )
-        
-        return MockTermsAcceptanceViewModel(data: data)
-    }
 }

@@ -38,7 +38,7 @@ public final class PinDigitEntryView: UIView {
     public var onPinCompleted: ((String) -> Void) = { _ in }
     
     // MARK: - Initialization
-    public init(viewModel: PinDigitEntryViewModelProtocol = MockPinDigitEntryViewModel.defaultMock()) {
+    public init(viewModel: PinDigitEntryViewModelProtocol = MockPinDigitEntryViewModel.defaultMock) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -47,7 +47,7 @@ public final class PinDigitEntryView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.viewModel = MockPinDigitEntryViewModel.defaultMock()
+        self.viewModel = MockPinDigitEntryViewModel.defaultMock
         super.init(coder: coder)
         setupViews()
         setupBindings()
@@ -211,7 +211,7 @@ struct PinDigitEntryView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
             PreviewUIView {
-                PinDigitEntryView(viewModel: MockPinDigitEntryViewModel.defaultMock())
+                PinDigitEntryView(viewModel: MockPinDigitEntryViewModel.defaultMock)
             }
             .frame(height: 60)
             .previewDisplayName("Empty PIN")

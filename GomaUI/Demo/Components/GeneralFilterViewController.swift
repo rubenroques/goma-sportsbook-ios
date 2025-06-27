@@ -64,13 +64,15 @@ class GeneralFilterViewController: UIViewController {
     private var hasSelections: Bool = false
     
     let generalFilterSelection = GeneralFilterSelection(
-        sportId: 1, timeValue: 1.0, sortTypeId: 1,
-        leagueId: 0
+        sportId: "1",
+        timeValue: 1.0,
+        sortTypeId: "1",
+        leagueId: "all"
     )
     
     var selectedGeneralFilterSelection = GeneralFilterSelection(
-        sportId: 1, timeValue: 1.0, sortTypeId: 1,
-        leagueId: 0
+        sportId: "1", timeValue: 1.0, sortTypeId: "1",
+        leagueId: "all"
     )
     
     // MARK: - Lifecycle
@@ -174,13 +176,12 @@ class GeneralFilterViewController: UIViewController {
     
     private func openCombinedFilters() {
         
-        let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
+        let configuration = CombinedFiltersDemoViewController.createMockFilterConfiguration()
 
-        let viewModel = CombinedFiltersViewModel(filterSelection: selectedGeneralFilterSelection,
-                                                 filterConfiguration: configuration,
-                                                 contextId: "sports")
+        let viewModel = CombinedFiltersDemoViewModel(filterSelection: selectedGeneralFilterSelection, filterConfiguration: configuration,
+                                                                                       contextId: "sports")
         
-        let combinedFiltersViewController = CombinedFiltersViewController( viewModel: viewModel)
+        let combinedFiltersViewController = CombinedFiltersDemoViewController( viewModel: viewModel)
         
         combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
             guard let self = self else { return }
@@ -260,44 +261,44 @@ class GeneralFilterViewController: UIViewController {
     }
     
     // MARK: - Helper Methods for Filter Data
-    private func getSportOption(for sportId: Int) -> (title: String, icon: String)? {
+    private func getSportOption(for sportId: String) -> (title: String, icon: String)? {
         let sportOptions = [
-            (id: 1, title: "Football", icon: "soccerball"),
-            (id: 2, title: "Basketball", icon: "basketball.fill"),
-            (id: 3, title: "Tennis", icon: "tennis.racket"),
-            (id: 4, title: "Cricket", icon: "figure.cricket")
+            (id: "1", title: "Football", icon: "soccerball"),
+            (id: "2", title: "Basketball", icon: "basketball.fill"),
+            (id: "3", title: "Tennis", icon: "tennis.racket"),
+            (id: "4", title: "Cricket", icon: "figure.cricket")
         ]
         
         return sportOptions.first { $0.id == sportId }.map { (title: $0.title, icon: $0.icon) }
     }
     
-    private func getSortOption(for sortId: Int) -> SortOption? {
+    private func getSortOption(for sortId: String) -> SortOption? {
         // Replicate the same data structure from createSortFilterViewModel
         let sortOptions = [
-            SortOption(id: 0, icon: "flame.fill", title: "Popular", count: 25),
-            SortOption(id: 1, icon: "clock.fill", title: "Upcoming", count: 15),
-            SortOption(id: 2, icon: "heart.fill", title: "Favourites", count: 0)
+            SortOption(id: "0", icon: "flame.fill", title: "Popular", count: 25),
+            SortOption(id: "1", icon: "clock.fill", title: "Upcoming", count: 15),
+            SortOption(id: "2", icon: "heart.fill", title: "Favourites", count: 0)
         ]
         
         return sortOptions.first { $0.id == sortId }
     }
 
-    private func getLeagueOption(for leagueId: Int) -> SortOption? {
+    private func getLeagueOption(for leagueId: String) -> SortOption? {
         // Replicate the same data structure from CombinedFiltersViewModel.getPopularLeagues()
-        var allLeaguesOption = SortOption(id: 0, icon: "trophy.fill", title: "All Popular Leagues", count: 0)
+        var allLeaguesOption = SortOption(id: "0", icon: "trophy.fill", title: "All Popular Leagues", count: 0)
         
         let leagueOptions = [
             allLeaguesOption,
-            SortOption(id: 1, icon: "trophy.fill", title: "Premier League", count: 32),
-            SortOption(id: 16, icon: "trophy.fill", title: "La Liga", count: 28),
-            SortOption(id: 10, icon: "trophy.fill", title: "Bundesliga", count: 25),
-            SortOption(id: 13, icon: "trophy.fill", title: "Serie A", count: 27),
-            SortOption(id: 7, icon: "trophy.fill", title: "Ligue 1", count: 0),
-            SortOption(id: 19, icon: "trophy.fill", title: "Champions League", count: 16),
-            SortOption(id: 20, icon: "trophy.fill", title: "Europa League", count: 12),
-            SortOption(id: 8, icon: "trophy.fill", title: "MLS", count: 28),
-            SortOption(id: 28, icon: "trophy.fill", title: "Eredivisie", count: 18),
-            SortOption(id: 24, icon: "trophy.fill", title: "Primeira Liga", count: 16)
+            SortOption(id: "1", icon: "trophy.fill", title: "Premier League", count: 32),
+            SortOption(id: "16", icon: "trophy.fill", title: "La Liga", count: 28),
+            SortOption(id: "10", icon: "trophy.fill", title: "Bundesliga", count: 25),
+            SortOption(id: "13", icon: "trophy.fill", title: "Serie A", count: 27),
+            SortOption(id: "7", icon: "trophy.fill", title: "Ligue 1", count: 0),
+            SortOption(id: "19", icon: "trophy.fill", title: "Champions League", count: 16),
+            SortOption(id: "20", icon: "trophy.fill", title: "Europa League", count: 12),
+            SortOption(id: "8", icon: "trophy.fill", title: "MLS", count: 28),
+            SortOption(id: "28", icon: "trophy.fill", title: "Eredivisie", count: 18),
+            SortOption(id: "24", icon: "trophy.fill", title: "Primeira Liga", count: 16)
         ]
         
         return leagueOptions.first { $0.id == leagueId }

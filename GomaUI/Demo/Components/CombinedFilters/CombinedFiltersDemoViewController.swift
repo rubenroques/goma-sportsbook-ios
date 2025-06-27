@@ -1,5 +1,5 @@
 //
-//  CombinedFiltersViewController.swift
+//  CombinedFiltersDemoViewController.swift
 //  TestCase
 //
 //  Created by André Lascas on 29/05/2025.
@@ -9,331 +9,7 @@ import UIKit
 import Combine
 import GomaUI
 
-public struct GeneralFilterSelection {
-    var sportId: String
-    var timeValue: Float
-    var sortTypeId: String
-    var leagueId: String
-}
-
-public class CombinedFiltersViewModel {
-    
-    var popularLeagues = [SortOption]()
-    var popularCountryLeagues = [CountryLeagueOptions]()
-    var otherCountryLeagues = [CountryLeagueOptions]()
-    
-    var generalFilterSelection: GeneralFilterSelection
-    var defaultFilterSelection: GeneralFilterSelection = GeneralFilterSelection(
-        sportId: "1",
-        timeValue: 1.0,
-        sortTypeId: "1",
-        leagueId: "0"
-    )
-    
-    var filterConfiguration: FilterConfiguration
-    var currentContextId: String
-    
-    var dynamicViewModels: [String: Any] = [:]
-    
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    
-    init(filterSelection: GeneralFilterSelection,
-         filterConfiguration: FilterConfiguration,
-         contextId: String = "sports") {
-        
-        self.generalFilterSelection = filterSelection
-        self.filterConfiguration = filterConfiguration
-        self.currentContextId = contextId
-        
-        // TEST
-        if filterSelection.sportId == "1" {
-            self.getAllLeagues()
-        }
-        else {
-            self.recheckAllLeagues()
-        }
-    }
-    
-    func getAllLeagues() {
-        isLoadingPublisher.send(true)
-        
-        popularLeagues.removeAll()
-        popularCountryLeagues.removeAll()
-        otherCountryLeagues.removeAll()
-
-        // Popular Leagues
-        var allLeaguesOption = SortOption(id: "0", icon: "league_icon", title: "All Popular Leagues", count: 0, iconTintChange: false)
-        
-        let newSortOptions = [
-            SortOption(id: "1", icon: "league_icon", title: "Premier League", count: 32, iconTintChange: false),
-            SortOption(id: "16", icon: "league_icon", title: "La Liga", count: 28, iconTintChange: false),
-            SortOption(id: "10", icon: "league_icon", title: "Bundesliga", count: 25, iconTintChange: false),
-            SortOption(id: "13", icon: "league_icon", title: "Serie A", count: 27, iconTintChange: false),
-            SortOption(id: "7", icon: "league_icon", title: "Ligue 1", count: 0, iconTintChange: false),
-            SortOption(id: "19", icon: "league_icon", title: "Champions League", count: 16, iconTintChange: false),
-            SortOption(id: "20", icon: "league_icon", title: "Europa League", count: 12, iconTintChange: false),
-            SortOption(id: "8", icon: "league_icon", title: "MLS", count: 28, iconTintChange: false),
-            SortOption(id: "28", icon: "league_icon", title: "Eredivisie", count: 18, iconTintChange: false),
-            SortOption(id: "24", icon: "league_icon", title: "Primeira Liga", count: 16, iconTintChange: false)
-        ]
-        
-        let totalCount = newSortOptions.reduce(0) { $0 + $1.count }
-        
-        allLeaguesOption.count = totalCount
-        
-        popularLeagues.append(allLeaguesOption)
-        popularLeagues.append(contentsOf: newSortOptions)
-        
-        // Popular Country Leagues
-        let countryLeagueOptions = [
-            CountryLeagueOptions(
-                id: "1",
-                icon: "international_flag_icon",
-                title: "England",
-                leagues: [
-                    LeagueOption(id: "1", icon: "nil", title: "Premier League", count: 25),
-                    LeagueOption(id: "2", icon: nil, title: "Championship", count: 24),
-                    LeagueOption(id: "3", icon: nil, title: "League One", count: 22),
-                    LeagueOption(id: "4", icon: nil, title: "League Two", count: 0),
-                    LeagueOption(id: "5", icon: nil, title: "FA Cup", count: 18),
-                    LeagueOption(id: "6", icon: nil, title: "EFL Cup", count: 16)
-                ],
-                isExpanded: true
-            ),
-            CountryLeagueOptions(
-                id: "2",
-                icon: "international_flag_icon",
-                title: "France",
-                leagues: [
-                    LeagueOption(id: "7", icon: nil, title: "Ligue 1", count: 20),
-                    LeagueOption(id: "8", icon: nil, title: "Ligue 2", count: 18),
-                    LeagueOption(id: "9", icon: nil, title: "Coupe de France", count: 12)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "3",
-                icon: "international_flag_icon",
-                title: "Germany",
-                leagues: [
-                    LeagueOption(id: "10", icon: nil, title: "Bundesliga", count: 18),
-                    LeagueOption(id: "11", icon: nil, title: "2. Bundesliga", count: 18),
-                    LeagueOption(id: "12", icon: nil, title: "DFB-Pokal", count: 14)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "4",
-                icon: "international_flag_icon",
-                title: "Italy",
-                leagues: [
-                    LeagueOption(id: "13", icon: nil, title: "Serie A", count: 20),
-                    LeagueOption(id: "14", icon: nil, title: "Serie B", count: 20),
-                    LeagueOption(id: "15", icon: nil, title: "Coppa Italia", count: 16)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "5",
-                icon: "international_flag_icon",
-                title: "Spain",
-                leagues: [
-                    LeagueOption(id: "16", icon: nil, title: "La Liga", count: 20),
-                    LeagueOption(id: "17", icon: nil, title: "La Liga 2", count: 22),
-                    LeagueOption(id: "18", icon: nil, title: "Copa del Rey", count: 15)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "6",
-                icon: "international_flag_icon",
-                title: "International",
-                leagues: [
-                    LeagueOption(id: "19", icon: nil, title: "Champions League", count: 32),
-                    LeagueOption(id: "20", icon: nil, title: "Europa League", count: 24),
-                    LeagueOption(id: "21", icon: nil, title: "Conference League", count: 18),
-                    LeagueOption(id: "22", icon: nil, title: "World Cup Qualifiers", count: 28),
-                    LeagueOption(id: "23", icon: nil, title: "Nations League", count: 16)
-                ],
-                isExpanded: false
-            )
-        ]
-        
-        popularCountryLeagues.append(contentsOf: countryLeagueOptions)
-        
-        // Other country leagues
-        let otherCountryLeagueOptions = [
-            CountryLeagueOptions(
-                id: "7",
-                icon: "international_flag_icon",
-                title: "Portugal",
-                leagues: [
-                    LeagueOption(id: "24", icon: nil, title: "Primeira Liga", count: 20),
-                    LeagueOption(id: "25", icon: nil, title: "Taça de Portugal", count: 16)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "8",
-                icon: "international_flag_icon",
-                title: "Brazil",
-                leagues: [
-                    LeagueOption(id: "26", icon: nil, title: "Serie A", count: 13),
-                    LeagueOption(id: "27", icon: nil, title: "Copa do Brasil", count: 12)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "9",
-                icon: "international_flag_icon",
-                title: "Netherlands",
-                leagues: [
-                    LeagueOption(id: "28", icon: nil, title: "Eredivisie", count: 10)
-                ],
-                isExpanded: false
-            )
-        ]
-        
-        self.otherCountryLeagues.append(contentsOf: otherCountryLeagueOptions)
-        
-        // Refresh data simulating network
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-            self?.refreshLeaguesFilterData()
-            self?.refreshCountryLeaguesFilterData()
-            self?.isLoadingPublisher.send(false)
-        }
-       
-    }
-    
-    // TEST
-    func recheckAllLeagues(){
-        self.isLoadingPublisher.send(true)
-        
-        popularLeagues.removeAll()
-        popularCountryLeagues.removeAll()
-        otherCountryLeagues.removeAll()
-
-        // Popular Leagues
-        var allLeaguesOption = SortOption(id: "0", icon: "league_icon", title: "All Popular Leagues", count: 0, iconTintChange: false)
-        
-        let newSortOptions = [
-            SortOption(id: "1", icon: "league_icon", title: "NBA", count: 25, iconTintChange: false),
-            SortOption(id: "16", icon: "league_icon", title: "ACB", count: 10, iconTintChange: false),
-            SortOption(id: "10", icon: "league_icon", title: "ABA League", count: 8, iconTintChange: false),
-            SortOption(id: "13", icon: "league_icon", title: "La Liga", count: 13, iconTintChange: false),
-            SortOption(id: "7", icon: "league_icon", title: "Serie A", count: 0, iconTintChange: false)
-        ]
-        
-        let totalCount = newSortOptions.reduce(0) { $0 + $1.count }
-        
-        allLeaguesOption.count = totalCount
-        
-        popularLeagues.append(allLeaguesOption)
-        popularLeagues.append(contentsOf: newSortOptions)
-        
-        // Popular Country Leagues
-        
-        let countryLeagueOptions = [
-            CountryLeagueOptions(
-                id: "1",
-                icon: "international_flag_icon",
-                title: "United States",
-                leagues: [
-                    LeagueOption(id: "1", icon: nil, title: "NBA", count: 30),
-                    LeagueOption(id: "2", icon: nil, title: "WNBA", count: 12),
-                    LeagueOption(id: "3", icon: nil, title: "G League", count: 28)
-                ],
-                isExpanded: true
-            ),
-            CountryLeagueOptions(
-                id: "2",
-                icon: "international_flag_icon",
-                title: "Spain",
-                leagues: [
-                    LeagueOption(id: "13", icon: nil, title: "ACB", count: 18),
-                    LeagueOption(id: "14", icon: nil, title: "LEB Oro", count: 18)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "3",
-                icon: "international_flag_icon",
-                title: "Turkey",
-                leagues: [
-                    LeagueOption(id: "10", icon: nil, title: "ABA League", count: 14)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "4",
-                icon: "international_flag_icon",
-                title: "International",
-                leagues: [
-                    LeagueOption(id: "19", icon: nil, title: "EuroLeague", count: 18),
-                    LeagueOption(id: "20", icon: nil, title: "EuroCup", count: 20),
-                    LeagueOption(id: "21", icon: nil, title: "FIBA World Cup", count: 32)
-                ],
-                isExpanded: false
-            )
-        ]
-        
-        popularCountryLeagues.append(contentsOf: countryLeagueOptions)
-        
-        // Other country leagues
-        let otherCountryLeagueOptions = [
-            CountryLeagueOptions(
-                id: "7",
-                icon: "international_flag_icon",
-                title: "Portugal",
-                leagues: [
-                    LeagueOption(id: "64", icon: nil, title: "LPB 2025", count: 18)
-                ],
-                isExpanded: false
-            ),
-            CountryLeagueOptions(
-                id: "9",
-                icon: "international_flag_icon",
-                title: "Netherlands",
-                leagues: [
-                    LeagueOption(id: "68", icon: nil, title: "DBL 2025", count: 10)
-                ],
-                isExpanded: false
-            )
-        ]
-        
-        self.otherCountryLeagues.append(contentsOf: otherCountryLeagueOptions)
-        
-        // Refresh data
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-            self?.refreshLeaguesFilterData()
-            self?.refreshCountryLeaguesFilterData()
-            self?.isLoadingPublisher.send(false)
-        }
-
-    }
-    
-    private func refreshLeaguesFilterData() {
-        if let leaguesViewModel = dynamicViewModels["leaguesFilter"] as? MockSortFilterViewModel {
-            
-            leaguesViewModel.updateSortOptions(popularLeagues)
-        }
-        
-    }
-    
-    private func refreshCountryLeaguesFilterData() {
-        if let countryLeaguesViewModel = dynamicViewModels["popularCountryLeaguesFilter"] as? MockCountryLeaguesFilterViewModel {
-            
-            countryLeaguesViewModel.updateCountryLeagueOptions(popularCountryLeagues)
-        }
-        
-        if let otherCountryLeaguesViewModel = dynamicViewModels["otherCountryLeaguesFilter"] as? MockCountryLeaguesFilterViewModel {
-            
-            otherCountryLeaguesViewModel.updateCountryLeagueOptions(otherCountryLeagues)
-        }
-    }
-}
-
-public class CombinedFiltersViewController: UIViewController {
+class CombinedFiltersDemoViewController: UIViewController {
     
     // MARK: - Properties
     private let scrollView: UIScrollView = {
@@ -405,8 +81,8 @@ public class CombinedFiltersViewController: UIViewController {
     // Dynamic storage for views
     private var dynamicFilterViews: [String: UIView] = [:]
     
-    var viewModel: CombinedFiltersViewModel
-    
+    var viewModel: CombinedFiltersDemoViewModel
+
     // Callbacks
     public var onReset: (() -> Void)?
     public var onClose: (() -> Void)?
@@ -415,7 +91,7 @@ public class CombinedFiltersViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    public init(viewModel: CombinedFiltersViewModel) {
+    init(viewModel: CombinedFiltersDemoViewModel) {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
@@ -426,7 +102,7 @@ public class CombinedFiltersViewController: UIViewController {
     }
     
     // MARK: - Lifecycle
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
         setupView()
@@ -545,7 +221,7 @@ public class CombinedFiltersViewController: UIViewController {
     }
     
     // MARK: Binding
-    private func bind(toViewModel viewModel: CombinedFiltersViewModel) {
+    private func bind(toViewModel viewModel: CombinedFiltersDemoViewModel) {
         
         viewModel.isLoadingPublisher
             .sink(receiveValue: { [weak self] isLoading in
@@ -617,7 +293,7 @@ public class CombinedFiltersViewController: UIViewController {
 }
 
 // MARK: - Filter Configuration and Views Methods
-extension CombinedFiltersViewController {
+extension CombinedFiltersDemoViewController {
     
     private static func createFilterConfiguration() -> FilterConfiguration {
         // Create widgets
@@ -875,7 +551,7 @@ extension CombinedFiltersViewController {
 }
 
 // MARK: - Filter View Models Setup
-extension CombinedFiltersViewController {
+extension CombinedFiltersDemoViewController {
     
     private func createDynamicViewModels(for configuration: FilterConfiguration, contextId: String) {
         guard let context = configuration.filtersByContext.first(where: { $0.id == contextId }) else {
@@ -977,7 +653,7 @@ extension CombinedFiltersViewController {
                     }
                     
                     return SortOption(
-                        id: "\(index)",
+                        id: "\(index+1)",
                         icon: iconName,
                         title: option.label,
                         count: self.getCountForSortOption(option.id)
@@ -1031,25 +707,19 @@ extension CombinedFiltersViewController {
 }
 
 // MARK: - Convenience Initializer
-public extension CombinedFiltersViewController {
-    
-    static func withMockData() -> CombinedFiltersViewController {
-        
+extension CombinedFiltersDemoViewController {
+    static func withMockData() -> CombinedFiltersDemoViewController {
         let generalFilterSelection = GeneralFilterSelection(
-            sportId: "1",
-            timeValue: 1.0,
-            sortTypeId: "1",
-            leagueId: "0"
+            sportId: "1", timeValue: 1.0, sortTypeId: "1",
+            leagueId: "all"
         )
-        
         let configuration = createMockFilterConfiguration()
-
-        let viewModel = CombinedFiltersViewModel(filterSelection: generalFilterSelection,
-                                                 filterConfiguration: configuration,
-                                                 contextId: "sports")
-        
-        
-        return CombinedFiltersViewController( viewModel: viewModel)
+        let viewModel: CombinedFiltersDemoViewModel = CombinedFiltersDemoViewModel(
+                filterSelection: generalFilterSelection,
+                filterConfiguration: configuration,
+                contextId: "sports"
+            )
+        return CombinedFiltersDemoViewController( viewModel: viewModel)
     }
     
     static func createMockFilterConfiguration() -> FilterConfiguration {
@@ -1061,10 +731,10 @@ public extension CombinedFiltersViewController {
 import SwiftUI
 
 @available(iOS 17.0, *)
-struct CombinedFiltersViewController_Preview: PreviewProvider {
+struct CombinedFiltersDemoViewController_Preview: PreviewProvider {
     static var previews: some View {
         PreviewUIViewController {
-            let viewController = CombinedFiltersViewController.withMockData()
+            let viewController = CombinedFiltersDemoViewController.withMockData()
             let navigationController = UINavigationController(rootViewController: viewController)
             return navigationController
         }

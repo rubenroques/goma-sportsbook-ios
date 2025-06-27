@@ -53,7 +53,7 @@ public final class TransactionVerificationView: UIView {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    public init(viewModel: TransactionVerificationViewModelProtocol = MockTransactionVerificationViewModel.defaultMock()) {
+    public init(viewModel: TransactionVerificationViewModelProtocol = MockTransactionVerificationViewModel.defaultMock) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -61,7 +61,7 @@ public final class TransactionVerificationView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.viewModel = MockTransactionVerificationViewModel.defaultMock()
+        self.viewModel = MockTransactionVerificationViewModel.defaultMock
         super.init(coder: coder)
         setupViews()
         setupBindings()
@@ -117,8 +117,25 @@ public final class TransactionVerificationView: UIView {
     
     private func configure(with data: TransactionVerificationData) {
         titleLabel.text = data.title
-        topImageView.image = data.topImage
-        bottomImageView.image = data.bottomImage
+        
+        if let topImage = UIImage(named: data.topImage ?? "") {
+            topImageView.image = topImage
+
+        }
+        else if let topImage = UIImage(systemName: data.topImage ?? "") {
+            topImageView.image = topImage
+
+        }
+        
+        if let bottomImage = UIImage(named: data.bottomImage ?? "") {
+            bottomImageView.image = bottomImage
+
+        }
+        else if let bottomImage = UIImage(systemName: data.bottomImage ?? "") {
+            bottomImageView.image = bottomImage
+
+        }
+        
         topImageView.isHidden = data.topImage == nil
         bottomImageView.isHidden = data.bottomImage == nil
     }
@@ -130,18 +147,16 @@ public final class TransactionVerificationView: UIView {
 @available(iOS 17.0, *)
 #Preview("Default") {
     PreviewUIView {
-        TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.defaultMock())
+        TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.defaultMock)
     }
-    .previewDisplayName("Default")
     .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Simple") {
     PreviewUIView {
-        TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.simpleMock())
+        TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.simpleMock)
     }
-    .previewDisplayName("Simple")
     .padding()
 }
 #endif

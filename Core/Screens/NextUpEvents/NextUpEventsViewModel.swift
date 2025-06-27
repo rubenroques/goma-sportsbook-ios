@@ -38,6 +38,8 @@ class NextUpEventsViewModel: ObservableObject {
     var eventsState: AnyPublisher<LoadableContent<[Match]>, Never> {
         return self.eventsStateSubject.eraseToAnyPublisher()
     }
+    
+    var filterOptionItems: CurrentValueSubject<[FilterOptionItem], Never> = .init([])
 
     init(sport: Sport? = nil) {
         self.sport = sport ?? Env.sportsStore.football
@@ -85,6 +87,18 @@ class NextUpEventsViewModel: ObservableObject {
             .sink { [weak self] marketGroups in
                 self?.updateMarketGroupViewModels(marketGroups: marketGroups)
             }
+            .store(in: &cancellables)
+        
+        Env.filterStorage.$currentFilterSelection
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] currentFilterSelection in
+                
+                if let selectedFilterOptions = self?.buildFilterOptions(from: currentFilterSelection) {
+                    
+                    self?.filterOptionItems.send(selectedFilterOptions)
+                }
+                
+            })
             .store(in: &cancellables)
     }
 
@@ -210,6 +224,7 @@ class NextUpEventsViewModel: ObservableObject {
         let sportOption = getSportOption(for: selection.sportId)
         
         let sortOption = getSortOption(for: selection.sortTypeId)
+        
         let leagueOption = getLeagueOption(for: selection.leagueId)
         
         options.append(sportOption)

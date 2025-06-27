@@ -156,7 +156,7 @@ final public class PromotionalBonusCardView: UIView {
         setupButtons()
         
         // Setup avatar and count container
-        avatarsAndCountStackView.addArrangedSubview(avatarsStackView)
+//        avatarsAndCountStackView.addArrangedSubview(avatarsStackView)
         avatarsAndCountStackView.addArrangedSubview(playersLabel)
         
         // Setup main content stack
@@ -248,6 +248,8 @@ final public class PromotionalBonusCardView: UIView {
             backgroundImageView.image = UIImage(named: backgroundImageName)
         }
         
+        gradientView.isHidden = cardData.hasGradientView ? false : true
+        
         // Update button titles
         updateButtonTitles(claimTitle: cardData.claimButtonTitle, termsTitle: cardData.termsButtonTitle)
         
@@ -329,6 +331,7 @@ final public class PromotionalBonusCardView: UIView {
         
         return containerView
     }
+    
 }
 
 // MARK: - Preview Provider

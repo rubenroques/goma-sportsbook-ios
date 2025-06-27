@@ -286,17 +286,13 @@ class NextUpEventsViewController: UIViewController {
 //            self?.openCombinedFilters()
 //        }
         
-//        Env.filterStorage.$currentFilterSelection
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] currentFilterSelection in
-//                
-//                if let viewModel = self?.viewModel {
-//                    let selectedFilterOptions = viewModel.buildFilterOptions(from: currentFilterSelection)
-//                    
-//                    self?.generalFilterBarView.updateFilterItems(filterOptionItems: selectedFilterOptions)
-//                }
-//            })
-//            .store(in: &cancellables)
+        viewModel.filterOptionItems
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] filterOptionItems in
+                // self?.generalFilterBarView.updateFilterItems(filterOptionItems: filterOptionItems)
+            })
+            .store(in: &cancellables)
+        
     }
 
     // MARK: - Data Loading
@@ -309,7 +305,7 @@ class NextUpEventsViewController: UIViewController {
         
         let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
 
-        let viewModel = CombinedFiltersViewModel(filterConfiguration: configuration,
+        let viewModel = MockCombinedFiltersViewModel(filterConfiguration: configuration,
                                                  contextId: "sports")
         
         let combinedFiltersViewController = CombinedFiltersViewController(viewModel: viewModel)
