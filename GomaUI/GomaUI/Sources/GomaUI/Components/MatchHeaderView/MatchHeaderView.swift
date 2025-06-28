@@ -18,6 +18,7 @@ public class MatchHeaderView: UIView {
 
     // MARK: - ViewModel & Reactive
     private var viewModel: MatchHeaderViewModelProtocol?
+    private var imageResolver: MatchHeaderImageResolver?
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Constants
@@ -40,10 +41,11 @@ public class MatchHeaderView: UIView {
         setupStyling()
     }
 
-    public convenience init(viewModel: MatchHeaderViewModelProtocol) {
+    public convenience init(viewModel: MatchHeaderViewModelProtocol, imageResolver: MatchHeaderImageResolver = DefaultMatchHeaderImageResolver()) {
         self.init(frame: .zero)
         
         self.viewModel = viewModel
+        self.imageResolver = imageResolver
         setupBindings()
     }
 
@@ -115,26 +117,34 @@ extension MatchHeaderView {
             }
             .store(in: &cancellables)
 
-        // Bind country flag image - custom image takes precedence
-        viewModel.countryFlagImagePublisher
+        // Bind country flag image - use imageResolver if available
+        viewModel.countryFlagImageNamePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] customImage in
-                if let customImage = customImage {
-                    // Use custom UIImage if provided
-                    self?.locationFlagImageView.image = customImage
+            .sink { [weak self] imageName in
+                if let imageName = imageName, let imageResolver = self?.imageResolver {
+                    // Use imageResolver to get the image
+                    self?.locationFlagImageView.image = imageResolver.countryFlagImage(for: imageName)
                     self?.locationFlagImageView.tintColor = nil // Remove tint for custom images
+                } else {
+                    // Fallback to system image
+                    self?.locationFlagImageView.image = UIImage(systemName: "globe")
+                    self?.locationFlagImageView.tintColor = StyleProvider.Color.textSecondary
                 }
             }
             .store(in: &cancellables)
 
-        // Bind sport icon image - custom image takes precedence
-        viewModel.sportIconImagePublisher
+        // Bind sport icon image - use imageResolver if available
+        viewModel.sportIconImageNamePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] customImage in
-                if let customImage = customImage {
-                    // Use custom UIImage if provided
-                    self?.sportTypeImageView.image = customImage.withRenderingMode(.alwaysTemplate)
+            .sink { [weak self] imageName in
+                if let imageName = imageName, let imageResolver = self?.imageResolver {
+                    // Use imageResolver to get the image
+                    self?.sportTypeImageView.image = imageResolver.sportIconImage(for: imageName)?.withRenderingMode(.alwaysTemplate)
                     self?.sportTypeImageView.tintColor = StyleProvider.Color.highlightPrimary
+                } else {
+                    // Fallback to system image
+                    self?.sportTypeImageView.image = UIImage(systemName: "soccerball")
+                    self?.sportTypeImageView.tintColor = StyleProvider.Color.textSecondary
                 }
             }
             .store(in: &cancellables)
@@ -143,12 +153,18 @@ extension MatchHeaderView {
         viewModel.isFavoritePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isFavorite in
-                let starSymbol = isFavorite ? "star.fill" : "star"
-                let configuration = UIImage.SymbolConfiguration(weight: .semibold)
-                self?.favoritesIconImageView.image = UIImage(
-                    systemName: starSymbol,
-                    withConfiguration: configuration)?
-                    .withRenderingMode(.alwaysTemplate)
+                if let imageResolver = self?.imageResolver {
+                    // Use imageResolver to get the favorite icon
+                    self?.favoritesIconImageView.image = imageResolver.favoriteIcon(isFavorite: isFavorite)
+                } else {
+                    // Fallback to system image
+                    let starSymbol = isFavorite ? "star.fill" : "star"
+                    let configuration = UIImage.SymbolConfiguration(weight: .semibold)
+                    self?.favoritesIconImageView.image = UIImage(
+                        systemName: starSymbol,
+                        withConfiguration: configuration)?
+                        .withRenderingMode(.alwaysTemplate)
+                }
                 
                 self?.favoritesIconImageView.tintColor = StyleProvider.Color.favorites
             }
@@ -159,7 +175,6 @@ extension MatchHeaderView {
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] matchTime in
-                print("#DEBUG: MatchHeaderView matchTimePublisher received: \(matchTime ?? "nil")")
                 self?.matchTimeLabel.text = matchTime
                 self?.matchTimeLabel.isHidden = matchTime == nil || matchTime?.isEmpty == true
             }
@@ -174,54 +189,8 @@ extension MatchHeaderView {
             }
             .store(in: &cancellables)
 
-        // Bind unified visual state
-        viewModel.visualStatePublisher
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] visualState in
-                self?.updateAppearance(for: visualState)
-            }
-            .store(in: &cancellables)
     }
 
-    private func updateAppearance(for visualState: MatchHeaderVisualState) {
-        switch visualState {
-        case .standard:
-            setElementsVisible(favorite: true, country: true, sport: true, enabled: true)
-
-        case .disabled:
-            setElementsVisible(favorite: true, country: true, sport: true, enabled: false)
-
-        case .favoriteOnly:
-            setElementsVisible(favorite: true, country: false, sport: false, enabled: true)
-
-        case .minimal:
-            setElementsVisible(favorite: false, country: false, sport: false, enabled: true)
-        }
-    }
-
-    private func setElementsVisible(favorite: Bool, country: Bool, sport: Bool, enabled: Bool) {
-        // Set visibility
-        favoritesIconImageView.isHidden = !favorite
-        favoritesButton.isHidden = !favorite
-        locationFlagImageView.isHidden = !country
-        sportTypeImageView.isHidden = !sport
-
-        // Match time is always visible when available
-        // Its visibility is controlled by the data binding
-
-        // Set interaction state
-        favoritesButton.isEnabled = enabled
-        isUserInteractionEnabled = enabled
-
-        // Set visual disabled state
-        let alpha: CGFloat = enabled ? 1.0 : 0.6
-        favoritesIconImageView.alpha = alpha
-        sportTypeImageView.alpha = alpha
-        locationFlagImageView.alpha = alpha
-        competitionNameLabel.alpha = alpha
-        matchTimeLabel.alpha = alpha
-    }
 
     @objc private func favoriteButtonTapped() {
         viewModel?.toggleFavorite()
@@ -339,7 +308,7 @@ extension MatchHeaderView {
 
         // Create play icon
         let playIcon = UIImageView()
-        playIcon.image = UIImage(named: "live_indicator_icon", in: Bundle.module, compatibleWith: nil)?
+        playIcon.image = UIImage(systemName: "play.fill")?
             .withRenderingMode(.alwaysTemplate)
         playIcon.tintColor = .white
         playIcon.contentMode = .scaleAspectFit
@@ -429,7 +398,7 @@ extension MatchHeaderView {
 
 // MARK: - SwiftUI Previews
 @available(iOS 17.0, *)
-#Preview("MatchHeaderView - All States") {
+#Preview("MatchHeaderView - Examples") {
     ScrollView {
         VStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 8) {
@@ -480,53 +449,8 @@ extension MatchHeaderView {
                 .cornerRadius(8)
             }
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Disabled State")
-                    .font(.caption)
-                    .foregroundColor(.gray)
 
-                MatchHeaderViewPreview {
-                    let view = MatchHeaderView()
-                    view.configure(with: MockMatchHeaderViewModel.disabledNBAHeader)
-                    return view
-                }
-                .frame(width: 300, height: 17)
-                .padding()
-                .background(Color(StyleProvider.Color.backgroundColor))
-                .cornerRadius(8)
-            }
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Minimal Mode")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-
-                MatchHeaderViewPreview {
-                    let view = MatchHeaderView()
-                    view.configure(with: MockMatchHeaderViewModel.minimalModeHeader)
-                    return view
-                }
-                .frame(width: 300, height: 17)
-                .padding()
-                .background(Color(StyleProvider.Color.backgroundColor))
-                .cornerRadius(8)
-            }
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Favorite Only Mode")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-
-                MatchHeaderViewPreview {
-                    let view = MatchHeaderView()
-                    view.configure(with: MockMatchHeaderViewModel.favoriteOnlyHeader)
-                    return view
-                }
-                .frame(width: 300, height: 17)
-                .padding()
-                .background(Color(StyleProvider.Color.backgroundColor))
-                .cornerRadius(8)
-            }
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Long Competition Name")

@@ -100,10 +100,9 @@ extension MockTallOddsMatchCardViewModel {
             leagueInfo: MatchHeaderData(
                 id: "premier_league_match",
                 competitionName: "Premier League",
-                countryFlagImageName: "🇬🇧", // UK flag
+                countryFlagImageName: "UK",
                 sportIconImageName: "sportscourt.fill", // Football icon
                 isFavorite: false,
-                visualState: .standard, // Show all icons
                 matchTime: "16 April, 18:00",
                 isLive: false
             ),
@@ -190,7 +189,6 @@ extension MockTallOddsMatchCardViewModel {
                 countryFlagImageName: "GB",
                 sportIconImageName: "1", // Football icon
                 isFavorite: true,
-                visualState: .standard,
                 matchTime: "2nd Half, 67 Min",
                 isLive: true
             ),

@@ -82,7 +82,8 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Private Setup Methods
     private func createAndSetupCardView(with viewModel: TallOddsMatchCardViewModelProtocol) {
-        let cardView = TallOddsMatchCardView(viewModel: viewModel)
+        let imageResolver = AppMatchHeaderImageResolver()
+        let cardView = TallOddsMatchCardView(viewModel: viewModel, imageResolver: imageResolver)
         cardView.translatesAutoresizingMaskIntoConstraints = false
 
         cardView.backgroundColor = UIColor.App.backgroundCards

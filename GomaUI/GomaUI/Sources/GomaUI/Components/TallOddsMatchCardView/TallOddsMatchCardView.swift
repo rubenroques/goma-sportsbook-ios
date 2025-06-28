@@ -11,7 +11,7 @@ final public class TallOddsMatchCardView: UIView {
     private lazy var separatorLine: FadingView = Self.createSeparatorLine()
 
     // Child components
-    private lazy var matchHeaderView = Self.createMatchHeaderView()
+    private lazy var matchHeaderView = createMatchHeaderView()
     private lazy var participantsContainerView = Self.createParticipantsContainer()
     private lazy var participantsStackView = Self.createParticipantsStackView()
 
@@ -33,9 +33,13 @@ final public class TallOddsMatchCardView: UIView {
     public var onOutcomeSelected: ((String) -> Void) = { _ in }
     public var onMarketInfoTapped: (() -> Void) = {}
 
+    // MARK: - Private Properties
+    private let imageResolver: MatchHeaderImageResolver
+    
     // MARK: - Initialization
-    public init(viewModel: TallOddsMatchCardViewModelProtocol) {
+    public init(viewModel: TallOddsMatchCardViewModelProtocol, imageResolver: MatchHeaderImageResolver = DefaultMatchHeaderImageResolver()) {
         self.viewModel = viewModel
+        self.imageResolver = imageResolver
         super.init(frame: .zero)
         setupSubviews()
         setupBindings()
@@ -353,11 +357,10 @@ extension TallOddsMatchCardView {
         return container
     }
 
-    private static func createMatchHeaderView() -> MatchHeaderView {
+    private func createMatchHeaderView() -> MatchHeaderView {
         // Create with a mock view model that will be replaced immediately
-        print("#DEBUG: TallOddsMatchCardView.createMatchHeaderView with mock")
         let mockViewModel = MockMatchHeaderViewModel.defaultMock
-        let headerView = MatchHeaderView(viewModel: mockViewModel)
+        let headerView = MatchHeaderView(viewModel: mockViewModel, imageResolver: imageResolver)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         return headerView
     }

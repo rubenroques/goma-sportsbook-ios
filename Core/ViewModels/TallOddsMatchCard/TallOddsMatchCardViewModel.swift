@@ -135,17 +135,18 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         let liveScoreData = transformEventLiveDataToLiveScoreData(eventLiveData)
         let newScoreViewModel = Self.createScoreViewModel(from: liveScoreData)
         
-        print("[TallOddsMatchCardViewModel] 🔄 Updating score ViewModel for match: \(matchData.matchId)")
-        print("  - New score cells count: \(liveScoreData?.scoreCells.count ?? 0)")
-        
         scoreViewModelSubject.send(newScoreViewModel)
     }
     
     private func updateMatchHeaderViewModel(from eventLiveData: EventLiveData) {
         // Update match time if available
         if let matchTime = eventLiveData.matchTime {
-            print("#DEBUG: [TallOddsMatchCardViewModel] 🕐 Updating match time: \(matchTime)")
-            if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
+            if let status = eventLiveData.status, case .inProgress(let details) = status {
+                if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
+                    headerViewModel.updateMatchTime(details + ", " + matchTime + " min")
+                }
+            }
+            else if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
                 headerViewModel.updateMatchTime(matchTime)
             }
         }
@@ -215,12 +216,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
             scoreCells: scoreCells
         )
     }
-    
-    private func extractSportCode(from matchData: TallOddsMatchData) -> String {
-        // Extract sport code from match data or default to tennis for EVENT_INFO rich data
-        return "tennis" // Could be enhanced to use actual sport detection
-    }
-    
+
 }
 
 // MARK: - Factory Methods for Child ViewModels
@@ -263,7 +259,6 @@ extension TallOddsMatchCardViewModel {
             countryFlagImageName: Self.extractCountryFlag(from: match),
             sportIconImageName: Self.extractSportIcon(from: match),
             isFavorite: false, // TODO: Check with favorites service when available
-            visualState: .standard,
             matchTime: Self.formatMatchTime(from: match),
             isLive: match.status.isLive
         )

@@ -3823,6 +3823,14 @@
 		CE794C502D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C152D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Interactions.swift */; };
 		CE794C512D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C122D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift */; };
 		CE794C522D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C192D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift */; };
+		CE7A63DF2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */; };
+		CE7A63E02E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */; };
+		CE7A63E12E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */; };
+		CE7A63E22E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */; };
+		CE7A63E32E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */; };
+		CE7A63E42E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */; };
+		CE7A63E52E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */; };
+		CE7A63E62E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */; };
 		CE7BCEC22DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7BCEC12DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift */; };
 		CE7BCEC32DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7BCEC12DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift */; };
 		CE7BCEC42DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7BCEC12DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift */; };
@@ -9615,6 +9623,7 @@
 		CE794C162D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Layout.swift"; sourceTree = "<group>"; };
 		CE794C172D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Styling.swift"; sourceTree = "<group>"; };
 		CE794C192D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMatchHeaderImageResolver.swift; sourceTree = "<group>"; };
 		CE7BCEC12DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TallOddsMatchCardCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE7E80012D79494B00A5558A /* UserDefaults+DeveloperMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+DeveloperMode.swift"; sourceTree = "<group>"; };
 		CE7E800C2D794C1D00A5558A /* DeveloperSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperSettingsViewController.swift; sourceTree = "<group>"; };
@@ -10774,6 +10783,7 @@
 				A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */,
 				456B341226C13AE1009D7D27 /* Networking */,
 				45D9CBE4270F444000B8C321 /* Helpers */,
+				CE7A63DE2E0EFA8500A61D20 /* ImageResolvers */,
 				A96B619E27AC0642005DC376 /* URLSchemaManager.swift */,
 				CEE502CF2D66A609001B0342 /* SportTypeStore.swift */,
 				A996B3F229893FEC00A535FC /* PaymentsDropIn.swift */,
@@ -13477,10 +13487,6 @@
 				CE63A8502DEF878200E1FF01 /* MarketGroupCardsViewModel.swift */,
 				CE7BCEC12DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift */,
 				CE63A83F2DEF3E7600E1FF01 /* MarketGroupSelectorTabViewModel.swift */,
-				658E2CBC2E00271400FD4940 /* CombinedFiltersViewController.swift */,
-				CEC428302DF1E5C50077A12F /* PillSelectorBarCollectionViewCell.swift */,
-				CEC428312DF1E5C50077A12F /* TopBannerSliderCollectionViewCell.swift */,
-				CE63A83F2DEF3E7600E1FF01 /* NextUpEventsMarketGroupSelectorViewModel.swift */,
 			);
 			path = NextUpEvents;
 			sourceTree = "<group>";
@@ -13514,6 +13520,14 @@
 				CE794C192D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell.swift */,
 			);
 			path = PreLive;
+			sourceTree = "<group>";
+		};
+		CE7A63DE2E0EFA8500A61D20 /* ImageResolvers */ = {
+			isa = PBXGroup;
+			children = (
+				CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */,
+			);
+			path = ImageResolvers;
 			sourceTree = "<group>";
 		};
 		CE7E800D2D794C1D00A5558A /* DeveloperSettings */ = {
@@ -17288,6 +17302,7 @@
 				450B7A5428F58574009229E3 /* FavoritesManager.swift in Sources */,
 				4542DFEA2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				A9A7B52729DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
+				CE7A63DF2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */,
 				450B7A5528F58574009229E3 /* MyTicketsRootViewController.swift in Sources */,
 				450B7A5628F58574009229E3 /* Throwable.swift in Sources */,
 				450B7A5828F58574009229E3 /* NotificationsViewController.swift in Sources */,
@@ -18178,6 +18193,7 @@
 				45A33274298976BA008181E9 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE82C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				45A33275298976BA008181E9 /* FavoritesManager.swift in Sources */,
+				CE7A63E32E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */,
 				A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				45A33276298976BA008181E9 /* MyTicketsRootViewController.swift in Sources */,
 				45A33277298976BA008181E9 /* Throwable.swift in Sources */,
@@ -19038,6 +19054,7 @@
 				45F6BD322AB3732C00C81DE1 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE92C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				45F6BD332AB3732C00C81DE1 /* FavoritesManager.swift in Sources */,
+				CE7A63E12E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */,
 				45F6BD342AB3732C00C81DE1 /* BonusTypeMapper.swift in Sources */,
 				45F6BD352AB3732C00C81DE1 /* MyTicketsRootViewController.swift in Sources */,
 				45F6BD362AB3732C00C81DE1 /* Throwable.swift in Sources */,
@@ -19602,6 +19619,7 @@
 				CE12A2CE2D31347E0022BDF7 /* NibView.swift in Sources */,
 				CE12A2CF2D31347E0022BDF7 /* BonusHistoryCellViewModel.swift in Sources */,
 				CE12A2D02D31347E0022BDF7 /* BonusProgressView.swift in Sources */,
+				CE7A63E62E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */,
 				CE12A2D12D31347E0022BDF7 /* CardOptionRadioView.swift in Sources */,
 				CE12A2D32D31347E0022BDF7 /* ToastCustom.swift in Sources */,
 				6510AE4A2E00712D0010B8F0 /* FiltersStorage.swift in Sources */,
@@ -20767,6 +20785,7 @@
 				CE8F26092DD371350071238E /* BonusTypeMapper.swift in Sources */,
 				CE8F260A2DD371350071238E /* MyTicketsRootViewController.swift in Sources */,
 				CE8F260B2DD371350071238E /* Throwable.swift in Sources */,
+				CE7A63E52E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */,
 				CE8F260C2DD371350071238E /* NotificationsViewController.swift in Sources */,
 				CE8F260D2DD371350071238E /* UserProfileTipsViewModel.swift in Sources */,
 				CE8F260E2DD371350071238E /* VerticalMatchInfoView.swift in Sources */,
@@ -21627,6 +21646,7 @@
 				CEB3A37A2DD379800024043B /* BonusTypeMapper.swift in Sources */,
 				CEB3A37B2DD379800024043B /* MyTicketsRootViewController.swift in Sources */,
 				CEB3A37C2DD379800024043B /* Throwable.swift in Sources */,
+				CE7A63E02E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */,
 				CEB3A37D2DD379800024043B /* NotificationsViewController.swift in Sources */,
 				CEB3A37E2DD379800024043B /* UserProfileTipsViewModel.swift in Sources */,
 				CEB3A37F2DD379800024043B /* VerticalMatchInfoView.swift in Sources */,
@@ -22487,6 +22507,7 @@
 				CEB3A8032DD379890024043B /* BonusTypeMapper.swift in Sources */,
 				CEB3A8042DD379890024043B /* MyTicketsRootViewController.swift in Sources */,
 				CEB3A8052DD379890024043B /* Throwable.swift in Sources */,
+				CE7A63E22E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */,
 				CEB3A8062DD379890024043B /* NotificationsViewController.swift in Sources */,
 				CEB3A8072DD379890024043B /* UserProfileTipsViewModel.swift in Sources */,
 				CEB3A8082DD379890024043B /* VerticalMatchInfoView.swift in Sources */,
@@ -23255,6 +23276,7 @@
 				CEF195FC2DA834E900C81F12 /* CenterCellCollectionViewFlowLayout.swift in Sources */,
 				CEF195FD2DA834E900C81F12 /* WithdrawViewModel.swift in Sources */,
 				CEF195FE2DA834E900C81F12 /* CompetitionSectionHeader.swift in Sources */,
+				CE7A63E42E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift in Sources */,
 				CEF195FF2DA834E900C81F12 /* (null) in Sources */,
 				CEF196002DA834E900C81F12 /* ScoreView.swift in Sources */,
 				CEF196012DA834E900C81F12 /* String+Extensions.swift in Sources */,

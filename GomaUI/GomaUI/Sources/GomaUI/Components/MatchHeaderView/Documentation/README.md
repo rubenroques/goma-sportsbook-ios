@@ -36,9 +36,13 @@ Shows only the competition name, hiding all icons for space-constrained layouts.
 ```swift
 import GomaUI
 
-// Create with mock data
+// Create with mock data (uses default system icons)
 let viewModel = MockMatchHeaderViewModel.premierLeagueHeader
 let headerView = MatchHeaderView(viewModel: viewModel)
+
+// Create with custom image resolver
+let customImageResolver = YourAppImageResolver()
+let headerView = MatchHeaderView(viewModel: viewModel, imageResolver: customImageResolver)
 
 // Or configure existing view
 let headerView = MatchHeaderView()
@@ -72,13 +76,41 @@ MockMatchHeaderViewModel.longNameHeader
 MockMatchHeaderViewModel.basicHeader
 ```
 
-## Custom Implementation
+## Custom Image Resolution
+
+```swift
+// Create your own image resolver
+struct AppImageResolver: MatchHeaderImageResolver {
+    func countryFlagImage(for countryCode: String) -> UIImage? {
+        return UIImage(named: "flag_\(countryCode)", in: .main, compatibleWith: nil)
+    }
+    
+    func sportIconImage(for sportId: String) -> UIImage? {
+        return UIImage(named: "sport_\(sportId)", in: .main, compatibleWith: nil)
+    }
+    
+    func favoriteIcon(isFavorite: Bool) -> UIImage? {
+        let imageName = isFavorite ? "star_filled" : "star_outline"
+        return UIImage(named: imageName, in: .main, compatibleWith: nil)
+    }
+    
+    func liveIndicatorIcon() -> UIImage? {
+        return UIImage(named: "live_play_icon", in: .main, compatibleWith: nil)
+    }
+}
+
+// Use with custom resolver
+let imageResolver = AppImageResolver()
+let headerView = MatchHeaderView(viewModel: viewModel, imageResolver: imageResolver)
+```
+
+## Custom ViewModel Implementation
 
 ```swift
 // Create your own view model
 class CustomMatchHeaderViewModel: MatchHeaderViewModelProtocol {
     private let competitionNameSubject = CurrentValueSubject<String, Never>("")
-    // ... implement other publishers and methods
+    // ... implement other publishers and methods (without UIKit dependencies)
 }
 
 // Configure with custom data
@@ -86,8 +118,8 @@ let customViewModel = CustomMatchHeaderViewModel()
 customViewModel.updateData(MatchHeaderData(
     id: "custom_league",
     competitionName: "My Custom League",
-    countryFlagImageName: "custom_flag",
-    sportIconImageName: "custom_sport",
+    countryFlagImageName: "GB",  // String identifier, not UIImage
+    sportIconImageName: "1",     // String identifier, not UIImage
     isFavorite: true,
     visualState: .standard
 ))
@@ -138,27 +170,32 @@ viewModel.updateSportIcon("1")
 
 ```swift
 // In your cell configuration
-override func configure(with competition: Competition) {
-    let viewModel = createViewModel(from: competition)
-    matchHeaderView.configure(with: viewModel)
-}
-
-override func prepareForReuse() {
-    super.prepareForReuse()
-    matchHeaderView.cleanupForReuse()
-}
-
-private func createViewModel(from competition: Competition) -> MatchHeaderViewModelProtocol {
-    return MockMatchHeaderViewModel(
-        matchHeaderData: MatchHeaderData(
-            id: competition.id,
-            competitionName: competition.name,
-            countryFlagImageName: competition.countryCode,
-            sportIconImageName: competition.sportId,
-            isFavorite: competition.isFavorite,
-            visualState: .standard
+class MatchCell: UITableViewCell {
+    private let imageResolver = AppImageResolver() // Reuse the same resolver
+    private lazy var matchHeaderView = MatchHeaderView(viewModel: MockMatchHeaderViewModel.defaultMock, imageResolver: imageResolver)
+    
+    override func configure(with competition: Competition) {
+        let viewModel = createViewModel(from: competition)
+        matchHeaderView.configure(with: viewModel)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        matchHeaderView.cleanupForReuse() // ImageResolver is preserved
+    }
+    
+    private func createViewModel(from competition: Competition) -> MatchHeaderViewModelProtocol {
+        return MockMatchHeaderViewModel(
+            matchHeaderData: MatchHeaderData(
+                id: competition.id,
+                competitionName: competition.name,
+                countryFlagImageName: competition.countryCode,
+                sportIconImageName: competition.sportId,
+                isFavorite: competition.isFavorite,
+                visualState: .standard
+            )
         )
-    )
+    }
 }
 ```
 
@@ -169,14 +206,23 @@ private func createViewModel(from competition: Competition) -> MatchHeaderViewMo
 - **Touch Target**: Favorite button has 40x40pt touch area for accessibility
 - **Intrinsic Size**: Width expands to fill available space, height is fixed
 
-## Image Asset Requirements
+## Image Resolution
 
-The component expects these image assets in your bundle:
+The component uses the `MatchHeaderImageResolver` protocol to resolve images. You have two options:
 
-- `selected_favorite_icon` - Filled heart icon for favorited state
-- `unselected_favorite_icon` - Empty heart icon for non-favorited state
+### Default System Icons (DefaultMatchHeaderImageResolver)
+- Country flags: `globe` system icon
+- Sport icons: `soccerball` system icon  
+- Favorite icons: `star` and `star.fill` system icons
+- Live indicator: `play.fill` system icon
+
+### Custom Images (Your Implementation)
+Implement `MatchHeaderImageResolver` to provide your own images:
 - Country flag images (e.g., "GB", "ES", "IT", "US")
 - Sport icons (e.g., "1" for football, "8" for basketball, "5" for tennis)
+- Custom favorite and live indicator icons
+
+**Important**: The ViewModel protocol no longer includes UIKit dependencies. It only provides string identifiers that your ImageResolver converts to UIImages.
 
 ## Styling Customization
 

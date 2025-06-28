@@ -321,7 +321,6 @@ extension SportRadarModels {
         }
 
         private static func parseUpdated(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-            
             // let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             // let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
@@ -509,7 +508,6 @@ extension SportRadarModels {
                                                    serving: .away)
                     }
                 }
-                               
                 return .unknown
             }
 

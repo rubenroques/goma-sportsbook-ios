@@ -1,5 +1,5 @@
+import Foundation
 import Combine
-import UIKit
 import GomaUI
 
 final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
@@ -10,11 +10,7 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     private let isFavoriteSubject: CurrentValueSubject<Bool, Never>
     private let matchTimeSubject: CurrentValueSubject<String?, Never>
     private let isLiveSubject: CurrentValueSubject<Bool, Never>
-    private let visualStateSubject: CurrentValueSubject<MatchHeaderVisualState, Never>
     
-    // Custom image subjects
-    private let countryFlagImageSubject: CurrentValueSubject<UIImage?, Never>
-    private let sportIconImageSubject: CurrentValueSubject<UIImage?, Never>
     
     // MARK: - Published Properties
     public var competitionNamePublisher: AnyPublisher<String, Never> {
@@ -41,21 +37,7 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         return self.isLiveSubject.eraseToAnyPublisher()
     }
     
-    public var countryFlagImagePublisher: AnyPublisher<UIImage?, Never> {
-        return self.countryFlagImageSubject.eraseToAnyPublisher()
-    }
     
-    public var sportIconImagePublisher: AnyPublisher<UIImage?, Never> {
-        return self.sportIconImageSubject.eraseToAnyPublisher()
-    }
-    
-    public var visualStatePublisher: AnyPublisher<MatchHeaderVisualState, Never> {
-        return self.visualStateSubject.eraseToAnyPublisher()
-    }
-    
-    public var currentVisualState: MatchHeaderVisualState {
-        return self.visualStateSubject.value
-    }
     
     // MARK: - Initialization
     init(data: MatchHeaderData) {
@@ -63,19 +45,9 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         self.countryFlagImageNameSubject = CurrentValueSubject(data.countryFlagImageName)
         self.sportIconImageNameSubject = CurrentValueSubject(data.sportIconImageName)
         self.isFavoriteSubject = CurrentValueSubject(data.isFavorite)
-        
-        print("#DEBUG [MatchHeaderViewModel] init data.matchTime: \(data.matchTime ?? "nil") ")
-        
+       
         self.matchTimeSubject = CurrentValueSubject(data.matchTime)
         self.isLiveSubject = CurrentValueSubject(data.isLive)
-        self.visualStateSubject = CurrentValueSubject(data.visualState)
-        
-        // Initialize custom image subjects
-        self.countryFlagImageSubject = CurrentValueSubject(nil)
-        self.sportIconImageSubject = CurrentValueSubject(nil)
-
-        // Load images from image names if available
-        loadInitialImages(data: data)
     }
     
     // MARK: - Actions
@@ -86,9 +58,6 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         // TODO: Integrate with favorites service
     }
     
-    func setVisualState(_ state: MatchHeaderVisualState) {
-        visualStateSubject.send(state)
-    }
     
     func updateCompetitionName(_ name: String) {
         competitionNameSubject.send(name)
@@ -96,12 +65,10 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     
     func updateCountryFlag(_ imageName: String?) {
         countryFlagImageNameSubject.send(imageName)
-        loadCountryFlagImage(from: imageName)
     }
     
     func updateSportIcon(_ imageName: String?) {
         sportIconImageNameSubject.send(imageName)
-        loadSportIconImage(from: imageName)
     }
     
     func updateMatchTime(_ time: String?) {
@@ -112,63 +79,9 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         isLiveSubject.send(isLive)
     }
     
-    func updateCountryFlagImage(_ image: UIImage?) {
-        countryFlagImageSubject.send(image)
-    }
     
-    func updateSportIconImage(_ image: UIImage?) {
-        sportIconImageSubject.send(image)
-    }
-    
-    // MARK: - Convenience Methods
-    func setEnabled(_ enabled: Bool) {
-        let newState: MatchHeaderVisualState = enabled ? .standard : .disabled
-        setVisualState(newState)
-    }
-    
-    func setMinimalMode(_ minimal: Bool) {
-        let newState: MatchHeaderVisualState = minimal ? .minimal : .standard
-        setVisualState(newState)
-    }
-    
-    func setFavoriteOnlyMode(_ favoriteOnly: Bool) {
-        let newState: MatchHeaderVisualState = favoriteOnly ? .favoriteOnly : .standard
-        setVisualState(newState)
-    }
 }
 
-// MARK: - Private Image Loading
-extension MatchHeaderViewModel {
-    
-    private func loadInitialImages(data: MatchHeaderData) {
-        loadCountryFlagImage(from: data.countryFlagImageName)
-        loadSportIconImage(from: data.sportIconImageName)
-    }
-    
-    private func loadCountryFlagImage(from imageName: String?) {
-        guard let imageName = imageName else {
-            countryFlagImageSubject.send(nil)
-            return
-        }
-
-        let assetName = Assets.flagName(withCountryCode: imageName)
-        
-        let image = UIImage(named: assetName) ?? UIImage(systemName: "globe")
-        countryFlagImageSubject.send(image)
-    }
-    
-    private func loadSportIconImage(from imageName: String?) {
-        guard let imageName = imageName else {
-            sportIconImageSubject.send(nil)
-            return
-        }
-        
-        let assetName =
-        "sport_type_icon_\(imageName)"
-        let image = UIImage(named: assetName) ?? UIImage(named: "sport_type_icon_default")
-        sportIconImageSubject.send(image)
-    }
-}
 
 // MARK: - Factory for Creating from Match Data
 extension MatchHeaderViewModel {
@@ -181,7 +94,6 @@ extension MatchHeaderViewModel {
             countryFlagImageName: extractCountryFlag(from: match),
             sportIconImageName: extractSportIcon(from: match),
             isFavorite: false, // TODO: Check with favorites service when available
-            visualState: .standard,
             matchTime: formatMatchTime(from: match),
             isLive: match.status.isLive
         )
