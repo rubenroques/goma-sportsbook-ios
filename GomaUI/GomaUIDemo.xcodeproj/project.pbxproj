@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CE05AACB2DFB4CEE00D20357 /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE05AACA2DFB4CEE00D20357 /* GomaUI */; };
+		65F13FFD2E0EAD18004BDE6B /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE05AACA2DFB4CEE00D20357 /* GomaUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE05AACB2DFB4CEE00D20357 /* GomaUI in Frameworks */,
+				65F13FFD2E0EAD18004BDE6B /* GomaUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

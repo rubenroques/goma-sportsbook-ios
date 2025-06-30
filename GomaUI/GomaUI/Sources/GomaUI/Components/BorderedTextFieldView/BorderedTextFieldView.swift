@@ -30,8 +30,8 @@ final public class BorderedTextFieldView: UIView {
 
     // MARK: - Constants
     private enum Constants {
-        static let cornerRadius: CGFloat = 8.0
-        static let borderWidth: CGFloat = 1.0
+        static let cornerRadius: CGFloat = 4.0
+        static let borderWidth: CGFloat = 2.0
         static let horizontalPadding: CGFloat = 16.0
         static let verticalPadding: CGFloat = 12.0
         static let labelAnimationDuration: TimeInterval = 0.2
@@ -60,12 +60,12 @@ final public class BorderedTextFieldView: UIView {
         // Container setup
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.layer.cornerRadius = Constants.cornerRadius
-        containerView.backgroundColor = StyleProvider.Color.backgroundColor
+        containerView.backgroundColor = .clear
         addSubview(containerView)
 
         // Custom border setup
         borderLayer.fillColor = UIColor.clear.cgColor
-        borderLayer.strokeColor = StyleProvider.Color.secondaryColor.cgColor
+        borderLayer.strokeColor = StyleProvider.Color.separatorLine.cgColor
         borderLayer.lineWidth = Constants.borderWidth
         containerView.layer.addSublayer(borderLayer)
 
@@ -81,7 +81,7 @@ final public class BorderedTextFieldView: UIView {
         floatingLabel.translatesAutoresizingMaskIntoConstraints = false
         floatingLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
         floatingLabel.textColor = StyleProvider.Color.secondaryColor
-        floatingLabel.backgroundColor = StyleProvider.Color.backgroundColor
+        floatingLabel.backgroundColor = .clear
         containerView.addSubview(floatingLabel)
 
         // Suffix button setup (for password toggle)
@@ -265,8 +265,8 @@ final public class BorderedTextFieldView: UIView {
 
     private func updateForIdleState() {
         // Border and colors
-        borderLayer.strokeColor = StyleProvider.Color.secondaryColor.cgColor
-        floatingLabel.textColor = StyleProvider.Color.secondaryColor
+        borderLayer.strokeColor = StyleProvider.Color.separatorLine.cgColor
+        floatingLabel.textColor = StyleProvider.Color.inputText
 
         // Error label
         errorLabel.isHidden = true
@@ -279,8 +279,8 @@ final public class BorderedTextFieldView: UIView {
 
     private func updateForFocusedState() {
         // Border and colors
-        borderLayer.strokeColor = StyleProvider.Color.primaryColor.cgColor
-        floatingLabel.textColor = StyleProvider.Color.primaryColor
+        borderLayer.strokeColor = StyleProvider.Color.highlightPrimary.cgColor
+        floatingLabel.textColor = StyleProvider.Color.inputText
 
         // Error label
         errorLabel.isHidden = true
@@ -293,8 +293,8 @@ final public class BorderedTextFieldView: UIView {
 
     private func updateForErrorState(message: String) {
         // Border and colors (error takes precedence)
-        borderLayer.strokeColor = UIColor.systemRed.cgColor
-        floatingLabel.textColor = .systemRed
+        borderLayer.strokeColor = StyleProvider.Color.alertError.cgColor
+        floatingLabel.textColor = StyleProvider.Color.alertError
 
         // Error label
         errorLabel.text = message
@@ -308,8 +308,8 @@ final public class BorderedTextFieldView: UIView {
 
     private func updateForDisabledState() {
         // Border and colors
-        borderLayer.strokeColor = StyleProvider.Color.secondaryColor.cgColor
-        floatingLabel.textColor = StyleProvider.Color.secondaryColor
+        borderLayer.strokeColor = StyleProvider.Color.separatorLine.cgColor
+        floatingLabel.textColor = StyleProvider.Color.inputTextDisable
 
         // Error label
         errorLabel.isHidden = true

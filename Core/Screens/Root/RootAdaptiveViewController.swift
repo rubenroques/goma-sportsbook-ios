@@ -1143,8 +1143,36 @@ extension RootAdaptiveViewController {
 
         // Add floating overlay at the top of the view hierarchy
         view.addSubview(floatingOverlayView)
+        
+        // TEST REGISTER
+        // Double-tap: open PhoneLoginViewController
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(openPhoneLogin))
+        doubleTapGesture.numberOfTapsRequired = 2
+
+        // Triple-tap: open PhoneRegistrationViewController (your current one)
+        let tripleTapGesture = UITapGestureRecognizer(target: self, action: #selector(openPhoneRegistration))
+        tripleTapGesture.numberOfTapsRequired = 3
+
+        // Ensure double-tap waits for triple-tap to fail
+        doubleTapGesture.require(toFail: tripleTapGesture)
+
+        // Add both to your view
+        orangePlaceholderView.addGestureRecognizer(doubleTapGesture)
+        orangePlaceholderView.addGestureRecognizer(tripleTapGesture)
 
         initConstraints()
+    }
+    
+    @objc private func openPhoneLogin() {
+        let loginVC = PhoneLoginViewController()
+        let navController = Router.navigationController(with: loginVC)
+        present(navController, animated: true)
+    }
+    
+    @objc private func openPhoneRegistration() {
+        let registrationVC = PhoneRegistrationViewController()
+        present(registrationVC, animated: true)
+        
     }
 
     private func initConstraints() {

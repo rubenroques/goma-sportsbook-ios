@@ -26,6 +26,7 @@ public protocol CombinedFiltersViewModelProtocol {
     
     // MARK: - Methods
     func getAllLeagues()
+    func recheckAllLeagues()
     func refreshLeaguesFilterData()
     func refreshCountryLeaguesFilterData()
 }

@@ -1942,6 +1942,54 @@
 		6510AE4E2E00712D0010B8F0 /* FiltersStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510AE482E00712D0010B8F0 /* FiltersStorage.swift */; };
 		6510AE4F2E00712D0010B8F0 /* FiltersStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510AE482E00712D0010B8F0 /* FiltersStorage.swift */; };
 		6510AE502E00712D0010B8F0 /* FiltersStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6510AE482E00712D0010B8F0 /* FiltersStorage.swift */; };
+		651418DE2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */; };
+		651418DF2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */; };
+		651418E02E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */; };
+		651418E12E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */; };
+		651418E22E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */; };
+		651418E32E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */; };
+		651418E42E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */; };
+		651418E52E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */; };
+		651418E72E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */; };
+		651418E82E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */; };
+		651418E92E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */; };
+		651418EA2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */; };
+		651418EB2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */; };
+		651418EC2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */; };
+		651418ED2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */; };
+		651418EE2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */; };
+		651418F02E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */; };
+		651418F12E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */; };
+		651418F22E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */; };
+		651418F32E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */; };
+		651418F42E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */; };
+		651418F52E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */; };
+		651418F62E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */; };
+		651418F72E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */; };
+		651418FA2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */; };
+		651418FB2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */; };
+		651418FC2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */; };
+		651418FD2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */; };
+		651418FE2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */; };
+		651418FF2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */; };
+		651419002E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */; };
+		651419012E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */; };
+		651419032E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */; };
+		651419042E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */; };
+		651419052E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */; };
+		651419062E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */; };
+		651419072E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */; };
+		651419082E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */; };
+		651419092E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */; };
+		6514190A2E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */; };
+		6514190C2E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */; };
+		6514190D2E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */; };
+		6514190E2E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */; };
+		6514190F2E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */; };
+		651419102E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */; };
+		651419112E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */; };
+		651419122E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */; };
+		651419132E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */; };
 		65238E002C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
 		65238E012C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
 		65238E022C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
@@ -2469,6 +2517,126 @@
 		65EFF3912D847A0200F1FC57 /* BulletItemBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF38C2D847A0200F1FC57 /* BulletItemBlockView.swift */; };
 		65EFF3942D847A0200F1FC57 /* BulletItemBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF38C2D847A0200F1FC57 /* BulletItemBlockView.swift */; };
 		65EFF3962D847A0200F1FC57 /* BulletItemBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF38C2D847A0200F1FC57 /* BulletItemBlockView.swift */; };
+		65F140702E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */; };
+		65F140712E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */; };
+		65F140722E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */; };
+		65F140732E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */; };
+		65F140742E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */; };
+		65F140752E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */; };
+		65F140762E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */; };
+		65F140772E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */; };
+		65F140792E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */; };
+		65F1407A2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */; };
+		65F1407B2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */; };
+		65F1407C2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */; };
+		65F1407D2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */; };
+		65F1407E2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */; };
+		65F1407F2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */; };
+		65F140802E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */; };
+		65F140822E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */; };
+		65F140832E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */; };
+		65F140842E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */; };
+		65F140852E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */; };
+		65F140862E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */; };
+		65F140872E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */; };
+		65F140882E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */; };
+		65F140892E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */; };
+		65F1408C2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */; };
+		65F1408D2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */; };
+		65F1408E2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */; };
+		65F1408F2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */; };
+		65F140902E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */; };
+		65F140912E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */; };
+		65F140922E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */; };
+		65F140932E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */; };
+		65F140952E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */; };
+		65F140962E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */; };
+		65F140972E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */; };
+		65F140982E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */; };
+		65F140992E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */; };
+		65F1409A2E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */; };
+		65F1409B2E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */; };
+		65F1409C2E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */; };
+		65F1409E2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */; };
+		65F1409F2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */; };
+		65F140A02E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */; };
+		65F140A12E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */; };
+		65F140A22E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */; };
+		65F140A32E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */; };
+		65F140A42E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */; };
+		65F140A52E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */; };
+		65F140AA2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */; };
+		65F140AB2E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */; };
+		65F140AC2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */; };
+		65F140AD2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */; };
+		65F140AE2E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */; };
+		65F140AF2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */; };
+		65F140B02E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */; };
+		65F140B12E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */; };
+		65F140B22E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */; };
+		65F140B32E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */; };
+		65F140B42E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */; };
+		65F140B52E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */; };
+		65F140B62E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */; };
+		65F140B72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */; };
+		65F140B82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */; };
+		65F140B92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */; };
+		65F140BA2E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */; };
+		65F140BB2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */; };
+		65F140BC2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */; };
+		65F140BD2E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */; };
+		65F140BE2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */; };
+		65F140BF2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */; };
+		65F140C02E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */; };
+		65F140C12E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */; };
+		65F140C62E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */; };
+		65F140C72E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */; };
+		65F140C82E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */; };
+		65F140C92E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */; };
+		65F140CA2E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */; };
+		65F140CB2E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */; };
+		65F140CC2E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */; };
+		65F140CD2E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */; };
+		65F140CE2E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */; };
+		65F140CF2E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */; };
+		65F140D02E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */; };
+		65F140D12E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */; };
+		65F140D22E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */; };
+		65F140D32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */; };
+		65F140D42E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */; };
+		65F140D52E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */; };
+		65F140D62E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */; };
+		65F140D72E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */; };
+		65F140D82E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */; };
+		65F140D92E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */; };
+		65F140DA2E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */; };
+		65F140DB2E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */; };
+		65F140DC2E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */; };
+		65F140DD2E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */; };
+		65F140E22E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */; };
+		65F140E32E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */; };
+		65F140E42E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */; };
+		65F140E52E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */; };
+		65F140E62E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */; };
+		65F140E72E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */; };
+		65F140E82E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */; };
+		65F140E92E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */; };
+		65F140EB2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */; };
+		65F140EC2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */; };
+		65F140ED2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */; };
+		65F140EE2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */; };
+		65F140EF2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */; };
+		65F140F02E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */; };
+		65F140F12E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */; };
+		65F140F22E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */; };
+		65F140F42E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
+		65F140F52E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
+		65F140F62E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
+		65F140F72E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
+		65F140F82E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
+		65F140F92E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
+		65F140FA2E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
+		65F140FB2E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
 		65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884172C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
@@ -9033,6 +9201,12 @@
 		45F805952A05385B005296E0 /* dots-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dots-loading.json"; sourceTree = "<group>"; };
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
 		6510AE482E00712D0010B8F0 /* FiltersStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersStorage.swift; sourceTree = "<group>"; };
+		651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneRegistrationViewModelProtocol.swift; sourceTree = "<group>"; };
+		651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhoneRegistrationViewModel.swift; sourceTree = "<group>"; };
+		651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneRegistrationViewController.swift; sourceTree = "<group>"; };
+		651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneVerificationViewModelProtocol.swift; sourceTree = "<group>"; };
+		651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhoneVerificationViewModel.swift; sourceTree = "<group>"; };
+		6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneVerificationViewController.swift; sourceTree = "<group>"; };
 		65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetition.swift; sourceTree = "<group>"; };
 		6531BB8D2C0A295B002C696D /* replay_coin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_coin.json; sourceTree = "<group>"; };
 		65392E522D883DF00066FBE2 /* ServiceProviderModelMapper+Promotions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Promotions.swift"; sourceTree = "<group>"; };
@@ -9165,6 +9339,21 @@
 		65EFF3762D831C1100F1FC57 /* Promotions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promotions.swift; sourceTree = "<group>"; };
 		65EFF3812D845F4F00F1FC57 /* VideoBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBlockView.swift; sourceTree = "<group>"; };
 		65EFF38C2D847A0200F1FC57 /* BulletItemBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletItemBlockView.swift; sourceTree = "<group>"; };
+		65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLoginViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhoneLoginViewModel.swift; sourceTree = "<group>"; };
+		65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLoginViewController.swift; sourceTree = "<group>"; };
+		65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhonePasswordCodeResetViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhonePasswordCodeResetViewModel.swift; sourceTree = "<group>"; };
+		65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhonePasswordCodeResetViewController.swift; sourceTree = "<group>"; };
+		65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhonePasswordCodeVerificationViewModel.swift; sourceTree = "<group>"; };
+		65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhonePasswordCodeVerificationViewController.swift; sourceTree = "<group>"; };
+		65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhonePasswordCodeVerificationViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneForgotPasswordViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhoneForgotPasswordViewModel.swift; sourceTree = "<group>"; };
+		65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneForgotPasswordSuccessViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhoneForgotPasswordSuccessViewModel.swift; sourceTree = "<group>"; };
+		65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneForgotPasswordSuccessViewController.swift; sourceTree = "<group>"; };
 		65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		65F8841D2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetitionDetailRootViewController.swift; sourceTree = "<group>"; };
 		65F884272C1C43D300A56983 /* BannerTournamentTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTournamentTableViewHeader.swift; sourceTree = "<group>"; };
@@ -11136,6 +11325,8 @@
 		4589F3EE26BF017A005DF543 /* Register */ = {
 			isa = PBXGroup;
 			children = (
+				651418F82E0D9B8700990504 /* PhoneVerification */,
+				651418DC2E0C47AC00990504 /* PhoneRegister */,
 				A9BAFB4B2AB213B9002EDBA1 /* RegisterState */,
 				45BEA47626F4DC9900680181 /* SimpleRegister */,
 				A99A971926FDDEC100F8D163 /* FullRegister */,
@@ -11147,6 +11338,7 @@
 		4589F3F126BF017A005DF543 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				65F1406E2E0EB513004BDE6B /* PhoneLogin */,
 				4589F3F326BF017A005DF543 /* LoginViewController.swift */,
 				4589F3F226BF017A005DF543 /* LoginViewController.xib */,
 			);
@@ -11156,6 +11348,10 @@
 		4589F3F426BF017A005DF543 /* RecoverPassword */ = {
 			isa = PBXGroup;
 			children = (
+				65F140E02E12F684004BDE6B /* PhoneForgotPasswordSuccess */,
+				65F140C22E12DF13004BDE6B /* PhoneForgotPassword */,
+				65F140A62E12A1ED004BDE6B /* PhonePasswordCodeVerify */,
+				65F1408A2E0EF0A6004BDE6B /* PhonePasswordRecover */,
 				A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */,
 				A99DE661299E825900AA24AA /* RecoverPasswordViewModel.swift */,
 			);
@@ -11754,6 +11950,26 @@
 			path = Animations;
 			sourceTree = "<group>";
 		};
+		651418DC2E0C47AC00990504 /* PhoneRegister */ = {
+			isa = PBXGroup;
+			children = (
+				651418DD2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift */,
+				651418E62E0C482E00990504 /* MockPhoneRegistrationViewModel.swift */,
+				651418EF2E0C4C9000990504 /* PhoneRegistrationViewController.swift */,
+			);
+			path = PhoneRegister;
+			sourceTree = "<group>";
+		};
+		651418F82E0D9B8700990504 /* PhoneVerification */ = {
+			isa = PBXGroup;
+			children = (
+				651419022E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift */,
+				6514190B2E0D9BDB00990504 /* PhoneVerificationViewController.swift */,
+				651418F92E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift */,
+			);
+			path = PhoneVerification;
+			sourceTree = "<group>";
+		};
 		653A37902D4BDBB500B89CDF /* Questions */ = {
 			isa = PBXGroup;
 			children = (
@@ -12140,6 +12356,56 @@
 				65EFF38C2D847A0200F1FC57 /* BulletItemBlockView.swift */,
 			);
 			path = Promotions;
+			sourceTree = "<group>";
+		};
+		65F1406E2E0EB513004BDE6B /* PhoneLogin */ = {
+			isa = PBXGroup;
+			children = (
+				65F1406F2E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift */,
+				65F140782E0EB554004BDE6B /* MockPhoneLoginViewModel.swift */,
+				65F140812E0EB58C004BDE6B /* PhoneLoginViewController.swift */,
+			);
+			path = PhoneLogin;
+			sourceTree = "<group>";
+		};
+		65F1408A2E0EF0A6004BDE6B /* PhonePasswordRecover */ = {
+			isa = PBXGroup;
+			children = (
+				65F1408B2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift */,
+				65F140942E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift */,
+				65F1409D2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift */,
+			);
+			path = PhonePasswordRecover;
+			sourceTree = "<group>";
+		};
+		65F140A62E12A1ED004BDE6B /* PhonePasswordCodeVerify */ = {
+			isa = PBXGroup;
+			children = (
+				65F140A72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift */,
+				65F140A82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift */,
+				65F140A92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift */,
+			);
+			path = PhonePasswordCodeVerify;
+			sourceTree = "<group>";
+		};
+		65F140C22E12DF13004BDE6B /* PhoneForgotPassword */ = {
+			isa = PBXGroup;
+			children = (
+				65F140C32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift */,
+				65F140C42E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift */,
+				65F140C52E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift */,
+			);
+			path = PhoneForgotPassword;
+			sourceTree = "<group>";
+		};
+		65F140E02E12F684004BDE6B /* PhoneForgotPasswordSuccess */ = {
+			isa = PBXGroup;
+			children = (
+				65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */,
+				65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */,
+				65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */,
+			);
+			path = PhoneForgotPasswordSuccess;
 			sourceTree = "<group>";
 		};
 		65F884262C1C439F00A56983 /* Cells */ = {
@@ -16509,6 +16775,7 @@
 				CEB739F32D767AED009C4E0F /* LiveEventsViewController.swift in Sources */,
 				450B786C28F58574009229E3 /* BettingNotificationsViewController.swift in Sources */,
 				653A38382D53921600B89CDF /* BettingPracticesQuestionnaireViewModel.swift in Sources */,
+				65F140902E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */,
 				6561B61B2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				A9DD89F52A57144D00D3A5FE /* SubjectType.swift in Sources */,
 				CED5D9A02D94515F00429306 /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -16541,6 +16808,7 @@
 				A9CB3E7829CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */,
 				450B787F28F58574009229E3 /* SocialAppItemCollectionViewCell.swift in Sources */,
 				450B788028F58574009229E3 /* Constants.swift in Sources */,
+				6514190F2E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */,
 				450B788328F58574009229E3 /* DocumentPickerView.swift in Sources */,
 				CE5B54C22D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B54C32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
@@ -16557,7 +16825,11 @@
 				CE5B54CE2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE7BCEC72DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */,
 				CE5B54CF2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F140C62E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
+				65F140C72E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */,
+				65F140C82E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */,
 				CE5B54D02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				65F140F62E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */,
 				CE5B54D12D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B54D22D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CE5B54D32D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -16620,6 +16892,7 @@
 				45F2530A2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45ECD7572A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				450B78AB28F58574009229E3 /* RankingTypeTableHeaderView.swift in Sources */,
+				65F140852E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */,
 				450B78AD28F58574009229E3 /* CollapsibleGroupView.swift in Sources */,
 				450B78AF28F58574009229E3 /* UIImageView+Extensions.swift in Sources */,
 				450B78B028F58574009229E3 /* EnabledAccessViewController.swift in Sources */,
@@ -16670,6 +16943,7 @@
 				450B78E628F58574009229E3 /* TipsViewModel.swift in Sources */,
 				A9BB462B2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				450B78E828F58574009229E3 /* PasswordUpdateViewModel.swift in Sources */,
+				651419012E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */,
 				CEB73A0E2D7687E5009C4E0F /* InnerScrollDragDirection.swift in Sources */,
 				450B78EA28F58574009229E3 /* NetworkManager.swift in Sources */,
 				450B78EC28F58574009229E3 /* Array+Extensions.swift in Sources */,
@@ -16720,6 +16994,7 @@
 				45838649293E66DF001B96DB /* ServiceProviderModelMapper+Betting.swift in Sources */,
 				450B791D28F58574009229E3 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				450B791E28F58574009229E3 /* MultiSliderExtensions.swift in Sources */,
+				651418E22E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */,
 				450B792028F58574009229E3 /* CATransform3D+Shift.swift in Sources */,
 				45ECD7662A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				459EF2722BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift in Sources */,
@@ -16739,6 +17014,7 @@
 				450B792D28F58574009229E3 /* SimpleRegisterEmailSentViewController.swift in Sources */,
 				457C9F282A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				A93FE20E2A445434006A6907 /* GenericErrorViewController.swift in Sources */,
+				65F140E22E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */,
 				450B792F28F58574009229E3 /* TipsSliderViewModel.swift in Sources */,
 				65EFF2F22D80672C00F1FC57 /* PromotionsViewController.swift in Sources */,
 				45CE91522A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift in Sources */,
@@ -16905,6 +17181,9 @@
 				450B798928F58574009229E3 /* AppearanceMode.swift in Sources */,
 				45711908294B9A27000395F0 /* BetType.swift in Sources */,
 				450B798A28F58574009229E3 /* UserActionView.swift in Sources */,
+				65F140BF2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */,
+				65F140C02E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */,
+				65F140C12E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */,
 				450B798B28F58574009229E3 /* LoadingSpinnerViewController.swift in Sources */,
 				A9BAFB4E2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				655E20152B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
@@ -17060,11 +17339,13 @@
 				653A37992D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				450B7A1728F58574009229E3 /* Logger.swift in Sources */,
 				450B7A1828F58574009229E3 /* NavControllerTransitionCoordinator.swift in Sources */,
+				651419072E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */,
 				65392E702D889BAA0066FBE2 /* PromotionLineTableViewCell.swift in Sources */,
 				450B7A1928F58574009229E3 /* GamesNotificationViewModel.swift in Sources */,
 				450B7B3B28F58625009229E3 /* ClientVariables.swift in Sources */,
 				450B7A1B28F58574009229E3 /* ShiftViewOptions.swift in Sources */,
 				450B7A1C28F58574009229E3 /* ServiceProviderModelMapper.swift in Sources */,
+				65F140952E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */,
 				45372F5C29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				450B7A1D28F58574009229E3 /* SearchTitleSectionHeaderView.swift in Sources */,
 				450B7A1E28F58574009229E3 /* EmptyCardTableViewCell.swift in Sources */,
@@ -17104,6 +17385,7 @@
 				450B7A3828F58574009229E3 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				459874B92A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				455897EA2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
+				65F140792E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */,
 				450B7A3928F58574009229E3 /* BonusActiveCellViewModel.swift in Sources */,
 				45D881EC2C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				658A4CB82B9F6C4800F73772 /* Referrals.swift in Sources */,
@@ -17139,6 +17421,7 @@
 				65CD188A2D9469EA00CA23E0 /* SelectFriendCellViewModel.swift in Sources */,
 				65CD188B2D9469EA00CA23E0 /* FriendsListViewController.swift in Sources */,
 				CE4254612DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				65F1409E2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
 				CE4254622DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				65CD188C2D9469EA00CA23E0 /* SocialViewController.swift in Sources */,
 				65CD188D2D9469EA00CA23E0 /* ConversationsViewModel.swift in Sources */,
@@ -17150,6 +17433,7 @@
 				65CD18932D9469EA00CA23E0 /* SelectFriendTableViewCell.swift in Sources */,
 				65CD18942D9469EA00CA23E0 /* ResultsHeaderFooterView.swift in Sources */,
 				65CD18952D9469EA00CA23E0 /* AIAssistantUITableViewCell.swift in Sources */,
+				65F140EE2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */,
 				65CD18962D9469EA00CA23E0 /* ConversationBetSelectionViewController.swift in Sources */,
 				65CD18972D9469EA00CA23E0 /* GroupFriendManagementTableViewCell.swift in Sources */,
 				65CD18982D9469EA00CA23E0 /* UserNotificationTableViewCell.swift in Sources */,
@@ -17221,6 +17505,7 @@
 				A9527C152A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
 				450B7A5328F58574009229E3 /* TransactionsHistoryRootViewController.swift in Sources */,
 				CEEDD2542DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */,
+				651418F52E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */,
 				45970A022C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				450B7A5428F58574009229E3 /* FavoritesManager.swift in Sources */,
 				4542DFEA2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -17228,6 +17513,7 @@
 				450B7A5528F58574009229E3 /* MyTicketsRootViewController.swift in Sources */,
 				450B7A5628F58574009229E3 /* Throwable.swift in Sources */,
 				450B7A5828F58574009229E3 /* NotificationsViewController.swift in Sources */,
+				65F140752E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */,
 				450B7A5A28F58574009229E3 /* UserProfileTipsViewModel.swift in Sources */,
 				450B7A5B28F58574009229E3 /* LiveDetailsViewModel.swift in Sources */,
 				CEDB59792D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
@@ -17261,6 +17547,7 @@
 				658E2CCD2E0027A800FD4940 /* FilterModels.swift in Sources */,
 				A93FE22B2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				A9527C252A990E60006F4E37 /* MyCompetitionsRootViewModel.swift in Sources */,
+				651418EA2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				653A384B2D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */,
 				450B7A7528F58574009229E3 /* RecentSearchHeaderView.swift in Sources */,
 				45ECD7782A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
@@ -17395,6 +17682,7 @@
 				CEB739F42D767AED009C4E0F /* LiveEventsViewController.swift in Sources */,
 				45A3307D298976BA008181E9 /* BettingNotificationsViewController.swift in Sources */,
 				653A38342D53921600B89CDF /* BettingPracticesQuestionnaireViewModel.swift in Sources */,
+				65F1408F2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */,
 				6561B6192C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				A9DD89F42A57144D00D3A5FE /* SubjectType.swift in Sources */,
 				CED5D9972D94515F00429306 /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -17427,6 +17715,7 @@
 				A9CB3E7729CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */,
 				45A33090298976BA008181E9 /* SocialAppItemCollectionViewCell.swift in Sources */,
 				45A33091298976BA008181E9 /* Constants.swift in Sources */,
+				651419112E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */,
 				45A33094298976BA008181E9 /* DocumentPickerView.swift in Sources */,
 				CE5B548A2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B548B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
@@ -17443,7 +17732,11 @@
 				CE5B54962D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE7BCEC22DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */,
 				CE5B54972D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F140C92E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
+				65F140CA2E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */,
+				65F140CB2E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */,
 				CE5B54982D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				65F140F72E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */,
 				CE5B54992D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B549A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CE5B549B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -17506,6 +17799,7 @@
 				45F253082C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45ECD7562A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45A330BE298976BA008181E9 /* RankingTypeTableHeaderView.swift in Sources */,
+				65F140872E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */,
 				45A330C0298976BA008181E9 /* CollapsibleGroupView.swift in Sources */,
 				45A330C2298976BA008181E9 /* UIImageView+Extensions.swift in Sources */,
 				45A330C3298976BA008181E9 /* EnabledAccessViewController.swift in Sources */,
@@ -17556,6 +17850,7 @@
 				45A330FC298976BA008181E9 /* PasswordUpdateViewModel.swift in Sources */,
 				A9BB462A2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				45A330FE298976BA008181E9 /* NetworkManager.swift in Sources */,
+				651418FF2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */,
 				CEB73A0A2D7687E5009C4E0F /* InnerScrollDragDirection.swift in Sources */,
 				45A33100298976BA008181E9 /* Array+Extensions.swift in Sources */,
 				45A33101298976BA008181E9 /* MatchDetailsViewModel.swift in Sources */,
@@ -17606,6 +17901,7 @@
 				45A33133298976BA008181E9 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				45A33134298976BA008181E9 /* MultiSliderExtensions.swift in Sources */,
 				45A33136298976BA008181E9 /* CATransform3D+Shift.swift in Sources */,
+				651418DE2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */,
 				45A33137298976BA008181E9 /* TipsListViewModel.swift in Sources */,
 				45ECD7652A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				459EF2702BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift in Sources */,
@@ -17625,6 +17921,7 @@
 				45A33143298976BA008181E9 /* SimpleRegisterEmailSentViewController.swift in Sources */,
 				457C9F272A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				A93FE20D2A445434006A6907 /* GenericErrorViewController.swift in Sources */,
+				65F140E82E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */,
 				45A33145298976BA008181E9 /* TipsSliderViewModel.swift in Sources */,
 				65EFF2F62D80672C00F1FC57 /* PromotionsViewController.swift in Sources */,
 				45CE91512A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift in Sources */,
@@ -17791,6 +18088,9 @@
 				45A3319F298976BA008181E9 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				45A331A2298976BA008181E9 /* AppearanceMode.swift in Sources */,
 				45A331A3298976BA008181E9 /* BetType.swift in Sources */,
+				65F140AD2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */,
+				65F140AE2E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */,
+				65F140AF2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */,
 				45A331A4298976BA008181E9 /* UserActionView.swift in Sources */,
 				A9BAFB4D2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				CEEDD2642DAE74600048A5B0 /* ThemeColors.swift in Sources */,
@@ -17946,11 +18246,13 @@
 				45A33231298976BA008181E9 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				45A33232298976BA008181E9 /* BusinessModules.swift in Sources */,
 				653A37952D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
+				6514190A2E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */,
 				45A33234298976BA008181E9 /* NSObject+Extension.swift in Sources */,
 				45A33235298976BA008181E9 /* Logger.swift in Sources */,
 				65392E712D889BAA0066FBE2 /* PromotionLineTableViewCell.swift in Sources */,
 				45A33236298976BA008181E9 /* NavControllerTransitionCoordinator.swift in Sources */,
 				45A33237298976BA008181E9 /* GamesNotificationViewModel.swift in Sources */,
+				65F140982E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */,
 				45A3323A298976BA008181E9 /* ShiftViewOptions.swift in Sources */,
 				45A3323B298976BA008181E9 /* ServiceProviderModelMapper.swift in Sources */,
 				45372F5B29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
@@ -17990,6 +18292,7 @@
 				A9A1B2BE2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				CE7E804E2D7A368300A5558A /* PreviewUIView.swift in Sources */,
 				CE25A6042D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
+				65F1407F2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */,
 				45A33258298976BA008181E9 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				459874B82A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				455897E92A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
@@ -18025,6 +18328,7 @@
 				65CD19122D9469EA00CA23E0 /* PreviewChatTableViewCell.swift in Sources */,
 				65CD19132D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
 				CE42545B2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				65F140A12E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
 				CE42545C2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				65CD19142D9469EA00CA23E0 /* SelectFriendCellViewModel.swift in Sources */,
 				65CD19152D9469EA00CA23E0 /* FriendsListViewController.swift in Sources */,
@@ -18036,6 +18340,7 @@
 				65CD191B2D9469EA00CA23E0 /* EditGroupAddFriendViewModel.swift in Sources */,
 				65CD191C2D9469EA00CA23E0 /* AddFriendViewModel.swift in Sources */,
 				65CD191D2D9469EA00CA23E0 /* SelectFriendTableViewCell.swift in Sources */,
+				65F140ED2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */,
 				65CD191E2D9469EA00CA23E0 /* ResultsHeaderFooterView.swift in Sources */,
 				65CD191F2D9469EA00CA23E0 /* AIAssistantUITableViewCell.swift in Sources */,
 				65CD19202D9469EA00CA23E0 /* ConversationBetSelectionViewController.swift in Sources */,
@@ -18107,6 +18412,7 @@
 				45A33273298976BA008181E9 /* LogViewerViewController.swift in Sources */,
 				A9527C142A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
 				CEEDD2512DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */,
+				651418F02E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */,
 				45970A002C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				45A33274298976BA008181E9 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE82C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -18114,6 +18420,7 @@
 				A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				45A33276298976BA008181E9 /* MyTicketsRootViewController.swift in Sources */,
 				45A33277298976BA008181E9 /* Throwable.swift in Sources */,
+				65F140742E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */,
 				45A33279298976BA008181E9 /* NotificationsViewController.swift in Sources */,
 				45A3327B298976BA008181E9 /* UserProfileTipsViewModel.swift in Sources */,
 				CEDB59752D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
@@ -18147,6 +18454,7 @@
 				658E2CC72E0027A800FD4940 /* FilterModels.swift in Sources */,
 				A93FE22A2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				A9527C242A990E60006F4E37 /* MyCompetitionsRootViewModel.swift in Sources */,
+				651418E72E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				653A384D2D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */,
 				45A33295298976BA008181E9 /* RecentSearchHeaderView.swift in Sources */,
 				45ECD7772A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
@@ -18251,6 +18559,7 @@
 				CEB739F72D767AED009C4E0F /* LiveEventsViewController.swift in Sources */,
 				45F6BB0F2AB3732C00C81DE1 /* BettingNotificationsViewController.swift in Sources */,
 				653A38362D53921600B89CDF /* BettingPracticesQuestionnaireViewModel.swift in Sources */,
+				65F1408D2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */,
 				6561B61A2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				45F6BB102AB3732C00C81DE1 /* SubjectType.swift in Sources */,
 				CED5D9982D94515F00429306 /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -18283,6 +18592,7 @@
 				45F6BB2B2AB3732C00C81DE1 /* BonusEmptyView.swift in Sources */,
 				45F6BB2C2AB3732C00C81DE1 /* SocialAppItemCollectionViewCell.swift in Sources */,
 				45F6BB2D2AB3732C00C81DE1 /* Constants.swift in Sources */,
+				6514190D2E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */,
 				45F6BB2F2AB3732C00C81DE1 /* DocumentPickerView.swift in Sources */,
 				CE5B54FA2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B54FB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
@@ -18299,7 +18609,11 @@
 				CE5B55062D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE7BCEC32DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */,
 				CE5B55072D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F140D82E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
+				65F140D92E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */,
+				65F140DA2E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */,
 				CE5B55082D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				65F140F52E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */,
 				CE5B55092D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B550A2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CE5B550B2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -18362,6 +18676,7 @@
 				45F253092C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45F6BB5D2AB3732C00C81DE1 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45F6BB5E2AB3732C00C81DE1 /* RankingTypeTableHeaderView.swift in Sources */,
+				65F140822E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */,
 				45F6BB5F2AB3732C00C81DE1 /* CollapsibleGroupView.swift in Sources */,
 				45F6BB612AB3732C00C81DE1 /* UIImageView+Extensions.swift in Sources */,
 				45F6BB622AB3732C00C81DE1 /* EnabledAccessViewController.swift in Sources */,
@@ -18412,6 +18727,7 @@
 				45F6BB992AB3732C00C81DE1 /* PasswordUpdateViewModel.swift in Sources */,
 				45F6BB9B2AB3732C00C81DE1 /* NetworkManager.swift in Sources */,
 				CEB73A102D7687E5009C4E0F /* InnerScrollDragDirection.swift in Sources */,
+				651418FE2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */,
 				45F6BB9D2AB3732C00C81DE1 /* Array+Extensions.swift in Sources */,
 				45F6BB9E2AB3732C00C81DE1 /* MatchDetailsViewModel.swift in Sources */,
 				45F6BB9F2AB3732C00C81DE1 /* FilterHistoryViewController.swift in Sources */,
@@ -18462,6 +18778,7 @@
 				45F6BBD32AB3732C00C81DE1 /* MultiSliderExtensions.swift in Sources */,
 				45F6BBD52AB3732C00C81DE1 /* CATransform3D+Shift.swift in Sources */,
 				45F6BBD62AB3732C00C81DE1 /* TipsListViewModel.swift in Sources */,
+				651418DF2E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */,
 				45F6BBD72AB3732C00C81DE1 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				45F6BBD82AB3732C00C81DE1 /* SharedBetTicket.swift in Sources */,
 				459EF2712BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift in Sources */,
@@ -18481,6 +18798,7 @@
 				45F6BBE82AB3732C00C81DE1 /* GradientBorderView.swift in Sources */,
 				45F6BBE92AB3732C00C81DE1 /* GenericErrorViewController.swift in Sources */,
 				45F6BBEB2AB3732C00C81DE1 /* TipsSliderViewModel.swift in Sources */,
+				65F140E32E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */,
 				45F6BBEC2AB3732C00C81DE1 /* StoriesFullScreenItemView.swift in Sources */,
 				65EFF2F72D80672C00F1FC57 /* PromotionsViewController.swift in Sources */,
 				45F6BBED2AB3732C00C81DE1 /* EmailVerificationCodeViewController.swift in Sources */,
@@ -18647,6 +18965,9 @@
 				45F6BC4E2AB3732C00C81DE1 /* CurrencyHelper.swift in Sources */,
 				45F6BC4F2AB3732C00C81DE1 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				45F6BC512AB3732C00C81DE1 /* AppearanceMode.swift in Sources */,
+				65F140AA2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */,
+				65F140AB2E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */,
+				65F140AC2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */,
 				45F6BC522AB3732C00C81DE1 /* BetType.swift in Sources */,
 				45F6BC532AB3732C00C81DE1 /* UserActionView.swift in Sources */,
 				CEEDD2622DAE74600048A5B0 /* ThemeColors.swift in Sources */,
@@ -18802,11 +19123,13 @@
 				45F6BCE92AB3732C00C81DE1 /* StaticHomeViewTemplateDataSource.swift in Sources */,
 				45F6BCEA2AB3732C00C81DE1 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				653A379A2D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
+				651419042E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */,
 				45F6BCEB2AB3732C00C81DE1 /* BusinessModules.swift in Sources */,
 				45F6BCED2AB3732C00C81DE1 /* NSObject+Extension.swift in Sources */,
 				65392E6C2D889BAA0066FBE2 /* PromotionLineTableViewCell.swift in Sources */,
 				45F6BCEE2AB3732C00C81DE1 /* Logger.swift in Sources */,
 				45F6BCEF2AB3732C00C81DE1 /* NavControllerTransitionCoordinator.swift in Sources */,
+				65F1409B2E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */,
 				45F6BCF02AB3732C00C81DE1 /* GamesNotificationViewModel.swift in Sources */,
 				45F6BCF22AB3732C00C81DE1 /* ShiftViewOptions.swift in Sources */,
 				45F6BCF32AB3732C00C81DE1 /* ServiceProviderModelMapper.swift in Sources */,
@@ -18846,6 +19169,7 @@
 				45F6BD0D2AB3732C00C81DE1 /* UserConsentType.swift in Sources */,
 				CE7E804B2D7A368300A5558A /* PreviewUIView.swift in Sources */,
 				CE25A6032D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
+				65F1407B2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */,
 				45F6BD0F2AB3732C00C81DE1 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				45F6BD102AB3732C00C81DE1 /* CardsCollectionViewLayout.swift in Sources */,
 				45F6BD112AB3732C00C81DE1 /* RePlayFeatureHelper.swift in Sources */,
@@ -18881,6 +19205,7 @@
 				65CD19572D9469EA00CA23E0 /* PreviewChatTableViewCell.swift in Sources */,
 				65CD19582D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
 				CE4254532DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
+				65F140A02E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
 				CE4254542DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				65CD19592D9469EA00CA23E0 /* SelectFriendCellViewModel.swift in Sources */,
 				65CD195A2D9469EA00CA23E0 /* FriendsListViewController.swift in Sources */,
@@ -18892,6 +19217,7 @@
 				65CD19602D9469EA00CA23E0 /* EditGroupAddFriendViewModel.swift in Sources */,
 				65CD19612D9469EA00CA23E0 /* AddFriendViewModel.swift in Sources */,
 				65CD19622D9469EA00CA23E0 /* SelectFriendTableViewCell.swift in Sources */,
+				65F140EB2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */,
 				65CD19632D9469EA00CA23E0 /* ResultsHeaderFooterView.swift in Sources */,
 				65CD19642D9469EA00CA23E0 /* AIAssistantUITableViewCell.swift in Sources */,
 				65CD19652D9469EA00CA23E0 /* ConversationBetSelectionViewController.swift in Sources */,
@@ -18963,6 +19289,7 @@
 				45F6BD302AB3732C00C81DE1 /* LogViewerViewController.swift in Sources */,
 				45F6BD312AB3732C00C81DE1 /* MyCompetitionsRootViewController.swift in Sources */,
 				CEEDD2522DAE64DF0048A5B0 /* ColorExtension+Loader.swift in Sources */,
+				651418F32E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */,
 				45970A012C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				45F6BD322AB3732C00C81DE1 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE92C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -18970,6 +19297,7 @@
 				45F6BD342AB3732C00C81DE1 /* BonusTypeMapper.swift in Sources */,
 				45F6BD352AB3732C00C81DE1 /* MyTicketsRootViewController.swift in Sources */,
 				45F6BD362AB3732C00C81DE1 /* Throwable.swift in Sources */,
+				65F140762E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */,
 				45F6BD372AB3732C00C81DE1 /* NotificationsViewController.swift in Sources */,
 				45F6BD392AB3732C00C81DE1 /* UserProfileTipsViewModel.swift in Sources */,
 				CEDB59772D814F8F00D0C0C3 /* VerticalMatchInfoView.swift in Sources */,
@@ -19003,6 +19331,7 @@
 				658E2CCB2E0027A800FD4940 /* FilterModels.swift in Sources */,
 				45F6BD552AB3732C00C81DE1 /* CashbackInfoView.swift in Sources */,
 				45F6BD572AB3732C00C81DE1 /* MyCompetitionsRootViewModel.swift in Sources */,
+				651418ED2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				653A384C2D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */,
 				45F6BD582AB3732C00C81DE1 /* RecentSearchHeaderView.swift in Sources */,
 				45F6BD592AB3732C00C81DE1 /* TopCompetitionDetailsViewModel.swift in Sources */,
@@ -19095,6 +19424,7 @@
 				CE12A15D2D31347E0022BDF7 /* GenericAvatarSuccessViewController.swift in Sources */,
 				CE12A15E2D31347E0022BDF7 /* Bundle+Extensions.swift in Sources */,
 				CE12A15F2D31347E0022BDF7 /* SportStatisticView.swift in Sources */,
+				65F1409A2E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */,
 				CE12A1602D31347E0022BDF7 /* FullRegisterDocumentsViewController.swift in Sources */,
 				CE12A1612D31347E0022BDF7 /* ChatTicketSelectionView.swift in Sources */,
 				CE12A1622D31347E0022BDF7 /* VideoPreviewCollectionViewCell.swift in Sources */,
@@ -19129,6 +19459,9 @@
 				CE12A17A2D31347E0022BDF7 /* ListTypeIconCollectionViewCell.swift in Sources */,
 				CE12A17B2D31347E0022BDF7 /* PillLabelView.swift in Sources */,
 				CE12A17C2D31347E0022BDF7 /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
+				65F140B62E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */,
+				65F140B72E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */,
+				65F140B82E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */,
 				CE12A17D2D31347E0022BDF7 /* AuthToken.swift in Sources */,
 				CE12A17F2D31347E0022BDF7 /* MultiSlider+Drag.swift in Sources */,
 				CE12A1802D31347E0022BDF7 /* OddsViewModel.swift in Sources */,
@@ -19159,6 +19492,9 @@
 				CE5B558E2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				CE5B558F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B55902D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65F140CC2E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
+				65F140CD2E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */,
+				65F140CE2E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */,
 				CE5B55912D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CE5B55922D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B55932D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
@@ -19174,6 +19510,7 @@
 				CE5B559C2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B559D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B559E2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65F140A22E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
 				CE5B559F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B55A02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B55A12D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
@@ -19215,6 +19552,7 @@
 				CE12A1B62D31347E0022BDF7 /* Date+Extension.swift in Sources */,
 				CE12A1B72D31347E0022BDF7 /* LiveDetailsViewController.swift in Sources */,
 				CEC428212DF1ADB20077A12F /* DummyViewController.swift in Sources */,
+				65F1407A2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */,
 				CE12A1B82D31347E0022BDF7 /* GomaGamingServiceClient.swift in Sources */,
 				CE12A1B92D31347E0022BDF7 /* FeaturedTipLineTableViewCell.swift in Sources */,
 				CE12A1BA2D31347E0022BDF7 /* ContainerViewController.swift in Sources */,
@@ -19250,6 +19588,7 @@
 				CE12A1DA2D31347E0022BDF7 /* GomaGamingService.swift in Sources */,
 				CE12A1DC2D31347E0022BDF7 /* AppDelegate.swift in Sources */,
 				CE12A1DE2D31347E0022BDF7 /* UIImage+Extensions.swift in Sources */,
+				65F140EF2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */,
 				CE12A1DF2D31347E0022BDF7 /* MultipleBettingTicketDataSource.swift in Sources */,
 				CE12A1E22D31347E0022BDF7 /* MyGamesRootViewController.swift in Sources */,
 				CE12A1E32D31347E0022BDF7 /* PreSubmissionBetslipViewModel.swift in Sources */,
@@ -19260,6 +19599,7 @@
 				CE12A1EB2D31347E0022BDF7 /* TipsSliderViewController.swift in Sources */,
 				CE12A1EC2D31347E0022BDF7 /* UILabel+Extensions.swift in Sources */,
 				CE12A1ED2D31347E0022BDF7 /* WelcomeViewController.swift in Sources */,
+				651419132E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */,
 				653A387E2D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				CE12A1EE2D31347E0022BDF7 /* CGPoint+Shift.swift in Sources */,
 				CE12A1EF2D31347E0022BDF7 /* UserSettings.swift in Sources */,
@@ -19269,6 +19609,7 @@
 				CE12A1F22D31347E0022BDF7 /* UserRegisterForm.swift in Sources */,
 				CE12A1F42D31347E0022BDF7 /* FunctionalUtils.swift in Sources */,
 				CE12A1F82D31347E0022BDF7 /* MarketGroupDetailsStore.swift in Sources */,
+				65F140892E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */,
 				CE12A1F92D31347E0022BDF7 /* StyleHelpers.swift in Sources */,
 				CE12A1FA2D31347E0022BDF7 /* PictureInPictureView.swift in Sources */,
 				CE12A1FB2D31347E0022BDF7 /* AlertType.swift in Sources */,
@@ -19323,6 +19664,7 @@
 				CE12A2312D31347E0022BDF7 /* SelfExclusionViewController.swift in Sources */,
 				CE12A2322D31347E0022BDF7 /* CompetitionFilterTableViewCell.swift in Sources */,
 				CE12A2342D31347E0022BDF7 /* EmailVerificationViewController.swift in Sources */,
+				65F140E92E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */,
 				65CD16292D94629D00CA23E0 /* SocialModels.swift in Sources */,
 				CE12A2352D31347E0022BDF7 /* SuggestedBetTableViewCell.swift in Sources */,
 				CE12A2362D31347E0022BDF7 /* Optional+Extensions.swift in Sources */,
@@ -19426,6 +19768,7 @@
 				CE12A2922D31347E0022BDF7 /* DocumentStateView.swift in Sources */,
 				CE12A2932D31347E0022BDF7 /* AutoLayoutDSL.swift in Sources */,
 				CE12A2942D31347E0022BDF7 /* UIColor+Extensions.swift in Sources */,
+				65F140932E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */,
 				CE12A2952D31347E0022BDF7 /* FadingView.swift in Sources */,
 				CE12A2962D31347E0022BDF7 /* MyCompetitionsViewController.swift in Sources */,
 				CE12A2992D31347E0022BDF7 /* DepositViewController.swift in Sources */,
@@ -19454,6 +19797,7 @@
 				CEAB0B1E2D77588D00541098 /* ProChoiceHighlightTableViewCell.swift in Sources */,
 				CEAB0B1F2D77588D00541098 /* MatchWidgetCellViewModel.swift in Sources */,
 				CEAB0B202D77588D00541098 /* MatchWidgetContainerTableViewCell.swift in Sources */,
+				651418EC2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				CEAB0B212D77588D00541098 /* ListTypeCollectionViewCell.swift in Sources */,
 				CEAB0B222D77588D00541098 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				CEAB0B232D77588D00541098 /* TopCompetitionsDataSource.swift in Sources */,
@@ -19479,6 +19823,7 @@
 				CEAB0B382D77588D00541098 /* TitleTableViewHeader.swift in Sources */,
 				CEAB0B392D77588D00541098 /* OddDoubleCollectionViewCell.swift in Sources */,
 				CEAB0B3A2D77588D00541098 /* MatchLineTableViewCell.swift in Sources */,
+				65F140772E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */,
 				CE794C292D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CE794C2A2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE794C2B2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
@@ -19495,6 +19840,7 @@
 				CE12A2AD2D31347E0022BDF7 /* BonusAvailableDataSource.swift in Sources */,
 				CE12A2AE2D31347E0022BDF7 /* LoginViewController.swift in Sources */,
 				CE9A37BE2D824750006B6176 /* ServiceProviderModelMapper+Banner.swift in Sources */,
+				651419082E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */,
 				65CD19982D946D0000CA23E0 /* ChatBubbleView.swift in Sources */,
 				CE12A2B02D31347E0022BDF7 /* HomeViewModel.swift in Sources */,
 				CE12A2B22D31347E0022BDF7 /* MatchStatsCollectionViewCell.swift in Sources */,
@@ -19542,6 +19888,7 @@
 				65CD19A12D946F0300CA23E0 /* ActionSearchTextFieldView.swift in Sources */,
 				CE12A2DD2D31347E0022BDF7 /* KeychainInterface.swift in Sources */,
 				65EFF34C2D82F8DF00F1FC57 /* VideoSectionView.swift in Sources */,
+				651418E52E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */,
 				CE12A2DE2D31347E0022BDF7 /* TipInfoView.swift in Sources */,
 				CE12A2DF2D31347E0022BDF7 /* UserDefaults.swift in Sources */,
 				CE12A2E02D31347E0022BDF7 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
@@ -19638,6 +19985,7 @@
 				CE12A3442D31347E0022BDF7 /* SearchTextField.swift in Sources */,
 				CE12A3452D31347E0022BDF7 /* FeaturedTipCollectionViewCell.swift in Sources */,
 				CE12A3462D31347E0022BDF7 /* CashbackBalanceView.swift in Sources */,
+				651418FA2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */,
 				CE12A3472D31347E0022BDF7 /* BettingHistoryViewModel.swift in Sources */,
 				CE12A3482D31347E0022BDF7 /* RefusedAccessViewController.swift in Sources */,
 				CE12A3492D31347E0022BDF7 /* CustomPageControl.swift in Sources */,
@@ -19745,6 +20093,7 @@
 				65CD18422D9469EA00CA23E0 /* AddFriendViewController.swift in Sources */,
 				65CD18432D9469EA00CA23E0 /* PreviewChatTableViewCell.swift in Sources */,
 				65CD18442D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
+				651418F62E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */,
 				65CD18452D9469EA00CA23E0 /* SelectFriendCellViewModel.swift in Sources */,
 				65CD18462D9469EA00CA23E0 /* FriendsListViewController.swift in Sources */,
 				65CD18472D9469EA00CA23E0 /* SocialViewController.swift in Sources */,
@@ -19808,6 +20157,7 @@
 				CE63A85B2DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */,
 				CE12A39E2D31347E0022BDF7 /* GenericSuccessViewController.swift in Sources */,
 				CE12A39F2D31347E0022BDF7 /* QuickBetViewController.swift in Sources */,
+				65F140FA2E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */,
 				CE12A3A02D31347E0022BDF7 /* EmptyReferralView.swift in Sources */,
 				CE12A3A12D31347E0022BDF7 /* MakeYourBetTableViewCell.swift in Sources */,
 				CE12A3A32D31347E0022BDF7 /* CompetitionDetailsViewModel.swift in Sources */,
@@ -19972,6 +20322,7 @@
 				CE8F23342DD371350071238E /* LiveEventsViewController.swift in Sources */,
 				CE8F23352DD371350071238E /* BettingNotificationsViewController.swift in Sources */,
 				CE8F23362DD371350071238E /* BettingPracticesQuestionnaireViewModel.swift in Sources */,
+				65F1408E2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */,
 				CE8F23372DD371350071238E /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				CE8F23382DD371350071238E /* SubjectType.swift in Sources */,
 				CE8F23392DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -20004,6 +20355,7 @@
 				CE8F23562DD371350071238E /* BonusEmptyView.swift in Sources */,
 				CE8F23572DD371350071238E /* SocialAppItemCollectionViewCell.swift in Sources */,
 				CE8F23582DD371350071238E /* Constants.swift in Sources */,
+				651419102E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */,
 				CE8F23592DD371350071238E /* DocumentPickerView.swift in Sources */,
 				CE8F235A2DD371350071238E /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE8F235B2DD371350071238E /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
@@ -20020,7 +20372,11 @@
 				CE8F23662DD371350071238E /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE7BCEC52DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */,
 				CE8F23672DD371350071238E /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F140D52E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
+				65F140D62E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */,
+				65F140D72E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */,
 				CE8F23682DD371350071238E /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				65F140F92E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */,
 				CE8F23692DD371350071238E /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE8F236A2DD371350071238E /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CE8F236B2DD371350071238E /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -20083,6 +20439,7 @@
 				CE8F23A62DD371350071238E /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				CE8F23A72DD371350071238E /* RankingTypeTableHeaderView.swift in Sources */,
 				CE8F23A82DD371350071238E /* CollapsibleGroupView.swift in Sources */,
+				65F140862E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */,
 				CE8F23AA2DD371350071238E /* UIImageView+Extensions.swift in Sources */,
 				CE8F23AB2DD371350071238E /* EnabledAccessViewController.swift in Sources */,
 				CE8F23AC2DD371350071238E /* UserProfileViewController.swift in Sources */,
@@ -20133,6 +20490,7 @@
 				CE8F23DF2DD371350071238E /* InnerScrollDragDirection.swift in Sources */,
 				CE8F23E12DD371350071238E /* Array+Extensions.swift in Sources */,
 				CE8F23E22DD371350071238E /* MatchDetailsViewModel.swift in Sources */,
+				651418FB2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */,
 				CE8F23E32DD371350071238E /* FilterHistoryViewController.swift in Sources */,
 				CE8F23E42DD371350071238E /* MyGamesViewController.swift in Sources */,
 				CE8F23E52DD371350071238E /* BettingTicket.swift in Sources */,
@@ -20183,6 +20541,7 @@
 				CE8F24152DD371350071238E /* TipsListViewModel.swift in Sources */,
 				CE8F24162DD371350071238E /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				CE8F24172DD371350071238E /* ServiceProviderModelMapper+Scores.swift in Sources */,
+				651418E02E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */,
 				CE8F24182DD371350071238E /* SharedBetTicket.swift in Sources */,
 				CE8F24192DD371350071238E /* FloatingShortcutsView.swift in Sources */,
 				CE8F241A2DD371350071238E /* PaymentsDropIn.swift in Sources */,
@@ -20202,6 +20561,7 @@
 				CE8F24292DD371350071238E /* TipsSliderViewModel.swift in Sources */,
 				CE8F242A2DD371350071238E /* PromotionsViewController.swift in Sources */,
 				CE8F242B2DD371350071238E /* StoriesFullScreenItemView.swift in Sources */,
+				65F140E52E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */,
 				CE8F242C2DD371350071238E /* EmailVerificationCodeViewController.swift in Sources */,
 				CE8F242D2DD371350071238E /* GamesNotificationViewController.swift in Sources */,
 				CE8F242E2DD371350071238E /* MarketGroupDetailsViewModel.swift in Sources */,
@@ -20368,6 +20728,9 @@
 				CE8F24CD2DD371350071238E /* FeaturedTipDetailsViewModel.swift in Sources */,
 				CE8F24CE2DD371350071238E /* AppearanceMode.swift in Sources */,
 				CE8F24CF2DD371350071238E /* BetType.swift in Sources */,
+				65F140BC2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */,
+				65F140BD2E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */,
+				65F140BE2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */,
 				CE8F24D02DD371350071238E /* UserActionView.swift in Sources */,
 				CE8F24D12DD371350071238E /* RegisterSuccessViewController.swift in Sources */,
 				CE8F24D42DD371350071238E /* LoadingSpinnerViewController.swift in Sources */,
@@ -20523,11 +20886,13 @@
 				CE8F256B2DD371350071238E /* QuestionFormStepView.swift in Sources */,
 				CE8F256C2DD371350071238E /* NSObject+Extension.swift in Sources */,
 				CE8F256D2DD371350071238E /* Logger.swift in Sources */,
+				651419092E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */,
 				CE8F256E2DD371350071238E /* PromotionLineTableViewCell.swift in Sources */,
 				CE8F256F2DD371350071238E /* NavControllerTransitionCoordinator.swift in Sources */,
 				CE8F25702DD371350071238E /* GamesNotificationViewModel.swift in Sources */,
 				CE8F25712DD371350071238E /* ShiftViewOptions.swift in Sources */,
 				CE8F25722DD371350071238E /* ServiceProviderModelMapper.swift in Sources */,
+				65F140972E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */,
 				CE8F25732DD371350071238E /* OddOutcomesSortingHelper.swift in Sources */,
 				CE8F25742DD371350071238E /* SearchTitleSectionHeaderView.swift in Sources */,
 				CE8F25752DD371350071238E /* EmptyCardTableViewCell.swift in Sources */,
@@ -20567,6 +20932,7 @@
 				CE8F259A2DD371350071238E /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CE8F259B2DD371350071238E /* CardsCollectionViewLayout.swift in Sources */,
 				CE8F259C2DD371350071238E /* RePlayFeatureHelper.swift in Sources */,
+				65F1407C2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */,
 				CE8F259D2DD371350071238E /* BetBuilder.swift in Sources */,
 				CE8F259E2DD371350071238E /* Referrals.swift in Sources */,
 				CE8F259F2DD371350071238E /* BonusActiveCellViewModel.swift in Sources */,
@@ -20602,6 +20968,7 @@
 				CE42545A2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				CE8F25B92DD371350071238E /* SelectFriendCellViewModel.swift in Sources */,
 				CE8F25BA2DD371350071238E /* FriendsListViewController.swift in Sources */,
+				65F140A32E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
 				CE8F25BB2DD371350071238E /* SocialViewController.swift in Sources */,
 				CE8F25BC2DD371350071238E /* ConversationsViewModel.swift in Sources */,
 				CE8F25BD2DD371350071238E /* ReceivedMessageTableViewCell.swift in Sources */,
@@ -20613,6 +20980,7 @@
 				CE8F25C32DD371350071238E /* ResultsHeaderFooterView.swift in Sources */,
 				CE8F25C42DD371350071238E /* AIAssistantUITableViewCell.swift in Sources */,
 				CE8F25C52DD371350071238E /* ConversationBetSelectionViewController.swift in Sources */,
+				65F140F02E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */,
 				CE8F25C62DD371350071238E /* GroupFriendManagementTableViewCell.swift in Sources */,
 				CE8F25C72DD371350071238E /* UserNotificationTableViewCell.swift in Sources */,
 				CE8F25C82DD371350071238E /* NewGroupViewModel.swift in Sources */,
@@ -20684,6 +21052,7 @@
 				CE8F26052DD371350071238E /* PromotedBetslip.swift in Sources */,
 				CE8F26062DD371350071238E /* TransactionsHistoryRootViewController.swift in Sources */,
 				CE8F26072DD371350071238E /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
+				651418F42E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */,
 				CE8F26082DD371350071238E /* FavoritesManager.swift in Sources */,
 				CE8F26092DD371350071238E /* BonusTypeMapper.swift in Sources */,
 				CE8F260A2DD371350071238E /* MyTicketsRootViewController.swift in Sources */,
@@ -20691,6 +21060,7 @@
 				CE8F260C2DD371350071238E /* NotificationsViewController.swift in Sources */,
 				CE8F260D2DD371350071238E /* UserProfileTipsViewModel.swift in Sources */,
 				CE8F260E2DD371350071238E /* VerticalMatchInfoView.swift in Sources */,
+				65F140722E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */,
 				CE8F260F2DD371350071238E /* LiveDetailsViewModel.swift in Sources */,
 				CE8F26102DD371350071238E /* TitleTabularDataSource.swift in Sources */,
 				CE8F26112DD371350071238E /* MessageDetailWebViewController.swift in Sources */,
@@ -20724,6 +21094,7 @@
 				658E2CCA2E0027A800FD4940 /* FilterModels.swift in Sources */,
 				CE8F262E2DD371350071238E /* RecentSearchHeaderView.swift in Sources */,
 				CE8F262F2DD371350071238E /* TopCompetitionDetailsViewModel.swift in Sources */,
+				651418EE2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				CE8F26302DD371350071238E /* GradientView.swift in Sources */,
 				CE8F26312DD371350071238E /* StoriesFullScreenViewController.swift in Sources */,
 				CE8F26322DD371350071238E /* SharedGameCardView.swift in Sources */,
@@ -20828,6 +21199,7 @@
 				CEB3A0A12DD379800024043B /* LiveEventsViewController.swift in Sources */,
 				CEB3A0A22DD379800024043B /* BettingNotificationsViewController.swift in Sources */,
 				CEB3A0A32DD379800024043B /* BettingPracticesQuestionnaireViewModel.swift in Sources */,
+				65F140922E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */,
 				CEB3A0A42DD379800024043B /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				CEB3A0A52DD379800024043B /* SubjectType.swift in Sources */,
 				CEB3A0A62DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -20860,6 +21232,7 @@
 				CEB3A0C32DD379800024043B /* BonusEmptyView.swift in Sources */,
 				CEB3A0C42DD379800024043B /* SocialAppItemCollectionViewCell.swift in Sources */,
 				CEB3A0C52DD379800024043B /* Constants.swift in Sources */,
+				6514190C2E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */,
 				CEB3A0C62DD379800024043B /* DocumentPickerView.swift in Sources */,
 				CEB3A0C72DD379800024043B /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A0C82DD379800024043B /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
@@ -20876,7 +21249,11 @@
 				CEB3A0D32DD379800024043B /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE7BCEC42DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */,
 				CEB3A0D42DD379800024043B /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F140DB2E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
+				65F140DC2E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */,
+				65F140DD2E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */,
 				CEB3A0D52DD379800024043B /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				65F140F42E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */,
 				CEB3A0D62DD379800024043B /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A0D72DD379800024043B /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEB3A0D82DD379800024043B /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -20939,6 +21316,7 @@
 				CEB3A1132DD379800024043B /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				CEB3A1142DD379800024043B /* RankingTypeTableHeaderView.swift in Sources */,
 				CEB3A1152DD379800024043B /* CollapsibleGroupView.swift in Sources */,
+				65F140842E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */,
 				CEB3A1172DD379800024043B /* UIImageView+Extensions.swift in Sources */,
 				CEB3A1182DD379800024043B /* EnabledAccessViewController.swift in Sources */,
 				CEB3A1192DD379800024043B /* UserProfileViewController.swift in Sources */,
@@ -20989,6 +21367,7 @@
 				CEB3A14C2DD379800024043B /* InnerScrollDragDirection.swift in Sources */,
 				CEB3A14E2DD379800024043B /* Array+Extensions.swift in Sources */,
 				CEB3A14F2DD379800024043B /* MatchDetailsViewModel.swift in Sources */,
+				651419002E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */,
 				CEB3A1502DD379800024043B /* FilterHistoryViewController.swift in Sources */,
 				CEB3A1512DD379800024043B /* MyGamesViewController.swift in Sources */,
 				CEB3A1522DD379800024043B /* BettingTicket.swift in Sources */,
@@ -21039,6 +21418,7 @@
 				CEB3A1822DD379800024043B /* TipsListViewModel.swift in Sources */,
 				CEB3A1832DD379800024043B /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				CEB3A1842DD379800024043B /* ServiceProviderModelMapper+Scores.swift in Sources */,
+				651418E32E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */,
 				CEB3A1852DD379800024043B /* SharedBetTicket.swift in Sources */,
 				CEB3A1862DD379800024043B /* FloatingShortcutsView.swift in Sources */,
 				CEB3A1872DD379800024043B /* PaymentsDropIn.swift in Sources */,
@@ -21058,6 +21438,7 @@
 				CEB3A1962DD379800024043B /* TipsSliderViewModel.swift in Sources */,
 				CEB3A1972DD379800024043B /* PromotionsViewController.swift in Sources */,
 				CEB3A1982DD379800024043B /* StoriesFullScreenItemView.swift in Sources */,
+				65F140E42E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */,
 				CEB3A1992DD379800024043B /* EmailVerificationCodeViewController.swift in Sources */,
 				CEB3A19A2DD379800024043B /* GamesNotificationViewController.swift in Sources */,
 				CEB3A19B2DD379800024043B /* MarketGroupDetailsViewModel.swift in Sources */,
@@ -21224,6 +21605,9 @@
 				CEB3A23E2DD379800024043B /* FeaturedTipDetailsViewModel.swift in Sources */,
 				CEB3A23F2DD379800024043B /* AppearanceMode.swift in Sources */,
 				CEB3A2402DD379800024043B /* BetType.swift in Sources */,
+				65F140B32E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */,
+				65F140B42E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */,
+				65F140B52E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */,
 				CEB3A2412DD379800024043B /* UserActionView.swift in Sources */,
 				CEB3A2422DD379800024043B /* RegisterSuccessViewController.swift in Sources */,
 				CEB3A2452DD379800024043B /* LoadingSpinnerViewController.swift in Sources */,
@@ -21379,11 +21763,13 @@
 				CEB3A2DC2DD379800024043B /* QuestionFormStepView.swift in Sources */,
 				CEB3A2DD2DD379800024043B /* NSObject+Extension.swift in Sources */,
 				CEB3A2DE2DD379800024043B /* Logger.swift in Sources */,
+				651419052E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */,
 				CEB3A2DF2DD379800024043B /* PromotionLineTableViewCell.swift in Sources */,
 				CEB3A2E02DD379800024043B /* NavControllerTransitionCoordinator.swift in Sources */,
 				CEB3A2E12DD379800024043B /* GamesNotificationViewModel.swift in Sources */,
 				CEB3A2E22DD379800024043B /* ShiftViewOptions.swift in Sources */,
 				CEB3A2E32DD379800024043B /* ServiceProviderModelMapper.swift in Sources */,
+				65F140992E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */,
 				CEB3A2E42DD379800024043B /* OddOutcomesSortingHelper.swift in Sources */,
 				CEB3A2E52DD379800024043B /* SearchTitleSectionHeaderView.swift in Sources */,
 				CEB3A2E62DD379800024043B /* EmptyCardTableViewCell.swift in Sources */,
@@ -21423,6 +21809,7 @@
 				CEB3A30B2DD379800024043B /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CEB3A30C2DD379800024043B /* CardsCollectionViewLayout.swift in Sources */,
 				CEB3A30D2DD379800024043B /* RePlayFeatureHelper.swift in Sources */,
+				65F1407E2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */,
 				CEB3A30E2DD379800024043B /* BetBuilder.swift in Sources */,
 				CEB3A30F2DD379800024043B /* Referrals.swift in Sources */,
 				CEB3A3102DD379800024043B /* BonusActiveCellViewModel.swift in Sources */,
@@ -21458,6 +21845,7 @@
 				CE4254582DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				CEB3A32A2DD379800024043B /* SelectFriendCellViewModel.swift in Sources */,
 				CEB3A32B2DD379800024043B /* FriendsListViewController.swift in Sources */,
+				65F140A52E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
 				CEB3A32C2DD379800024043B /* SocialViewController.swift in Sources */,
 				CEB3A32D2DD379800024043B /* ConversationsViewModel.swift in Sources */,
 				CEB3A32E2DD379800024043B /* ReceivedMessageTableViewCell.swift in Sources */,
@@ -21469,6 +21857,7 @@
 				CEB3A3342DD379800024043B /* ResultsHeaderFooterView.swift in Sources */,
 				CEB3A3352DD379800024043B /* AIAssistantUITableViewCell.swift in Sources */,
 				CEB3A3362DD379800024043B /* ConversationBetSelectionViewController.swift in Sources */,
+				65F140F12E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */,
 				CEB3A3372DD379800024043B /* GroupFriendManagementTableViewCell.swift in Sources */,
 				CEB3A3382DD379800024043B /* UserNotificationTableViewCell.swift in Sources */,
 				CEB3A3392DD379800024043B /* NewGroupViewModel.swift in Sources */,
@@ -21540,6 +21929,7 @@
 				CEB3A3762DD379800024043B /* PromotedBetslip.swift in Sources */,
 				CEB3A3772DD379800024043B /* TransactionsHistoryRootViewController.swift in Sources */,
 				CEB3A3782DD379800024043B /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
+				651418F12E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */,
 				CEB3A3792DD379800024043B /* FavoritesManager.swift in Sources */,
 				CEB3A37A2DD379800024043B /* BonusTypeMapper.swift in Sources */,
 				CEB3A37B2DD379800024043B /* MyTicketsRootViewController.swift in Sources */,
@@ -21547,6 +21937,7 @@
 				CEB3A37D2DD379800024043B /* NotificationsViewController.swift in Sources */,
 				CEB3A37E2DD379800024043B /* UserProfileTipsViewModel.swift in Sources */,
 				CEB3A37F2DD379800024043B /* VerticalMatchInfoView.swift in Sources */,
+				65F140702E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */,
 				CEB3A3802DD379800024043B /* LiveDetailsViewModel.swift in Sources */,
 				CEB3A3812DD379800024043B /* TitleTabularDataSource.swift in Sources */,
 				CEB3A3822DD379800024043B /* MessageDetailWebViewController.swift in Sources */,
@@ -21580,6 +21971,7 @@
 				658E2CC82E0027A800FD4940 /* FilterModels.swift in Sources */,
 				CEB3A39F2DD379800024043B /* RecentSearchHeaderView.swift in Sources */,
 				CEB3A3A02DD379800024043B /* TopCompetitionDetailsViewModel.swift in Sources */,
+				651418E92E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				CEB3A3A12DD379800024043B /* GradientView.swift in Sources */,
 				CEB3A3A22DD379800024043B /* StoriesFullScreenViewController.swift in Sources */,
 				CEB3A3A32DD379800024043B /* SharedGameCardView.swift in Sources */,
@@ -21684,6 +22076,7 @@
 				CEB3A52A2DD379890024043B /* LiveEventsViewController.swift in Sources */,
 				CEB3A52B2DD379890024043B /* BettingNotificationsViewController.swift in Sources */,
 				CEB3A52C2DD379890024043B /* BettingPracticesQuestionnaireViewModel.swift in Sources */,
+				65F140912E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */,
 				CEB3A52D2DD379890024043B /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				CEB3A52E2DD379890024043B /* SubjectType.swift in Sources */,
 				CEB3A52F2DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -21716,6 +22109,7 @@
 				CEB3A54C2DD379890024043B /* BonusEmptyView.swift in Sources */,
 				CEB3A54D2DD379890024043B /* SocialAppItemCollectionViewCell.swift in Sources */,
 				CEB3A54E2DD379890024043B /* Constants.swift in Sources */,
+				6514190E2E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */,
 				CEB3A54F2DD379890024043B /* DocumentPickerView.swift in Sources */,
 				CEB3A5502DD379890024043B /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A5512DD379890024043B /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
@@ -21732,7 +22126,11 @@
 				CEB3A55C2DD379890024043B /* OutrightMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE7BCEC92DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */,
 				CEB3A55D2DD379890024043B /* BoostedMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F140D22E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
+				65F140D32E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */,
+				65F140D42E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */,
 				CEB3A55E2DD379890024043B /* BackgroundImageMatchWidgetCollectionViewCell.swift in Sources */,
+				65F140FB2E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */,
 				CEB3A55F2DD379890024043B /* TopImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A5602DD379890024043B /* OutrightMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEB3A5612DD379890024043B /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
@@ -21795,6 +22193,7 @@
 				CEB3A59C2DD379890024043B /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				CEB3A59D2DD379890024043B /* RankingTypeTableHeaderView.swift in Sources */,
 				CEB3A59E2DD379890024043B /* CollapsibleGroupView.swift in Sources */,
+				65F140832E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */,
 				CEB3A5A02DD379890024043B /* UIImageView+Extensions.swift in Sources */,
 				CEB3A5A12DD379890024043B /* EnabledAccessViewController.swift in Sources */,
 				CEB3A5A22DD379890024043B /* UserProfileViewController.swift in Sources */,
@@ -21845,6 +22244,7 @@
 				CEB3A5D52DD379890024043B /* InnerScrollDragDirection.swift in Sources */,
 				CEB3A5D72DD379890024043B /* Array+Extensions.swift in Sources */,
 				CEB3A5D82DD379890024043B /* MatchDetailsViewModel.swift in Sources */,
+				651418FD2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */,
 				CEB3A5D92DD379890024043B /* FilterHistoryViewController.swift in Sources */,
 				CEB3A5DA2DD379890024043B /* MyGamesViewController.swift in Sources */,
 				CEB3A5DB2DD379890024043B /* BettingTicket.swift in Sources */,
@@ -21895,6 +22295,7 @@
 				CEB3A60B2DD379890024043B /* TipsListViewModel.swift in Sources */,
 				CEB3A60C2DD379890024043B /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				CEB3A60D2DD379890024043B /* ServiceProviderModelMapper+Scores.swift in Sources */,
+				651418E12E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */,
 				CEB3A60E2DD379890024043B /* SharedBetTicket.swift in Sources */,
 				CEB3A60F2DD379890024043B /* FloatingShortcutsView.swift in Sources */,
 				CEB3A6102DD379890024043B /* PaymentsDropIn.swift in Sources */,
@@ -21914,6 +22315,7 @@
 				CEB3A61F2DD379890024043B /* TipsSliderViewModel.swift in Sources */,
 				CEB3A6202DD379890024043B /* PromotionsViewController.swift in Sources */,
 				CEB3A6212DD379890024043B /* StoriesFullScreenItemView.swift in Sources */,
+				65F140E62E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */,
 				CEB3A6222DD379890024043B /* EmailVerificationCodeViewController.swift in Sources */,
 				CEB3A6232DD379890024043B /* GamesNotificationViewController.swift in Sources */,
 				CEB3A6242DD379890024043B /* MarketGroupDetailsViewModel.swift in Sources */,
@@ -22080,6 +22482,9 @@
 				CEB3A6C72DD379890024043B /* FeaturedTipDetailsViewModel.swift in Sources */,
 				CEB3A6C82DD379890024043B /* AppearanceMode.swift in Sources */,
 				CEB3A6C92DD379890024043B /* BetType.swift in Sources */,
+				65F140B02E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */,
+				65F140B12E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */,
+				65F140B22E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */,
 				CEB3A6CA2DD379890024043B /* UserActionView.swift in Sources */,
 				CEB3A6CB2DD379890024043B /* RegisterSuccessViewController.swift in Sources */,
 				CEB3A6CE2DD379890024043B /* LoadingSpinnerViewController.swift in Sources */,
@@ -22235,11 +22640,13 @@
 				CEB3A7652DD379890024043B /* QuestionFormStepView.swift in Sources */,
 				CEB3A7662DD379890024043B /* NSObject+Extension.swift in Sources */,
 				CEB3A7672DD379890024043B /* Logger.swift in Sources */,
+				651419062E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */,
 				CEB3A7682DD379890024043B /* PromotionLineTableViewCell.swift in Sources */,
 				CEB3A7692DD379890024043B /* NavControllerTransitionCoordinator.swift in Sources */,
 				CEB3A76A2DD379890024043B /* GamesNotificationViewModel.swift in Sources */,
 				CEB3A76B2DD379890024043B /* ShiftViewOptions.swift in Sources */,
 				CEB3A76C2DD379890024043B /* ServiceProviderModelMapper.swift in Sources */,
+				65F140962E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */,
 				CEB3A76D2DD379890024043B /* OddOutcomesSortingHelper.swift in Sources */,
 				CEB3A76E2DD379890024043B /* SearchTitleSectionHeaderView.swift in Sources */,
 				CEB3A76F2DD379890024043B /* EmptyCardTableViewCell.swift in Sources */,
@@ -22279,6 +22686,7 @@
 				CEB3A7942DD379890024043B /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CEB3A7952DD379890024043B /* CardsCollectionViewLayout.swift in Sources */,
 				CEB3A7962DD379890024043B /* RePlayFeatureHelper.swift in Sources */,
+				65F1407D2E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */,
 				CEB3A7972DD379890024043B /* BetBuilder.swift in Sources */,
 				CEB3A7982DD379890024043B /* Referrals.swift in Sources */,
 				CEB3A7992DD379890024043B /* BonusActiveCellViewModel.swift in Sources */,
@@ -22314,6 +22722,7 @@
 				CE42545E2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
 				CEB3A7B32DD379890024043B /* SelectFriendCellViewModel.swift in Sources */,
 				CEB3A7B42DD379890024043B /* FriendsListViewController.swift in Sources */,
+				65F140A42E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
 				CEB3A7B52DD379890024043B /* SocialViewController.swift in Sources */,
 				CEB3A7B62DD379890024043B /* ConversationsViewModel.swift in Sources */,
 				CEB3A7B72DD379890024043B /* ReceivedMessageTableViewCell.swift in Sources */,
@@ -22325,6 +22734,7 @@
 				CEB3A7BD2DD379890024043B /* ResultsHeaderFooterView.swift in Sources */,
 				CEB3A7BE2DD379890024043B /* AIAssistantUITableViewCell.swift in Sources */,
 				CEB3A7BF2DD379890024043B /* ConversationBetSelectionViewController.swift in Sources */,
+				65F140EC2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */,
 				CEB3A7C02DD379890024043B /* GroupFriendManagementTableViewCell.swift in Sources */,
 				CEB3A7C12DD379890024043B /* UserNotificationTableViewCell.swift in Sources */,
 				CEB3A7C22DD379890024043B /* NewGroupViewModel.swift in Sources */,
@@ -22396,6 +22806,7 @@
 				CEB3A7FF2DD379890024043B /* PromotedBetslip.swift in Sources */,
 				CEB3A8002DD379890024043B /* TransactionsHistoryRootViewController.swift in Sources */,
 				CEB3A8012DD379890024043B /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
+				651418F72E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */,
 				CEB3A8022DD379890024043B /* FavoritesManager.swift in Sources */,
 				CEB3A8032DD379890024043B /* BonusTypeMapper.swift in Sources */,
 				CEB3A8042DD379890024043B /* MyTicketsRootViewController.swift in Sources */,
@@ -22403,6 +22814,7 @@
 				CEB3A8062DD379890024043B /* NotificationsViewController.swift in Sources */,
 				CEB3A8072DD379890024043B /* UserProfileTipsViewModel.swift in Sources */,
 				CEB3A8082DD379890024043B /* VerticalMatchInfoView.swift in Sources */,
+				65F140732E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */,
 				CEB3A8092DD379890024043B /* LiveDetailsViewModel.swift in Sources */,
 				CEB3A80A2DD379890024043B /* TitleTabularDataSource.swift in Sources */,
 				CEB3A80B2DD379890024043B /* MessageDetailWebViewController.swift in Sources */,
@@ -22436,6 +22848,7 @@
 				658E2CC92E0027A800FD4940 /* FilterModels.swift in Sources */,
 				CEB3A8282DD379890024043B /* RecentSearchHeaderView.swift in Sources */,
 				CEB3A8292DD379890024043B /* TopCompetitionDetailsViewModel.swift in Sources */,
+				651418E82E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				CEB3A82A2DD379890024043B /* GradientView.swift in Sources */,
 				CEB3A82B2DD379890024043B /* StoriesFullScreenViewController.swift in Sources */,
 				CEB3A82C2DD379890024043B /* SharedGameCardView.swift in Sources */,
@@ -22512,6 +22925,7 @@
 				CEF193A62DA834E900C81F12 /* ExtraDocsViewController.swift in Sources */,
 				CEB2361A2DAD09F900260B5B /* SocialModels.swift in Sources */,
 				CEF193A72DA834E900C81F12 /* PopUpPromotionView.swift in Sources */,
+				65F140F22E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift in Sources */,
 				CEF193A82DA834E900C81F12 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
 				CEF193A92DA834E900C81F12 /* CheckboxToggleView.swift in Sources */,
 				CEF193AA2DA834E900C81F12 /* HomeViewTemplateDatasource.swift in Sources */,
@@ -22547,8 +22961,10 @@
 				CEF193C92DA834E900C81F12 /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				CEF193CA2DA834E900C81F12 /* WithdrawSuccessViewController.swift in Sources */,
 				CEF193CB2DA834E900C81F12 /* HeaderTextFieldView.swift in Sources */,
+				651419032E0D9BAD00990504 /* MockPhoneVerificationViewModel.swift in Sources */,
 				CEF193CC2DA834E900C81F12 /* SocialItemCollectionViewCell.swift in Sources */,
 				CEF193CD2DA834E900C81F12 /* CasualGamblingViewController.swift in Sources */,
+				65F140882E0EB58C004BDE6B /* PhoneLoginViewController.swift in Sources */,
 				CEF193CE2DA834E900C81F12 /* ListTypeIconCollectionViewCell.swift in Sources */,
 				CEF193CF2DA834E900C81F12 /* PillLabelView.swift in Sources */,
 				CEF193D02DA834E900C81F12 /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
@@ -22572,6 +22988,7 @@
 				CEB9BB932DB659F800E8084B /* ImageSectionView.swift in Sources */,
 				CEB9BB942DB659F800E8084B /* VideoBlockView.swift in Sources */,
 				CEB9BB952DB659F800E8084B /* VideoSectionView.swift in Sources */,
+				651418FC2E0D9B9600990504 /* PhoneVerificationViewModelProtocol.swift in Sources */,
 				CEB9BB962DB659F800E8084B /* DescriptionBlockView.swift in Sources */,
 				CEB9BB972DB659F800E8084B /* ListBlockView.swift in Sources */,
 				CEB9BB982DB659F800E8084B /* TitleBlockView.swift in Sources */,
@@ -22611,6 +23028,7 @@
 				CEF193F22DA834E900C81F12 /* BackgroundImageMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEF193F32DA834E900C81F12 /* OutrightMatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEF193F42DA834E900C81F12 /* OutrightMatchWidgetCollectionViewCell.swift in Sources */,
+				651418EB2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				CEF193F52DA834E900C81F12 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CEF193F62DA834E900C81F12 /* BoostedMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEF193F72DA834E900C81F12 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
@@ -22724,6 +23142,7 @@
 				CEF194642DA834E900C81F12 /* BetslipViewController.swift in Sources */,
 				CEF194652DA834E900C81F12 /* AlertType.swift in Sources */,
 				CEF194662DA834E900C81F12 /* CodeVerificationViewController.swift in Sources */,
+				65F1408C2E0EF0C1004BDE6B /* PhonePasswordCodeResetViewModelProtocol.swift in Sources */,
 				CEF194672DA834E900C81F12 /* TipsViewModel.swift in Sources */,
 				CEF194682DA834E900C81F12 /* (null) in Sources */,
 				CEF194692DA834E900C81F12 /* PasswordUpdateViewModel.swift in Sources */,
@@ -22790,6 +23209,9 @@
 				CEF194A22DA834E900C81F12 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				CEF194A32DA834E900C81F12 /* MultiSliderExtensions.swift in Sources */,
 				CEF194A42DA834E900C81F12 /* CATransform3D+Shift.swift in Sources */,
+				65F140CF2E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
+				65F140D02E12DF49004BDE6B /* PhoneForgotPasswordViewModelProtocol.swift in Sources */,
+				65F140D12E12DF49004BDE6B /* PhoneForgotPasswordViewController.swift in Sources */,
 				CEF194A52DA834E900C81F12 /* TipsListViewModel.swift in Sources */,
 				CE7BCEC62DF0990500F8BA39 /* TallOddsMatchCardCollectionViewCell.swift in Sources */,
 				CEF194A62DA834E900C81F12 /* TopCompetitionsLineTableViewCell.swift in Sources */,
@@ -22810,6 +23232,9 @@
 				CEB2365E2DAD0E2800260B5B /* EditGroupViewModel.swift in Sources */,
 				CEB2365F2DAD0E2800260B5B /* SelectFriendCellViewModel.swift in Sources */,
 				CEB236602DAD0E2800260B5B /* NewGroupManagementViewModel.swift in Sources */,
+				65F140B92E12A20B004BDE6B /* PhonePasswordCodeVerificationViewController.swift in Sources */,
+				65F140BA2E12A20B004BDE6B /* MockPhonePasswordCodeVerificationViewModel.swift in Sources */,
+				65F140BB2E12A20B004BDE6B /* PhonePasswordCodeVerificationViewModelProtocol.swift in Sources */,
 				CEF194A82DA834E900C81F12 /* SharedBetTicket.swift in Sources */,
 				CEF194A92DA834E900C81F12 /* (null) in Sources */,
 				CEF194AA2DA834E900C81F12 /* FloatingShortcutsView.swift in Sources */,
@@ -22820,6 +23245,7 @@
 				CEF194B02DA834E900C81F12 /* FilterFavoritesViewModel.swift in Sources */,
 				CEF194B12DA834E900C81F12 /* SettingsRadioRowView.swift in Sources */,
 				CEF194B22DA834E900C81F12 /* ContactSettingsViewModel.swift in Sources */,
+				651418F22E0C4C9000990504 /* PhoneRegistrationViewController.swift in Sources */,
 				CEF194B32DA834E900C81F12 /* CGFloat+Shift.swift in Sources */,
 				CEF194B42DA834E900C81F12 /* HomeTemplateParser.swift in Sources */,
 				CEF194B62DA834E900C81F12 /* DebugTableViewDescription.swift in Sources */,
@@ -22856,6 +23282,7 @@
 				CEF194D42DA834E900C81F12 /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEF194D52DA834E900C81F12 /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEF194D62DA834E900C81F12 /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				65F1409C2E0EF0D9004BDE6B /* MockPhonePasswordCodeResetViewModel.swift in Sources */,
 				CEF194D72DA834E900C81F12 /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEF194D82DA834E900C81F12 /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEF194D92DA834E900C81F12 /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
@@ -22880,6 +23307,7 @@
 				CEF194ED2DA834E900C81F12 /* UserLoginForm.swift in Sources */,
 				CEF194EE2DA834E900C81F12 /* MyCompetitionsViewModel.swift in Sources */,
 				CEF194F02DA834E900C81F12 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
+				65F1409F2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
 				CEF194F12DA834E900C81F12 /* SearchViewModel.swift in Sources */,
 				CEF194F22DA834E900C81F12 /* MyFavoritesRootViewController.swift in Sources */,
 				CE9C9E802DE779B400642EFF /* SystemBetResponse.swift in Sources */,
@@ -22939,6 +23367,7 @@
 				CEB296D22DAEB1CF00DFF002 /* PromotedCompetitionTopImageTableViewCell.swift in Sources */,
 				CEF195212DA834E900C81F12 /* MatchWidgetCellViewModel.swift in Sources */,
 				CEF195222DA834E900C81F12 /* MatchWidgetContainerTableViewCell.swift in Sources */,
+				65F140F82E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */,
 				CEF195232DA834E900C81F12 /* ListTypeCollectionViewCell.swift in Sources */,
 				CEF195242DA834E900C81F12 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				CEF195252DA834E900C81F12 /* TopCompetitionsDataSource.swift in Sources */,
@@ -23031,6 +23460,7 @@
 				CEF195712DA834E900C81F12 /* NibView.swift in Sources */,
 				CEF195722DA834E900C81F12 /* BonusHistoryCellViewModel.swift in Sources */,
 				CEF195732DA834E900C81F12 /* CardOptionRadioView.swift in Sources */,
+				651418E42E0C47C200990504 /* PhoneRegistrationViewModelProtocol.swift in Sources */,
 				CEF195742DA834E900C81F12 /* BonusProgressView.swift in Sources */,
 				CEF195752DA834E900C81F12 /* (null) in Sources */,
 				CEF195762DA834E900C81F12 /* ToastCustom.swift in Sources */,
@@ -23107,6 +23537,7 @@
 				CEB2367F2DAD0EF900260B5B /* PromptView.swift in Sources */,
 				CEF195C02DA834E900C81F12 /* PromotedCompetitionTableViewCell.swift in Sources */,
 				CEF195C12DA834E900C81F12 /* (null) in Sources */,
+				65F140E72E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift in Sources */,
 				CEF195C22DA834E900C81F12 /* ShareTicketFriendGroupViewController.swift in Sources */,
 				CEF195C32DA834E900C81F12 /* FlipNumberView.swift in Sources */,
 				CEF195C42DA834E900C81F12 /* RankingsListViewModel.swift in Sources */,
@@ -23240,6 +23671,7 @@
 				CEF1964A2DA834E900C81F12 /* (null) in Sources */,
 				CEF1964B2DA834E900C81F12 /* CompetitionsFiltersView.swift in Sources */,
 				CEF1964C2DA834E900C81F12 /* GenericSuccessViewController.swift in Sources */,
+				65F140802E0EB554004BDE6B /* MockPhoneLoginViewModel.swift in Sources */,
 				CEF1964D2DA834E900C81F12 /* EmptyReferralView.swift in Sources */,
 				CEF1964E2DA834E900C81F12 /* QuickBetViewController.swift in Sources */,
 				CEF1964F2DA834E900C81F12 /* MakeYourBetTableViewCell.swift in Sources */,
@@ -23302,6 +23734,7 @@
 				CEF1968A2DA834E900C81F12 /* RecentSearchHeaderView.swift in Sources */,
 				CEF1968B2DA834E900C81F12 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				CEF1968C2DA834E900C81F12 /* GradientView.swift in Sources */,
+				651419122E0D9BDB00990504 /* PhoneVerificationViewController.swift in Sources */,
 				CEF1968D2DA834E900C81F12 /* StoriesFullScreenViewController.swift in Sources */,
 				CEF1968E2DA834E900C81F12 /* SharedGameCardView.swift in Sources */,
 				CEF1968F2DA834E900C81F12 /* DefaultShiftAnimation.swift in Sources */,
@@ -23362,6 +23795,7 @@
 				CEB2363C2DAD0E1000260B5B /* ConversationBetSelectionRootViewController.swift in Sources */,
 				CEB2363D2DAD0E1000260B5B /* BetSelectionCellViewModel.swift in Sources */,
 				CEB2363E2DAD0E1000260B5B /* ConversationsDetailViewModel.swift in Sources */,
+				65F140712E0EB52D004BDE6B /* PhoneLoginViewModelProtocol.swift in Sources */,
 				CEB2363F2DAD0E1000260B5B /* ConversationsViewController.swift in Sources */,
 				CEB236402DAD0E1000260B5B /* InviteContactTableViewCell.swift in Sources */,
 				CEB236412DAD0E1000260B5B /* FriendProfileViewController.swift in Sources */,
