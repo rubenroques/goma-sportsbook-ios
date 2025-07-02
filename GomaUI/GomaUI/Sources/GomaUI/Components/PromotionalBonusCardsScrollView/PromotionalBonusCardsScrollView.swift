@@ -37,8 +37,8 @@ final public class PromotionalBonusCardsScrollView: UIView {
     private var cardViews: [String: PromotionalBonusCardView] = [:]
     
     // MARK: - Public Properties
-    public var onCardClaimBonus: ((String) -> Void) = { _ in }
-    public var onCardTermsTapped: ((String) -> Void) = { _ in }
+    public var onCardClaimBonus: ((PromotionalBonusCardData) -> Void) = { _ in }
+    public var onCardTermsTapped: ((PromotionalBonusCardData) -> Void) = { _ in }
     
     // MARK: - Initialization
     public init(viewModel: PromotionalBonusCardsScrollViewModelProtocol) {
@@ -96,12 +96,12 @@ final public class PromotionalBonusCardsScrollView: UIView {
             // Set up card actions
             cardView.onClaimBonus = { [weak self] in
                 self?.viewModel.cardClaimBonusTapped(cardId: cardData.id)
-                self?.onCardClaimBonus(cardData.id)
+                self?.onCardClaimBonus(cardData)
             }
             
             cardView.onTermsTapped = { [weak self] in
                 self?.viewModel.cardTermsTapped(cardId: cardData.id)
-                self?.onCardTermsTapped(cardData.id)
+                self?.onCardTermsTapped(cardData)
             }
             
             cardView.translatesAutoresizingMaskIntoConstraints = false

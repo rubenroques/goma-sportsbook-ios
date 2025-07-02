@@ -70,7 +70,7 @@ class PhoneVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         setupLayout()
         
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)

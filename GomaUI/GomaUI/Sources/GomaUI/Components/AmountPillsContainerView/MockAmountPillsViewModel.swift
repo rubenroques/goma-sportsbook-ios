@@ -13,7 +13,7 @@ import UIKit
 final public class MockAmountPillsViewModel: AmountPillsViewModelProtocol {
     
     // MARK: - Properties
-    private let pillsDataSubject: CurrentValueSubject<AmountPillsData, Never>
+    public let pillsDataSubject: CurrentValueSubject<AmountPillsData, Never>
     public var pillsDataPublisher: AnyPublisher<AmountPillsData, Never> {
         return pillsDataSubject.eraseToAnyPublisher()
     }

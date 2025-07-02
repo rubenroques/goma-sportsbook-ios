@@ -2637,6 +2637,126 @@
 		65F140F92E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
 		65F140FA2E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
 		65F140FB2E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */; };
+		65F140FE2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */; };
+		65F140FF2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */; };
+		65F141002E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */; };
+		65F141012E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */; };
+		65F141022E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */; };
+		65F141032E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */; };
+		65F141042E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */; };
+		65F141052E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */; };
+		65F141072E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */; };
+		65F141082E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */; };
+		65F141092E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */; };
+		65F1410A2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */; };
+		65F1410B2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */; };
+		65F1410C2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */; };
+		65F1410D2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */; };
+		65F1410E2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */; };
+		65F141102E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */; };
+		65F141112E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */; };
+		65F141122E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */; };
+		65F141132E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */; };
+		65F141142E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */; };
+		65F141152E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */; };
+		65F141162E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */; };
+		65F141172E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */; };
+		65F1411A2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */; };
+		65F1411B2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */; };
+		65F1411C2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */; };
+		65F1411D2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */; };
+		65F1411E2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */; };
+		65F1411F2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */; };
+		65F141202E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */; };
+		65F141212E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */; };
+		65F141232E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */; };
+		65F141242E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */; };
+		65F141252E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */; };
+		65F141262E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */; };
+		65F141272E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */; };
+		65F141282E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */; };
+		65F141292E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */; };
+		65F1412A2E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */; };
+		65F1412C2E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */; };
+		65F1412D2E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */; };
+		65F1412E2E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */; };
+		65F1412F2E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */; };
+		65F141302E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */; };
+		65F141312E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */; };
+		65F141322E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */; };
+		65F141332E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */; };
+		65F141362E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */; };
+		65F141372E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */; };
+		65F141382E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */; };
+		65F141392E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */; };
+		65F1413A2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */; };
+		65F1413B2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */; };
+		65F1413C2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */; };
+		65F1413D2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */; };
+		65F1413F2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */; };
+		65F141402E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */; };
+		65F141412E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */; };
+		65F141422E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */; };
+		65F141432E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */; };
+		65F141442E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */; };
+		65F141452E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */; };
+		65F141462E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */; };
+		65F141482E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */; };
+		65F141492E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */; };
+		65F1414A2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */; };
+		65F1414B2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */; };
+		65F1414C2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */; };
+		65F1414D2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */; };
+		65F1414E2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */; };
+		65F1414F2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */; };
+		65F141522E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */; };
+		65F141532E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */; };
+		65F141542E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */; };
+		65F141552E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */; };
+		65F141562E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */; };
+		65F141572E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */; };
+		65F141582E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */; };
+		65F141592E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */; };
+		65F1415B2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */; };
+		65F1415C2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */; };
+		65F1415D2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */; };
+		65F1415E2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */; };
+		65F1415F2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */; };
+		65F141602E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */; };
+		65F141612E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */; };
+		65F141622E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */; };
+		65F141642E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */; };
+		65F141652E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */; };
+		65F141662E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */; };
+		65F141672E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */; };
+		65F141682E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */; };
+		65F141692E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */; };
+		65F1416A2E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */; };
+		65F1416B2E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */; };
+		65F1416E2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */; };
+		65F1416F2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */; };
+		65F141702E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */; };
+		65F141712E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */; };
+		65F141722E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */; };
+		65F141732E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */; };
+		65F141742E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */; };
+		65F141752E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */; };
+		65F141772E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */; };
+		65F141782E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */; };
+		65F141792E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */; };
+		65F1417A2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */; };
+		65F1417B2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */; };
+		65F1417C2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */; };
+		65F1417D2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */; };
+		65F1417E2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */; };
+		65F141802E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */; };
+		65F141812E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */; };
+		65F141822E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */; };
+		65F141832E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */; };
+		65F141842E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */; };
+		65F141852E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */; };
+		65F141862E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */; };
+		65F141872E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */; };
 		65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884172C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
@@ -9354,6 +9474,21 @@
 		65F140E12E12F6A4004BDE6B /* PhoneForgotPasswordSuccessViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneForgotPasswordSuccessViewModelProtocol.swift; sourceTree = "<group>"; };
 		65F140EA2E12F6CF004BDE6B /* MockPhoneForgotPasswordSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhoneForgotPasswordSuccessViewModel.swift; sourceTree = "<group>"; };
 		65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneForgotPasswordSuccessViewController.swift; sourceTree = "<group>"; };
+		65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstDepositPromotionsViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFirstDepositPromotionsViewModel.swift; sourceTree = "<group>"; };
+		65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstDepositPromotionsViewController.swift; sourceTree = "<group>"; };
+		65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositBonusViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDepositBonusViewModel.swift; sourceTree = "<group>"; };
+		65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositBonusViewController.swift; sourceTree = "<group>"; };
+		65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositVerificationViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDepositVerificationViewModel.swift; sourceTree = "<group>"; };
+		65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositVerificationViewController.swift; sourceTree = "<group>"; };
+		65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositAlternativeStepsViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDepositAlternativeStepsViewModel.swift; sourceTree = "<group>"; };
+		65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositAlternativeStepsViewController.swift; sourceTree = "<group>"; };
+		65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositBonusSuccessViewModelProtocol.swift; sourceTree = "<group>"; };
+		65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDepositBonusSuccessViewModel.swift; sourceTree = "<group>"; };
+		65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositBonusSuccessViewController.swift; sourceTree = "<group>"; };
 		65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		65F8841D2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetitionDetailRootViewController.swift; sourceTree = "<group>"; };
 		65F884272C1C43D300A56983 /* BannerTournamentTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTournamentTableViewHeader.swift; sourceTree = "<group>"; };
@@ -11243,6 +11378,7 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				65F140FC2E13EE8B004BDE6B /* FirstDepositPromotions */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Root */,
 				45C3E8D727B56DC7007A1A0F /* Home */,
@@ -12406,6 +12542,60 @@
 				65F140F32E12F730004BDE6B /* PhoneForgotPasswordSuccessViewController.swift */,
 			);
 			path = PhoneForgotPasswordSuccess;
+			sourceTree = "<group>";
+		};
+		65F140FC2E13EE8B004BDE6B /* FirstDepositPromotions */ = {
+			isa = PBXGroup;
+			children = (
+				65F1416C2E1557C7004BDE6B /* DepositBonusSuccess */,
+				65F141502E154546004BDE6B /* DepositAlternativeSteps */,
+				65F141342E143C86004BDE6B /* DepositVerification */,
+				65F141182E140290004BDE6B /* DepositBonus */,
+				65F140FD2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift */,
+				65F141062E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift */,
+				65F1410F2E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift */,
+			);
+			path = FirstDepositPromotions;
+			sourceTree = "<group>";
+		};
+		65F141182E140290004BDE6B /* DepositBonus */ = {
+			isa = PBXGroup;
+			children = (
+				65F141192E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift */,
+				65F141222E1402B9004BDE6B /* MockDepositBonusViewModel.swift */,
+				65F1412B2E1402E2004BDE6B /* DepositBonusViewController.swift */,
+			);
+			path = DepositBonus;
+			sourceTree = "<group>";
+		};
+		65F141342E143C86004BDE6B /* DepositVerification */ = {
+			isa = PBXGroup;
+			children = (
+				65F141352E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift */,
+				65F1413E2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift */,
+				65F141472E143CEB004BDE6B /* DepositVerificationViewController.swift */,
+			);
+			path = DepositVerification;
+			sourceTree = "<group>";
+		};
+		65F141502E154546004BDE6B /* DepositAlternativeSteps */ = {
+			isa = PBXGroup;
+			children = (
+				65F141512E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift */,
+				65F1415A2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift */,
+				65F141632E154585004BDE6B /* DepositAlternativeStepsViewController.swift */,
+			);
+			path = DepositAlternativeSteps;
+			sourceTree = "<group>";
+		};
+		65F1416C2E1557C7004BDE6B /* DepositBonusSuccess */ = {
+			isa = PBXGroup;
+			children = (
+				65F1416D2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift */,
+				65F141762E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift */,
+				65F1417F2E155800004BDE6B /* DepositBonusSuccessViewController.swift */,
+			);
+			path = DepositBonusSuccess;
 			sourceTree = "<group>";
 		};
 		65F884262C1C439F00A56983 /* Cells */ = {
@@ -16739,6 +16929,7 @@
 				4542DFE12C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				450B785728F58574009229E3 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200C2B28A14700C95337 /* TextSectionView.swift in Sources */,
+				65F141852E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */,
 				CE0C6C7F2D5483DA00EAD26B /* CompetitionFilterCell.swift in Sources */,
 				CE18A9EA2D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
 				CE18A9EB2D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
@@ -16781,11 +16972,13 @@
 				CED5D9A02D94515F00429306 /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				65EFF32D2D81F35C00F1FC57 /* DescriptionBlockView.swift in Sources */,
 				A96FAED92981912100A0751F /* UploadDocuments.swift in Sources */,
+				65F1417B2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */,
 				450B786E28F58574009229E3 /* GeoLocationManager.swift in Sources */,
 				65EFF3472D82F67400F1FC57 /* ImageSectionView.swift in Sources */,
 				450B787028F58574009229E3 /* PersonalInfoViewController.swift in Sources */,
 				A9A1B2C82A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				458735372AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
+				65F141002E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */,
 				A90C372129C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				450B787228F58574009229E3 /* HeaderTextFieldView.swift in Sources */,
 				450B787328F58574009229E3 /* SocialItemCollectionViewCell.swift in Sources */,
@@ -16840,6 +17033,7 @@
 				CE5B54D82D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B54D92D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B54DA2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65F141212E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */,
 				CE5B54DB2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B54DC2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B54DD2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
@@ -16847,6 +17041,7 @@
 				450B788528F58574009229E3 /* BettingHistoryRootViewController.swift in Sources */,
 				450B788628F58574009229E3 /* DepositViewModel.swift in Sources */,
 				450B788828F58574009229E3 /* UserSession.swift in Sources */,
+				65F141652E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				4521F0902CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				450B788928F58574009229E3 /* MessagesViewController.swift in Sources */,
 				450B788A28F58574009229E3 /* LoadableContent.swift in Sources */,
@@ -16864,9 +17059,11 @@
 				450B789728F58574009229E3 /* SegmentControlView.swift in Sources */,
 				450B789828F58574009229E3 /* UserInfoView.swift in Sources */,
 				45044AFC291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */,
+				65F1412C2E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */,
 				450B789928F58574009229E3 /* ShareTicketChoiceViewModel.swift in Sources */,
 				450B789C28F58574009229E3 /* AggregatorRepositoryType.swift in Sources */,
 				A9958C7029705D62001474E2 /* DocumentView.swift in Sources */,
+				65F141272E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
 				450B789E28F58574009229E3 /* PopularDetailsViewController.swift in Sources */,
 				CE7E80332D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE7E80342D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -16975,6 +17172,7 @@
 				65CD19DB2D94738900CA23E0 /* SettingsTitleView.swift in Sources */,
 				A90FB80429B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
 				450B790D28F58574009229E3 /* SportMatchLineViewModel.swift in Sources */,
+				65F1410E2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */,
 				450B790E28F58574009229E3 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				450B790F28F58574009229E3 /* PopUpDetails.swift in Sources */,
 				450B791028F58574009229E3 /* RunningPlatform.swift in Sources */,
@@ -17041,6 +17239,7 @@
 				450B794228F58574009229E3 /* UIStackView+Extensions.swift in Sources */,
 				CEB9BB872DB6575900E8084B /* ActionButtonTableViewCell.swift in Sources */,
 				A96FAED12981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
+				65F141162E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */,
 				CEEFDE872D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEEFDE882D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEEFDE892D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -17053,11 +17252,13 @@
 				CEEFDE8C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE16F2822D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				A9A43C792A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
+				65F1416F2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				450B794528F58574009229E3 /* UserInfoSimpleCardView.swift in Sources */,
 				A9A521702A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				450B794628F58574009229E3 /* FavoriteGoma.swift in Sources */,
 				653A38422D53921900B89CDF /* BettingPracticesViewController.swift in Sources */,
 				CE0AEAB02D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */,
+				65F141392E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				450B794828F58574009229E3 /* Fonts.swift in Sources */,
 				450B794A28F58574009229E3 /* UserProfileInfoViewController.swift in Sources */,
 				A99CC2F92A262ABB0035BA3D /* ScreenState.swift in Sources */,
@@ -17076,6 +17277,7 @@
 				450B795928F58574009229E3 /* Localization.swift in Sources */,
 				4511356B2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				450B795E28F58574009229E3 /* BetslipErrorView.swift in Sources */,
+				65F1414E2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				450B795F28F58574009229E3 /* CompetitionSearchTableViewCell.swift in Sources */,
 				CEA667222D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
 				CEA667232D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
@@ -17083,6 +17285,7 @@
 				CEA667252D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
 				CEA667262D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
 				CEA667272D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
+				65F141452E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */,
 				450B796028F58574009229E3 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				450B796228F58574009229E3 /* SelectChatroomTableViewCell.swift in Sources */,
 				452B9D292C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */,
@@ -17202,6 +17405,7 @@
 				450B799528F58574009229E3 /* NibView.swift in Sources */,
 				450B799628F58574009229E3 /* BonusHistoryCellViewModel.swift in Sources */,
 				450B799728F58574009229E3 /* BonusProgressView.swift in Sources */,
+				65F1415D2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
 				A9BA04192A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				CE63A8612DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */,
 				450B799928F58574009229E3 /* ToastCustom.swift in Sources */,
@@ -17472,6 +17676,7 @@
 				65CD18B42D9469EA00CA23E0 /* ChatNotificationsViewController.swift in Sources */,
 				65CD18B52D9469EA00CA23E0 /* BetSelectionStateTableViewCell.swift in Sources */,
 				65CD18B62D9469EA00CA23E0 /* SentMessageTableViewCell.swift in Sources */,
+				65F141552E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,
 				65CD18B72D9469EA00CA23E0 /* ListActionHeaderFooterView.swift in Sources */,
 				65CD18B82D9469EA00CA23E0 /* ChatSettingsViewModel.swift in Sources */,
 				450B7A3D28F58574009229E3 /* FilterCollapseView.swift in Sources */,
@@ -17646,6 +17851,7 @@
 				4542DFDF2C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45A33067298976BA008181E9 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200A2B28A14700C95337 /* TextSectionView.swift in Sources */,
+				65F141832E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */,
 				CE0C6C7E2D5483DA00EAD26B /* CompetitionFilterCell.swift in Sources */,
 				CE18A9F02D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
 				CE18A9F12D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
@@ -17688,11 +17894,13 @@
 				CED5D9972D94515F00429306 /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				65EFF32E2D81F35C00F1FC57 /* DescriptionBlockView.swift in Sources */,
 				45A3307F298976BA008181E9 /* UploadDocuments.swift in Sources */,
+				65F141782E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */,
 				45A33080298976BA008181E9 /* GeoLocationManager.swift in Sources */,
 				65EFF3432D82F67400F1FC57 /* ImageSectionView.swift in Sources */,
 				45A33082298976BA008181E9 /* PersonalInfoViewController.swift in Sources */,
 				A9A1B2C72A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				458735362AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
+				65F140FE2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */,
 				A90C372029C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				45A33084298976BA008181E9 /* HeaderTextFieldView.swift in Sources */,
 				45A33085298976BA008181E9 /* SocialItemCollectionViewCell.swift in Sources */,
@@ -17747,6 +17955,7 @@
 				CE5B54A02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B54A12D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B54A22D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65F141202E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */,
 				CE5B54A32D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B54A42D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B54A52D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
@@ -17754,6 +17963,7 @@
 				45A33096298976BA008181E9 /* BettingHistoryRootViewController.swift in Sources */,
 				45A33097298976BA008181E9 /* DepositViewModel.swift in Sources */,
 				45A33098298976BA008181E9 /* UserSession.swift in Sources */,
+				65F1416A2E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				4521F0912CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				45A33099298976BA008181E9 /* MessagesViewController.swift in Sources */,
 				45A3309A298976BA008181E9 /* LoadableContent.swift in Sources */,
@@ -17771,9 +17981,11 @@
 				45A330A7298976BA008181E9 /* SegmentControlView.swift in Sources */,
 				45A330A8298976BA008181E9 /* UserInfoView.swift in Sources */,
 				45A330A9298976BA008181E9 /* ServiceProviderModelMapper+Profile.swift in Sources */,
+				65F141332E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */,
 				45A330AA298976BA008181E9 /* ShareTicketChoiceViewModel.swift in Sources */,
 				45A330AD298976BA008181E9 /* AggregatorRepositoryType.swift in Sources */,
 				45A330AE298976BA008181E9 /* DocumentView.swift in Sources */,
+				65F141232E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
 				45A330B0298976BA008181E9 /* PopularDetailsViewController.swift in Sources */,
 				CE7E80362D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE7E80372D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -17882,6 +18094,7 @@
 				65CD19DA2D94738900CA23E0 /* SettingsTitleView.swift in Sources */,
 				45A33122298976BA008181E9 /* SportMatchLineViewModel.swift in Sources */,
 				45A33123298976BA008181E9 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
+				65F141072E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */,
 				45A33124298976BA008181E9 /* PopUpDetails.swift in Sources */,
 				45A33125298976BA008181E9 /* RunningPlatform.swift in Sources */,
 				45A33126298976BA008181E9 /* AppModels.swift in Sources */,
@@ -17948,6 +18161,7 @@
 				45A33158298976BA008181E9 /* GameSuggestedView.swift in Sources */,
 				CEB9BB8A2DB6575900E8084B /* ActionButtonTableViewCell.swift in Sources */,
 				45A33159298976BA008181E9 /* UIStackView+Extensions.swift in Sources */,
+				65F141132E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */,
 				CEEFDE632D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEEFDE642D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEEFDE652D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -17960,11 +18174,13 @@
 				CEEFDE682D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45A3315A298976BA008181E9 /* UploadDocumentsViewModel.swift in Sources */,
 				CE16F2842D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
+				65F141702E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				A9A43C782A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
 				A9A5216F2A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				45A3315D298976BA008181E9 /* UserInfoSimpleCardView.swift in Sources */,
 				45A3315E298976BA008181E9 /* FavoriteGoma.swift in Sources */,
 				653A383D2D53921900B89CDF /* BettingPracticesViewController.swift in Sources */,
+				65F141362E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CE0AEAAB2D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */,
 				45A33160298976BA008181E9 /* Fonts.swift in Sources */,
 				A99CC2F82A262ABB0035BA3D /* ScreenState.swift in Sources */,
@@ -17983,6 +18199,7 @@
 				45A33171298976BA008181E9 /* UserSettingsGoma.swift in Sources */,
 				45A33172298976BA008181E9 /* Localization.swift in Sources */,
 				451135692BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
+				65F141492E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				45A33177298976BA008181E9 /* BetslipErrorView.swift in Sources */,
 				CEA667102D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
 				CEA667112D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
@@ -17990,6 +18207,7 @@
 				CEA667132D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
 				CEA667142D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
 				CEA667152D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
+				65F141432E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */,
 				45A33178298976BA008181E9 /* CompetitionSearchTableViewCell.swift in Sources */,
 				45A33179298976BA008181E9 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				452B9D272C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */,
@@ -18109,6 +18327,7 @@
 				A9527C2C2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				45A331A9298976BA008181E9 /* UserRankingPositionTableViewCell.swift in Sources */,
 				45A331AD298976BA008181E9 /* BetSubmissionSuccessViewController.swift in Sources */,
+				65F141622E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
 				45A331AF298976BA008181E9 /* NibView.swift in Sources */,
 				CE63A85A2DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */,
 				45A331B0298976BA008181E9 /* BonusHistoryCellViewModel.swift in Sources */,
@@ -18379,6 +18598,7 @@
 				65CD193E2D9469EA00CA23E0 /* ChatNotificationsViewController.swift in Sources */,
 				65CD193F2D9469EA00CA23E0 /* BetSelectionStateTableViewCell.swift in Sources */,
 				65CD19402D9469EA00CA23E0 /* SentMessageTableViewCell.swift in Sources */,
+				65F141532E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,
 				65CD19412D9469EA00CA23E0 /* ListActionHeaderFooterView.swift in Sources */,
 				65CD19422D9469EA00CA23E0 /* ChatSettingsViewModel.swift in Sources */,
 				45A3325C298976BA008181E9 /* ProfileLimitsManagementViewModel.swift in Sources */,
@@ -18523,6 +18743,7 @@
 				4542DFE02C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45F6BAF52AB3732C00C81DE1 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200B2B28A14700C95337 /* TextSectionView.swift in Sources */,
+				65F141862E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */,
 				CE0C6C7C2D5483DA00EAD26B /* CompetitionFilterCell.swift in Sources */,
 				CE18A9F82D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
 				CE18A9F92D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
@@ -18565,11 +18786,13 @@
 				CED5D9982D94515F00429306 /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				65EFF3332D81F35C00F1FC57 /* DescriptionBlockView.swift in Sources */,
 				45F6BB122AB3732C00C81DE1 /* UploadDocuments.swift in Sources */,
+				65F141772E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */,
 				45F6BB132AB3732C00C81DE1 /* GeoLocationManager.swift in Sources */,
 				65EFF3442D82F67400F1FC57 /* ImageSectionView.swift in Sources */,
 				45F6BB152AB3732C00C81DE1 /* PersonalInfoViewController.swift in Sources */,
 				45F6BB162AB3732C00C81DE1 /* UserConsentStatus.swift in Sources */,
 				45F6BB182AB3732C00C81DE1 /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
+				65F141042E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */,
 				45F6BB192AB3732C00C81DE1 /* WithdrawSuccessViewController.swift in Sources */,
 				45F6BB1A2AB3732C00C81DE1 /* HeaderTextFieldView.swift in Sources */,
 				45F6BB1B2AB3732C00C81DE1 /* SocialItemCollectionViewCell.swift in Sources */,
@@ -18624,6 +18847,7 @@
 				CE5B55102D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B55112D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE5B55122D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65F1411B2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */,
 				CE5B55132D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B55142D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B55152D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
@@ -18631,6 +18855,7 @@
 				45F6BB312AB3732C00C81DE1 /* BettingHistoryRootViewController.swift in Sources */,
 				45F6BB322AB3732C00C81DE1 /* DepositViewModel.swift in Sources */,
 				45F6BB332AB3732C00C81DE1 /* UserSession.swift in Sources */,
+				65F1416B2E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				4521F08E2CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				45F6BB342AB3732C00C81DE1 /* MessagesViewController.swift in Sources */,
 				45F6BB352AB3732C00C81DE1 /* LoadableContent.swift in Sources */,
@@ -18648,9 +18873,11 @@
 				45F6BB442AB3732C00C81DE1 /* SegmentControlView.swift in Sources */,
 				45F6BB452AB3732C00C81DE1 /* UserInfoView.swift in Sources */,
 				45F6BB462AB3732C00C81DE1 /* ServiceProviderModelMapper+Profile.swift in Sources */,
+				65F141302E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */,
 				45F6BB472AB3732C00C81DE1 /* ShareTicketChoiceViewModel.swift in Sources */,
 				45F6BB4A2AB3732C00C81DE1 /* AggregatorRepositoryType.swift in Sources */,
 				45F6BB4B2AB3732C00C81DE1 /* DocumentView.swift in Sources */,
+				65F1412A2E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
 				45F6BB4C2AB3732C00C81DE1 /* PopularDetailsViewController.swift in Sources */,
 				CE7E801E2D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE7E801F2D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -18759,6 +18986,7 @@
 				65CD19D52D94738900CA23E0 /* SettingsTitleView.swift in Sources */,
 				45F6BBC12AB3732C00C81DE1 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				45F6BBC22AB3732C00C81DE1 /* PopUpDetails.swift in Sources */,
+				65F1410C2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */,
 				45F6BBC32AB3732C00C81DE1 /* RunningPlatform.swift in Sources */,
 				45F6BBC42AB3732C00C81DE1 /* AppModels.swift in Sources */,
 				45F6BBC62AB3732C00C81DE1 /* HeadToHeadCardStatsView.swift in Sources */,
@@ -18825,6 +19053,7 @@
 				45F6BC022AB3732C00C81DE1 /* GameSuggestedView.swift in Sources */,
 				CEB9BB882DB6575900E8084B /* ActionButtonTableViewCell.swift in Sources */,
 				45F6BC032AB3732C00C81DE1 /* UIStackView+Extensions.swift in Sources */,
+				65F141122E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */,
 				CEEFDE932D8B772900630F7E /* MatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEEFDE942D8B772900630F7E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEEFDE952D8B772900630F7E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -18837,11 +19066,13 @@
 				CEEFDE982D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45F6BC042AB3732C00C81DE1 /* UploadDocumentsViewModel.swift in Sources */,
 				CE16F2862D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
+				65F141742E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				45F6BC062AB3732C00C81DE1 /* RibDocsViewModel.swift in Sources */,
 				45F6BC082AB3732C00C81DE1 /* CardsStyleViewController.swift in Sources */,
 				45F6BC092AB3732C00C81DE1 /* UserInfoSimpleCardView.swift in Sources */,
 				45F6BC0A2AB3732C00C81DE1 /* FavoriteGoma.swift in Sources */,
 				653A38452D53921900B89CDF /* BettingPracticesViewController.swift in Sources */,
+				65F1413B2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CE0AEAB12D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */,
 				45F6BC0C2AB3732C00C81DE1 /* Fonts.swift in Sources */,
 				45F6BC0D2AB3732C00C81DE1 /* ScreenState.swift in Sources */,
@@ -18860,6 +19091,7 @@
 				45F6BC1A2AB3732C00C81DE1 /* MyFavoritesRootViewController.swift in Sources */,
 				45F6BC1D2AB3732C00C81DE1 /* UserSettingsGoma.swift in Sources */,
 				45F6BC1E2AB3732C00C81DE1 /* Localization.swift in Sources */,
+				65F1414B2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				4511356A2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				CEA667282D84A72800C74895 /* LinksProviderProtocol.swift in Sources */,
 				CEA667292D84A72800C74895 /* DynamicLinksProvider.swift in Sources */,
@@ -18867,6 +19099,7 @@
 				CEA6672B2D84A72800C74895 /* LinksManagementServiceProtocol.swift in Sources */,
 				CEA6672C2D84A72800C74895 /* StaticLinksProvider.swift in Sources */,
 				CEA6672D2D84A72800C74895 /* LinksProviderFactory.swift in Sources */,
+				65F141402E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */,
 				45F6BC212AB3732C00C81DE1 /* BetslipErrorView.swift in Sources */,
 				45F6BC222AB3732C00C81DE1 /* CompetitionSearchTableViewCell.swift in Sources */,
 				45F6BC232AB3732C00C81DE1 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
@@ -18986,6 +19219,7 @@
 				45F6BC562AB3732C00C81DE1 /* InfoDialogView.swift in Sources */,
 				45F6BC592AB3732C00C81DE1 /* UserRankingPositionTableViewCell.swift in Sources */,
 				45F6BC5B2AB3732C00C81DE1 /* BetSubmissionSuccessViewController.swift in Sources */,
+				65F1415B2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
 				45F6BC5D2AB3732C00C81DE1 /* NibView.swift in Sources */,
 				CE63A85F2DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */,
 				45F6BC5E2AB3732C00C81DE1 /* BonusHistoryCellViewModel.swift in Sources */,
@@ -19256,6 +19490,7 @@
 				65CD19832D9469EA00CA23E0 /* ChatNotificationsViewController.swift in Sources */,
 				65CD19842D9469EA00CA23E0 /* BetSelectionStateTableViewCell.swift in Sources */,
 				65CD19852D9469EA00CA23E0 /* SentMessageTableViewCell.swift in Sources */,
+				65F141562E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,
 				65CD19862D9469EA00CA23E0 /* ListActionHeaderFooterView.swift in Sources */,
 				65CD19872D9469EA00CA23E0 /* ChatSettingsViewModel.swift in Sources */,
 				45F6BD152AB3732C00C81DE1 /* ProfileLimitsManagementViewModel.swift in Sources */,
@@ -19385,6 +19620,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65F141092E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */,
 				CE12A1372D31347E0022BDF7 /* SearchViewController.swift in Sources */,
 				CE12A1382D31347E0022BDF7 /* Scores.swift in Sources */,
 				CE12A13B2D31347E0022BDF7 /* AppSession.swift in Sources */,
@@ -19413,6 +19649,7 @@
 				CE18A9ED2D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				CE12A1522D31347E0022BDF7 /* ExtraDocsViewController.swift in Sources */,
 				CE12A1532D31347E0022BDF7 /* PopUpPromotionView.swift in Sources */,
+				65F1417E2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */,
 				CE12A1542D31347E0022BDF7 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
 				CE12A1552D31347E0022BDF7 /* CheckboxToggleView.swift in Sources */,
 				CE12A1572D31347E0022BDF7 /* HomeViewTemplateDatasource.swift in Sources */,
@@ -19449,6 +19686,7 @@
 				CE12A16F2D31347E0022BDF7 /* UploadDocuments.swift in Sources */,
 				CE12A1702D31347E0022BDF7 /* GeoLocationManager.swift in Sources */,
 				65EFF3412D82F67400F1FC57 /* ImageSectionView.swift in Sources */,
+				65F1411D2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */,
 				CE12A1722D31347E0022BDF7 /* PersonalInfoViewController.swift in Sources */,
 				CE12A1732D31347E0022BDF7 /* UserConsentStatus.swift in Sources */,
 				CE12A1752D31347E0022BDF7 /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
@@ -19490,6 +19728,7 @@
 				CE5B558C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CE5B558D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B558E2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
+				65F141262E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
 				CE5B558F2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B55902D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				65F140CC2E12DF49004BDE6B /* MockPhoneForgotPasswordViewModel.swift in Sources */,
@@ -19514,12 +19753,14 @@
 				CE5B559F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE5B55A02D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B55A12D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
+				65F141812E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */,
 				CE12A18E2D31347E0022BDF7 /* NSAttributedString+Extensions.swift in Sources */,
 				CE12A18F2D31347E0022BDF7 /* BettingHistoryRootViewController.swift in Sources */,
 				CE12A1902D31347E0022BDF7 /* DepositViewModel.swift in Sources */,
 				CE12A1912D31347E0022BDF7 /* UserSession.swift in Sources */,
 				CE12A1922D31347E0022BDF7 /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				CE12A1932D31347E0022BDF7 /* MessagesViewController.swift in Sources */,
+				65F141112E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */,
 				CE12A1942D31347E0022BDF7 /* LoadableContent.swift in Sources */,
 				CE12A1952D31347E0022BDF7 /* ShareTicketChoiceViewController.swift in Sources */,
 				CE12A1962D31347E0022BDF7 /* CollapsibleView.swift in Sources */,
@@ -19565,6 +19806,7 @@
 				CE12A1C02D31347E0022BDF7 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				CE12A1C12D31347E0022BDF7 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				CE12A1C22D31347E0022BDF7 /* RankingTypeTableHeaderView.swift in Sources */,
+				65F141372E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CE63A8292DE9D2FB00E1FF01 /* NextUpEventsViewController.swift in Sources */,
 				CE12A1C32D31347E0022BDF7 /* CollapsibleGroupView.swift in Sources */,
 				CE12A1C52D31347E0022BDF7 /* UIImageView+Extensions.swift in Sources */,
@@ -19658,6 +19900,7 @@
 				CE12A22B2D31347E0022BDF7 /* RunningPlatform.swift in Sources */,
 				CE12A22C2D31347E0022BDF7 /* AppModels.swift in Sources */,
 				CE12A22E2D31347E0022BDF7 /* HeadToHeadCardStatsView.swift in Sources */,
+				65F141442E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */,
 				65EFF30B2D81DEB600F1FC57 /* PromotionDetailViewController.swift in Sources */,
 				CE12A22F2D31347E0022BDF7 /* AppearanceViewModel.swift in Sources */,
 				CE12A2302D31347E0022BDF7 /* ChatTicketStateInMessageView.swift in Sources */,
@@ -19782,6 +20025,7 @@
 				CE12A2A22D31347E0022BDF7 /* SimpleRegisterDetailsViewController.swift in Sources */,
 				CE12A2A32D31347E0022BDF7 /* FilterFavoritesValue.swift in Sources */,
 				CE12A2A42D31347E0022BDF7 /* UIAlertController+Extensions.swift in Sources */,
+				65F141582E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,
 				CE12A2A52D31347E0022BDF7 /* Data+Extensions.swift in Sources */,
 				CE12A2A62D31347E0022BDF7 /* ContactSettingsViewController.swift in Sources */,
 				CE12A2A72D31347E0022BDF7 /* CGPoint+Extensions.swift in Sources */,
@@ -19796,6 +20040,7 @@
 				CEAB0B1D2D77588D00541098 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				CEAB0B1E2D77588D00541098 /* ProChoiceHighlightTableViewCell.swift in Sources */,
 				CEAB0B1F2D77588D00541098 /* MatchWidgetCellViewModel.swift in Sources */,
+				65F141692E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				CEAB0B202D77588D00541098 /* MatchWidgetContainerTableViewCell.swift in Sources */,
 				651418EC2E0C482E00990504 /* MockPhoneRegistrationViewModel.swift in Sources */,
 				CEAB0B212D77588D00541098 /* ListTypeCollectionViewCell.swift in Sources */,
@@ -19885,6 +20130,7 @@
 				CE12A2D92D31347E0022BDF7 /* TipsControlViewController.swift in Sources */,
 				CE12A2DA2D31347E0022BDF7 /* UIView+Shift.swift in Sources */,
 				CE12A2DB2D31347E0022BDF7 /* MessageDetailViewModel.swift in Sources */,
+				65F141602E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
 				65CD19A12D946F0300CA23E0 /* ActionSearchTextFieldView.swift in Sources */,
 				CE12A2DD2D31347E0022BDF7 /* KeychainInterface.swift in Sources */,
 				65EFF34C2D82F8DF00F1FC57 /* VideoSectionView.swift in Sources */,
@@ -19979,9 +20225,11 @@
 				CE12A33B2D31347E0022BDF7 /* Match.swift in Sources */,
 				CE12A33C2D31347E0022BDF7 /* TabularBarButton.swift in Sources */,
 				CE12A33E2D31347E0022BDF7 /* TabularBarDelegate.swift in Sources */,
+				65F141712E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				CE12A3402D31347E0022BDF7 /* BonusActiveDataSource.swift in Sources */,
 				CE12A3412D31347E0022BDF7 /* BonusSwitchTableViewCell.swift in Sources */,
 				CE12A3432D31347E0022BDF7 /* CompetitionFilterRowViewModel.swift in Sources */,
+				65F141322E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */,
 				CE12A3442D31347E0022BDF7 /* SearchTextField.swift in Sources */,
 				CE12A3452D31347E0022BDF7 /* FeaturedTipCollectionViewCell.swift in Sources */,
 				CE12A3462D31347E0022BDF7 /* CashbackBalanceView.swift in Sources */,
@@ -20049,6 +20297,7 @@
 				CE12A3802D31347E0022BDF7 /* MyFavoritesViewController.swift in Sources */,
 				CE12A3812D31347E0022BDF7 /* TipsCellViewModel.swift in Sources */,
 				CE12A3822D31347E0022BDF7 /* InAppMessageTableViewCell.swift in Sources */,
+				65F140FF2E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */,
 				CE12A3832D31347E0022BDF7 /* PreSubmissionBetslipViewController.swift in Sources */,
 				CE12A3842D31347E0022BDF7 /* DropDownSelectionView.swift in Sources */,
 				CE12A3852D31347E0022BDF7 /* PolicyLinkView.swift in Sources */,
@@ -20061,6 +20310,7 @@
 				CE12A3892D31347E0022BDF7 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CE7E80492D7A368300A5558A /* PreviewUIView.swift in Sources */,
 				CE25A6022D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
+				65F1414D2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				CE12A38A2D31347E0022BDF7 /* CardsCollectionViewLayout.swift in Sources */,
 				CE12A38B2D31347E0022BDF7 /* RePlayFeatureHelper.swift in Sources */,
 				CE12A38C2D31347E0022BDF7 /* BonusActiveCellViewModel.swift in Sources */,
@@ -20286,6 +20536,7 @@
 				CE8F23142DD371350071238E /* TabularScrollView.swift in Sources */,
 				CE8F23152DD371350071238E /* CasinoGameDetailViewModel.swift in Sources */,
 				CE8F23162DD371350071238E /* TextSectionView.swift in Sources */,
+				65F141872E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */,
 				CE8F23172DD371350071238E /* CompetitionFilterCell.swift in Sources */,
 				CE8F23182DD371350071238E /* SimpleCompetitionDetailsViewModel.swift in Sources */,
 				CE8F23192DD371350071238E /* SimpleCompetitionDetailsViewController.swift in Sources */,
@@ -20328,11 +20579,13 @@
 				CE8F23392DD371350071238E /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE8F233A2DD371350071238E /* DescriptionBlockView.swift in Sources */,
 				CE8F233B2DD371350071238E /* UploadDocuments.swift in Sources */,
+				65F141792E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */,
 				CE8F233C2DD371350071238E /* GeoLocationManager.swift in Sources */,
 				CE8F233D2DD371350071238E /* ImageSectionView.swift in Sources */,
 				CE8F233E2DD371350071238E /* PersonalInfoViewController.swift in Sources */,
 				CE8F233F2DD371350071238E /* UserConsentStatus.swift in Sources */,
 				CE8F23412DD371350071238E /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
+				65F141022E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */,
 				CE8F23422DD371350071238E /* WithdrawSuccessViewController.swift in Sources */,
 				CE8F23432DD371350071238E /* HeaderTextFieldView.swift in Sources */,
 				CE8F23442DD371350071238E /* SocialItemCollectionViewCell.swift in Sources */,
@@ -20387,6 +20640,7 @@
 				CE8F23702DD371350071238E /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE8F23712DD371350071238E /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE8F23722DD371350071238E /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65F1411F2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */,
 				CE8F23732DD371350071238E /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE8F23742DD371350071238E /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE8F23752DD371350071238E /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
@@ -20394,6 +20648,7 @@
 				CE8F23772DD371350071238E /* BettingHistoryRootViewController.swift in Sources */,
 				CE8F23782DD371350071238E /* DepositViewModel.swift in Sources */,
 				CE8F23792DD371350071238E /* UserSession.swift in Sources */,
+				65F141682E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				CE8F237A2DD371350071238E /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				CE8F237B2DD371350071238E /* MessagesViewController.swift in Sources */,
 				CE8F237C2DD371350071238E /* LoadableContent.swift in Sources */,
@@ -20411,9 +20666,11 @@
 				CE8F23892DD371350071238E /* SegmentControlView.swift in Sources */,
 				CE8F238A2DD371350071238E /* UserInfoView.swift in Sources */,
 				CE8F238B2DD371350071238E /* ServiceProviderModelMapper+Profile.swift in Sources */,
+				65F141312E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */,
 				CE8F238C2DD371350071238E /* ShareTicketChoiceViewModel.swift in Sources */,
 				CE8F238D2DD371350071238E /* AggregatorRepositoryType.swift in Sources */,
 				CE8F238E2DD371350071238E /* DocumentView.swift in Sources */,
+				65F141282E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
 				CE8F238F2DD371350071238E /* PopularDetailsViewController.swift in Sources */,
 				CE8F23902DD371350071238E /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE8F23912DD371350071238E /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -20522,6 +20779,7 @@
 				CE8F24022DD371350071238E /* PopUpDetails.swift in Sources */,
 				CE8F24032DD371350071238E /* RunningPlatform.swift in Sources */,
 				CE8F24042DD371350071238E /* AppModels.swift in Sources */,
+				65F141082E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */,
 				CE8F24052DD371350071238E /* HeadToHeadCardStatsView.swift in Sources */,
 				CE8F24062DD371350071238E /* PromotionDetailViewController.swift in Sources */,
 				CE8F24072DD371350071238E /* AppearanceViewModel.swift in Sources */,
@@ -20588,6 +20846,7 @@
 				CE8F24442DD371350071238E /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CE8F24452DD371350071238E /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE8F24462DD371350071238E /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F141152E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */,
 				CE8F24472DD371350071238E /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CE8F24482DD371350071238E /* Theme.swift in Sources */,
 				CE8F24492DD371350071238E /* ThemeService.swift in Sources */,
@@ -20600,11 +20859,13 @@
 				CE8F24512DD371350071238E /* CardsStyleViewController.swift in Sources */,
 				CE8F24522DD371350071238E /* UserInfoSimpleCardView.swift in Sources */,
 				CE8F24532DD371350071238E /* FavoriteGoma.swift in Sources */,
+				65F141732E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				CE8F24542DD371350071238E /* BettingPracticesViewController.swift in Sources */,
 				CE8F24552DD371350071238E /* MatchHeaderView.swift in Sources */,
 				CE8F24562DD371350071238E /* Fonts.swift in Sources */,
 				CE8F24572DD371350071238E /* ScreenState.swift in Sources */,
 				CE8F24582DD371350071238E /* UserProfileInfoViewController.swift in Sources */,
+				65F141382E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CE8F24592DD371350071238E /* NotEmpty.swift in Sources */,
 				CE8F245A2DD371350071238E /* VersionUpdateViewController.swift in Sources */,
 				CE8F245B2DD371350071238E /* SportSelectionCollectionViewCell.swift in Sources */,
@@ -20623,6 +20884,7 @@
 				CE8F246A2DD371350071238E /* LinksProviderProtocol.swift in Sources */,
 				CE8F246B2DD371350071238E /* DynamicLinksProvider.swift in Sources */,
 				CE8F246C2DD371350071238E /* LinksManagementService.swift in Sources */,
+				65F141482E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				CE8F246D2DD371350071238E /* LinksManagementServiceProtocol.swift in Sources */,
 				CE8F246E2DD371350071238E /* StaticLinksProvider.swift in Sources */,
 				CE8F246F2DD371350071238E /* LinksProviderFactory.swift in Sources */,
@@ -20630,6 +20892,7 @@
 				CE8F24712DD371350071238E /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				CE8F24722DD371350071238E /* BetBuilderBettingTicketDataSource.swift in Sources */,
 				CE8F24732DD371350071238E /* DocumentStateView.swift in Sources */,
+				65F141412E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */,
 				CE8F24742DD371350071238E /* SelectChatroomTableViewCell.swift in Sources */,
 				CE8F24752DD371350071238E /* AutoLayoutDSL.swift in Sources */,
 				CE63A82A2DE9D2FB00E1FF01 /* NextUpEventsViewController.swift in Sources */,
@@ -20749,6 +21012,7 @@
 				CE8F24E12DD371350071238E /* BetSubmissionSuccessViewController.swift in Sources */,
 				CE63A8602DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */,
 				CE8F24E22DD371350071238E /* NibView.swift in Sources */,
+				65F141612E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
 				CE8F24E32DD371350071238E /* BonusHistoryCellViewModel.swift in Sources */,
 				CE8F24E42DD371350071238E /* CardOptionRadioView.swift in Sources */,
 				CE8F24E52DD371350071238E /* BonusProgressView.swift in Sources */,
@@ -21019,6 +21283,7 @@
 				CE8F25E62DD371350071238E /* ListActionHeaderFooterView.swift in Sources */,
 				CE8F25E72DD371350071238E /* ChatSettingsViewModel.swift in Sources */,
 				CE8F25E82DD371350071238E /* ProfileLimitsManagementViewModel.swift in Sources */,
+				65F141542E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,
 				CE8F25E92DD371350071238E /* FilterCollapseView.swift in Sources */,
 				CE8F25EA2DD371350071238E /* Delayed.swift in Sources */,
 				CE8F25EB2DD371350071238E /* DocumentsRootViewController.swift in Sources */,
@@ -21163,6 +21428,7 @@
 				CEB3A0812DD379800024043B /* TabularScrollView.swift in Sources */,
 				CEB3A0822DD379800024043B /* CasinoGameDetailViewModel.swift in Sources */,
 				CEB3A0832DD379800024043B /* TextSectionView.swift in Sources */,
+				65F141842E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */,
 				CEB3A0842DD379800024043B /* CompetitionFilterCell.swift in Sources */,
 				CEB3A0852DD379800024043B /* SimpleCompetitionDetailsViewModel.swift in Sources */,
 				CEB3A0862DD379800024043B /* SimpleCompetitionDetailsViewController.swift in Sources */,
@@ -21205,11 +21471,13 @@
 				CEB3A0A62DD379800024043B /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A0A72DD379800024043B /* DescriptionBlockView.swift in Sources */,
 				CEB3A0A82DD379800024043B /* UploadDocuments.swift in Sources */,
+				65F1417D2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */,
 				CEB3A0A92DD379800024043B /* GeoLocationManager.swift in Sources */,
 				CEB3A0AA2DD379800024043B /* ImageSectionView.swift in Sources */,
 				CEB3A0AB2DD379800024043B /* PersonalInfoViewController.swift in Sources */,
 				CEB3A0AC2DD379800024043B /* UserConsentStatus.swift in Sources */,
 				CEB3A0AE2DD379800024043B /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
+				65F141012E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */,
 				CEB3A0AF2DD379800024043B /* WithdrawSuccessViewController.swift in Sources */,
 				CEB3A0B02DD379800024043B /* HeaderTextFieldView.swift in Sources */,
 				CEB3A0B12DD379800024043B /* SocialItemCollectionViewCell.swift in Sources */,
@@ -21264,6 +21532,7 @@
 				CEB3A0DD2DD379800024043B /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A0DE2DD379800024043B /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A0DF2DD379800024043B /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65F1411C2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */,
 				CEB3A0E02DD379800024043B /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CEB3A0E12DD379800024043B /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A0E22DD379800024043B /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
@@ -21271,6 +21540,7 @@
 				CEB3A0E42DD379800024043B /* BettingHistoryRootViewController.swift in Sources */,
 				CEB3A0E52DD379800024043B /* DepositViewModel.swift in Sources */,
 				CEB3A0E62DD379800024043B /* UserSession.swift in Sources */,
+				65F141642E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				CEB3A0E72DD379800024043B /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				CEB3A0E82DD379800024043B /* MessagesViewController.swift in Sources */,
 				CEB3A0E92DD379800024043B /* LoadableContent.swift in Sources */,
@@ -21288,9 +21558,11 @@
 				CEB3A0F62DD379800024043B /* SegmentControlView.swift in Sources */,
 				CEB3A0F72DD379800024043B /* UserInfoView.swift in Sources */,
 				CEB3A0F82DD379800024043B /* ServiceProviderModelMapper+Profile.swift in Sources */,
+				65F1412E2E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */,
 				CEB3A0F92DD379800024043B /* ShareTicketChoiceViewModel.swift in Sources */,
 				CEB3A0FA2DD379800024043B /* AggregatorRepositoryType.swift in Sources */,
 				CEB3A0FB2DD379800024043B /* DocumentView.swift in Sources */,
+				65F141292E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
 				CEB3A0FC2DD379800024043B /* PopularDetailsViewController.swift in Sources */,
 				CEB3A0FD2DD379800024043B /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CEB3A0FE2DD379800024043B /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -21399,6 +21671,7 @@
 				CEB3A16F2DD379800024043B /* PopUpDetails.swift in Sources */,
 				CEB3A1702DD379800024043B /* RunningPlatform.swift in Sources */,
 				CEB3A1712DD379800024043B /* AppModels.swift in Sources */,
+				65F1410A2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */,
 				CEB3A1722DD379800024043B /* HeadToHeadCardStatsView.swift in Sources */,
 				CEB3A1732DD379800024043B /* PromotionDetailViewController.swift in Sources */,
 				CEB3A1742DD379800024043B /* AppearanceViewModel.swift in Sources */,
@@ -21465,6 +21738,7 @@
 				CEB3A1B12DD379800024043B /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEB3A1B22DD379800024043B /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A1B32DD379800024043B /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F141142E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */,
 				CEB3A1B42DD379800024043B /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEB3A1B52DD379800024043B /* Theme.swift in Sources */,
 				CEB3A1B62DD379800024043B /* ThemeService.swift in Sources */,
@@ -21477,11 +21751,13 @@
 				CEB3A1BE2DD379800024043B /* CardsStyleViewController.swift in Sources */,
 				CEB3A1BF2DD379800024043B /* UserInfoSimpleCardView.swift in Sources */,
 				CEB3A1C02DD379800024043B /* FavoriteGoma.swift in Sources */,
+				65F1416E2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				CEB3A1C12DD379800024043B /* BettingPracticesViewController.swift in Sources */,
 				CEB3A1C22DD379800024043B /* MatchHeaderView.swift in Sources */,
 				CEB3A1C32DD379800024043B /* Fonts.swift in Sources */,
 				CEB3A1C42DD379800024043B /* ScreenState.swift in Sources */,
 				CEB3A1C52DD379800024043B /* UserProfileInfoViewController.swift in Sources */,
+				65F1413C2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CEB3A1C62DD379800024043B /* NotEmpty.swift in Sources */,
 				CEB3A1C72DD379800024043B /* VersionUpdateViewController.swift in Sources */,
 				CEB3A1C82DD379800024043B /* SportSelectionCollectionViewCell.swift in Sources */,
@@ -21500,6 +21776,7 @@
 				CEB3A1D72DD379800024043B /* LinksProviderProtocol.swift in Sources */,
 				CEB3A1D82DD379800024043B /* DynamicLinksProvider.swift in Sources */,
 				CEB3A1D92DD379800024043B /* LinksManagementService.swift in Sources */,
+				65F1414C2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				CEB3A1DA2DD379800024043B /* LinksManagementServiceProtocol.swift in Sources */,
 				CEB3A1DB2DD379800024043B /* StaticLinksProvider.swift in Sources */,
 				CEB3A1DC2DD379800024043B /* LinksProviderFactory.swift in Sources */,
@@ -21507,6 +21784,7 @@
 				CEB3A1DE2DD379800024043B /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				CEB3A1DF2DD379800024043B /* BetBuilderBettingTicketDataSource.swift in Sources */,
 				CEB3A1E02DD379800024043B /* DocumentStateView.swift in Sources */,
+				65F141422E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */,
 				CEB3A1E12DD379800024043B /* SelectChatroomTableViewCell.swift in Sources */,
 				CEB3A1E22DD379800024043B /* AutoLayoutDSL.swift in Sources */,
 				CE63A8272DE9D2FB00E1FF01 /* NextUpEventsViewController.swift in Sources */,
@@ -21626,6 +21904,7 @@
 				CEB3A2522DD379800024043B /* BetSubmissionSuccessViewController.swift in Sources */,
 				CE63A85C2DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */,
 				CEB3A2532DD379800024043B /* NibView.swift in Sources */,
+				65F1415C2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
 				CEB3A2542DD379800024043B /* BonusHistoryCellViewModel.swift in Sources */,
 				CEB3A2552DD379800024043B /* CardOptionRadioView.swift in Sources */,
 				CEB3A2562DD379800024043B /* BonusProgressView.swift in Sources */,
@@ -21896,6 +22175,7 @@
 				CEB3A3572DD379800024043B /* ListActionHeaderFooterView.swift in Sources */,
 				CEB3A3582DD379800024043B /* ChatSettingsViewModel.swift in Sources */,
 				CEB3A3592DD379800024043B /* ProfileLimitsManagementViewModel.swift in Sources */,
+				65F141522E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,
 				CEB3A35A2DD379800024043B /* FilterCollapseView.swift in Sources */,
 				CEB3A35B2DD379800024043B /* Delayed.swift in Sources */,
 				CEB3A35C2DD379800024043B /* DocumentsRootViewController.swift in Sources */,
@@ -22040,6 +22320,7 @@
 				CEB3A50A2DD379890024043B /* TabularScrollView.swift in Sources */,
 				CEB3A50B2DD379890024043B /* CasinoGameDetailViewModel.swift in Sources */,
 				CEB3A50C2DD379890024043B /* TextSectionView.swift in Sources */,
+				65F141802E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */,
 				CEB3A50D2DD379890024043B /* CompetitionFilterCell.swift in Sources */,
 				CEB3A50E2DD379890024043B /* SimpleCompetitionDetailsViewModel.swift in Sources */,
 				CEB3A50F2DD379890024043B /* SimpleCompetitionDetailsViewController.swift in Sources */,
@@ -22082,11 +22363,13 @@
 				CEB3A52F2DD379890024043B /* ClassicMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A5302DD379890024043B /* DescriptionBlockView.swift in Sources */,
 				CEB3A5312DD379890024043B /* UploadDocuments.swift in Sources */,
+				65F1417C2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */,
 				CEB3A5322DD379890024043B /* GeoLocationManager.swift in Sources */,
 				CEB3A5332DD379890024043B /* ImageSectionView.swift in Sources */,
 				CEB3A5342DD379890024043B /* PersonalInfoViewController.swift in Sources */,
 				CEB3A5352DD379890024043B /* UserConsentStatus.swift in Sources */,
 				CEB3A5372DD379890024043B /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
+				65F141052E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */,
 				CEB3A5382DD379890024043B /* WithdrawSuccessViewController.swift in Sources */,
 				CEB3A5392DD379890024043B /* HeaderTextFieldView.swift in Sources */,
 				CEB3A53A2DD379890024043B /* SocialItemCollectionViewCell.swift in Sources */,
@@ -22141,6 +22424,7 @@
 				CEB3A5662DD379890024043B /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A5672DD379890024043B /* OutrightMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A5682DD379890024043B /* BackgroundImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65F1411E2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */,
 				CEB3A5692DD379890024043B /* BoostedMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CEB3A56A2DD379890024043B /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A56B2DD379890024043B /* BoostedMatchWidgetCollectionViewCell.swift in Sources */,
@@ -22148,6 +22432,7 @@
 				CEB3A56D2DD379890024043B /* BettingHistoryRootViewController.swift in Sources */,
 				CEB3A56E2DD379890024043B /* DepositViewModel.swift in Sources */,
 				CEB3A56F2DD379890024043B /* UserSession.swift in Sources */,
+				65F141672E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				CEB3A5702DD379890024043B /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				CEB3A5712DD379890024043B /* MessagesViewController.swift in Sources */,
 				CEB3A5722DD379890024043B /* LoadableContent.swift in Sources */,
@@ -22165,9 +22450,11 @@
 				CEB3A57F2DD379890024043B /* SegmentControlView.swift in Sources */,
 				CEB3A5802DD379890024043B /* UserInfoView.swift in Sources */,
 				CEB3A5812DD379890024043B /* ServiceProviderModelMapper+Profile.swift in Sources */,
+				65F1412D2E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */,
 				CEB3A5822DD379890024043B /* ShareTicketChoiceViewModel.swift in Sources */,
 				CEB3A5832DD379890024043B /* AggregatorRepositoryType.swift in Sources */,
 				CEB3A5842DD379890024043B /* DocumentView.swift in Sources */,
+				65F141242E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
 				CEB3A5852DD379890024043B /* PopularDetailsViewController.swift in Sources */,
 				CEB3A5862DD379890024043B /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CEB3A5872DD379890024043B /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -22276,6 +22563,7 @@
 				CEB3A5F82DD379890024043B /* PopUpDetails.swift in Sources */,
 				CEB3A5F92DD379890024043B /* RunningPlatform.swift in Sources */,
 				CEB3A5FA2DD379890024043B /* AppModels.swift in Sources */,
+				65F1410D2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */,
 				CEB3A5FB2DD379890024043B /* HeadToHeadCardStatsView.swift in Sources */,
 				CEB3A5FC2DD379890024043B /* PromotionDetailViewController.swift in Sources */,
 				CEB3A5FD2DD379890024043B /* AppearanceViewModel.swift in Sources */,
@@ -22342,6 +22630,7 @@
 				CEB3A63A2DD379890024043B /* MatchWidgetCollectionViewCell+Layout.swift in Sources */,
 				CEB3A63B2DD379890024043B /* MatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A63C2DD379890024043B /* MatchWidgetCollectionViewCell+Configuration.swift in Sources */,
+				65F141172E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */,
 				CEB3A63D2DD379890024043B /* MatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEB3A63E2DD379890024043B /* Theme.swift in Sources */,
 				CEB3A63F2DD379890024043B /* ThemeService.swift in Sources */,
@@ -22354,11 +22643,13 @@
 				CEB3A6462DD379890024043B /* RibDocsViewModel.swift in Sources */,
 				CEB3A6472DD379890024043B /* CardsStyleViewController.swift in Sources */,
 				CEB3A6482DD379890024043B /* UserInfoSimpleCardView.swift in Sources */,
+				65F141752E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				CEB3A6492DD379890024043B /* FavoriteGoma.swift in Sources */,
 				CEB3A64A2DD379890024043B /* BettingPracticesViewController.swift in Sources */,
 				CEB3A64B2DD379890024043B /* MatchHeaderView.swift in Sources */,
 				CEB3A64C2DD379890024043B /* Fonts.swift in Sources */,
 				CEB3A64D2DD379890024043B /* ScreenState.swift in Sources */,
+				65F1413D2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CEB3A64E2DD379890024043B /* UserProfileInfoViewController.swift in Sources */,
 				CEB3A64F2DD379890024043B /* NotEmpty.swift in Sources */,
 				CEB3A6502DD379890024043B /* VersionUpdateViewController.swift in Sources */,
@@ -22377,6 +22668,7 @@
 				CEB3A65F2DD379890024043B /* BetslipErrorView.swift in Sources */,
 				CEB3A6602DD379890024043B /* LinksProviderProtocol.swift in Sources */,
 				CEB3A6612DD379890024043B /* DynamicLinksProvider.swift in Sources */,
+				65F1414A2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				CEB3A6622DD379890024043B /* LinksManagementService.swift in Sources */,
 				CEB3A6632DD379890024043B /* LinksManagementServiceProtocol.swift in Sources */,
 				CEB3A6642DD379890024043B /* StaticLinksProvider.swift in Sources */,
@@ -22384,6 +22676,7 @@
 				CEB3A6662DD379890024043B /* CompetitionSearchTableViewCell.swift in Sources */,
 				CEB3A6672DD379890024043B /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				CEB3A6682DD379890024043B /* BetBuilderBettingTicketDataSource.swift in Sources */,
+				65F141462E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */,
 				CEB3A6692DD379890024043B /* DocumentStateView.swift in Sources */,
 				CEB3A66A2DD379890024043B /* SelectChatroomTableViewCell.swift in Sources */,
 				CE63A8242DE9D2FB00E1FF01 /* NextUpEventsViewController.swift in Sources */,
@@ -22503,6 +22796,7 @@
 				CEB3A6DB2DD379890024043B /* BetSubmissionSuccessViewController.swift in Sources */,
 				CE63A85E2DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */,
 				CEB3A6DC2DD379890024043B /* NibView.swift in Sources */,
+				65F1415E2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
 				CEB3A6DD2DD379890024043B /* BonusHistoryCellViewModel.swift in Sources */,
 				CEB3A6DE2DD379890024043B /* CardOptionRadioView.swift in Sources */,
 				CEB3A6DF2DD379890024043B /* BonusProgressView.swift in Sources */,
@@ -22773,6 +23067,7 @@
 				CEB3A7E02DD379890024043B /* ListActionHeaderFooterView.swift in Sources */,
 				CEB3A7E12DD379890024043B /* ChatSettingsViewModel.swift in Sources */,
 				CEB3A7E22DD379890024043B /* ProfileLimitsManagementViewModel.swift in Sources */,
+				65F141572E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,
 				CEB3A7E32DD379890024043B /* FilterCollapseView.swift in Sources */,
 				CEB3A7E42DD379890024043B /* Delayed.swift in Sources */,
 				CEB3A7E52DD379890024043B /* DocumentsRootViewController.swift in Sources */,
@@ -22910,8 +23205,10 @@
 				CEF193962DA834E900C81F12 /* HomeAwayCardStatsView.swift in Sources */,
 				CEF193972DA834E900C81F12 /* CardsStyleViewModel.swift in Sources */,
 				CEF193982DA834E900C81F12 /* MarketGroupOrganizer.swift in Sources */,
+				65F1414F2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				CEF1939A2DA834E900C81F12 /* GrantedBonus.swift in Sources */,
 				CEF1939B2DA834E900C81F12 /* UIApplication+Extensions.swift in Sources */,
+				65F1412F2E1402E2004BDE6B /* DepositBonusViewController.swift in Sources */,
 				CEF1939C2DA834E900C81F12 /* SuggestedBetLineViewModel.swift in Sources */,
 				CEF1939D2DA834E900C81F12 /* UserProfileViewModel.swift in Sources */,
 				CEF1939E2DA834E900C81F12 /* FilterSliderCollapseView.swift in Sources */,
@@ -23057,16 +23354,20 @@
 				CEF1940E2DA834E900C81F12 /* CustomPageIndicator.swift in Sources */,
 				CEF1940F2DA834E900C81F12 /* TopCompetitionDetailsViewController.swift in Sources */,
 				CEB9BB902DB659B000E8084B /* Promotions.swift in Sources */,
+				65F141592E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,
 				CEF194102DA834E900C81F12 /* Environment.swift in Sources */,
 				CEF194112DA834E900C81F12 /* SegmentControlView.swift in Sources */,
 				CEF194122DA834E900C81F12 /* UserInfoView.swift in Sources */,
+				65F141662E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				CEF194142DA834E900C81F12 /* ShareTicketChoiceViewModel.swift in Sources */,
 				CEF194152DA834E900C81F12 /* AggregatorRepositoryType.swift in Sources */,
 				CEF194162DA834E900C81F12 /* DocumentView.swift in Sources */,
+				65F141822E155800004BDE6B /* DepositBonusSuccessViewController.swift in Sources */,
 				CEF194172DA834E900C81F12 /* PopularDetailsViewController.swift in Sources */,
 				CEF194182DA834E900C81F12 /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CEF194192DA834E900C81F12 /* MatchWidgetCellViewModelProtocol.swift in Sources */,
 				CEF1941A2DA834E900C81F12 /* MatchWidgetCellViewModel+Protocol.swift in Sources */,
+				65F141032E13EEAD004BDE6B /* FirstDepositPromotionsViewModelProtocol.swift in Sources */,
 				CEF1941B2DA834E900C81F12 /* InAppMessageCellViewModel.swift in Sources */,
 				CEF1941C2DA834E900C81F12 /* (null) in Sources */,
 				CEF1941D2DA834E900C81F12 /* BonusRootViewController.swift in Sources */,
@@ -23120,6 +23421,7 @@
 				CEF1944D2DA834E900C81F12 /* MyGamesRootViewController.swift in Sources */,
 				CEF1944E2DA834E900C81F12 /* PreSubmissionBetslipViewModel.swift in Sources */,
 				CEF194502DA834E900C81F12 /* RankingsViewController.swift in Sources */,
+				65F1415F2E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
 				CEF194512DA834E900C81F12 /* BetslipManager.swift in Sources */,
 				CEF194522DA834E900C81F12 /* Color+Extensions.swift in Sources */,
 				CEF194532DA834E900C81F12 /* ProfileLimitsManagementViewController.swift in Sources */,
@@ -23148,10 +23450,12 @@
 				CEF194692DA834E900C81F12 /* PasswordUpdateViewModel.swift in Sources */,
 				CEF1946A2DA834E900C81F12 /* RegisterErrorViewController.swift in Sources */,
 				CEB2367E2DAD0ED200260B5B /* ChatBubbleView.swift in Sources */,
+				65F1411A2E1402A4004BDE6B /* DepositBonusViewModelProtocol.swift in Sources */,
 				CEF1946B2DA834E900C81F12 /* NetworkManager.swift in Sources */,
 				CEF1946C2DA834E900C81F12 /* InnerScrollDragDirection.swift in Sources */,
 				CEF1946E2DA834E900C81F12 /* Array+Extensions.swift in Sources */,
 				CEF1946F2DA834E900C81F12 /* MatchDetailsViewModel.swift in Sources */,
+				65F1417A2E1557EA004BDE6B /* MockDepositBonusSuccessViewModel.swift in Sources */,
 				CEF194702DA834E900C81F12 /* FilterHistoryViewController.swift in Sources */,
 				CEF194712DA834E900C81F12 /* MyGamesViewController.swift in Sources */,
 				CEF194722DA834E900C81F12 /* BettingTicket.swift in Sources */,
@@ -23274,6 +23578,7 @@
 				CEF194CD2DA834E900C81F12 /* (null) in Sources */,
 				CEF194CE2DA834E900C81F12 /* UserReferralView.swift in Sources */,
 				CEF194CF2DA834E900C81F12 /* UserProfileTipsViewController.swift in Sources */,
+				65F141102E13EF7F004BDE6B /* FirstDepositPromotionsViewController.swift in Sources */,
 				CEF194D02DA834E900C81F12 /* AppSettingsViewController.swift in Sources */,
 				CEE5BBE32DF370F9006E7494 /* MarketNamePillLabelViewModel.swift in Sources */,
 				CEF194D12DA834E900C81F12 /* SingleBettingTicketDataSource.swift in Sources */,
@@ -23341,6 +23646,7 @@
 				CEF1950B2DA834E900C81F12 /* (null) in Sources */,
 				CEF1950C2DA834E900C81F12 /* ScaleAspectFitImageView.swift in Sources */,
 				CEF1950D2DA834E900C81F12 /* DepositViewController.swift in Sources */,
+				65F141722E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				CEC427EF2DF0E6520077A12F /* MarketOutcomesMultiLineViewModel.swift in Sources */,
 				CEC427F02DF0E6520077A12F /* MarketInfoLineViewModel.swift in Sources */,
 				CEC427F12DF0E6520077A12F /* MatchHeaderViewModel.swift in Sources */,
@@ -23445,6 +23751,7 @@
 				CEF1955F2DA834E900C81F12 /* AppearanceMode.swift in Sources */,
 				CEF195602DA834E900C81F12 /* BetType.swift in Sources */,
 				CEF195612DA834E900C81F12 /* UserActionView.swift in Sources */,
+				65F1410B2E13EECF004BDE6B /* MockFirstDepositPromotionsViewModel.swift in Sources */,
 				CEF195622DA834E900C81F12 /* RegisterSuccessViewController.swift in Sources */,
 				CEF195632DA834E900C81F12 /* LoadingSpinnerViewController.swift in Sources */,
 				CEF195642DA834E900C81F12 /* TextSubsectionView.swift in Sources */,
@@ -23511,10 +23818,12 @@
 				CEF195A32DA834E900C81F12 /* FilterFavoritesViewController.swift in Sources */,
 				CEF195A42DA834E900C81F12 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				CEF195A52DA834E900C81F12 /* MainMarketType.swift in Sources */,
+				65F1413F2E143CC4004BDE6B /* MockDepositVerificationViewModel.swift in Sources */,
 				CEF195A62DA834E900C81F12 /* RecoverPasswordViewController.swift in Sources */,
 				CEF195A72DA834E900C81F12 /* FilterHistoryViewModel.swift in Sources */,
 				CEF195AA2DA834E900C81F12 /* FeaturedTipCollectionViewModel.swift in Sources */,
 				CEF195AB2DA834E900C81F12 /* (null) in Sources */,
+				65F1413A2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CEF195AC2DA834E900C81F12 /* FilterRowView.swift in Sources */,
 				CEF195AD2DA834E900C81F12 /* UserTrackingSettingsViewController.swift in Sources */,
 				CEF195AE2DA834E900C81F12 /* UploadView.swift in Sources */,
@@ -23603,6 +23912,7 @@
 				CEF196042DA834E900C81F12 /* BusinessModules.swift in Sources */,
 				CEF196052DA834E900C81F12 /* QuestionFormStepView.swift in Sources */,
 				CEF196062DA834E900C81F12 /* NSObject+Extension.swift in Sources */,
+				65F141252E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
 				CEF196072DA834E900C81F12 /* Logger.swift in Sources */,
 				CEF196082DA834E900C81F12 /* NavControllerTransitionCoordinator.swift in Sources */,
 				CEF196092DA834E900C81F12 /* GamesNotificationViewModel.swift in Sources */,

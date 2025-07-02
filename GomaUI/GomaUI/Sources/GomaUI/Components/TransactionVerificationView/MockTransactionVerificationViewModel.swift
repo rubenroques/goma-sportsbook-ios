@@ -61,6 +61,36 @@ public final class MockTransactionVerificationViewModel: TransactionVerification
     }
     
     public func configure(with data: TransactionVerificationData) {
+        
+        let fullText = data.subtitle
+
+        if let highlightText = data.highlightText {
+            let phoneRanges = HighlightedTextView.findRanges(of: highlightText, in: fullText)
+            
+            let highlight = HighlightData(
+                text: highlightText,
+                color: StyleProvider.Color.highlightPrimary,
+                ranges: phoneRanges
+            )
+            
+            let highlightedTextData = HighlightedTextData(
+                fullText: fullText,
+                highlights: [highlight],
+                textAlignment: .center
+            )
+            
+            self.highlightedTextViewModelInstance.configure(with: highlightedTextData)
+        }
+        else {
+            let highlightedTextData = HighlightedTextData(
+                fullText: fullText,
+                highlights: [],
+                textAlignment: .center
+            )
+            
+            self.highlightedTextViewModelInstance.configure(with: highlightedTextData)
+        }
+        
         dataSubject.send(data)
     }
 }
@@ -102,7 +132,7 @@ public extension MockTransactionVerificationViewModel {
         return MockTransactionVerificationViewModel(data: data)
     }
     
-    static var CompletePinMock: MockTransactionVerificationViewModel {
+    static var completePinMock: MockTransactionVerificationViewModel {
         let data = TransactionVerificationData(
             title: "Received it yet?",
             subtitle: "Follow the prompt to proceed",

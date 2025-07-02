@@ -26,7 +26,8 @@ public struct AmountPillsData: Equatable {
 public protocol AmountPillsViewModelProtocol {
     /// Publisher for reactive updates
     var pillsDataPublisher: AnyPublisher<AmountPillsData, Never> { get }
-    
+    var pillsDataSubject: CurrentValueSubject<AmountPillsData, Never> { get }
+
     /// Select a specific pill
     func selectPill(withId id: String)
     

@@ -57,7 +57,8 @@ extension MockPromotionalBonusCardViewModel {
             playersCount: "12.6k",
             backgroundImageName: "promo_card_background",
             claimButtonTitle: "Claim bonus",
-            termsButtonTitle: "Terms and Conditions"
+            termsButtonTitle: "Terms and Conditions",
+            bonusAmount: 1000
         )
         
         return MockPromotionalBonusCardViewModel(cardData: cardData)
@@ -81,7 +82,8 @@ extension MockPromotionalBonusCardViewModel {
             backgroundImageName: "promo_card_background",
             hasGradientView: false,
             claimButtonTitle: "Claim bonus",
-            termsButtonTitle: "Terms and Conditions"
+            termsButtonTitle: "Terms and Conditions",
+            bonusAmount: 1000
         )
         
         return MockPromotionalBonusCardViewModel(cardData: cardData)

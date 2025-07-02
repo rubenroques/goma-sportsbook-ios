@@ -35,7 +35,7 @@ class PhoneForgotPasswordSuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.systemGray6
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         setupLayout()
         setupBindings()
         closeButton.addTarget(self, action: #selector(didTapClose), for: .touchUpInside)

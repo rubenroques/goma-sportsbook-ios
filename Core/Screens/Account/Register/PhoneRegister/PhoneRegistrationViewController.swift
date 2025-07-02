@@ -64,12 +64,11 @@ class PhoneRegistrationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         setupLayout()
         setupBindings()
         
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
-        
         
     }
 

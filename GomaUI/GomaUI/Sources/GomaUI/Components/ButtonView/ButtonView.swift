@@ -113,7 +113,7 @@ final public class ButtonView: UIView {
         
         if isEnabled {
             button.layer.borderWidth = 2
-            button.layer.borderColor = StyleProvider.Color.buttonBackgroundPrimary.cgColor
+            button.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
             button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         } else {
             button.layer.borderWidth = 2

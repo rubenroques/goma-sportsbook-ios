@@ -55,7 +55,8 @@ extension MockPromotionalBonusCardsScrollViewModel {
             mainTitle: "Deposit XAF 1000 and play with XAF 2000",
             userAvatars: userAvatars1,
             playersCount: "12.6k",
-            backgroundImageName: "bonus_card_background"
+            backgroundImageName: "bonus_card_background",
+            bonusAmount: 1000
         )
         
         // Second card - Welcome Bonus
@@ -71,7 +72,8 @@ extension MockPromotionalBonusCardsScrollViewModel {
             mainTitle: "Get 100% match bonus up to XAF 5000",
             userAvatars: userAvatars2,
             playersCount: "8.2k",
-            backgroundImageName: nil
+            backgroundImageName: nil,
+            bonusAmount: 100
         )
         
         // Third card - Weekend Special
@@ -88,7 +90,8 @@ extension MockPromotionalBonusCardsScrollViewModel {
             mainTitle: "50% Bonus on all deposits this weekend",
             userAvatars: userAvatars3,
             playersCount: "3.1k",
-            backgroundImageName: nil
+            backgroundImageName: nil,
+            bonusAmount: 50
         )
         
         // Fourth card - VIP Bonus
@@ -103,7 +106,8 @@ extension MockPromotionalBonusCardsScrollViewModel {
             mainTitle: "Triple your deposit for VIP members only",
             userAvatars: userAvatars4,
             playersCount: "1.8k",
-            backgroundImageName: nil
+            backgroundImageName: nil,
+            bonusAmount: 300
         )
         
         let cardsData = PromotionalBonusCardsData(
@@ -127,7 +131,8 @@ extension MockPromotionalBonusCardsScrollViewModel {
             mainTitle: "Instant 50% bonus on first deposit",
             userAvatars: userAvatars,
             playersCount: "2.5k",
-            backgroundImageName: nil
+            backgroundImageName: nil,
+            bonusAmount: 50
         )
         
         let card2 = PromotionalBonusCardData(
@@ -136,7 +141,8 @@ extension MockPromotionalBonusCardsScrollViewModel {
             mainTitle: "Daily cashback up to 10%",
             userAvatars: userAvatars,
             playersCount: "4.1k",
-            backgroundImageName: nil
+            backgroundImageName: nil,
+            bonusAmount: 10
         )
         
         let cardsData = PromotionalBonusCardsData(

@@ -14,18 +14,18 @@ public struct StatusNotificationData {
     public let id: String
     public let type: StatusNotificationType
     public let message: String
-    public let emoji: String?
+    public let icon: String?
     
     public init(
         id: String = UUID().uuidString,
         type: StatusNotificationType,
         message: String,
-        emoji: String? = nil
+        icon: String? = nil
     ) {
         self.id = id
         self.type = type
         self.message = message
-        self.emoji = emoji
+        self.icon = icon
     }
 }
 

@@ -1152,13 +1152,18 @@ extension RootAdaptiveViewController {
         // Triple-tap: open PhoneRegistrationViewController (your current one)
         let tripleTapGesture = UITapGestureRecognizer(target: self, action: #selector(openPhoneRegistration))
         tripleTapGesture.numberOfTapsRequired = 3
+        
+        let quadrupleTapGesture = UITapGestureRecognizer(target: self, action: #selector(openFirstDeposits))
+        quadrupleTapGesture.numberOfTapsRequired = 4
 
         // Ensure double-tap waits for triple-tap to fail
         doubleTapGesture.require(toFail: tripleTapGesture)
+        tripleTapGesture.require(toFail: quadrupleTapGesture)
 
         // Add both to your view
         orangePlaceholderView.addGestureRecognizer(doubleTapGesture)
         orangePlaceholderView.addGestureRecognizer(tripleTapGesture)
+        orangePlaceholderView.addGestureRecognizer(quadrupleTapGesture)
 
         initConstraints()
     }
@@ -1172,6 +1177,12 @@ extension RootAdaptiveViewController {
     @objc private func openPhoneRegistration() {
         let registrationVC = PhoneRegistrationViewController()
         present(registrationVC, animated: true)
+        
+    }
+    
+    @objc private func openFirstDeposits() {
+        let firstDepositPromotionsVC = FirstDepositPromotionsViewController()
+        present(firstDepositPromotionsVC, animated: true)
         
     }
 

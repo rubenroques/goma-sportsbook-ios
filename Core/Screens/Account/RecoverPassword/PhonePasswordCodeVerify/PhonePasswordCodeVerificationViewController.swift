@@ -94,7 +94,7 @@ class PhonePasswordCodeVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         setupLayout()
         setupBindings()
         
