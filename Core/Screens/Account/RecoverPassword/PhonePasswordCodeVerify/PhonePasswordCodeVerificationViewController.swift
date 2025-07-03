@@ -94,13 +94,15 @@ class PhonePasswordCodeVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         setupLayout()
         setupBindings()
         
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         changeButton.addTarget(self, action: #selector(didTapChangeButton), for: .primaryActionTriggered)
+        
+        pinEntryView.focusField(at: 0)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)

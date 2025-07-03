@@ -65,15 +65,14 @@ public class FilterStorage: ObservableObject {
                 switch subscribableContent {
                 case .connected(let subscription):
                     print("🔗 Connected to Sport Tournaments stream with subscription: \(subscription.id)")
-                    
+                    // TODO:
                 case .contentUpdate(let tournaments):
                                         
                     let popularCompetitions = ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
-                    
                     self.currentCompetitions = popularCompetitions
                     
                 case .disconnected:
-                    print("🔌 Disconnected from Popular Tournaments stream")
+                    break
                 }
             }
         )

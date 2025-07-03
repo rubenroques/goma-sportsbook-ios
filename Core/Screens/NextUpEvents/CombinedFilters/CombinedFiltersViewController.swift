@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import GomaUI
+import ServicesProvider
 
 public class CombinedFiltersViewController: UIViewController {
     
@@ -117,7 +118,7 @@ public class CombinedFiltersViewController: UIViewController {
     // Dynamic storage for views
     private var dynamicFilterViews: [String: UIView] = [:]
     
-    var viewModel: MockCombinedFiltersViewModel
+    var viewModel: CombinedFiltersViewModelProtocol
     
     // Callbacks
     public var onReset: (() -> Void)?
@@ -127,7 +128,7 @@ public class CombinedFiltersViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    public init(viewModel: MockCombinedFiltersViewModel) {
+    init(viewModel: CombinedFiltersViewModelProtocol) {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
@@ -248,7 +249,7 @@ public class CombinedFiltersViewController: UIViewController {
     }
     
     // MARK: Binding
-    private func bind(toViewModel viewModel: MockCombinedFiltersViewModel) {
+    private func bind(toViewModel viewModel: CombinedFiltersViewModelProtocol) {
         
         viewModel.isLoadingPublisher
             .sink(receiveValue: { [weak self] isLoading in
@@ -307,7 +308,13 @@ public class CombinedFiltersViewController: UIViewController {
     }
     
     @objc private func closeButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
+        if let navigationController = self.navigationController {
+            navigationController.popViewController(animated: true)
+        }
+        else {
+            self.dismiss(animated: true)
+        }
+
         onClose?()
     }
 
@@ -328,7 +335,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "sportsFilter",
                 type: .sportsFilter,
-                label: "sports",
+                label: "Sports",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -339,7 +346,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "timeFilter",
                 type: .timeFilter,
-                label: "filter_by_time",
+                label: "Filter by Time",
                 icon: "filterTime",
                 details: FilterDetails(
                     isExpandable: false,
@@ -356,22 +363,22 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "sortByFilter",
                 type: .radioFilterBasic,
-                label: "sort_by",
+                label: "Sort by",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
                     expandedByDefault: true,
                     options: [
-                        FilterOption(id: "popular", label: "popular", value: "popular"),
-                        FilterOption(id: "upcoming", label: "upcoming", value: "upcoming"),
-                        FilterOption(id: "favourites", label: "favourites", value: "favourites")
+                        FilterOption(id: "popular", label: "Popular", value: "popular"),
+                        FilterOption(id: "upcoming", label: "Upcoming", value: "upcoming"),
+                        FilterOption(id: "favourites", label: "Favourites", value: "favourites")
                     ]
                 )
             ),
             FilterWidget(
                 id: "leaguesFilter",
                 type: .radioFilterBasic,
-                label: "leagues",
+                label: "Leagues",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -382,7 +389,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "popularCountryLeaguesFilter",
                 type: .radioFilterAccordion,
-                label: "popular_countries",
+                label: "Popular Countries",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -393,7 +400,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "otherCountryLeaguesFilter",
                 type: .radioFilterAccordion,
-                label: "other_countries",
+                label: "Other Countries",
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,

@@ -11,92 +11,14 @@ import LocalAuthentication
 import ServicesProvider
 import GomaUI
 
-class RootAdaptiveScreenViewModel {
-
-    @Published var currentScreen: ScreenType?
-
-    var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
-    var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
-    var floatingOverlayViewModel: FloatingOverlayViewModelProtocol
-
-    private var cancellables = Set<AnyCancellable>()
-    private var lastActiveTabBarID: TabBarIdentifier?
-
-    init(multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol = MockMultiWidgetToolbarViewModel.defaultMock,
-         adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
-         floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel())
-    {
-        self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel
-        self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
-        self.floatingOverlayViewModel = floatingOverlayViewModel
-
-        setupTabBarBinding()
-    }
-
-    // MARK: - Screen Management
-    func presentScreen(_ screenType: ScreenType) {
-        currentScreen = screenType
-    }
-
-    func hideCurrentScreen() {
-        currentScreen = nil
-    }
-
-    // MARK: - Private Methods
-    private func setupTabBarBinding() {
-        // Listen to tab bar active bar id changes
-        adaptiveTabBarViewModel.displayStatePublisher
-            .sink { [weak self] displayState in
-                self?.lastActiveTabBarID = displayState.activeTabBarID
-            }
-            .store(in: &cancellables)
-
-        // Listen to tab bar state changes
-        adaptiveTabBarViewModel.displayStatePublisher
-            .dropFirst()
-            .sink { [weak self] displayState in
-                self?.handleTabBarChange(displayState)
-            }
-            .store(in: &cancellables)
-    }
-
-    private func handleTabBarChange(_ displayState: AdaptiveTabBarDisplayState) {
-
-        if lastActiveTabBarID != displayState.activeTabBarID {
-            switch displayState.activeTabBarID {
-            case .home:
-                // Switched to Sportsbook
-                floatingOverlayViewModel.show(mode: .sportsbook, duration: 3.0)
-            case .casino:
-                // Switched to Casino
-                floatingOverlayViewModel.show(mode: .casino, duration: 3.0)
-            }
-        }
-    }
-
-}
-
-enum ScreenType {
-    // Sportsbook tab items
-    case home
-    case nextUpEvents
-    case inPlayEvents
-    case myBets
-    case search
-
-    // Casino tab items
-    case casinoHome
-    case casinoVirtualSports
-    case casinoAviatorGame
-    case casinoSearch
-}
-
 class RootAdaptiveViewController: UIViewController {
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
     private var widgetToolBarView: MultiWidgetToolbarView!
+    
+    // TODO: Remove after milestone for top bar
     private lazy var orangePlaceholderView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.App.topBarGradient1
@@ -145,7 +67,6 @@ class RootAdaptiveViewController: UIViewController {
     private var inPlayEventsViewControllerLoaded: Bool = false
 
     // Dummy view controllers for unimplemented screens
-    private lazy var inPlayDummyViewController = DummyViewController(displayText: "Live Events")
     private lazy var myBetsDummyViewController = DummyViewController(displayText: "My Bets")
     private lazy var searchDummyViewController = DummyViewController(displayText: "Search")
     private lazy var casinoHomeDummyViewController = DummyViewController(displayText: "Casino Home")
@@ -203,7 +124,9 @@ class RootAdaptiveViewController: UIViewController {
 
         self.adaptiveTabBarView = AdaptiveTabBarView(viewModel: viewModel.adaptiveTabBarViewModel)
         self.adaptiveTabBarView.backgroundMode = .transparent // Use transparent mode with combined blur
+        
         self.widgetToolBarView = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
+        
         self.floatingOverlayView = FloatingOverlayView(viewModel: viewModel.floatingOverlayViewModel)
         self.floatingOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -745,7 +668,7 @@ class RootAdaptiveViewController: UIViewController {
         case .inPlayEvents:
             // Use dummy instead of real controller
             presentChildViewController(
-                inPlayDummyViewController,
+                inPlayEventsViewController,
                 in: inPlayEventsBaseView,
                 loadedFlag: &inPlayEventsViewControllerLoaded
             )
@@ -1115,14 +1038,18 @@ extension RootAdaptiveViewController {
 
     private func setupSubviews() {
 
+        //
+        view.addSubview(containerView)
+        
         // Add main container views
         view.addSubview(topSafeAreaView)
         view.addSubview(topBarContainerBaseView)
 
         topBarContainerBaseView.addSubview(widgetToolBarView)
-//        topBarContainerBaseView.addSubview(orangePlaceholderView)
 
-        view.addSubview(containerView)
+        //
+        //topBarContainerBaseView.addSubview(orangePlaceholderView)
+
         view.addSubview(bottomSafeAreaView)
         view.addSubview(localAuthenticationBaseView)
 
@@ -1156,31 +1083,6 @@ extension RootAdaptiveViewController {
 
         initConstraints()
     }
-    
-    @objc private func openPhoneLogin() {
-        let loginVC = PhoneLoginViewController()
-        let navController = Router.navigationController(with: loginVC)
-        
-        loginVC.loginComplete = { [weak self] in
-            navController.dismiss(animated: true)
-            // TESTING LOGIN CHANGE
-            self?.widgetToolBarView.setLoggedInState(true)
-        }
-        
-        present(navController, animated: true)
-    }
-    
-    @objc private func openPhoneRegistration() {
-        let registrationVC = PhoneRegistrationViewController()
-        present(registrationVC, animated: true)
-        
-    }
-    
-    @objc private func openFirstDeposits() {
-        let firstDepositPromotionsVC = FirstDepositPromotionsViewController()
-        present(firstDepositPromotionsVC, animated: true)
-        
-    }
 
     private func initConstraints() {
 
@@ -1203,10 +1105,10 @@ extension RootAdaptiveViewController {
             self.widgetToolBarView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
             
             // Orange placeholder view (same constraints as widget toolbar)
-//            self.orangePlaceholderView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
-//            self.orangePlaceholderView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
-//            self.orangePlaceholderView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
-//            self.orangePlaceholderView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
+            //self.orangePlaceholderView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
+            //self.orangePlaceholderView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
+            //self.orangePlaceholderView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
+            //self.orangePlaceholderView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
 
             // Container View
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -1321,6 +1223,35 @@ extension RootAdaptiveViewController {
 }
 
 extension RootAdaptiveViewController: RootActionable {
+    
+    func openPhoneLogin() {
+        let phoneLoginViewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()
+        
+        let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
+        
+        let navigationController = Router.navigationController(with: phoneLoginViewController)
+        
+        phoneLoginViewModel.loginComplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                // TESTING LOGIN CHANGE
+                navigationController.dismiss(animated: true)
+                self?.widgetToolBarView.setLoggedInState(true)
+            })
+            .store(in: &cancellables)
+        
+        present(navigationController, animated: true)
+    }
+    
+    func openPhoneRegistration() {
+        let phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
+        
+        let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
+        
+        present(phoneRegistrationViewController, animated: true)
+        
+    }
+    
     func openMatchDetail(matchId: String) {
 
     }

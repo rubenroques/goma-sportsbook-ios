@@ -12,7 +12,7 @@ import GomaUI
 class DepositBonusSuccessViewController: UIViewController {
     private let containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         view.layer.cornerRadius = 8
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false

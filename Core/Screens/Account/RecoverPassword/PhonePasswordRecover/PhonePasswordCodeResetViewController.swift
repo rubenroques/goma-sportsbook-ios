@@ -82,7 +82,7 @@ class PhonePasswordCodeResetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         setupLayout()
         setupBindings()
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)

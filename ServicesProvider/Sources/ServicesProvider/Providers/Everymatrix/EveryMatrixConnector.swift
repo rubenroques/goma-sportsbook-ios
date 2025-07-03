@@ -28,12 +28,13 @@ class EveryMatrixConnector: Connector {
         // self.setupNotificationHandling()
         
         self.connectionCancellable = self.wampManager.connectionStatePublisher
-            .sink { wampConnectionState in
+            .sink { [weak self] wampConnectionState in
                 switch wampConnectionState {
                 case .connected:
                     print("EveryMatrixConnector init wamp connected")
                 case .disconnected:
                     print("EveryMatrixConnector init wamp disconnected")
+                    self?.forceReconnect()
                 }
             }
     }

@@ -46,7 +46,7 @@ class PhoneRegistrationViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(viewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()) {
+    init(viewModel: PhoneRegistrationViewModelProtocol) {
         self.viewModel = viewModel
         self.headerView = PromotionalHeaderView(viewModel: viewModel.headerViewModel)
         self.highlightedTextView = HighlightedTextView(viewModel: viewModel.highlightedTextViewModel)
@@ -64,7 +64,7 @@ class PhoneRegistrationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         setupLayout()
         setupBindings()
         
@@ -144,11 +144,11 @@ class PhoneRegistrationViewController: UIViewController {
         }
         
         termsView.onTermsLinkTapped = { [weak self] in
-            self?.openTermsURL(urlString: "www.google.com")
+            self?.openTermsURL(urlString: "https://www.google.com")
         }
         
         termsView.onPrivacyLinkTapped = { [weak self] in
-            self?.openPrivacyURL(urlString: "www.google.com")
+            self?.openPrivacyURL(urlString: "https://www.google.com")
         }
     }
     

@@ -9,6 +9,7 @@ public struct TallOddsMatchData: Equatable, Hashable {
     public let awayParticipantName: String
     public let marketInfo: MarketInfoData
     public let outcomes: MarketGroupData
+    public let liveScoreData: LiveScoreData?
     
     public init(
         matchId: String,
@@ -16,7 +17,8 @@ public struct TallOddsMatchData: Equatable, Hashable {
         homeParticipantName: String,
         awayParticipantName: String,
         marketInfo: MarketInfoData,
-        outcomes: MarketGroupData
+        outcomes: MarketGroupData,
+        liveScoreData: LiveScoreData? = nil
     ) {
         self.matchId = matchId
         self.leagueInfo = leagueInfo
@@ -24,6 +26,16 @@ public struct TallOddsMatchData: Equatable, Hashable {
         self.awayParticipantName = awayParticipantName
         self.marketInfo = marketInfo
         self.outcomes = outcomes
+        self.liveScoreData = liveScoreData
+    }
+}
+
+// MARK: - Live Score Data
+public struct LiveScoreData: Equatable, Hashable {
+    public let scoreCells: [ScoreDisplayData]
+    
+    public init(scoreCells: [ScoreDisplayData]) {
+        self.scoreCells = scoreCells
     }
 }
 
@@ -32,15 +44,18 @@ public struct TallOddsMatchCardDisplayState: Equatable {
     public let matchId: String
     public let homeParticipantName: String
     public let awayParticipantName: String
+    public let isLive: Bool
     
     public init(
         matchId: String,
         homeParticipantName: String,
-        awayParticipantName: String
+        awayParticipantName: String,
+        isLive: Bool = false
     ) {
         self.matchId = matchId
         self.homeParticipantName = homeParticipantName
         self.awayParticipantName = awayParticipantName
+        self.isLive = isLive
     }
 }
 
@@ -53,6 +68,7 @@ public protocol TallOddsMatchCardViewModelProtocol {
     var matchHeaderViewModelPublisher: AnyPublisher<MatchHeaderViewModelProtocol, Never> { get }
     var marketInfoLineViewModelPublisher: AnyPublisher<MarketInfoLineViewModelProtocol, Never> { get }
     var marketOutcomesViewModelPublisher: AnyPublisher<MarketOutcomesMultiLineViewModelProtocol, Never> { get }
+    var scoreViewModelPublisher: AnyPublisher<ScoreViewModelProtocol?, Never> { get }
     
     // Action handlers
     func onMatchHeaderAction()

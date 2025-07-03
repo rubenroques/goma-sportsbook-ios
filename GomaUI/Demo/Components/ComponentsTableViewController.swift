@@ -119,6 +119,18 @@ class ComponentsTableViewController: UITableViewController {
             }
         ),
         UIComponent(
+            title: "Pill Selector Bar",
+            description: "Horizontal scrollable collection of pills with fade effects and interactive selection",
+            viewController: PillSelectorBarViewController.self,
+            previewFactory: {
+                let viewModel = MockPillSelectorBarViewModel.marketFilters
+                let pillSelectorBar = PillSelectorBarView(viewModel: viewModel)
+                pillSelectorBar.backgroundColor = StyleProvider.Color.backgroundSecondary
+                pillSelectorBar.layer.cornerRadius = 8
+                return pillSelectorBar
+            }
+        ),
+        UIComponent(
             title: "Pill View",
             description: "Customizable pill-shaped selector with icon and selection state support",
             viewController: PillItemViewController.self,
@@ -306,6 +318,40 @@ class ComponentsTableViewController: UITableViewController {
                 pillView.backgroundColor = StyleProvider.Color.backgroundSecondary
                 pillView.layer.cornerRadius = 4
                 return pillView
+            }
+        ),
+        UIComponent(
+            title: "Sport Type Selector Item",
+            description: "Individual sport item with icon and text layout, designed for use in sport selection interfaces",
+            viewController: SportTypeSelectorItemViewController.self,
+            previewFactory: {
+                let stackView = UIStackView()
+                stackView.axis = .horizontal
+                stackView.spacing = 8
+                stackView.distribution = .fillEqually
+                
+                let footballItem = SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.footballMock)
+                let basketballItem = SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.basketballMock)
+                
+                footballItem.heightAnchor.constraint(equalToConstant: 56).isActive = true
+                basketballItem.heightAnchor.constraint(equalToConstant: 56).isActive = true
+                
+                stackView.addArrangedSubview(footballItem)
+                stackView.addArrangedSubview(basketballItem)
+                
+                return stackView
+            }
+        ),
+        UIComponent(
+            title: "Sport Type Selector",
+            description: "Full-screen sport selection with 2-column collection view, modal presentation, and selection callbacks",
+            viewController: SportTypeSelectorViewController.self,
+            previewFactory: {
+                let viewModel = MockSportTypeSelectorViewModel.fewSportsMock
+                let selectorView = SportTypeSelectorView(viewModel: viewModel)
+                selectorView.backgroundColor = StyleProvider.Color.backgroundSecondary
+                selectorView.layer.cornerRadius = 8
+                return selectorView
             }
         ),
         UIComponent(

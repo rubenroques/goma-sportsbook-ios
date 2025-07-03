@@ -27,15 +27,51 @@ public class EventMetadataPointer: Codable {
 
 }
 
+public struct MainMarket: Codable, Hashable, Identifiable {
+    public let id: String
+    public let bettingTypeId: String
+    public let eventPartId: String
+    public let sportId: String
+    public let bettingTypeName: String
+    public let eventPartName: String
+    public let numberOfOutcomes: Int?
+    public let liveMarket: Bool
+    public let outright: Bool
+    
+    public init(
+        id: String,
+        bettingTypeId: String,
+        eventPartId: String,
+        sportId: String,
+        bettingTypeName: String,
+        eventPartName: String,
+        numberOfOutcomes: Int?,
+        liveMarket: Bool,
+        outright: Bool
+    ) {
+        self.id = id
+        self.bettingTypeId = bettingTypeId
+        self.eventPartId = eventPartId
+        self.sportId = sportId
+        self.bettingTypeName = bettingTypeName
+        self.eventPartName = eventPartName
+        self.numberOfOutcomes = numberOfOutcomes
+        self.liveMarket = liveMarket
+        self.outright = outright
+    }
+}
+
 public class EventsGroup {
     public var events: Events
     public var marketGroupId: String?
     public var title: String?
+    public var mainMarkets: [MainMarket]?
 
-    public init(events: Events, marketGroupId: String?, title: String? = nil) {
+    public init(events: Events, marketGroupId: String?, title: String? = nil, mainMarkets: [MainMarket]? = nil) {
         self.events = events
         self.marketGroupId = marketGroupId
         self.title = title
+        self.mainMarkets = mainMarkets
     }
 }
 
@@ -55,6 +91,15 @@ public enum EventStatus: Hashable {
         case "not_started": self = .notStarted
         case "ended": self = .ended(value)
         default: self = .inProgress(value)
+        }
+    }
+    
+    public var isInProgress: Bool {
+        switch self {
+        case .inProgress:
+            return true
+        default:
+            return false
         }
     }
 }

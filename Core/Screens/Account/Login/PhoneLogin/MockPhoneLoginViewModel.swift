@@ -24,7 +24,6 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
     var phoneNumber: String = ""
     var password: String = ""
     
-    
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -39,6 +38,7 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
         
         phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
                                                                                                   placeholder: "Phone number *",
+                                                                                                  prefix: "+237",
                                                                                                   isSecure: false,
                                                                                                   visualState: .idle,
                                                                                                   keyboardType: .phonePad,

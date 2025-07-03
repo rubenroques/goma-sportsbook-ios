@@ -1,0 +1,1534 @@
+Subscription callback [/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3] successfully.
+Requesting initial dump for [/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3]...
+Initial dump call succeed, response =
+{
+"version": "1750952796731",
+"format": "AGGREGATOR",
+"messageType": "INITIAL_DUMP",
+"records": [
+{
+"_type": "SPORT",
+"id": "8",
+"name": "Basketball",
+"shortName": "Basketball",
+"isVirtual": false,
+"numberOfEvents": 73,
+"numberOfMarkets": 1111,
+"numberOfBettingOffers": 2749,
+"numberOfLiveEvents": 3,
+"numberOfLiveMarkets": 22,
+"numberOfLiveBettingOffers": 45,
+"numberOfUpcomingMatches": 65,
+"numberOfMatchesWhichWillHaveLiveOdds": "19",
+"childrenIds": [],
+"displayChildren": false,
+"showEventCategory": false,
+"isTopSport": true,
+"hasMatches": true,
+"hasOutrights": true
+},
+...
+{
+"_type": "LOCATION",
+"id": "231",
+"typeId": "1",
+"name": "Uzbekistan",
+"shortName": "Uzbe",
+"code": "UZ",
+"numberOfEvents": 3,
+"numberOfMarkets": 129,
+"numberOfBettingOffers": 424,
+"numberOfLiveEvents": 1,
+"numberOfLiveMarkets": 28,
+"numberOfLiveBettingOffers": 79,
+"numberOfUpcomingMatches": 2
+},
+...
+{
+"_type": "MATCH",
+"id": "273954029334302720",
+"typeId": "1",
+"sportId": "1",
+"parentId": "224892089781080064",
+"parentPartId": "1",
+"name": "NK Brinje Grosuplje - FC Koper",
+"startTime": 1750951800000,
+"venueId": "240",
+"statusId": "2",
+"rootPartId": "2",
+"currentPartId": "5",
+"allowsLiveOdds": false,
+"numberOfMarkets": 69,
+"numberOfBettingOffers": 205,
+"typeName": "Generic Match",
+"sportName": "Football",
+"shortSportName": "Football",
+"parentName": "Friendly Club Matches 2025 (Possible Format Change)",
+"shortParentName": "Friendly Club Matches (Possible Format Change)",
+"parentPartName": "Whole Event",
+"shortParentPartName": "Whole Event",
+"venueName": "World",
+"shortVenueName": "World",
+"statusName": "In Progress",
+"rootPartName": "Whole Match",
+"shortRootPartName": "Whole Match",
+"currentPartName": "1st Half",
+"shortCurrentPartName": "1st Half",
+"shortName": "NK Brinje Grosuplje - FC Koper",
+"parentStartTime": 1735430400000,
+"parentEndTime": 1766966400000,
+"parentTemplateId": "1141",
+"homeParticipantId": "482680873578496",
+"homeParticipantName": "NK Brinje Grosuplje",
+"awayParticipantId": "3954",
+"awayParticipantName": "FC Koper",
+"homeShortParticipantName": "NK Brinje Grosuplje",
+"awayShortParticipantName": "FC Koper",
+"categoryId": "240001",
+"categoryName": "World",
+"redirectDelay": "60000",
+"displayChildren": false,
+"layoutStyle": "EU"
+},
+{
+"_type": "MATCH",
+"id": "273776668593754112",
+"typeId": "1",
+"sportId": "1",
+"parentId": "263765294352183296",
+"parentPartId": "1",
+"name": "BFC Daugava Daugavpils - SC Grobinas",
+"startTime": 1750950000000,
+"venueId": "135",
+"statusId": "2",
+"rootPartId": "2",
+"currentPartId": "5",
+"allowsLiveOdds": false,
+"numberOfMarkets": 28,
+"numberOfBettingOffers": 83,
+"typeName": "Generic Match",
+"sportName": "Football",
+"shortSportName": "Football",
+"parentName": "Virsliga 2025/2025",
+"shortParentName": "Virsliga",
+"parentPartName": "Whole Event",
+"shortParentPartName": "Whole Event",
+"venueName": "Latvia",
+"shortVenueName": "Latv",
+"statusName": "In Progress",
+"rootPartName": "Whole Match",
+"shortRootPartName": "Whole Match",
+"currentPartName": "1st Half",
+"shortCurrentPartName": "1st Half",
+"shortName": "BFC Daugava Daugavpils - SC Grobinas",
+"parentStartTime": 1741046400000,
+"parentEndTime": 1762732800000,
+"parentTemplateId": "763",
+"homeParticipantId": "1075236",
+"homeParticipantName": "BFC Daugava Daugavpils",
+"awayParticipantId": "1479444",
+"awayParticipantName": "SC Grobinas",
+"homeShortParticipantName": "BFC Daugava Daugavpils",
+"awayShortParticipantName": "SC Grobinas",
+"categoryId": "135001",
+"categoryName": "Latvia",
+"redirectDelay": "60000",
+"displayChildren": false,
+"layoutStyle": "EU"
+},
+...
+{
+"_type": "EVENT_STATISTICS",
+"id": "273969188204318720",
+"providerId": "3000555",
+"providerEntityId": "58380031",
+"entityId": "273969186773012480"
+},
+{
+"_type": "EVENT_INFO",
+"id": "273982401858924544",
+"typeId": "278",
+"eventId": "273954029334302720",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "3",
+"eventPartName": "Ordinary Time",
+"typeName": "Played at",
+"shortTypeName": "Played at",
+"shortEventPartName": "Ordinary Time",
+"eventPartRelativePosition": 630
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114459221520384",
+"typeId": "95",
+"eventId": "273954029334302720",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 14,
+"paramFloat2": 40,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114458522120192",
+"typeId": "1",
+"eventId": "273954029334302720",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 0,
+"paramFloat2": 0,
+"paramParticipantId1": "3954",
+"paramParticipantId2": "482680873578496",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "273954036233957376",
+"typeId": "92",
+"eventId": "273954029334302720",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "5",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "1st Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "1st Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274112464333987840",
+"typeId": "1",
+"eventId": "273776668593754112",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 1,
+"paramFloat2": 2,
+"paramParticipantId1": "1075236",
+"paramParticipantId2": "1479444",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274112464577257472",
+"typeId": "95",
+"eventId": "273776668593754112",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 45,
+"paramFloat2": 0,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "273911338140590080",
+"typeId": "92",
+"eventId": "273776668593754112",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "5",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "1st Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "1st Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108275174174720",
+"typeId": "92",
+"eventId": "274000037081649152",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "6",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "2nd Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "2nd Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108902711259136",
+"typeId": "95",
+"eventId": "274000037081649152",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 85,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108899651514368",
+"typeId": "1",
+"eventId": "274000037081649152",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 1,
+"paramFloat2": 0,
+"paramParticipantId1": "2837817354121216",
+"paramParticipantId2": "254002358238175232",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108813708128256",
+"typeId": "1",
+"eventId": "274000037150855168",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 3,
+"paramFloat2": 2,
+"paramParticipantId1": "149708559114883072",
+"paramParticipantId2": "156411642369855488",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108814440034304",
+"typeId": "95",
+"eventId": "274000037150855168",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 83,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108325008797696",
+"typeId": "92",
+"eventId": "274000037150855168",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "6",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "2nd Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "2nd Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108907283050496",
+"typeId": "95",
+"eventId": "274000037596499968",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 81,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108341748264960",
+"typeId": "92",
+"eventId": "274000037596499968",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "6",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "2nd Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "2nd Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108907362742272",
+"typeId": "1",
+"eventId": "274000037596499968",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 0,
+"paramFloat2": 1,
+"paramParticipantId1": "227188815295565824",
+"paramParticipantId2": "268940857759109120",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114346911686656",
+"typeId": "92",
+"eventId": "273905699138965504",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "5",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "1st Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "1st Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114398157692928",
+"typeId": "1",
+"eventId": "273905699138965504",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 0,
+"paramFloat2": 0,
+"paramParticipantId1": "1246214",
+"paramParticipantId2": "175095503198932992",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114486713081856",
+"typeId": "95",
+"eventId": "273905699138965504",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 14,
+"paramFloat2": 20,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114316785049600",
+"typeId": "1",
+"eventId": "273904561752772608",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 0,
+"paramFloat2": 0,
+"paramParticipantId1": "1258513",
+"paramParticipantId2": "1424457",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "273936206407032832",
+"typeId": "92",
+"eventId": "273904561752772608",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "5",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "1st Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "1st Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114315883274240",
+"typeId": "95",
+"eventId": "273904561752772608",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 16,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114364381884416",
+"typeId": "92",
+"eventId": "273969186773012480",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "5",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "1st Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "1st Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114370236084224",
+"typeId": "95",
+"eventId": "273969186773012480",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 16,
+"paramFloat2": 6,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274114371358060544",
+"typeId": "1",
+"eventId": "273969186773012480",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 1,
+"paramFloat2": 0,
+"paramParticipantId1": "968630",
+"paramParticipantId2": "4457768477526016",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274109064563507200",
+"typeId": "95",
+"eventId": "274001988831809536",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 80,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274109068404441088",
+"typeId": "1",
+"eventId": "274001988831809536",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 3,
+"paramFloat2": 1,
+"paramParticipantId1": "150901202734862336",
+"paramParticipantId2": "151527578328580096",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274108692351533056",
+"typeId": "92",
+"eventId": "274001988831809536",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "6",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "2nd Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "2nd Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274112999424638976",
+"typeId": "1",
+"eventId": "274044829381562368",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 1,
+"paramFloat2": 4,
+"paramParticipantId1": "146020477819736064",
+"paramParticipantId2": "201824433969721344",
+"paramScoringUnitId1": "28",
+"eventPartName": "Whole Match",
+"typeName": "Score",
+"shortTypeName": "Score",
+"shortEventPartName": "Whole Match",
+"paramScoringUnitName1": "Goal",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274113003251941376",
+"typeId": "95",
+"eventId": "274044829381562368",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramFloat1": 37,
+"eventPartName": "Whole Match",
+"typeName": "Match Time",
+"shortTypeName": "Match Time",
+"shortEventPartName": "Whole Match",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "EVENT_INFO",
+"id": "274112466360057856",
+"typeId": "92",
+"eventId": "274044829381562368",
+"providerId": "3001094",
+"statusId": "1",
+"eventPartId": "2",
+"paramEventPartId1": "5",
+"paramEventStatusId1": "2",
+"paramEventPartName1": "1st Half",
+"paramEventStatusName1": "In Progress",
+"eventPartName": "Whole Match",
+"typeName": "Current event status",
+"shortTypeName": "Current event status",
+"shortEventPartName": "Whole Match",
+"shortParamEventPartName1": "1st Half",
+"eventPartRelativePosition": 115
+},
+{
+"_type": "MARKET",
+"id": "273904995564646912",
+"name": "Double Chance",
+"shortName": "Double Chance",
+"displayKey": "b9_ep3",
+"displayName": "Double Chance",
+"displayShortName": "Double Chance",
+"eventId": "273904561752772608",
+"eventPartId": "3",
+"bettingTypeId": "9",
+"numberOfOutcomes": 3,
+"scoringUnitId": "28",
+"isComplete": true,
+"isClosed": false,
+"bettingTypeName": "Double Chance",
+"shortBettingTypeName": "Double Chance",
+"eventPartName": "Ordinary Time",
+"mainLine": false,
+"isAvailable": true,
+"shortEventPartName": "Ordinary Time",
+"scoringUnitName": "Goal",
+"asianLine": false,
+"labelName": "TEXT NOT FOUND|Other|oddsMatrix_market_label_test sport",
+"labelStyle": "Style1",
+"allowEachWay": false,
+"allowStartingPrice": false
+},
+{
+"_type": "MARKET",
+"id": "273954321614633984",
+"name": "Double Chance",
+"shortName": "Double Chance",
+"displayKey": "b9_ep3",
+"displayName": "Double Chance",
+"displayShortName": "Double Chance",
+"eventId": "273954029334302720",
+"eventPartId": "3",
+"bettingTypeId": "9",
+"numberOfOutcomes": 3,
+"scoringUnitId": "28",
+"isComplete": true,
+"isClosed": false,
+"bettingTypeName": "Double Chance",
+"shortBettingTypeName": "Double Chance",
+"eventPartName": "Ordinary Time",
+"mainLine": false,
+"isAvailable": true,
+"shortEventPartName": "Ordinary Time",
+"scoringUnitName": "Goal",
+"asianLine": false,
+"labelName": "TEXT NOT FOUND|Other|oddsMatrix_market_label_test sport",
+"labelStyle": "Style1",
+"allowEachWay": false,
+"allowStartingPrice": false
+},
+{
+"_type": "MARKET",
+"id": "273840914582336512",
+"name": "Double Chance",
+"shortName": "Double Chance",
+"displayKey": "b9_ep3",
+"displayName": "Double Chance",
+"displayShortName": "Double Chance",
+"eventId": "273776668593754112",
+"eventPartId": "3",
+"bettingTypeId": "9",
+"numberOfOutcomes": 3,
+"scoringUnitId": "28",
+"isComplete": true,
+"isClosed": false,
+"bettingTypeName": "Double Chance",
+"shortBettingTypeName": "Double Chance",
+"eventPartName": "Ordinary Time",
+"mainLine": false,
+"isAvailable": true,
+"shortEventPartName": "Ordinary Time",
+"scoringUnitName": "Goal",
+"asianLine": false,
+"labelName": "TEXT NOT FOUND|Other|oddsMatrix_market_label_test sport",
+"labelStyle": "Style1",
+"allowEachWay": false,
+"allowStartingPrice": false
+},
+{
+"_type": "OUTCOME",
+"id": "274000037304455168",
+"typeId": "10",
+"statusId": "1",
+"eventId": "274000037150855168",
+"eventPartId": "3",
+"paramParticipantId1": "156411642369855488",
+"paramScoringUnitId1": "28",
+"code": "#P156411642369855488",
+"typeName": "Winner",
+"translatedName": "Masafi Club",
+"shortTranslatedName": "2",
+"eventPartName": "Ordinary Time",
+"paramParticipantName1": "Masafi Club",
+"shortParamParticipantName1": "Masafi Club",
+"shortEventPartName": "Ordinary Time",
+"paramScoringUnitName1": "Goal",
+"headerName": "Away",
+"headerShortName": "Away",
+"headerNameKey": "away"
+},
+{
+"_type": "OUTCOME",
+"id": "274000037305506560",
+"typeId": "10",
+"statusId": "1",
+"eventId": "274000037150855168",
+"eventPartId": "3",
+"paramParticipantId1": "149708559114883072",
+"paramScoringUnitId1": "28",
+"code": "#P149708559114883072",
+"typeName": "Winner",
+"translatedName": "Al Sinaah",
+"shortTranslatedName": "1",
+"eventPartName": "Ordinary Time",
+"paramParticipantName1": "Al Sinaah",
+"shortParamParticipantName1": "Al Sinaah",
+"shortEventPartName": "Ordinary Time",
+"paramScoringUnitName1": "Goal",
+"headerName": "Home",
+"headerShortName": "Home",
+"headerNameKey": "home"
+},
+{
+"_type": "MARKET_OUTCOME_RELATION",
+"id": "273904995565695232",
+"marketId": "273904995564646912",
+"outcomeId": "273904995522827520"
+},
+{
+"_type": "MARKET_OUTCOME_RELATION",
+"id": "273904995583523072",
+"marketId": "273904995564646912",
+"outcomeId": "273904995525972224"
+},
+{
+"_type": "MARKET_OUTCOME_RELATION",
+"id": "273904995585619200",
+"marketId": "273904995585618944",
+"outcomeId": "273904995529118208"
+},{
+"_type": "BETTING_OFFER",
+"id": "273957606944420096",
+"providerId": "3001033",
+"outcomeId": "273954321594671360",
+"bettingTypeId": "69",
+"statusId": "1",
+"isLive": true,
+"odds": 6.5,
+"lastChangedTime": 1750952701871,
+"bettingTypeName": "Home Draw Away",
+"shortBettingTypeName": "Home Draw Away",
+"isAvailable": true
+},
+{
+"_type": "BETTING_OFFER",
+"id": "273969188251842048",
+"providerId": "3001033",
+"outcomeId": "273969186828046336",
+"bettingTypeId": "69",
+"statusId": "1",
+"isLive": true,
+"odds": 3.1,
+"lastChangedTime": 1750952741251,
+"bettingTypeName": "Home Draw Away",
+"shortBettingTypeName": "Home Draw Away",
+"isAvailable": true
+},
+{
+"_type": "BETTING_OFFER",
+"id": "273974163030549248",
+"providerId": "3001033",
+"outcomeId": "273905907905676032",
+"bettingTypeId": "69",
+"statusId": "1",
+"isLive": true,
+"odds": 4.3,
+"lastChangedTime": 1750952347138,
+"bettingTypeName": "Home Draw Away",
+"shortBettingTypeName": "Home Draw Away",
+"isAvailable": true
+},
+{
+"_type": "MAIN_MARKET",
+"id": "3150002056",
+"bettingTypeId": "69",
+"eventPartId": "3",
+"sportId": "1",
+"bettingTypeName": "Home Draw Away",
+"eventPartName": "Ordinary Time",
+"numberOfOutcomes": 3,
+"liveMarket": true,
+"outright": false
+},
+{
+"_type": "MAIN_MARKET",
+"id": "3150002383",
+"bettingTypeId": "862",
+"eventPartId": "3",
+"sportId": "1",
+"bettingTypeName": "Total Goals",
+"eventPartName": "Ordinary Time",
+"liveMarket": true,
+"outright": false
+},
+{
+"_type": "MAIN_MARKET",
+"id": "3150002058",
+"bettingTypeId": "9",
+"eventPartId": "3",
+"sportId": "1",
+"bettingTypeName": "Double Chance",
+"eventPartName": "Ordinary Time",
+"numberOfOutcomes": 3,
+"liveMarket": true,
+"outright": false
+},
+{
+"_type": "MAIN_MARKET",
+"id": "3150002532",
+"bettingTypeId": "7",
+"eventPartId": "1",
+"sportId": "1",
+"bettingTypeName": "Winner",
+"eventPartName": "Whole Event",
+"liveMarket": true,
+"outright": true
+},
+{
+"_type": "MAIN_MARKET",
+"id": "3150002534",
+"bettingTypeId": "411",
+"eventPartId": "1",
+"sportId": "1",
+"bettingTypeName": "Special Bets",
+"eventPartName": "Whole Event",
+"liveMarket": true,
+"outright": true
+},
+{
+"_type": "MARKET_INFO",
+"id": "273954321614633984",
+"marketInfo": "There can be 3 outcomes in the game, with the bet still winning: 1X = 'Home Team and Draw', X2 = 'Away Team and Draw', 12 = 'Home Team or Away Team'. ",
+"displayKey": "b9_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273954321614633472",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "274044829474091008",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "274000037469877760",
+"marketInfo": "There can be 3 outcomes in the game, with the bet still winning: 1X = 'Home Team and Draw', X2 = 'Away Team and Draw', 12 = 'Home Team or Away Team'. ",
+"displayKey": "b9_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "274000037457293312",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "274000037195151360",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273969186882320896",
+"marketInfo": "There can be 3 outcomes in the game, with the bet still winning: 1X = 'Home Team and Draw', X2 = 'Away Team and Draw', 12 = 'Home Team or Away Team'. ",
+"displayKey": "b9_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "274044829504500736",
+"marketInfo": "There can be 3 outcomes in the game, with the bet still winning: 1X = 'Home Team and Draw', X2 = 'Away Team and Draw', 12 = 'Home Team or Away Team'. ",
+"displayKey": "b9_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "274000038022476800",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273904995564646912",
+"marketInfo": "There can be 3 outcomes in the game, with the bet still winning: 1X = 'Home Team and Draw', X2 = 'Away Team and Draw', 12 = 'Home Team or Away Team'. ",
+"displayKey": "b9_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273904995585618944",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273969186874979840",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273905907925383680",
+"marketInfo": "There can be 3 outcomes in the game, with the bet still winning: 1X = 'Home Team and Draw', X2 = 'Away Team and Draw', 12 = 'Home Team or Away Team'. ",
+"displayKey": "b9_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273905907925381632",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "274001988954748416",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273840914582336512",
+"marketInfo": "There can be 3 outcomes in the game, with the bet still winning: 1X = 'Home Team and Draw', X2 = 'Away Team and Draw', 12 = 'Home Team or Away Team'. ",
+"displayKey": "b9_ep3"
+},
+{
+"_type": "MARKET_INFO",
+"id": "273840914597016576",
+"marketInfo": "Who wins the match? There are 3 possibilities: 'home wins', 'away wins', 'draw'.",
+"displayKey": "b69_ep3"
+},
+{
+"_type": "LIVE_MATCHES_NUMBER",
+"id": "1",
+"numberOfLiveEvents": 18
+}
+]
+}
+
+---------------------------
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952797515",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114370236084224",
+"changedProperties": {
+"paramFloat2": 10
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952798585",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114486713081856",
+"changedProperties": {
+"paramFloat2": 22
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952798593",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114370236084224",
+"changedProperties": {
+"paramFloat2": 13
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952800053",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114486713081856",
+"changedProperties": {
+"paramFloat2": 24
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114459221520384",
+"changedProperties": {
+"paramFloat2": 46
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952800408",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114370236084224",
+"changedProperties": {
+"paramFloat2": 15
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952801878",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274108814440034304",
+"changedProperties": {
+"paramFloat1": 84
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952801893",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274113003251941376",
+"changedProperties": {
+"paramFloat1": 38
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114315883274240",
+"changedProperties": {
+"paramFloat1": 17
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952802264",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273988175921623552",
+"changedProperties": {
+"statusId": "7",
+"isAvailable": true,
+"lastChangedTime": 1750952802075
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952802626",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "MATCH",
+"id": "273969186773012480",
+"changedProperties": {
+"numberOfMarkets": 27,
+"numberOfBettingOffers": 84
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273988175921623296",
+"changedProperties": {
+"statusId": "7",
+"isAvailable": true,
+"lastChangedTime": 1750952802167
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273988175921623040",
+"changedProperties": {
+"statusId": "7",
+"isAvailable": true,
+"lastChangedTime": 1750952802167
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952803988",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "MATCH",
+"id": "273969186773012480",
+"changedProperties": {
+"numberOfMarkets": 26,
+"numberOfBettingOffers": 79
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952804133",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273957606969585664",
+"changedProperties": {
+"lastChangedTime": 1750952803776,
+"odds": 1.1111112
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273957606969585920",
+"changedProperties": {
+"lastChangedTime": 1750952803788,
+"odds": 2.65
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273957606944420096",
+"changedProperties": {
+"lastChangedTime": 1750952803789,
+"odds": 6
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273957606944420352",
+"changedProperties": {
+"lastChangedTime": 1750952803789,
+"odds": 1.4255319
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "274070001008259072",
+"changedProperties": {
+"lastChangedTime": 1750952803788,
+"odds": 1.08
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273969188251842048",
+"changedProperties": {
+"lastChangedTime": 1750952803941,
+"odds": 1.9523809
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952804505",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273969188251841792",
+"changedProperties": {
+"statusId": "7",
+"isAvailable": true,
+"lastChangedTime": 1750952804143
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273969188251842304",
+"changedProperties": {
+"statusId": "7",
+"isAvailable": true,
+"lastChangedTime": 1750952804143
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273969188251842048",
+"changedProperties": {
+"statusId": "7",
+"isAvailable": true,
+"lastChangedTime": 1750952804301
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114459221520384",
+"changedProperties": {
+"paramFloat2": 52
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952805490",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "MATCH",
+"id": "274000037596499968",
+"changedProperties": {
+"numberOfMarkets": 10,
+"numberOfBettingOffers": 28
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "MATCH",
+"id": "273969186773012480",
+"changedProperties": {
+"numberOfMarkets": 25,
+"numberOfBettingOffers": 78
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952805958",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114486713081856",
+"changedProperties": {
+"paramFloat2": 29
+}
+},
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114370236084224",
+"changedProperties": {
+"paramFloat2": 20
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952806993",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "MATCH",
+"id": "273969186773012480",
+"changedProperties": {
+"numberOfMarkets": 26,
+"numberOfBettingOffers": 81
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952807794",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114486713081856",
+"changedProperties": {
+"paramFloat2": 31
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952808885",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114370236084224",
+"changedProperties": {
+"paramFloat2": 22
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952809256",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "BETTING_OFFER",
+"id": "273983144036802816",
+"changedProperties": {
+"lastChangedTime": 1750952809177,
+"odds": 3.6
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952809616",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114459221520384",
+"changedProperties": {
+"paramFloat2": 54
+}
+}
+]
+}
+
+Callback ["/sports/6/en/live-matches-aggregator-main/1/all-locations/default-event-info/10/3"] is fired with data =
+{
+"version": "1750952810348",
+"format": "AGGREGATOR",
+"messageType": "UPDATE",
+"records": [
+{
+"changeType": "UPDATE",
+"entityType": "EVENT_INFO",
+"id": "274114371358060544",
+"changedProperties": {
+"paramFloat2": 1
+}
+}
+]
+}

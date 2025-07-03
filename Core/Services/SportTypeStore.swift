@@ -21,6 +21,10 @@ class SportTypeStore {
             return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: "1", showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
         }
     }
+    
+    var football: Sport {
+        return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: "1", showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
+    }
 
     var defaultLiveSport: Sport {
         if case .loaded(let sports) = self.activeSportsCurrentValueSubject.value,

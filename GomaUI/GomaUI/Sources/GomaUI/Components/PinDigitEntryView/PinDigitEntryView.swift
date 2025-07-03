@@ -147,7 +147,7 @@ public final class PinDigitEntryView: UIView {
         }
     }
     
-    private func focusField(at index: Int) {
+    public func focusField(at index: Int) {
         hiddenTextField.becomeFirstResponder()
     }
     

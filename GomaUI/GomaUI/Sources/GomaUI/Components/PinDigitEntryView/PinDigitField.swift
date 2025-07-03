@@ -98,7 +98,7 @@ public class PinDigitField: UIView {
             focusIndicatorBar.isHidden = false
         case .filled:
             containerView.backgroundColor = .clear
-            containerView.layer.borderColor = StyleProvider.Color.textPrimary.cgColor
+            containerView.layer.borderColor = StyleProvider.Color.alertSuccess.cgColor
             focusIndicatorBar.isHidden = true
         }
     }

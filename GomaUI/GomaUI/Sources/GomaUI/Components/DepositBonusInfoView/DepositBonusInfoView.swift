@@ -14,9 +14,8 @@ final public class DepositBonusInfoView: UIView {
     // MARK: - Private Properties
     private let containerView: GradientView = {
         let view = GradientView.customGradient(colors: [
-            (StyleProvider.Color.topBarGradient1, 0.33),
-            (StyleProvider.Color.topBarGradient2, 0.66),
-            (StyleProvider.Color.topBarGradient3, 1.0),
+            (StyleProvider.Color.liveBorder1, 0.0),
+            (StyleProvider.Color.liveBorder2, 1.0),
         ], gradientDirection: .diagonal)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 8
@@ -132,11 +131,12 @@ final public class DepositBonusInfoView: UIView {
     private func configure(depositBonusInfo: DepositBonusInfoData) {
         // Update icon
         if let iconImage = UIImage(named: depositBonusInfo.icon) {
-            iconImageView.image = iconImage
+            iconImageView.image = iconImage.withRenderingMode(.alwaysTemplate)
+            iconImageView.tintColor = StyleProvider.Color.allWhite
         }
         else if let iconImage = UIImage(systemName: depositBonusInfo.icon) {
             iconImageView.image = iconImage
-            iconImageView.tintColor = StyleProvider.Color.buttonTextPrimary
+            iconImageView.tintColor = StyleProvider.Color.allWhite
         }
         
         // Update balance text

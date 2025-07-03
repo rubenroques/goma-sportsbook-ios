@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-class MarketWidgetCellViewModel {
+class MarketWidgetCellViewModel: ObservableObject {
 
 //    private var highlightedMarket: HighlightedContent<Market>
     var match: Match?

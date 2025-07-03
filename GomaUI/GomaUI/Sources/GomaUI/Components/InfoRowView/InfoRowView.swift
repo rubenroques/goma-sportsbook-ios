@@ -16,7 +16,7 @@ public final class InfoRowView: UIView {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.pills
+        view.backgroundColor = StyleProvider.Color.backgroundSecondary
         view.layer.cornerRadius = 4
         return view
     }()

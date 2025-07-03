@@ -1,5 +1,4 @@
 import Combine
-import UIKit
 
 public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
     
@@ -8,13 +7,9 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
     private let countryFlagImageNameSubject = CurrentValueSubject<String?, Never>(nil)
     private let sportIconImageNameSubject = CurrentValueSubject<String?, Never>(nil)
     private let isFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
-    private let visualStateSubject = CurrentValueSubject<MatchHeaderVisualState, Never>(.standard)
     private let matchTimeSubject = CurrentValueSubject<String?, Never>(nil)
     private let isLiveSubject = CurrentValueSubject<Bool, Never>(false)
     
-    // Custom image subjects
-    private let countryFlagImageSubject = CurrentValueSubject<UIImage?, Never>(nil)
-    private let sportIconImageSubject = CurrentValueSubject<UIImage?, Never>(nil)
     
     // MARK: - Public Publishers
     public var competitionNamePublisher: AnyPublisher<String, Never> {
@@ -33,9 +28,6 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
         isFavoriteSubject.eraseToAnyPublisher()
     }
     
-    public var visualStatePublisher: AnyPublisher<MatchHeaderVisualState, Never> {
-        visualStateSubject.eraseToAnyPublisher()
-    }
     
     public var matchTimePublisher: AnyPublisher<String?, Never> {
         matchTimeSubject.eraseToAnyPublisher()
@@ -45,25 +37,19 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
         isLiveSubject.eraseToAnyPublisher()
     }
     
-    // Custom image publishers
-    public var countryFlagImagePublisher: AnyPublisher<UIImage?, Never> {
-        countryFlagImageSubject.eraseToAnyPublisher()
-    }
     
-    public var sportIconImagePublisher: AnyPublisher<UIImage?, Never> {
-        sportIconImageSubject.eraseToAnyPublisher()
-    }
-    
-    public var currentVisualState: MatchHeaderVisualState {
-        visualStateSubject.value
-    }
     
     // MARK: - Action Callback
     public var favoriteToggleCallback: ((Bool) -> Void)?
     
     // MARK: - Initialization
     public init(matchHeaderData: MatchHeaderData) {
-        updateData(matchHeaderData)
+        competitionNameSubject.send(matchHeaderData.competitionName)
+        countryFlagImageNameSubject.send(matchHeaderData.countryFlagImageName)
+        sportIconImageNameSubject.send(matchHeaderData.sportIconImageName)
+        isFavoriteSubject.send(matchHeaderData.isFavorite)
+        matchTimeSubject.send(matchHeaderData.matchTime)
+        isLiveSubject.send(matchHeaderData.isLive)
     }
     
     // MARK: - Actions
@@ -73,19 +59,6 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
         favoriteToggleCallback?(newValue)
     }
     
-    public func updateData(_ data: MatchHeaderData) {
-        competitionNameSubject.send(data.competitionName)
-        countryFlagImageNameSubject.send(data.countryFlagImageName)
-        sportIconImageNameSubject.send(data.sportIconImageName)
-        isFavoriteSubject.send(data.isFavorite)
-        visualStateSubject.send(data.visualState)
-        matchTimeSubject.send(data.matchTime)
-        isLiveSubject.send(data.isLive)
-    }
-    
-    public func setVisualState(_ state: MatchHeaderVisualState) {
-        visualStateSubject.send(state)
-    }
     
     public func updateCompetitionName(_ name: String) {
         competitionNameSubject.send(name)
@@ -107,27 +80,7 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
         isLiveSubject.send(isLive)
     }
     
-    // New methods for custom images
-    public func updateCountryFlagImage(_ image: UIImage?) {
-        countryFlagImageSubject.send(image)
-    }
     
-    public func updateSportIconImage(_ image: UIImage?) {
-        sportIconImageSubject.send(image)
-    }
-    
-    // MARK: - Convenience Methods
-    public func setEnabled(_ enabled: Bool) {
-        setVisualState(enabled ? .standard : .disabled)
-    }
-    
-    public func setMinimalMode(_ minimal: Bool) {
-        setVisualState(minimal ? .minimal : .standard)
-    }
-    
-    public func setFavoriteOnlyMode(_ favoriteOnly: Bool) {
-        setVisualState(favoriteOnly ? .favoriteOnly : .standard)
-    }
 }
 
 // MARK: - Factory Methods
@@ -142,7 +95,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: "GB",
                 sportIconImageName: "1", // Football icon
                 isFavorite: false,
-                visualState: .standard,
                 matchTime: "16 April, 18:00",
                 isLive: false
             )
@@ -158,7 +110,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: "GB",
                 sportIconImageName: "1", // Football icon
                 isFavorite: false,
-                visualState: .standard,
                 matchTime: "16 April, 18:00",
                 isLive: false
             )
@@ -174,7 +125,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: "ES",
                 sportIconImageName: "1", // Football icon
                 isFavorite: true,
-                visualState: .standard,
                 matchTime: "1st Half, 44 Min",
                 isLive: true
             )
@@ -194,7 +144,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: "IT",
                 sportIconImageName: "8", // Basketball icon
                 isFavorite: false,
-                visualState: .standard,
                 matchTime: "20 April, 19:30",
                 isLive: false
             )
@@ -210,7 +159,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: "US",
                 sportIconImageName: "8", // Basketball icon
                 isFavorite: true,
-                visualState: .disabled,
                 matchTime: "22 April, 02:30",
                 isLive: false
             )
@@ -226,7 +174,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: "EU",
                 sportIconImageName: "1", // Football icon
                 isFavorite: false,
-                visualState: .minimal,
                 matchTime: "25 April, 21:00",
                 isLive: false
             )
@@ -242,7 +189,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: "FR",
                 sportIconImageName: "5", // Tennis icon
                 isFavorite: true,
-                visualState: .favoriteOnly,
                 matchTime: "28 April, 15:00",
                 isLive: false
             )
@@ -258,7 +204,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: "EU",
                 sportIconImageName: "1", // Football icon
                 isFavorite: false,
-                visualState: .standard,
                 matchTime: "30 April, 17:15",
                 isLive: false
             )
@@ -274,7 +219,6 @@ extension MockMatchHeaderViewModel {
                 countryFlagImageName: nil,
                 sportIconImageName: nil,
                 isFavorite: false,
-                visualState: .standard,
                 matchTime: "2 May, 14:00",
                 isLive: false
             )

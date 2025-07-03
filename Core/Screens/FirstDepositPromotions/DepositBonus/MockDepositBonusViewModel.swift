@@ -34,7 +34,7 @@ class MockDepositBonusViewModel: DepositBonusViewModelProtocol {
         self.bonusDepositData = BonusDepositData(id: promotionalBonusCardData.id, selectedAmount: 0, bonusAmount: promotionalBonusCardData.bonusAmount)
         
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "header",
-                                                                                           icon: "deposit_gift_icon",
+                                                                                           icon: "phone_verify_icon",
                                                                                            title: "Ready to make your first deposit?",
                                                                                            subtitle: nil))
         
@@ -43,6 +43,7 @@ class MockDepositBonusViewModel: DepositBonusViewModelProtocol {
         
         amountFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "amount",
                                                                                                   placeholder: "Enter amount",
+                                                                                                   prefix: "XAF",
                                                                                                   isSecure: false,
                                                                                                   visualState: .idle,
                                                                                                    keyboardType: .numberPad,
@@ -56,7 +57,7 @@ class MockDepositBonusViewModel: DepositBonusViewModelProtocol {
         ]))
         
         bonusInfoViewModel = MockDepositBonusInfoViewModel(depositBonusInfo: DepositBonusInfoData(id: "deposit_bonus",
-                                                                                                  icon: "gift.fill",
+                                                                                                  icon: "deposit_gift_icon",
                                                                                                   balanceText: "Your deposit + Bonus",
                                                                                                   currencyAmount: "XAF --"))
         

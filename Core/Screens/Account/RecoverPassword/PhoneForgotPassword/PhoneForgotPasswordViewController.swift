@@ -84,7 +84,7 @@ class PhoneForgotPasswordViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         setupLayout()
         setupBindings()
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)

@@ -231,7 +231,36 @@ final class WAMPManager {
                             }
                         }
                         catch {
-                            print("WAMPManager \(router) Decoding Error: \(error)")
+                            print("🔴 WAMPManager getModel Decoding Error:")
+                            print("   ├─ Target Type: \(decodingType)")
+                            print("   ├─ Router: \(router.procedure)")
+                            print("   ├─ Error: \(error)")
+                            if let decodingError = error as? DecodingError {
+                                print("   ├─ Decoding Error Details: \(decodingError.localizedDescription)")
+                                switch decodingError {
+                                case .keyNotFound(let key, let context):
+                                    print("   ├─ Missing Key: \(key.stringValue)")
+                                    print("   ├─ Context: \(context.debugDescription)")
+                                case .typeMismatch(let type, let context):
+                                    print("   ├─ Type Mismatch: Expected \(type)")
+                                    print("   ├─ Context: \(context.debugDescription)")
+                                case .valueNotFound(let type, let context):
+                                    print("   ├─ Value Not Found: \(type)")
+                                    print("   ├─ Context: \(context.debugDescription)")
+                                case .dataCorrupted(let context):
+                                    print("   ├─ Data Corrupted: \(context.debugDescription)")
+                                @unknown default:
+                                    break
+                                }
+                            }
+                            if let kwResults = kwResults {
+                                print("   ├─ Raw kwResults: \(kwResults)")
+                            }
+                            if let arrResults = arrResults {
+                                print("   └─ Raw arrResults: \(arrResults)")
+                            } else {
+                                print("   └─ No raw data available")
+                            }
                             promise(.failure( .decodingError(value: error.localizedDescription) ))
                         }
                     }, onError: { _, error, _, kwargs in
@@ -343,7 +372,33 @@ final class WAMPManager {
                 }
             }
             catch {
-                // print("WAMPManager Decoding Error: \(error)")
+                print("🔴 WAMPManager subscribeEndpoint Decoding Error:")
+                print("   ├─ Target Type: \(decodingType)")
+                print("   ├─ Endpoint: \(endpoint.procedure)")
+                print("   ├─ Error: \(error)")
+                if let decodingError = error as? DecodingError {
+                    print("   ├─ Decoding Error Details: \(decodingError.localizedDescription)")
+                    switch decodingError {
+                    case .keyNotFound(let key, let context):
+                        print("   ├─ Missing Key: \(key.stringValue)")
+                        print("   ├─ Context: \(context.debugDescription)")
+                    case .typeMismatch(let type, let context):
+                        print("   ├─ Type Mismatch: Expected \(type)")
+                        print("   ├─ Context: \(context.debugDescription)")
+                    case .valueNotFound(let type, let context):
+                        print("   ├─ Value Not Found: \(type)")
+                        print("   ├─ Context: \(context.debugDescription)")
+                    case .dataCorrupted(let context):
+                        print("   ├─ Data Corrupted: \(context.debugDescription)")
+                    @unknown default:
+                        break
+                    }
+                }
+                if let kwResults = kwResults {
+                    print("   └─ Raw kwResults: \(kwResults)")
+                } else {
+                    print("   └─ No raw data available")
+                }
                 subject.send(completion: .failure(.decodingError(value: error.localizedDescription)))
             }
         })
@@ -446,6 +501,33 @@ final class WAMPManager {
                         }
                     }
                     catch {
+                        print("🔴 WAMPManager registerOnEndpoint Decoding Error:")
+                        print("   ├─ Target Type: \(decodingType)")
+                        print("   ├─ Endpoint: \(endpoint.procedure)")
+                        print("   ├─ Error: \(error)")
+                        if let decodingError = error as? DecodingError {
+                            print("   ├─ Decoding Error Details: \(decodingError.localizedDescription)")
+                            switch decodingError {
+                            case .keyNotFound(let key, let context):
+                                print("   ├─ Missing Key: \(key.stringValue)")
+                                print("   ├─ Context: \(context.debugDescription)")
+                            case .typeMismatch(let type, let context):
+                                print("   ├─ Type Mismatch: Expected \(type)")
+                                print("   ├─ Context: \(context.debugDescription)")
+                            case .valueNotFound(let type, let context):
+                                print("   ├─ Value Not Found: \(type)")
+                                print("   ├─ Context: \(context.debugDescription)")
+                            case .dataCorrupted(let context):
+                                print("   ├─ Data Corrupted: \(context.debugDescription)")
+                            @unknown default:
+                                break
+                            }
+                        }
+                        if let kwResults = kwResults {
+                            print("   └─ Raw kwResults: \(kwResults)")
+                        } else {
+                            print("   └─ No raw data available")
+                        }
                         subject.send(completion: .failure( .decodingError(value: error.localizedDescription) ))
                     }
                 })

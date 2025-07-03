@@ -19,6 +19,7 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     // MARK: - Managers for different subscription types
     private var prelivePaginator: PreLiveMatchesPaginator?
+    private var livePaginator: LiveMatchesPaginator?
     private var sportsManager: SportsManager?
 
     private var locationsManager: LocationsManager?
@@ -44,11 +45,32 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        // Clean up any existing paginator
+        livePaginator?.unsubscribe()
+
+        // Use sportType ID, fallback to "1" (football) if not available
+        let sportId = sportType.numericId ?? "1"
+
+        // Create new paginator with custom configuration if provided
+        let numberOfEvents = 10 // Default value, could be made configurable
+        let numberOfMarkets = 5 // Default value, could be made configurable
+
+        livePaginator = LiveMatchesPaginator(
+            connector: connector,
+            sportId: sportId,
+            numberOfEvents: numberOfEvents,
+            numberOfMarkets: numberOfMarkets
+        )
+
+        return livePaginator!.subscribe()
     }
 
     func requestLiveMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        guard let paginator = livePaginator else {
+            return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
+        }
+        
+        return paginator.loadNextPage()
     }
 
     func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, eventCount: Int?, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
@@ -123,7 +145,17 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        guard let livePaginator = self.livePaginator else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        // Observe EVENT_INFO entities for this event from the live matches subscription
+        return livePaginator.observeEventInfosForEvent(eventId: id)
+            .map { eventLiveData in
+                return SubscribableContent.contentUpdate(content: eventLiveData)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
     }
 
     func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
@@ -137,31 +169,81 @@ class EveryMatrixEventsProvider: EventsProvider {
             return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
         }
 
-        // Delegate to paginator's market subscription method
-        return paginator.subscribeToMarketUpdates(withId: id)
+        // Check both paginators to find which one contains this market
+        if let prelivePaginator = prelivePaginator, prelivePaginator.outcomeExists(id: id) {
+            // Delegate to pre-live paginator's outcome subscription method
+            return prelivePaginator.subscribeToMarketUpdates(withId: id)
+                .handleEvents(receiveSubscription: { subscription in
+                    // print("subs outcome updated. receiveSubscription (pre-live)")
+                }, receiveOutput: { output in
+                    // print("subs outcome updated. receiveOutput (pre-live)")
+                }, receiveCompletion: { completion in
+                    // print("subs outcome updated. receiveCompletion (pre-live)")
+                }, receiveCancel: {
+                    // print("subs outcome updated. receiveCancel (pre-live)")
+                }, receiveRequest: { demand in
+                    // print("subs outcome updated. receiveRequest (pre-live)")
+                })
+                .eraseToAnyPublisher()
+        } else if let livePaginator = livePaginator, livePaginator.outcomeExists(id: id) {
+            // Delegate to live paginator's outcome subscription method
+            return livePaginator.subscribeToMarketUpdates(withId: id)
+                .handleEvents(receiveSubscription: { subscription in
+                    // print("subs outcome updated. receiveSubscription (live)")
+                }, receiveOutput: { output in
+                    // print("subs outcome updated. receiveOutput (live)")
+                }, receiveCompletion: { completion in
+                    // print("subs outcome updated. receiveCompletion (live)")
+                }, receiveCancel: {
+                    // print("subs outcome updated. receiveCancel (live)")
+                }, receiveRequest: { demand in
+                    // print("subs outcome updated. receiveRequest (live)")
+                })
+                .eraseToAnyPublisher()
+        } else {
+            return Fail(error: ServiceProviderError.errorMessage(message: "Market with id \(id) not found in any active paginator")).eraseToAnyPublisher()
+        }
+        
     }
 
     func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
         // NOTE: This method name reflects that it subscribes to individual outcome updates
         // within the context of an active event list subscription, not changes to the list itself
-        guard let paginator = prelivePaginator else {
-            return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
+        
+        // Check both paginators to find which one contains this outcome
+        if let prelivePaginator = prelivePaginator, prelivePaginator.outcomeExists(id: id) {
+            // Delegate to pre-live paginator's outcome subscription method
+            return prelivePaginator.subscribeToOutcomeUpdates(withId: id)
+                .handleEvents(receiveSubscription: { subscription in
+                    // print("subs outcome updated. receiveSubscription (pre-live)")
+                }, receiveOutput: { output in
+                    // print("subs outcome updated. receiveOutput (pre-live)")
+                }, receiveCompletion: { completion in
+                    // print("subs outcome updated. receiveCompletion (pre-live)")
+                }, receiveCancel: {
+                    // print("subs outcome updated. receiveCancel (pre-live)")
+                }, receiveRequest: { demand in
+                    // print("subs outcome updated. receiveRequest (pre-live)")
+                })
+                .eraseToAnyPublisher()
+        } else if let livePaginator = livePaginator, livePaginator.outcomeExists(id: id) {
+            // Delegate to live paginator's outcome subscription method
+            return livePaginator.subscribeToOutcomeUpdates(withId: id)
+                .handleEvents(receiveSubscription: { subscription in
+                    // print("subs outcome updated. receiveSubscription (live)")
+                }, receiveOutput: { output in
+                    // print("subs outcome updated. receiveOutput (live)")
+                }, receiveCompletion: { completion in
+                    // print("subs outcome updated. receiveCompletion (live)")
+                }, receiveCancel: {
+                    // print("subs outcome updated. receiveCancel (live)")
+                }, receiveRequest: { demand in
+                    // print("subs outcome updated. receiveRequest (live)")
+                })
+                .eraseToAnyPublisher()
+        } else {
+            return Fail(error: ServiceProviderError.errorMessage(message: "Outcome with id \(id) not found in any active paginator")).eraseToAnyPublisher()
         }
-
-        // Delegate to paginator's outcome subscription method
-        return paginator.subscribeToOutcomeUpdates(withId: id)
-            .handleEvents(receiveSubscription: { subscription in
-                print("subs outcome updated. receiveSubscription")
-            }, receiveOutput: { output in
-                print("subs outcome updated. receiveOutput")
-            }, receiveCompletion: { completion in
-                print("subs outcome updated. receiveCompletion")
-            }, receiveCancel: {
-                print("subs outcome updated. receiveCancel")
-            }, receiveRequest: { demand in
-                print("subs outcome updated. receiveRequest")
-            })
-            .eraseToAnyPublisher()
     }
     
     func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int = 10) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
@@ -364,6 +446,5 @@ extension EveryMatrixEventsProvider {
             return Fail(outputType: SubscribableContent<[Country]>.self, failure: ServiceProviderError.resourceNotFound)
                 .eraseToAnyPublisher()
         }
-    }
-
+    }    
 }

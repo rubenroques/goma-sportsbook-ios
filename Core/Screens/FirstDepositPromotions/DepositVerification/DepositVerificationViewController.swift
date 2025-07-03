@@ -58,7 +58,7 @@ class DepositVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         setupLayout()
         setupBindings()
         cancelButton.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)

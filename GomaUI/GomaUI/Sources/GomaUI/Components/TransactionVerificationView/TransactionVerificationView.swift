@@ -66,7 +66,7 @@ public final class TransactionVerificationView: UIView {
     
     // MARK: - Private Methods
     private func setupViews() {
-        backgroundColor = StyleProvider.Color.backgroundPrimary
+        backgroundColor = StyleProvider.Color.backgroundTertiary
         
         addSubview(topImageView)
         addSubview(titleLabel)

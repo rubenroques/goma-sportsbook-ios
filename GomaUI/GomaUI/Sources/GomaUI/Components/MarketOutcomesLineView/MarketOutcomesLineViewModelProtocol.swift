@@ -126,7 +126,7 @@ public enum OutcomeType: Equatable {
 }
 
 // MARK: - Display State
-public struct MarketOutcomesDisplayState: Equatable {
+public struct MarketOutcomesLineDisplayState: Equatable {
     public let displayMode: MarketDisplayMode
     public let leftOutcome: MarketOutcomeData?
     public let middleOutcome: MarketOutcomeData?
@@ -146,7 +146,7 @@ public struct MarketOutcomesDisplayState: Equatable {
 // MARK: - View Model Protocol
 public protocol MarketOutcomesLineViewModelProtocol {
     // Single state publisher for all market data
-    var marketStatePublisher: AnyPublisher<MarketOutcomesDisplayState, Never> { get }
+    var marketStatePublisher: AnyPublisher<MarketOutcomesLineDisplayState, Never> { get }
 
     // Odds change events for animation triggers (separate for performance)
     var oddsChangeEventPublisher: AnyPublisher<OddsChangeEvent, Never> { get }

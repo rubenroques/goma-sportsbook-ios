@@ -28,18 +28,6 @@ public class MockMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMode
             .eraseToAnyPublisher()
     }
     
-    // MARK: - Visual State Publishers
-    public var visualStatePublisher: AnyPublisher<MarketGroupSelectorTabVisualState, Never> {
-        tabDataSubject
-            .map(\.visualState)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-    
-    public var currentVisualState: MarketGroupSelectorTabVisualState {
-        tabDataSubject.value.visualState
-    }
-    
     // MARK: - Selection Events
     public var selectionEventPublisher: AnyPublisher<MarketGroupSelectionEvent, Never> {
         selectionEventSubject.eraseToAnyPublisher()
@@ -58,28 +46,19 @@ public class MockMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMode
     public func selectMarketGroup(id: String) {
         let currentData = tabDataSubject.value
         
-        // Verify the market group exists and is not disabled
-        guard let targetGroup = currentData.marketGroups.first(where: { $0.id == id }),
-              targetGroup.visualState != .disabled else {
+        // Verify the market group exists
+        guard let targetGroup = currentData.marketGroups.first(where: { $0.id == id }) else {
             return
         }
         
         let previouslySelectedId = currentData.selectedMarketGroupId
         
-        // Update market groups with new selection states
-        let updatedMarketGroups = currentData.marketGroups.map { marketGroup in
-            MarketGroupTabItemData(
-                id: marketGroup.id,
-                title: marketGroup.title,
-                visualState: marketGroup.id == id ? .selected : (marketGroup.visualState == .disabled ? .disabled : .idle)
-            )
-        }
-        
+        // Only update the selection ID, not the entire market groups array
+        // This avoids recreating all MarketGroupTabItemData objects
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
-            marketGroups: updatedMarketGroups,
-            selectedMarketGroupId: id,
-            visualState: currentData.visualState
+            marketGroups: currentData.marketGroups, // Keep existing array
+            selectedMarketGroupId: id
         )
         
         tabDataSubject.send(updatedData)
@@ -97,19 +76,7 @@ public class MockMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMode
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
             marketGroups: marketGroups,
-            selectedMarketGroupId: currentData.selectedMarketGroupId,
-            visualState: marketGroups.isEmpty ? .empty : currentData.visualState
-        )
-        tabDataSubject.send(updatedData)
-    }
-    
-    public func setVisualState(_ state: MarketGroupSelectorTabVisualState) {
-        let currentData = tabDataSubject.value
-        let updatedData = MarketGroupSelectorTabData(
-            id: currentData.id,
-            marketGroups: currentData.marketGroups,
-            selectedMarketGroupId: currentData.selectedMarketGroupId,
-            visualState: state
+            selectedMarketGroupId: currentData.selectedMarketGroupId
         )
         tabDataSubject.send(updatedData)
     }
@@ -135,8 +102,7 @@ public class MockMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMode
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
             marketGroups: updatedMarketGroups,
-            selectedMarketGroupId: updatedSelectedId,
-            visualState: updatedMarketGroups.isEmpty ? .empty : currentData.visualState
+            selectedMarketGroupId: updatedSelectedId
         )
         
         tabDataSubject.send(updatedData)
@@ -153,38 +119,24 @@ public class MockMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMode
     // MARK: - Convenience Methods
     public func clearSelection() {
         let currentData = tabDataSubject.value
-        let updatedMarketGroups = currentData.marketGroups.map { marketGroup in
-            MarketGroupTabItemData(
-                id: marketGroup.id,
-                title: marketGroup.title,
-                visualState: marketGroup.visualState == .disabled ? .disabled : .idle
-            )
-        }
         
+        // Only update the selection ID to nil, keep existing market groups
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
-            marketGroups: updatedMarketGroups,
-            selectedMarketGroupId: nil,
-            visualState: currentData.visualState
+            marketGroups: currentData.marketGroups, // Keep existing array
+            selectedMarketGroupId: nil
         )
         
         tabDataSubject.send(updatedData)
     }
     
     public func selectFirstAvailableMarketGroup() {
-        let availableGroup = currentMarketGroups.first { $0.visualState != .disabled }
-        if let firstGroup = availableGroup {
+        // Select the first market group if available
+        if let firstGroup = currentMarketGroups.first {
             selectMarketGroup(id: firstGroup.id)
         }
     }
     
-    public func setEnabled(_ enabled: Bool) {
-        setVisualState(enabled ? .idle : .disabled)
-    }
-    
-    public func setLoading(_ loading: Bool) {
-        setVisualState(loading ? .loading : .idle)
-    }
 }
 
 // MARK: - Factory Methods
@@ -202,8 +154,7 @@ extension MockMarketGroupSelectorTabViewModel {
             tabData: MarketGroupSelectorTabData(
                 id: "sports_markets",
                 marketGroups: marketGroups,
-                selectedMarketGroupId: "1x2",
-                visualState: .idle
+                selectedMarketGroupId: "1x2"
             )
         )
     }
@@ -218,8 +169,7 @@ extension MockMarketGroupSelectorTabViewModel {
             tabData: MarketGroupSelectorTabData(
                 id: "limited_markets",
                 marketGroups: marketGroups,
-                selectedMarketGroupId: "1x2",
-                visualState: .idle
+                selectedMarketGroupId: "1x2"
             )
         )
     }
@@ -228,7 +178,7 @@ extension MockMarketGroupSelectorTabViewModel {
         let marketGroups = [
             MarketGroupTabItemData(id: "1x2", title: "1x2", visualState: .selected),
             MarketGroupTabItemData(id: "double_chance", title: "Double Chance", visualState: .idle),
-            MarketGroupTabItemData(id: "disabled_market", title: "Unavailable", visualState: .disabled),
+            MarketGroupTabItemData(id: "disabled_market", title: "Unavailable", visualState: .idle),
             MarketGroupTabItemData(id: "over_under", title: "Over/Under", visualState: .idle)
         ]
         
@@ -236,8 +186,7 @@ extension MockMarketGroupSelectorTabViewModel {
             tabData: MarketGroupSelectorTabData(
                 id: "mixed_markets",
                 marketGroups: marketGroups,
-                selectedMarketGroupId: "1x2",
-                visualState: .idle
+                selectedMarketGroupId: "1x2"
             )
         )
     }
@@ -247,8 +196,7 @@ extension MockMarketGroupSelectorTabViewModel {
             tabData: MarketGroupSelectorTabData(
                 id: "empty_markets",
                 marketGroups: [],
-                selectedMarketGroupId: nil,
-                visualState: .empty
+                selectedMarketGroupId: nil
             )
         )
     }
@@ -258,25 +206,23 @@ extension MockMarketGroupSelectorTabViewModel {
             tabData: MarketGroupSelectorTabData(
                 id: "loading_markets",
                 marketGroups: [],
-                selectedMarketGroupId: nil,
-                visualState: .loading
+                selectedMarketGroupId: nil
             )
         )
     }
     
     public static var disabledMarkets: MockMarketGroupSelectorTabViewModel {
         let marketGroups = [
-            MarketGroupTabItemData(id: "1x2", title: "1x2", visualState: .disabled),
-            MarketGroupTabItemData(id: "double_chance", title: "Double Chance", visualState: .disabled),
-            MarketGroupTabItemData(id: "over_under", title: "Over/Under", visualState: .disabled)
+            MarketGroupTabItemData(id: "1x2", title: "1x2", visualState: .idle),
+            MarketGroupTabItemData(id: "double_chance", title: "Double Chance", visualState: .idle),
+            MarketGroupTabItemData(id: "over_under", title: "Over/Under", visualState: .idle)
         ]
         
         return MockMarketGroupSelectorTabViewModel(
             tabData: MarketGroupSelectorTabData(
                 id: "disabled_markets",
                 marketGroups: marketGroups,
-                selectedMarketGroupId: nil,
-                visualState: .disabled
+                selectedMarketGroupId: nil
             )
         )
     }
@@ -290,8 +236,7 @@ extension MockMarketGroupSelectorTabViewModel {
             tabData: MarketGroupSelectorTabData(
                 id: id,
                 marketGroups: marketGroups,
-                selectedMarketGroupId: selectedMarketGroupId,
-                visualState: marketGroups.isEmpty ? .empty : .idle
+                selectedMarketGroupId: selectedMarketGroupId
             )
         )
     }

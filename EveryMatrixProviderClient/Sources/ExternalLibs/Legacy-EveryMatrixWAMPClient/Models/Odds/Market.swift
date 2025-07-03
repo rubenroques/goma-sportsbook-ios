@@ -22,7 +22,7 @@ extension EveryMatrix {
         let bettingTypeId: String?
         let sportId: String?
         let numberOfOutcomes: Int?
-        let scoringUnitId: String??
+        let scoringUnitId: String?
         let isComplete: Bool?
         let isClosed: Bool?
         let bettingTypeName: String?

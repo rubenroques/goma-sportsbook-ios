@@ -64,7 +64,9 @@ class GeneralFilterViewController: UIViewController {
     private var hasSelections: Bool = false
     
     let generalFilterSelection = GeneralFilterSelection(
-        sportId: "1", timeValue: 1.0, sortTypeId: "1",
+        sportId: "1",
+        timeValue: 1.0,
+        sortTypeId: "1",
         leagueId: "all"
     )
     
@@ -174,12 +176,12 @@ class GeneralFilterViewController: UIViewController {
     
     private func openCombinedFilters() {
         
-        let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
+        let configuration = CombinedFiltersDemoViewController.createMockFilterConfiguration()
 
-        let viewModel: CombinedFiltersViewModelProtocol = MockCombinedFiltersViewModel(filterSelection: selectedGeneralFilterSelection, filterConfiguration: configuration,
+        let viewModel = CombinedFiltersDemoViewModel(filterSelection: selectedGeneralFilterSelection, filterConfiguration: configuration,
                                                                                        contextId: "sports")
         
-        let combinedFiltersViewController = CombinedFiltersViewController( viewModel: viewModel)
+        let combinedFiltersViewController = CombinedFiltersDemoViewController( viewModel: viewModel)
         
         combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
             guard let self = self else { return }

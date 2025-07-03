@@ -1,289 +1,604 @@
 import UIKit
-
-// MARK: - InPlayEvent Model
-struct InPlayEvent {
-    let id: String
-    let title: String
-    let subtitle: String
-    let score: String
-    let time: String
-    let isLive: Bool
-}
-
-// MARK: - InPlayEventsViewModel
-class InPlayEventsViewModel {
-    private(set) var events: [InPlayEvent] = []
-    
-    var onEventsUpdated: (() -> Void)?
-    
-    init() {
-        loadDummyEvents()
-    }
-    
-    private func loadDummyEvents() {
-        events = [
-            InPlayEvent(id: "1", title: "Lakers vs Warriors", subtitle: "NBA Basketball", score: "89-92", time: "Q3 2:45", isLive: true),
-            InPlayEvent(id: "2", title: "Patriots vs Chiefs", subtitle: "NFL Football", score: "14-21", time: "Q2 8:12", isLive: true),
-            InPlayEvent(id: "3", title: "Barcelona vs Real Madrid", subtitle: "La Liga Soccer", score: "2-1", time: "78'", isLive: true),
-            InPlayEvent(id: "4", title: "Celtics vs Heat", subtitle: "NBA Basketball", score: "45-52", time: "Half Time", isLive: false),
-            InPlayEvent(id: "5", title: "Yankees vs Red Sox", subtitle: "MLB Baseball", score: "3-5", time: "Bot 7th", isLive: true),
-            InPlayEvent(id: "6", title: "Rangers vs Bruins", subtitle: "NHL Hockey", score: "1-2", time: "P2 15:23", isLive: true),
-            InPlayEvent(id: "7", title: "Dodgers vs Giants", subtitle: "MLB Baseball", score: "7-4", time: "Top 9th", isLive: true),
-            InPlayEvent(id: "8", title: "Cowboys vs Eagles", subtitle: "NFL Football", score: "28-24", time: "Q4 3:45", isLive: true)
-        ]
-        onEventsUpdated?()
-    }
-    
-    func numberOfEvents() -> Int {
-        return events.count
-    }
-    
-    func event(at index: Int) -> InPlayEvent? {
-        guard index >= 0 && index < events.count else { return nil }
-        return events[index]
-    }
-}
-
-// MARK: - InPlayEventTableViewCell
-class InPlayEventTableViewCell: UITableViewCell {
-    static let reuseIdentifier = "InPlayEventTableViewCell"
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .label
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let subtitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .secondaryLabel
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let scoreLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .label
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let timeLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .systemOrange
-        label.textAlignment = .right
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let liveIndicator: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemRed
-        view.layer.cornerRadius = 4
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let liveLabel: UILabel = {
-        let label = UILabel()
-        label.text = "LIVE"
-        label.font = UIFont.boldSystemFont(ofSize: 10)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        self.setupViews()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupViews() {
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(subtitleLabel)
-        contentView.addSubview(scoreLabel)
-        contentView.addSubview(timeLabel)
-        contentView.addSubview(liveIndicator)
-        liveIndicator.addSubview(liveLabel)
-        
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: scoreLabel.leadingAnchor, constant: -8),
-            
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            subtitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            subtitleLabel.trailingAnchor.constraint(lessThanOrEqualTo: scoreLabel.leadingAnchor, constant: -8),
-            subtitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
-            
-            scoreLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            scoreLabel.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor, constant: -12),
-            scoreLabel.widthAnchor.constraint(equalToConstant: 60),
-            
-            timeLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            timeLabel.trailingAnchor.constraint(equalTo: liveIndicator.leadingAnchor, constant: -8),
-            timeLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
-            
-            liveIndicator.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 4),
-            liveIndicator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            liveIndicator.widthAnchor.constraint(equalToConstant: 40),
-            liveIndicator.heightAnchor.constraint(equalToConstant: 20),
-            
-            liveLabel.centerXAnchor.constraint(equalTo: liveIndicator.centerXAnchor),
-            liveLabel.centerYAnchor.constraint(equalTo: liveIndicator.centerYAnchor)
-        ])
-    }
-    
-    func configure(with event: InPlayEvent) {
-        titleLabel.text = event.title
-        subtitleLabel.text = event.subtitle
-        scoreLabel.text = event.score
-        timeLabel.text = event.time
-        
-        liveIndicator.isHidden = !event.isLive
-        liveLabel.isHidden = !event.isLive
-        
-        if event.isLive {
-            timeLabel.textColor = .systemRed
-            liveIndicator.backgroundColor = .systemRed
-        } else {
-            timeLabel.textColor = .systemOrange
-            liveIndicator.backgroundColor = .systemGray
-        }
-    }
-}
+import GomaUI
+import Combine
 
 // MARK: - InPlayEventsViewController
 class InPlayEventsViewController: UIViewController {
-        
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(InPlayEventTableViewCell.self, forCellReuseIdentifier: InPlayEventTableViewCell.reuseIdentifier)
-        tableView.backgroundColor = .systemBackground
-        tableView.separatorStyle = .singleLine
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Live Events"
-        label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.textColor = .label
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let liveCountLabel: UILabel = {
-        let label = UILabel()
-        label.text = "8 Live Events"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .systemRed
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let viewModel: InPlayEventsViewModel
 
-    // MARK: Lifetime and cycle
+    // MARK: - UI Components
+    private var headerContainerView: UIView!
+    private let quickLinksTabBarView: QuickLinksTabBarView
+    private var pillSelectorBarView: PillSelectorBarView!
+    private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
+    
+    private var pageViewController: UIPageViewController!
+    
+    private let loadingIndicatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .white
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.startAnimating()
+
+        view.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        return view
+    }()
+
+    // MARK: - Properties
+    private let viewModel: InPlayEventsViewModel
+    private var marketGroupControllers: [String: MarketGroupCardsViewController] = [:]
+    private var cancellables = Set<AnyCancellable>()
+    private var isAnimating = false // Track animation state
+    
+    // MARK: - Header Animation Properties
+    private var headerTopConstraint: NSLayoutConstraint!
+    private var isHeaderVisible = true
+    private let headerAnimationDuration: TimeInterval = 0.3
+    private let scrollThreshold: CGFloat = 20.0 // Minimum scroll to trigger hide
+    private var pillsContainerStackView: UIStackView!
+    
+    private var headerHeight: CGFloat = 142.0 // Will be calculated dynamically (40 + 60 + 42)
+
+    // MARK: - Lifecycle
     init(viewModel: InPlayEventsViewModel) {
         self.viewModel = viewModel
+        self.quickLinksTabBarView = QuickLinksTabBarView(viewModel: viewModel.quickLinksTabBarViewModel)
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.quickLinksTabBarView.alpha = 0.0
+        
         setupViews()
         setupBindings()
+        loadData()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateHeaderHeightIfNeeded()
+    }
+    
+    private func updateHeaderHeightIfNeeded() {
+        let calculatedHeight = headerContainerView.frame.height + 4
+        
+        // Only update if height actually changed and is valid
+        guard calculatedHeight > 0 && abs(calculatedHeight - headerHeight) > 0.1 else { return }
+        
+        headerHeight = calculatedHeight
+        // Update all existing market group controllers
+        for controller in marketGroupControllers.values {
+            controller.topContentInset = headerHeight
+        }
+    }
+    
+    // MARK: - Setup
     private func setupViews() {
         view.backgroundColor = .systemBackground
-        
-        view.addSubview(titleLabel)
-        view.addSubview(liveCountLabel)
-        view.addSubview(tableView)
-        
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
-            liveCountLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            liveCountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            liveCountLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
-            tableView.topAnchor.constraint(equalTo: liveCountLabel.bottomAnchor, constant: 16),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
+
+        setupHeaderContainer()
+        setupQuickLinksTabBar()
+        setupPillSelectorBarView()
+        setupMarketGroupSelectorTabView()
+        setupPageViewController()
+        setupLoadingIndicator()
+        setupConstraints()
     }
     
+    private func setupHeaderContainer() {
+        headerContainerView = UIView()
+        headerContainerView.translatesAutoresizingMaskIntoConstraints = false
+        headerContainerView.backgroundColor = .systemBackground
+        view.addSubview(headerContainerView)
+    }
+
+    private func setupMarketGroupSelectorTabView() {
+        marketGroupSelectorTabView = MarketGroupSelectorTabView(viewModel: viewModel.marketGroupSelectorViewModel)
+        marketGroupSelectorTabView.translatesAutoresizingMaskIntoConstraints = false
+        headerContainerView.addSubview(marketGroupSelectorTabView)
+    }
+
+    private func setupPageViewController() {
+        pageViewController = UIPageViewController(
+            transitionStyle: .scroll,
+            navigationOrientation: .horizontal,
+            options: nil
+        )
+        pageViewController.dataSource = self
+        pageViewController.delegate = self
+
+        addChild(pageViewController)
+        view.addSubview(pageViewController.view)
+        pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        pageViewController.didMove(toParent: self)
+        
+        // Send page view controller to back so header can overlay
+        view.sendSubviewToBack(pageViewController.view)
+    }
+
+    private func setupQuickLinksTabBar() {
+        headerContainerView.addSubview(quickLinksTabBarView)
+        quickLinksTabBarView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func setupPillSelectorBarView() {
+        pillSelectorBarView = PillSelectorBarView(viewModel: viewModel.pillSelectorBarViewModel)
+        pillSelectorBarView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create horizontal stack view for pills + filter button
+        let pillsContainerStackView = UIStackView()
+        pillsContainerStackView.axis = .horizontal
+        pillsContainerStackView.distribution = .fill
+        pillsContainerStackView.alignment = .fill
+        pillsContainerStackView.spacing = 0
+        pillsContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create filter button container (red for debugging)
+        let filterButtonContainer = UIView()
+        filterButtonContainer.backgroundColor = UIColor.App.navPills
+        filterButtonContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create filter pill button
+        let filterPillData = PillData(
+            id: "filter",
+            title: "Filter",
+            leftIconName: "line.3.horizontal.decrease",
+            showExpandIcon: true,
+            isSelected: false
+        )
+        let filterPillViewModel = MockPillItemViewModel(pillData: filterPillData)
+        let filterPillView = PillItemView(viewModel: filterPillViewModel)
+        filterPillView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Handle filter button tap
+        filterPillView.onPillSelected = { [weak self] in
+            print("🎯 InPlayEventsViewController: Filter pill tapped")
+            self?.presentFilters()
+        }
+        
+        // Add filter pill to container with padding
+        filterButtonContainer.addSubview(filterPillView)
+        
+        // Add views to stack
+        pillsContainerStackView.addArrangedSubview(pillSelectorBarView)
+        pillsContainerStackView.addArrangedSubview(filterButtonContainer)
+        
+        // Add stack to header container
+        headerContainerView.addSubview(pillsContainerStackView)
+        self.pillsContainerStackView = pillsContainerStackView
+        
+        // Setup constraints
+        NSLayoutConstraint.activate([
+            // Stack view constraints
+            pillsContainerStackView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
+            pillsContainerStackView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
+            pillsContainerStackView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
+            
+            // Filter pill constraints within container (8px padding)
+            filterPillView.topAnchor.constraint(equalTo: filterButtonContainer.topAnchor, constant: 8),
+            filterPillView.leadingAnchor.constraint(equalTo: filterButtonContainer.leadingAnchor, constant: 8),
+            filterPillView.trailingAnchor.constraint(equalTo: filterButtonContainer.trailingAnchor, constant: -8),
+            filterPillView.bottomAnchor.constraint(equalTo: filterButtonContainer.bottomAnchor, constant: -8),
+            filterPillView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        // Handle pill selection events
+        pillSelectorBarView.onPillSelected = { [weak self] pillId in
+            print("🎯 InPlayEventsViewController: Pill selected - \(pillId)")
+            if pillId == "sport_selector" {
+                self?.presentSportsSelector()
+            }
+            // Other pills can be handled here as needed
+        }
+        
+        // Handle sports selector modal presentation
+        viewModel.pillSelectorBarViewModel.onShowSportsSelector = { [weak self] in
+            self?.presentSportsSelector()
+        }
+    }
+
+    private func setupLoadingIndicator() {
+        view.addSubview(loadingIndicatorView)
+    }
+
+    private func setupConstraints() {
+        // Header container constraints - positioned as overlay
+        headerTopConstraint = headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+        
+        NSLayoutConstraint.activate([
+            // Header Container - floating overlay
+            headerTopConstraint,
+            headerContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerContainerView.bottomAnchor.constraint(equalTo: marketGroupSelectorTabView.bottomAnchor),
+            
+            // Quick Links Tab Bar inside header container
+            quickLinksTabBarView.topAnchor.constraint(equalTo: headerContainerView.topAnchor),
+            quickLinksTabBarView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
+            quickLinksTabBarView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
+            quickLinksTabBarView.heightAnchor.constraint(equalToConstant: 40),
+
+            // Market Group Selector below Pills Container inside header container
+            marketGroupSelectorTabView.topAnchor.constraint(equalTo: pillsContainerStackView.bottomAnchor),
+            marketGroupSelectorTabView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
+            marketGroupSelectorTabView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
+            marketGroupSelectorTabView.heightAnchor.constraint(equalToConstant: 42),
+
+            // Page View Controller - decoupled from header, starts from top
+            pageViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Loading Indicator
+            loadingIndicatorView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingIndicatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingIndicatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingIndicatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
     private func setupBindings() {
-        viewModel.onEventsUpdated = { [weak self] in
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-                self?.updateLiveCount()
+        // Bind to market groups changes from ViewModel
+        viewModel.$marketGroups
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] marketGroups in
+                self?.updateMarketGroupControllers(marketGroups: marketGroups)
+            }
+            .store(in: &cancellables)
+
+        // Bind to selection changes from ViewModel
+        viewModel.$selectedMarketGroupId
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] selectedId in
+                guard let selectedId = selectedId else { return }
+                self?.handleMarketGroupSelection(marketGroupId: selectedId)
+            }
+            .store(in: &cancellables)
+
+        // Bind to loading state (optional, for showing loading indicators)
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.setLoadingIndicatorVisible(isLoading)
+            }
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Data Loading
+    private func loadData() {
+        viewModel.reloadEvents()
+    }
+
+    // MARK: - UI Updates
+    private func updateMarketGroupControllers(marketGroups: [MarketGroupTabItemData]) {
+        print("Updating UI controllers for \(marketGroups.count) groups")
+
+        // Create UI controllers for each market group ViewModel
+        for marketGroup in marketGroups {
+            if marketGroupControllers[marketGroup.id] == nil {
+                // Get the ViewModel from the main ViewModel
+                guard let marketGroupCardsViewModel = viewModel.getMarketGroupCardsViewModel(for: marketGroup.id) else {
+                    print("No ViewModel found for market type: \(marketGroup.id)")
+                    continue
+                }
+
+                // Create UI controller with ViewModel
+                let controller = MarketGroupCardsViewController(viewModel: marketGroupCardsViewModel)
+                controller.scrollDelegate = self
+                controller.topContentInset = headerHeight
+                marketGroupControllers[marketGroup.id] = controller
+                print("Created new UI controller for market type: \(marketGroup.id)")
+            }
+        }
+
+        // Remove controllers for market groups that no longer exist
+        let currentMarketGroupIds = Set(marketGroups.map { $0.id })
+        let controllersToRemove = marketGroupControllers.keys.filter { !currentMarketGroupIds.contains($0) }
+        for idToRemove in controllersToRemove {
+            marketGroupControllers.removeValue(forKey: idToRemove)
+            print("Removed UI controller for market type: \(idToRemove)")
+        }
+
+        // Set initial page if needed
+        if pageViewController.viewControllers?.isEmpty == true,
+           let firstMarketGroup = marketGroups.first,
+           let firstController = marketGroupControllers[firstMarketGroup.id] {
+            pageViewController.setViewControllers([firstController], direction: .forward, animated: false, completion: nil)
+            print("Set initial page controller for market type: \(firstMarketGroup.id)")
+        }
+    }
+
+    private func handleMarketGroupSelection(marketGroupId: String) {
+        print("Handling market group selection: \(marketGroupId)")
+
+        // Prevent multiple animations at once
+        guard !isAnimating else {
+            print("Animation already in progress, ignoring selection")
+            return
+        }
+
+        guard let targetController = marketGroupControllers[marketGroupId] else {
+            print("No UI controller found for market type: \(marketGroupId)")
+            return
+        }
+
+        // Get current controller to determine animation direction
+        let currentController = pageViewController.viewControllers?.first as? MarketGroupCardsViewController
+        let currentMarketTypeId = currentController.flatMap { getCurrentMarketTypeId(for: $0) }
+
+        // If we're already on the target page, no need to animate
+        if currentMarketTypeId == marketGroupId {
+            print("Already on target market type: \(marketGroupId)")
+            return
+        }
+
+        // Determine animation direction based on tab positions
+        let direction = determineAnimationDirection(
+            from: currentMarketTypeId,
+            to: marketGroupId
+        )
+
+        isAnimating = true
+
+        pageViewController.setViewControllers(
+            [targetController],
+            direction: direction,
+            animated: true,
+            completion: { [weak self] completed in
+                self?.isAnimating = false
+                if completed {
+                    print("Successfully switched to market type: \(marketGroupId)")
+                } else {
+                    print("Failed to switch to market type: \(marketGroupId)")
+                }
+            }
+        )
+    }
+
+    // MARK: - Animation Direction Helper
+    private func determineAnimationDirection(from currentMarketTypeId: String?, to targetMarketTypeId: String) -> UIPageViewController.NavigationDirection {
+        guard let currentMarketTypeId = currentMarketTypeId else {
+            return .forward
+        }
+
+        guard currentMarketTypeId != targetMarketTypeId else {
+            return .forward
+        }
+
+        let marketGroups = viewModel.getCurrentMarketGroups()
+        guard let currentIndex = marketGroups.firstIndex(where: { $0.id == currentMarketTypeId }),
+              let targetIndex = marketGroups.firstIndex(where: { $0.id == targetMarketTypeId }) else {
+            return .forward
+        }
+
+        return targetIndex > currentIndex ? .forward : .reverse
+    }
+
+    private func setLoadingIndicatorVisible(_ isVisible: Bool) {
+        if isVisible {
+            // Show loading indicator
+            loadingIndicatorView.isHidden = false
+            loadingIndicatorView.alpha = 0.0
+            UIView.animate(withDuration: 0.03) {
+                self.loadingIndicatorView.alpha = 1.0
+            }
+        } else {
+            // Hide loading indicator
+            UIView.animate(withDuration: 0.1) {
+                self.loadingIndicatorView.alpha = 0.0
+            } completion: { _ in
+                self.loadingIndicatorView.isHidden = true
             }
         }
     }
+
+    // MARK: - Testing Helper (can be removed in production)
+    @objc private func testLoadingIndicator() {
+        // Toggle loading state for testing
+        let newState = !viewModel.isLoading
+        if newState {
+            print("Testing: Showing loading indicator")
+        } else {
+            print("Testing: Hiding loading indicator")
+        }
+        // Note: Normally you wouldn't set isLoading directly,
+        // but this is useful for testing the UI behavior
+    }
     
-    private func updateLiveCount() {
-        let liveEvents = viewModel.events.filter { $0.isLive }
-        liveCountLabel.text = "\(liveEvents.count) Live Events"
+    // MARK: - Header Animation
+    private func animateHeader(show: Bool) {
+        guard isHeaderVisible != show else { return }
+        
+        isHeaderVisible = show
+        let targetOffset = show ? 0 : -headerHeight
+        
+        UIView.animate(
+            withDuration: headerAnimationDuration,
+            delay: 0,
+            usingSpringWithDamping: 0.8,
+            initialSpringVelocity: 0,
+            options: [.curveEaseInOut, .allowUserInteraction],
+            animations: {
+                self.headerTopConstraint.constant = targetOffset
+                self.view.layoutIfNeeded()
+            },
+            completion: nil
+        )
+    }
+    
+    // MARK: - Sports Selector Modal
+    private func presentSportsSelector() {
+        // Create fresh SportSelectorViewModel on-demand
+        let sportSelectorViewModel = LiveSportSelectorViewModel()
+        let sportsViewController = SportTypeSelectorViewController(viewModel: sportSelectorViewModel)
+        
+        // Use SportSelectorViewModel callback to get full Sport object
+        sportSelectorViewModel.onSportSelected = { [weak self] sport in
+            print("🏆 InPlayEventsViewController: Sport selected from modal - \(sport.name)")
+            // Update sport via ViewModel
+            self?.viewModel.updateSportType(sport)
+            sportsViewController.dismiss()
+        }
+        
+        // Handle cancellation - presenter manages navigation
+        sportsViewController.onCancel = {
+            print("❌ InPlayEventsViewController: Sports selector cancelled")
+            sportsViewController.dismiss()
+        }
+        
+        sportsViewController.presentModally(from: self)
+    }
+    
+    // MARK: - Filter Modal
+    private func presentFilters() {
+        print("🔍 InPlayEventsViewController: presentFilters() called")
+        let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
+        
+        let viewModel = MockCombinedFiltersViewModel(filterConfiguration: configuration,
+                                                 contextId: "sports")
+        
+        let combinedFiltersViewController = CombinedFiltersViewController(viewModel: viewModel)
+        
+        combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
+            guard let self = self else { return }
+            
+            // Filter selection has been applied through Env.filterStorage
+            // The view model can react to filter changes if needed
+        }
+        
+        self.present(combinedFiltersViewController, animated: true)
     }
 }
 
-// MARK: - UITableViewDataSource
-extension InPlayEventsViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfEvents()
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: InPlayEventTableViewCell.reuseIdentifier, for: indexPath) as? InPlayEventTableViewCell,
-              let event = viewModel.event(at: indexPath.row) else {
-            return UITableViewCell()
+// MARK: - UIPageViewControllerDataSource
+extension InPlayEventsViewController: UIPageViewControllerDataSource {
+
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        guard let currentController = viewController as? MarketGroupCardsViewController,
+              let currentMarketTypeId = getCurrentMarketTypeId(for: currentController),
+              let currentIndex = getMarketGroupIndex(for: currentMarketTypeId),
+              currentIndex > 0 else {
+            return nil
         }
-        
-        cell.configure(with: event)
-        return cell
+
+        let marketGroups = viewModel.getCurrentMarketGroups()
+        let previousMarketTypeId = marketGroups[currentIndex - 1].id
+        return marketGroupControllers[previousMarketTypeId]
+    }
+
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard let currentController = viewController as? MarketGroupCardsViewController,
+              let currentMarketTypeId = getCurrentMarketTypeId(for: currentController),
+              let currentIndex = getMarketGroupIndex(for: currentMarketTypeId) else {
+            return nil
+        }
+
+        let marketGroups = viewModel.getCurrentMarketGroups()
+        guard currentIndex < marketGroups.count - 1 else {
+            return nil
+        }
+
+        let nextMarketTypeId = marketGroups[currentIndex + 1].id
+        return marketGroupControllers[nextMarketTypeId]
+    }
+
+    // MARK: - Helper Methods
+    private func getCurrentMarketTypeId(for controller: MarketGroupCardsViewController) -> String? {
+        return marketGroupControllers.first { $0.value === controller }?.key
+    }
+
+    private func getMarketGroupIndex(for marketTypeId: String) -> Int? {
+        return viewModel.getCurrentMarketGroups().firstIndex { $0.id == marketTypeId }
     }
 }
 
-// MARK: - UITableViewDelegate
-extension InPlayEventsViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+// MARK: - UIPageViewControllerDelegate
+extension InPlayEventsViewController: UIPageViewControllerDelegate {
+
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+
+        // Reset animation state regardless of completion
+        isAnimating = false
+
+        guard completed,
+              let currentController = pageViewController.viewControllers?.first as? MarketGroupCardsViewController,
+              let currentMarketTypeId = getCurrentMarketTypeId(for: currentController) else {
+            return
+        }
+
+        // Update the tab selection to match the current page
+        // Only if we're not currently processing a tab selection (to avoid circular updates)
+        if viewModel.getCurrentSelectedMarketGroupId() != currentMarketTypeId {
+            viewModel.selectMarketGroup(id: currentMarketTypeId)
+            print("Updated tab selection to match page: \(currentMarketTypeId)")
+        }
+    }
+
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        // Set animation state when transition begins (for user swipes)
+        isAnimating = true
         
-        if let event = viewModel.event(at: indexPath.row) {
-            print("Selected live event: \(event.title)")
+        // Show header when swiping between pages
+        animateHeader(show: true)
+    }
+}
+
+// MARK: - MarketGroupCardsScrollDelegate
+extension InPlayEventsViewController: MarketGroupCardsScrollDelegate {
+    
+    func marketGroupCardsDidScroll(_ scrollView: UIScrollView, scrollDirection: ScrollDirection, in viewController: MarketGroupCardsViewController) {
+        // Only react to scroll from the currently visible page
+        guard let currentController = pageViewController.viewControllers?.first,
+              currentController === viewController else { return }
+        
+        let offset = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let scrollViewHeight = scrollView.bounds.height
+        
+        // Calculate if we're at the bottom
+        let maxScrollOffset = contentHeight - scrollViewHeight
+        let isAtBottom = offset >= maxScrollOffset - 10
+        
+        // Check if we're bouncing at the bottom
+        let isBouncing = offset > maxScrollOffset
+        
+        // Determine whether to show or hide headers
+        if scrollDirection == .down && offset > scrollThreshold && !isAtBottom {
+            // Only hide when scrolling down and not near bottom
+            animateHeader(show: false)
+        } else if scrollDirection == .up && !isBouncing && offset < maxScrollOffset {
+            // Only show when scrolling up and not bouncing
+            animateHeader(show: true)
+        } else if offset <= 0 {
+            // Always show at top
+            animateHeader(show: true)
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+    func marketGroupCardsDidEndScrolling(_ scrollView: UIScrollView, in viewController: MarketGroupCardsViewController) {
+        // Show headers if we're at the top after scrolling ends
+        if scrollView.contentOffset.y <= 0 {
+            animateHeader(show: true)
+        }
     }
-} 
+}

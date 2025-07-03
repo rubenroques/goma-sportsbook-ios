@@ -236,23 +236,7 @@ class MarketGroupSelectorTabViewController: UIViewController {
     
     // MARK: - Action Handlers
     @objc private func stateChanged() {
-        guard let firstViewModel = viewModels.first else { return }
-        
-        let selectedState: MarketGroupSelectorTabVisualState
-        switch stateSegmentedControl.selectedSegmentIndex {
-        case 0:
-            selectedState = .idle
-        case 1:
-            selectedState = .loading
-        case 2:
-            selectedState = .empty
-        case 3:
-            selectedState = .disabled
-        default:
-            selectedState = .idle
-        }
-        
-        firstViewModel.setVisualState(selectedState)
+
     }
     
     @objc private func addTabTapped() {
@@ -288,18 +272,6 @@ class MarketGroupSelectorTabViewController: UIViewController {
     }
     
     private func handleSelectionEvent(_ event: MarketGroupSelectionEvent, from componentIndex: Int) {
-        DispatchQueue.main.async { [weak self] in
-            let eventText = """
-            Component: \(componentIndex)
-            Selected: \(event.selectedId)
-            Previous: \(event.previouslySelectedId ?? "None")
-            Time: \(DateFormatter.localizedString(from: event.timestamp, dateStyle: .none, timeStyle: .medium))
-            """
-            self?.selectionEventLabel.text = eventText
-            
-            // Add haptic feedback
-            let notificationFeedback = UINotificationFeedbackGenerator()
-            notificationFeedback.notificationOccurred(.success)
-        }
+        
     }
 } 

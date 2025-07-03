@@ -25,12 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
         Logger.log("App Started")
 
-        //
+        /*
         // External Localization tool
         #if DEBUG
         let phraseConfiguration = PhraseConfiguration()
         phraseConfiguration.debugMode = false
-        // phraseConfiguration.localeOverride = "fr-FR"
+        phraseConfiguration.localeOverride = "en-US"
         Phrase.shared.configuration = phraseConfiguration
         Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "GuBCndN-seQgps-CuyMlx6AXkzsiyGuJMIFicqpvMoc")
         #else
@@ -50,6 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         catch {
             print("PhraseSDK updateTranslation crashed error \(error)")
         }
+        */
 
         //
         //

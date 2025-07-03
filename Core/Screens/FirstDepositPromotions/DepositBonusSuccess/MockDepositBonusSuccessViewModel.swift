@@ -18,7 +18,7 @@ class MockDepositBonusSuccessViewModel: DepositBonusSuccessViewModelProtocol {
         
         self.bonusDepositData = bonusDepositData
         
-        statusNotificationViewModel = MockStatusNotificationViewModel(data: StatusNotificationData(type: .success, message: "Deposit Successful", icon: "success_circle_icon"))
+        statusNotificationViewModel = MockStatusNotificationViewModel(data: StatusNotificationData(type: .success, message: "Deposit Successful 🤑", icon: "success_circle_icon"))
         
         infoRowViewModels = [
             MockInfoRowViewModel(data: InfoRowData(leftText: "Your Deposit", rightText: "XAF \(bonusDepositData.selectedAmount)")),

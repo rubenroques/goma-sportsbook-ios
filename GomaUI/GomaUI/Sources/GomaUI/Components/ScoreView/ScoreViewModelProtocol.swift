@@ -8,12 +8,14 @@ public struct ScoreDisplayData: Equatable, Hashable {
     public let id: String
     public let homeScore: String
     public let awayScore: String
+    public let index: Int
     public let style: ScoreCellStyle
 
-    public init(id: String, homeScore: String, awayScore: String, style: ScoreCellStyle) {
+    public init(id: String, homeScore: String, awayScore: String, index: Int = 0, style: ScoreCellStyle) {
         self.id = id
         self.homeScore = homeScore
         self.awayScore = awayScore
+        self.index = index
         self.style = style
     }
 }

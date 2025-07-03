@@ -49,6 +49,8 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
     public var isPasswordVisiblePublisher: AnyPublisher<Bool, Never> {
         return isPasswordVisibleSubject.eraseToAnyPublisher()
     }
+    
+    public var prefixText: String?
 
         // MARK: - Initialization
     public init(textFieldData: BorderedTextFieldData) {
@@ -61,6 +63,8 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
 
         // Password visibility initialization
         self.isPasswordVisibleSubject = CurrentValueSubject(false)
+        
+        self.prefixText = textFieldData.prefix
     }
 
     // MARK: - BorderedTextFieldViewModelProtocol
@@ -98,8 +102,16 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
     }
 
     public func clearError() {
-        // Return to idle state when clearing error
-        visualStateSubject.send(.idle)
+        // Return to idle or focused state when clearing error
+        let currentState = visualStateSubject.value
+        switch currentState {
+        case .idle:
+            visualStateSubject.send(.idle)
+        case .error:
+            visualStateSubject.send(.focused)
+        default:
+            return
+        }
     }
 
     public func setEnabled(_ enabled: Bool) {

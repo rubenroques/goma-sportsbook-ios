@@ -5,10 +5,10 @@ import UIKit
 final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
 
     // MARK: - Publishers
-    private let marketStateSubject: CurrentValueSubject<MarketOutcomesDisplayState, Never>
+    private let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OddsChangeEvent, Never>
 
-    public var marketStatePublisher: AnyPublisher<MarketOutcomesDisplayState, Never> {
+    public var marketStatePublisher: AnyPublisher<MarketOutcomesLineDisplayState, Never> {
         return marketStateSubject.eraseToAnyPublisher()
     }
 
@@ -22,7 +22,7 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
                 middleOutcome: MarketOutcomeData? = nil,
                 rightOutcome: MarketOutcomeData? = nil) {
 
-        let initialState = MarketOutcomesDisplayState(
+        let initialState = MarketOutcomesLineDisplayState(
             displayMode: displayMode,
             leftOutcome: leftOutcome,
             middleOutcome: middleOutcome,
@@ -112,7 +112,7 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
 
     public func setDisplayMode(_ mode: MarketDisplayMode) {
         let currentState = marketStateSubject.value
-        let updatedState = MarketOutcomesDisplayState(
+        let updatedState = MarketOutcomesLineDisplayState(
             displayMode: mode,
             leftOutcome: currentState.leftOutcome,
             middleOutcome: currentState.middleOutcome,
@@ -165,7 +165,7 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
     }
 
     // MARK: - Helper Methods
-    private func getOutcome(from state: MarketOutcomesDisplayState, type: OutcomeType) -> MarketOutcomeData? {
+    private func getOutcome(from state: MarketOutcomesLineDisplayState, type: OutcomeType) -> MarketOutcomeData? {
         switch type {
         case .left: return state.leftOutcome
         case .middle: return state.middleOutcome
@@ -173,24 +173,24 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         }
     }
 
-    private func updateOutcome(in state: MarketOutcomesDisplayState, type: OutcomeType, outcome: MarketOutcomeData) -> MarketOutcomesDisplayState {
+    private func updateOutcome(in state: MarketOutcomesLineDisplayState, type: OutcomeType, outcome: MarketOutcomeData) -> MarketOutcomesLineDisplayState {
         switch type {
         case .left:
-            return MarketOutcomesDisplayState(
+            return MarketOutcomesLineDisplayState(
                 displayMode: state.displayMode,
                 leftOutcome: outcome,
                 middleOutcome: state.middleOutcome,
                 rightOutcome: state.rightOutcome
             )
         case .middle:
-            return MarketOutcomesDisplayState(
+            return MarketOutcomesLineDisplayState(
                 displayMode: state.displayMode,
                 leftOutcome: state.leftOutcome,
                 middleOutcome: outcome,
                 rightOutcome: state.rightOutcome
             )
         case .right:
-            return MarketOutcomesDisplayState(
+            return MarketOutcomesLineDisplayState(
                 displayMode: state.displayMode,
                 leftOutcome: state.leftOutcome,
                 middleOutcome: state.middleOutcome,
@@ -199,7 +199,7 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         }
     }
 
-    private func updateOutcomeSelection(in state: MarketOutcomesDisplayState, type: OutcomeType, isSelected: Bool) -> MarketOutcomesDisplayState {
+    private func updateOutcomeSelection(in state: MarketOutcomesLineDisplayState, type: OutcomeType, isSelected: Bool) -> MarketOutcomesLineDisplayState {
         guard let currentOutcome = getOutcome(from: state, type: type) else { return state }
 
         let updatedOutcome = MarketOutcomeData(

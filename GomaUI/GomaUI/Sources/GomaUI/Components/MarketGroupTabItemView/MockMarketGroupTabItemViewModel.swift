@@ -46,7 +46,6 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
     }
     
     public func handleTap() {
-        guard currentVisualState != .disabled else { return }
         onTapSubject.send(tabItemDataSubject.value.id)
     }
     
@@ -84,11 +83,8 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
     }
     
     public func setEnabled(_ enabled: Bool) {
-        if !enabled && currentVisualState != .disabled {
-            setVisualState(.disabled)
-        } else if enabled && currentVisualState == .disabled {
-            setVisualState(.idle)
-        }
+        // Since we no longer have a disabled state, this method is a no-op
+        // The tab is always enabled and clickable
     }
 }
 
@@ -140,7 +136,7 @@ extension MockMarketGroupTabItemViewModel {
             tabItemData: MarketGroupTabItemData(
                 id: "disabled",
                 title: "Disabled",
-                visualState: .disabled
+                visualState: .idle // No longer have disabled state
             )
         )
     }

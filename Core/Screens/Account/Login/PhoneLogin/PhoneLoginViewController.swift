@@ -81,9 +81,7 @@ class PhoneLoginViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     
-    var loginComplete: (() -> Void)?
-
-    init(viewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()) {
+    init(viewModel: PhoneLoginViewModelProtocol) {
         self.viewModel = viewModel
         self.headerView = PromotionalHeaderView(viewModel: viewModel.headerViewModel)
         self.highlightedTextView = HighlightedTextView(viewModel: viewModel.highlightedTextViewModel)
@@ -99,7 +97,7 @@ class PhoneLoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         setupLayout()
         setupBindings()
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
@@ -190,12 +188,6 @@ class PhoneLoginViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.loginComplete
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.loginComplete?()
-            }
-            .store(in: &cancellables)
     }
 
     @objc private func didTapCloseButton() {
