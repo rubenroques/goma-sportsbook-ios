@@ -61,14 +61,20 @@ extension EveryMatrix {
             }
         }
 
-        // Store multiple entities
+        // Store multiple entities while preserving insertion order
         func store<T: Entity>(_ entities: [T]) {
             for entity in entities {
                 let type = T.rawType
                 if self.entities[type] == nil {
                     self.entities[type] = [:]
+                    entityOrder[type] = []
                 }
                 self.entities[type]?[entity.id] = entity
+
+                // Add to order if not already present
+                if !(entityOrder[type]?.contains(entity.id) ?? false) {
+                    entityOrder[type]?.append(entity.id)
+                }
 
                 // Notify observers of each change
                 notifyEntityChange(entity)
@@ -78,6 +84,7 @@ extension EveryMatrix {
         // Clear all data
         func clear() {
             entities.removeAll()
+            entityOrder.removeAll()
         }
 
         // Update entity with changed properties

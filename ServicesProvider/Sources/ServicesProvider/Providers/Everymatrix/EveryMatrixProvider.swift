@@ -169,8 +169,41 @@ class EveryMatrixEventsProvider: EventsProvider {
             return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
         }
 
-        // Delegate to paginator's market subscription method
-        return paginator.subscribeToMarketUpdates(withId: id)
+        // Check both paginators to find which one contains this market
+        if let prelivePaginator = prelivePaginator, prelivePaginator.outcomeExists(id: id) {
+            // Delegate to pre-live paginator's outcome subscription method
+            return prelivePaginator.subscribeToMarketUpdates(withId: id)
+                .handleEvents(receiveSubscription: { subscription in
+                    // print("subs outcome updated. receiveSubscription (pre-live)")
+                }, receiveOutput: { output in
+                    // print("subs outcome updated. receiveOutput (pre-live)")
+                }, receiveCompletion: { completion in
+                    // print("subs outcome updated. receiveCompletion (pre-live)")
+                }, receiveCancel: {
+                    // print("subs outcome updated. receiveCancel (pre-live)")
+                }, receiveRequest: { demand in
+                    // print("subs outcome updated. receiveRequest (pre-live)")
+                })
+                .eraseToAnyPublisher()
+        } else if let livePaginator = livePaginator, livePaginator.outcomeExists(id: id) {
+            // Delegate to live paginator's outcome subscription method
+            return livePaginator.subscribeToMarketUpdates(withId: id)
+                .handleEvents(receiveSubscription: { subscription in
+                    // print("subs outcome updated. receiveSubscription (live)")
+                }, receiveOutput: { output in
+                    // print("subs outcome updated. receiveOutput (live)")
+                }, receiveCompletion: { completion in
+                    // print("subs outcome updated. receiveCompletion (live)")
+                }, receiveCancel: {
+                    // print("subs outcome updated. receiveCancel (live)")
+                }, receiveRequest: { demand in
+                    // print("subs outcome updated. receiveRequest (live)")
+                })
+                .eraseToAnyPublisher()
+        } else {
+            return Fail(error: ServiceProviderError.errorMessage(message: "Market with id \(id) not found in any active paginator")).eraseToAnyPublisher()
+        }
+        
     }
 
     func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
@@ -413,6 +446,5 @@ extension EveryMatrixEventsProvider {
             return Fail(outputType: SubscribableContent<[Country]>.self, failure: ServiceProviderError.resourceNotFound)
                 .eraseToAnyPublisher()
         }
-    }
-    
+    }    
 }

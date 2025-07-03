@@ -14,6 +14,20 @@ extension EveryMatrixModelMapper {
         let events = internalMatches.map(Self.event(fromInternalMatch:))
         return EventsGroup(events: events, marketGroupId: nil)
     }
+    
+    static func mainMarket(fromInternalMainMarket internalMainMarket: EveryMatrix.MainMarketDTO) -> MainMarket {
+        return MainMarket(
+            id: internalMainMarket.id,
+            bettingTypeId: internalMainMarket.bettingTypeId,
+            eventPartId: internalMainMarket.eventPartId,
+            sportId: internalMainMarket.sportId,
+            bettingTypeName: internalMainMarket.bettingTypeName,
+            eventPartName: internalMainMarket.eventPartName,
+            numberOfOutcomes: internalMainMarket.numberOfOutcomes,
+            liveMarket: internalMainMarket.liveMarket,
+            outright: internalMainMarket.outright
+        )
+    }
 
     static func event(fromInternalMatch internalMatch: EveryMatrix.Match) -> Event {
         // Convert EveryMatrix.Sport to external SportType
@@ -173,6 +187,11 @@ extension EveryMatrixModelMapper {
     static func eventsGroup(fromInternalMatch internalMatch: EveryMatrix.Match) -> EventsGroup {
         return eventsGroup(fromInternalMatches: [internalMatch])
     }
+    
+    /// Convert a single match to an EventsGroup with main markets
+    static func eventsGroup(fromInternalMatch internalMatch: EveryMatrix.Match, mainMarkets: [MainMarket]? = nil) -> EventsGroup {
+        return eventsGroup(fromInternalMatches: [internalMatch], mainMarkets: mainMarkets)
+    }
 
     /// Filter and convert matches by sport
     static func eventsGroup(fromInternalMatches internalMatches: [EveryMatrix.Match], sportId: String) -> EventsGroup {
@@ -198,6 +217,12 @@ extension EveryMatrixModelMapper {
             // Return all matches in a single group
             return [eventsGroup(fromInternalMatches: internalMatches)]
         }
+    }
+    
+    /// Convert EventsGroup with provided main markets
+    static func eventsGroup(fromInternalMatches internalMatches: [EveryMatrix.Match], mainMarkets: [MainMarket]? = nil) -> EventsGroup {
+        let events = internalMatches.map(Self.event(fromInternalMatch:))
+        return EventsGroup(events: events, marketGroupId: nil, mainMarkets: mainMarkets)
     }
 }
 

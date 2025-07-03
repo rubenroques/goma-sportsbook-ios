@@ -150,7 +150,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     
     /// Subscribe to outcome updates for a specific outcome ID
     func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
-        return store.observeOutcome(id: id)
+        let realPublisher = store.observeOutcome(id: id)
             .handleEvents(receiveSubscription: { subscription in
                 // print("entityStore.observeOutcome.subscription")
             }, receiveOutput: { outcome in
@@ -162,18 +162,30 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             }, receiveRequest: { demand in
                 // print("entityStore.observeOutcome.demand: \(demand)")
             })
-            .compactMap { outcomeDTO -> EveryMatrix.Outcome? in
+            .map { outcomeDTO -> Outcome? in
                 guard let outcomeDTO = outcomeDTO else { return nil }
                 
                 // Build hierarchical outcome from DTO
-                return EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store)
-            }
-            .compactMap { outcome -> Outcome? in
+                guard let hierarchicalOutcome = EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store) else {
+                    return nil
+                }
+                
                 // Map internal model to domain model using existing mapper
-                return EveryMatrixModelMapper.outcome(fromInternalOutcome: outcome)
+                return EveryMatrixModelMapper.outcome(fromInternalOutcome: hierarchicalOutcome)
             }
             .setFailureType(to: ServiceProviderError.self)
-            .eraseToAnyPublisher()
+        
+//        #if DEBUG
+//        // Create simulation publisher with random intervals
+//        let simulationPublisher = createRandomIntervalSimulationPublisher(for: id)
+//        
+//        // Merge real and simulated updates
+//        return Publishers.Merge(realPublisher, simulationPublisher)
+//            .eraseToAnyPublisher()
+//        #else
+//        return realPublisher.eraseToAnyPublisher()
+//        #endif
+        return realPublisher.eraseToAnyPublisher()
     }
     
     /// Check if an outcome with the given ID exists in this paginator's store
@@ -232,9 +244,9 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
 
     // MARK: - Future Methods for Hierarchical Data Building
 
-    /// Build hierarchical matches from stored flat entities
+    /// Build hierarchical matches from stored flat entities in original order
     private func buildHierarchicalMatches() -> [EveryMatrix.Match] {
-        let matchDTOs = store.getAll(EveryMatrix.MatchDTO.self)
+        let matchDTOs = store.getAllInOrder(EveryMatrix.MatchDTO.self)
         return matchDTOs.compactMap { matchDTO in
             EveryMatrix.MatchBuilder.build(from: matchDTO, store: store)
         }
@@ -244,19 +256,31 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     private func buildEventsGroups() -> [EventsGroup] {
         let hierarchicalMatches = buildHierarchicalMatches()
 
-        // Group matches by competition/category for better organization
-        return EveryMatrixModelMapper.eventsGroups(
-            fromInternalMatches: hierarchicalMatches,
-            groupByCategory: true
-        )
-    }
-
-    /// Convert hierarchical matches to EventsGroup (to be implemented later)
-    private func convertMatchesToEventsGroups(_ matches: [EveryMatrix.Match]) -> [EventsGroup] {
-        // This method is now replaced by buildEventsGroups()
-        return EveryMatrixModelMapper.eventsGroups(fromInternalMatches: matches)
+        if hierarchicalMatches.isEmpty {
+            return []
+        }
+        
+        // Extract main markets from store and filter by sport
+        let mainMarkets = extractMainMarketsForSport()
+        
+        // Create EventsGroup with main markets
+        return [EveryMatrixModelMapper.eventsGroup(fromInternalMatches: hierarchicalMatches, mainMarkets: mainMarkets)]
     }
     
+    /// Extract and convert main markets for the current sport in original API order
+    private func extractMainMarketsForSport() -> [MainMarket]? {
+        let allMainMarketsInOrder = store.getAllInOrder(EveryMatrix.MainMarketDTO.self)
+        let filteredMainMarkets = allMainMarketsInOrder.filter { $0.sportId == sportId }
+        
+        if filteredMainMarkets.isEmpty {
+            return nil
+        }
+        
+        return filteredMainMarkets.map { mainMarketDTO in
+            EveryMatrixModelMapper.mainMarket(fromInternalMainMarket: mainMarketDTO)
+        }
+    }
+
     // MARK: - Matches-Specific Parsing
     
     /// Parse only MATCH, MARKET, OUTCOME, BETTING_OFFER and related entities from the aggregator response
@@ -384,5 +408,89 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     func unsubscribe(subscription: Subscription) {
         // 
     }
+    
+    #if DEBUG
+    // MARK: - Simulation Helpers
+    
+    /// Creates a publisher that emits at random intervals between 0.3 and 3.5 seconds
+    private func createRandomIntervalSimulationPublisher(for outcomeId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        // Create a subject to emit values
+        let subject = PassthroughSubject<Outcome?, ServiceProviderError>()
+        
+        // Function to schedule the next random emission
+        func scheduleNextEmission() {
+            // Random delay between 0.3 and 3.5 seconds
+            let randomDelay = Double.random(in: 0.3...3.5)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + randomDelay) { [weak self] in
+                guard let self = self else { return }
+                
+                // Get current outcome data
+                guard let outcomeDTO = self.store.get(EveryMatrix.OutcomeDTO.self, id: outcomeId),
+                      let outcome = EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store) else {
+                    // Schedule next emission even if outcome not found
+                    scheduleNextEmission()
+                    return
+                }
+                
+                // Create and emit simulated outcome
+                if let simulatedOutcome = self.createSimulatedOutcome(from: outcome) {
+                    subject.send(simulatedOutcome)
+                }
+                
+                // Schedule the next emission
+                scheduleNextEmission()
+            }
+        }
+        
+        // Start the emission cycle
+        scheduleNextEmission()
+        
+        return subject.eraseToAnyPublisher()
+    }
+    
+    /// Creates a simulated outcome with random odds variation
+    private func createSimulatedOutcome(from outcome: EveryMatrix.Outcome) -> Outcome? {
+        // Get the first available betting offer
+        guard let firstOffer = outcome.bettingOffers.first(where: { $0.isAvailable }) else {
+            return nil
+        }
+        
+        let currentOdds = firstOffer.odds
+        let variationPercent = Double.random(in: 0.05...0.65)
+        let isIncrease = Bool.random()
+        let newOdds: Double
+        
+        if isIncrease {
+            newOdds = currentOdds * (1 + variationPercent)
+        } else {
+            newOdds = max(1.01, currentOdds * (1 - variationPercent)) // Ensure odds don't go below 1.01
+        }
+        
+        // Create a modified betting offer with new odds
+        let modifiedOffer = EveryMatrix.BettingOffer(
+            id: firstOffer.id,
+            odds: newOdds,
+            isAvailable: firstOffer.isAvailable,
+            isLive: firstOffer.isLive,
+            lastChangedTime: Date(), // Use current time for the change
+            providerId: firstOffer.providerId
+        )
+        
+        // Create a modified outcome with the new betting offer
+        let modifiedOutcome = EveryMatrix.Outcome(
+            id: outcome.id,
+            name: outcome.name,
+            shortName: outcome.shortName,
+            code: outcome.code,
+            bettingOffers: [modifiedOffer], // Use only the modified offer
+            headerName: outcome.headerName,
+            headerNameKey: outcome.headerNameKey
+        )
+                
+        // Convert to public Outcome model
+        return EveryMatrixModelMapper.outcome(fromInternalOutcome: modifiedOutcome)
+    }
+    #endif
     
 }

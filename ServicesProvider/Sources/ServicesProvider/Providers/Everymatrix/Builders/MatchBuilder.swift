@@ -23,8 +23,8 @@ extension EveryMatrix {
             let venue = venueDTO.flatMap { LocationBuilder.build(from: $0, store: store) }
             let category = categoryDTO.flatMap { EventCategoryBuilder.build(from: $0, store: store) }
 
-            // Get markets for this match
-            let allMarkets = store.getAll(MarketDTO.self)
+            // Get markets for this match in original order
+            let allMarkets = store.getAllInOrder(MarketDTO.self)
             let matchMarkets = allMarkets.filter { $0.eventId == match.id }
 
             // Build hierarchical markets

@@ -13,9 +13,9 @@ extension EveryMatrix {
         typealias OutputType = Market
 
         static func build(from market: MarketDTO, store: EntityStore) -> Market? {
-            // Get outcomes for this market
-            let allOutcomes = store.getAll(OutcomeDTO.self)
-            let allRelations = store.getAll(MarketOutcomeRelationDTO.self)
+            // Get outcomes for this market in original order
+            let allOutcomes = store.getAllInOrder(OutcomeDTO.self)
+            let allRelations = store.getAllInOrder(MarketOutcomeRelationDTO.self)
 
             // Find outcomes related to this market
             let relatedOutcomeIds = allRelations

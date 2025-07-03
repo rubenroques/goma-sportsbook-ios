@@ -13,8 +13,8 @@ extension EveryMatrix {
         typealias OutputType = Outcome
 
         static func build(from outcome: OutcomeDTO, store: EntityStore) -> Outcome? {
-            // Get betting offers for this outcome
-            let allBettingOffers = store.getAll(BettingOfferDTO.self)
+            // Get betting offers for this outcome in original order
+            let allBettingOffers = store.getAllInOrder(BettingOfferDTO.self)
             let outcomeBettingOffers = allBettingOffers.filter { $0.outcomeId == outcome.id }
 
             // Build hierarchical betting offers

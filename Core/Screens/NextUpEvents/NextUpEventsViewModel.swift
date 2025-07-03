@@ -155,7 +155,6 @@ class NextUpEventsViewModel: ObservableObject {
             switch subscribableContent {
             case .connected(let subscription):
                 print("[NextUpEventsViewModel] 🟢 Connected to pre-live matches subscription \(subscription.id)")
-                break
 
             case .contentUpdate(let content):
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: content)
@@ -166,7 +165,6 @@ class NextUpEventsViewModel: ObservableObject {
 
             case .disconnected:
                 print("[NextUpEventsViewModel] 🔴 Disconnected from pre-live matches subscription")
-                break
             }
         }
     }

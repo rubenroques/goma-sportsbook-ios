@@ -64,22 +64,13 @@ class LiveMatchesPaginator: UnsubscriptionController {
 
         // Create the WAMP router using the existing popularMatchesPublisher case
         // I am using this live version to better test the changes in the matches/market/outcomes
-        // TODO: revert to popularMatchesPublisher when the changes are tested
-#if DEBUG
-        let router = WAMPRouter.liveMatchesPublisher(
-            operatorId: "4093",
-            language: "en",
-            sportId: sportId,
-            matchesCount: 1
-        )
-#else
         let router = WAMPRouter.liveMatchesPublisher(
             operatorId: "4093",
             language: "en",
             sportId: sportId,
             matchesCount: numberOfEvents // 1
         )
-#endif
+
         
 
         // Subscribe to the websocket topic
@@ -173,6 +164,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
             }
             .map { outcome -> Outcome? in
                 // Map internal model to domain model using existing mapper
+                print("#DEBUG [LiveMatchesPaginator] subscribeToOutcomeUpdates outcome: \(outcome)")
                 return EveryMatrixModelMapper.outcome(fromInternalOutcome: outcome)
             }
             .setFailureType(to: ServiceProviderError.self)
@@ -253,9 +245,9 @@ class LiveMatchesPaginator: UnsubscriptionController {
 
     // MARK: - Future Methods for Hierarchical Data Building
 
-    /// Build hierarchical matches from stored flat entities
+    /// Build hierarchical matches from stored flat entities in original order
     private func buildHierarchicalMatches() -> [EveryMatrix.Match] {
-        let matchDTOs = store.getAll(EveryMatrix.MatchDTO.self)
+        let matchDTOs = store.getAllInOrder(EveryMatrix.MatchDTO.self)
         return matchDTOs.compactMap { matchDTO in
             EveryMatrix.MatchBuilder.build(from: matchDTO, store: store)
         }
@@ -265,11 +257,29 @@ class LiveMatchesPaginator: UnsubscriptionController {
     private func buildEventsGroups() -> [EventsGroup] {
         let hierarchicalMatches = buildHierarchicalMatches()
 
-        // Group matches by competition/category for better organization
-        return EveryMatrixModelMapper.eventsGroups(
-            fromInternalMatches: hierarchicalMatches,
-            groupByCategory: true
-        )
+        if hierarchicalMatches.isEmpty {
+            return []
+        }
+        
+        // Extract main markets from store and filter by sport
+        let mainMarkets = extractMainMarketsForSport()
+        
+        // Create EventsGroup with main markets
+        return [EveryMatrixModelMapper.eventsGroup(fromInternalMatches: hierarchicalMatches, mainMarkets: mainMarkets)]
+    }
+    
+    /// Extract and convert main markets for the current sport in original API order
+    private func extractMainMarketsForSport() -> [MainMarket]? {
+        let allMainMarketsInOrder = store.getAllInOrder(EveryMatrix.MainMarketDTO.self)
+        let filteredMainMarkets = allMainMarketsInOrder.filter { $0.sportId == sportId }
+        
+        if filteredMainMarkets.isEmpty {
+            return nil
+        }
+        
+        return filteredMainMarkets.map { mainMarketDTO in
+            EveryMatrixModelMapper.mainMarket(fromInternalMainMarket: mainMarketDTO)
+        }
     }
 
     /// Convert hierarchical matches to EventsGroup (to be implemented later)
@@ -345,6 +355,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
             // Apply custom update logic based on entity type
             if change.entityType == EveryMatrix.BettingOfferDTO.rawType && changedProperties.keys.contains("odds") {
                 // Only update betting offers with odds changes
+                print("[LiveMatchesPaginator] 🔄 Real odds update - BettingOffer ID: \(change.id), changedProperties: \(changedProperties)")
                 store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
                 
             } else if change.entityType == EveryMatrix.MarketDTO.rawType {

@@ -86,8 +86,6 @@ class SplashInformativeViewController: UIViewController {
             .sink { completion in
                 print("activeSportsPublisher: completion \(completion)")
             } receiveValue: { [weak self] sportsLoadingState in
-                print("Sports: \(sportsLoadingState)")
-                
                 switch sportsLoadingState {
                 case .idle:
                     break
@@ -99,7 +97,6 @@ class SplashInformativeViewController: UIViewController {
                     break
                 }
             }
-
 //        
 //        Env.presentationConfigurationStore.loadState
 //            .sink { completion in

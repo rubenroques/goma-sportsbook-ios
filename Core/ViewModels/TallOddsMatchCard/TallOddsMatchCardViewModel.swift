@@ -113,14 +113,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                     print("[TallOddsMatchCardViewModel] 🟢 Live data connected: \(subscription.id) for match: \(self.matchData.matchId)")
                     
                 case .contentUpdate(let eventLiveData):
-                    print("#DEBUG: [TallOddsMatchCardViewModel] 📡 Received live data update for match: \(self.matchData.matchId)")
-                    print("  - Home Score: \(eventLiveData.homeScore ?? -1)")
-                    print("  - Away Score: \(eventLiveData.awayScore ?? -1)")
-                    print("  - Status: \(eventLiveData.status)")
-                    print("  - Match Time: \(eventLiveData.matchTime ?? "nil")")
-                    print("  - Detailed Scores Count: \(eventLiveData.detailedScores?.count ?? 0)")
-                    print("  - Active Player Serving: \(eventLiveData.activePlayerServing?.rawValue ?? "nil")")
-                    
+                    // print("[TallOddsMatchCardViewModel] contentUpdated live data")
                     self.currentEventLiveData = eventLiveData
                     self.updateScoreViewModel(from: eventLiveData)
                     self.updateMatchHeaderViewModel(from: eventLiveData)
