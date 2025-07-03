@@ -18,6 +18,7 @@ class NextUpEventsViewModel: ObservableObject {
     @Published var marketGroups: [MarketGroupTabItemData] = []
     @Published var selectedMarketGroupId: String?
     @Published var isLoading: Bool = false
+    @Published var mainMarkets: [MainMarket]? = nil
 
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
@@ -158,10 +159,14 @@ class NextUpEventsViewModel: ObservableObject {
 
             case .contentUpdate(let content):
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: content)
+                let mainMarkets = ServiceProviderModelMapper.mainMarkets(fromEventsGroups: content)
                 
                 print("[NextUpEventsViewModel] 📡 received pre-live groups \(content.count) mapped to matches \(matches.count)")
+                if let mainMarkets = mainMarkets {
+                    print("[NextUpEventsViewModel] 📊 received \(mainMarkets.count) main markets")
+                }
                       
-                self?.processMatches(matches)
+                self?.processMatches(matches, mainMarkets: mainMarkets)
 
             case .disconnected:
                 print("[NextUpEventsViewModel] 🔴 Disconnected from pre-live matches subscription")
@@ -169,14 +174,15 @@ class NextUpEventsViewModel: ObservableObject {
         }
     }
 
-    private func processMatches(_ matches: [Match]) {
+    private func processMatches(_ matches: [Match], mainMarkets: [MainMarket]? = nil) {
         print("[NextUpEvents] processMatches called with \(matches.count) matches")
         isLoading = false
         allMatches = matches
+        self.mainMarkets = mainMarkets
         eventsStateSubject.send(LoadableContent.loaded(matches))
 
-        // Update market group selector with new matches
-        marketGroupSelectorViewModel.updateWithMatches(matches)
+        // Update market group selector with new matches and main markets
+        marketGroupSelectorViewModel.updateWithMatches(matches, mainMarkets: mainMarkets)
 
         // Update all existing market group ViewModels with new matches
         for (marketType, viewModel) in marketGroupCardsViewModels {

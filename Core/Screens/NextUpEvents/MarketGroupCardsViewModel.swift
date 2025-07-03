@@ -61,9 +61,9 @@ class MarketGroupCardsViewModel: ObservableObject {
 
     // MARK: - Private Methods
     private func filterMatches() -> [FilteredMatchData] {
-        return allMatches.compactMap { match in
+        return allMatches.map { match in
             let relevantMarkets = match.markets.filter { $0.marketTypeId == marketTypeId }
-            guard !relevantMarkets.isEmpty else { return nil }
+            // Include ALL matches, even those without markets for this market type
             return FilteredMatchData(match: match, relevantMarkets: relevantMarkets)
         }
     }

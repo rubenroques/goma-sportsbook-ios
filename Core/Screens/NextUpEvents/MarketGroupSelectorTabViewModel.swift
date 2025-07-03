@@ -144,8 +144,17 @@ class MarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol {
     }
     
     // MARK: - Match Processing Methods
-    func updateWithMatches(_ matches: [Match]) {
-        let marketGroupTabs = extractMarketTypeTabs(from: matches)
+    func updateWithMatches(_ matches: [Match], mainMarkets: [MainMarket]? = nil) {
+        let marketGroupTabs: [MarketGroupTabItemData]
+        
+        if let mainMarkets = mainMarkets, !mainMarkets.isEmpty {
+            // Use main markets for tabs when available
+            marketGroupTabs = createTabsFromMainMarkets(mainMarkets, matches: matches)
+        } else {
+            // Fallback to extracting from matches
+            marketGroupTabs = extractMarketTypeTabs(from: matches)
+        }
+        
         updateMarketGroups(marketGroupTabs)
         
         // Auto-select first tab if none is selected
@@ -170,5 +179,17 @@ class MarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol {
                 visualState: .idle
             )
         }.sorted { $0.title < $1.title } // Sort alphabetically
+    }
+    
+    private func createTabsFromMainMarkets(_ mainMarkets: [MainMarket], matches: [Match]) -> [MarketGroupTabItemData] {
+        // Create tabs for ALL main markets in their original order
+        // No filtering - show all main markets regardless of match availability
+        return mainMarkets.map { mainMarket in
+            MarketGroupTabItemData(
+                id: mainMarket.bettingTypeId, // Use bettingTypeId to match with marketTypeId
+                title: mainMarket.displayName,
+                visualState: .idle
+            )
+        }
     }
 } 

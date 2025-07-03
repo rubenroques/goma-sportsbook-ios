@@ -2683,6 +2683,14 @@
 		A9DF8E4328E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8E3C28E5A5D80083BF56 /* TipsSettingsViewController.swift */; };
 		A9FEF5752AB8630600CB638F /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
 		A9FEF5762AB8630B00CB638F /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		CE04D31D2E16E1B400C6424A /* MainMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04D31C2E16E1B400C6424A /* MainMarket.swift */; };
+		CE04D31E2E16E1B400C6424A /* MainMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04D31C2E16E1B400C6424A /* MainMarket.swift */; };
+		CE04D31F2E16E1B400C6424A /* MainMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04D31C2E16E1B400C6424A /* MainMarket.swift */; };
+		CE04D3202E16E1B400C6424A /* MainMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04D31C2E16E1B400C6424A /* MainMarket.swift */; };
+		CE04D3212E16E1B400C6424A /* MainMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04D31C2E16E1B400C6424A /* MainMarket.swift */; };
+		CE04D3222E16E1B400C6424A /* MainMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04D31C2E16E1B400C6424A /* MainMarket.swift */; };
+		CE04D3232E16E1B400C6424A /* MainMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04D31C2E16E1B400C6424A /* MainMarket.swift */; };
+		CE04D3242E16E1B400C6424A /* MainMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04D31C2E16E1B400C6424A /* MainMarket.swift */; };
 		CE0599742DE8B94200E9DDFA /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE0599732DE8B94200E9DDFA /* GomaUI */; };
 		CE05AAD32DFB85E800D20357 /* Bootstrap+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */; };
 		CE05AAD42DFB85E800D20357 /* Router+BetssonCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */; };
@@ -9509,6 +9517,7 @@
 		A9FB6D5128C645C800E3FE58 /* RankingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsViewController.swift; sourceTree = "<group>"; };
 		A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewController.swift; sourceTree = "<group>"; };
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
+		CE04D31C2E16E1B400C6424A /* MainMarket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarket.swift; sourceTree = "<group>"; };
 		CE05AAD02DFB85E800D20357 /* AppDelegate+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+BetssonCM.swift"; sourceTree = "<group>"; };
 		CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bootstrap+BetssonCM.swift"; sourceTree = "<group>"; };
 		CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Router+BetssonCM.swift"; sourceTree = "<group>"; };
@@ -11460,6 +11469,7 @@
 				45B7DADE26F92CE40032C1C3 /* UserSession.swift */,
 				4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */,
 				455643A026F2634E00EE78FA /* GomaClientSettings.swift */,
+				CE04D31C2E16E1B400C6424A /* MainMarket.swift */,
 				45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */,
 				45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */,
 				A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */,
@@ -17096,6 +17106,7 @@
 				451ABD6729CB3B1D0062641F /* Match.swift in Sources */,
 				450B79F128F58574009229E3 /* TabularBarButton.swift in Sources */,
 				450B79F328F58574009229E3 /* TabularBarDelegate.swift in Sources */,
+				CE04D31F2E16E1B400C6424A /* MainMarket.swift in Sources */,
 				450B79F528F58574009229E3 /* BonusActiveDataSource.swift in Sources */,
 				450B79F628F58574009229E3 /* BonusSwitchTableViewCell.swift in Sources */,
 				450B79F828F58574009229E3 /* CompetitionFilterRowViewModel.swift in Sources */,
@@ -17987,6 +17998,7 @@
 				45A3320D298976BA008181E9 /* BettingHistoryViewController.swift in Sources */,
 				45A3320E298976BA008181E9 /* Snapshot.swift in Sources */,
 				451ABD6629CB3B1D0062641F /* Match.swift in Sources */,
+				CE04D3222E16E1B400C6424A /* MainMarket.swift in Sources */,
 				45A3320F298976BA008181E9 /* InternalBrowserViewController.swift in Sources */,
 				45A33210298976BA008181E9 /* TabularBarButton.swift in Sources */,
 				45A33212298976BA008181E9 /* TabularBarDelegate.swift in Sources */,
@@ -18848,6 +18860,7 @@
 				45F6BCC12AB3732C00C81DE1 /* MarketDetailCollectionViewCell.swift in Sources */,
 				45F6BCC22AB3732C00C81DE1 /* BettingHistoryViewController.swift in Sources */,
 				45F6BCC32AB3732C00C81DE1 /* Snapshot.swift in Sources */,
+				CE04D3212E16E1B400C6424A /* MainMarket.swift in Sources */,
 				45F6BCC42AB3732C00C81DE1 /* Match.swift in Sources */,
 				45F6BCC52AB3732C00C81DE1 /* InternalBrowserViewController.swift in Sources */,
 				45F6BCC62AB3732C00C81DE1 /* TabularBarButton.swift in Sources */,
@@ -19957,6 +19970,7 @@
 				CE12A3D72D31347E0022BDF7 /* BonusSwitchView.swift in Sources */,
 				CE12A3D82D31347E0022BDF7 /* CashbackInfoView.swift in Sources */,
 				CE12A3DA2D31347E0022BDF7 /* MyCompetitionsRootViewModel.swift in Sources */,
+				CE04D31D2E16E1B400C6424A /* MainMarket.swift in Sources */,
 				CE12A3DB2D31347E0022BDF7 /* RecentSearchHeaderView.swift in Sources */,
 				653A38472D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */,
 				CE12A3DC2D31347E0022BDF7 /* TopCompetitionDetailsViewModel.swift in Sources */,
@@ -20579,6 +20593,7 @@
 				CE8F25442DD371350071238E /* Match.swift in Sources */,
 				CE8F25452DD371350071238E /* InternalBrowserViewController.swift in Sources */,
 				CE8F25462DD371350071238E /* TabularBarButton.swift in Sources */,
+				CE04D3202E16E1B400C6424A /* MainMarket.swift in Sources */,
 				CE8F25472DD371350071238E /* TabularBarDelegate.swift in Sources */,
 				CE8F25482DD371350071238E /* BonusActiveDataSource.swift in Sources */,
 				CE8F25492DD371350071238E /* BonusSwitchTableViewCell.swift in Sources */,
@@ -21440,6 +21455,7 @@
 				CEB3A2B52DD379800024043B /* Match.swift in Sources */,
 				CEB3A2B62DD379800024043B /* InternalBrowserViewController.swift in Sources */,
 				CEB3A2B72DD379800024043B /* TabularBarButton.swift in Sources */,
+				CE04D3232E16E1B400C6424A /* MainMarket.swift in Sources */,
 				CEB3A2B82DD379800024043B /* TabularBarDelegate.swift in Sources */,
 				CEB3A2B92DD379800024043B /* BonusActiveDataSource.swift in Sources */,
 				CEB3A2BA2DD379800024043B /* BonusSwitchTableViewCell.swift in Sources */,
@@ -22301,6 +22317,7 @@
 				CEB3A73E2DD379890024043B /* Match.swift in Sources */,
 				CEB3A73F2DD379890024043B /* InternalBrowserViewController.swift in Sources */,
 				CEB3A7402DD379890024043B /* TabularBarButton.swift in Sources */,
+				CE04D31E2E16E1B400C6424A /* MainMarket.swift in Sources */,
 				CEB3A7412DD379890024043B /* TabularBarDelegate.swift in Sources */,
 				CEB3A7422DD379890024043B /* BonusActiveDataSource.swift in Sources */,
 				CEB3A7432DD379890024043B /* BonusSwitchTableViewCell.swift in Sources */,
@@ -22697,6 +22714,7 @@
 				CEF193DF2DA834E900C81F12 /* (null) in Sources */,
 				CEF193E02DA834E900C81F12 /* DocumentPickerView.swift in Sources */,
 				CEF193E12DA834E900C81F12 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */,
+				CE04D3242E16E1B400C6424A /* MainMarket.swift in Sources */,
 				6510AE4B2E00712D0010B8F0 /* FiltersStorage.swift in Sources */,
 				CEF193E22DA834E900C81F12 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEF193E32DA834E900C81F12 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,

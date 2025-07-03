@@ -15,7 +15,39 @@ enum ServiceProviderModelMapper {
     
 extension ServiceProviderModelMapper {
     
-    // Matches
+    // MARK: - Main Markets
+    
+    /// Extracts and maps main markets from EventsGroups
+    /// Returns nil if no main markets are available
+    static func mainMarkets(fromEventsGroups eventsGroups: [ServicesProvider.EventsGroup]) -> [MainMarket]? {
+        // Get main markets from the first EventsGroup that has them
+        // All groups should have the same main markets for a given sport
+        guard let firstGroupWithMainMarkets = eventsGroups.first(where: { $0.mainMarkets != nil }),
+              let serviceProviderMainMarkets = firstGroupWithMainMarkets.mainMarkets,
+              !serviceProviderMainMarkets.isEmpty else {
+            return nil
+        }
+        
+        return serviceProviderMainMarkets.map { mainMarket(fromServiceProviderMainMarket: $0) }
+    }
+    
+    /// Maps a ServicesProvider.MainMarket to the app's MainMarket model
+    static func mainMarket(fromServiceProviderMainMarket spMainMarket: ServicesProvider.MainMarket) -> MainMarket {
+        return MainMarket(
+            id: spMainMarket.id,
+            bettingTypeId: spMainMarket.bettingTypeId,
+            bettingTypeName: spMainMarket.bettingTypeName,
+            eventPartId: spMainMarket.eventPartId,
+            eventPartName: spMainMarket.eventPartName,
+            sportId: spMainMarket.sportId,
+            numberOfOutcomes: spMainMarket.numberOfOutcomes,
+            isLiveMarket: spMainMarket.liveMarket,
+            isOutright: spMainMarket.outright
+        )
+    }
+    
+    // MARK: - Matches
+    
     static func matches(fromEventsGroups eventsGroups: [ServicesProvider.EventsGroup]) -> [Match] {
         var matches = [Match?]()
         for eventsGroup in eventsGroups {
