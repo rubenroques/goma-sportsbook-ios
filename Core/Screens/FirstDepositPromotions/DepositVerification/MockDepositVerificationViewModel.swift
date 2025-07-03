@@ -16,7 +16,7 @@ class MockDepositVerificationViewModel: DepositVerificationViewModelProtocol {
     var isShowingAlternativeSteps: Bool = false
 
     let shouldUpdateTransactionState = PassthroughSubject<Void, Never>()
-    
+
     var bonusDepositData: BonusDepositData
 
     init(bonusDepositData: BonusDepositData) {
@@ -51,5 +51,18 @@ class MockDepositVerificationViewModel: DepositVerificationViewModelProtocol {
             
             self?.shouldUpdateTransactionState.send()
         }
+    }
+    
+    func resendTransaction() {
+        
+        let updatedTransactionVerificationViewModel = MockTransactionVerificationViewModel.incompletePinMock
+        
+        self.transactionVerificationViewModel.configure(with: updatedTransactionVerificationViewModel.data)
+        
+        self.isShowingAlternativeSteps = false
+        
+        self.shouldUpdateTransactionState.send()
+        
+        updateVerifyTransaction()
     }
 }

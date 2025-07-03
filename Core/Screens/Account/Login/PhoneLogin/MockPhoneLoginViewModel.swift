@@ -7,6 +7,7 @@
 
 import Foundation
 import GomaUI
+import Combine
 
 class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
     let headerViewModel: PromotionalHeaderViewModelProtocol
@@ -15,6 +16,17 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
     let passwordFieldViewModel: BorderedTextFieldViewModelProtocol
     let buttonViewModel: ButtonViewModelProtocol
 
+    private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+    var isLoadingPublisher: AnyPublisher<Bool, Never> { isLoadingSubject.eraseToAnyPublisher() }
+    
+    let loginComplete = PassthroughSubject<Void, Never>()
+    
+    var phoneNumber: String = ""
+    var password: String = ""
+    
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     init() {
         
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "header",
@@ -43,5 +55,35 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
                                                                      title: "Log In",
                                                                      style: .solidBackground,
                                                                      isEnabled: true))
+        
+        setupBindings()
+    }
+    
+    private func setupBindings() {
+        
+        phoneFieldViewModel.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] phoneText in
+                self?.phoneNumber = phoneText
+            })
+            .store(in: &cancellables)
+        
+        passwordFieldViewModel.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] passwordText in
+                self?.password = passwordText
+            })
+            .store(in: &cancellables)
+    }
+    
+    func loginUser(phoneNumber: String, password: String) {
+        
+        isLoadingSubject.send(true)
+        // Simulate endpoint delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            self?.isLoadingSubject.send(false)
+            
+            self?.loginComplete.send()
+        }
     }
 }

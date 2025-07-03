@@ -120,5 +120,7 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 }
             })
             .store(in: &cancellables)
+        
+        
     }
 }

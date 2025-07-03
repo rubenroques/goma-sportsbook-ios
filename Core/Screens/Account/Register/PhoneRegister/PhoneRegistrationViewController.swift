@@ -140,15 +140,35 @@ class PhoneRegistrationViewController: UIViewController {
     private func setupBindings() {
         
         createAccountButton.onButtonTapped = { [weak self] in
-            self?.openPhoneVerification()
+            self?.openFirstDepositPromotions()
+        }
+        
+        termsView.onTermsLinkTapped = { [weak self] in
+            self?.openTermsURL(urlString: "www.google.com")
+        }
+        
+        termsView.onPrivacyLinkTapped = { [weak self] in
+            self?.openPrivacyURL(urlString: "www.google.com")
         }
     }
     
-    private func openPhoneVerification() {
+    private func openFirstDepositPromotions() {
         
-        let phoneVerificationViewController = PhoneVerificationViewController()
+        let firstDepositPromotions = FirstDepositPromotionsViewController()
         
-        self.present(phoneVerificationViewController, animated: true)
+        self.present(firstDepositPromotions, animated: true)
+    }
+    
+    private func openTermsURL(urlString: String) {
+        if let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    private func openPrivacyURL(urlString: String) {
+        if let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+        }
     }
     
     // MARK: Actions

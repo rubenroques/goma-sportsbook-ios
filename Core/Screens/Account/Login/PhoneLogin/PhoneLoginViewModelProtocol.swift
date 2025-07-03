@@ -7,6 +7,7 @@
 
 import Foundation
 import GomaUI
+import Combine
 
 protocol PhoneLoginViewModelProtocol {
     var headerViewModel: PromotionalHeaderViewModelProtocol { get }
@@ -14,4 +15,11 @@ protocol PhoneLoginViewModelProtocol {
     var phoneFieldViewModel: BorderedTextFieldViewModelProtocol { get }
     var passwordFieldViewModel: BorderedTextFieldViewModelProtocol { get }
     var buttonViewModel: ButtonViewModelProtocol { get }
+    
+    var phoneNumber: String { get }
+    var password: String { get }
+    var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
+    var loginComplete: PassthroughSubject<Void, Never> { get }
+
+    func loginUser(phoneNumber: String, password: String)
 }

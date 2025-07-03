@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import GomaUI
+import Combine
 
 class PhoneLoginViewController: UIViewController {
     
@@ -53,6 +54,23 @@ class PhoneLoginViewController: UIViewController {
     
     private let loginButton: ButtonView
     
+    private let loadingView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        view.isHidden = true
+
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.startAnimating()
+        view.addSubview(indicator)
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        return view
+    }()
+    
     // Constraints
     private var loginButtonBottomConstraint: NSLayoutConstraint = {
         let constraint = NSLayoutConstraint()
@@ -60,6 +78,10 @@ class PhoneLoginViewController: UIViewController {
     }()
 
     private let viewModel: PhoneLoginViewModelProtocol
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    var loginComplete: (() -> Void)?
 
     init(viewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()) {
         self.viewModel = viewModel
@@ -79,6 +101,7 @@ class PhoneLoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = StyleProvider.Color.backgroundPrimary
         setupLayout()
+        setupBindings()
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
         forgotPasswordButton.addTarget(self, action: #selector(didTapForgotPassword), for: .primaryActionTriggered)
         
@@ -109,7 +132,8 @@ class PhoneLoginViewController: UIViewController {
 
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginButton)
-        
+        view.addSubview(loadingView)
+
         loginButtonBottomConstraint = loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
 
         NSLayoutConstraint.activate([
@@ -141,8 +165,37 @@ class PhoneLoginViewController: UIViewController {
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             loginButton.topAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor, constant: 30),
-            loginButtonBottomConstraint
+            loginButtonBottomConstraint,
+            
+            loadingView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    
+    private func setupBindings() {
+        
+        loginButton.onButtonTapped = { [weak self] in
+            if let phoneNumber = self?.viewModel.phoneNumber,
+               let password = self?.viewModel.password {
+                self?.viewModel.loginUser(phoneNumber: phoneNumber, password: password)
+            }
+        }
+        
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.loadingView.isHidden = !isLoading
+            }
+            .store(in: &cancellables)
+        
+        viewModel.loginComplete
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.loginComplete?()
+            }
+            .store(in: &cancellables)
     }
 
     @objc private func didTapCloseButton() {

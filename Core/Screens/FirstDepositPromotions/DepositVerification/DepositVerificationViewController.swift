@@ -126,9 +126,14 @@ class DepositVerificationViewController: UIViewController {
     }
     
     private func presentAlternativeStepsViewController() {
-        let alternativeStepsViewModel: DepositAlternativeStepsViewModelProtocol = MockDepositAlternativeStepsViewModel(bonusDepositData: viewModel.bonusDepositData)
+        var alternativeStepsViewModel: DepositAlternativeStepsViewModelProtocol = MockDepositAlternativeStepsViewModel(bonusDepositData: viewModel.bonusDepositData)
         
         let alternativeStepsViewController = DepositAlternativeStepsViewController(viewModel: alternativeStepsViewModel)
+        
+        alternativeStepsViewModel.shouldResendAction = { [weak self] in
+            self?.viewModel.resendTransaction()
+            alternativeStepsViewController.dismiss(animated: true)
+        }
         
         self.present(alternativeStepsViewController, animated: true)
     }

@@ -213,7 +213,7 @@ class PhonePasswordCodeVerificationViewController: UIViewController {
     }
     
     @objc private func didTapChangeButton() {
-        print("CHANGE SOMETHING!")
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {

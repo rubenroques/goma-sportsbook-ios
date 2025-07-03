@@ -24,7 +24,7 @@ class DepositAlternativeStepsViewController: UIViewController {
     private let confirmButton: ButtonView
     private let resendButton: ButtonView
     private let cancelButton: ButtonView
-
+    
     init(viewModel: DepositAlternativeStepsViewModelProtocol) {
         self.viewModel = viewModel
         self.navigationView = CustomNavigationView(viewModel: viewModel.navigationViewModel)
@@ -131,7 +131,7 @@ class DepositAlternativeStepsViewController: UIViewController {
         }
         
         resendButton.onButtonTapped = { [weak self] in
-            print("RESEND USSD!")
+            self?.viewModel.shouldResendAction?()
         }
         
         cancelButton.onButtonTapped = { [weak self] in

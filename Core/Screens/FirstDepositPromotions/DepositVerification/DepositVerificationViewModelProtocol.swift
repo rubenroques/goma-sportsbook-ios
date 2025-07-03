@@ -18,4 +18,6 @@ protocol DepositVerificationViewModelProtocol {
     var shouldUpdateTransactionState: PassthroughSubject<Void, Never> { get }
 
     var bonusDepositData: BonusDepositData { get }
+    
+    func resendTransaction()
 }

@@ -433,6 +433,16 @@ class RootAdaptiveViewController: UIViewController {
         adaptiveTabBarView.onTabSelected = { [weak self] tabItem in
             self?.handleTabSelection(tabItem)
         }
+        
+        widgetToolBarView.onWidgetSelected = { [weak self] widgetId in
+            print("WIDGET ID: \(widgetId)")
+            if widgetId == "loginButton" {
+                self?.openPhoneLogin()
+            }
+            else if widgetId == "joinButton" {
+                self?.openPhoneRegistration()
+            }
+        }
     }
 
     // MARK: - Tab Bar Integration
@@ -1110,7 +1120,7 @@ extension RootAdaptiveViewController {
         view.addSubview(topBarContainerBaseView)
 
         topBarContainerBaseView.addSubview(widgetToolBarView)
-        topBarContainerBaseView.addSubview(orangePlaceholderView)
+//        topBarContainerBaseView.addSubview(orangePlaceholderView)
 
         view.addSubview(containerView)
         view.addSubview(bottomSafeAreaView)
@@ -1143,27 +1153,6 @@ extension RootAdaptiveViewController {
 
         // Add floating overlay at the top of the view hierarchy
         view.addSubview(floatingOverlayView)
-        
-        // TEST REGISTER
-        // Double-tap: open PhoneLoginViewController
-        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(openPhoneLogin))
-        doubleTapGesture.numberOfTapsRequired = 2
-
-        // Triple-tap: open PhoneRegistrationViewController (your current one)
-        let tripleTapGesture = UITapGestureRecognizer(target: self, action: #selector(openPhoneRegistration))
-        tripleTapGesture.numberOfTapsRequired = 3
-        
-        let quadrupleTapGesture = UITapGestureRecognizer(target: self, action: #selector(openFirstDeposits))
-        quadrupleTapGesture.numberOfTapsRequired = 4
-
-        // Ensure double-tap waits for triple-tap to fail
-        doubleTapGesture.require(toFail: tripleTapGesture)
-        tripleTapGesture.require(toFail: quadrupleTapGesture)
-
-        // Add both to your view
-        orangePlaceholderView.addGestureRecognizer(doubleTapGesture)
-        orangePlaceholderView.addGestureRecognizer(tripleTapGesture)
-        orangePlaceholderView.addGestureRecognizer(quadrupleTapGesture)
 
         initConstraints()
     }
@@ -1171,6 +1160,13 @@ extension RootAdaptiveViewController {
     @objc private func openPhoneLogin() {
         let loginVC = PhoneLoginViewController()
         let navController = Router.navigationController(with: loginVC)
+        
+        loginVC.loginComplete = { [weak self] in
+            navController.dismiss(animated: true)
+            // TESTING LOGIN CHANGE
+            self?.widgetToolBarView.setLoggedInState(true)
+        }
+        
         present(navController, animated: true)
     }
     
@@ -1207,10 +1203,10 @@ extension RootAdaptiveViewController {
             self.widgetToolBarView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
             
             // Orange placeholder view (same constraints as widget toolbar)
-            self.orangePlaceholderView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
-            self.orangePlaceholderView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
-            self.orangePlaceholderView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
-            self.orangePlaceholderView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
+//            self.orangePlaceholderView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
+//            self.orangePlaceholderView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
+//            self.orangePlaceholderView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
+//            self.orangePlaceholderView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
 
             // Container View
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),

@@ -51,7 +51,7 @@ public class StatusInfoView: UIView {
     }
 
     private func setupView() {
-        backgroundColor = UIColor.systemGray6
+        backgroundColor = StyleProvider.Color.backgroundPrimary
 
         iconView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

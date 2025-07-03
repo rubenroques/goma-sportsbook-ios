@@ -17,5 +17,7 @@ protocol DepositAlternativeStepsViewModelProtocol {
     var cancelButtonViewModel: ButtonViewModelProtocol { get }
 
     var bonusDepositData: BonusDepositData { get }
+    
+    var shouldResendAction: (() -> Void)? { get set }
 
 }

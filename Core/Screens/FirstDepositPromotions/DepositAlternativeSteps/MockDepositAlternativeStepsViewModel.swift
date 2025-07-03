@@ -18,6 +18,8 @@ class MockDepositAlternativeStepsViewModel: DepositAlternativeStepsViewModelProt
 
     var bonusDepositData: BonusDepositData
     
+    var shouldResendAction: (() -> Void)?
+
     init(bonusDepositData: BonusDepositData) {
         
         self.bonusDepositData = bonusDepositData
