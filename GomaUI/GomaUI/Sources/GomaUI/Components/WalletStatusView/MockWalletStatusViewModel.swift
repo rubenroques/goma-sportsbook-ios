@@ -154,9 +154,9 @@ extension MockWalletStatusViewModel {
     /// Default mock matching the Figma design
     public static var defaultMock: MockWalletStatusViewModel {
         return MockWalletStatusViewModel(
-            totalBalance: "2,000.00",
+            totalBalance: "2,000.01",
             currentBalance: "1,000.00",
-            bonusBalance: "965.00",
+            bonusBalance: "965.01",
             cashbackBalance: "35.00",
             withdrawableAmount: "1,000.00"
         )

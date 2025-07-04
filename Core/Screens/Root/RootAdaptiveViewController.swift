@@ -18,14 +18,6 @@ class RootAdaptiveViewController: UIViewController {
     private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
     private var widgetToolBarView: MultiWidgetToolbarView!
     
-    // TODO: Remove after milestone for top bar
-    private lazy var orangePlaceholderView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.App.topBarGradient1
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var mainContainerView: UIView = Self.createMainContainerView()
 
@@ -37,6 +29,10 @@ class RootAdaptiveViewController: UIViewController {
 
     // FloatingOverlay
     private var floatingOverlayView: FloatingOverlayView!
+
+    // WalletStatus Overlay
+    private lazy var walletStatusOverlayView: UIView = Self.createWalletStatusOverlayView()
+    private var walletStatusView: WalletStatusView!
 
     // Authentication Views
     private lazy var localAuthenticationBaseView: UIView = Self.createLocalAuthenticationBaseView()
@@ -129,6 +125,9 @@ class RootAdaptiveViewController: UIViewController {
         
         self.floatingOverlayView = FloatingOverlayView(viewModel: viewModel.floatingOverlayViewModel)
         self.floatingOverlayView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.walletStatusView = WalletStatusView(viewModel: MockWalletStatusViewModel.defaultMock)
+        self.walletStatusView.translatesAutoresizingMaskIntoConstraints = false
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -366,6 +365,17 @@ class RootAdaptiveViewController: UIViewController {
                 self?.openPhoneRegistration()
             }
         }
+        
+        widgetToolBarView.onBalanceTapped = { [weak self] widgetId in
+            print("BALANCE TAPPED: \(widgetId)")
+            if widgetId == "wallet" {
+                // Add haptic feedback for better UX
+                let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                impactFeedback.impactOccurred()
+                
+                self?.showWalletStatusOverlay()
+            }
+        }
     }
 
     // MARK: - Tab Bar Integration
@@ -440,6 +450,37 @@ class RootAdaptiveViewController: UIViewController {
 
     func openExternalBrowser(onURL url: URL) {
         UIApplication.shared.open(url)
+    }
+    
+    // MARK: - Wallet Status Overlay
+    private func showWalletStatusOverlay() {
+        walletStatusOverlayView.alpha = 0
+        walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        walletStatusOverlayView.isHidden = false
+        
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: .curveEaseOut) {
+            self.walletStatusOverlayView.alpha = 1.0
+            self.walletStatusView.transform = CGAffineTransform.identity
+        }
+    }
+    
+    private func hideWalletStatusOverlay() {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseIn) {
+            self.walletStatusOverlayView.alpha = 0
+            self.walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        } completion: { _ in
+            self.walletStatusOverlayView.isHidden = true
+        }
+    }
+    
+    @objc private func overlayTapped(_ sender: UITapGestureRecognizer) {
+        let location = sender.location(in: walletStatusOverlayView)
+        let walletViewFrame = walletStatusView.frame
+        
+        // Only dismiss if tap is outside the wallet status view
+        if !walletViewFrame.contains(location) {
+            hideWalletStatusOverlay()
+        }
     }
 
 
@@ -838,6 +879,13 @@ extension RootAdaptiveViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    
+    private static func createWalletStatusOverlayView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        return view
+    }
 
     private static func createMainContainerView() -> UIView {
         let view = UIView()
@@ -1048,8 +1096,6 @@ extension RootAdaptiveViewController {
         topBarContainerBaseView.addSubview(widgetToolBarView)
 
         //
-        //topBarContainerBaseView.addSubview(orangePlaceholderView)
-
         view.addSubview(bottomSafeAreaView)
         view.addSubview(localAuthenticationBaseView)
 
@@ -1080,6 +1126,15 @@ extension RootAdaptiveViewController {
 
         // Add floating overlay at the top of the view hierarchy
         view.addSubview(floatingOverlayView)
+        
+        // Add wallet status overlay (initially hidden)
+        view.addSubview(walletStatusOverlayView)
+        walletStatusOverlayView.addSubview(walletStatusView)
+        walletStatusOverlayView.isHidden = true
+        
+        // Add tap gesture to dismiss overlay
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(overlayTapped(_:)))
+        walletStatusOverlayView.addGestureRecognizer(tapGesture)
 
         initConstraints()
     }
@@ -1103,12 +1158,6 @@ extension RootAdaptiveViewController {
             self.widgetToolBarView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
             self.widgetToolBarView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
             self.widgetToolBarView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
-            
-            // Orange placeholder view (same constraints as widget toolbar)
-            //self.orangePlaceholderView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
-            //self.orangePlaceholderView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
-            //self.orangePlaceholderView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
-            //self.orangePlaceholderView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
 
             // Container View
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -1216,6 +1265,17 @@ extension RootAdaptiveViewController {
             // Floating Overlay View
             self.floatingOverlayView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.floatingOverlayView.bottomAnchor.constraint(equalTo: self.adaptiveTabBarView.topAnchor, constant: -32),
+            
+            // Wallet Status Overlay
+            self.walletStatusOverlayView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.walletStatusOverlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.walletStatusOverlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.walletStatusOverlayView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            // Wallet Status View (anchored below top bar)
+            self.walletStatusView.leadingAnchor.constraint(equalTo: self.walletStatusOverlayView.leadingAnchor, constant: 50),
+            self.walletStatusView.trailingAnchor.constraint(equalTo: self.walletStatusOverlayView.trailingAnchor, constant: -32),
+            self.walletStatusView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor, constant: 16),
         ])
 
     }
