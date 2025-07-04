@@ -64,35 +64,6 @@ public final class HighlightedTextView: UIView {
             .store(in: &cancellables)
     }
     
-//    private func configure(with data: HighlightedTextData) {
-//        // Set text alignment
-//        textLabel.textAlignment = data.textAlignment
-//        
-//        // Create attributed string
-//        let attributedString = NSMutableAttributedString(
-//            string: data.fullText,
-//            attributes: [
-//                .font: StyleProvider.fontWith(type: .regular, size: 14),
-//                .foregroundColor: StyleProvider.Color.textPrimary
-//            ]
-//        )
-//        
-//        // Apply highlights
-//        for highlight in data.highlights {
-//            for range in highlight.ranges {
-//                // Validate range
-//                if range.location + range.length <= data.fullText.count {
-//                    attributedString.addAttributes([
-//                        .foregroundColor: highlight.color,
-//                        .font: StyleProvider.fontWith(type: .bold, size: 14)
-//                    ], range: range)
-//                }
-//            }
-//        }
-//        
-//        textLabel.attributedText = attributedString
-//    }
-    
     private func configure(with data: HighlightedTextData) {
         // Set text alignment
         textLabel.textAlignment = data.textAlignment

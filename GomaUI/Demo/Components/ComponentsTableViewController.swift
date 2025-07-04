@@ -576,6 +576,35 @@ class ComponentsTableViewController: UITableViewController {
                 return verificationView
             }
         ),
+        UIComponent(
+            title: "Resend Code Countdown View",
+            description: "A label with a countdown, using ResendCodeCountdownView.",
+            viewController: ResendCodeCountdownDemoViewController.self,
+            previewFactory: {
+                let viewModel = MockResendCodeCountdownViewModel(startSeconds: 60)
+                let countdownView = ResendCodeCountdownView(viewModel: viewModel)
+                viewModel.startCountdown()
+                return countdownView
+            }
+        ),
+        UIComponent(
+            title: "Status Info View",
+            description: "A status info component, using StatusInfoView.",
+            viewController: StatusInfoViewController.self,
+            previewFactory: {
+                let viewModel = MockStatusInfoViewModel(
+                    statusInfo: StatusInfo(
+                        icon: "checkmark.circle.fill",
+                        title: "Password Changed Successfully",
+                        message: "Your password has been updated. You can now log in with your new password."
+                    )
+                )
+                let statusInfoView = StatusInfoView(viewModel: viewModel)
+                statusInfoView.backgroundColor = StyleProvider.Color.backgroundColor
+                statusInfoView.layer.cornerRadius = 12
+                return statusInfoView
+            }
+        ),
     ]
 
     // MARK: - View Lifecycle

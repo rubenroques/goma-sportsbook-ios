@@ -29,7 +29,7 @@ public enum StatusNotificationType {
     var iconImage: UIImage? {
         switch self {
         case .success:
-            return UIImage(systemName: "checkmark.circle.fill")
+            return UIImage(named: "checkmark.circle.fill")
         case .error:
             return UIImage(systemName: "xmark.circle.fill")
         case .warning:
@@ -128,12 +128,13 @@ public final class StatusNotificationView: UIView {
     
     private func configure(with data: StatusNotificationData) {
         messageLabel.text = data.message
-        iconImageView.image = data.type.iconImage
         containerView.backgroundColor = data.type.backgroundColor
         
-        // Add emoji if provided
-        if let emoji = data.emoji {
-            messageLabel.text = "\(data.message) \(emoji)"
+        if let icon = data.icon {
+            iconImageView.image = UIImage(named: icon)?.withTintColor(StyleProvider.Color.allWhite)
+        }
+        else {
+            iconImageView.image = data.type.iconImage
         }
     }
 }

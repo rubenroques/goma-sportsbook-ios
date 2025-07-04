@@ -36,8 +36,7 @@ public extension MockStatusNotificationViewModel {
     static var successMock: MockStatusNotificationViewModel {
         let data = StatusNotificationData(
             type: .success,
-            message: "Deposit Successful",
-            emoji: "🤑"
+            message: "Deposit Successful 🤑"
         )
         
         return MockStatusNotificationViewModel(data: data)
@@ -46,8 +45,7 @@ public extension MockStatusNotificationViewModel {
     static var errorMock: MockStatusNotificationViewModel {
         let data = StatusNotificationData(
             type: .error,
-            message: "Transaction Failed",
-            emoji: "😞"
+            message: "Transaction Failed 😞"
         )
         
         return MockStatusNotificationViewModel(data: data)
@@ -56,8 +54,7 @@ public extension MockStatusNotificationViewModel {
     static var warningMock: MockStatusNotificationViewModel {
         let data = StatusNotificationData(
             type: .warning,
-            message: "Low Balance Warning",
-            emoji: "⚠️"
+            message: "Low Balance Warning ⚠️"
         )
         
         return MockStatusNotificationViewModel(data: data)

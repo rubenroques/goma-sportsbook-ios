@@ -40,11 +40,11 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
         print("Widget selected: \(id)")
         
         // For demonstration purposes, toggle login state if login/logout buttons are tapped
-        if id == "loginButton" {
-            setLayoutState(.loggedIn)
-        } else if id == "avatar" {
-            setLayoutState(.loggedOut)
-        }
+//        if id == "loginButton" {
+//            setLayoutState(.loggedIn)
+//        } else if id == "avatar" {
+//            setLayoutState(.loggedOut)
+//        }
     }
     
     public func setLayoutState(_ state: LayoutState) {

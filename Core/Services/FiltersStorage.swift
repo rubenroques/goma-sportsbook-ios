@@ -67,8 +67,7 @@ public class FilterStorage: ObservableObject {
                     print("🔗 Connected to Sport Tournaments stream with subscription: \(subscription.id)")
                     // TODO:
                 case .contentUpdate(let tournaments):
-                    // print("FilterStorage-Sport tournaments received:")
-                    
+                                        
                     let popularCompetitions = ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
                     self.currentCompetitions = popularCompetitions
                     

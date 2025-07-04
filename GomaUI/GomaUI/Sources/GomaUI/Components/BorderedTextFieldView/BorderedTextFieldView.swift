@@ -9,7 +9,8 @@ final public class BorderedTextFieldView: UIView {
     private let floatingLabel = UILabel()
     private let suffixButton = UIButton()
     private let errorLabel = UILabel()
-
+    private let prefixLabel = UILabel()
+    
     // Custom border layer
     private let borderLayer = CAShapeLayer()
 
@@ -20,7 +21,10 @@ final public class BorderedTextFieldView: UIView {
     private var labelCenterYConstraint: NSLayoutConstraint!
     private var labelLeadingConstraint: NSLayoutConstraint!
     private var labelTopConstraint: NSLayoutConstraint!
-
+    
+    // Prefix constraints
+    private var textFieldLeadingConstraint: NSLayoutConstraint!
+    
     // Current visual state for internal tracking
     private var currentVisualState: BorderedTextFieldVisualState = .idle
 
@@ -30,8 +34,8 @@ final public class BorderedTextFieldView: UIView {
 
     // MARK: - Constants
     private enum Constants {
-        static let cornerRadius: CGFloat = 8.0
-        static let borderWidth: CGFloat = 1.0
+        static let cornerRadius: CGFloat = 4.0
+        static let borderWidth: CGFloat = 2.0
         static let horizontalPadding: CGFloat = 16.0
         static let verticalPadding: CGFloat = 12.0
         static let labelAnimationDuration: TimeInterval = 0.2
@@ -60,15 +64,23 @@ final public class BorderedTextFieldView: UIView {
         // Container setup
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.layer.cornerRadius = Constants.cornerRadius
-        containerView.backgroundColor = StyleProvider.Color.backgroundColor
+        containerView.backgroundColor = .clear
         addSubview(containerView)
 
         // Custom border setup
         borderLayer.fillColor = UIColor.clear.cgColor
-        borderLayer.strokeColor = StyleProvider.Color.secondaryColor.cgColor
+        borderLayer.strokeColor = StyleProvider.Color.separatorLine.cgColor
         borderLayer.lineWidth = Constants.borderWidth
         containerView.layer.addSublayer(borderLayer)
 
+        // Prefix label setup
+        prefixLabel.translatesAutoresizingMaskIntoConstraints = false
+        prefixLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
+        prefixLabel.textColor = StyleProvider.Color.textDisablePrimary
+        prefixLabel.backgroundColor = .clear
+        prefixLabel.isHidden = true
+        containerView.addSubview(prefixLabel)
+        
         // Text field setup
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.font = StyleProvider.fontWith(type: .regular, size: 16)
@@ -79,14 +91,14 @@ final public class BorderedTextFieldView: UIView {
 
         // Floating label setup
         floatingLabel.translatesAutoresizingMaskIntoConstraints = false
-        floatingLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-        floatingLabel.textColor = StyleProvider.Color.secondaryColor
-        floatingLabel.backgroundColor = StyleProvider.Color.backgroundColor
+//        floatingLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
+//        floatingLabel.textColor = StyleProvider.Color.secondaryColor
+        floatingLabel.backgroundColor = .clear
         containerView.addSubview(floatingLabel)
 
         // Suffix button setup (for password toggle)
         suffixButton.translatesAutoresizingMaskIntoConstraints = false
-        suffixButton.tintColor = StyleProvider.Color.secondaryColor
+        suffixButton.tintColor = StyleProvider.Color.iconPrimary
         suffixButton.isHidden = true
         suffixButton.addTarget(self, action: #selector(suffixButtonTapped), for: .touchUpInside)
         containerView.addSubview(suffixButton)
@@ -101,6 +113,7 @@ final public class BorderedTextFieldView: UIView {
 
         setupConstraints()
         setupAccessibility()
+        updatePrefixLabel()
     }
 
     private func setupConstraints() {
@@ -111,10 +124,19 @@ final public class BorderedTextFieldView: UIView {
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerView.heightAnchor.constraint(equalToConstant: Constants.fieldHeight)
         ])
+        
+        // Prefix label constraints
+        NSLayoutConstraint.activate([
+            prefixLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding),
+            prefixLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+        ])
 
         // Text field constraints (with padding for suffix button area)
+        textFieldLeadingConstraint = textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding)
+        textFieldLeadingConstraint.isActive = true
+        
         NSLayoutConstraint.activate([
-            textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding),
+//            textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding),
             textField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             textField.heightAnchor.constraint(equalToConstant: 24),
             textField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -(Constants.horizontalPadding + Constants.suffixButtonSize + 8))
@@ -176,7 +198,9 @@ final public class BorderedTextFieldView: UIView {
         viewModel.placeholderPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] placeholder in
-                self?.floatingLabel.text = placeholder
+//                self?.floatingLabel.text = placeholder
+                self?.updatePlaceholderWithHighlightedAsterisk(placeholder)
+
                 // Remove textField placeholder since floatingLabel handles both states
                 self?.textField.placeholder = nil
             }
@@ -265,8 +289,7 @@ final public class BorderedTextFieldView: UIView {
 
     private func updateForIdleState() {
         // Border and colors
-        borderLayer.strokeColor = StyleProvider.Color.secondaryColor.cgColor
-        floatingLabel.textColor = StyleProvider.Color.secondaryColor
+        borderLayer.strokeColor = StyleProvider.Color.separatorLine.cgColor
 
         // Error label
         errorLabel.isHidden = true
@@ -275,12 +298,12 @@ final public class BorderedTextFieldView: UIView {
         textField.isEnabled = true
         alpha = 1.0
         isUserInteractionEnabled = true
+        
     }
 
     private func updateForFocusedState() {
         // Border and colors
-        borderLayer.strokeColor = StyleProvider.Color.primaryColor.cgColor
-        floatingLabel.textColor = StyleProvider.Color.primaryColor
+        borderLayer.strokeColor = StyleProvider.Color.highlightPrimary.cgColor
 
         // Error label
         errorLabel.isHidden = true
@@ -293,8 +316,7 @@ final public class BorderedTextFieldView: UIView {
 
     private func updateForErrorState(message: String) {
         // Border and colors (error takes precedence)
-        borderLayer.strokeColor = UIColor.systemRed.cgColor
-        floatingLabel.textColor = .systemRed
+        borderLayer.strokeColor = StyleProvider.Color.alertError.cgColor
 
         // Error label
         errorLabel.text = message
@@ -308,8 +330,7 @@ final public class BorderedTextFieldView: UIView {
 
     private func updateForDisabledState() {
         // Border and colors
-        borderLayer.strokeColor = StyleProvider.Color.secondaryColor.cgColor
-        floatingLabel.textColor = StyleProvider.Color.secondaryColor
+        borderLayer.strokeColor = StyleProvider.Color.separatorLine.cgColor
 
         // Error label
         errorLabel.isHidden = true
@@ -318,6 +339,36 @@ final public class BorderedTextFieldView: UIView {
         textField.isEnabled = false
         alpha = 0.6
         isUserInteractionEnabled = false
+    }
+    
+    private func updatePrefixLabel() {
+        if let prefix = viewModel.prefixText, !prefix.isEmpty {
+            prefixLabel.text = prefix
+            textFieldLeadingConstraint.isActive = false
+            textFieldLeadingConstraint = textField.leadingAnchor.constraint(equalTo: prefixLabel.trailingAnchor, constant: 8)
+            textFieldLeadingConstraint.isActive = true
+        } else {
+            textFieldLeadingConstraint.isActive = false
+            textFieldLeadingConstraint = textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding)
+            textFieldLeadingConstraint.isActive = true
+        }
+    }
+    
+    private func updatePlaceholderWithHighlightedAsterisk(_ placeholder: String) {
+        let attributedString = NSMutableAttributedString(string: placeholder)
+        
+        // Set base styling
+        let fullRange = NSRange(location: 0, length: placeholder.count)
+        attributedString.addAttribute(.font, value: StyleProvider.fontWith(type: .regular, size: 16), range: fullRange)
+        attributedString.addAttribute(.foregroundColor, value: StyleProvider.Color.inputTextTitle, range: fullRange)
+        
+        // Find the asterisk and style it
+        if let asteriskRange = placeholder.range(of: "*") {
+            let nsRange = NSRange(asteriskRange, in: placeholder)
+            attributedString.addAttribute(.foregroundColor, value: StyleProvider.Color.highlightPrimary, range: nsRange)
+        }
+        
+        floatingLabel.attributedText = attributedString
     }
 
     // MARK: - Animation & Styling
@@ -425,6 +476,11 @@ final public class BorderedTextFieldView: UIView {
             // Update border path after animation completes
             self.updateBorderPath()
         }
+        
+        if viewModel.prefixText != nil {
+            prefixLabel.isHidden = false
+        }
+        
     }
 
     private func animateLabelToPlaceholderPosition() {
@@ -437,6 +493,10 @@ final public class BorderedTextFieldView: UIView {
         } completion: { _ in
             // Update border path after animation completes
             self.updateBorderPath()
+        }
+        
+        if viewModel.prefixText != nil {
+            prefixLabel.isHidden = true
         }
     }
 
@@ -500,8 +560,9 @@ private extension Optional where Wrapped == String {
         let mockViewModel = MockBorderedTextFieldViewModel(
             textFieldData: BorderedTextFieldData(
                 id: "phone",
-                text: "+237 712345678",
+                text: "712345678",
                 placeholder: "Phone number",
+                prefix: "+237",
                 visualState: .idle,
                 keyboardType: .phonePad,
                 textContentType: .telephoneNumber

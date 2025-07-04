@@ -82,25 +82,23 @@ final public class AmountPillsView: UIView {
     
     // MARK: - Configuration
     private func configure(pillsData: AmountPillsData) {
-        // Clear existing pill views
-        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        pillViews.removeAll()
-        
-        // Create pill views
-        for pillData in pillsData.pills {
-            let pillViewModel = MockAmountPillViewModel(pillData: pillData)
-            let pillView = AmountPillView(viewModel: pillViewModel)
+        if pillViews.isEmpty {
             
-            // Add tap gesture
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pillTapped(_:)))
-            pillView.addGestureRecognizer(tapGesture)
-            pillView.isUserInteractionEnabled = true
-            pillView.tag = Int(pillData.id) ?? 0
-            
-            stackView.addArrangedSubview(pillView)
-            pillViews[pillData.id] = pillView
+            // Create pill views
+            for pillData in pillsData.pills {
+                let pillViewModel = MockAmountPillViewModel(pillData: pillData)
+                let pillView = AmountPillView(viewModel: pillViewModel)
+                
+                // Add tap gesture
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pillTapped(_:)))
+                pillView.addGestureRecognizer(tapGesture)
+                pillView.isUserInteractionEnabled = true
+                pillView.tag = Int(pillData.id) ?? 0
+                
+                stackView.addArrangedSubview(pillView)
+                pillViews[pillData.id] = pillView
+            }
         }
-        
         // Update selection states
         updateSelectionStates(selectedId: pillsData.selectedPillId)
     }

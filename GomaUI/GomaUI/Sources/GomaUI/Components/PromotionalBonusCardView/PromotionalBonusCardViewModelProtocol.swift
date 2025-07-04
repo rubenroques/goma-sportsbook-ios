@@ -32,6 +32,7 @@ public struct PromotionalBonusCardData: Equatable, Hashable {
     public let hasGradientView: Bool
     public let claimButtonTitle: String
     public let termsButtonTitle: String
+    public let bonusAmount: Double
     
     public init(
         id: String,
@@ -42,7 +43,8 @@ public struct PromotionalBonusCardData: Equatable, Hashable {
         backgroundImageName: String? = nil,
         hasGradientView: Bool = true,
         claimButtonTitle: String = "Claim bonus",
-        termsButtonTitle: String = "Terms and Conditions"
+        termsButtonTitle: String = "Terms and Conditions",
+        bonusAmount: Double
     ) {
         self.id = id
         self.headerText = headerText
@@ -53,6 +55,7 @@ public struct PromotionalBonusCardData: Equatable, Hashable {
         self.hasGradientView = hasGradientView
         self.claimButtonTitle = claimButtonTitle
         self.termsButtonTitle = termsButtonTitle
+        self.bonusAmount = bonusAmount
     }
 }
 

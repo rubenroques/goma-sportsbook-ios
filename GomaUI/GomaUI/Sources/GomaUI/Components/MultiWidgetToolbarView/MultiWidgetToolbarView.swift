@@ -258,21 +258,31 @@ final public class MultiWidgetToolbarView: UIView {
     }
 
     private func createSignUpButtonWidget(_ widget: Widget) -> UIView {
-        return createStyledButton(
+        let registerButton = createStyledButton(
             title: widget.label?.uppercased(),
             backgroundColor: StyleProvider.Color.buttonBackgroundPrimary,
             titleColor: StyleProvider.Color.buttonTextPrimary,
             borderColor: nil
         )
+        
+        registerButton.accessibilityIdentifier = widget.id
+        registerButton.addTarget(self, action: #selector(widgetTapped), for: .primaryActionTriggered)
+        
+        return registerButton
     }
 
     private func createLoginButtonWidget(_ widget: Widget) -> UIView {
-        return createStyledButton(
+        let loginButton = createStyledButton(
             title: widget.label?.uppercased(),
             backgroundColor: .clear,
             titleColor: StyleProvider.Color.buttonTextSecondary,
             borderColor: StyleProvider.Color.buttonTextSecondary
         )
+        
+        loginButton.accessibilityIdentifier = widget.id
+        loginButton.addTarget(self, action: #selector(widgetTapped), for: .primaryActionTriggered)
+        
+        return loginButton
     }
 
     private func createStyledButton(

@@ -15,7 +15,7 @@ final public class AmountPillView: UIView {
     private let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.pills
+        view.backgroundColor = StyleProvider.Color.navPills
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
         return view
@@ -86,7 +86,7 @@ final public class AmountPillView: UIView {
             containerView.backgroundColor = StyleProvider.Color.highlightPrimary
             amountLabel.textColor = StyleProvider.Color.buttonTextPrimary
         } else {
-            containerView.backgroundColor = StyleProvider.Color.pills
+            containerView.backgroundColor = StyleProvider.Color.navPills
             amountLabel.textColor = StyleProvider.Color.textPrimary
         }
     }

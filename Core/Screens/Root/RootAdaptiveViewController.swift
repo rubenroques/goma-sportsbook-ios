@@ -356,6 +356,16 @@ class RootAdaptiveViewController: UIViewController {
         adaptiveTabBarView.onTabSelected = { [weak self] tabItem in
             self?.handleTabSelection(tabItem)
         }
+        
+        widgetToolBarView.onWidgetSelected = { [weak self] widgetId in
+            print("WIDGET ID: \(widgetId)")
+            if widgetId == "loginButton" {
+                self?.openPhoneLogin()
+            }
+            else if widgetId == "joinButton" {
+                self?.openPhoneRegistration()
+            }
+        }
     }
 
     // MARK: - Tab Bar Integration
@@ -1213,6 +1223,35 @@ extension RootAdaptiveViewController {
 }
 
 extension RootAdaptiveViewController: RootActionable {
+    
+    func openPhoneLogin() {
+        let phoneLoginViewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()
+        
+        let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
+        
+        let navigationController = Router.navigationController(with: phoneLoginViewController)
+        
+        phoneLoginViewModel.loginComplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                // TESTING LOGIN CHANGE
+                navigationController.dismiss(animated: true)
+                self?.widgetToolBarView.setLoggedInState(true)
+            })
+            .store(in: &cancellables)
+        
+        present(navigationController, animated: true)
+    }
+    
+    func openPhoneRegistration() {
+        let phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
+        
+        let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
+        
+        present(phoneRegistrationViewController, animated: true)
+        
+    }
+    
     func openMatchDetail(matchId: String) {
 
     }

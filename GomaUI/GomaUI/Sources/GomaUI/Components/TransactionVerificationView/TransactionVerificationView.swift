@@ -41,10 +41,7 @@ public final class TransactionVerificationView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = StyleProvider.Color.backgroundColor
-        imageView.layer.cornerRadius = 16
-        imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = StyleProvider.Color.highlightPrimary.withAlphaComponent(0.3).cgColor
+        imageView.backgroundColor = .clear
         return imageView
     }()
     
@@ -69,7 +66,7 @@ public final class TransactionVerificationView: UIView {
     
     // MARK: - Private Methods
     private func setupViews() {
-        backgroundColor = StyleProvider.Color.backgroundColor
+        backgroundColor = StyleProvider.Color.backgroundTertiary
         
         addSubview(topImageView)
         addSubview(titleLabel)
@@ -117,7 +114,7 @@ public final class TransactionVerificationView: UIView {
     
     private func configure(with data: TransactionVerificationData) {
         titleLabel.text = data.title
-        
+                
         if let topImage = UIImage(named: data.topImage ?? "") {
             topImageView.image = topImage
 
@@ -149,6 +146,7 @@ public final class TransactionVerificationView: UIView {
     PreviewUIView {
         TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.defaultMock)
     }
+    .background(Color(StyleProvider.Color.backgroundColor))
     .padding()
 }
 
@@ -157,6 +155,7 @@ public final class TransactionVerificationView: UIView {
     PreviewUIView {
         TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.simpleMock)
     }
+    .background(Color(StyleProvider.Color.backgroundColor))
     .padding()
 }
 #endif

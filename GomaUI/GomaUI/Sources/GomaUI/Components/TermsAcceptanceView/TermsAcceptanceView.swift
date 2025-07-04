@@ -28,7 +28,13 @@ public final class TermsAcceptanceView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "checkmark")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        if let customLogo = UIImage(named: "check_icon") {
+            imageView.image = customLogo.withRenderingMode(.alwaysTemplate)
+            imageView.tintColor = StyleProvider.Color.allWhite
+        }
+        else {
+            imageView.image = UIImage(systemName: "checkmark")?.withTintColor(StyleProvider.Color.allWhite, renderingMode: .alwaysOriginal)
+        }
         imageView.isHidden = true
         return imageView
     }()
