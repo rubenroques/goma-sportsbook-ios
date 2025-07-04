@@ -70,15 +70,6 @@ extension MarketOutcomesMultiLineViewModel {
 // MARK: - Factory for Creating from Real Market Data (Simplified)
 extension MarketOutcomesMultiLineViewModel {
     
-    /// Creates a MarketOutcomesMultiLineViewModel from real Market and Outcome data
-    static func create(
-        from markets: [Market],
-        marketTypeId: String
-    ) -> MarketOutcomesMultiLineViewModel {
-        let marketGroupData = extractMarketGroupData(from: markets, marketTypeId: marketTypeId)
-        return MarketOutcomesMultiLineViewModel(marketGroupData: marketGroupData)
-    }
-    
     /// Creates line view models directly from market data (production pattern)
     static func createWithDirectLineViewModels(
         from markets: [Market],
@@ -90,18 +81,10 @@ extension MarketOutcomesMultiLineViewModel {
             // Create production line view model directly from Market
             return MarketOutcomesLineViewModel.create(from: market)
         }
-        
-        // Determine group title based on market type
-        let groupTitle = determineGroupTitle(for: marketTypeId)
-        
-        // Create appropriate empty state message if no line view models
-        let emptyStateMessage: String? = lineViewModels.isEmpty ? 
-            "No \(groupTitle ?? "markets") available for this match" : nil
-        
+
         return MarketOutcomesMultiLineViewModel(
-            groupTitle: groupTitle,
             lineViewModels: lineViewModels,
-            emptyStateMessage: emptyStateMessage
+            emptyStateMessage: "No markets available for type"
         )
     }
     

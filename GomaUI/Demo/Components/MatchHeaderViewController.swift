@@ -11,7 +11,7 @@ class MatchHeaderViewController: UIViewController {
 
     // Control section
     private lazy var controlsStackView = UIStackView()
-    private lazy var stateSegmentedControl = UISegmentedControl(items: ["Standard", "Disabled", "Favorite Only", "Minimal"])
+    private lazy var stateSegmentedControl = UISegmentedControl(items: ["Standard"])
     private lazy var favoriteToggleButton = UIButton(type: .system)
     private lazy var competitionNameTextField = UITextField()
 
@@ -69,7 +69,6 @@ class MatchHeaderViewController: UIViewController {
         stateLabel.textColor = StyleProvider.Color.textColor
 
         stateSegmentedControl.selectedSegmentIndex = 0
-        stateSegmentedControl.addTarget(self, action: #selector(stateChanged), for: .valueChanged)
 
         // Favorite toggle
         favoriteToggleButton.setTitle("Toggle Favorite (First Item)", for: .normal)
@@ -148,9 +147,6 @@ class MatchHeaderViewController: UIViewController {
         infoLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
         infoLabel.textColor = StyleProvider.Color.secondaryColor
 
-        // Set info text based on visual state
-        updateInfoLabel(infoLabel, for: viewModel.currentVisualState)
-
         let stackView = UIStackView(arrangedSubviews: [titleLabel, headerView, infoLabel])
         stackView.axis = .vertical
         stackView.spacing = 8
@@ -165,19 +161,6 @@ class MatchHeaderViewController: UIViewController {
         ])
 
         return container
-    }
-
-    private func updateInfoLabel(_ label: UILabel, for state: MatchHeaderVisualState) {
-        switch state {
-        case .standard:
-            label.text = "State: Standard - All elements visible and interactive"
-        case .disabled:
-            label.text = "State: Disabled - Reduced opacity, no interactions"
-        case .favoriteOnly:
-            label.text = "State: Favorite Only - Only favorite icon and name visible"
-        case .minimal:
-            label.text = "State: Minimal - Only competition name visible"
-        }
     }
 
     private func setupBindings() {
@@ -199,28 +182,6 @@ class MatchHeaderViewController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
-    }
-
-    @objc private func stateChanged() {
-        let selectedState: MatchHeaderVisualState
-
-        switch stateSegmentedControl.selectedSegmentIndex {
-        case 0:
-            selectedState = .standard
-        case 1:
-            selectedState = .disabled
-        case 2:
-            selectedState = .favoriteOnly
-        case 3:
-            selectedState = .minimal
-        default:
-            selectedState = .standard
-        }
-
-        // Apply to all view models
-        for viewModel in viewModels {
-            viewModel.setVisualState(selectedState)
-        }
     }
 
     @objc private func toggleFavorite() {

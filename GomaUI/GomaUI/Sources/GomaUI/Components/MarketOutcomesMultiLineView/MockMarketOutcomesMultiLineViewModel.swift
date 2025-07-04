@@ -216,7 +216,6 @@ extension MockMarketOutcomesMultiLineViewModel {
         
         let groupData = MarketGroupData(
             id: "1x2_group",
-            groupTitle: "Match Result",
             marketLines: lines
         )
         
@@ -427,7 +426,7 @@ extension MockMarketOutcomesMultiLineViewModel {
     }
     
     /// Empty state market group (no markets available)
-    public static var emptyMarketGroup: MockMarketOutcomesMultiLineViewModel {
+    public static var emptyMarketGroupWithTitle: MockMarketOutcomesMultiLineViewModel {
         return MockMarketOutcomesMultiLineViewModel(
             groupTitle: "Total Goals",
             lineViewModels: [],
@@ -436,7 +435,7 @@ extension MockMarketOutcomesMultiLineViewModel {
     }
     
     /// Empty state without title
-    public static var emptyMarketGroupNoTitle: MockMarketOutcomesMultiLineViewModel {
+    public static var emptyMarketGroup: MockMarketOutcomesMultiLineViewModel {
         return MockMarketOutcomesMultiLineViewModel(
             groupTitle: nil,
             lineViewModels: [],

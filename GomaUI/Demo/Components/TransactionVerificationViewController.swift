@@ -12,7 +12,7 @@ import GomaUI
 class TransactionVerificationViewController: UIViewController {
     private let viewModels: [(title: String, viewModel: TransactionVerificationViewModelProtocol)] = [
         ("Incomplete Pin Mock", MockTransactionVerificationViewModel.incompletePinMock),
-        ("Complete Pin state", MockTransactionVerificationViewModel.CompletePinMock),
+        ("Complete Pin state", MockTransactionVerificationViewModel.completePinMock),
     ]
     private let summaryLabel: UILabel = {
         let label = UILabel()

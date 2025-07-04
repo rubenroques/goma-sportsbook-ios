@@ -54,11 +54,7 @@ extension EveryMatrixModelMapper {
 
         var homeTeamName = internalMatch.homeParticipant?.name ?? ""
         let awayTeamName = internalMatch.awayParticipant?.name ?? ""
-        
-        #if DEBUG
-        homeTeamName = internalMatch.id + "-" + (internalMatch.homeParticipant?.name ?? "")
-        #endif
-        
+
         return Event(
             id: internalMatch.id,
             homeTeamName: homeTeamName,

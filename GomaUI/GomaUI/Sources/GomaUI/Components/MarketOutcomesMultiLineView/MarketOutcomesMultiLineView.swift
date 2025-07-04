@@ -15,8 +15,11 @@ final public class MarketOutcomesMultiLineView: UIView {
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
     
     // Loading, error and empty states
+    private lazy var loadingContainer: UIView = Self.createLoadingContainer()
     private lazy var loadingIndicator: UIActivityIndicatorView = Self.createLoadingIndicator()
+    private lazy var errorContainer: UIView = Self.createErrorContainer()
     private lazy var errorLabel: UILabel = Self.createErrorLabel()
+    private lazy var emptyStateContainer: UIView = Self.createEmptyStateContainer()
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
     
     // Array to manage line views (simplified - view models come from the parent VM)
@@ -40,6 +43,8 @@ final public class MarketOutcomesMultiLineView: UIView {
         static let groupTitleBottomSpacing: CGFloat = 12.0
         static let containerPadding: CGFloat = 0.0
         static let disabledAlpha: CGFloat = 0.5
+        static let emptyStateHeight: CGFloat = 50.0
+        static let cornerRadius: CGFloat = 4.5
     }
 
     // MARK: - Initialization
@@ -86,10 +91,15 @@ final public class MarketOutcomesMultiLineView: UIView {
         // Add lines container
         containerStackView.addArrangedSubview(linesStackView)
         
-        // Add loading, error and empty state views
-        addSubview(loadingIndicator)
-        addSubview(errorLabel)
-        addSubview(emptyStateLabel)
+        // Add all state containers to stack (mutually exclusive, initially hidden)
+        containerStackView.addArrangedSubview(loadingContainer)
+        containerStackView.addArrangedSubview(errorContainer)
+        containerStackView.addArrangedSubview(emptyStateContainer)
+        
+        // Add content to containers
+        loadingContainer.addSubview(loadingIndicator)
+        errorContainer.addSubview(errorLabel)
+        emptyStateContainer.addSubview(emptyStateLabel)
 
         setupConstraints()
         setupWithTheme()
@@ -103,21 +113,26 @@ final public class MarketOutcomesMultiLineView: UIView {
             containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.containerPadding),
             containerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.containerPadding),
 
-            // Loading indicator (centered)
-            loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
-
-            // Error label (centered)
-            errorLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            errorLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            errorLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
-            errorLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
+            // Loading container height (stackview handles position)
+            loadingContainer.heightAnchor.constraint(equalToConstant: Constants.emptyStateHeight),
             
-            // Empty state label (centered)
-            emptyStateLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            emptyStateLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            emptyStateLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
-            emptyStateLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16)
+            // Loading indicator (centered in container)
+            loadingIndicator.centerXAnchor.constraint(equalTo: loadingContainer.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: loadingContainer.centerYAnchor),
+
+            // Error container height (stackview handles position)
+            errorContainer.heightAnchor.constraint(equalToConstant: Constants.emptyStateHeight),
+            
+            // Error label (centered in container)
+            errorLabel.centerXAnchor.constraint(equalTo: errorContainer.centerXAnchor),
+            errorLabel.centerYAnchor.constraint(equalTo: errorContainer.centerYAnchor),
+            
+            // Empty state container height (stackview handles position)
+            emptyStateContainer.heightAnchor.constraint(equalToConstant: Constants.emptyStateHeight),
+            
+            // Empty state label (centered in container)
+            emptyStateLabel.centerXAnchor.constraint(equalTo: emptyStateContainer.centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: emptyStateContainer.centerYAnchor)
         ])
     }
 
@@ -126,11 +141,26 @@ final public class MarketOutcomesMultiLineView: UIView {
         groupTitleLabel.textColor = StyleProvider.Color.textColor
         groupTitleLabel.font = StyleProvider.fontWith(type: .medium, size: 16)
         
+        // Loading container styling
+        loadingContainer.backgroundColor = StyleProvider.Color.backgroundColor
+        loadingContainer.layer.cornerRadius = Constants.cornerRadius
+        loadingContainer.clipsToBounds = true
+        
+        // Error container styling
+        errorContainer.backgroundColor = StyleProvider.Color.backgroundColor
+        errorContainer.layer.cornerRadius = Constants.cornerRadius
+        errorContainer.clipsToBounds = true
+        
         // Error label styling
-        errorLabel.textColor = StyleProvider.Color.secondaryColor
+        errorLabel.textColor = StyleProvider.Color.textDisabledOdds
+        
+        // Empty state container styling
+        emptyStateContainer.backgroundColor = StyleProvider.Color.backgroundColor
+        emptyStateContainer.layer.cornerRadius = Constants.cornerRadius
+        emptyStateContainer.clipsToBounds = true
         
         // Empty state label styling
-        emptyStateLabel.textColor = StyleProvider.Color.secondaryColor
+        emptyStateLabel.textColor = StyleProvider.Color.textDisabledOdds
         emptyStateLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
         
         // Loading indicator styling
@@ -179,6 +209,10 @@ final public class MarketOutcomesMultiLineView: UIView {
         lineViews.forEach { $0.removeFromSuperview() }
         lineViews.removeAll()
         
+        // Hide empty state when we have content to show
+        emptyStateContainer.isHidden = true
+        linesStackView.isHidden = false
+        
         // Create new line views from the aggregated view models
         for lineViewModel in lineViewModels {
             let lineView = MarketOutcomesLineView(viewModel: lineViewModel)
@@ -210,36 +244,46 @@ final public class MarketOutcomesMultiLineView: UIView {
     }
 
     // MARK: - State Management
-    private func showLoadingState() {
-        containerStackView.isHidden = true
-        errorLabel.isHidden = true
-        loadingIndicator.isHidden = false
+    func showLoadingState() {
+        // Keep containerStackView visible, hide content and other states, show loading
+        containerStackView.isHidden = false
+        linesStackView.isHidden = true
+        errorContainer.isHidden = true
+        emptyStateContainer.isHidden = true
+        loadingContainer.isHidden = false
         loadingIndicator.startAnimating()
     }
 
-    private func showErrorState(_ message: String) {
-        containerStackView.isHidden = true
-        loadingIndicator.isHidden = true
+    func showErrorState(_ message: String) {
+        // Keep containerStackView visible, hide content and other states, show error
+        containerStackView.isHidden = false
+        linesStackView.isHidden = true
+        loadingContainer.isHidden = true
         loadingIndicator.stopAnimating()
+        emptyStateContainer.isHidden = true
         errorLabel.text = message
-        errorLabel.isHidden = false
+        errorContainer.isHidden = false
     }
 
     private func showEmptyState(_ message: String) {
-        containerStackView.isHidden = true
-        loadingIndicator.isHidden = true
+        // Keep containerStackView visible, hide content and other states, show empty state
+        containerStackView.isHidden = false
+        linesStackView.isHidden = true
+        loadingContainer.isHidden = true
         loadingIndicator.stopAnimating()
-        errorLabel.isHidden = true
+        errorContainer.isHidden = true
         emptyStateLabel.text = message
-        emptyStateLabel.isHidden = false
+        emptyStateContainer.isHidden = false
     }
 
     private func showContentState() {
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
-        errorLabel.isHidden = true
-        emptyStateLabel.isHidden = true
+        // Keep containerStackView visible, hide all state containers, show content
         containerStackView.isHidden = false
+        loadingContainer.isHidden = true
+        loadingIndicator.stopAnimating()
+        errorContainer.isHidden = true
+        emptyStateContainer.isHidden = true
+        linesStackView.isHidden = false
     }
 
     // MARK: - Multi-Line Corner Radius Logic
@@ -340,19 +384,49 @@ private extension MarketOutcomesMultiLineView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
         label.isHidden = true
         return label
+    }
+    
+    static func createLoadingContainer() -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.layer.cornerRadius = Constants.cornerRadius
+        container.clipsToBounds = true
+        container.isHidden = true
+        return container
+    }
+    
+    static func createErrorContainer() -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.layer.cornerRadius = Constants.cornerRadius
+        container.clipsToBounds = true
+        container.isHidden = true
+        return container
+    }
+    
+    static func createEmptyStateContainer() -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.layer.cornerRadius = Constants.cornerRadius
+        container.clipsToBounds = true
+        container.isHidden = true
+        return container
     }
     
     static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.isHidden = true
+        label.textColor = StyleProvider.Color.textDisabledOdds
         return label
     }
 }
@@ -361,53 +435,199 @@ private extension MarketOutcomesMultiLineView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Over/Under Market Group") {
-    PreviewUIView {
-        MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.overUnderMarketGroup)
+#Preview("All States Comparison") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        // Create container stack view for all states comparison
+        let containerStack = UIStackView()
+        containerStack.axis = .vertical
+        containerStack.spacing = 20
+        containerStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        // 1. Market with outcomes
+        let marketWithOutcomes = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.overUnderMarketGroup)
+        marketWithOutcomes.translatesAutoresizingMaskIntoConstraints = false
+        
+        // 2. Loading state - use empty view model but manually trigger loading
+        let loadingStateMarket = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.emptyMarketGroup)
+        loadingStateMarket.translatesAutoresizingMaskIntoConstraints = false
+        // Manually trigger loading state
+        DispatchQueue.main.async {
+            loadingStateMarket.showLoadingState()
+        }
+        
+        // 3. Error state - use empty view model but manually trigger error
+        let errorStateMarket = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.emptyMarketGroup)
+        errorStateMarket.translatesAutoresizingMaskIntoConstraints = false
+        // Manually trigger error state
+        DispatchQueue.main.async {
+            errorStateMarket.showErrorState("Failed to load markets")
+        }
+        
+        // 4. Empty state market
+        let emptyStateMarket = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.emptyMarketGroup)
+        emptyStateMarket.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create labels for each state
+        let createLabel: (String) -> UILabel = { text in
+            let label = UILabel()
+            label.text = text
+            label.font = StyleProvider.fontWith(type: .medium, size: 16)
+            label.textColor = StyleProvider.Color.textColor
+            label.textAlignment = .center
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }
+        
+        // Add all components to stack
+        containerStack.addArrangedSubview(createLabel("Content State"))
+        containerStack.addArrangedSubview(marketWithOutcomes)
+        containerStack.addArrangedSubview(createLabel("Loading State"))
+        containerStack.addArrangedSubview(loadingStateMarket)
+        containerStack.addArrangedSubview(createLabel("Error State"))
+        containerStack.addArrangedSubview(errorStateMarket)
+        containerStack.addArrangedSubview(createLabel("Empty State"))
+        containerStack.addArrangedSubview(emptyStateMarket)
+        
+        vc.view.addSubview(containerStack)
+        
+        NSLayoutConstraint.activate([
+            containerStack.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            containerStack.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: 50),
+            containerStack.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            containerStack.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        vc.view.backgroundColor = UIColor.systemGray6
+        return vc
     }
-    .frame(height: 200)
-    .padding()
-    .background(Color(UIColor.systemGray6))
+}
+
+@available(iOS 17.0, *)
+#Preview("Over/Under Market Group") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        let marketOutcomesMultiLineView = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.overUnderMarketGroup)
+        
+        marketOutcomesMultiLineView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(marketOutcomesMultiLineView)
+        
+        NSLayoutConstraint.activate([
+            marketOutcomesMultiLineView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            marketOutcomesMultiLineView.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: 40),
+            marketOutcomesMultiLineView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 12),
+        ])
+        
+        vc.view.backgroundColor = UIColor.systemGray6
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Market Group Empty") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        let marketOutcomesMultiLineView = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.emptyMarketGroup)
+        
+        marketOutcomesMultiLineView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(marketOutcomesMultiLineView)
+        
+        NSLayoutConstraint.activate([
+            marketOutcomesMultiLineView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            marketOutcomesMultiLineView.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: 40),
+            marketOutcomesMultiLineView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 12),
+        ])
+        
+        vc.view.backgroundColor = UIColor.systemGray2
+        return vc
+    }
 }
 
 @available(iOS 17.0, *)
 #Preview("Home/Draw/Away Market Group") {
-    PreviewUIView {
-        MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.homeDrawAwayMarketGroup)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        let marketOutcomesMultiLineView = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.homeDrawAwayMarketGroup)
+        
+        marketOutcomesMultiLineView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(marketOutcomesMultiLineView)
+        
+        NSLayoutConstraint.activate([
+            marketOutcomesMultiLineView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            marketOutcomesMultiLineView.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: 40),
+            marketOutcomesMultiLineView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 12),
+        ])
+        
+        vc.view.backgroundColor = UIColor.systemGray6
+        return vc
     }
-    .frame(height: 200)
-    .padding()
-    .background(Color(UIColor.systemGray6))
 }
 
 @available(iOS 17.0, *)
 #Preview("Market Group with Suspended Line") {
-    PreviewUIView {
-        MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.overUnderWithSuspendedLine)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        let marketOutcomesMultiLineView = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.overUnderWithSuspendedLine)
+        
+        marketOutcomesMultiLineView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(marketOutcomesMultiLineView)
+        
+        NSLayoutConstraint.activate([
+            marketOutcomesMultiLineView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            marketOutcomesMultiLineView.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: 40),
+            marketOutcomesMultiLineView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 12),
+        ])
+        
+        vc.view.backgroundColor = UIColor.systemGray6
+        return vc
     }
-    .frame(height: 250)
-    .padding()
-    .background(Color(UIColor.systemGray6))
 }
 
 @available(iOS 17.0, *)
 #Preview("Mixed Layout Market Group") {
-    PreviewUIView {
-        MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.mixedLayoutMarketGroup)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        let marketOutcomesMultiLineView = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.mixedLayoutMarketGroup)
+        
+        marketOutcomesMultiLineView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(marketOutcomesMultiLineView)
+        
+        NSLayoutConstraint.activate([
+            marketOutcomesMultiLineView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            marketOutcomesMultiLineView.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: 40),
+            marketOutcomesMultiLineView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 12),
+        ])
+        
+        vc.view.backgroundColor = UIColor.systemGray6
+        return vc
     }
-    .frame(height: 200)
-    .padding()
-    .background(Color(UIColor.systemGray6))
 }
 
 @available(iOS 17.0, *)
 #Preview("Market Group with Odds Changes") {
-    PreviewUIView {
-        MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.marketGroupWithOddsChanges)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        let marketOutcomesMultiLineView = MarketOutcomesMultiLineView(viewModel: MockMarketOutcomesMultiLineViewModel.marketGroupWithOddsChanges)
+        
+        marketOutcomesMultiLineView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(marketOutcomesMultiLineView)
+        
+        NSLayoutConstraint.activate([
+            marketOutcomesMultiLineView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            marketOutcomesMultiLineView.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: 40),
+            marketOutcomesMultiLineView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 12),
+        ])
+        
+        vc.view.backgroundColor = UIColor.systemGray6
+        return vc
     }
-    .frame(height: 150)
-    .padding()
-    .background(Color(UIColor.systemGray6))
 }
 
-#endif 
+#endif

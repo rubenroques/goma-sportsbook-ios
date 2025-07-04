@@ -14,8 +14,8 @@ class MarketOutcomesMultiLineViewController: UIViewController {
         ("Market Group with Suspended Line", MockMarketOutcomesMultiLineViewModel.overUnderWithSuspendedLine),
         ("Mixed Layout Market Group", MockMarketOutcomesMultiLineViewModel.mixedLayoutMarketGroup),
         ("Market Group with Odds Changes", MockMarketOutcomesMultiLineViewModel.marketGroupWithOddsChanges),
-        ("Empty Market Group (with title)", MockMarketOutcomesMultiLineViewModel.emptyMarketGroup),
-        ("Empty Market Group (no title)", MockMarketOutcomesMultiLineViewModel.emptyMarketGroupNoTitle)
+        ("Empty Market Group (with title)", MockMarketOutcomesMultiLineViewModel.emptyMarketGroupWithTitle),
+        ("Empty Market Group (no title)", MockMarketOutcomesMultiLineViewModel.emptyMarketGroup)
     ]
 
     // MARK: - View Lifecycle
