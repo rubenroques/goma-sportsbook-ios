@@ -14,9 +14,10 @@ final public class MarketOutcomesMultiLineView: UIView {
     // Container for all market lines
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
     
-    // Loading and error states
+    // Loading, error and empty states
     private lazy var loadingIndicator: UIActivityIndicatorView = Self.createLoadingIndicator()
     private lazy var errorLabel: UILabel = Self.createErrorLabel()
+    private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
     
     // Array to manage line views (simplified - view models come from the parent VM)
     private var lineViews: [MarketOutcomesLineView] = []
@@ -85,9 +86,10 @@ final public class MarketOutcomesMultiLineView: UIView {
         // Add lines container
         containerStackView.addArrangedSubview(linesStackView)
         
-        // Add loading and error views
+        // Add loading, error and empty state views
         addSubview(loadingIndicator)
         addSubview(errorLabel)
+        addSubview(emptyStateLabel)
 
         setupConstraints()
         setupWithTheme()
@@ -109,7 +111,13 @@ final public class MarketOutcomesMultiLineView: UIView {
             errorLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             errorLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             errorLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
-            errorLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16)
+            errorLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
+            
+            // Empty state label (centered)
+            emptyStateLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            emptyStateLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
+            emptyStateLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16)
         ])
     }
 
@@ -120,6 +128,10 @@ final public class MarketOutcomesMultiLineView: UIView {
         
         // Error label styling
         errorLabel.textColor = StyleProvider.Color.secondaryColor
+        
+        // Empty state label styling
+        emptyStateLabel.textColor = StyleProvider.Color.secondaryColor
+        emptyStateLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
         
         // Loading indicator styling
         loadingIndicator.color = StyleProvider.Color.primaryColor
@@ -153,8 +165,13 @@ final public class MarketOutcomesMultiLineView: UIView {
             groupTitleLabel.isHidden = true
         }
         
-        // Show content state (no loading/error in simplified version)
-        showContentState()
+        // Check if we should show empty state
+        if displayState.isEmpty {
+            showEmptyState(displayState.emptyStateMessage ?? "No markets available")
+        } else {
+            // Show content state (no loading/error in simplified version)
+            showContentState()
+        }
     }
     
     private func updateLineViews(with lineViewModels: [MarketOutcomesLineViewModelProtocol]) {
@@ -208,10 +225,20 @@ final public class MarketOutcomesMultiLineView: UIView {
         errorLabel.isHidden = false
     }
 
+    private func showEmptyState(_ message: String) {
+        containerStackView.isHidden = true
+        loadingIndicator.isHidden = true
+        loadingIndicator.stopAnimating()
+        errorLabel.isHidden = true
+        emptyStateLabel.text = message
+        emptyStateLabel.isHidden = false
+    }
+
     private func showContentState() {
         loadingIndicator.isHidden = true
         loadingIndicator.stopAnimating()
         errorLabel.isHidden = true
+        emptyStateLabel.isHidden = true
         containerStackView.isHidden = false
     }
 
@@ -310,6 +337,16 @@ private extension MarketOutcomesMultiLineView {
     }
 
     static func createErrorLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = StyleProvider.fontWith(type: .regular, size: 14)
+        label.isHidden = true
+        return label
+    }
+    
+    static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center

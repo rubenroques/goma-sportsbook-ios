@@ -22,12 +22,18 @@ final public class MockMarketOutcomesMultiLineViewModel: MarketOutcomesMultiLine
     }
     
     // MARK: - Initialization
-    public init(groupTitle: String? = nil, lineViewModels: [MarketOutcomesLineViewModelProtocol] = []) {
+    public init(groupTitle: String? = nil, lineViewModels: [MarketOutcomesLineViewModelProtocol] = [], emptyStateMessage: String? = nil) {
         self.lineViewModelsSubject = CurrentValueSubject(lineViewModels)
+        
+        let isEmpty = lineViewModels.isEmpty
+        let finalEmptyMessage = isEmpty ? (emptyStateMessage ?? "No markets available") : nil
+        
         self.displayStateSubject = CurrentValueSubject(
             MarketOutcomesMultiLineDisplayState(
                 groupTitle: groupTitle,
-                lineCount: lineViewModels.count
+                lineCount: lineViewModels.count,
+                isEmpty: isEmpty,
+                emptyStateMessage: finalEmptyMessage
             )
         )
     }
@@ -418,5 +424,23 @@ extension MockMarketOutcomesMultiLineViewModel {
         )
         
         return MockMarketOutcomesMultiLineViewModel(marketGroup: groupData)
+    }
+    
+    /// Empty state market group (no markets available)
+    public static var emptyMarketGroup: MockMarketOutcomesMultiLineViewModel {
+        return MockMarketOutcomesMultiLineViewModel(
+            groupTitle: "Total Goals",
+            lineViewModels: [],
+            emptyStateMessage: "No Total Goals markets available for this match"
+        )
+    }
+    
+    /// Empty state without title
+    public static var emptyMarketGroupNoTitle: MockMarketOutcomesMultiLineViewModel {
+        return MockMarketOutcomesMultiLineViewModel(
+            groupTitle: nil,
+            lineViewModels: [],
+            emptyStateMessage: "Markets temporarily unavailable"
+        )
     }
 }

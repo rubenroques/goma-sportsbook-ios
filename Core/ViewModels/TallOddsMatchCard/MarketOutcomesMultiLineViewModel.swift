@@ -22,12 +22,18 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
     }
     
     // MARK: - Initialization
-    init(groupTitle: String? = nil, lineViewModels: [MarketOutcomesLineViewModelProtocol] = []) {
+    init(groupTitle: String? = nil, lineViewModels: [MarketOutcomesLineViewModelProtocol] = [], emptyStateMessage: String? = nil) {
         self.lineViewModelsSubject = CurrentValueSubject(lineViewModels)
+        
+        let isEmpty = lineViewModels.isEmpty
+        let finalEmptyMessage = isEmpty ? (emptyStateMessage ?? "No markets available") : nil
+        
         self.displayStateSubject = CurrentValueSubject(
             MarketOutcomesMultiLineDisplayState(
                 groupTitle: groupTitle,
-                lineCount: lineViewModels.count
+                lineCount: lineViewModels.count,
+                isEmpty: isEmpty,
+                emptyStateMessage: finalEmptyMessage
             )
         )
     }
@@ -88,9 +94,14 @@ extension MarketOutcomesMultiLineViewModel {
         // Determine group title based on market type
         let groupTitle = determineGroupTitle(for: marketTypeId)
         
+        // Create appropriate empty state message if no line view models
+        let emptyStateMessage: String? = lineViewModels.isEmpty ? 
+            "No \(groupTitle ?? "markets") available for this match" : nil
+        
         return MarketOutcomesMultiLineViewModel(
             groupTitle: groupTitle,
-            lineViewModels: lineViewModels
+            lineViewModels: lineViewModels,
+            emptyStateMessage: emptyStateMessage
         )
     }
     
@@ -139,7 +150,21 @@ extension MarketOutcomesMultiLineViewModel {
     }
     
     private static func determineGroupTitle(for marketTypeId: String) -> String? {
-        // Return nil for now - group titles can be determined based on market type if needed
-        return nil
+        // Basic mapping of common market type IDs to readable names
+        // This could be enhanced with a proper localization system
+        switch marketTypeId.lowercased() {
+        case "1x2", "home_draw_away":
+            return "Match Result"
+        case "total_goals", "over_under":
+            return "Total Goals"
+        case "both_teams_to_score":
+            return "Both Teams to Score"
+        case "asian_handicap":
+            return "Asian Handicap"
+        case "double_chance":
+            return "Double Chance"
+        default:
+            return "Markets"
+        }
     }
 }

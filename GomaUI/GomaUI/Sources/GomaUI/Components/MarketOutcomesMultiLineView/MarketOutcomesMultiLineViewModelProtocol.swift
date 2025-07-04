@@ -50,11 +50,17 @@ public struct MarketGroupData: Equatable, Hashable {
 public struct MarketOutcomesMultiLineDisplayState: Equatable {
     public let groupTitle: String?
     public let lineCount: Int
+    public let isEmpty: Bool
+    public let emptyStateMessage: String?
 
     public init(groupTitle: String? = nil,
-                lineCount: Int = 0) {
+                lineCount: Int = 0,
+                isEmpty: Bool = false,
+                emptyStateMessage: String? = nil) {
         self.groupTitle = groupTitle
         self.lineCount = lineCount
+        self.isEmpty = isEmpty
+        self.emptyStateMessage = emptyStateMessage
     }
 }
 

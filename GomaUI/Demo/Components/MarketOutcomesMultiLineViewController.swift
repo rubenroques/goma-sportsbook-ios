@@ -13,7 +13,9 @@ class MarketOutcomesMultiLineViewController: UIViewController {
         ("Home/Draw/Away Market Group", MockMarketOutcomesMultiLineViewModel.homeDrawAwayMarketGroup),
         ("Market Group with Suspended Line", MockMarketOutcomesMultiLineViewModel.overUnderWithSuspendedLine),
         ("Mixed Layout Market Group", MockMarketOutcomesMultiLineViewModel.mixedLayoutMarketGroup),
-        ("Market Group with Odds Changes", MockMarketOutcomesMultiLineViewModel.marketGroupWithOddsChanges)
+        ("Market Group with Odds Changes", MockMarketOutcomesMultiLineViewModel.marketGroupWithOddsChanges),
+        ("Empty Market Group (with title)", MockMarketOutcomesMultiLineViewModel.emptyMarketGroup),
+        ("Empty Market Group (no title)", MockMarketOutcomesMultiLineViewModel.emptyMarketGroupNoTitle)
     ]
 
     // MARK: - View Lifecycle
@@ -33,7 +35,7 @@ class MarketOutcomesMultiLineViewController: UIViewController {
         // Add description label
         let descriptionLabel = UILabel()
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.text = "The MarketOutcomesMultiLineView is now a simple aggregator that displays line view models provided by its parent view model. Each line view model handles its own state and API connections independently. This demonstrates the simplified composition pattern. Tap 'Switch' to see different configurations and 'Test' to explore the architecture."
+        descriptionLabel.text = "The MarketOutcomesMultiLineView is now a simple aggregator that displays line view models provided by its parent view model. Each line view model handles its own state and API connections independently. This demonstrates the simplified composition pattern with support for empty states when no markets are available. Tap 'Switch' to see different configurations including empty state examples."
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
