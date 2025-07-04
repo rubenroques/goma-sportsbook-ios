@@ -65,7 +65,7 @@ final public class WalletWidgetView: UIView {
     private func setupBalanceContainer() {
         // Balance container (darker orange)
         balanceContainer.translatesAutoresizingMaskIntoConstraints = false
-        balanceContainer.backgroundColor = StyleProvider.Color.walletBackgroundColor
+        balanceContainer.backgroundColor = StyleProvider.Color.highlightPrimaryContrast.withAlphaComponent(0.1)
         balanceContainer.layer.cornerRadius = 8
         balanceContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
 
@@ -84,13 +84,13 @@ final public class WalletWidgetView: UIView {
 
         // Balance label
         balanceLabel.translatesAutoresizingMaskIntoConstraints = false
-        balanceLabel.textColor = StyleProvider.Color.contrastTextColor
+        balanceLabel.textColor = StyleProvider.Color.allWhite
         balanceLabel.font = StyleProvider.fontWith(type: .semibold, size: 14)
 
         // Chevron image
         chevronImage.image = UIImage(systemName: "chevron.down")
         chevronImage.translatesAutoresizingMaskIntoConstraints = false
-        chevronImage.tintColor = StyleProvider.Color.contrastTextColor
+        chevronImage.tintColor = StyleProvider.Color.allWhite
         chevronImage.contentMode = .scaleAspectFit
         chevronImage.widthAnchor.constraint(equalToConstant: 12).isActive = true
 
@@ -108,8 +108,8 @@ final public class WalletWidgetView: UIView {
 
     private func setupDepositButton() {
         depositButton.translatesAutoresizingMaskIntoConstraints = false
-        depositButton.backgroundColor = StyleProvider.Color.contrastTextColor
-        depositButton.setTitleColor(StyleProvider.Color.toolbarBackgroundColor, for: .normal)
+        depositButton.backgroundColor = StyleProvider.Color.allWhite
+        depositButton.setTitleColor(StyleProvider.Color.topBarGradient1, for: .normal)
         depositButton.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 14)
         depositButton.layer.cornerRadius = 8
         depositButton.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
