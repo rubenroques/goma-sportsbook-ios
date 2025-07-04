@@ -135,6 +135,29 @@ public final class TransactionVerificationView: UIView {
         
         topImageView.isHidden = data.topImage == nil
         bottomImageView.isHidden = data.bottomImage == nil
+        
+        if data.id == "ussd_push" {
+            startTopImageSpinnerAnimation()
+        }
+        else {
+            stopTopImageSpinnerAnimation()
+        }
+    }
+    
+    private func startTopImageSpinnerAnimation() {
+        // Remove any existing animation
+        topImageView.layer.removeAnimation(forKey: "rotationAnimation")
+        
+        let rotation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotation.toValue = NSNumber(value: Double.pi * 2)
+        rotation.duration = 1.0
+        rotation.isCumulative = true
+        rotation.repeatCount = .infinity
+        topImageView.layer.add(rotation, forKey: "rotationAnimation")
+    }
+    
+    private func stopTopImageSpinnerAnimation() {
+        topImageView.layer.removeAnimation(forKey: "rotationAnimation")
     }
 }
 

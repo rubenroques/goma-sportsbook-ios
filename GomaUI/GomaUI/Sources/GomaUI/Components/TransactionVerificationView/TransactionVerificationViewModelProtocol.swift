@@ -19,7 +19,7 @@ public struct TransactionVerificationData {
     public let bottomImage: String?
     
     public init(
-        id: String = UUID().uuidString,
+        id: String,
         title: String,
         subtitle: String,
         highlightText: String? = nil,

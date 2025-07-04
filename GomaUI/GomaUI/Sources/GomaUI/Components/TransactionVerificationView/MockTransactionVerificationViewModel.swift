@@ -99,6 +99,7 @@ public final class MockTransactionVerificationViewModel: TransactionVerification
 public extension MockTransactionVerificationViewModel {
     static var defaultMock: MockTransactionVerificationViewModel {
         let data = TransactionVerificationData(
+            id: "ussd_push",
             title: "USSD Push coming through...",
             subtitle: "We are sending a USSD Push interaction to +237 612345678",
             highlightText: "+237 612345678",
@@ -111,6 +112,7 @@ public extension MockTransactionVerificationViewModel {
     
     static var simpleMock: MockTransactionVerificationViewModel {
         let data = TransactionVerificationData(
+            id: "ussd_received",
             title: "Received it yet?",
             subtitle: "Follow the prompt to proceed",
             topImage: "arrow.2.circlepath",
@@ -122,6 +124,7 @@ public extension MockTransactionVerificationViewModel {
     
     static var incompletePinMock: MockTransactionVerificationViewModel {
         let data = TransactionVerificationData(
+            id: "ussd_push",
             title: "USSD Push coming through...",
             subtitle: "We are sending a USSD Push interaction to +237 612345678",
             highlightText: "+237 612345678",
@@ -134,6 +137,7 @@ public extension MockTransactionVerificationViewModel {
     
     static var completePinMock: MockTransactionVerificationViewModel {
         let data = TransactionVerificationData(
+            id: "ussd_received",
             title: "Received it yet?",
             subtitle: "Follow the prompt to proceed",
             topImage: "check_icon",
