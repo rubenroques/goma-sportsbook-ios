@@ -17,13 +17,16 @@ final public class WalletStatusView: UIView {
     
     // UI Components
     private lazy var containerStackView = Self.createContainerStackView()
-    private lazy var totalBalanceRow = Self.createBalanceRow(withIcon: true)
+    private lazy var totalBalanceLineView = WalletBalanceLineView(
+        title: "Total Balance", 
+        icon: UIImage(named: "banknote_cash_icon", in: Bundle.module, compatibleWith: nil)
+    )
     private lazy var firstSeparatorLine = Self.createSeparatorLine()
-    private lazy var currentBalanceRow = Self.createBalanceRow(withIcon: false)
-    private lazy var bonusBalanceRow = Self.createBalanceRow(withIcon: false)
-    private lazy var cashbackBalanceRow = Self.createBalanceRow(withIcon: false)
+    private lazy var currentBalanceLineView = WalletBalanceLineView(title: "Current Balance")
+    private lazy var bonusBalanceLineView = WalletBalanceLineView(title: "Bonus")
+    private lazy var cashbackBalanceLineView = WalletBalanceLineView(title: "Cashback balance")
     private lazy var secondSeparatorLine = Self.createSeparatorLine()
-    private lazy var withdrawableRow = Self.createBalanceRow(withIcon: false)
+    private lazy var withdrawableLineView = WalletBalanceLineView(title: "Withdrawable")
     private var depositButton: ButtonView
     private var withdrawButton: ButtonView
     
@@ -51,13 +54,13 @@ final public class WalletStatusView: UIView {
         addSubview(containerStackView)
         
         // Add all rows to stack view
-        containerStackView.addArrangedSubview(totalBalanceRow)
+        containerStackView.addArrangedSubview(totalBalanceLineView)
         containerStackView.addArrangedSubview(firstSeparatorLine)
-        containerStackView.addArrangedSubview(currentBalanceRow)
-        containerStackView.addArrangedSubview(bonusBalanceRow)
-        containerStackView.addArrangedSubview(cashbackBalanceRow)
+        containerStackView.addArrangedSubview(currentBalanceLineView)
+        containerStackView.addArrangedSubview(bonusBalanceLineView)
+        containerStackView.addArrangedSubview(cashbackBalanceLineView)
         containerStackView.addArrangedSubview(secondSeparatorLine)
-        containerStackView.addArrangedSubview(withdrawableRow)
+        containerStackView.addArrangedSubview(withdrawableLineView)
         
         // Add spacing before buttons
         let buttonSpacingView = UIView()
@@ -71,13 +74,12 @@ final public class WalletStatusView: UIView {
         containerStackView.addArrangedSubview(withdrawButton)
         
         // Set custom button heights and font sizes
-        depositButton.setCustomHeight(40)
-        depositButton.setCustomFontSize(15)
-        withdrawButton.setCustomHeight(40)
-        withdrawButton.setCustomFontSize(15)
+        depositButton.setCustomHeight(34)
+        depositButton.setCustomFontSize(12)
+        withdrawButton.setCustomHeight(34)
+        withdrawButton.setCustomFontSize(12)
         
         setupConstraints()
-        setupLabels()
     }
     
     private func setupConstraints() {
@@ -89,56 +91,13 @@ final public class WalletStatusView: UIView {
         ])
     }
     
-    private func setupLabels() {
-        // Total Balance - has icon in left container
-        if let leftContainer = totalBalanceRow.arrangedSubviews.first as? UIStackView {
-            if let iconImageView = leftContainer.arrangedSubviews.first as? UIImageView {
-                iconImageView.image = UIImage(named: "banknote_cash_icon", in: Bundle.module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-                iconImageView.tintColor = StyleProvider.Color.highlightPrimary
-            }
-            if let label = leftContainer.arrangedSubviews.last as? UILabel {
-                label.text = "Total Balance"
-            }
-        }
-        
-        // Other balance labels - check for left container or direct label
-        if let leftContainer = currentBalanceRow.arrangedSubviews.first as? UIStackView,
-           let label = leftContainer.arrangedSubviews.first as? UILabel {
-            label.text = "Current Balance"
-        } else if let label = currentBalanceRow.arrangedSubviews.first as? UILabel {
-            label.text = "Current Balance"
-        }
-        
-        if let leftContainer = bonusBalanceRow.arrangedSubviews.first as? UIStackView,
-           let label = leftContainer.arrangedSubviews.first as? UILabel {
-            label.text = "Bonus"
-        } else if let label = bonusBalanceRow.arrangedSubviews.first as? UILabel {
-            label.text = "Bonus"
-        }
-        
-        if let leftContainer = cashbackBalanceRow.arrangedSubviews.first as? UIStackView,
-           let label = leftContainer.arrangedSubviews.first as? UILabel {
-            label.text = "Cashback balance"
-        } else if let label = cashbackBalanceRow.arrangedSubviews.first as? UILabel {
-            label.text = "Cashback balance"
-        }
-        
-        if let leftContainer = withdrawableRow.arrangedSubviews.first as? UIStackView,
-           let label = leftContainer.arrangedSubviews.first as? UILabel {
-            label.text = "Withdrawable"
-        } else if let label = withdrawableRow.arrangedSubviews.first as? UILabel {
-            label.text = "Withdrawable"
-        }
-    }
     
     private func setupBindings() {
         // Total Balance
         viewModel.totalBalancePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                if let valueLabel = self?.totalBalanceRow.arrangedSubviews.last as? UILabel {
-                    valueLabel.text = value
-                }
+                self?.totalBalanceLineView.updateValue(value)
             }
             .store(in: &cancellables)
         
@@ -146,9 +105,7 @@ final public class WalletStatusView: UIView {
         viewModel.currentBalancePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                if let valueLabel = self?.currentBalanceRow.arrangedSubviews.last as? UILabel {
-                    valueLabel.text = value
-                }
+                self?.currentBalanceLineView.updateValue(value)
             }
             .store(in: &cancellables)
         
@@ -156,9 +113,7 @@ final public class WalletStatusView: UIView {
         viewModel.bonusBalancePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                if let valueLabel = self?.bonusBalanceRow.arrangedSubviews.last as? UILabel {
-                    valueLabel.text = value
-                }
+                self?.bonusBalanceLineView.updateValue(value)
             }
             .store(in: &cancellables)
         
@@ -166,9 +121,7 @@ final public class WalletStatusView: UIView {
         viewModel.cashbackBalancePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                if let valueLabel = self?.cashbackBalanceRow.arrangedSubviews.last as? UILabel {
-                    valueLabel.text = value
-                }
+                self?.cashbackBalanceLineView.updateValue(value)
             }
             .store(in: &cancellables)
         
@@ -176,9 +129,7 @@ final public class WalletStatusView: UIView {
         viewModel.withdrawableAmountPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                if let valueLabel = self?.withdrawableRow.arrangedSubviews.last as? UILabel {
-                    valueLabel.text = value
-                }
+                self?.withdrawableLineView.updateValue(value)
             }
             .store(in: &cancellables)
     }
@@ -199,47 +150,6 @@ extension WalletStatusView {
         stackView.distribution = .fill
         stackView.alignment = .fill
         return stackView
-    }
-    
-    private static func createBalanceRow(withIcon: Bool) -> UIStackView {
-        let rowStack = UIStackView()
-        rowStack.translatesAutoresizingMaskIntoConstraints = false
-        rowStack.axis = .horizontal
-        rowStack.distribution = .equalSpacing
-        rowStack.alignment = .center
-        
-        // Left side container
-        let leftContainer = UIStackView()
-        leftContainer.axis = .horizontal
-        leftContainer.spacing = 3
-        leftContainer.alignment = .center
-        
-        if withIcon {
-            let iconImageView = UIImageView()
-            iconImageView.translatesAutoresizingMaskIntoConstraints = false
-            iconImageView.contentMode = .scaleAspectFit
-            NSLayoutConstraint.activate([
-                iconImageView.widthAnchor.constraint(equalToConstant: 24),
-                iconImageView.heightAnchor.constraint(equalToConstant: 24)
-            ])
-            leftContainer.addArrangedSubview(iconImageView)
-        }
-        
-        let titleLabel = UILabel()
-        titleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
-        titleLabel.textColor = StyleProvider.Color.textPrimary
-        leftContainer.addArrangedSubview(titleLabel)
-        
-        // Value label
-        let valueLabel = UILabel()
-        valueLabel.font = StyleProvider.fontWith(type: .bold, size: 14)
-        valueLabel.textColor = StyleProvider.Color.highlightPrimary
-        valueLabel.textAlignment = .right
-        
-        rowStack.addArrangedSubview(leftContainer)
-        rowStack.addArrangedSubview(valueLabel)
-        
-        return rowStack
     }
     
     private static func createSeparatorLine() -> UIView {

@@ -130,7 +130,7 @@ The component uses ButtonView with predefined styles:
 - **Deposit**: Solid background (green) - `.solidBackground`
 - **Withdraw**: Bordered (orange) - `.bordered`
 
-Button heights are set to 30pt to match the design.
+Button heights are set to 34pt with 12pt font size to match the design.
 
 ### Colors
 
@@ -144,10 +144,46 @@ All colors come from StyleProvider:
 
 - **Tier 2 Component**: Interactive with button actions
 - **Reactive Design**: Publishers for all dynamic values
-- **Reusable Components**: Leverages existing ButtonView
+- **Reusable Components**: Leverages existing ButtonView and custom WalletBalanceLineView
 - **Clean Separation**: View model handles all business logic
+- **Modular Design**: Balance lines are handled by dedicated WalletBalanceLineView components
+
+### Component Structure
+
+The WalletStatusView is composed of several reusable sub-components:
+
+#### WalletBalanceLineView
+A dedicated component for displaying individual balance lines that provides:
+- **Flexible initialization**: With or without icons
+- **Clean API**: Direct property access (`titleText`, `valueText`, `icon`)
+- **Type safety**: No casting of arranged subviews
+- **Reusability**: Can be used in other wallet-related components
+
+```swift
+// Create with icon
+let totalLine = WalletBalanceLineView(
+    title: "Total Balance",
+    value: "2,000.00",
+    icon: UIImage(named: "banknote_cash_icon", in: Bundle.module, compatibleWith: nil)
+)
+
+// Create without icon
+let currentLine = WalletBalanceLineView(title: "Current Balance", value: "1,000.00")
+
+// Update dynamically
+currentLine.updateValue("1,500.00")
+currentLine.titleText = "Updated Balance"
+```
+
+#### Benefits of Modular Design
+- **Maintainability**: Each balance line is a self-contained component
+- **Type Safety**: No risky casting of UI elements
+- **Testability**: Individual components can be tested in isolation
+- **Consistency**: Uniform styling and behavior across all balance lines
 
 ## Testing
+
+### WalletStatusView Testing
 
 Use the provided mock factories for different scenarios:
 
@@ -163,4 +199,31 @@ MockWalletStatusViewModel.highBalanceMock
 
 // Bonus only (no withdrawable)
 MockWalletStatusViewModel.bonusOnlyMock
+```
+
+### WalletBalanceLineView Testing
+
+The WalletBalanceLineView component includes comprehensive SwiftUI previews for testing:
+
+- **All Balance Line States**: Shows all variations used in the wallet (with/without icons)
+- **Balance Line Without Icon**: Simple balance line preview
+- **All Balance Line Types**: Collection view showing different balance types
+- **Different Value Lengths**: Tests layout with various text lengths
+
+These previews can be accessed in Xcode's preview pane and help validate:
+- Layout behavior with long text
+- Icon alignment and spacing
+- Color theming consistency
+- Different value formats
+
+## File Structure
+
+```
+WalletStatusView/
+├── WalletStatusView.swift              # Main component
+├── WalletStatusViewModelProtocol.swift # Protocol definition
+├── WalletBalanceLineView.swift         # Reusable balance line component
+├── MockWalletStatusViewModel.swift     # Mock implementations
+└── Documentation/
+    └── README.md                       # This documentation
 ```
