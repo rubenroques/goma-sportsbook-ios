@@ -168,6 +168,10 @@ final public class ButtonView: UIView {
     public func setCustomHeight(_ height: CGFloat) {
         button.heightAnchor.constraint(equalToConstant: height).isActive = true
     }
+    
+    public func setCustomFontSize(_ size: CGFloat) {
+        button.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: size)
+    }
 }
 
 // MARK: - Preview Provider

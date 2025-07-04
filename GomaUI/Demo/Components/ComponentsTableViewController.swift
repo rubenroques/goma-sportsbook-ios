@@ -469,6 +469,16 @@ class ComponentsTableViewController: UITableViewController {
             }
         ),
         UIComponent(
+            title: "Wallet Status View",
+            description: "Displays wallet balance information with deposit/withdraw actions. Designed for overlay dialogs.",
+            viewController: WalletStatusViewController.self,
+            previewFactory: {
+                let viewModel = MockWalletStatusViewModel.defaultMock
+                let walletView = WalletStatusView(viewModel: viewModel)
+                return walletView
+            }
+        ),
+        UIComponent(
             title: "Custom Navigation View",
             description: "A customizable navigation bar, using CustomNavigationView.",
             viewController: CustomNavigationViewController.self,
