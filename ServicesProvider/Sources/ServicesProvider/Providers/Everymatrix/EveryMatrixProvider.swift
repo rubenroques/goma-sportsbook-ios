@@ -170,7 +170,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         }
 
         // Check both paginators to find which one contains this market
-        if let prelivePaginator = prelivePaginator, prelivePaginator.outcomeExists(id: id) {
+        if let prelivePaginator = prelivePaginator, prelivePaginator.marketExists(id: id) {
             // Delegate to pre-live paginator's outcome subscription method
             return prelivePaginator.subscribeToMarketUpdates(withId: id)
                 .handleEvents(receiveSubscription: { subscription in
@@ -185,7 +185,7 @@ class EveryMatrixEventsProvider: EventsProvider {
                     // print("subs outcome updated. receiveRequest (pre-live)")
                 })
                 .eraseToAnyPublisher()
-        } else if let livePaginator = livePaginator, livePaginator.outcomeExists(id: id) {
+        } else if let livePaginator = livePaginator, livePaginator.marketExists(id: id) {
             // Delegate to live paginator's outcome subscription method
             return livePaginator.subscribeToMarketUpdates(withId: id)
                 .handleEvents(receiveSubscription: { subscription in

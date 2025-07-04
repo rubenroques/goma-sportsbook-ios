@@ -125,6 +125,11 @@ class LiveMatchesPaginator: UnsubscriptionController {
     
     // MARK: - Individual Entity Subscriptions
     
+    /// Check if an outcome with the given ID exists in this paginator's store
+    func marketExists(id: String) -> Bool {
+        return store.get(EveryMatrix.MarketDTO.self, id: id) != nil
+    }
+    
     /// Subscribe to market updates for a specific market ID
     func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
         return store.observeMarket(id: id)
@@ -140,6 +145,11 @@ class LiveMatchesPaginator: UnsubscriptionController {
             }
             .setFailureType(to: ServiceProviderError.self)
             .eraseToAnyPublisher()
+    }
+    
+    /// Check if an outcome with the given ID exists in this paginator's store
+    func outcomeExists(id: String) -> Bool {
+        return store.get(EveryMatrix.OutcomeDTO.self, id: id) != nil
     }
     
     /// Subscribe to outcome updates for a specific outcome ID
@@ -171,10 +181,6 @@ class LiveMatchesPaginator: UnsubscriptionController {
             .eraseToAnyPublisher()
     }
     
-    /// Check if an outcome with the given ID exists in this paginator's store
-    func outcomeExists(id: String) -> Bool {
-        return store.get(EveryMatrix.OutcomeDTO.self, id: id) != nil
-    }
     
     /// Observe EVENT_INFO entities for a specific event using the focused store
     func observeEventInfosForEvent(eventId: String) -> AnyPublisher<EventLiveData, Never> {
@@ -355,7 +361,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
             // Apply custom update logic based on entity type
             if change.entityType == EveryMatrix.BettingOfferDTO.rawType && changedProperties.keys.contains("odds") {
                 // Only update betting offers with odds changes
-                print("[LiveMatchesPaginator] 🔄 Real odds update - BettingOffer ID: \(change.id), changedProperties: \(changedProperties)")
+                // print("[LiveMatchesPaginator] 🔄 Real odds update - BettingOffer ID: \(change.id), changedProperties: \(changedProperties)")
                 store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
                 
             } else if change.entityType == EveryMatrix.MarketDTO.rawType {

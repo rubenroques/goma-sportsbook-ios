@@ -131,6 +131,11 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     
     // MARK: - Individual Entity Subscriptions
     
+    /// Check if an outcome with the given ID exists in this paginator's store
+    func marketExists(id: String) -> Bool {
+        return store.get(EveryMatrix.MarketDTO.self, id: id) != nil
+    }
+    
     /// Subscribe to market updates for a specific market ID
     func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
         return store.observeMarket(id: id)
@@ -146,6 +151,12 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             }
             .setFailureType(to: ServiceProviderError.self)
             .eraseToAnyPublisher()
+    }
+    
+    
+    /// Check if an outcome with the given ID exists in this paginator's store
+    func outcomeExists(id: String) -> Bool {
+        return store.get(EveryMatrix.OutcomeDTO.self, id: id) != nil
     }
     
     /// Subscribe to outcome updates for a specific outcome ID
@@ -187,11 +198,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
 //        #endif
         return realPublisher.eraseToAnyPublisher()
     }
-    
-    /// Check if an outcome with the given ID exists in this paginator's store
-    func outcomeExists(id: String) -> Bool {
-        return store.get(EveryMatrix.OutcomeDTO.self, id: id) != nil
-    }
+
     
     // MARK: - Private Methods
 
