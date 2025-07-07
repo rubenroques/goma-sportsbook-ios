@@ -61,17 +61,20 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
     
     private func setupBindings() {
         
-        phoneFieldViewModel.textPublisher
+        Publishers.CombineLatest(phoneFieldViewModel.textPublisher, passwordFieldViewModel.textPublisher)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] phoneText in
+            .sink(receiveValue: { [weak self] phoneText, passwordText in
+                
                 self?.phoneNumber = phoneText
-            })
-            .store(in: &cancellables)
-        
-        passwordFieldViewModel.textPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] passwordText in
+
                 self?.password = passwordText
+                
+                if phoneText.isNotEmpty && passwordText.isNotEmpty {
+                    self?.buttonViewModel.setEnabled(true)
+                }
+                else {
+                    self?.buttonViewModel.setEnabled(false)
+                }
             })
             .store(in: &cancellables)
     }
