@@ -179,12 +179,54 @@ class ComponentsTableViewController: UITableViewController {
             }
         ),
         UIComponent(
+            title: "Capsule View",
+            description: "Versatile pill-shaped containers with automatic shape management for badges, status indicators, count labels, and other capsule UI elements",
+            viewController: CapsuleViewController.self,
+            previewFactory: {
+                let containerView = UIView()
+                let stackView = UIStackView()
+                stackView.axis = .horizontal
+                stackView.spacing = 8
+                stackView.alignment = .center
+                stackView.distribution = .fill
+
+                // Create sample capsules
+                let liveCapsule = CapsuleView(viewModel: MockCapsuleViewModel.liveBadge)
+                let countCapsule = CapsuleView(viewModel: MockCapsuleViewModel.countBadge)
+                let statusCapsule = CapsuleView(viewModel: MockCapsuleViewModel.statusSuccess)
+
+                stackView.addArrangedSubview(liveCapsule)
+                stackView.addArrangedSubview(countCapsule)
+                stackView.addArrangedSubview(statusCapsule)
+
+                containerView.addSubview(stackView)
+                stackView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    stackView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                    stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                    stackView.leadingAnchor.constraint(greaterThanOrEqualTo: containerView.leadingAnchor, constant: 8),
+                    stackView.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -8)
+                ])
+
+                return containerView
+            }
+        ),
+        UIComponent(
             title: "Bordered Text Field",
             description: "Modern text input with floating labels, validation states, and real-time observation",
             viewController: BorderedTextFieldViewController.self,
             previewFactory: {
                 let viewModel = MockBorderedTextFieldViewModel.emailField
                 return BorderedTextFieldView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Match Date Navigation Bar",
+            description: "Navigation bar with match timing information, supporting both pre-match date/time display and live match status with highlighted pills",
+            viewController: MatchDateNavigationBarViewController.self,
+            previewFactory: {
+                let viewModel = MockMatchDateNavigationBarViewModel.liveMock
+                return MatchDateNavigationBarView(viewModel: viewModel)
             }
         ),
         UIComponent(

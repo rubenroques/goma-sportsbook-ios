@@ -39,21 +39,21 @@ class WalletStatusViewController: UIViewController {
     // MARK: - Setup
     private func setupViewModel() {
         viewModel = MockWalletStatusViewModel.defaultMock
-        
-        // Handle button actions
-        viewModel.depositButtonViewModel.onButtonTapped = { [weak self] in
-            self?.showAlert(title: "Deposit", message: "Deposit button tapped! In production, this would navigate to deposit screen.")
-        }
-        
-        viewModel.withdrawButtonViewModel.onButtonTapped = { [weak self] in
-            self?.showAlert(title: "Withdraw", message: "Withdraw button tapped! In production, this would navigate to withdrawal screen.")
-        }
     }
     
     private func setupViews() {
         // Create wallet status view
-        walletStatusView = WalletStatusView(viewModel: viewModel)
+        walletStatusView = WalletStatusView(viewModel: self.viewModel)
         walletStatusView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Set up button tap handlers
+        walletStatusView.onDepositButtonTapped = { [weak self] in
+            self?.showAlert(title: "Deposit", message: "Deposit button tapped! In production, this would navigate to deposit screen.")
+        }
+        
+        walletStatusView.onWithdrawButtonTapped = { [weak self] in
+            self?.showAlert(title: "Withdraw", message: "Withdraw button tapped! In production, this would navigate to withdrawal screen.")
+        }
         
         // Stack view for demo controls
         let controlsStack = UIStackView(arrangedSubviews: [
@@ -110,13 +110,13 @@ class WalletStatusViewController: UIViewController {
         let dialogWalletView = WalletStatusView(viewModel: dialogViewModel)
         dialogWalletView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Configure dialog actions
-        dialogViewModel.depositButtonViewModel.onButtonTapped = { [weak self] in
+        // Configure dialog button tap handlers
+        dialogWalletView.onDepositButtonTapped = { [weak self] in
             self?.dismissDialog()
             self?.showAlert(title: "Dialog Action", message: "Deposit from dialog!")
         }
         
-        dialogViewModel.withdrawButtonViewModel.onButtonTapped = { [weak self] in
+        dialogWalletView.onWithdrawButtonTapped = { [weak self] in
             self?.dismissDialog()
             self?.showAlert(title: "Dialog Action", message: "Withdraw from dialog!")
         }

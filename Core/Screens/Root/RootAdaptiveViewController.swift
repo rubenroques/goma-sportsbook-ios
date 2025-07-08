@@ -357,7 +357,6 @@ class RootAdaptiveViewController: UIViewController {
         }
         
         widgetToolBarView.onWidgetSelected = { [weak self] widgetId in
-            print("WIDGET ID: \(widgetId)")
             if widgetId == "loginButton" {
                 self?.openPhoneLogin()
             }
@@ -367,7 +366,6 @@ class RootAdaptiveViewController: UIViewController {
         }
         
         widgetToolBarView.onBalanceTapped = { [weak self] widgetId in
-            print("BALANCE TAPPED: \(widgetId)")
             if widgetId == "wallet" {
                 // Add haptic feedback for better UX
                 let impactFeedback = UIImpactFeedbackGenerator(style: .light)

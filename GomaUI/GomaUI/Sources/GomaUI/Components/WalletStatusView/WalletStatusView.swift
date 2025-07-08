@@ -30,6 +30,19 @@ final public class WalletStatusView: UIView {
     private var depositButton: ButtonView
     private var withdrawButton: ButtonView
     
+    // MARK: - Public Properties
+    public var onDepositButtonTapped: (() -> Void)? {
+        didSet {
+            depositButton.onButtonTapped = onDepositButtonTapped ?? {}
+        }
+    }
+    
+    public var onWithdrawButtonTapped: (() -> Void)? {
+        didSet {
+            withdrawButton.onButtonTapped = onWithdrawButtonTapped ?? {}
+        }
+    }
+    
     // MARK: - Initialization
     public init(viewModel: WalletStatusViewModelProtocol) {
         self.viewModel = viewModel
