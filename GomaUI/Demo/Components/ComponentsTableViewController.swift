@@ -230,6 +230,15 @@ class ComponentsTableViewController: UITableViewController {
             }
         ),
         UIComponent(
+            title: "Match Header Compact",
+            description: "Compact header displaying match teams, competition breadcrumb, and optional statistics button with tappable elements",
+            viewController: MatchHeaderCompactViewController.self,
+            previewFactory: {
+                let viewModel = MockMatchHeaderCompactViewModel.default
+                return MatchHeaderCompactView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
             title: "Market Group Selector Tab",
             description: "Horizontal scrollable tab bar for betting market groups with dynamic content and selection coordination",
             viewController: MarketGroupSelectorTabViewController.self,
