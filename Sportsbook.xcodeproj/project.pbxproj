@@ -5378,6 +5378,16 @@
 		65ABC48C2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
 		65ABC48D2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
 		65ABC48E2DD4D03A0043051C /* WinBoostInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */; };
+		65EF4BE82E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BE92E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BEA2E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BEB2E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BEC2E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BED2E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BEE2E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BEF2E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BF02E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
+		65EF4BF12E1C14FA004CE196 /* JonumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */; };
 		65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884172C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
@@ -9787,6 +9797,7 @@
 		65A4BA072C09E54700279143 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
 		65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoActionDialogView.swift; sourceTree = "<group>"; };
 		65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinBoostInfoView.swift; sourceTree = "<group>"; };
+		65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JonumFeature.swift; sourceTree = "<group>"; };
 		65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		65F8841D2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetitionDetailRootViewController.swift; sourceTree = "<group>"; };
 		65F884272C1C43D300A56983 /* BannerTournamentTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTournamentTableViewHeader.swift; sourceTree = "<group>"; };
@@ -12249,6 +12260,7 @@
 				A9059F192ABB5B1300796583 /* DocumentLevelStatus.swift */,
 				658A4CB52B9F6C4800F73772 /* Referrals.swift */,
 				65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */,
+				65EF4BE72E1C14FA004CE196 /* JonumFeature.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -17246,6 +17258,7 @@
 				450B79D928F58574009229E3 /* ShareTicketFriendGroupViewController.swift in Sources */,
 				450B79DA28F58574009229E3 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				450B79DB28F58574009229E3 /* FlipNumberView.swift in Sources */,
+				65EF4BEF2E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				450B79DC28F58574009229E3 /* RankingsListViewModel.swift in Sources */,
 				A9958C6729703184001474E2 /* UploadDocumentsViewController.swift in Sources */,
 				A996B3F429893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
@@ -18116,6 +18129,7 @@
 				4568B9712858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				A98708B628D3455300F27348 /* RankingsListViewModel.swift in Sources */,
 				65238E062C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
+				65EF4BF02E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				457CBB2D282D27D000ED0F00 /* TabularBarDataSource.swift in Sources */,
 				457CBB2E282D27D000ED0F00 /* SportSectionHeaderView.swift in Sources */,
 				457CBB2F282D27D000ED0F00 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -19040,6 +19054,7 @@
 				457CBE45282D2CD100ED0F00 /* WithdrawResponse.swift in Sources */,
 				457CBE46282D2CD100ED0F00 /* NavigationCardView.swift in Sources */,
 				457CBE47282D2CD100ED0F00 /* BonusViewModel.swift in Sources */,
+				65EF4BF12E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				457CBE49282D2CD100ED0F00 /* SettingsRowView.swift in Sources */,
 				A9DF8E4B28E6F6720083BF56 /* UserNotificationTableViewCell.swift in Sources */,
 				457CBE4A282D2CD100ED0F00 /* TitleTableViewHeader.swift in Sources */,
@@ -19594,6 +19609,7 @@
 				A9C1C0A12874404C00E9D6AC /* ShareTicketFriendGroupViewController.swift in Sources */,
 				4589C8AF282024E400243547 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				4568B96F2858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
+				65EF4BEE2E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				A98708B428D3455300F27348 /* RankingsListViewModel.swift in Sources */,
 				A9958C6629703184001474E2 /* UploadDocumentsViewController.swift in Sources */,
 				A996B3F329893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
@@ -20334,6 +20350,7 @@
 				45A331F6298976BA008181E9 /* PreviewChatTableViewCell.swift in Sources */,
 				45A331F7298976BA008181E9 /* ShareTicketFriendGroupViewController.swift in Sources */,
 				45A331F8298976BA008181E9 /* FavoriteCompetitionsDataSource.swift in Sources */,
+				65EF4BEB2E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				45A331F9298976BA008181E9 /* FlipNumberView.swift in Sources */,
 				45A331FA298976BA008181E9 /* RankingsListViewModel.swift in Sources */,
 				450FC40E2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */,
@@ -21074,6 +21091,7 @@
 				653A382A2D53920A00B89CDF /* BettingPracticesQuestionnaireViewController.swift in Sources */,
 				45A6BD0528246A7500D9B416 /* TabularBarDataSource.swift in Sources */,
 				4568B9702858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
+				65EF4BEA2E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				A98708B528D3455300F27348 /* RankingsListViewModel.swift in Sources */,
 				45A6BD0628246A7500D9B416 /* SportSectionHeaderView.swift in Sources */,
 				45A6BD0728246A7500D9B416 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -21814,6 +21832,7 @@
 				45F6BCAA2AB3732C00C81DE1 /* NavControllerTrasntitionDismissing.swift in Sources */,
 				45F6BCAB2AB3732C00C81DE1 /* PreviewChatTableViewCell.swift in Sources */,
 				45F6BCAC2AB3732C00C81DE1 /* ShareTicketFriendGroupViewController.swift in Sources */,
+				65EF4BED2E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				45F6BCAD2AB3732C00C81DE1 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				45F6BCAE2AB3732C00C81DE1 /* FlipNumberView.swift in Sources */,
 				45F6BCAF2AB3732C00C81DE1 /* RankingsListViewModel.swift in Sources */,
@@ -22746,6 +22765,7 @@
 				A9C342C128F9A74A0055360B /* Debounce.swift in Sources */,
 				A9C342C228F9A74A0055360B /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				A9C342C428F9A74A0055360B /* ConversationsViewController.swift in Sources */,
+				65EF4BE82E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				A9C342C528F9A74A0055360B /* WithdrawResponse.swift in Sources */,
 				A9C342C628F9A74A0055360B /* NavigationCardView.swift in Sources */,
 				A9C342C728F9A74A0055360B /* BonusViewModel.swift in Sources */,
@@ -23300,6 +23320,7 @@
 				CE12A3212D31347E0022BDF7 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				CE12A3222D31347E0022BDF7 /* FlipNumberView.swift in Sources */,
 				CE12A3232D31347E0022BDF7 /* RankingsListViewModel.swift in Sources */,
+				65EF4BEC2E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				CE12A3242D31347E0022BDF7 /* UploadDocumentsViewController.swift in Sources */,
 				CE12A3252D31347E0022BDF7 /* PaymentsDropIn.swift in Sources */,
 				CE12A3262D31347E0022BDF7 /* StoriesItemCollectionViewCell.swift in Sources */,
@@ -24040,6 +24061,7 @@
 				CEA567EF2D5A58D800696793 /* FlipNumberView.swift in Sources */,
 				CEA567F02D5A58D800696793 /* RankingsListViewModel.swift in Sources */,
 				CEA567F12D5A58D800696793 /* SportSectionHeaderView.swift in Sources */,
+				65EF4BE92E1C14FA004CE196 /* JonumFeature.swift in Sources */,
 				CEA567F22D5A58D800696793 /* MyTicketBetLineViewModel.swift in Sources */,
 				CEA567F32D5A58D800696793 /* CheckboxButton.swift in Sources */,
 				CEA567F42D5A58D800696793 /* SocialViewController.swift in Sources */,

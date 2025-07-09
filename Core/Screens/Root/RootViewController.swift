@@ -84,6 +84,10 @@ class RootViewController: UIViewController {
     @IBOutlet private var cashbackIconImageView: UIImageView!
     @IBOutlet private var cashbackTitleLabel: UILabel!
     
+    @IBOutlet private var jonumButtonBaseView: UIView!
+    @IBOutlet private var jonumIconImageView: UIImageView!
+    @IBOutlet private var jonumTitleLabel: UILabel!
+    
     @IBOutlet private var featuredCompetitionButtonBaseView: UIView!
     @IBOutlet private var featuredCompetitionIconImageView: UIImageView!
     @IBOutlet private var featuredCompetitionTitleLabel: UILabel!
@@ -370,6 +374,7 @@ class RootViewController: UIViewController {
             self.liveTitleLabel,
             self.tipsTitleLabel,
             self.cashbackTitleLabel,
+            self.jonumTitleLabel,
             self.casinoTitleLabel
         ]
         
@@ -677,6 +682,7 @@ class RootViewController: UIViewController {
         self.sportsbookTitleLabel.text = localized("sportsbook")
         self.tipsTitleLabel.text = localized("tips")
         self.cashbackTitleLabel.text = localized("cashback")
+        self.jonumTitleLabel.text = localized("jonum")
         
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
         
@@ -704,6 +710,9 @@ class RootViewController: UIViewController {
         
         let cashbackTapgesture = UITapGestureRecognizer(target: self, action: #selector(didTapCashbackTabItem))
         self.cashbackButtonBaseView.addGestureRecognizer(cashbackTapgesture)
+        
+        let jonumTapgesture = UITapGestureRecognizer(target: self, action: #selector(didTapJonumTabItem))
+        self.jonumButtonBaseView.addGestureRecognizer(jonumTapgesture)
         
         let featuredCompetitionTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapFeaturedCompetitionTabItem))
         self.featuredCompetitionButtonBaseView.addGestureRecognizer(featuredCompetitionTapGesture)
@@ -754,7 +763,6 @@ class RootViewController: UIViewController {
         }
         else {
             self.cashbackButtonBaseView.isHidden = true
-            
         }
         
         if let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition,
@@ -776,6 +784,30 @@ class RootViewController: UIViewController {
         }
         else {
             self.featuredCompetitionButtonBaseView.isHidden = true
+        }
+        
+        if let jonumFeature = Env.businessSettingsSocket.clientSettings.jonum,
+           jonumFeature.isActive {
+            self.jonumButtonBaseView.isHidden = false
+            
+            let jonumIcon = jonumFeature.icon
+            
+            if let url = URL(string: jonumIcon) {
+                
+                self.jonumIconImageView.kf.setImage(with: url)
+            
+            }
+            
+            let jonumName = jonumFeature.name
+            
+            self.jonumTitleLabel.text = jonumName
+            
+            if TargetVariables.hasFeatureEnabled(feature: .cashback) {
+                self.cashbackButtonBaseView.isHidden = true
+            }
+        }
+        else {
+            self.jonumButtonBaseView.isHidden = true
         }
         
         //
@@ -903,6 +935,7 @@ class RootViewController: UIViewController {
         self.liveButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
         self.tipsButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
         self.cashbackButtonBaseView.backgroundColor = .clear
+        self.jonumButtonBaseView.backgroundColor = .clear
         self.featuredCompetitionButtonBaseView.backgroundColor = .clear
 
         self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
@@ -1840,6 +1873,11 @@ extension RootViewController {
         self.selectedTabItem = .cashback
     }
     
+    @objc private func didTapJonumTabItem() {
+        
+        print("JONUM ACTION!")
+    }
+    
     @objc private func didTapFeaturedCompetitionTabItem() {
         self.flipToSportsbookIfNeeded()
 
@@ -1962,6 +2000,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            jonumTitleLabel.textColor = UIColor.App.iconSecondary
+            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .preLive:
@@ -1976,6 +2016,7 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .live:
@@ -1990,6 +2031,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            jonumTitleLabel.textColor = UIColor.App.iconSecondary
+            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .tips:
@@ -2004,6 +2047,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            jonumTitleLabel.textColor = UIColor.App.iconSecondary
+            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .cashback:
@@ -2018,6 +2063,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.highlightPrimary
             cashbackIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            jonumTitleLabel.textColor = UIColor.App.iconSecondary
+            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .featuredCompetition:
@@ -2033,7 +2080,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            
+            jonumTitleLabel.textColor = UIColor.App.iconSecondary
+            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.highlightPrimary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
         case .casino:

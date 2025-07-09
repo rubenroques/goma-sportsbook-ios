@@ -90,6 +90,7 @@ enum SportsbookTargetFeatures: CaseIterable {
     
     case spinWheel
     case popularBetBuilder
+    
 }
 
 enum SportsbookSupportedLanguage: String, CaseIterable {
