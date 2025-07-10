@@ -8,6 +8,7 @@
 import Foundation
 import GomaUI
 import Combine
+import ServicesProvider
 
 class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     let headerViewModel: PromotionalHeaderViewModelProtocol
@@ -22,7 +23,12 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     
     var isRegisterDataComplete: CurrentValueSubject<Bool, Never> = .init(false)
     
-    init() {
+    var registrationConfig: RegistrationConfigContent
+    
+    init(registrationConfig: RegistrationConfigContent) {
+        
+        self.registrationConfig = registrationConfig
+        
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "registerHeader",
                                                                                            icon: "key_icon",
                                                                                            title: "Get in on the action!",
@@ -30,14 +36,22 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         
         highlightedTextViewModel = MockHighlightedTextViewModel(data: HighlightedTextData(fullText: "Sign up securely in just 2 minutes", highlights: []))
         
+        let phoneConfig = registrationConfig.fields.first(where: {
+            $0.name == "Mobile"
+        })
+        
         phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
                                                                                                   placeholder: "New number *",
-                                                                                                  prefix: "+237",
+                                                                                                  prefix: phoneConfig?.defaultValue ?? "",
                                                                                                   isSecure: false,
                                                                                                   visualState: .idle,
                                                                                                   keyboardType: .phonePad,
                                                                                                   textContentType: .telephoneNumber))
 
+        let passwordConfig = registrationConfig.fields.first(where: {
+            $0.name == "Password"
+        })
+        
         passwordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "password",
                                                                                                      placeholder: "Password (4 characters minimum) *",
                                                                                                      isSecure: true,
@@ -51,10 +65,29 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                                                                                                      visualState: .idle,
                                                                                                      keyboardType: .default,
                                                                                                      textContentType: .oneTimeCode))
+        
+        let extractedTermsHTMLData = Env.legislationManager.extractedTermsHTMLData
+
         // swiftlint:disable line_length
-        termsViewModel = MockTermsAcceptanceViewModel(data: TermsAcceptanceData(fullText: "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy",
-                                                                                termsText: "Terms and Conditions",
-                                                                                privacyText: "Privacy Policy"))
+        let fullText = extractedTermsHTMLData?.fullText ?? "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy"
+        
+        let termsData = extractedTermsHTMLData?.extractedLinks.first(where: {
+            $0.type == .terms
+        })
+        
+        let privacyData = extractedTermsHTMLData?.extractedLinks.first(where: {
+            $0.type == .privacyPolicy
+        })
+        
+        let cookiesData = extractedTermsHTMLData?.extractedLinks.first(where: {
+            $0.type == .cookies
+        })
+        
+        // swiftlint:disable line_length
+        termsViewModel = MockTermsAcceptanceViewModel(data: TermsAcceptanceData(fullText: fullText,
+                                                                                termsText: termsData?.text ?? "Terms and Conditions",
+                                                                                privacyText: privacyData?.text ?? "Privacy Policy",
+                                                                                cookiesText: cookiesData?.text))
         
         buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "register",
                                                                      title: "Create Account",
@@ -62,6 +95,7 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                                                                      isEnabled: true))
         
         setupPublishers()
+        
     }
     
     private func setupPublishers() {
@@ -95,14 +129,13 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] phoneText in
                 guard let self = self else { return }
-                let regex = try? NSRegularExpression(pattern: "^0?\\d{9}$")
-                let range = NSRange(location: 0, length: phoneText.utf16.count)
-                let isValid = regex?.firstMatch(in: phoneText, options: [], range: range) != nil
+                
+                let isValidPhoneNumberData = Env.legislationManager.isValidPhoneNumber(phoneText: phoneText)
                 
                 if phoneText.isEmpty {
                     self.phoneFieldViewModel.clearError()
-                } else if !isValid {
-                    self.phoneFieldViewModel.setError("Enter a valid Cameroon number (9 digits, may start with 0)")
+                } else if !isValidPhoneNumberData.0 {
+                    self.phoneFieldViewModel.setError("\(isValidPhoneNumberData.1)")
                 } else {
                     self.phoneFieldViewModel.clearError()
                 }
@@ -113,8 +146,10 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] passwordText in
                 
-                if passwordText.count < 4 && passwordText.isNotEmpty {
-                    self?.passwordFieldViewModel.setError("Password too small")
+                let isValidPasswordData = Env.legislationManager.isValidPassword(passwordText: passwordText)
+                
+                if !isValidPasswordData.0 && passwordText.isNotEmpty {
+                    self?.passwordFieldViewModel.setError("\(isValidPasswordData.1)")
                 }
                 else {
                     self?.passwordFieldViewModel.clearError()
@@ -122,6 +157,6 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
             })
             .store(in: &cancellables)
         
-        
     }
+    
 }

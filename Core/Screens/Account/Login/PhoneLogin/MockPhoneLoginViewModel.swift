@@ -20,6 +20,7 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { isLoadingSubject.eraseToAnyPublisher() }
     
     let loginComplete = PassthroughSubject<Void, Never>()
+    let loginError = PassthroughSubject<String, Never>()
     
     var phoneNumber: String = ""
     var password: String = ""
@@ -82,11 +83,23 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
     func loginUser(phoneNumber: String, password: String) {
         
         isLoadingSubject.send(true)
+        
         // Simulate endpoint delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            self?.isLoadingSubject.send(false)
-            
-            self?.loginComplete.send()
+        if phoneNumber == "123456789" && password == "error" {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                self?.isLoadingSubject.send(false)
+                
+                self?.loginError.send("Incorrect username or password")
+
+            }
         }
+        else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                self?.isLoadingSubject.send(false)
+                
+                self?.loginComplete.send()
+            }
+        }
+        
     }
 }

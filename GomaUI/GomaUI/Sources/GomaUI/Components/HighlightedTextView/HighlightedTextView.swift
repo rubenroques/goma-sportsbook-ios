@@ -68,12 +68,17 @@ public final class HighlightedTextView: UIView {
         // Set text alignment
         textLabel.textAlignment = data.textAlignment
         
+        // Create paragraph style for line height
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4.0
+        
         // Create attributed string
         let attributedString = NSMutableAttributedString(
             string: data.fullText,
             attributes: [
                 .font: StyleProvider.fontWith(type: data.baseFontType, size: data.baseFontSize),
-                .foregroundColor: StyleProvider.Color.textPrimary
+                .foregroundColor: StyleProvider.Color.textPrimary,
+                .paragraphStyle: paragraphStyle
             ]
         )
         

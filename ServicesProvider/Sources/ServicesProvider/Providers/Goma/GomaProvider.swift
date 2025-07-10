@@ -656,6 +656,10 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
             return searchUser
         }).eraseToAnyPublisher()
     }
+    
+    func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+    }
 }
 
 extension GomaProvider: EventsProvider {

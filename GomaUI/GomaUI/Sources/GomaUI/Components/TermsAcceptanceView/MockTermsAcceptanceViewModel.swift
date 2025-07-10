@@ -81,6 +81,20 @@ public final class MockTermsAcceptanceViewModel: TermsAcceptanceViewModelProtoco
             highlights.append(privacyHighlight)
         }
         
+        // Cookies Policy
+        if let cookiesText = data.cookiesText {
+            let cookiesRanges = HighlightedTextView.findRanges(of: cookiesText, in: data.fullText)
+            if !cookiesRanges.isEmpty {
+                let cookiesHighlight = HighlightData(
+                    text: cookiesText,
+                    color: StyleProvider.Color.highlightPrimary,
+                    ranges: cookiesRanges,
+                    type: .link
+                )
+                highlights.append(cookiesHighlight)
+            }
+        }
+        
         let highlightedTextData = HighlightedTextData(
             fullText: data.fullText,
             highlights: highlights,

@@ -20,6 +20,7 @@ protocol PhoneLoginViewModelProtocol {
     var password: String { get }
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var loginComplete: PassthroughSubject<Void, Never> { get }
+    var loginError: PassthroughSubject<String, Never> { get }
 
     func loginUser(phoneNumber: String, password: String)
 }

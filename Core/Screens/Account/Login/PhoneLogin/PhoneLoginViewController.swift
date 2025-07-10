@@ -188,6 +188,31 @@ class PhoneLoginViewController: UIViewController {
             }
             .store(in: &cancellables)
         
+        viewModel.loginError
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] errorMessage in
+                self?.showLoginErrorAlert(errorMessage: errorMessage)
+            })
+            .store(in: &cancellables)
+        
+    }
+    
+    func showLoginErrorAlert(errorMessage: String) {
+        
+        let alert = UIAlertController(
+            title: "Login Error",
+            message: errorMessage,
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(
+            title: localized("ok"),
+            style: .default
+        )
+        
+        alert.addAction(okAction)
+        
+        present(alert, animated: true)
     }
 
     @objc private func didTapCloseButton() {

@@ -144,11 +144,28 @@ class PhoneRegistrationViewController: UIViewController {
         }
         
         termsView.onTermsLinkTapped = { [weak self] in
-            self?.openTermsURL(urlString: "https://www.google.com")
+            if let termsData = Env.legislationManager.extractedTermsHTMLData?.extractedLinks.first(where: {
+                $0.type == .terms
+            }) {
+                self?.openTermsURL(urlString: termsData.url)
+            }
         }
         
         termsView.onPrivacyLinkTapped = { [weak self] in
-            self?.openPrivacyURL(urlString: "https://www.google.com")
+            if let privacyData = Env.legislationManager.extractedTermsHTMLData?.extractedLinks.first(where: {
+                $0.type == .privacyPolicy
+            }) {
+                self?.openTermsURL(urlString: privacyData.url)
+            }
+            
+        }
+        
+        termsView.onCookiesLinkTapped = { [weak self] in
+            if let cookiesData = Env.legislationManager.extractedTermsHTMLData?.extractedLinks.first(where: {
+                $0.type == .cookies
+            }) {
+                self?.openTermsURL(urlString: cookiesData.url)
+            }
         }
     }
     
@@ -166,6 +183,12 @@ class PhoneRegistrationViewController: UIViewController {
     }
     
     private func openPrivacyURL(urlString: String) {
+        if let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    private func openCookiesURL(urlString: String) {
         if let url = URL(string: urlString) {
             UIApplication.shared.open(url)
         }

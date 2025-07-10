@@ -1411,6 +1411,10 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
             }
         }).eraseToAnyPublisher()
     }
+    
+    func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 }
 
 extension SportRadarPrivilegedAccessManager {

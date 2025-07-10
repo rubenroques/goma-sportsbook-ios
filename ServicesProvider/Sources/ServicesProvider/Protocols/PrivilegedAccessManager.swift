@@ -129,6 +129,9 @@ protocol PrivilegedAccessManagerProvider {
     func addUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError>
     func removeUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError>
     func searchUserWithCode(code: String) -> AnyPublisher<SearchUser, ServiceProviderError>
+    
+    // Registration configs
+    func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError>
 }
 
 // MARK: - Domain-Specific Protocols

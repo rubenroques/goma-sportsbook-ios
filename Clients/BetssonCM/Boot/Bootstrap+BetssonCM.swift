@@ -94,6 +94,7 @@ class Bootstrap {
             .sink { _ in
                 environment.sportsStore.requestInitialSportsData()
                 environment.filterStorage.getCurrentCompetitions()
+                environment.legislationManager.getRegistrationConfig()
             }
             .store(in: &self.cancellables)
 
