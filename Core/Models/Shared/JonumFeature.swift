@@ -13,12 +13,14 @@ struct JonumFeature: Codable {
     var url: String
     var icon: String
     var name: String
+    var banner: String
     
     enum CodingKeys: String, CodingKey {
         case isActive = "is_active"
         case url = "url"
         case icon = "icon"
         case name = "name"
+        case banner = "banner"
     }
     
     init(from decoder: Decoder) throws {
@@ -33,5 +35,6 @@ struct JonumFeature: Codable {
         
         self.name = try container.decode(String.self, forKey: .name)
 
+        self.banner = try container.decode(String.self, forKey: .banner)
     }
 }

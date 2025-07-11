@@ -22,6 +22,7 @@ class ClientManagedHomeViewTemplateDataSource {
         .makeOwnBetCallToAction, // MakeYourOwnBet
         .highlightedMatches, // Highlights image cards
         .highlightedMarketProChoices, // Pro Choices Markets
+        .jonum, // JONUM Feature
         .highlightedBoostedOddsMatches, // Boosted Odds
         .topCompetitionsShortcuts, // TopCompetitionsMobile
         .featuredTips, // SuggestedBets
@@ -742,6 +743,12 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
                let matchesForSport = self.promotedSportsMatches[promotedSportId] {
                 return matchesForSport.count
+            }
+            return 0
+        case .jonum:
+            if let jonumFeature = Env.businessSettingsSocket.clientSettings.jonum,
+               jonumFeature.isActive {
+                return 1
             }
             return 0
         default:

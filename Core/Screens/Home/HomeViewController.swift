@@ -92,6 +92,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(TopCompetitionsLineTableViewCell.self, forCellReuseIdentifier: TopCompetitionsLineTableViewCell.identifier)
         self.tableView.register(PromotedCompetitionTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTableViewCell.identifier)
         self.tableView.register(HeroCardTableViewCell.self, forCellReuseIdentifier: HeroCardTableViewCell.identifier)
+        self.tableView.register(GamingBannerTableViewCell.self, forCellReuseIdentifier: GamingBannerTableViewCell.identifier)
 
         self.tableView.register(MarketWidgetContainerTableViewCell.self, forCellReuseIdentifier: MarketWidgetContainerTableViewCell.identifier)
 
@@ -705,6 +706,25 @@ class HomeViewController: UIViewController {
             self.present(promotionsWebViewController, animated: true)
         }
     }
+    
+    private func openJonum() {
+        let appScheme = "jonum://"
+        
+        if let appURL = URL(string: appScheme),
+           UIApplication.shared.canOpenURL(appURL) {
+            
+            UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+            
+        }
+        else {
+            
+            if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url,
+               let url = URL(string: jonumUrlString) {
+                
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+    }
 
     private func showBetSucess(bettingTicket: BettingTicket, betPlacedDetails: [BetPlacedDetails]) {
 
@@ -1252,6 +1272,22 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
             return cell
+        case .jonum:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: GamingBannerTableViewCell.identifier) as? GamingBannerTableViewCell
+            else {
+                return UITableViewCell()
+            }
+            
+            if let banner = Env.businessSettingsSocket.clientSettings.jonum?.banner {
+                cell.configure(bannerString: banner)
+            }
+            
+            cell.didTapBannerAction = { [weak self] in
+                self?.openJonum()
+            }
+            
+            return cell
         }
 
     }
@@ -1367,6 +1403,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableView.automaticDimension
         case .videoNewsLine:
             return 258
+        case .jonum:
+            return UITableView.automaticDimension
         }
 
     }
@@ -1456,6 +1494,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 679
         case .videoNewsLine:
             return 258
+        case .jonum:
+            return 110
         }
     }
 
@@ -1614,6 +1654,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .heroCard:
                 break
             case .videoNewsLine:
+                break
+            case .jonum:
                 break
             }
         }

@@ -47,6 +47,8 @@ class HomeViewModel {
 
         case highlightedMarketProChoices
         case videoNewsLine
+        
+        case jonum
 
         var identifier: String {
             switch self {
@@ -77,6 +79,8 @@ class HomeViewModel {
             case .highlightedMarketProChoices: return "highlightedMarketProChoices"
 
             case .videoNewsLine: return "videoNewsLine"
+                
+            case .jonum: return "jonum"
             }
         }
     }

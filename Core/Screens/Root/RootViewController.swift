@@ -1874,8 +1874,24 @@ extension RootViewController {
     }
     
     @objc private func didTapJonumTabItem() {
+                
+        let appScheme = "jonum://"
         
-        print("JONUM ACTION!")
+        if let appURL = URL(string: appScheme),
+           UIApplication.shared.canOpenURL(appURL) {
+            
+            UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+            
+        }
+        else {
+            
+            if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url,
+               let url = URL(string: jonumUrlString) {
+                
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+        
     }
     
     @objc private func didTapFeaturedCompetitionTabItem() {
@@ -2001,7 +2017,6 @@ extension RootViewController {
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             jonumTitleLabel.textColor = UIColor.App.iconSecondary
-            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .preLive:
@@ -2016,7 +2031,6 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .live:
@@ -2032,7 +2046,6 @@ extension RootViewController {
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             jonumTitleLabel.textColor = UIColor.App.iconSecondary
-            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .tips:
@@ -2048,7 +2061,6 @@ extension RootViewController {
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             jonumTitleLabel.textColor = UIColor.App.iconSecondary
-            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .cashback:
@@ -2064,7 +2076,6 @@ extension RootViewController {
             cashbackTitleLabel.textColor = UIColor.App.highlightPrimary
             cashbackIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             jonumTitleLabel.textColor = UIColor.App.iconSecondary
-            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .featuredCompetition:
@@ -2081,7 +2092,6 @@ extension RootViewController {
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             jonumTitleLabel.textColor = UIColor.App.iconSecondary
-            jonumIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             featuredCompetitionTitleLabel.textColor = UIColor.App.highlightPrimary
 //            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
         case .casino:

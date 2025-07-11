@@ -5161,6 +5161,16 @@
 		45FF105729D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105829D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105929D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		65094B622E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B632E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B642E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B652E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B662E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B672E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B682E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B692E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B6A2E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
+		65094B6B2E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */; };
 		65238E002C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
 		65238E012C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
 		65238E022C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
@@ -9768,6 +9778,7 @@
 		45F805952A05385B005296E0 /* dots-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dots-loading.json"; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
+		65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamingBannerTableViewCell.swift; sourceTree = "<group>"; };
 		65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetition.swift; sourceTree = "<group>"; };
 		6531BB8D2C0A295B002C696D /* replay_coin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_coin.json; sourceTree = "<group>"; };
 		653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TallProgressBarView.swift; sourceTree = "<group>"; };
@@ -12552,6 +12563,7 @@
 				6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */,
 				6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */,
 				6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */,
+				65094B612E21543E008CCE76 /* GamingBannerTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -17245,6 +17257,7 @@
 				450B79D228F58574009229E3 /* EnvironmentType.swift in Sources */,
 				4521F0882CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift in Sources */,
 				459EEBDC2BEE309C001B2FD6 /* MatchLineTableCellViewModel.swift in Sources */,
+				65094B632E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				452B9D202C1890160032363F /* SystemBettingTicketDataSource.swift in Sources */,
 				450B79D328F58574009229E3 /* CountrySelectorTableViewCell.swift in Sources */,
 				450B79D428F58574009229E3 /* FeaturedTipView.swift in Sources */,
@@ -18116,6 +18129,7 @@
 				457CBB26282D27D000ED0F00 /* HistoryRootViewController.swift in Sources */,
 				457CBB27282D27D000ED0F00 /* TransactionHistory.swift in Sources */,
 				452B9D1B2C188FEF0032363F /* MultipleBettingTicketDataSource.swift in Sources */,
+				65094B672E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				457CBB28282D27D000ED0F00 /* EnvironmentType.swift in Sources */,
 				A9B946BA28BFAA3E0091296E /* FeaturedTipView.swift in Sources */,
 				653A37CC2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
@@ -18585,6 +18599,7 @@
 				457CBD1D282D2CD100ED0F00 /* URLSchemaManager.swift in Sources */,
 				457CBD1E282D2CD100ED0F00 /* TransactionsHistoryViewModel.swift in Sources */,
 				457CBD1F282D2CD100ED0F00 /* NetworkError.swift in Sources */,
+				65094B692E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				457CBD21282D2CD100ED0F00 /* FullRegisterAddressCountryViewController.swift in Sources */,
 				A9C04C392A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
 				457CBD23282D2CD100ED0F00 /* TabularViewController.swift in Sources */,
@@ -19596,6 +19611,7 @@
 				4589C8AB282024E400243547 /* EnvironmentType.swift in Sources */,
 				4521F0872CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift in Sources */,
 				459EEBDD2BEE309C001B2FD6 /* MatchLineTableCellViewModel.swift in Sources */,
+				65094B662E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				452B9D212C1890160032363F /* SystemBettingTicketDataSource.swift in Sources */,
 				4589C8AC282024E400243547 /* CountrySelectorTableViewCell.swift in Sources */,
 				A9B946B828BFAA3E0091296E /* FeaturedTipView.swift in Sources */,
@@ -20337,6 +20353,7 @@
 				45A331EF298976BA008181E9 /* TransactionHistory.swift in Sources */,
 				4521F0892CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift in Sources */,
 				459EEBDA2BEE309C001B2FD6 /* MatchLineTableCellViewModel.swift in Sources */,
+				65094B652E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				452B9D1E2C1890160032363F /* SystemBettingTicketDataSource.swift in Sources */,
 				45A331F0298976BA008181E9 /* EnvironmentType.swift in Sources */,
 				45A331F1298976BA008181E9 /* CountrySelectorTableViewCell.swift in Sources */,
@@ -21078,6 +21095,7 @@
 				CE6258102D5A19CA009C11D2 /* StoriesFullScreenViewController.swift in Sources */,
 				CE6258112D5A19CA009C11D2 /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */,
 				CE6258122D5A19CA009C11D2 /* StoriesLineTableViewCell.swift in Sources */,
+				65094B6A2E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				45A6BD0128246A7500D9B416 /* CountrySelectorTableViewCell.swift in Sources */,
 				4521F08A2CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift in Sources */,
 				A9B946B928BFAA3E0091296E /* FeaturedTipView.swift in Sources */,
@@ -21819,6 +21837,7 @@
 				45F6BCA32AB3732C00C81DE1 /* HistoryRootViewController.swift in Sources */,
 				4521F0842CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift in Sources */,
 				459EEBDB2BEE309C001B2FD6 /* MatchLineTableCellViewModel.swift in Sources */,
+				65094B6B2E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				452B9D1F2C1890160032363F /* SystemBettingTicketDataSource.swift in Sources */,
 				45F6BCA42AB3732C00C81DE1 /* TransactionHistory.swift in Sources */,
 				45F6BCA52AB3732C00C81DE1 /* EnvironmentType.swift in Sources */,
@@ -22296,6 +22315,7 @@
 				A907B6AF29D10C7500AC4A17 /* PromotionsWebViewController.swift in Sources */,
 				A9C3414428F9A74A0055360B /* NetworkManager.swift in Sources */,
 				A9C3414528F9A74A0055360B /* SystemBetResponse.swift in Sources */,
+				65094B682E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				A9C3414628F9A74A0055360B /* Array+Extensions.swift in Sources */,
 				A9C3414728F9A74A0055360B /* MatchDetailsViewModel.swift in Sources */,
 				A9C3414828F9A74A0055360B /* FilterHistoryViewController.swift in Sources */,
@@ -23307,6 +23327,7 @@
 				CE12A3162D31347E0022BDF7 /* MarketWidgetContainerTableViewModel.swift in Sources */,
 				CE12A3172D31347E0022BDF7 /* MatchLineTableCellViewModel.swift in Sources */,
 				CE12A3182D31347E0022BDF7 /* SystemBettingTicketDataSource.swift in Sources */,
+				65094B622E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				CE12A3192D31347E0022BDF7 /* CountrySelectorTableViewCell.swift in Sources */,
 				CE12A31A2D31347E0022BDF7 /* FeaturedTipView.swift in Sources */,
 				CE12A31B2D31347E0022BDF7 /* BannerTopCollectionViewCell.swift in Sources */,
@@ -24048,6 +24069,7 @@
 				CEA567E22D5A58D800696793 /* StoriesLineTableViewCell.swift in Sources */,
 				CEA567E32D5A58D800696793 /* CountrySelectorTableViewCell.swift in Sources */,
 				CEA567E42D5A58D800696793 /* MarketWidgetContainerTableViewModel.swift in Sources */,
+				65094B642E21543E008CCE76 /* GamingBannerTableViewCell.swift in Sources */,
 				CEA567E52D5A58D800696793 /* FeaturedTipView.swift in Sources */,
 				CEA567E62D5A58D800696793 /* BannerTopCollectionViewCell.swift in Sources */,
 				CEA567E72D5A58D800696793 /* SingleBettingTicketTableViewCell.swift in Sources */,
