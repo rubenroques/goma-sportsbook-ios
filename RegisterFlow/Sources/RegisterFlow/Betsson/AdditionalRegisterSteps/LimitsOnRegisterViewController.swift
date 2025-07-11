@@ -355,11 +355,11 @@ public class LimitsOnRegisterViewController: UIViewController {
         }
         
         if !self.bettingLimitHeaderTextFieldView.isDisabled {
-            self.bettingLimitHeaderTextFieldView.setText("500")
+            self.bettingLimitHeaderTextFieldView.setText("750")
         }
         
         if !self.autoPayoutHeaderTextFieldView.isDisabled {
-            self.autoPayoutHeaderTextFieldView.setText("251")
+            self.autoPayoutHeaderTextFieldView.setText("501")
         }
     }
 
@@ -371,7 +371,7 @@ public class LimitsOnRegisterViewController: UIViewController {
         }
         
         if !self.bettingLimitHeaderTextFieldView.isDisabled {
-            self.bettingLimitHeaderTextFieldView.setText("1000")
+            self.bettingLimitHeaderTextFieldView.setText("1250")
         }
         
         if !self.autoPayoutHeaderTextFieldView.isDisabled {
@@ -383,15 +383,15 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.selectedProfile = .advanced
         
         if !self.depositLimitHeaderTextFieldView.isDisabled {
-            self.depositLimitHeaderTextFieldView.setText("5000")
+            self.depositLimitHeaderTextFieldView.setText("4000")
         }
         
         if !self.bettingLimitHeaderTextFieldView.isDisabled {
-            self.bettingLimitHeaderTextFieldView.setText("10000")
+            self.bettingLimitHeaderTextFieldView.setText("8000")
         }
         
         if !self.autoPayoutHeaderTextFieldView.isDisabled {
-            self.autoPayoutHeaderTextFieldView.setText("10001")
+            self.autoPayoutHeaderTextFieldView.setText("10000")
         }
     }
     
