@@ -1304,13 +1304,12 @@ extension RootAdaptiveViewController: RootActionable {
     }
     
     func openPhoneRegistration() {
-        if let registrationConfig = Env.legislationManager.registrationConfig {
-            let phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel(registrationConfig: registrationConfig)
-            
-            let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
-            
-            present(phoneRegistrationViewController, animated: true)
-        }
+        
+        let phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
+        
+        let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
+        
+        present(phoneRegistrationViewController, animated: true)
         
     }
     

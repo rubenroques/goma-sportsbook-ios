@@ -77,8 +77,6 @@ class Environment {
     
     let filterStorage: FilterStorage = FilterStorage()
     
-    var legislationManager: LegislationManager = LegislationManager()
-
     init() {
 
     }

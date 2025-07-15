@@ -70,4 +70,9 @@ extension EveryMatrixModelMapper {
             errorKey: internalValidation.errorKey
         )
     }
+    
+    static func singUpResponse(fromInternalRegisterResponse internalRegisterResponse: EveryMatrix.RegisterResponse) -> SignUpResponse {
+        
+        return SignUpResponse(successful: internalRegisterResponse.registrationId.isEmpty ? false : true)
+    }
 }

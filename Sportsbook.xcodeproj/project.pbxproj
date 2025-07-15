@@ -2457,14 +2457,6 @@
 		65CD19E22D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
 		65CD19E52D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
 		65CD19E82D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
-		65EF4C6D2E1FCA4F004CE196 /* LegislationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */; };
-		65EF4C6E2E1FCA4F004CE196 /* LegislationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */; };
-		65EF4C6F2E1FCA4F004CE196 /* LegislationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */; };
-		65EF4C702E1FCA4F004CE196 /* LegislationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */; };
-		65EF4C712E1FCA4F004CE196 /* LegislationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */; };
-		65EF4C722E1FCA4F004CE196 /* LegislationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */; };
-		65EF4C732E1FCA4F004CE196 /* LegislationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */; };
-		65EF4C742E1FCA4F004CE196 /* LegislationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */; };
 		65EF4C762E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
 		65EF4C772E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
 		65EF4C782E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
@@ -9516,7 +9508,6 @@
 		65CD19C52D94707800CA23E0 /* SocialMyTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMyTicketTableViewCell.swift; sourceTree = "<group>"; };
 		65CD19D12D94738900CA23E0 /* SettingsTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTitleView.swift; sourceTree = "<group>"; };
 		65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipViewModel.swift; sourceTree = "<group>"; };
-		65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegislationManager.swift; sourceTree = "<group>"; };
 		65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationConfig.swift; sourceTree = "<group>"; };
 		65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+RegistrationConfig.swift"; sourceTree = "<group>"; };
 		65EFF2F12D80672C00F1FC57 /* PromotionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionsViewController.swift; sourceTree = "<group>"; };
@@ -11152,7 +11143,6 @@
 				45CE4DD62B04E357005C2414 /* SecundaryMarketsService.swift */,
 				CEA6675C2D84BFAD00C74895 /* LinksProvider */,
 				6510AE482E00712D0010B8F0 /* FiltersStorage.swift */,
-				65EF4C6C2E1FCA4F004CE196 /* LegislationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -17595,7 +17585,6 @@
 				450B79D928F58574009229E3 /* ShareTicketFriendGroupViewController.swift in Sources */,
 				450B79DB28F58574009229E3 /* FlipNumberView.swift in Sources */,
 				450B79DC28F58574009229E3 /* RankingsListViewModel.swift in Sources */,
-				65EF4C732E1FCA4F004CE196 /* LegislationManager.swift in Sources */,
 				A9958C6729703184001474E2 /* UploadDocumentsViewController.swift in Sources */,
 				A996B3F429893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
 				450FC40F2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */,
@@ -18526,7 +18515,6 @@
 				CE16F28B2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				653A382F2D53920A00B89CDF /* BettingPracticesQuestionnaireViewController.swift in Sources */,
 				65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */,
-				65EF4C722E1FCA4F004CE196 /* LegislationManager.swift in Sources */,
 				45A331F7298976BA008181E9 /* ShareTicketFriendGroupViewController.swift in Sources */,
 				45A331F9298976BA008181E9 /* FlipNumberView.swift in Sources */,
 				45A331FA298976BA008181E9 /* RankingsListViewModel.swift in Sources */,
@@ -19427,7 +19415,6 @@
 				CE16F28F2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				653A38312D53920A00B89CDF /* BettingPracticesQuestionnaireViewController.swift in Sources */,
 				65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */,
-				65EF4C702E1FCA4F004CE196 /* LegislationManager.swift in Sources */,
 				45F6BCAA2AB3732C00C81DE1 /* NavControllerTrasntitionDismissing.swift in Sources */,
 				45F6BCAC2AB3732C00C81DE1 /* ShareTicketFriendGroupViewController.swift in Sources */,
 				45F6BCAE2AB3732C00C81DE1 /* FlipNumberView.swift in Sources */,
@@ -20244,7 +20231,6 @@
 				CE12A2BD2D31347E0022BDF7 /* BoostedArrowView.swift in Sources */,
 				CEA6674D2D84A76100C74895 /* URLPath.swift in Sources */,
 				CE12A2BE2D31347E0022BDF7 /* FeaturedTipDetailsViewModel.swift in Sources */,
-				65EF4C6F2E1FCA4F004CE196 /* LegislationManager.swift in Sources */,
 				CE12A2C02D31347E0022BDF7 /* AppearanceMode.swift in Sources */,
 				CE12A2C12D31347E0022BDF7 /* BetType.swift in Sources */,
 				CE12A2C22D31347E0022BDF7 /* UserActionView.swift in Sources */,
@@ -21238,7 +21224,6 @@
 				CE8F25292DD371350071238E /* PromotedCompetitionTableViewCell.swift in Sources */,
 				CE8F252A2DD371350071238E /* ShareTicketFriendGroupViewController.swift in Sources */,
 				CE8F252B2DD371350071238E /* FlipNumberView.swift in Sources */,
-				65EF4C742E1FCA4F004CE196 /* LegislationManager.swift in Sources */,
 				CE8F252C2DD371350071238E /* RankingsListViewModel.swift in Sources */,
 				CE8F252D2DD371350071238E /* StoriesItemCollectionViewCell.swift in Sources */,
 				CE8F252E2DD371350071238E /* UploadDocumentsViewController.swift in Sources */,
@@ -22139,7 +22124,6 @@
 				CEB3A29A2DD379800024043B /* PromotedCompetitionTableViewCell.swift in Sources */,
 				CEB3A29B2DD379800024043B /* ShareTicketFriendGroupViewController.swift in Sources */,
 				CEB3A29C2DD379800024043B /* FlipNumberView.swift in Sources */,
-				65EF4C6D2E1FCA4F004CE196 /* LegislationManager.swift in Sources */,
 				CEB3A29D2DD379800024043B /* RankingsListViewModel.swift in Sources */,
 				CEB3A29E2DD379800024043B /* StoriesItemCollectionViewCell.swift in Sources */,
 				CEB3A29F2DD379800024043B /* UploadDocumentsViewController.swift in Sources */,
@@ -23040,7 +23024,6 @@
 				CEB3A7232DD379890024043B /* PromotedCompetitionTableViewCell.swift in Sources */,
 				CEB3A7242DD379890024043B /* ShareTicketFriendGroupViewController.swift in Sources */,
 				CEB3A7252DD379890024043B /* FlipNumberView.swift in Sources */,
-				65EF4C6E2E1FCA4F004CE196 /* LegislationManager.swift in Sources */,
 				CEB3A7262DD379890024043B /* RankingsListViewModel.swift in Sources */,
 				CEB3A7272DD379890024043B /* StoriesItemCollectionViewCell.swift in Sources */,
 				CEB3A7282DD379890024043B /* UploadDocumentsViewController.swift in Sources */,
@@ -23375,7 +23358,6 @@
 				CEF1938F2DA834E900C81F12 /* HeaderDropDownSelectionView.swift in Sources */,
 				CEF193902DA834E900C81F12 /* TabularViewDataSource.swift in Sources */,
 				CEF193912DA834E900C81F12 /* SearchSportHeaderView.swift in Sources */,
-				65EF4C712E1FCA4F004CE196 /* LegislationManager.swift in Sources */,
 				CEF193922DA834E900C81F12 /* SwiftyJSON.swift in Sources */,
 				CEF193932DA834E900C81F12 /* NSObject+Shift.swift in Sources */,
 				CEF193942DA834E900C81F12 /* IdentificationDocsViewController.swift in Sources */,

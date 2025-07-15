@@ -258,6 +258,8 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                 return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             })
             .eraseToAnyPublisher()
+        case .phone(_):
+            return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         }
     }
 

@@ -10,7 +10,7 @@ import Foundation
 enum EveryMatrixPlayerAPI {
     case login(username: String, password: String)
     case getRegistrationConfig
-
+    case register(phoneText: String, password: String, registrationId: String)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -27,6 +27,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/login/player"
         case .getRegistrationConfig:
             return "/v1/player/legislation/registration/config"
+        case .register:
+            return "/v1/player/legislation/registration/step"
         }
     }
     
@@ -35,7 +37,7 @@ extension EveryMatrixPlayerAPI: Endpoint {
     }
     
     var headers: HTTP.Headers? {
-        var headers = EveryMatrixConfiguration.default.defaultHeaders
+        let headers = EveryMatrixConfiguration.default.defaultHeaders
         
         return headers
     }
@@ -50,12 +52,29 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return .post
         case .getRegistrationConfig:
             return .get
+        case .register:
+            return .post
         }
     }
     
     var body: Data? {
         switch self {
+        case .register(let phoneText, let password, let registrationId):
+            let body = """
+                       {
+                        "Step": "Step1",
+                        "RegistrationId": "\(registrationId)",
+                        "RegisterUserDto": {
+                            "Mobile": "\(phoneText)",
+                            "Password": "\(password)",
+                            "TermsAndConditions": true
+                        }
+                       }
+                       """
             
+            let data = body.data(using: String.Encoding.utf8)!
+            
+            return data
         default:
             return nil
         }

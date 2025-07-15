@@ -23,7 +23,7 @@ public enum EveryMatrixPlayerAPIEnvironment {
 }
 
 /// Configuration for EveryMatrix API client
-public final class EveryMatrixConfiguration: @unchecked Sendable {
+public final class EveryMatrixConfiguration {
     /// Current environment
     public let environment: EveryMatrixPlayerAPIEnvironment
 

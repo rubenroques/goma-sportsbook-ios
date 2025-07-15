@@ -76,7 +76,25 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     }
     
     func signUp(with formType: SignUpFormType) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        
+        switch formType {
+        case .phone(let phoneSignUpForm):
+            let endpoint = EveryMatrixPlayerAPI.register(phoneText: phoneSignUpForm.phone, password: phoneSignUpForm.password, registrationId: phoneSignUpForm.registrationId)
+            let publisher: AnyPublisher<EveryMatrix.RegisterResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+            return publisher.flatMap({ registerResponse -> AnyPublisher<SignUpResponse, ServiceProviderError> in
+                
+                let mappedRegisterResponse = EveryMatrixModelMapper.singUpResponse(fromInternalRegisterResponse: registerResponse)
+                
+                return Just(mappedRegisterResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                
+            })
+            .eraseToAnyPublisher()
+        default:
+            return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+
+        }
+        
     }
     
     func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {

@@ -34,13 +34,47 @@ class PhoneRegistrationViewController: UIViewController {
         button.setTitleColor(StyleProvider.Color.highlightTertiary, for: .normal)
         return button
     }()
+    
     private let headerView: PromotionalHeaderView
     private let highlightedTextView: HighlightedTextView
-    private let phoneField: BorderedTextFieldView
-    private let passwordField: BorderedTextFieldView
-    private let referralField: BorderedTextFieldView
-    private let termsView: TermsAcceptanceView
+    
+    private let componentsBaseView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let componentsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 30
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private var phoneField: BorderedTextFieldView? = nil
+    private var passwordField: BorderedTextFieldView? = nil
+    private var referralField: BorderedTextFieldView? = nil
+    private var termsView: TermsAcceptanceView? = nil
     private let createAccountButton: ButtonView
+    
+    private let loadingView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        view.isHidden = true
+
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.startAnimating()
+        view.addSubview(indicator)
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        return view
+    }()
     
     private let viewModel: PhoneRegistrationViewModelProtocol
 
@@ -50,10 +84,10 @@ class PhoneRegistrationViewController: UIViewController {
         self.viewModel = viewModel
         self.headerView = PromotionalHeaderView(viewModel: viewModel.headerViewModel)
         self.highlightedTextView = HighlightedTextView(viewModel: viewModel.highlightedTextViewModel)
-        self.phoneField = BorderedTextFieldView(viewModel: viewModel.phoneFieldViewModel)
-        self.passwordField = BorderedTextFieldView(viewModel: viewModel.passwordFieldViewModel)
-        self.referralField = BorderedTextFieldView(viewModel: viewModel.referralFieldViewModel)
-        self.termsView = TermsAcceptanceView(viewModel: viewModel.termsViewModel)
+//        self.phoneField = BorderedTextFieldView(viewModel: viewModel.phoneFieldViewModel)
+//        self.passwordField = BorderedTextFieldView(viewModel: viewModel.passwordFieldViewModel)
+//        self.referralField = BorderedTextFieldView(viewModel: viewModel.referralFieldViewModel)
+//        self.termsView = TermsAcceptanceView(viewModel: viewModel.termsViewModel)
         self.createAccountButton = ButtonView(viewModel: viewModel.buttonViewModel)
         super.init(nibName: nil, bundle: nil)
     }
@@ -66,10 +100,18 @@ class PhoneRegistrationViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = StyleProvider.Color.backgroundTertiary
         setupLayout()
-        setupBindings()
         
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
         
+        viewModel.isLoadingConfigPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoadingConfig in
+                
+                if !isLoadingConfig {
+                    self?.setupComponentsLayout()
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func setupLayout() {
@@ -81,24 +123,13 @@ class PhoneRegistrationViewController: UIViewController {
         view.addSubview(headerView)
         highlightedTextView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(highlightedTextView)
-        
-        let stackView = UIStackView(arrangedSubviews: [
-            phoneField,
-            passwordField,
-            referralField,
-        ])
-        stackView.axis = .vertical
-        stackView.spacing = 30
-        stackView.alignment = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(componentsBaseView)
+        componentsBaseView.addSubview(componentsStackView)
 
-        view.addSubview(stackView)
-        
-        termsView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(termsView)
         createAccountButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(createAccountButton)
-        
+        view.addSubview(loadingView)
+
         NSLayoutConstraint.activate([
             navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -121,52 +152,140 @@ class PhoneRegistrationViewController: UIViewController {
             highlightedTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             highlightedTextView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8),
             
-            stackView.topAnchor.constraint(equalTo: highlightedTextView.bottomAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            componentsBaseView.topAnchor.constraint(equalTo: highlightedTextView.bottomAnchor, constant: 20),
+            componentsBaseView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            componentsBaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            termsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            termsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            termsView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 36),
-            
+            componentsStackView.topAnchor.constraint(equalTo: componentsBaseView.topAnchor),
+            componentsStackView.leadingAnchor.constraint(equalTo: componentsBaseView.leadingAnchor),
+            componentsStackView.trailingAnchor.constraint(equalTo: componentsBaseView.trailingAnchor),
+
             createAccountButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             createAccountButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            createAccountButton.topAnchor.constraint(greaterThanOrEqualTo: termsView.bottomAnchor, constant: 30),
-            createAccountButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            createAccountButton.topAnchor.constraint(greaterThanOrEqualTo: componentsBaseView.bottomAnchor, constant: 30),
+            createAccountButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            
+            loadingView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    
+    private func setupComponentsLayout() {
+        
+        if let phoneFieldViewModel = viewModel.phoneFieldViewModel {
+            let phoneField = BorderedTextFieldView(viewModel: phoneFieldViewModel)
+            self.phoneField = phoneField
+            componentsStackView.addArrangedSubview(phoneField)
+        }
+        
+        if let passwordFieldViewModel = viewModel.passwordFieldViewModel {
+            let passwordField = BorderedTextFieldView(viewModel: passwordFieldViewModel)
+            self.passwordField = passwordField
+            componentsStackView.addArrangedSubview(passwordField)
+        }
+        
+        if let referralFieldViewModel = viewModel.referralFieldViewModel {
+            let referralField = BorderedTextFieldView(viewModel: referralFieldViewModel)
+            self.referralField = referralField
+            componentsStackView.addArrangedSubview(referralField)
+        }
+
+        if let termsViewModel = viewModel.termsViewModel {
+            let termsView = TermsAcceptanceView(viewModel: termsViewModel)
+            self.termsView = termsView
+            termsView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(termsView)
+            
+            NSLayoutConstraint.activate([
+                termsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                termsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                termsView.topAnchor.constraint(equalTo: componentsStackView.bottomAnchor, constant: 36),
+                termsView.bottomAnchor.constraint(equalTo: componentsBaseView.bottomAnchor)
+            ])
+        }
+        
+        self.componentsBaseView.setNeedsLayout()
+        self.componentsBaseView.layoutIfNeeded()
+        
+        setupBindings()
     }
     
     // MARK: Binding
     private func setupBindings() {
         
         createAccountButton.onButtonTapped = { [weak self] in
-            self?.openFirstDepositPromotions()
+//            self?.openFirstDepositPromotions()
+            
+            self?.viewModel.registerUser()
         }
         
-        termsView.onTermsLinkTapped = { [weak self] in
-            if let termsData = Env.legislationManager.extractedTermsHTMLData?.extractedLinks.first(where: {
-                $0.type == .terms
-            }) {
-                self?.openTermsURL(urlString: termsData.url)
-            }
-        }
-        
-        termsView.onPrivacyLinkTapped = { [weak self] in
-            if let privacyData = Env.legislationManager.extractedTermsHTMLData?.extractedLinks.first(where: {
-                $0.type == .privacyPolicy
-            }) {
-                self?.openTermsURL(urlString: privacyData.url)
+        if let termsView = self.termsView {
+            termsView.onTermsLinkTapped = { [weak self] in
+                if let termsData = self?.viewModel.extractedTermsHTMLData?.extractedLinks.first(where: {
+                    $0.type == .terms
+                }) {
+                    self?.openTermsURL(urlString: termsData.url)
+                }
             }
             
-        }
-        
-        termsView.onCookiesLinkTapped = { [weak self] in
-            if let cookiesData = Env.legislationManager.extractedTermsHTMLData?.extractedLinks.first(where: {
-                $0.type == .cookies
-            }) {
-                self?.openTermsURL(urlString: cookiesData.url)
+            termsView.onPrivacyLinkTapped = { [weak self] in
+                if let privacyData = self?.viewModel.extractedTermsHTMLData?.extractedLinks.first(where: {
+                    $0.type == .privacyPolicy
+                }) {
+                    self?.openTermsURL(urlString: privacyData.url)
+                }
+                
+            }
+            
+            termsView.onCookiesLinkTapped = { [weak self] in
+                if let cookiesData = self?.viewModel.extractedTermsHTMLData?.extractedLinks.first(where: {
+                    $0.type == .cookies
+                }) {
+                    self?.openTermsURL(urlString: cookiesData.url)
+                }
             }
         }
+        
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.loadingView.isHidden = !isLoading
+            }
+            .store(in: &cancellables)
+        
+        viewModel.registerComplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.openFirstDepositPromotions()
+            })
+            .store(in: &cancellables)
+        
+        viewModel.registerError
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] errorMessage in
+                self?.showRegisterErrorAlert(errorMessage: errorMessage)
+            })
+            .store(in: &cancellables)
+    }
+    
+    func showRegisterErrorAlert(errorMessage: String) {
+        
+        let alert = UIAlertController(
+            title: "Register Error",
+            message: errorMessage,
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(
+            title: localized("ok"),
+            style: .default
+        )
+        
+        alert.addAction(okAction)
+        
+        present(alert, animated: true)
     }
     
     private func openFirstDepositPromotions() {
