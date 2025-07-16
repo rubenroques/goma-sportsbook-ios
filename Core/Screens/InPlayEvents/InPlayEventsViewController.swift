@@ -308,8 +308,8 @@ class InPlayEventsViewController: UIViewController {
                 controller.topContentInset = headerHeight
                 
                 // Add card tap callback for match detail navigation
-                controller.onCardTapped = { [weak self] filteredMatchData in
-                    self?.handleCardTapped(filteredMatchData)
+                controller.onCardTapped = { [weak self] tappedMatch in
+                    self?.handleCardTapped(tappedMatch)
                 }
                 
                 marketGroupControllers[marketGroup.id] = controller
@@ -496,7 +496,7 @@ class InPlayEventsViewController: UIViewController {
     }
     
     // MARK: - Card Tap Handling
-    private func handleCardTapped(_ filteredMatchData: FilteredMatchData) {
+    private func handleCardTapped(_ selectedMatch: Match) {
         // Create MatchDetailsTextualViewModel from the filtered match data
         // Note: Currently using default init with mock data
         let matchDetailsViewModel = MockMatchDetailsTextualViewModel.defaultMock

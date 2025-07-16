@@ -18,7 +18,7 @@ class MarketGroupCardsViewController: UIViewController {
     private var scrollDirection: ScrollDirection = .none
     
     // MARK: - Card Tap Callback
-    var onCardTapped: ((FilteredMatchData) -> Void)?
+    var onCardTapped: ((Match) -> Void)?
     
     // MARK: - Configurable Content Inset
     var topContentInset: CGFloat = 0 {
@@ -143,7 +143,7 @@ class MarketGroupCardsViewController: UIViewController {
                 },
                 onCardTapped: { [weak self] in
                     // Handle card tap - forward to parent controller
-                    self?.onCardTapped?(matchCardData.filteredData)
+                    self?.onCardTapped?(matchCardData.filteredData.match)
                 }
             )
 
