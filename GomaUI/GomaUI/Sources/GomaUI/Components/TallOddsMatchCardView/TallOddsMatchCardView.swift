@@ -32,6 +32,7 @@ final public class TallOddsMatchCardView: UIView {
     public var onFavoriteToggled: (() -> Void) = {}
     public var onOutcomeSelected: ((String) -> Void) = { _ in }
     public var onMarketInfoTapped: (() -> Void) = {}
+    public var onCardTapped: (() -> Void) = {}
 
     // MARK: - Private Properties
     private let imageResolver: MatchHeaderImageResolver
@@ -184,6 +185,11 @@ extension TallOddsMatchCardView {
         onMatchHeaderTapped()
         viewModel.onMatchHeaderAction()
     }
+    
+    @objc private func cardTapped() {
+        onCardTapped()
+        viewModel.onCardTapped()
+    }
 
 }
 
@@ -283,9 +289,14 @@ extension TallOddsMatchCardView {
 
         self.separatorLine.backgroundColor = StyleProvider.Color.highlightPrimary
 
+        // Setup general card tap gesture recognizer
+        let cardTapGesture = UITapGestureRecognizer(target: self, action: #selector(cardTapped))
+        containerView.addGestureRecognizer(cardTapGesture)
+        containerView.isUserInteractionEnabled = true
+
         // Setup match header gesture recognizer
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(matchHeaderTapped))
-        matchHeaderView.addGestureRecognizer(tapGesture)
+        let headerTapGesture = UITapGestureRecognizer(target: self, action: #selector(matchHeaderTapped))
+        matchHeaderView.addGestureRecognizer(headerTapGesture)
         matchHeaderView.isUserInteractionEnabled = true
 
         // Setup market outcomes callback

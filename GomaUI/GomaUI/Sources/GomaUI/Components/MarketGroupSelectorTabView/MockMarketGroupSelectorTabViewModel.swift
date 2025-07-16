@@ -241,6 +241,24 @@ extension MockMarketGroupSelectorTabViewModel {
         )
     }
     
+    // Market category tabs from Figma design
+    public static var marketCategoryTabs: MockMarketGroupSelectorTabViewModel {
+        let marketGroups = [
+            MarketGroupTabItemData(id: "all", title: "All", visualState: .selected),
+            MarketGroupTabItemData(id: "betbuilder", title: "BetBuilder", visualState: .idle, iconType: "betbuilder", badgeCount: 16),
+            MarketGroupTabItemData(id: "popular", title: "Popular", visualState: .idle, iconType: "popular", badgeCount: 16),
+            MarketGroupTabItemData(id: "sets", title: "Sets", visualState: .idle, badgeCount: 16)
+        ]
+        
+        return MockMarketGroupSelectorTabViewModel(
+            tabData: MarketGroupSelectorTabData(
+                id: "market_categories",
+                marketGroups: marketGroups,
+                selectedMarketGroupId: "all"
+            )
+        )
+    }
+    
     // MARK: - Quick Access Collections
     public static var allDemoConfigurations: [MockMarketGroupSelectorTabViewModel] {
         return [

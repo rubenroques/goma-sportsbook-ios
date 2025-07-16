@@ -5,11 +5,16 @@ public class MarketGroupTabItemView: UIView {
 
     // MARK: - Private Properties
     private let viewModel: MarketGroupTabItemViewModelProtocol
+    private let imageResolver: MarketGroupTabImageResolver
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - UI Components
     private let containerView = UIView()
+    private let contentStackView = UIStackView()
     private let titleLabel = UILabel()
+    private let iconImageView = UIImageView()
+    private let badgeView = UIView()
+    private let badgeLabel = UILabel()
     private let underlineView = UIView()
 
     // MARK: - Layout Constants
@@ -19,11 +24,17 @@ public class MarketGroupTabItemView: UIView {
         static let underlineHeight: CGFloat = 2.0
         static let animationDuration: TimeInterval = 0.2
         static let minimumHeight: CGFloat = 42.0
+        static let stackSpacing: CGFloat = 4.0
+        static let iconSize: CGFloat = 18.0
+        static let badgeSize: CGFloat = 16.0
+        static let badgeFontSize: CGFloat = 10.0
     }
 
     // MARK: - Initialization
-    public init(viewModel: MarketGroupTabItemViewModelProtocol) {
+    public init(viewModel: MarketGroupTabItemViewModelProtocol, 
+                imageResolver: MarketGroupTabImageResolver = DefaultMarketGroupTabImageResolver()) {
         self.viewModel = viewModel
+        self.imageResolver = imageResolver
         super.init(frame: .zero)
         setupSubviews()
         setupConstraints()
@@ -40,7 +51,7 @@ public class MarketGroupTabItemView: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(containerView)
-        containerView.addSubview(titleLabel)
+        containerView.addSubview(contentStackView)
         containerView.addSubview(underlineView)
 
         self.backgroundColor = StyleProvider.Color.backgroundPrimary
@@ -49,11 +60,37 @@ public class MarketGroupTabItemView: UIView {
         // Container view setup
         containerView.clipsToBounds = true
 
+        // Stack view setup
+        contentStackView.axis = .horizontal
+        contentStackView.alignment = .center
+        contentStackView.distribution = .fill
+        contentStackView.spacing = Constants.stackSpacing
+        
+        // Add views to stack
+        contentStackView.addArrangedSubview(titleLabel)
+        contentStackView.addArrangedSubview(iconImageView)
+        contentStackView.addArrangedSubview(badgeView)
+
         // Title label setup
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 1
         titleLabel.lineBreakMode = .byTruncatingTail
         titleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
+        
+        // Icon image view setup
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.isHidden = true
+        
+        // Badge view setup
+        badgeView.backgroundColor = StyleProvider.Color.highlightPrimary
+        badgeView.layer.cornerRadius = Constants.badgeSize / 2
+        badgeView.isHidden = true
+        badgeView.addSubview(badgeLabel)
+        
+        // Badge label setup
+        badgeLabel.textColor = StyleProvider.Color.buttonTextPrimary
+        badgeLabel.font = StyleProvider.fontWith(type: .bold, size: Constants.badgeFontSize)
+        badgeLabel.textAlignment = .center
         
         // Underline view setup
         underlineView.isHidden = true
@@ -62,7 +99,10 @@ public class MarketGroupTabItemView: UIView {
 
     private func setupConstraints() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentStackView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        badgeView.translatesAutoresizingMaskIntoConstraints = false
+        badgeLabel.translatesAutoresizingMaskIntoConstraints = false
         underlineView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -73,11 +113,25 @@ public class MarketGroupTabItemView: UIView {
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minimumHeight),
             
-            // Title label constraints
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding),
-            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -Constants.horizontalPadding),
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: underlineView.topAnchor),
+            // Content stack view constraints
+            contentStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding),
+            contentStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -Constants.horizontalPadding),
+            contentStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: underlineView.topAnchor),
+
+            // Icon size constraints
+            iconImageView.widthAnchor.constraint(equalToConstant: Constants.iconSize),
+            iconImageView.heightAnchor.constraint(equalToConstant: Constants.iconSize),
+            
+            // Badge size constraints
+            badgeView.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.badgeSize),
+            badgeView.heightAnchor.constraint(equalToConstant: Constants.badgeSize),
+            
+            // Badge label constraints
+            badgeLabel.centerXAnchor.constraint(equalTo: badgeView.centerXAnchor),
+            badgeLabel.centerYAnchor.constraint(equalTo: badgeView.centerYAnchor),
+            badgeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: badgeView.leadingAnchor, constant: 3),
+            badgeLabel.trailingAnchor.constraint(lessThanOrEqualTo: badgeView.trailingAnchor, constant: -3),
 
             // Underline view constraints
             underlineView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 0),
@@ -93,6 +147,22 @@ public class MarketGroupTabItemView: UIView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] title in
                 self?.titleLabel.text = title
+            }
+            .store(in: &cancellables)
+
+        // Icon type binding
+        viewModel.iconTypePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] iconType in
+                self?.updateIcon(iconType)
+            }
+            .store(in: &cancellables)
+        
+        // Badge count binding
+        viewModel.badgeCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] count in
+                self?.updateBadge(count)
             }
             .store(in: &cancellables)
 
@@ -121,6 +191,26 @@ public class MarketGroupTabItemView: UIView {
     }
 
     // MARK: - State Updates
+    private func updateIcon(_ iconType: String?) {
+        guard let iconType = iconType else {
+            iconImageView.isHidden = true
+            return
+        }
+        
+        iconImageView.image = imageResolver.tabIcon(for: iconType)
+        iconImageView.isHidden = false
+    }
+    
+    private func updateBadge(_ count: Int?) {
+        guard let count = count, count > 0 else {
+            badgeView.isHidden = true
+            return
+        }
+        
+        badgeLabel.text = "\(count)"
+        badgeView.isHidden = false
+    }
+    
     private func updateVisualState(_ visualState: MarketGroupTabItemVisualState) {
         UIView.animate(withDuration: Constants.animationDuration, delay: 0, options: [.curveEaseInOut]) {
             self.applyVisualState(visualState)
@@ -159,9 +249,9 @@ public class MarketGroupTabItemView: UIView {
 // MARK: - Intrinsic Content Size
 extension MarketGroupTabItemView {
     public override var intrinsicContentSize: CGSize {
-        let titleSize = titleLabel.intrinsicContentSize
+        let stackSize = contentStackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         return CGSize(
-            width: titleSize.width + (Constants.horizontalPadding * 2),
+            width: stackSize.width + (Constants.horizontalPadding * 2),
             height: Constants.minimumHeight
         )
     }
@@ -173,65 +263,141 @@ import SwiftUI
 
 @available(iOS 17.0, *)
 #Preview("1x2 Tab - Selected") {
-    PreviewUIView {
-        MarketGroupTabItemView(viewModel: MockMarketGroupTabItemViewModel.oneXTwoTab)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabView = MarketGroupTabItemView(viewModel: MockMarketGroupTabItemViewModel.oneXTwoTab)
+        tabView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabView)
+        
+        NSLayoutConstraint.activate([
+            tabView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            tabView.trailingAnchor.constraint(lessThanOrEqualTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
     }
-    .frame(height: 50)
-    .padding()
-    .background(Color(UIColor.systemBackground))
 }
 
 @available(iOS 17.0, *)
 #Preview("Double Chance Tab - Idle") {
-    PreviewUIView {
-        MarketGroupTabItemView(viewModel: MockMarketGroupTabItemViewModel.doubleChanceTab)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabView = MarketGroupTabItemView(viewModel: MockMarketGroupTabItemViewModel.doubleChanceTab)
+        tabView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabView)
+        
+        NSLayoutConstraint.activate([
+            tabView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            tabView.trailingAnchor.constraint(lessThanOrEqualTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
     }
-    .frame(height: 50)
-    .padding()
-    .background(Color(UIColor.systemBackground))
 }
 
 @available(iOS 17.0, *)
-#Preview("Disabled Tab") {
-    PreviewUIView {
-        MarketGroupTabItemView(viewModel: MockMarketGroupTabItemViewModel.disabledTab)
+#Preview("BetBuilder Tab with Icon and Badge") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabView = MarketGroupTabItemView(viewModel: MockMarketGroupTabItemViewModel.betBuilderTab())
+        tabView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabView)
+        
+        NSLayoutConstraint.activate([
+            tabView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            tabView.trailingAnchor.constraint(lessThanOrEqualTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
     }
-    .frame(height: 50)
-    .padding()
-    .background(Color(UIColor.systemBackground))
+}
+
+@available(iOS 17.0, *)
+#Preview("Popular Tab with Icon and Badge") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabView = MarketGroupTabItemView(viewModel: MockMarketGroupTabItemViewModel.popularTab())
+        tabView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabView)
+        
+        NSLayoutConstraint.activate([
+            tabView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            tabView.trailingAnchor.constraint(lessThanOrEqualTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Sets Tab with Badge Only") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabView = MarketGroupTabItemView(viewModel: MockMarketGroupTabItemViewModel.setsTab())
+        tabView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabView)
+        
+        NSLayoutConstraint.activate([
+            tabView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            tabView.trailingAnchor.constraint(lessThanOrEqualTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
 }
 
 @available(iOS 17.0, *)
 #Preview("Multiple Tabs Layout") {
-    PreviewUIView {
+    PreviewUIViewController {
+        let vc = UIViewController()
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.alignment = .center
         stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         let tabs = [
-            ("1x2", true),
-            ("Double Chance", false),
-            ("Over/Under", false)
+            ("All", true, nil as String?, nil as Int?),
+            ("BetBuilder", false, "betbuilder", 16),
+            ("Popular", false, "popular", 16),
+            ("Sets", false, nil, 16)
         ]
 
-        for (title, selected) in tabs {
+        for (title, selected, iconType, badgeCount) in tabs {
             let tabView = MarketGroupTabItemView(
                 viewModel: MockMarketGroupTabItemViewModel.customTab(
-                    id: title.lowercased().replacingOccurrences(of: "/", with: "_"),
+                    id: title.lowercased().replacingOccurrences(of: " ", with: ""),
                     title: title,
-                    selected: selected
+                    selected: selected,
+                    iconType: iconType,
+                    badgeCount: badgeCount
                 )
             )
             stackView.addArrangedSubview(tabView)
         }
 
-        return stackView
+        vc.view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
     }
-    .frame(height: 50)
-    .padding()
-    .background(Color(UIColor.systemBackground))
 }
 
 #endif

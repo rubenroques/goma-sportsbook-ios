@@ -340,6 +340,12 @@ class NextUpEventsViewController: UIViewController {
                 let controller = MarketGroupCardsViewController(viewModel: marketGroupCardsViewModel)
                 controller.scrollDelegate = self
                 controller.topContentInset = headerHeight
+                
+                // Add card tap callback for match detail navigation
+                controller.onCardTapped = { [weak self] filteredMatchData in
+                    self?.handleCardTapped(filteredMatchData)
+                }
+                
                 marketGroupControllers[marketGroup.id] = controller
                 print("Created new UI controller for market type: \(marketGroup.id)")
             }
@@ -496,6 +502,19 @@ class NextUpEventsViewController: UIViewController {
         }
         
         sportsViewController.presentModally(from: self)
+    }
+    
+    // MARK: - Card Tap Handling
+    private func handleCardTapped(_ filteredMatchData: FilteredMatchData) {
+        // Create MatchDetailsTextualViewModel from the filtered match data
+        // Note: Currently using default init with mock data
+        let matchDetailsViewModel = MockMatchDetailsTextualViewModel.defaultMock
+        
+        // Create and present the MatchDetailsTextualViewController
+        let matchDetailsViewController = MatchDetailsTextualViewController(viewModel: matchDetailsViewModel)
+        
+        // Present the controller using navigation stack
+        navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
     
     // MARK: - Filter Modal

@@ -135,7 +135,8 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
         onMatchHeaderTapped: @escaping () -> Void = {},
         onFavoriteToggled: @escaping () -> Void = {},
         onOutcomeSelected: @escaping (String) -> Void = { _ in },
-        onMarketInfoTapped: @escaping () -> Void = {}
+        onMarketInfoTapped: @escaping () -> Void = {},
+        onCardTapped: @escaping () -> Void = {}
     ) {
         // Configure the cell with the view model
         configure(with: viewModel)
@@ -145,5 +146,6 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
         tallOddsMatchCardView?.onFavoriteToggled = onFavoriteToggled
         tallOddsMatchCardView?.onOutcomeSelected = onOutcomeSelected
         tallOddsMatchCardView?.onMarketInfoTapped = onMarketInfoTapped
+        tallOddsMatchCardView?.onCardTapped = onCardTapped
     }
 }

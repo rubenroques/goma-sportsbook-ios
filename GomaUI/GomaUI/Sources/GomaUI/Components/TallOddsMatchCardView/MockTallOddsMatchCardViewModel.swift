@@ -76,6 +76,10 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
     public func onMarketInfoTapped() {
         print("Market info tapped for match: \(matchData.matchId)")
     }
+    
+    public func onCardTapped() {
+        print("Card tapped for match: \(matchData.matchId)")
+    }
 }
 
 // MARK: - Mock Factory

@@ -28,6 +28,20 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
             .eraseToAnyPublisher()
     }
     
+    public var iconTypePublisher: AnyPublisher<String?, Never> {
+        tabItemDataSubject
+            .map(\.iconType)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
+    public var badgeCountPublisher: AnyPublisher<Int?, Never> {
+        tabItemDataSubject
+            .map(\.badgeCount)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
     // MARK: - Visual State Publishers
     public var visualStatePublisher: AnyPublisher<MarketGroupTabItemVisualState, Never> {
         tabItemDataSubject
@@ -55,7 +69,9 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
         let updatedData = MarketGroupTabItemData(
             id: currentData.id,
             title: currentData.title,
-            visualState: state
+            visualState: state,
+            iconType: currentData.iconType,
+            badgeCount: currentData.badgeCount
         )
         tabItemDataSubject.send(updatedData)
     }
@@ -65,7 +81,33 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
         let updatedData = MarketGroupTabItemData(
             id: currentData.id,
             title: title,
-            visualState: currentData.visualState
+            visualState: currentData.visualState,
+            iconType: currentData.iconType,
+            badgeCount: currentData.badgeCount
+        )
+        tabItemDataSubject.send(updatedData)
+    }
+    
+    public func updateIconType(_ iconType: String?) {
+        let currentData = tabItemDataSubject.value
+        let updatedData = MarketGroupTabItemData(
+            id: currentData.id,
+            title: currentData.title,
+            visualState: currentData.visualState,
+            iconType: iconType,
+            badgeCount: currentData.badgeCount
+        )
+        tabItemDataSubject.send(updatedData)
+    }
+    
+    public func updateBadgeCount(_ count: Int?) {
+        let currentData = tabItemDataSubject.value
+        let updatedData = MarketGroupTabItemData(
+            id: currentData.id,
+            title: currentData.title,
+            visualState: currentData.visualState,
+            iconType: currentData.iconType,
+            badgeCount: count
         )
         tabItemDataSubject.send(updatedData)
     }
@@ -141,12 +183,60 @@ extension MockMarketGroupTabItemViewModel {
         )
     }
     
-    public static func customTab(id: String, title: String, selected: Bool = false) -> MockMarketGroupTabItemViewModel {
+    public static func customTab(id: String, title: String, selected: Bool = false, iconType: String? = nil, badgeCount: Int? = nil) -> MockMarketGroupTabItemViewModel {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: id,
                 title: title,
-                visualState: selected ? .selected : .idle
+                visualState: selected ? .selected : .idle,
+                iconType: iconType,
+                badgeCount: badgeCount
+            )
+        )
+    }
+    
+    // MARK: - Market Category Tabs (from Figma design)
+    public static var allTab: MockMarketGroupTabItemViewModel {
+        return MockMarketGroupTabItemViewModel(
+            tabItemData: MarketGroupTabItemData(
+                id: "all",
+                title: "All",
+                visualState: .selected
+            )
+        )
+    }
+    
+    public static func betBuilderTab(count: Int = 16) -> MockMarketGroupTabItemViewModel {
+        return MockMarketGroupTabItemViewModel(
+            tabItemData: MarketGroupTabItemData(
+                id: "betbuilder",
+                title: "BetBuilder",
+                visualState: .idle,
+                iconType: "betbuilder",
+                badgeCount: count
+            )
+        )
+    }
+    
+    public static func popularTab(count: Int = 16) -> MockMarketGroupTabItemViewModel {
+        return MockMarketGroupTabItemViewModel(
+            tabItemData: MarketGroupTabItemData(
+                id: "popular",
+                title: "Popular",
+                visualState: .idle,
+                iconType: "popular",
+                badgeCount: count
+            )
+        )
+    }
+    
+    public static func setsTab(count: Int = 16) -> MockMarketGroupTabItemViewModel {
+        return MockMarketGroupTabItemViewModel(
+            tabItemData: MarketGroupTabItemData(
+                id: "sets",
+                title: "Sets",
+                visualState: .idle,
+                badgeCount: count
             )
         )
     }
@@ -167,6 +257,16 @@ extension MockMarketGroupTabItemViewModel {
             doubleChanceTab,
             disabledTab,
             overUnderTab
+        ]
+    }
+    
+    // Market category tabs from Figma design
+    public static var marketCategoryTabs: [MockMarketGroupTabItemViewModel] {
+        return [
+            allTab,
+            betBuilderTab(),
+            popularTab(),
+            setsTab()
         ]
     }
 } 

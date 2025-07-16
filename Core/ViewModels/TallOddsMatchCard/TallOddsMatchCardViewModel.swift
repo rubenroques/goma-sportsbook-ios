@@ -97,6 +97,11 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         // TODO: Implement market details navigation
     }
     
+    func onCardTapped() {
+        print("Production: Card tapped for match: \(matchData.matchId)")
+        // TODO: Implement match details navigation
+    }
+    
     // MARK: - Live Data Subscription
     
     private func subscribeToLiveData() {

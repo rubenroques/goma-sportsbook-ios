@@ -85,6 +85,19 @@ class ComponentsTableViewController: UITableViewController {
             }
         ),
         UIComponent(
+            title: "Statistics Widget",
+            description: "Web-based statistics widget with paginated scroll view, tab navigation, and multiple content types for match statistics",
+            viewController: StatisticsWidgetViewController.self,
+            previewFactory: {
+                let viewModel = MockStatisticsWidgetViewModel.footballMatch
+                let statisticsWidget = StatisticsWidgetView(viewModel: viewModel)
+                statisticsWidget.backgroundColor = StyleProvider.Color.backgroundTertiary
+                statisticsWidget.layer.cornerRadius = 8
+                statisticsWidget.clipsToBounds = true
+                return statisticsWidget
+            }
+        ),
+        UIComponent(
             title: "Wallet Widget",
             description: "Compact wallet balance display with deposit action button",
             viewController: WalletWidgetViewController.self,

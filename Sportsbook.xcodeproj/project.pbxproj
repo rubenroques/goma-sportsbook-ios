@@ -3910,6 +3910,78 @@
 		CE544FCB2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCD2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCE2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
+		CE5852FA2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
+		CE5852FB2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
+		CE5852FC2E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
+		CE5852FD2E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
+		CE5852FE2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
+		CE5852FF2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
+		CE5853002E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
+		CE5853012E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
+		CE5853022E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
+		CE5853032E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
+		CE5853042E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
+		CE5853052E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
+		CE5853062E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
+		CE5853072E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
+		CE5853082E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
+		CE5853092E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
+		CE58530A2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
+		CE58530B2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
+		CE58530C2E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
+		CE58530D2E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
+		CE58530E2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
+		CE58530F2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
+		CE5853102E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
+		CE5853112E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
+		CE5853122E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
+		CE5853132E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
+		CE5853142E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
+		CE5853152E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
+		CE5853162E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
+		CE5853172E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
+		CE5853182E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
+		CE5853192E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
+		CE58531E2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
+		CE58531F2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
+		CE5853202E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
+		CE5853212E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */; };
+		CE5853222E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
+		CE5853232E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
+		CE5853242E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
+		CE5853252E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */; };
+		CE5853262E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
+		CE5853272E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
+		CE5853282E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
+		CE5853292E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */; };
+		CE58532A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
+		CE58532B2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
+		CE58532C2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
+		CE58532D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */; };
+		CE58532E2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
+		CE58532F2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
+		CE5853302E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
+		CE5853312E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */; };
+		CE5853322E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
+		CE5853332E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
+		CE5853342E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
+		CE5853352E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */; };
+		CE5853362E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
+		CE5853372E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
+		CE5853382E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
+		CE5853392E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */; };
+		CE58533A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
+		CE58533B2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
+		CE58533C2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
+		CE58533D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */; };
+		CE5853402E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */; };
+		CE5853412E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */; };
+		CE5853422E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */; };
+		CE5853432E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */; };
+		CE5853442E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */; };
+		CE5853452E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */; };
+		CE5853462E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */; };
+		CE5853472E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */; };
 		CE5B548A2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
 		CE5B548B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
 		CE5B548C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
@@ -9910,6 +9982,15 @@
 		CE4254522DF65E9F00DB38E7 /* OutcomeItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutcomeItemViewModel.swift; sourceTree = "<group>"; };
 		CE4254632DF6C15D00DB38E7 /* GomaUIModelMapper+Outcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GomaUIModelMapper+Outcome.swift"; sourceTree = "<group>"; };
 		CE544FC92D07029900AA24CA /* first_deposit_8.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = first_deposit_8.json; sourceTree = "<group>"; };
+		CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsTextualViewController.swift; sourceTree = "<group>"; };
+		CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsTextualViewModel.swift; sourceTree = "<group>"; };
+		CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsTextualViewModelProtocol.swift; sourceTree = "<group>"; };
+		CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMatchDetailsTextualViewModel.swift; sourceTree = "<group>"; };
+		CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketsTabSimpleViewController.swift; sourceTree = "<group>"; };
+		CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketsTabSimpleViewModel.swift; sourceTree = "<group>"; };
+		CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketsTabSimpleViewModelProtocol.swift; sourceTree = "<group>"; };
+		CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMarketsTabSimpleViewModel.swift; sourceTree = "<group>"; };
+		CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMarketGroupTabImageResolver.swift; sourceTree = "<group>"; };
 		CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
@@ -11444,6 +11525,7 @@
 				CEAB09A52D77588D00541098 /* PreLiveEvents */,
 				45D712FC27033BF400AC0364 /* LiveEvents */,
 				A9BCF438274FB558006DD528 /* MatchDetails */,
+				CE5852F92E27B4BB005F7B89 /* MatchDetailsTextual */,
 				458BAC66276B652F006C4BC7 /* MyTickets */,
 				454E0A932732BF4600794E0C /* Betslip */,
 				45EF5430270C5FD600D1E13E /* Filters */,
@@ -13839,6 +13921,29 @@
 			path = Animations;
 			sourceTree = "<group>";
 		};
+		CE5852F92E27B4BB005F7B89 /* MatchDetailsTextual */ = {
+			isa = PBXGroup;
+			children = (
+				CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */,
+				CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */,
+				CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */,
+				CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */,
+				CE58533E2E27BB2D005F7B89 /* MarketsTab */,
+			);
+			path = MatchDetailsTextual;
+			sourceTree = "<group>";
+		};
+		CE58533E2E27BB2D005F7B89 /* MarketsTab */ = {
+			isa = PBXGroup;
+			children = (
+				CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */,
+				CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */,
+				CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */,
+				CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */,
+			);
+			path = MarketsTab;
+			sourceTree = "<group>";
+		};
 		CE5B546C2D99A2DF006837C4 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -13992,6 +14097,7 @@
 			isa = PBXGroup;
 			children = (
 				CE7A63DD2E0EFA8500A61D20 /* AppMatchHeaderImageResolver.swift */,
+				CE58533F2E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift */,
 			);
 			path = ImageResolvers;
 			sourceTree = "<group>";
@@ -17426,6 +17532,10 @@
 				CEAB0B952D77588D00541098 /* FavoriteMatchesDataSource.swift in Sources */,
 				CEAB0B962D77588D00541098 /* OddTripleCollectionViewCell.swift in Sources */,
 				CEAB0B972D77588D00541098 /* ActivationAlertCollectionViewCell.swift in Sources */,
+				CE5852FA2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
+				CE5852FB2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
+				CE5852FC2E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
+				CE5852FD2E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEAB0B982D77588D00541098 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				CEAB0B992D77588D00541098 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEAB0B9A2D77588D00541098 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -17458,6 +17568,10 @@
 				450B797D28F58574009229E3 /* MatchStatsCollectionViewCell.swift in Sources */,
 				450B798128F58574009229E3 /* ProfileViewController.swift in Sources */,
 				A9A1B2B62A0E557000F7A8ED /* UserConsent.swift in Sources */,
+				CE58531E2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */,
+				CE58531F2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */,
+				CE5853202E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */,
+				CE5853212E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */,
 				A91A05B929CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				65F884202C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift in Sources */,
 				455AE12D2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */,
@@ -17711,6 +17825,7 @@
 				65CD18882D9469EA00CA23E0 /* PreviewChatTableViewCell.swift in Sources */,
 				65CD18892D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
 				65CD188A2D9469EA00CA23E0 /* SelectFriendCellViewModel.swift in Sources */,
+				CE5853432E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */,
 				65CD188B2D9469EA00CA23E0 /* FriendsListViewController.swift in Sources */,
 				CE4254612DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
 				65F1409E2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
@@ -18354,6 +18469,10 @@
 				CEAB0A302D77588D00541098 /* FavoriteMatchesDataSource.swift in Sources */,
 				CEAB0A312D77588D00541098 /* OddTripleCollectionViewCell.swift in Sources */,
 				CEAB0A322D77588D00541098 /* ActivationAlertCollectionViewCell.swift in Sources */,
+				CE5853022E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
+				CE5853032E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
+				CE5853042E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
+				CE5853052E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEAB0A332D77588D00541098 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				CEAB0A342D77588D00541098 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEAB0A352D77588D00541098 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -18386,6 +18505,10 @@
 				CE5D22402D93FEC30001B1E4 /* ViewModelCache.swift in Sources */,
 				45A33197298976BA008181E9 /* MatchStatsCollectionViewCell.swift in Sources */,
 				A9A1B2B52A0E557000F7A8ED /* UserConsent.swift in Sources */,
+				CE58532A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */,
+				CE58532B2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */,
+				CE58532C2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */,
+				CE58532D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */,
 				A91A05B829CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				65F8841E2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift in Sources */,
 				455AE12C2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */,
@@ -18639,6 +18762,7 @@
 				65CD19102D9469EA00CA23E0 /* NewMessageViewModel.swift in Sources */,
 				65CD19112D9469EA00CA23E0 /* AddFriendViewController.swift in Sources */,
 				65CD19122D9469EA00CA23E0 /* PreviewChatTableViewCell.swift in Sources */,
+				CE5853452E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */,
 				65CD19132D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
 				CE42545B2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
 				65F140A12E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
@@ -19252,6 +19376,10 @@
 				CEAB0B552D77588D00541098 /* FavoriteMatchesDataSource.swift in Sources */,
 				CEAB0B562D77588D00541098 /* OddTripleCollectionViewCell.swift in Sources */,
 				CEAB0B572D77588D00541098 /* ActivationAlertCollectionViewCell.swift in Sources */,
+				CE58530A2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
+				CE58530B2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
+				CE58530C2E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
+				CE58530D2E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEAB0B582D77588D00541098 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				CEAB0B592D77588D00541098 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEAB0B5A2D77588D00541098 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -19284,6 +19412,10 @@
 				CE5D22412D93FEC30001B1E4 /* ViewModelCache.swift in Sources */,
 				45F6BC422AB3732C00C81DE1 /* HomeViewModel.swift in Sources */,
 				45F6BC442AB3732C00C81DE1 /* MatchStatsCollectionViewCell.swift in Sources */,
+				CE58532E2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */,
+				CE58532F2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */,
+				CE5853302E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */,
+				CE5853312E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */,
 				45F6BC462AB3732C00C81DE1 /* UserConsent.swift in Sources */,
 				65F8841F2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift in Sources */,
 				45F6BC472AB3732C00C81DE1 /* CloseAccountViewController.swift in Sources */,
@@ -19537,6 +19669,7 @@
 				65CD19552D9469EA00CA23E0 /* NewMessageViewModel.swift in Sources */,
 				65CD19562D9469EA00CA23E0 /* AddFriendViewController.swift in Sources */,
 				65CD19572D9469EA00CA23E0 /* PreviewChatTableViewCell.swift in Sources */,
+				CE5853402E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */,
 				65CD19582D9469EA00CA23E0 /* ChatListViewController.swift in Sources */,
 				CE4254532DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
 				65F140A02E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
@@ -19828,6 +19961,7 @@
 				CE5B558A2D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CE5B558B2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B558C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				CE5853442E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */,
 				CE5B558D2D99A2DF006837C4 /* OutrightMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE5B558E2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell.swift in Sources */,
 				65F141262E1402B9004BDE6B /* MockDepositBonusViewModel.swift in Sources */,
@@ -20014,6 +20148,10 @@
 				CE12A2372D31347E0022BDF7 /* OutcomeSelectionButtonView.swift in Sources */,
 				CE12A2382D31347E0022BDF7 /* IdentificationDocsViewModel.swift in Sources */,
 				CE12A2392D31347E0022BDF7 /* ServiceProviderModelMapper+Betting.swift in Sources */,
+				CE5853322E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */,
+				CE5853332E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */,
+				CE5853342E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */,
+				CE5853352E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */,
 				CE12A23A2D31347E0022BDF7 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				CE12A23B2D31347E0022BDF7 /* MultiSliderExtensions.swift in Sources */,
 				CE12A23D2D31347E0022BDF7 /* CATransform3D+Shift.swift in Sources */,
@@ -20549,6 +20687,10 @@
 				CE12A3C02D31347E0022BDF7 /* ViewContext.swift in Sources */,
 				CE12A3C12D31347E0022BDF7 /* PaymentsBrowserViewController.swift in Sources */,
 				CE12A3C22D31347E0022BDF7 /* RankingsViewModel.swift in Sources */,
+				CE58530E2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
+				CE58530F2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
+				CE5853102E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
+				CE5853112E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CE12A3C32D31347E0022BDF7 /* ModalTransitionPresentationController.swift in Sources */,
 				CE12A3C42D31347E0022BDF7 /* TransactionsHistoryViewController.swift in Sources */,
 				CE12A3C52D31347E0022BDF7 /* TitleTextFieldView.swift in Sources */,
@@ -21057,6 +21199,10 @@
 				CE8F24A32DD371350071238E /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CE8F24A42DD371350071238E /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				CE8F24A52DD371350071238E /* BannerTopCollectionViewCell.swift in Sources */,
+				CE5852FE2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
+				CE5852FF2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
+				CE5853002E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
+				CE5853012E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CE8F24A62DD371350071238E /* BannerMatchCollectionViewCell.swift in Sources */,
 				CE8F24A72DD371350071238E /* TitleTableViewHeader.swift in Sources */,
 				CE8F24A82DD371350071238E /* OddDoubleCollectionViewCell.swift in Sources */,
@@ -21089,6 +21235,10 @@
 				CE8F24C32DD371350071238E /* FeaturedCompetitionDetailRootViewController.swift in Sources */,
 				CE8F24C42DD371350071238E /* QuickSwipeStackTableViewCell.swift in Sources */,
 				CE8F24C52DD371350071238E /* ProfileViewController.swift in Sources */,
+				CE5853222E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */,
+				CE5853232E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */,
+				CE5853242E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */,
+				CE5853252E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */,
 				CEB3A0222DD379510024043B /* ThemeColors.swift in Sources */,
 				CEB3A0232DD379510024043B /* ColorExtension+Colors.swift in Sources */,
 				CEB3A0252DD379510024043B /* ClientVariables.swift in Sources */,
@@ -21342,6 +21492,7 @@
 				CE8F25B82DD371350071238E /* ChatListViewController.swift in Sources */,
 				CE4254592DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
 				CE42545A2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
+				CE5853462E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */,
 				CE8F25B92DD371350071238E /* SelectFriendCellViewModel.swift in Sources */,
 				CE8F25BA2DD371350071238E /* FriendsListViewController.swift in Sources */,
 				65F140A32E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
@@ -21955,6 +22106,10 @@
 				CEB3A2102DD379800024043B /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEB3A2112DD379800024043B /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				CEB3A2122DD379800024043B /* BannerTopCollectionViewCell.swift in Sources */,
+				CE5853122E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
+				CE5853132E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
+				CE5853142E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
+				CE5853152E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEB3A2132DD379800024043B /* BannerMatchCollectionViewCell.swift in Sources */,
 				CEB3A2142DD379800024043B /* TitleTableViewHeader.swift in Sources */,
 				CEB3A2152DD379800024043B /* OddDoubleCollectionViewCell.swift in Sources */,
@@ -21987,6 +22142,10 @@
 				CEB3A22F2DD379800024043B /* CloseAccountViewController.swift in Sources */,
 				CEB3A2302DD379800024043B /* FeaturedCompetitionDetailRootViewController.swift in Sources */,
 				CEB3A2312DD379800024043B /* QuickSwipeStackTableViewCell.swift in Sources */,
+				CE58533A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */,
+				CE58533B2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */,
+				CE58533C2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */,
+				CE58533D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */,
 				CEB3A2322DD379800024043B /* ProfileViewController.swift in Sources */,
 				CEB3A2332DD379800024043B /* ThemeColors.swift in Sources */,
 				CEB3A2342DD379800024043B /* ColorExtension+Colors.swift in Sources */,
@@ -22240,6 +22399,7 @@
 				CEB3A3292DD379800024043B /* ChatListViewController.swift in Sources */,
 				CE4254572DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
 				CE4254582DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
+				CE5853412E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */,
 				CEB3A32A2DD379800024043B /* SelectFriendCellViewModel.swift in Sources */,
 				CEB3A32B2DD379800024043B /* FriendsListViewController.swift in Sources */,
 				65F140A52E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
@@ -22853,6 +23013,10 @@
 				CEB3A6982DD379890024043B /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				CEB3A6992DD379890024043B /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEB3A69A2DD379890024043B /* ActivationAlertScrollableTableViewCell.swift in Sources */,
+				CE5853062E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
+				CE5853072E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
+				CE5853082E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
+				CE5853092E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEB3A69B2DD379890024043B /* BannerTopCollectionViewCell.swift in Sources */,
 				CEB3A69C2DD379890024043B /* BannerMatchCollectionViewCell.swift in Sources */,
 				CEB3A69D2DD379890024043B /* TitleTableViewHeader.swift in Sources */,
@@ -22885,6 +23049,10 @@
 				CEB3A6B82DD379890024043B /* CloseAccountViewController.swift in Sources */,
 				CEB3A6B92DD379890024043B /* FeaturedCompetitionDetailRootViewController.swift in Sources */,
 				CEB3A6BA2DD379890024043B /* QuickSwipeStackTableViewCell.swift in Sources */,
+				CE5853262E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */,
+				CE5853272E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */,
+				CE5853282E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */,
+				CE5853292E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */,
 				CEB3A6BB2DD379890024043B /* ProfileViewController.swift in Sources */,
 				CEB3A6BC2DD379890024043B /* ThemeColors.swift in Sources */,
 				CEB3A6BD2DD379890024043B /* ColorExtension+Colors.swift in Sources */,
@@ -23138,6 +23306,7 @@
 				CEB3A7B22DD379890024043B /* ChatListViewController.swift in Sources */,
 				CE42545D2DF65E9F00DB38E7 /* MarketOutcomesLineViewModel.swift in Sources */,
 				CE42545E2DF65E9F00DB38E7 /* OutcomeItemViewModel.swift in Sources */,
+				CE5853472E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */,
 				CEB3A7B32DD379890024043B /* SelectFriendCellViewModel.swift in Sources */,
 				CEB3A7B42DD379890024043B /* FriendsListViewController.swift in Sources */,
 				65F140A42E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
@@ -23483,6 +23652,10 @@
 				CEF194102DA834E900C81F12 /* Environment.swift in Sources */,
 				CEF194112DA834E900C81F12 /* SegmentControlView.swift in Sources */,
 				CEF194122DA834E900C81F12 /* UserInfoView.swift in Sources */,
+				CE5853162E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
+				CE5853172E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
+				CE5853182E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
+				CE5853192E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				65F141662E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				CEF194142DA834E900C81F12 /* ShareTicketChoiceViewModel.swift in Sources */,
 				CEF194152DA834E900C81F12 /* AggregatorRepositoryType.swift in Sources */,
@@ -23740,6 +23913,7 @@
 				CEF194EE2DA834E900C81F12 /* MyCompetitionsViewModel.swift in Sources */,
 				CEF194F02DA834E900C81F12 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				65F1409F2E0EF0EF004BDE6B /* PhonePasswordCodeResetViewController.swift in Sources */,
+				CE5853422E27BE2B005F7B89 /* AppMarketGroupTabImageResolver.swift in Sources */,
 				CEF194F12DA834E900C81F12 /* SearchViewModel.swift in Sources */,
 				CEF194F22DA834E900C81F12 /* MyFavoritesRootViewController.swift in Sources */,
 				CE9C9E802DE779B400642EFF /* SystemBetResponse.swift in Sources */,
@@ -23791,6 +23965,10 @@
 				CEF195172DA834E900C81F12 /* ContactSettingsViewController.swift in Sources */,
 				CEF195182DA834E900C81F12 /* Data+Extensions.swift in Sources */,
 				CEF195192DA834E900C81F12 /* CGPoint+Extensions.swift in Sources */,
+				CE5853362E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */,
+				CE5853372E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */,
+				CE5853382E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */,
+				CE5853392E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift in Sources */,
 				CEF1951A2DA834E900C81F12 /* OutrightCompetitionLineTableViewCell.swift in Sources */,
 				CEF1951B2DA834E900C81F12 /* PreLiveEventsViewController.swift in Sources */,
 				CEF1951C2DA834E900C81F12 /* BannerCellViewModel.swift in Sources */,

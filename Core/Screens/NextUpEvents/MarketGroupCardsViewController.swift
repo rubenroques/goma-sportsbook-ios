@@ -17,6 +17,9 @@ class MarketGroupCardsViewController: UIViewController {
     private var lastContentOffset: CGFloat = 0
     private var scrollDirection: ScrollDirection = .none
     
+    // MARK: - Card Tap Callback
+    var onCardTapped: ((FilteredMatchData) -> Void)?
+    
     // MARK: - Configurable Content Inset
     var topContentInset: CGFloat = 0 {
         didSet {
@@ -137,6 +140,10 @@ class MarketGroupCardsViewController: UIViewController {
                 },
                 onMarketInfoTapped: {
                     // Handle market info tap
+                },
+                onCardTapped: { [weak self] in
+                    // Handle card tap - forward to parent controller
+                    self?.onCardTapped?(matchCardData.filteredData)
                 }
             )
 
