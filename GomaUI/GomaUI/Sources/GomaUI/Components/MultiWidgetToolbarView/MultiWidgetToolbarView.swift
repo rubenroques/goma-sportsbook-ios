@@ -196,6 +196,12 @@ final public class MultiWidgetToolbarView: UIView {
             view.heightAnchor.constraint(equalToConstant: 32),
             view.widthAnchor.constraint(equalToConstant: 32)
         ])
+        
+        // Add tap gesture
+        view.accessibilityIdentifier = widget.id
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(tapGesture)
 
         return view
     }

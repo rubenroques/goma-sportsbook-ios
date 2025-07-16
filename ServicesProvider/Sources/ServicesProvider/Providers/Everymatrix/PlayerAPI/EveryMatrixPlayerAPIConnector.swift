@@ -18,6 +18,8 @@ class EveryMatrixPlayerAPIConnector: Connector {
     private let session: URLSession
     private let decoder: JSONDecoder
     private var cancellables: Set<AnyCancellable> = []
+    
+    private(set) var sessionToken: EveryMatrixSessionToken?
 
     init(session: URLSession = .shared, decoder: JSONDecoder = JSONDecoder()) {
         self.session = session
@@ -31,7 +33,13 @@ class EveryMatrixPlayerAPIConnector: Connector {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
         
-        return session.dataTaskPublisher(for: request)
+        // Add session token if required
+        var finalRequest = request
+        if endpoint.requireSessionKey, let token = sessionToken?.sessionId {
+            finalRequest.setValue(token, forHTTPHeaderField: "X-SessionId")
+        }
+        
+        return session.dataTaskPublisher(for: finalRequest)
             .tryMap { result -> Data in
                 // Handle HTTP status codes
                 if let httpResponse = result.response as? HTTPURLResponse {
@@ -45,7 +53,13 @@ class EveryMatrixPlayerAPIConnector: Connector {
                     case 404:
                         throw ServiceProviderError.notSupportedForProvider
                     case 500...599:
-                        throw ServiceProviderError.internalServerError
+                        // Try to decode the error body
+                        if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
+                            let errorMessage = apiError.thirdPartyResponse?.message ?? "Server Error"
+                            throw ServiceProviderError.errorMessage(message: errorMessage)
+                        } else {
+                            throw ServiceProviderError.internalServerError
+                                            }
                     default:
                         throw ServiceProviderError.unknown
                     }
@@ -79,4 +93,13 @@ class EveryMatrixPlayerAPIConnector: Connector {
             }
             .eraseToAnyPublisher()
     }
+    
+    func updateSessionToken(sessionId: String, id: String) {
+        self.sessionToken = EveryMatrixSessionToken(sessionId: sessionId, id: id)
+    }
+}
+
+struct EveryMatrixSessionToken {
+    let sessionId: String
+    let id: String
 }

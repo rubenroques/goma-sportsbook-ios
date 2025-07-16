@@ -53,10 +53,10 @@ class PhoneRegistrationViewController: UIViewController {
         return stackView
     }()
     
-    private var phoneField: BorderedTextFieldView? = nil
-    private var passwordField: BorderedTextFieldView? = nil
-    private var referralField: BorderedTextFieldView? = nil
-    private var termsView: TermsAcceptanceView? = nil
+    private var phonePrefixField: BorderedTextFieldView?
+    private var phoneField: BorderedTextFieldView?
+    private var passwordField: BorderedTextFieldView?
+    private var termsView: TermsAcceptanceView?
     private let createAccountButton: ButtonView
     
     private let loadingView: UIView = {
@@ -76,7 +76,7 @@ class PhoneRegistrationViewController: UIViewController {
         return view
     }()
     
-    private let viewModel: PhoneRegistrationViewModelProtocol
+    private var viewModel: PhoneRegistrationViewModelProtocol
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -84,10 +84,6 @@ class PhoneRegistrationViewController: UIViewController {
         self.viewModel = viewModel
         self.headerView = PromotionalHeaderView(viewModel: viewModel.headerViewModel)
         self.highlightedTextView = HighlightedTextView(viewModel: viewModel.highlightedTextViewModel)
-//        self.phoneField = BorderedTextFieldView(viewModel: viewModel.phoneFieldViewModel)
-//        self.passwordField = BorderedTextFieldView(viewModel: viewModel.passwordFieldViewModel)
-//        self.referralField = BorderedTextFieldView(viewModel: viewModel.referralFieldViewModel)
-//        self.termsView = TermsAcceptanceView(viewModel: viewModel.termsViewModel)
         self.createAccountButton = ButtonView(viewModel: viewModel.buttonViewModel)
         super.init(nibName: nil, bundle: nil)
     }
@@ -174,6 +170,12 @@ class PhoneRegistrationViewController: UIViewController {
     
     private func setupComponentsLayout() {
         
+        if let phonePrefixFieldViewModel = viewModel.phonePrefixFieldViewModel {
+            let phonePrefixField = BorderedTextFieldView(viewModel: phonePrefixFieldViewModel)
+            self.phonePrefixField = phonePrefixField
+            componentsStackView.addArrangedSubview(phonePrefixField)
+        }
+        
         if let phoneFieldViewModel = viewModel.phoneFieldViewModel {
             let phoneField = BorderedTextFieldView(viewModel: phoneFieldViewModel)
             self.phoneField = phoneField
@@ -184,12 +186,6 @@ class PhoneRegistrationViewController: UIViewController {
             let passwordField = BorderedTextFieldView(viewModel: passwordFieldViewModel)
             self.passwordField = passwordField
             componentsStackView.addArrangedSubview(passwordField)
-        }
-        
-        if let referralFieldViewModel = viewModel.referralFieldViewModel {
-            let referralField = BorderedTextFieldView(viewModel: referralFieldViewModel)
-            self.referralField = referralField
-            componentsStackView.addArrangedSubview(referralField)
         }
 
         if let termsViewModel = viewModel.termsViewModel {
@@ -216,7 +212,6 @@ class PhoneRegistrationViewController: UIViewController {
     private func setupBindings() {
         
         createAccountButton.onButtonTapped = { [weak self] in
-//            self?.openFirstDepositPromotions()
             
             self?.viewModel.registerUser()
         }
@@ -255,19 +250,36 @@ class PhoneRegistrationViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.registerComplete
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in
-                self?.openFirstDepositPromotions()
-            })
-            .store(in: &cancellables)
+        viewModel.registerComplete = { [weak self] in
+            self?.showRegisterSuccessAlert()
+
+        }
         
-        viewModel.registerError
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] errorMessage in
-                self?.showRegisterErrorAlert(errorMessage: errorMessage)
-            })
-            .store(in: &cancellables)
+        viewModel.registerError = { [weak self] errorMessage in
+            self?.showRegisterErrorAlert(errorMessage: errorMessage)
+        }
+        
+    }
+    
+    func showRegisterSuccessAlert() {
+        
+        let alert = UIAlertController(
+            title: "Register Success!",
+            message: "Your account was registered and logged in!",
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(
+            title: localized("ok"),
+            style: .default
+        ) { [weak self] _ in
+            
+            self?.dismiss(animated: true)
+        }
+        
+        alert.addAction(okAction)
+        
+        present(alert, animated: true)
     }
     
     func showRegisterErrorAlert(errorMessage: String) {

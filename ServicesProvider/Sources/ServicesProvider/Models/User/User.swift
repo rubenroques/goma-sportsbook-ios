@@ -339,11 +339,13 @@ public class SignUpForm {
 
 public struct PhoneSignUpForm {
     public var phone: String
+    public var phonePrefix: String
     public var password: String
     public var registrationId: String
 
-    public init(phone: String, password: String, registrationId: String) {
+    public init(phone: String, phonePrefix: String, password: String, registrationId: String) {
         self.phone = phone
+        self.phonePrefix = phonePrefix
         self.password = password
         self.registrationId = registrationId
     }

@@ -61,7 +61,11 @@ extension EveryMatrix {
         let errorKey: String
     }
     
-    struct RegisterResponse: Codable {
+    struct RegisterStepResponse: Codable {
         let registrationId: String
+    }
+    
+    struct RegisterResponse: Codable {
+        let userId: String
     }
 }

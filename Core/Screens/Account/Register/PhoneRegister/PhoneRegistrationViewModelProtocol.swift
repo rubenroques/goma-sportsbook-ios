@@ -13,16 +13,20 @@ protocol PhoneRegistrationViewModelProtocol {
     var isRegisterDataComplete: CurrentValueSubject<Bool, Never> { get }
     var headerViewModel: PromotionalHeaderViewModelProtocol { get }
     var highlightedTextViewModel: HighlightedTextViewModelProtocol { get }
+    var phonePrefixFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
     var phoneFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
     var passwordFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
-    var referralFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
     var termsViewModel: TermsAcceptanceViewModelProtocol? { get }
     var buttonViewModel: ButtonViewModelProtocol { get }
     
+    var phonePrefixText: String { get }
+    var phoneText: String { get }
+    var password: String { get }
+    
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var isLoadingConfigPublisher: AnyPublisher<Bool, Never> { get }
-    var registerComplete: PassthroughSubject<Void, Never> { get }
-    var registerError: PassthroughSubject<String, Never> { get }
+    var registerComplete: (() -> Void)? { get set }
+    var registerError: ((String) -> Void)? { get set }
     
     var extractedTermsHTMLData: RegisterConfigHelper.ExtractedHTMLData? { get }
 

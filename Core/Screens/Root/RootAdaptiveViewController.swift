@@ -187,10 +187,11 @@ class RootAdaptiveViewController: UIViewController {
             .sink { userProfile in
                 if let userProfile = userProfile {
                     // self.screenState = .logged(user: userProfile)
+                    self.widgetToolBarView.setLoggedInState(true)
                 }
                 else {
                     self.screenState = .anonymous
-
+                    self.widgetToolBarView.setLoggedInState(false)
                 }
             }
             .store(in: &cancellables)
@@ -364,6 +365,11 @@ class RootAdaptiveViewController: UIViewController {
             else if widgetId == "joinButton" {
                 self?.openPhoneRegistration()
             }
+            else if widgetId == "avatar" {
+                // TODO: Set a logged out state for testing
+                self?.widgetToolBarView.setLoggedInState(false)
+            }
+            
         }
         
         widgetToolBarView.onBalanceTapped = { [weak self] widgetId in
@@ -376,6 +382,7 @@ class RootAdaptiveViewController: UIViewController {
                 self?.showWalletStatusOverlay()
             }
         }
+        
     }
 
     // MARK: - Tab Bar Integration
@@ -1285,31 +1292,29 @@ extension RootAdaptiveViewController {
 extension RootAdaptiveViewController: RootActionable {
     
     func openPhoneLogin() {
-        let phoneLoginViewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()
+        var phoneLoginViewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()
         
         let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
         
         let navigationController = Router.navigationController(with: phoneLoginViewController)
         
-        phoneLoginViewModel.loginComplete
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in
-                // TESTING LOGIN CHANGE
-                navigationController.dismiss(animated: true)
-                self?.widgetToolBarView.setLoggedInState(true)
-            })
-            .store(in: &cancellables)
+//        phoneLoginViewModel.loginComplete = { [weak self] in
+//            navigationController.dismiss(animated: true)
+//            self?.widgetToolBarView.setLoggedInState(true)
+//        }
         
         present(navigationController, animated: true)
     }
     
     func openPhoneRegistration() {
         
-        let phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
+        var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
         
         let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
         
-        present(phoneRegistrationViewController, animated: true)
+        let navigationController = Router.navigationController(with: phoneRegistrationViewController)
+        
+        present(navigationController, animated: true)
         
     }
     

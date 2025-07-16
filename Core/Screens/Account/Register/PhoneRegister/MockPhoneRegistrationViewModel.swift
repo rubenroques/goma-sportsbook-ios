@@ -13,9 +13,9 @@ import ServicesProvider
 class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     let headerViewModel: PromotionalHeaderViewModelProtocol
     let highlightedTextViewModel: HighlightedTextViewModelProtocol
+    var phonePrefixFieldViewModel: BorderedTextFieldViewModelProtocol?
     var phoneFieldViewModel: BorderedTextFieldViewModelProtocol?
     var passwordFieldViewModel: BorderedTextFieldViewModelProtocol?
-    let referralFieldViewModel: BorderedTextFieldViewModelProtocol?
     var termsViewModel: TermsAcceptanceViewModelProtocol?
     let buttonViewModel: ButtonViewModelProtocol
 
@@ -28,11 +28,12 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { isLoadingSubject.eraseToAnyPublisher() }
     
     var isRegisterDataComplete: CurrentValueSubject<Bool, Never> = .init(false)
-    let registerComplete = PassthroughSubject<Void, Never>()
-    let registerError = PassthroughSubject<String, Never>()
+    var registerComplete: (() -> Void)?
+    var registerError: ((String) -> Void)?
     
     var registrationConfig: RegistrationConfigContent?
     var extractedTermsHTMLData: RegisterConfigHelper.ExtractedHTMLData?
+    var phonePrefixText: String = ""
     var phoneText: String = ""
     var password: String = ""
     
@@ -44,13 +45,6 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                                                                                            subtitle: nil))
         
         highlightedTextViewModel = MockHighlightedTextViewModel(data: HighlightedTextData(fullText: "Sign up securely in just 2 minutes", highlights: []))
-        
-        referralFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "referral",
-                                                                                                     placeholder: "Referral Code",
-                                                                                                     isSecure: false,
-                                                                                                     visualState: .idle,
-                                                                                                     keyboardType: .default,
-                                                                                                     textContentType: .oneTimeCode))
         
         buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "register",
                                                                      title: "Create Account",
@@ -97,6 +91,14 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         self.registrationConfig = config
         
         for field in config.fields {
+            
+            // TEMP PREFIX
+            phonePrefixFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
+                                                                                       placeholder: "Mobile Prefix *",
+                                                                                       isSecure: false,
+                                                                                       visualState: .idle,
+                                                                                       keyboardType: .phonePad,
+                                                                                       textContentType: .telephoneNumber))
             switch field.name {
             case "Mobile":
                 let phoneConfig = config.fields.first(where: {
@@ -105,7 +107,7 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 
                 phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
                                                                                            placeholder: "New number *",
-                                                                                           prefix: phoneConfig?.defaultValue ?? "",
+//                                                                                           prefix: phoneConfig?.defaultValue ?? "",
                                                                                            isSecure: false,
                                                                                            visualState: .idle,
                                                                                            keyboardType: .phonePad,
@@ -156,12 +158,15 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     private func setupPublishers() {
         
         if let registrationConfig = registrationConfig,
+           let phonePrefixFieldViewModel = phonePrefixFieldViewModel,
            let phoneFieldViewModel = phoneFieldViewModel,
            let passwordFieldViewModel = passwordFieldViewModel,
            let termsViewModel = termsViewModel {
             
             Publishers.CombineLatest4(phoneFieldViewModel.textPublisher, passwordFieldViewModel.textPublisher, termsViewModel.dataPublisher, passwordFieldViewModel.visualStatePublisher)
-                .map { phone, password, termsAccepted, passwordVisualState in
+                .combineLatest(phonePrefixFieldViewModel.textPublisher)
+                .map { combined4, phonePrefix in
+                    let (phone, password, termsAccepted, passwordVisualState) = combined4
                     let isPasswordValid: Bool
                     
                     if case .error = passwordVisualState {
@@ -176,12 +181,21 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                         }
                     }
                     
-                    return !phone.isEmpty && isPasswordValid && termsAccepted.isAccepted
+                    return !phone.isEmpty && isPasswordValid && termsAccepted.isAccepted && !phonePrefix.isEmpty
                 }
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] isEnabled in
                     self?.buttonViewModel.setEnabled(isEnabled)
                     self?.isRegisterDataComplete.send(isEnabled)
+                }
+                .store(in: &cancellables)
+            
+            phonePrefixFieldViewModel.textPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] phonePrefixText in
+                    guard let self = self else { return }
+                    
+                    self.phonePrefixText = phonePrefixText
                 }
                 .store(in: &cancellables)
             
@@ -231,7 +245,11 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
 
         let registrationId = registrationConfig?.registrationID ?? ""
         
-        let signUpFormType = SignUpFormType.phone(PhoneSignUpForm(phone: phoneText, password: password, registrationId: registrationId))
+//        let phonePrefix = registrationConfig?.fields.first(where: {
+//            $0.name == "Mobile"
+//        })?.defaultValue
+        
+        let signUpFormType = SignUpFormType.phone(PhoneSignUpForm(phone: phoneText, phonePrefix: phonePrefixText, password: password, registrationId: registrationId))
         
         Env.servicesProvider.signUp(with: signUpFormType)
             .receive(on: DispatchQueue.main)
@@ -241,16 +259,49 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     print("PHONE REGISTER FINISHED")
                 case .failure(let error):
                     print("PHONE REGISTER ERROR: \(error)")
-                    self?.registerError.send(error.localizedDescription)
+                    switch error {
+                    case .errorMessage(let message):
+                        self?.registerError?(message)
+                    default:
+                        self?.registerError?(error.localizedDescription)
+                    }
+                    
+                    self?.isLoadingSubject.send(false)
+
+                }
+
+            }, receiveValue: { [weak self] signUpResponse in
+                                
+                self?.loginUserAfterRegister()
+            })
+            .store(in: &cancellables)
+    }
+    
+    func loginUserAfterRegister() {
+        
+        let username = "\(phonePrefixText)\(phoneText)"
+        let password = "\(password)"
+        
+        Env.userSessionStore.login(withUsername: username, password: password)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    switch error {
+                    case .errorMessage(let errorMessage):
+                        self?.registerError?(errorMessage)
+                    default:
+                        self?.registerError?("Login after register error")
+                    }
+                case .finished:
+                    ()
                 }
                 
                 self?.isLoadingSubject.send(false)
 
-            }, receiveValue: { [weak self] signUpResponse in
-                
-                print("PHONE REGISTER RESPONSE: \(signUpResponse)")
-                
-                self?.registerComplete.send()
+            }, receiveValue: { [weak self] _ in
+                self?.registerComplete?()
+
             })
             .store(in: &cancellables)
     }

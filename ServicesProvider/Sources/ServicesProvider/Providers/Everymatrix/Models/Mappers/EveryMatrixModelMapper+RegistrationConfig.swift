@@ -71,8 +71,55 @@ extension EveryMatrixModelMapper {
         )
     }
     
-    static func singUpResponse(fromInternalRegisterResponse internalRegisterResponse: EveryMatrix.RegisterResponse) -> SignUpResponse {
+    static func signUpResponse(fromInternalRegisterStepResponse internalRegisterStepResponse: EveryMatrix.RegisterStepResponse) -> SignUpResponse {
         
-        return SignUpResponse(successful: internalRegisterResponse.registrationId.isEmpty ? false : true)
+        return SignUpResponse(successful: internalRegisterStepResponse.registrationId.isEmpty ? false : true)
+    }
+    
+    static func signUpResponse(fromInternalRegisterResponse internalRegisterResponse: EveryMatrix.RegisterResponse) -> SignUpResponse {
+        
+        return SignUpResponse(successful: internalRegisterResponse.userId.isEmpty ? false : true)
+    }
+    
+    static func userProfile(fromInternalPlayerProfile internalPlayerProfile: EveryMatrix.PlayerProfile) -> UserProfile {
+        // Date parsing
+        let dateFormatter = ISO8601DateFormatter()
+        let birthDate: Date = dateFormatter.date(from: internalPlayerProfile.birthDate) ?? Date(timeIntervalSince1970: 0)
+
+        return UserProfile(
+            userIdentifier: String(internalPlayerProfile.id),
+            sessionKey: "",
+            username: internalPlayerProfile.userName,
+            email: internalPlayerProfile.email,
+            firstName: internalPlayerProfile.firstName,
+            middleName: nil, // No field in PlayerProfile
+            lastName: internalPlayerProfile.lastName,
+            birthDate: birthDate,
+            gender: internalPlayerProfile.gender,
+            nationalityCode: internalPlayerProfile.nationality,
+            countryCode: internalPlayerProfile.countryCode,
+            personalIdNumber: internalPlayerProfile.personalId,
+            address: internalPlayerProfile.address1,
+            province: internalPlayerProfile.state,
+            city: internalPlayerProfile.city,
+            postalCode: internalPlayerProfile.zip,
+            birthDepartment: nil, // No field in PlayerProfile
+            streetNumber: nil,    // No field in PlayerProfile
+            phoneNumber: internalPlayerProfile.phone,
+            mobilePhone: internalPlayerProfile.mobilePhone,
+            mobileCountryCode: internalPlayerProfile.mobilePhonePrefix,
+            mobileLocalNumber: nil, // No field in PlayerProfile
+            avatarName: nil, // No field in PlayerProfile
+            godfatherCode: nil, // No field in PlayerProfile
+            placeOfBirth: internalPlayerProfile.birthPlace,
+            additionalStreetLine: internalPlayerProfile.address2,
+            emailVerificationStatus: internalPlayerProfile.isEmailVerified ? .verified : .unverified,
+            userRegistrationStatus: .completed,
+            kycStatus: .pass,
+            lockedStatus: .notLocked,
+            hasMadeDeposit: false, // No field in PlayerProfile
+            kycExpiryDate: nil, // No field in PlayerProfile
+            currency: internalPlayerProfile.currency
+        )
     }
 }

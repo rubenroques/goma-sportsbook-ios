@@ -51,8 +51,29 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
     // Implement all required methods from PrivilegedAccessManagerProvider
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        let endpoint = EveryMatrixPlayerAPI.login(username: username, password: password)
+        let publisher: AnyPublisher<EveryMatrix.PhoneLoginResponse, ServiceProviderError> = self.connector.request(endpoint)
 
+        return publisher
+            .flatMap { [weak self] phoneLoginResponse -> AnyPublisher<UserProfile, ServiceProviderError> in
+                guard let self = self else {
+                    return Fail(error: .unknown).eraseToAnyPublisher()
+                }
+                // Store the session token
+                self.connector.updateSessionToken(sessionId: phoneLoginResponse.sessionId, id: phoneLoginResponse.id)
+                
+                let getUserProfileEndpoint = EveryMatrixPlayerAPI.getUserProfile(userId: String(phoneLoginResponse.userId))
+                
+                return self.connector.request(getUserProfileEndpoint)
+                    .map { (playerProfile: EveryMatrix.PlayerProfile) in
+                        // Map to your app's UserProfile model if needed
+                        let mappedUserProfile = EveryMatrixModelMapper.userProfile(fromInternalPlayerProfile: playerProfile)
+                        
+                        return mappedUserProfile
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
     
     var accessToken: String?
@@ -79,17 +100,28 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         
         switch formType {
         case .phone(let phoneSignUpForm):
-            let endpoint = EveryMatrixPlayerAPI.register(phoneText: phoneSignUpForm.phone, password: phoneSignUpForm.password, registrationId: phoneSignUpForm.registrationId)
-            let publisher: AnyPublisher<EveryMatrix.RegisterResponse, ServiceProviderError> = self.connector.request(endpoint)
+            let registerStepEndpoint = EveryMatrixPlayerAPI.registerStep(
+                        phoneText: phoneSignUpForm.phone,
+                        password: phoneSignUpForm.password,
+                        mobilePrefix: phoneSignUpForm.phonePrefix,
+                        registrationId: phoneSignUpForm.registrationId
+                    )
+            
+                    let registerStepPublisher: AnyPublisher<EveryMatrix.RegisterStepResponse, ServiceProviderError> = self.connector.request(registerStepEndpoint)
 
-            return publisher.flatMap({ registerResponse -> AnyPublisher<SignUpResponse, ServiceProviderError> in
-                
-                let mappedRegisterResponse = EveryMatrixModelMapper.singUpResponse(fromInternalRegisterResponse: registerResponse)
-                
-                return Just(mappedRegisterResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-                
-            })
-            .eraseToAnyPublisher()
+                    return registerStepPublisher
+                        .flatMap { registerStepResponse -> AnyPublisher<EveryMatrix.RegisterResponse, ServiceProviderError> in
+                            // Extract registrationId from the first response
+                            let registrationId = registerStepResponse.registrationId
+                            let registerEndpoint = EveryMatrixPlayerAPI.register(registrationId: registrationId)
+                            // Call the second endpoint
+                            return self.connector.request(registerEndpoint)
+                        }
+                        .map { registerResponse in
+                            // Map the final response to your SignUpResponse
+                            return EveryMatrixModelMapper.signUpResponse(fromInternalRegisterResponse: registerResponse)
+                        }
+                        .eraseToAnyPublisher()
         default:
             return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
 
