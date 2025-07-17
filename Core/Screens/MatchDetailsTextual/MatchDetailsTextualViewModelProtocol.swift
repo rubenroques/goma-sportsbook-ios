@@ -13,33 +13,26 @@ public protocol MatchDetailsTextualViewModelProtocol: AnyObject {
     
     // MARK: - Child ViewModels (Vertical Pattern)
     
-    /// Step 2: MultiWidgetToolbarView
     var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol { get }
     
-    /// Step 3: MatchDateNavigationBarView
     var matchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol { get }
     
-    /// Step 4: MatchHeaderCompactView
     var matchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol { get }
     
-    /// Step 5: StatisticsWidgetView (collapsible)
     var statisticsWidgetViewModel: StatisticsWidgetViewModelProtocol { get }
     
-    /// Step 6: MarketGroupSelectorTabView
     var marketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol { get }
     
     // MARK: - Publishers
+    
+    /// Published when the market group selector tab view model changes (for UI reconfiguration)
+    var marketGroupSelectorTabViewModelPublisher: AnyPublisher<MarketGroupSelectorTabViewModelProtocol, Never> { get }
     
     /// Published when the view model is ready to display content
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     
     /// Published when an error occurs
     var errorPublisher: AnyPublisher<String?, Never> { get }
-    
-    // MARK: - Navigation
-    
-    /// Published when navigation is requested
-    var navigationRequestPublisher: AnyPublisher<MatchDetailsNavigationAction, Never> { get }
     
     // MARK: - Statistics Widget
     
@@ -56,12 +49,4 @@ public protocol MatchDetailsTextualViewModelProtocol: AnyObject {
     
     /// Refresh all content
     func refresh()
-}
-
-// MARK: - Navigation Actions
-
-public enum MatchDetailsNavigationAction {
-    case back
-    case share
-    case favorite
 }

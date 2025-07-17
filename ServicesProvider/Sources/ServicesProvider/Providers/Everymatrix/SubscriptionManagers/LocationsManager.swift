@@ -140,6 +140,8 @@ class LocationsManager {
                 break
             case .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber, .tournament:
                 break // Ignore non-location entities
+            case .marketGroup:
+                break // Ignore non-location entities
                 
             case .unknown(let type):
                 if type == "LOCATION" {

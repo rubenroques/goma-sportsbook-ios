@@ -17,35 +17,34 @@ public class MatchDetailsTextualViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
+    private lazy var topSafeAreaView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
-    private let scrollView = UIScrollView()
-    private let contentView = UIView()
     private let mainStackView = UIStackView()
-    private let loadingIndicator = UIActivityIndicatorView(style: .large)
+    private let pageContainerView = UIView()
+    private let loadingIndicator = UIActivityIndicatorView(style: .medium)
     
-    // Component views will be added step by step
-    // Step 2: MultiWidgetToolbarView
     private lazy var multiWidgetToolbarView: MultiWidgetToolbarView = {
         let view = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    // Step 3: MatchDateNavigationBarView
     private lazy var matchDateNavigationBarView: MatchDateNavigationBarView = {
         let view = MatchDateNavigationBarView(viewModel: viewModel.matchDateNavigationBarViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    // Step 4: MatchHeaderCompactView
     private lazy var matchHeaderCompactView: MatchHeaderCompactView = {
         let view = MatchHeaderCompactView(viewModel: viewModel.matchHeaderCompactViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    // Step 5: StatisticsWidgetView (collapsible)
     private lazy var statisticsWidgetView: StatisticsWidgetView = {
         let view = StatisticsWidgetView(viewModel: viewModel.statisticsWidgetViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -55,7 +54,6 @@ public class MatchDetailsTextualViewController: UIViewController {
     // Statistics height constraint for collapsible animation
     private var statisticsHeightConstraint: NSLayoutConstraint!
     
-    // Step 6: MarketGroupSelectorTabView
     private lazy var marketGroupSelectorTabView: MarketGroupSelectorTabView = {
         let view = MarketGroupSelectorTabView(
             viewModel: viewModel.marketGroupSelectorTabViewModel,
@@ -66,10 +64,10 @@ public class MatchDetailsTextualViewController: UIViewController {
         return view
     }()
     
-    // Step 7: UIPageViewController for markets
     private var pageViewController: UIPageViewController!
     private var marketControllers: [String: MarketsTabSimpleViewController] = [:]
     private var isAnimating = false
+    private var isFirstStatisticsUpdate = true
     
     // MARK: - Initialization
     
@@ -86,24 +84,23 @@ public class MatchDetailsTextualViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        setupConstraints()
-        setupBindings()
+        
+        self.setupUI()
+        self.setupConstraints()
+        
+        self.setupBindings()
     }
     
     // MARK: - Setup
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground
-        title = "Match Details"
+        view.backgroundColor = UIColor.App.backgroundPrimary
         
-        // Configure scroll view
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.showsVerticalScrollIndicator = true
-        scrollView.alwaysBounceVertical = true
+        topSafeAreaView.backgroundColor = UIColor.App.topBarGradient1
         
-        // Configure content view
-        contentView.translatesAutoresizingMaskIntoConstraints = false
+        // Configure page container view
+        pageContainerView.translatesAutoresizingMaskIntoConstraints = false
+        pageContainerView.backgroundColor = .clear
         
         // Configure main stack view
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -115,42 +112,28 @@ public class MatchDetailsTextualViewController: UIViewController {
         // Configure loading indicator
         loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
         loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.color = .systemGray
         
         // Add views to hierarchy
-        view.addSubview(scrollView)
+        view.addSubview(topSafeAreaView)
+        view.addSubview(mainStackView)
+        view.addSubview(pageContainerView)
         view.addSubview(loadingIndicator)
-        scrollView.addSubview(contentView)
-        contentView.addSubview(mainStackView)
         
-        // Setup components (will be added step by step)
         setupComponents()
     }
     
     private func setupComponents() {
-        // Components will be added here step by step:
-        // 1. MultiWidgetToolbarView ✅
-        // 2. MatchDateNavigationBarView ✅
-        // 3. MatchHeaderCompactView ✅
-        // 4. StatisticsWidgetView (collapsible) ✅
-        // 5. MarketGroupSelectorTabView ✅
-        // 6. UIPageViewController for markets ✅
-        
-        // Step 2: Add MultiWidgetToolbarView
         setupMultiWidgetToolbarView()
         
-        // Step 3: Add MatchDateNavigationBarView
         setupMatchDateNavigationBarView()
         
-        // Step 4: Add MatchHeaderCompactView
         setupMatchHeaderCompactView()
         
-        // Step 5: Add StatisticsWidgetView (collapsible)
         setupStatisticsWidgetView()
         
-        // Step 6: Add MarketGroupSelectorTabView
         setupMarketGroupSelectorTabView()
         
-        // Step 7: Add UIPageViewController
         setupPageViewController()
     }
     
@@ -186,12 +169,9 @@ public class MatchDetailsTextualViewController: UIViewController {
         statisticsHeightConstraint = statisticsWidgetView.heightAnchor.constraint(equalToConstant: 0)
         statisticsHeightConstraint.isActive = true
         
-        // Initially hidden (height = 0)
+        // Initially hidden
         statisticsWidgetView.isHidden = true
-        
-        // Style the statistics widget
-        statisticsWidgetView.backgroundColor = .systemBackground
-        statisticsWidgetView.layer.cornerRadius = 8
+
         statisticsWidgetView.clipsToBounds = true
     }
     
@@ -218,8 +198,16 @@ public class MatchDetailsTextualViewController: UIViewController {
         
         addChild(pageViewController)
         pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        mainStackView.addArrangedSubview(pageViewController.view)
+        pageContainerView.addSubview(pageViewController.view)
         pageViewController.didMove(toParent: self)
+        
+        // Set up page view controller constraints
+        NSLayoutConstraint.activate([
+            pageViewController.view.topAnchor.constraint(equalTo: pageContainerView.topAnchor),
+            pageViewController.view.leadingAnchor.constraint(equalTo: pageContainerView.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: pageContainerView.trailingAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: pageContainerView.bottomAnchor)
+        ])
         
         // Initialize market controllers based on current market groups
         initializeMarketControllers()
@@ -306,14 +294,6 @@ public class MatchDetailsTextualViewController: UIViewController {
     }
     
     private func handleBackTapped() {
-        // Notify view model of back navigation request
-        viewModel.navigationRequestPublisher
-            .first()
-            .sink { _ in
-                // The binding in setupBindings() will handle the actual navigation
-            }
-            .store(in: &cancellables)
-        
         // Or directly navigate
         navigationController?.popViewController(animated: true)
     }
@@ -345,28 +325,26 @@ public class MatchDetailsTextualViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Scroll view
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            // Top Safe Area
+            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             
-            // Content view
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            // Main stack view (fixed at top)
+            mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            // Main stack view
-            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            // Page container view (fills remaining space)
+            pageContainerView.topAnchor.constraint(equalTo: mainStackView.bottomAnchor),
+            pageContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            pageContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pageContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            // Loading indicator
-            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            // Loading indicator (top-right corner)
+            loadingIndicator.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            loadingIndicator.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     
@@ -393,24 +371,53 @@ public class MatchDetailsTextualViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // Bind navigation actions
-        viewModel.navigationRequestPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in
-                self?.handleNavigationAction(action)
-            }
-            .store(in: &cancellables)
-        
         // Bind statistics visibility
         viewModel.statisticsVisibilityPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isVisible in
-                self?.updateStatisticsVisibility(isVisible)
+                guard let self = self else { return }
+                let animated = !self.isFirstStatisticsUpdate
+                self.isFirstStatisticsUpdate = false
+                self.updateStatisticsVisibility(isVisible, animated: animated)
+            }
+            .store(in: &cancellables)
+        
+        // Bind market group selector tab view model changes
+        viewModel.marketGroupSelectorTabViewModelPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newViewModel in
+                self?.updateMarketGroupSelectorTabView(with: newViewModel)
             }
             .store(in: &cancellables)
     }
     
     // MARK: - Helper Methods
+    
+    private func updateMarketGroupSelectorTabView(with newViewModel: MarketGroupSelectorTabViewModelProtocol) {
+        // Efficiently reconfigure existing view with new view model (follows GomaUI pattern)
+        marketGroupSelectorTabView.configure(with: newViewModel)
+        
+        // Recreate market controllers for new market groups
+        recreateMarketControllers()
+        
+        // Set initial page if we have market groups
+        if let firstMarketGroupId = newViewModel.currentMarketGroups.first?.id,
+           let firstController = marketControllers[firstMarketGroupId] {
+            pageViewController.setViewControllers([firstController], direction: .forward, animated: false)
+        }
+    }
+    
+    private func recreateMarketControllers() {
+        // Clear existing controllers
+        marketControllers.removeAll()
+        
+        // Create new controllers for current market groups
+        let marketGroups = viewModel.marketGroupSelectorTabViewModel.currentMarketGroups
+        for marketGroup in marketGroups {
+            let controller = MarketsTabSimpleViewController(marketGroupId: marketGroup.id, title: marketGroup.title)
+            marketControllers[marketGroup.id] = controller
+        }
+    }
     
     private func showError(_ message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
@@ -420,23 +427,17 @@ public class MatchDetailsTextualViewController: UIViewController {
         })
         present(alert, animated: true)
     }
-    
-    private func handleNavigationAction(_ action: MatchDetailsNavigationAction) {
-        switch action {
-        case .back:
-            navigationController?.popViewController(animated: true)
-        case .share:
-            // Share functionality placeholder
-            break
-        case .favorite:
-            // Favorite functionality placeholder
-            break
-        }
-    }
-    
-    private func updateStatisticsVisibility(_ isVisible: Bool) {
-        // Animate statistics widget visibility
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+        
+    private func updateStatisticsVisibility(_ isVisible: Bool, animated: Bool) {
+        if animated {
+            // Animate statistics widget visibility
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+                self.statisticsHeightConstraint.constant = isVisible ? 220 : 0
+                self.statisticsWidgetView.isHidden = !isVisible
+                self.view.layoutIfNeeded()
+            }
+        } else {
+            // Set initial state without animation
             self.statisticsHeightConstraint.constant = isVisible ? 220 : 0
             self.statisticsWidgetView.isHidden = !isVisible
             self.view.layoutIfNeeded()

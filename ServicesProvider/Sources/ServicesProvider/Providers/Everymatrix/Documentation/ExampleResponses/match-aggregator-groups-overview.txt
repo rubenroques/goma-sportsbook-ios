@@ -1,0 +1,193 @@
+[
+    50,
+    18,
+    {},
+    [],
+    {
+        "version": "1752747380920",
+        "format": "BASIC",
+        "messageType": "INITIAL_DUMP",
+        "records": [
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131025",
+                "groupKey": "Fast_markets",
+                "translatedName": "Fast",
+                "position": 0,
+                "isDefault": false,
+                "numberOfMarkets": 8,
+                "isBetBuilder": false,
+                "isFast": true,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131857",
+                "groupKey": "Main",
+                "translatedName": "Main",
+                "position": 1,
+                "isDefault": true,
+                "numberOfMarkets": 53,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132130910",
+                "groupKey": "Bet_Builder",
+                "translatedName": "Bet Builder",
+                "position": 2,
+                "isDefault": false,
+                "numberOfMarkets": 149,
+                "isBetBuilder": true,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131019",
+                "groupKey": "Combo_Markets",
+                "translatedName": "Combo Markets",
+                "position": 3,
+                "isDefault": false,
+                "numberOfMarkets": 13,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131021",
+                "groupKey": "Goals",
+                "translatedName": "Goals",
+                "position": 4,
+                "isDefault": false,
+                "numberOfMarkets": 27,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131022",
+                "groupKey": "Scores",
+                "translatedName": "Scores",
+                "position": 5,
+                "isDefault": false,
+                "numberOfMarkets": 14,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131024",
+                "groupKey": "Halves",
+                "translatedName": "Halves",
+                "position": 6,
+                "isDefault": false,
+                "numberOfMarkets": 52,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131026",
+                "groupKey": "Corners",
+                "translatedName": "Corners",
+                "position": 7,
+                "isDefault": false,
+                "numberOfMarkets": 0,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131030",
+                "groupKey": "Handicaps",
+                "translatedName": "Handicaps",
+                "position": 8,
+                "isDefault": false,
+                "numberOfMarkets": 23,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131028",
+                "groupKey": "Teams",
+                "translatedName": "Teams",
+                "position": 9,
+                "isDefault": false,
+                "numberOfMarkets": 42,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131023",
+                "groupKey": "Players",
+                "translatedName": "Players",
+                "position": 10,
+                "isDefault": false,
+                "numberOfMarkets": 0,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131029",
+                "groupKey": "Bookings",
+                "translatedName": "Bookings",
+                "position": 11,
+                "isDefault": false,
+                "numberOfMarkets": 0,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131031",
+                "groupKey": "Special_Bets",
+                "translatedName": "Special Bets",
+                "position": 12,
+                "isDefault": false,
+                "numberOfMarkets": 0,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132131052",
+                "groupKey": "Main_Alternative",
+                "translatedName": "Main Alternative",
+                "position": 13,
+                "isDefault": false,
+                "numberOfMarkets": 35,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            },
+            {
+                "_type": "MARKET_GROUP",
+                "id": "1132132756",
+                "groupKey": "Flash",
+                "translatedName": "Flash",
+                "position": 15,
+                "isDefault": false,
+                "numberOfMarkets": 6,
+                "isBetBuilder": false,
+                "isFast": false,
+                "isOutright": false
+            }
+        ]
+    }
+]

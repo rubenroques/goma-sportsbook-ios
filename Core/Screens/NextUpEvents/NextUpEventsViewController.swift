@@ -61,8 +61,6 @@ class NextUpEventsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.quickLinksTabBarView.alpha = 0.0
-        
         setupViews()
         setupBindings()
         loadData()
@@ -506,9 +504,8 @@ class NextUpEventsViewController: UIViewController {
     
     // MARK: - Card Tap Handling
     private func handleCardTapped(_ selectedMatch: Match) {
-        // Create MatchDetailsTextualViewModel from the filtered match data
-        // Note: Currently using default init with mock data
-        let matchDetailsViewModel = MockMatchDetailsTextualViewModel.defaultMock
+        // Create MatchDetailsTextualViewModel from the selected match
+        let matchDetailsViewModel = MatchDetailsTextualViewModel(match: selectedMatch)
         
         // Create and present the MatchDetailsTextualViewController
         let matchDetailsViewController = MatchDetailsTextualViewController(viewModel: matchDetailsViewModel)

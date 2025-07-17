@@ -183,28 +183,28 @@ public final class MatchDateNavigationBarView: UIView {
         
         // Split the text to apply different font weights
         if let text = preMatchLabel.text {
-            let components = text.components(separatedBy: " ")
+            let components = text.components(separatedBy: ",")
             if components.count >= 2 {
                 let attributedString = NSMutableAttributedString()
                 
-                // Time part (regular)
+                // Date part (bold)
                 attributedString.append(NSAttributedString(
                     string: components[0],
                     attributes: [
-                        .font: StyleProvider.fontWith(type: .regular, size: 12),
+                        .font: StyleProvider.fontWith(type: .bold, size: 12),
                         .foregroundColor: StyleProvider.Color.textPrimary
                     ]
                 ))
                 
                 // Space
-                attributedString.append(NSAttributedString(string: " "))
+                attributedString.append(NSAttributedString(string: ", "))
                 
-                // Date part (bold)
+                // Time part (regular)
                 let datePart = components[1...].joined(separator: " ")
                 attributedString.append(NSAttributedString(
                     string: datePart,
                     attributes: [
-                        .font: StyleProvider.fontWith(type: .bold, size: 12),
+                        .font: StyleProvider.fontWith(type: .regular, size: 12),
                         .foregroundColor: StyleProvider.Color.textPrimary
                     ]
                 ))

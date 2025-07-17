@@ -163,6 +163,8 @@ class PopularTournamentsManager {
                 break
             case .eventCategory, .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber:
                 break // Ignore non-tournament entities
+            case .marketGroup:
+                break // Ignore non-tournament entities
                 
             case .unknown(let type):
                 if type == "TOURNAMENT" {

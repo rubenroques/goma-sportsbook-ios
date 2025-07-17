@@ -659,7 +659,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
 }
 
 extension GomaProvider: EventsProvider {
-
+   
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         return self.connector.connectionStatePublisher.eraseToAnyPublisher()
     }
@@ -970,6 +970,14 @@ extension GomaProvider: EventsProvider {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
 
+    func subscribeToMarketGroups(eventId: String) -> AnyPublisher<SubscribableContent<[MarketGroup]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+    }
+    
+    func subscribeToMarketGroupDetails(eventId: String, marketGroupKey: String) -> AnyPublisher<SubscribableContent<[Market]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+    }
+    
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
         let endpointDetails = GomaAPISchema.getEventDetails(identifier: id)

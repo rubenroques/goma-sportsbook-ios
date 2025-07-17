@@ -141,6 +141,8 @@ class SportsManager {
                 break // Ignore non-sport entities
             case .eventInfo:
                 break // Ignore non-sport entities
+            case .marketGroup:
+                break // Ignore non-sport entities
                 
             case .unknown(let type):
                 if type == "SPORT" {

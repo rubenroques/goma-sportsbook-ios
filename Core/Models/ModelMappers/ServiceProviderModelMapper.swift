@@ -507,6 +507,37 @@ extension ServiceProviderModelMapper {
         return tournaments.map(Self.tournament(fromTournament:))
     }
     
+    // MARK: - Market Groups
+    
+    /// Maps an array of ServicesProvider.MarketGroup to the app's MarketGroup models
+    static func marketGroups(fromServiceProviderMarketGroups spMarketGroups: [ServicesProvider.MarketGroup]) -> [MarketGroup] {
+        return spMarketGroups.map(Self.marketGroup(fromServiceProviderMarketGroup:))
+    }
+    
+    /// Maps a ServicesProvider.MarketGroup to the app's MarketGroup model
+    static func marketGroup(fromServiceProviderMarketGroup spMarketGroup: ServicesProvider.MarketGroup) -> MarketGroup {
+        // Convert markets if present
+        var convertedMarkets: [Market]?
+        if let markets = spMarketGroup.markets {
+            convertedMarkets = markets.map(Self.market(fromServiceProviderMarket:))
+        }
+        
+        return MarketGroup(
+            id: spMarketGroup.id,
+            type: spMarketGroup.type,
+            groupKey: spMarketGroup.groupKey,
+            translatedName: spMarketGroup.translatedName,
+            isDefault: spMarketGroup.isDefault,
+            markets: convertedMarkets,
+            position: spMarketGroup.position,
+            numberOfMarkets: spMarketGroup.numberOfMarkets,
+            loaded: spMarketGroup.loaded,
+            isBetBuilder: spMarketGroup.isBetBuilder,
+            isFast: spMarketGroup.isFast,
+            isOutright: spMarketGroup.isOutright
+        )
+    }
+    
     static func suggestedBetslips(fromPromotedBetslips promotedBetslips: [PromotedBetslip]) -> [SuggestedBetslip] {
         return promotedBetslips.map(Self.suggestedBetslip(fromPromotedBetslip:))
     }

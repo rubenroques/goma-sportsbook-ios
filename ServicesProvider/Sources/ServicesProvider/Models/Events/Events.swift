@@ -744,6 +744,11 @@ public struct MarketGroup {
     public var numberOfMarkets: Int?
     public var loaded: Bool
     public var markets: [Market]?
+    
+    // Additional EveryMatrix new properties
+    public var isBetBuilder: Bool?
+    public var isFast: Bool?
+    public var isOutright: Bool?
 }
 
 public struct FieldWidgetRenderData {

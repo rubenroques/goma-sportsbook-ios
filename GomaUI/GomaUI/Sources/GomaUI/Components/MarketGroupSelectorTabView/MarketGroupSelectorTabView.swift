@@ -9,7 +9,7 @@ public enum MarketGroupSelectorBackgroundStyle {
 public class MarketGroupSelectorTabView: UIView {
 
     // MARK: - Private Properties
-    private let viewModel: MarketGroupSelectorTabViewModelProtocol
+    private var viewModel: MarketGroupSelectorTabViewModelProtocol
     private let imageResolver: MarketGroupTabImageResolver
     private let backgroundStyle: MarketGroupSelectorBackgroundStyle
     private var cancellables = Set<AnyCancellable>()
@@ -288,6 +288,25 @@ extension MarketGroupSelectorTabView {
 
 // MARK: - Public Interface
 extension MarketGroupSelectorTabView {
+
+    /// Configure the view with a new view model (follows GomaUI pattern)
+    public func configure(with newViewModel: MarketGroupSelectorTabViewModelProtocol) {
+        // Cancel existing bindings
+        cancellables.removeAll()
+        
+        // Update view model reference
+        viewModel = newViewModel
+        
+        // Re-establish bindings with new view model
+        setupBindings()
+        
+        // Update UI to reflect new view model state
+        updateTabItems(viewModel.currentMarketGroups)
+        if let selectedId = viewModel.currentSelectedMarketGroupId {
+            updateSelectionState(selectedId: selectedId)
+            scrollToTabItem(id: selectedId, animated: false)
+        }
+    }
 
     /// Scrolls to a specific tab item
     public func scrollToTab(id: String, animated: Bool = true) {

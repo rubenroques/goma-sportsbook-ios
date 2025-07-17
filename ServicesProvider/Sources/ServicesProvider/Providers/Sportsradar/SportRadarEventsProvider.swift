@@ -505,6 +505,14 @@ class SportRadarEventsProvider: EventsProvider {
 
     }
 
+    func subscribeToMarketGroups(eventId: String) -> AnyPublisher<SubscribableContent<[MarketGroup]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+    }
+    
+    func subscribeToMarketGroupDetails(eventId: String, marketGroupKey: String) -> AnyPublisher<SubscribableContent<[Market]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+    }
+    
     // Independent Live Data extended info
     public func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
 

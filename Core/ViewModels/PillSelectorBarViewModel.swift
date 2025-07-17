@@ -11,11 +11,11 @@ final class PillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
     
     // MARK: - PillSelectorBarViewModelProtocol
     public var displayStatePublisher: AnyPublisher<PillSelectorBarDisplayState, Never> {
-        displayStateSubject.eraseToAnyPublisher()
+        self.displayStateSubject.eraseToAnyPublisher()
     }
     
     public var selectionEventPublisher: AnyPublisher<PillSelectionEvent, Never> {
-        selectionEventSubject.eraseToAnyPublisher()
+        self.selectionEventSubject.eraseToAnyPublisher()
     }
     
     public var currentSelectedPillId: String? { nil } // No selection tracking needed

@@ -321,6 +321,8 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 store.store(dto)
             case .eventInfo(let dto):
                 store.store(dto)
+            case .marketGroup(let dto):
+                store.store(dto)
                 
             // UPDATE/DELETE/CREATE records - only process match-related changes
             case .changeRecord(let changeRecord):
@@ -404,6 +406,8 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
         case .tournament(let dto):
             store.store(dto)
         case .eventInfo(let dto):
+            store.store(dto)
+        case .marketGroup(let dto):
             store.store(dto)
             
         case .unknown(let type):

@@ -60,5 +60,6 @@ public enum ServiceProviderError: Error, Equatable, Hashable {
     case invalidUserLocation
     
     case notSupportedForProvider
+    case matchDetailsManagerNotFound
     case unknown
 }

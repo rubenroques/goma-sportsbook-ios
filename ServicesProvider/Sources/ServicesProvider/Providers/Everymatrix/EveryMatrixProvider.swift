@@ -27,6 +27,9 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     private var popularTournamentsManager: PopularTournamentsManager?
     private var sportTournamentsManager: SportTournamentsManager?
+    
+    // MARK: - Match Details Manager
+    private var matchDetailsManager: MatchDetailsManager?
 
     init(connector: EveryMatrixConnector) {
         self.connector = connector
@@ -38,6 +41,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         locationsManager?.unsubscribe()
         popularTournamentsManager?.unsubscribe()
         sportTournamentsManager?.unsubscribe()
+        matchDetailsManager?.unsubscribe()
     }
 
     func reconnectIfNeeded() {
@@ -119,7 +123,34 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        // Clean up any existing match details manager
+        matchDetailsManager?.unsubscribe()
+        
+        // Create new match details manager
+        matchDetailsManager = MatchDetailsManager(connector: connector, matchId: eventId)
+        
+        return matchDetailsManager!.subscribeEventDetails()
+    }
+    
+    func subscribeToMarketGroups(eventId: String) -> AnyPublisher<SubscribableContent<[MarketGroup]>, ServiceProviderError> {
+        guard let manager = matchDetailsManager else {
+            return Fail(error: ServiceProviderError.matchDetailsManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        // Verify the manager is for the correct eventId
+        guard manager.matchId == eventId else {
+            return Fail(error: ServiceProviderError.errorMessage(message: "MatchDetailsManager eventId mismatch: expected \(eventId), found \(manager.matchId)")).eraseToAnyPublisher()
+        }
+        
+        return manager.subscribeToMarketGroups()
+    }
+    
+    func subscribeToMarketGroupDetails(eventId: String, marketGroupKey: String) -> AnyPublisher<SubscribableContent<[Market]>, ServiceProviderError> {
+        guard let manager = matchDetailsManager else {
+            return Fail(error: ServiceProviderError.matchDetailsManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return manager.subscribeToMarketGroupDetails(marketGroupKey: marketGroupKey)
     }
 
     func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
@@ -145,6 +176,20 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
+        // First check if we have an active match details manager for this event
+        if let matchDetailsManager = self.matchDetailsManager {
+            // Use the match details manager to observe live data
+//            return matchDetailsManager.observeEventInfosForEvent(eventId: id)
+//                .map { eventLiveData in
+//                    return SubscribableContent.contentUpdate(content: eventLiveData)
+//                }
+//                .setFailureType(to: ServiceProviderError.self)
+//                .eraseToAnyPublisher()
+            // TODO: match details manager to observe live data
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        // Fallback to live paginator if no match details manager
         guard let livePaginator = self.livePaginator else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
@@ -165,6 +210,16 @@ class EveryMatrixEventsProvider: EventsProvider {
     func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
         // NOTE: This method name reflects that it subscribes to individual market updates
         // within the context of an active event list subscription, not changes to the list itself
+        
+        // First check if we have an active match details manager with this market
+        if let matchDetailsManager = self.matchDetailsManager {
+            // Use the match details manager to observe market updates
+            return matchDetailsManager.observeMarket(withId: id)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+        
+        // Fallback to checking paginators
         guard let paginator = prelivePaginator else {
             return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
         }
@@ -210,6 +265,15 @@ class EveryMatrixEventsProvider: EventsProvider {
         // NOTE: This method name reflects that it subscribes to individual outcome updates
         // within the context of an active event list subscription, not changes to the list itself
         
+        // First check if we have an active match details manager with this outcome
+        if let matchDetailsManager = self.matchDetailsManager {
+            // Use the match details manager to observe outcome updates
+            return matchDetailsManager.observeOutcome(withId: id)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+        
+        // Fallback to checking paginators
         // Check both paginators to find which one contains this outcome
         if let prelivePaginator = prelivePaginator, prelivePaginator.outcomeExists(id: id) {
             // Delegate to pre-live paginator's outcome subscription method
@@ -280,7 +344,44 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func getMarketGroups(forEvent event: Event, includeMixMatchGroup: Bool, includeAllMarketsGroup: Bool) -> AnyPublisher<[MarketGroup], Never> {
-        fatalError("notSupportedForProvider")
+        // Check if we have an active match details manager for this event
+        if let matchDetailsManager = self.matchDetailsManager {
+            // Get market groups from the match details manager
+            let marketGroups = matchDetailsManager.getMarketGroups()
+            
+            if marketGroups.isEmpty {
+                // Fallback to single "All Markets" group if no market groups found
+                let allMarketsGroup = MarketGroup(
+                    type: "0",
+                    id: "all_markets",
+                    groupKey: "All Markets",
+                    translatedName: "All Markets",
+                    position: 0,
+                    isDefault: true,
+                    numberOfMarkets: event.markets.count,
+                    loaded: true,
+                    markets: event.markets
+                )
+                return Just([allMarketsGroup]).eraseToAnyPublisher()
+            }
+            
+            return Just(marketGroups).eraseToAnyPublisher()
+        }
+        
+        // Fallback to default behavior if no match details manager
+        let defaultMarketGroup = MarketGroup(
+            type: "0",
+            id: "0",
+            groupKey: "All Markets",
+            translatedName: "All Markets",
+            position: 0,
+            isDefault: true,
+            numberOfMarkets: event.markets.count,
+            loaded: true,
+            markets: event.markets
+        )
+        
+        return Just([defaultMarketGroup]).eraseToAnyPublisher()
     }
 
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {

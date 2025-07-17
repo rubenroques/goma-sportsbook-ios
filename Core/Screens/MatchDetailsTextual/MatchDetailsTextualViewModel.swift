@@ -8,46 +8,90 @@
 import Foundation
 import Combine
 import GomaUI
+import ServicesProvider
 
-public class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
+class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
     
     // MARK: - Private Properties
     
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
     private let errorSubject = CurrentValueSubject<String?, Never>(nil)
-    private let navigationRequestSubject = PassthroughSubject<MatchDetailsNavigationAction, Never>()
+
     private let statisticsVisibilitySubject = CurrentValueSubject<Bool, Never>(false)
+    private let marketGroupSelectorTabViewModelSubject = CurrentValueSubject<MarketGroupSelectorTabViewModelProtocol?, Never>(nil)
     
     private var cancellables = Set<AnyCancellable>()
     
+    // WebSocket subscription management
+    private var eventDetailsSubscription: AnyCancellable?
+    
+    // Store match reference for real event ID
+    private var currentMatch: Match?
+    private var currentMatchId: String?
+    
     // MARK: - Child ViewModels (Vertical Pattern)
+    let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
     
-    // Step 2: MultiWidgetToolbarView
-    public let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
+    let matchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol
     
-    // Step 3: MatchDateNavigationBarView
-    public let matchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol
+    let matchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol
     
-    // Step 4: MatchHeaderCompactView
-    public let matchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol
+    let statisticsWidgetViewModel: StatisticsWidgetViewModelProtocol
     
-    // Step 5: StatisticsWidgetView (collapsible)
-    public let statisticsWidgetViewModel: StatisticsWidgetViewModelProtocol
-    
-    // Step 6: MarketGroupSelectorTabView
-    public let marketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol
+    private(set) var marketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol
     
     // These will be added step by step as we integrate each component
     
     // MARK: - Initialization
     
-    public init() {
+    /// Initialize with a Match object (preferred for navigation from match lists)
+    init(match: Match) {
+        // Store match reference for WebSocket subscription
+        self.currentMatch = match
+        self.currentMatchId = match.id
+        
+        // Create child ViewModels (Vertical Pattern) with real match data
+        self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
+        self.matchDateNavigationBarViewModel = MatchDateNavigationBarViewModel(match: match)
+        self.matchHeaderCompactViewModel = MatchHeaderCompactViewModel(match: match)
+        self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
+        
+        // Create production market group selector for real match data
+        self.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
+        marketGroupSelectorTabViewModelSubject.send(self.marketGroupSelectorTabViewModel)
+        
+        setupBindings()
+        loadMatchDetails()
+    }
+    
+    /// Initialize with a match ID (for deep linking or bookmarking)
+    init(matchId: String) {
+        // Store match ID for WebSocket subscription
+        self.currentMatch = nil
+        self.currentMatchId = matchId
+        
+        // Create child ViewModels (Vertical Pattern) with mock data initially
+        // The real match data will be loaded asynchronously
+        self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
+        self.matchDateNavigationBarViewModel = MockMatchDateNavigationBarViewModel.liveMock
+        self.matchHeaderCompactViewModel = MockMatchHeaderCompactViewModel.default
+        self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
+        self.marketGroupSelectorTabViewModel = MockMarketGroupSelectorTabViewModel.standardSportsMarkets
+        marketGroupSelectorTabViewModelSubject.send(self.marketGroupSelectorTabViewModel)
+        
+        setupBindings()
+        loadMatchDetails(matchId: matchId)
+    }
+    
+    /// Default initialization (for backward compatibility)
+    init() {
         // Create child ViewModels (Vertical Pattern)
         self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
         self.matchDateNavigationBarViewModel = MockMatchDateNavigationBarViewModel.liveMock
         self.matchHeaderCompactViewModel = MockMatchHeaderCompactViewModel.default
         self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
         self.marketGroupSelectorTabViewModel = MockMarketGroupSelectorTabViewModel.standardSportsMarkets
+        marketGroupSelectorTabViewModelSubject.send(self.marketGroupSelectorTabViewModel)
         
         setupBindings()
         loadMatchDetails()
@@ -55,40 +99,116 @@ public class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol 
     
     // MARK: - Publishers
     
-    public var isLoadingPublisher: AnyPublisher<Bool, Never> {
+    var isLoadingPublisher: AnyPublisher<Bool, Never> {
         isLoadingSubject.eraseToAnyPublisher()
     }
     
-    public var errorPublisher: AnyPublisher<String?, Never> {
+    var errorPublisher: AnyPublisher<String?, Never> {
         errorSubject.eraseToAnyPublisher()
     }
     
-    public var navigationRequestPublisher: AnyPublisher<MatchDetailsNavigationAction, Never> {
-        navigationRequestSubject.eraseToAnyPublisher()
+    var statisticsVisibilityPublisher: AnyPublisher<Bool, Never> {
+        statisticsVisibilitySubject.eraseToAnyPublisher()
     }
     
-    public var statisticsVisibilityPublisher: AnyPublisher<Bool, Never> {
-        statisticsVisibilitySubject.eraseToAnyPublisher()
+    var marketGroupSelectorTabViewModelPublisher: AnyPublisher<MarketGroupSelectorTabViewModelProtocol, Never> {
+        marketGroupSelectorTabViewModelSubject
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Methods
     
-    public func loadMatchDetails() {
+    func loadMatchDetails() {
+        guard let matchId = currentMatchId else {
+            print("❌ No match ID available for subscription")
+            return
+        }
+        
         isLoadingSubject.send(true)
         
-        // Simulate async loading
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.isLoadingSubject.send(false)
-        }
+        eventDetailsSubscription = Env.servicesProvider.subscribeEventDetails(eventId: matchId)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("Event details subscription completed: \(completion)")
+            } receiveValue: { [weak self] subscribableContent in
+                print("Received event details content: \(subscribableContent)")
+                
+                switch subscribableContent {
+                case .connected(let subscription):
+                    print("✅ Connected to event details WebSocket: \(subscription.id)")
+                    
+                case .contentUpdate(let event):
+                    guard
+                        let match = ServiceProviderModelMapper.match(fromEvent: event)
+                    else { return }
+                    
+                    print("📡 Received event data: \(match.id)")
+                    print("   Match: \(match.homeParticipant.name) vs \(match.awayParticipant.name)")
+                    print("   Status: \(match.status)")
+                    print("   Markets: \(match.markets.count)")
+                    
+                    // Update current match and recreate market group selector with real data
+                    self?.currentMatch = match
+                    self?.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
+                    self?.marketGroupSelectorTabViewModelSubject.send(self?.marketGroupSelectorTabViewModel)
+                    
+                    self?.isLoadingSubject.send(false)
+                    
+                case .disconnected:
+                    print("❌ Disconnected from event details WebSocket")
+                    self?.isLoadingSubject.send(false)
+                }
+            }
     }
     
-    public func toggleStatistics() {
+    private func loadMatchDetails(matchId: String) {
+        self.currentMatchId = matchId
+        isLoadingSubject.send(true)
+        
+        eventDetailsSubscription = Env.servicesProvider.subscribeEventDetails(eventId: matchId)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("Event details subscription completed: \(completion)")
+            } receiveValue: { [weak self] subscribableContent in
+                print("Received event details content: \(subscribableContent)")
+                
+                switch subscribableContent {
+                case .connected(let subscription):
+                    print("✅ Connected to event details WebSocket: \(subscription.id)")
+                    
+                case .contentUpdate(let event):
+                    guard
+                        let match = ServiceProviderModelMapper.match(fromEvent: event)
+                    else { return }
+                    
+                    print("📡 Received event data: \(match.id)")
+                    print("   Match: \(match.homeParticipant.name) vs \(match.awayParticipant.name)")
+                    print("   Status: \(match.status)")
+                    print("   Markets: \(match.markets.count)")
+                    
+                    // Update current match and recreate market group selector with real data
+                    self?.currentMatch = match
+                    self?.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
+                    self?.marketGroupSelectorTabViewModelSubject.send(self?.marketGroupSelectorTabViewModel)
+                    
+                    self?.isLoadingSubject.send(false)
+                    
+                case .disconnected:
+                    print("❌ Disconnected from event details WebSocket")
+                    self?.isLoadingSubject.send(false)
+                }
+            }
+    }
+    
+    func toggleStatistics() {
         let currentVisibility = statisticsVisibilitySubject.value
         statisticsVisibilitySubject.send(!currentVisibility)
     }
     
-    public func refresh() {
+    func refresh() {
         errorSubject.send(nil)
+        eventDetailsSubscription?.cancel()
         loadMatchDetails()
     }
     
@@ -103,5 +223,9 @@ public class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol 
         }
         
         // This will be expanded as we add each component
+    }
+    
+    deinit {
+        eventDetailsSubscription?.cancel()
     }
 }

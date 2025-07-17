@@ -23,6 +23,7 @@ extension EveryMatrix {
         case nextMatchesNumber(NextMatchesNumberDTO)
         case tournament(TournamentDTO)
         case eventInfo(EventInfoDTO)
+        case marketGroup(MarketGroupDTO)
 
         // UPDATE/DELETE/CREATE records with change metadata
         case changeRecord(ChangeRecord)
@@ -90,6 +91,9 @@ extension EveryMatrix {
             case "EVENT_INFO":
                 let eventInfo = try EventInfoDTO(from: decoder)
                 self = .eventInfo(eventInfo)
+            case "MARKET_GROUP":
+                let marketGroup = try MarketGroupDTO(from: decoder)
+                self = .marketGroup(marketGroup)
             default:
                 self = .unknown(type: type)
             }
@@ -122,6 +126,8 @@ extension EveryMatrix {
             case .tournament(let dto):
                 try dto.encode(to: encoder)
             case .eventInfo(let dto):
+                try dto.encode(to: encoder)
+            case .marketGroup(let dto):
                 try dto.encode(to: encoder)
             case .changeRecord(let record):
                 try record.encode(to: encoder)

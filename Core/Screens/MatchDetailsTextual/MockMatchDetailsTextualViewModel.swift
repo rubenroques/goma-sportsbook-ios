@@ -15,24 +15,20 @@ public class MockMatchDetailsTextualViewModel: MatchDetailsTextualViewModelProto
     
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
     private let errorSubject = CurrentValueSubject<String?, Never>(nil)
-    private let navigationRequestSubject = PassthroughSubject<MatchDetailsNavigationAction, Never>()
+    
     private let statisticsVisibilitySubject = CurrentValueSubject<Bool, Never>(false)
+    private let marketGroupSelectorTabViewModelSubject = CurrentValueSubject<MarketGroupSelectorTabViewModelProtocol?, Never>(nil)
     
     // MARK: - Child ViewModels (Vertical Pattern)
     
-    // Step 2: MultiWidgetToolbarView
     public let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
     
-    // Step 3: MatchDateNavigationBarView
     public let matchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol
     
-    // Step 4: MatchHeaderCompactView
     public let matchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol
     
-    // Step 5: StatisticsWidgetView (collapsible)
     public let statisticsWidgetViewModel: StatisticsWidgetViewModelProtocol
     
-    // Step 6: MarketGroupSelectorTabView
     public let marketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol
     
     // MARK: - Initialization
@@ -44,6 +40,7 @@ public class MockMatchDetailsTextualViewModel: MatchDetailsTextualViewModelProto
         self.matchHeaderCompactViewModel = MockMatchHeaderCompactViewModel.default
         self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
         self.marketGroupSelectorTabViewModel = MockMarketGroupSelectorTabViewModel.standardSportsMarkets
+        marketGroupSelectorTabViewModelSubject.send(self.marketGroupSelectorTabViewModel)
         
         // Setup bindings
         setupBindings()
@@ -90,12 +87,14 @@ public class MockMatchDetailsTextualViewModel: MatchDetailsTextualViewModelProto
         errorSubject.eraseToAnyPublisher()
     }
     
-    public var navigationRequestPublisher: AnyPublisher<MatchDetailsNavigationAction, Never> {
-        navigationRequestSubject.eraseToAnyPublisher()
-    }
-    
     public var statisticsVisibilityPublisher: AnyPublisher<Bool, Never> {
         statisticsVisibilitySubject.eraseToAnyPublisher()
+    }
+    
+    public var marketGroupSelectorTabViewModelPublisher: AnyPublisher<MarketGroupSelectorTabViewModelProtocol, Never> {
+        marketGroupSelectorTabViewModelSubject
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Methods
