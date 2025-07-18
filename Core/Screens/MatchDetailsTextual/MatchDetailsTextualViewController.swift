@@ -9,11 +9,11 @@ import UIKit
 import Combine
 import GomaUI
 
-public class MatchDetailsTextualViewController: UIViewController {
+class MatchDetailsTextualViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: MatchDetailsTextualViewModelProtocol
+    private let viewModel: MatchDetailsTextualViewModel
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
@@ -26,6 +26,33 @@ public class MatchDetailsTextualViewController: UIViewController {
     private let mainStackView = UIStackView()
     private let pageContainerView = UIView()
     private let loadingIndicator = UIActivityIndicatorView(style: .medium)
+    
+    // Loading overlay for page container
+    private lazy var pageLoadingOverlay: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.App.backgroundPrimary
+        view.isHidden = true
+        return view
+    }()
+    
+    private lazy var pageLoadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = UIColor.App.textPrimary
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var pageLoadingLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Loading markets..."
+        label.textColor = UIColor.App.textSecondary
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.textAlignment = .center
+        return label
+    }()
     
     private lazy var multiWidgetToolbarView: MultiWidgetToolbarView = {
         let view = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
@@ -68,10 +95,11 @@ public class MatchDetailsTextualViewController: UIViewController {
     private var marketControllers: [String: MarketsTabSimpleViewController] = [:]
     private var isAnimating = false
     private var isFirstStatisticsUpdate = true
+    private var marketGroupsSubscription: AnyCancellable?
     
     // MARK: - Initialization
     
-    public init(viewModel: MatchDetailsTextualViewModelProtocol) {
+    init(viewModel: MatchDetailsTextualViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -82,13 +110,22 @@ public class MatchDetailsTextualViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupUI()
         self.setupConstraints()
         
         self.setupBindings()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     // MARK: - Setup
@@ -119,6 +156,11 @@ public class MatchDetailsTextualViewController: UIViewController {
         view.addSubview(mainStackView)
         view.addSubview(pageContainerView)
         view.addSubview(loadingIndicator)
+        
+        // Add loading overlay on top of page container
+        view.addSubview(pageLoadingOverlay)
+        pageLoadingOverlay.addSubview(pageLoadingIndicator)
+        pageLoadingOverlay.addSubview(pageLoadingLabel)
         
         setupComponents()
     }
@@ -208,34 +250,16 @@ public class MatchDetailsTextualViewController: UIViewController {
             pageViewController.view.trailingAnchor.constraint(equalTo: pageContainerView.trailingAnchor),
             pageViewController.view.bottomAnchor.constraint(equalTo: pageContainerView.bottomAnchor)
         ])
-        
-        // Initialize market controllers based on current market groups
-        initializeMarketControllers()
-        
-        // Set initial page if we have market groups
-        if let firstMarketGroupId = viewModel.marketGroupSelectorTabViewModel.currentMarketGroups.first?.id,
-           let firstController = marketControllers[firstMarketGroupId] {
-            pageViewController.setViewControllers([firstController], direction: .forward, animated: false)
-        }
-    }
-    
-    private func initializeMarketControllers() {
-        let marketGroups = viewModel.marketGroupSelectorTabViewModel.currentMarketGroups
-        
-        for marketGroup in marketGroups {
-            let controller = MarketsTabSimpleViewController(marketGroupId: marketGroup.id, title: marketGroup.title)
-            marketControllers[marketGroup.id] = controller
-        }
     }
     
     private func handleMarketGroupSelection(_ selectionEvent: MarketGroupSelectionEvent) {
-        print("Market group selected: \(selectionEvent.selectedId)")
-        
         // Prevent animation if already animating
-        guard !isAnimating else { return }
+        guard !isAnimating else { 
+            print("[📱MTDTXT] Already animating, ignoring selection")
+            return 
+        }
         
         guard let targetController = marketControllers[selectionEvent.selectedId] else {
-            print("No controller found for market group: \(selectionEvent.selectedId)")
             return
         }
         
@@ -344,7 +368,23 @@ public class MatchDetailsTextualViewController: UIViewController {
             
             // Loading indicator (top-right corner)
             loadingIndicator.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            loadingIndicator.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            loadingIndicator.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            // Page loading overlay (covers page container)
+            pageLoadingOverlay.topAnchor.constraint(equalTo: pageContainerView.topAnchor),
+            pageLoadingOverlay.leadingAnchor.constraint(equalTo: pageContainerView.leadingAnchor),
+            pageLoadingOverlay.trailingAnchor.constraint(equalTo: pageContainerView.trailingAnchor),
+            pageLoadingOverlay.bottomAnchor.constraint(equalTo: pageContainerView.bottomAnchor),
+            
+            // Page loading indicator (centered in overlay)
+            pageLoadingIndicator.centerXAnchor.constraint(equalTo: pageLoadingOverlay.centerXAnchor),
+            pageLoadingIndicator.centerYAnchor.constraint(equalTo: pageLoadingOverlay.centerYAnchor, constant: -16),
+            
+            // Page loading label (below indicator)
+            pageLoadingLabel.topAnchor.constraint(equalTo: pageLoadingIndicator.bottomAnchor, constant: 16),
+            pageLoadingLabel.centerXAnchor.constraint(equalTo: pageLoadingOverlay.centerXAnchor),
+            pageLoadingLabel.leadingAnchor.constraint(greaterThanOrEqualTo: pageLoadingOverlay.leadingAnchor, constant: 20),
+            pageLoadingLabel.trailingAnchor.constraint(lessThanOrEqualTo: pageLoadingOverlay.trailingAnchor, constant: -20)
         ])
     }
     
@@ -353,10 +393,16 @@ public class MatchDetailsTextualViewController: UIViewController {
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
+                guard let self = self else { return }
+                
                 if isLoading {
-                    self?.loadingIndicator.startAnimating()
+                    self.loadingIndicator.startAnimating()
+                    self.pageLoadingOverlay.isHidden = false
+                    self.pageLoadingIndicator.startAnimating()
                 } else {
-                    self?.loadingIndicator.stopAnimating()
+                    self.loadingIndicator.stopAnimating()
+                    self.pageLoadingOverlay.isHidden = true
+                    self.pageLoadingIndicator.stopAnimating()
                 }
             }
             .store(in: &cancellables)
@@ -386,37 +432,72 @@ public class MatchDetailsTextualViewController: UIViewController {
         viewModel.marketGroupSelectorTabViewModelPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newViewModel in
-                self?.updateMarketGroupSelectorTabView(with: newViewModel)
+                guard let self = self else { return }
+                self.marketGroupSelectorTabView.configure(with: newViewModel)
+                
+                // CRITICAL: Re-subscribe to market groups when view model instance changes
+                self.subscribeToMarketGroupsData()
             }
             .store(in: &cancellables)
+        
+        // Initial subscription to market groups data
+        subscribeToMarketGroupsData()
+    }
+    
+    // MARK: - Market Groups Subscription
+    
+    private func subscribeToMarketGroupsData() {
+        // Cancel any existing subscription to avoid memory leaks
+        marketGroupsSubscription?.cancel()
+        
+        
+        // Subscribe to market groups data changes from the CURRENT view model instance
+        marketGroupsSubscription = viewModel.marketGroupSelectorTabViewModel.marketGroupsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] marketGroups in
+                guard let self = self else { return }
+                
+                // Recreate market controllers when market groups data changes
+                self.recreateMarketControllers()
+                
+                // Set initial page if we have market groups and no current page
+                if let firstMarketGroupId = marketGroups.first?.id,
+                   let firstController = self.marketControllers[firstMarketGroupId],
+                   self.pageViewController.viewControllers?.isEmpty == true {
+                    self.pageViewController.setViewControllers([firstController], direction: .forward, animated: false)
+                }
+            }
     }
     
     // MARK: - Helper Methods
-    
-    private func updateMarketGroupSelectorTabView(with newViewModel: MarketGroupSelectorTabViewModelProtocol) {
-        // Efficiently reconfigure existing view with new view model (follows GomaUI pattern)
-        marketGroupSelectorTabView.configure(with: newViewModel)
-        
-        // Recreate market controllers for new market groups
-        recreateMarketControllers()
-        
-        // Set initial page if we have market groups
-        if let firstMarketGroupId = newViewModel.currentMarketGroups.first?.id,
-           let firstController = marketControllers[firstMarketGroupId] {
-            pageViewController.setViewControllers([firstController], direction: .forward, animated: false)
-        }
-    }
-    
     private func recreateMarketControllers() {
+        print("[📱MTDTXT] recreateMarketControllers - start")
+        
         // Clear existing controllers
         marketControllers.removeAll()
         
         // Create new controllers for current market groups
         let marketGroups = viewModel.marketGroupSelectorTabViewModel.currentMarketGroups
+        print("[📱MTDTXT] Recreating \(marketGroups.count) market controllers")
+        
         for marketGroup in marketGroups {
-            let controller = MarketsTabSimpleViewController(marketGroupId: marketGroup.id, title: marketGroup.title)
+            print("[📱MTDTXT] Recreating controller for group: \(marketGroup.id) - \(marketGroup.title)")
+            
+            // Create proper view model with all required data
+            let tabViewModel = MarketsTabSimpleViewModel(
+                marketGroupId: marketGroup.id,
+                marketGroupTitle: marketGroup.title,
+                eventId: viewModel.eventId,
+                marketGroupKey: marketGroup.id // Using marketGroup.id as key for now
+            )
+            
+            let controller = MarketsTabSimpleViewController(viewModel: tabViewModel)
             marketControllers[marketGroup.id] = controller
+            
+            print("[📱MTDTXT] Recreated controller for group: \(marketGroup.id)")
         }
+        
+        print("[📱MTDTXT] recreateMarketControllers - completed with \(marketControllers.count) controllers")
     }
     
     private func showError(_ message: String) {
@@ -448,7 +529,7 @@ public class MatchDetailsTextualViewController: UIViewController {
 // MARK: - UIPageViewControllerDataSource
 extension MatchDetailsTextualViewController: UIPageViewControllerDataSource {
     
-    public func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let currentController = viewController as? MarketsTabSimpleViewController else { return nil }
         
         let marketGroups = viewModel.marketGroupSelectorTabViewModel.currentMarketGroups
@@ -461,7 +542,7 @@ extension MatchDetailsTextualViewController: UIPageViewControllerDataSource {
         return marketControllers[previousMarketGroup.id]
     }
     
-    public func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let currentController = viewController as? MarketsTabSimpleViewController else { return nil }
         
         let marketGroups = viewModel.marketGroupSelectorTabViewModel.currentMarketGroups
@@ -478,7 +559,7 @@ extension MatchDetailsTextualViewController: UIPageViewControllerDataSource {
 // MARK: - UIPageViewControllerDelegate
 extension MatchDetailsTextualViewController: UIPageViewControllerDelegate {
     
-    public func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard completed,
               let currentController = pageViewController.viewControllers?.first as? MarketsTabSimpleViewController else { return }
         
@@ -487,7 +568,7 @@ extension MatchDetailsTextualViewController: UIPageViewControllerDelegate {
         viewModel.marketGroupSelectorTabViewModel.selectMarketGroup(id: currentController.marketGroupId)
     }
     
-    public func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         // Optional: Handle will transition if needed
     }
 }

@@ -3910,38 +3910,22 @@
 		CE544FCB2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCD2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCE2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
-		CE5852FA2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
 		CE5852FB2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
 		CE5852FC2E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
-		CE5852FD2E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
-		CE5852FE2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
 		CE5852FF2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
 		CE5853002E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
-		CE5853012E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
-		CE5853022E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
 		CE5853032E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
 		CE5853042E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
-		CE5853052E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
-		CE5853062E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
 		CE5853072E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
 		CE5853082E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
-		CE5853092E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
-		CE58530A2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
 		CE58530B2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
 		CE58530C2E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
-		CE58530D2E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
-		CE58530E2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
 		CE58530F2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
 		CE5853102E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
-		CE5853112E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
-		CE5853122E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
 		CE5853132E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
 		CE5853142E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
-		CE5853152E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
-		CE5853162E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */; };
 		CE5853172E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */; };
 		CE5853182E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */; };
-		CE5853192E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */; };
 		CE58531E2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */; };
 		CE58531F2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */; };
 		CE5853202E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */; };
@@ -4006,6 +3990,14 @@
 		CE5854542E29456B005F7B89 /* MatchDetailsMarketGroupSelectorTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58544E2E29456A005F7B89 /* MatchDetailsMarketGroupSelectorTabViewModel.swift */; };
 		CE5854552E29456B005F7B89 /* MatchDetailsMarketGroupSelectorTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58544E2E29456A005F7B89 /* MatchDetailsMarketGroupSelectorTabViewModel.swift */; };
 		CE5854562E29456B005F7B89 /* MatchDetailsMarketGroupSelectorTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58544E2E29456A005F7B89 /* MatchDetailsMarketGroupSelectorTabViewModel.swift */; };
+		CE5854582E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */; };
+		CE5854592E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */; };
+		CE58545A2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */; };
+		CE58545B2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */; };
+		CE58545C2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */; };
+		CE58545D2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */; };
+		CE58545E2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */; };
+		CE58545F2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */; };
 		CE5B548A2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B546F2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Animations.swift */; };
 		CE5B548B2D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54722D99A2DF006837C4 /* BoostedMatchWidgetCollectionViewCell+Interactions.swift */; };
 		CE5B548C2D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5B54862D99A2DF006837C4 /* TopImageMatchWidgetCollectionViewCell+Styling.swift */; };
@@ -10008,8 +10000,6 @@
 		CE544FC92D07029900AA24CA /* first_deposit_8.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = first_deposit_8.json; sourceTree = "<group>"; };
 		CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsTextualViewController.swift; sourceTree = "<group>"; };
 		CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsTextualViewModel.swift; sourceTree = "<group>"; };
-		CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsTextualViewModelProtocol.swift; sourceTree = "<group>"; };
-		CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMatchDetailsTextualViewModel.swift; sourceTree = "<group>"; };
 		CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketsTabSimpleViewController.swift; sourceTree = "<group>"; };
 		CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketsTabSimpleViewModel.swift; sourceTree = "<group>"; };
 		CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketsTabSimpleViewModelProtocol.swift; sourceTree = "<group>"; };
@@ -10018,6 +10008,7 @@
 		CE5853512E27FB94005F7B89 /* MatchDateNavigationBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDateNavigationBarViewModel.swift; sourceTree = "<group>"; };
 		CE5853532E27FB94005F7B89 /* MatchHeaderCompactViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchHeaderCompactViewModel.swift; sourceTree = "<group>"; };
 		CE58544E2E29456A005F7B89 /* MatchDetailsMarketGroupSelectorTabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsMarketGroupSelectorTabViewModel.swift; sourceTree = "<group>"; };
+		CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTypeGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE5B54662D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CE5B54672D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CE5B54682D99A2DF006837C4 /* BackgroundImageMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundImageMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
@@ -13954,8 +13945,6 @@
 				CE5852F52E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift */,
 				CE5852F62E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift */,
 				CE58544E2E29456A005F7B89 /* MatchDetailsMarketGroupSelectorTabViewModel.swift */,
-				CE5852F72E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift */,
-				CE5852F82E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift */,
 				CE58533E2E27BB2D005F7B89 /* MarketsTab */,
 			);
 			path = MatchDetailsTextual;
@@ -13967,6 +13956,7 @@
 				CE58531A2E27BAEA005F7B89 /* MarketsTabSimpleViewController.swift */,
 				CE58531B2E27BAEA005F7B89 /* MarketsTabSimpleViewModel.swift */,
 				CE58531C2E27BAEA005F7B89 /* MarketsTabSimpleViewModelProtocol.swift */,
+				CE5854572E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift */,
 				CE58531D2E27BAEA005F7B89 /* MockMarketsTabSimpleViewModel.swift */,
 			);
 			path = MarketsTab;
@@ -17490,6 +17480,7 @@
 				CEEDD24E2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */,
 				CEEFDE8C2D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE16F2822D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
+				CE58545E2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */,
 				A9A43C792A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
 				65F1416F2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				450B794528F58574009229E3 /* UserInfoSimpleCardView.swift in Sources */,
@@ -17579,10 +17570,8 @@
 				CEAB0B952D77588D00541098 /* FavoriteMatchesDataSource.swift in Sources */,
 				CEAB0B962D77588D00541098 /* OddTripleCollectionViewCell.swift in Sources */,
 				CEAB0B972D77588D00541098 /* ActivationAlertCollectionViewCell.swift in Sources */,
-				CE5852FA2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
 				CE5852FB2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
 				CE5852FC2E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
-				CE5852FD2E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEAB0B982D77588D00541098 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				CEAB0B992D77588D00541098 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEAB0B9A2D77588D00541098 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -18430,6 +18419,7 @@
 				CEEDD23C2DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */,
 				CEEFDE682D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45A3315A298976BA008181E9 /* UploadDocumentsViewModel.swift in Sources */,
+				CE58545A2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */,
 				CE16F2842D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				65F141702E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				A9A43C782A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
@@ -18519,10 +18509,8 @@
 				CEAB0A302D77588D00541098 /* FavoriteMatchesDataSource.swift in Sources */,
 				CEAB0A312D77588D00541098 /* OddTripleCollectionViewCell.swift in Sources */,
 				CEAB0A322D77588D00541098 /* ActivationAlertCollectionViewCell.swift in Sources */,
-				CE5853022E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
 				CE5853032E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
 				CE5853042E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
-				CE5853052E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEAB0A332D77588D00541098 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				CEAB0A342D77588D00541098 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEAB0A352D77588D00541098 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -19340,6 +19328,7 @@
 				CEEDD2432DADE1D90048A5B0 /* ThemeColorsPlaceholder.swift in Sources */,
 				CEEFDE982D8B772900630F7E /* MatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				45F6BC042AB3732C00C81DE1 /* UploadDocumentsViewModel.swift in Sources */,
+				CE58545C2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */,
 				CE16F2862D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				65F141742E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				45F6BC062AB3732C00C81DE1 /* RibDocsViewModel.swift in Sources */,
@@ -19429,10 +19418,8 @@
 				CEAB0B552D77588D00541098 /* FavoriteMatchesDataSource.swift in Sources */,
 				CEAB0B562D77588D00541098 /* OddTripleCollectionViewCell.swift in Sources */,
 				CEAB0B572D77588D00541098 /* ActivationAlertCollectionViewCell.swift in Sources */,
-				CE58530A2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
 				CE58530B2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
 				CE58530C2E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
-				CE58530D2E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEAB0B582D77588D00541098 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				CEAB0B592D77588D00541098 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEAB0B5A2D77588D00541098 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -20070,6 +20057,7 @@
 				CE12A1A72D31347E0022BDF7 /* ShareTicketChoiceViewModel.swift in Sources */,
 				CE12A1AA2D31347E0022BDF7 /* AggregatorRepositoryType.swift in Sources */,
 				CE12A1AB2D31347E0022BDF7 /* DocumentView.swift in Sources */,
+				CE58545F2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */,
 				CE12A1AC2D31347E0022BDF7 /* PopularDetailsViewController.swift in Sources */,
 				CE7E80242D7A145E00A5558A /* MockMatchWidgetCellViewModel.swift in Sources */,
 				CE7E80252D7A145E00A5558A /* MatchWidgetCellViewModelProtocol.swift in Sources */,
@@ -20745,10 +20733,8 @@
 				CE12A3C02D31347E0022BDF7 /* ViewContext.swift in Sources */,
 				CE12A3C12D31347E0022BDF7 /* PaymentsBrowserViewController.swift in Sources */,
 				CE12A3C22D31347E0022BDF7 /* RankingsViewModel.swift in Sources */,
-				CE58530E2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
 				CE58530F2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
 				CE5853102E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
-				CE5853112E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CE12A3C32D31347E0022BDF7 /* ModalTransitionPresentationController.swift in Sources */,
 				CE12A3C42D31347E0022BDF7 /* TransactionsHistoryViewController.swift in Sources */,
 				CE12A3C52D31347E0022BDF7 /* TitleTextFieldView.swift in Sources */,
@@ -21169,6 +21155,7 @@
 				CE8F24502DD371350071238E /* RibDocsViewModel.swift in Sources */,
 				CE8F24512DD371350071238E /* CardsStyleViewController.swift in Sources */,
 				CE8F24522DD371350071238E /* UserInfoSimpleCardView.swift in Sources */,
+				CE5854582E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */,
 				CE8F24532DD371350071238E /* FavoriteGoma.swift in Sources */,
 				65F141732E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				CE8F24542DD371350071238E /* BettingPracticesViewController.swift in Sources */,
@@ -21258,10 +21245,8 @@
 				CE8F24A32DD371350071238E /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CE8F24A42DD371350071238E /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				CE8F24A52DD371350071238E /* BannerTopCollectionViewCell.swift in Sources */,
-				CE5852FE2E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
 				CE5852FF2E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
 				CE5853002E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
-				CE5853012E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CE8F24A62DD371350071238E /* BannerMatchCollectionViewCell.swift in Sources */,
 				CE8F24A72DD371350071238E /* TitleTableViewHeader.swift in Sources */,
 				CE8F24A82DD371350071238E /* OddDoubleCollectionViewCell.swift in Sources */,
@@ -22079,6 +22064,7 @@
 				CEB3A1BD2DD379800024043B /* RibDocsViewModel.swift in Sources */,
 				CEB3A1BE2DD379800024043B /* CardsStyleViewController.swift in Sources */,
 				CEB3A1BF2DD379800024043B /* UserInfoSimpleCardView.swift in Sources */,
+				CE58545B2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */,
 				CEB3A1C02DD379800024043B /* FavoriteGoma.swift in Sources */,
 				65F1416E2E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				CEB3A1C12DD379800024043B /* BettingPracticesViewController.swift in Sources */,
@@ -22168,10 +22154,8 @@
 				CEB3A2102DD379800024043B /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEB3A2112DD379800024043B /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				CEB3A2122DD379800024043B /* BannerTopCollectionViewCell.swift in Sources */,
-				CE5853122E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
 				CE5853132E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
 				CE5853142E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
-				CE5853152E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEB3A2132DD379800024043B /* BannerMatchCollectionViewCell.swift in Sources */,
 				CEB3A2142DD379800024043B /* TitleTableViewHeader.swift in Sources */,
 				CEB3A2152DD379800024043B /* OddDoubleCollectionViewCell.swift in Sources */,
@@ -22989,6 +22973,7 @@
 				CEB3A6452DD379890024043B /* ChipsTypeView.swift in Sources */,
 				CEB3A6462DD379890024043B /* RibDocsViewModel.swift in Sources */,
 				CEB3A6472DD379890024043B /* CardsStyleViewController.swift in Sources */,
+				CE5854592E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */,
 				CEB3A6482DD379890024043B /* UserInfoSimpleCardView.swift in Sources */,
 				65F141752E1557D5004BDE6B /* DepositBonusSuccessViewModelProtocol.swift in Sources */,
 				CEB3A6492DD379890024043B /* FavoriteGoma.swift in Sources */,
@@ -23078,10 +23063,8 @@
 				CEB3A6982DD379890024043B /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				CEB3A6992DD379890024043B /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				CEB3A69A2DD379890024043B /* ActivationAlertScrollableTableViewCell.swift in Sources */,
-				CE5853062E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
 				CE5853072E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
 				CE5853082E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
-				CE5853092E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				CEB3A69B2DD379890024043B /* BannerTopCollectionViewCell.swift in Sources */,
 				CEB3A69C2DD379890024043B /* BannerMatchCollectionViewCell.swift in Sources */,
 				CEB3A69D2DD379890024043B /* TitleTableViewHeader.swift in Sources */,
@@ -23720,10 +23703,8 @@
 				CEF194102DA834E900C81F12 /* Environment.swift in Sources */,
 				CEF194112DA834E900C81F12 /* SegmentControlView.swift in Sources */,
 				CEF194122DA834E900C81F12 /* UserInfoView.swift in Sources */,
-				CE5853162E27B4BB005F7B89 /* MockMatchDetailsTextualViewModel.swift in Sources */,
 				CE5853172E27B4BB005F7B89 /* MatchDetailsTextualViewModel.swift in Sources */,
 				CE5853182E27B4BB005F7B89 /* MatchDetailsTextualViewController.swift in Sources */,
-				CE5853192E27B4BB005F7B89 /* MatchDetailsTextualViewModelProtocol.swift in Sources */,
 				65F141662E154585004BDE6B /* DepositAlternativeStepsViewController.swift in Sources */,
 				CEF194142DA834E900C81F12 /* ShareTicketChoiceViewModel.swift in Sources */,
 				CEF194152DA834E900C81F12 /* AggregatorRepositoryType.swift in Sources */,
@@ -24059,6 +24040,7 @@
 				CEF195292DA834E900C81F12 /* PreLiveEventsViewModel.swift in Sources */,
 				CEF1952A2DA834E900C81F12 /* CompetitionListIconCollectionViewCell.swift in Sources */,
 				CEF1952B2DA834E900C81F12 /* MatchStatsViewModel.swift in Sources */,
+				CE58545D2E2A46B9005F7B89 /* MarketTypeGroupCollectionViewCell.swift in Sources */,
 				CEF1952C2DA834E900C81F12 /* TopCompetitionCollectionViewCell.swift in Sources */,
 				CEF1952D2DA834E900C81F12 /* TournamentTableViewHeader.swift in Sources */,
 				CEF1952E2DA834E900C81F12 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,

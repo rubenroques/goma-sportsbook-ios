@@ -10,7 +10,7 @@ import Combine
 import GomaUI
 import ServicesProvider
 
-class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
+class MatchDetailsTextualViewModel {
     
     // MARK: - Private Properties
     
@@ -29,6 +29,11 @@ class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
     private var currentMatch: Match?
     private var currentMatchId: String?
     
+    // Track loading completion states
+    private var isEventDetailsLoaded = false
+    private var isMarketGroupsLoaded = false
+    private var marketGroupsSubscription: AnyCancellable?
+    
     // MARK: - Child ViewModels (Vertical Pattern)
     let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
     
@@ -39,8 +44,6 @@ class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
     let statisticsWidgetViewModel: StatisticsWidgetViewModelProtocol
     
     private(set) var marketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol
-    
-    // These will be added step by step as we integrate each component
     
     // MARK: - Initialization
     
@@ -61,7 +64,7 @@ class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
         marketGroupSelectorTabViewModelSubject.send(self.marketGroupSelectorTabViewModel)
         
         setupBindings()
-        loadMatchDetails()
+        loadMatchDetails(matchId: match.id)
     }
     
     /// Initialize with a match ID (for deep linking or bookmarking)
@@ -81,20 +84,6 @@ class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
         
         setupBindings()
         loadMatchDetails(matchId: matchId)
-    }
-    
-    /// Default initialization (for backward compatibility)
-    init() {
-        // Create child ViewModels (Vertical Pattern)
-        self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
-        self.matchDateNavigationBarViewModel = MockMatchDateNavigationBarViewModel.liveMock
-        self.matchHeaderCompactViewModel = MockMatchHeaderCompactViewModel.default
-        self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
-        self.marketGroupSelectorTabViewModel = MockMarketGroupSelectorTabViewModel.standardSportsMarkets
-        marketGroupSelectorTabViewModelSubject.send(self.marketGroupSelectorTabViewModel)
-        
-        setupBindings()
-        loadMatchDetails()
     }
     
     // MARK: - Publishers
@@ -117,51 +106,14 @@ class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
             .eraseToAnyPublisher()
     }
     
-    // MARK: - Methods
+    // MARK: - Event Data
     
-    func loadMatchDetails() {
-        guard let matchId = currentMatchId else {
-            print("❌ No match ID available for subscription")
-            return
-        }
-        
-        isLoadingSubject.send(true)
-        
-        eventDetailsSubscription = Env.servicesProvider.subscribeEventDetails(eventId: matchId)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("Event details subscription completed: \(completion)")
-            } receiveValue: { [weak self] subscribableContent in
-                print("Received event details content: \(subscribableContent)")
-                
-                switch subscribableContent {
-                case .connected(let subscription):
-                    print("✅ Connected to event details WebSocket: \(subscription.id)")
-                    
-                case .contentUpdate(let event):
-                    guard
-                        let match = ServiceProviderModelMapper.match(fromEvent: event)
-                    else { return }
-                    
-                    print("📡 Received event data: \(match.id)")
-                    print("   Match: \(match.homeParticipant.name) vs \(match.awayParticipant.name)")
-                    print("   Status: \(match.status)")
-                    print("   Markets: \(match.markets.count)")
-                    
-                    // Update current match and recreate market group selector with real data
-                    self?.currentMatch = match
-                    self?.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
-                    self?.marketGroupSelectorTabViewModelSubject.send(self?.marketGroupSelectorTabViewModel)
-                    
-                    self?.isLoadingSubject.send(false)
-                    
-                case .disconnected:
-                    print("❌ Disconnected from event details WebSocket")
-                    self?.isLoadingSubject.send(false)
-                }
-            }
+    /// The event ID for this match
+    var eventId: String {
+        return currentMatchId ?? ""
     }
     
+    // MARK: - Methods
     private func loadMatchDetails(matchId: String) {
         self.currentMatchId = matchId
         isLoadingSubject.send(true)
@@ -192,11 +144,15 @@ class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
                     self?.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
                     self?.marketGroupSelectorTabViewModelSubject.send(self?.marketGroupSelectorTabViewModel)
                     
-                    self?.isLoadingSubject.send(false)
+                    // Mark event details as loaded
+                    self?.isEventDetailsLoaded = true
+                    self?.setupMarketGroupsLoadingObserver()
+                    self?.checkLoadingCompletion()
                     
                 case .disconnected:
                     print("❌ Disconnected from event details WebSocket")
-                    self?.isLoadingSubject.send(false)
+                    self?.isEventDetailsLoaded = true
+                    self?.checkLoadingCompletion()
                 }
             }
     }
@@ -209,7 +165,10 @@ class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
     func refresh() {
         errorSubject.send(nil)
         eventDetailsSubscription?.cancel()
-        loadMatchDetails()
+        
+        if let currentMatchId = self.currentMatchId {
+            self.loadMatchDetails(matchId: currentMatchId)
+        }
     }
     
     // MARK: - Private Methods
@@ -225,7 +184,40 @@ class MatchDetailsTextualViewModel: MatchDetailsTextualViewModelProtocol {
         // This will be expanded as we add each component
     }
     
+    // MARK: - Loading Coordination
+    
+    private func setupMarketGroupsLoadingObserver() {
+        // Cancel any existing market groups subscription to avoid memory leaks
+        marketGroupsSubscription?.cancel()
+        
+        // Reset market groups loaded state since we're observing a new view model
+        isMarketGroupsLoaded = false
+        
+        
+        // Subscribe to market groups data changes to know when they load
+        marketGroupsSubscription = marketGroupSelectorTabViewModel.marketGroupsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] marketGroups in
+                guard let self = self else { return }
+                
+                // Mark market groups as loaded when we receive data
+                if !marketGroups.isEmpty {
+                    self.isMarketGroupsLoaded = true
+                    self.checkLoadingCompletion()
+                }
+            }
+    }
+    
+    private func checkLoadingCompletion() {
+        let isFullyLoaded = isEventDetailsLoaded && isMarketGroupsLoaded
+        
+        if isFullyLoaded {
+            isLoadingSubject.send(false)
+        }
+    }
+    
     deinit {
         eventDetailsSubscription?.cancel()
+        marketGroupsSubscription?.cancel()
     }
 }

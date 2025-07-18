@@ -184,7 +184,7 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
         // Convert MarketGroup domain models to MarketGroupTabItemData UI models
         let tabItems = marketGroups.map { marketGroup -> MarketGroupTabItemData in
             MarketGroupTabItemData(
-                id: marketGroup.id,
+                id: marketGroup.groupKey ?? marketGroup.type,
                 title: marketGroup.translatedName ?? marketGroup.type,
                 visualState: .idle
             )

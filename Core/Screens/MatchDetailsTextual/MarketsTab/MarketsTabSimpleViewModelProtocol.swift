@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import GomaUI
 
 public protocol MarketsTabSimpleViewModelProtocol: AnyObject {
     
@@ -26,8 +27,9 @@ public protocol MarketsTabSimpleViewModelProtocol: AnyObject {
     /// Published when an error occurs
     var errorPublisher: AnyPublisher<String?, Never> { get }
     
-    /// Published when markets data is available
-    var marketsPublisher: AnyPublisher<[MarketData], Never> { get }
+    /// Published when market groups data is available
+    /// Each MarketGroupData represents one collection view cell
+    var marketGroupsPublisher: AnyPublisher<[MarketGroupWithIcons], Never> { get }
     
     // MARK: - Methods
     
@@ -37,12 +39,21 @@ public protocol MarketsTabSimpleViewModelProtocol: AnyObject {
     /// Refresh markets data
     func refreshMarkets()
     
-    /// Handle market selection
-    func selectMarket(id: String)
+    /// Handle outcome selection
+    func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType)
 }
 
 // MARK: - Data Models
 
-public struct MarketData: Equatable, Hashable {
+/// Wrapper to include icons with MarketGroupData
+public struct MarketGroupWithIcons: Equatable, Hashable {
+    public let marketGroup: MarketGroupData
+    public let icons: [MarketInfoIcon]
+    public let groupName: String
     
+    public init(marketGroup: MarketGroupData, icons: [MarketInfoIcon], groupName: String) {
+        self.marketGroup = marketGroup
+        self.icons = icons
+        self.groupName = groupName
+    }
 }

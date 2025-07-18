@@ -7,203 +7,192 @@
 
 import UIKit
 import Combine
+import GomaUI
 
 public class MarketsTabSimpleViewController: UIViewController {
     
     // MARK: - Properties
     
-    public let marketGroupId: String
-    public let marketGroupTitle: String
     private let viewModel: MarketsTabSimpleViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Computed Properties
+    
+    public var marketGroupId: String { viewModel.marketGroupId }
+    public var marketGroupTitle: String { viewModel.marketGroupTitle }
+    
     // MARK: - UI Components
     
-    private let scrollView = UIScrollView()
-    private let contentView = UIView()
-    private let mainStackView = UIStackView()
+    private let collectionView: UICollectionView
+    private var dataSource: UICollectionViewDiffableDataSource<Section, CollectionViewItem>?
     private let loadingIndicator = UIActivityIndicatorView(style: .medium)
+    
+    // MARK: - Collection View Types
+    
+    enum Section: String, CaseIterable {
+        case marketTypeGroups
+    }
+    
+    enum CollectionViewItem: Hashable {
+        case marketTypeGroup(MarketGroupWithIcons)
+    }
     
     // MARK: - Initialization
     
-    public init(marketGroupId: String, title: String) {
-        self.marketGroupId = marketGroupId
-        self.marketGroupTitle = title
-        self.viewModel = MockMarketsTabSimpleViewModel.defaultMock(for: marketGroupId, title: title)
+    public init(viewModel: MarketsTabSimpleViewModelProtocol) {
+        
+        self.viewModel = viewModel
+        
+        // Create collection view with layout
+        let layout = Self.createCollectionViewLayout()
+        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
         super.init(nibName: nil, bundle: nil)
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Deinit
+    
+    deinit {
+        cancellables.removeAll()
+    }
+    
     // MARK: - Lifecycle
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
+        configureDataSource()
         setupConstraints()
         setupBindings()
+        
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
     }
     
     // MARK: - Setup
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground
         
-        // Configure scroll view
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.showsVerticalScrollIndicator = true
-        scrollView.alwaysBounceVertical = true
+        view.backgroundColor = UIColor.App.backgroundPrimary
         
-        // Configure content view
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Configure main stack view
-        mainStackView.translatesAutoresizingMaskIntoConstraints = false
-        mainStackView.axis = .vertical
-        mainStackView.spacing = 16
-        mainStackView.alignment = .fill
-        mainStackView.distribution = .fill
+        // Configure collection view
+        collectionView.backgroundColor = UIColor.App.backgroundPrimary
+        collectionView.showsVerticalScrollIndicator = true
+        collectionView.alwaysBounceVertical = true
         
         // Configure loading indicator
         loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
         loadingIndicator.hidesWhenStopped = true
         
         // Add views to hierarchy
-        view.addSubview(scrollView)
+        view.addSubview(collectionView)
         view.addSubview(loadingIndicator)
-        scrollView.addSubview(contentView)
-        contentView.addSubview(mainStackView)
         
-        // Setup content
-        setupContent()
+        
     }
     
-    private func setupContent() {
-        // Title section
-        let titleLabel = UILabel()
-        titleLabel.text = marketGroupTitle
-        titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
-        titleLabel.textColor = .label
-        titleLabel.textAlignment = .center
+    // MARK: - Collection View Layout
+    
+    private static func createCollectionViewLayout() -> UICollectionViewLayout {
+        return UICollectionViewCompositionalLayout { sectionIndex, _ in
+            let section = Section.allCases[sectionIndex]
+            
+            switch section {
+            case .marketTypeGroups:
+                // Dynamic height for market type group cards
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .estimated(150) // Estimated height - Auto Layout will determine actual size
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .estimated(150) // Estimated height - Auto Layout will determine actual size
+                )
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 12
+                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
+                return section
+            }
+        }
+    }
+    
+    // MARK: - Data Source Configuration
+    
+    private func configureDataSource() {
         
-        // Subtitle
-        let subtitleLabel = UILabel()
-        subtitleLabel.text = "Market Group ID: \(marketGroupId)"
-        subtitleLabel.font = .systemFont(ofSize: 16, weight: .medium)
-        subtitleLabel.textColor = .secondaryLabel
-        subtitleLabel.textAlignment = .center
+        // Register the custom cells
+        collectionView.register(
+            MarketTypeGroupCollectionViewCell.self,
+            forCellWithReuseIdentifier: MarketTypeGroupCollectionViewCell.reuseIdentifier
+        )
         
-        // Description
-        let descriptionLabel = UILabel()
-        descriptionLabel.text = "This is a simple dummy placeholder view for the \(marketGroupTitle) market group."
-        descriptionLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        descriptionLabel.textColor = .label
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.textAlignment = .center
-        
-        // Sample content cards
-        let sampleCards = createSampleCards()
-        
-        // Add components to stack view
-        mainStackView.addArrangedSubview(titleLabel)
-        mainStackView.addArrangedSubview(subtitleLabel)
-        mainStackView.addArrangedSubview(createSpacer(height: 20))
-        mainStackView.addArrangedSubview(descriptionLabel)
-        mainStackView.addArrangedSubview(createSpacer(height: 20))
-        
-        for card in sampleCards {
-            mainStackView.addArrangedSubview(card)
+        // Market type group cell registration
+        let marketTypeGroupCellRegistration = UICollectionView.CellRegistration<MarketTypeGroupCollectionViewCell, MarketGroupWithIcons> { [weak self] cell, indexPath, marketGroupWithIcons in
+            guard let self = self else { return }
+            
+            cell.configure(with: marketGroupWithIcons)
+            
+            // Set up outcome selection callbacks
+            cell.onOutcomeSelected = { [weak self] lineId, outcomeType in
+                guard let self = self else { return }
+                self.viewModel.handleOutcomeSelection(
+                    marketGroupId: marketGroupWithIcons.marketGroup.id,
+                    lineId: lineId,
+                    outcomeType: outcomeType
+                )
+            }
+            
+            cell.onOutcomeDeselected = { [weak self] lineId, outcomeType in
+                guard let self = self else { return }
+                // Handle deselection if needed
+            }
         }
         
-        // Add bottom spacer
-        mainStackView.addArrangedSubview(createSpacer(height: 40))
-    }
-    
-    private func createSampleCards() -> [UIView] {
-        var cards: [UIView] = []
-        
-        let sampleMarkets = [
-            "Full Time Result",
-            "Both Teams to Score",
-            "Over/Under 2.5 Goals",
-            "Handicap",
-            "Correct Score"
-        ]
-        
-        for (index, marketName) in sampleMarkets.enumerated() {
-            let card = createSampleCard(title: marketName, index: index)
-            cards.append(card)
+        self.dataSource = UICollectionViewDiffableDataSource<Section, CollectionViewItem>(collectionView: collectionView) { collectionView, indexPath, item in
+            switch item {
+            case .marketTypeGroup(let marketGroupWithIcons):
+                return collectionView.dequeueConfiguredReusableCell(
+                    using: marketTypeGroupCellRegistration,
+                    for: indexPath,
+                    item: marketGroupWithIcons
+                )
+            }
         }
         
-        return cards
-    }
-    
-    private func createSampleCard(title: String, index: Int) -> UIView {
-        let container = UIView()
-        container.backgroundColor = .systemGray6
-        container.layer.cornerRadius = 8
-        container.translatesAutoresizingMaskIntoConstraints = false
-        
-        let label = UILabel()
-        label.text = title
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .label
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        let detailLabel = UILabel()
-        detailLabel.text = "Sample market content for \(marketGroupTitle)"
-        detailLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        detailLabel.textColor = .secondaryLabel
-        detailLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        container.addSubview(label)
-        container.addSubview(detailLabel)
-        
-        NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 16),
-            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
-            
-            detailLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
-            detailLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-            detailLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
-            detailLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -16),
-            
-            container.heightAnchor.constraint(greaterThanOrEqualToConstant: 80)
-        ])
-        
-        return container
-    }
-    
-    private func createSpacer(height: CGFloat) -> UIView {
-        let spacer = UIView()
-        spacer.translatesAutoresizingMaskIntoConstraints = false
-        spacer.heightAnchor.constraint(equalToConstant: height).isActive = true
-        return spacer
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Scroll view
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            // Content view
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            
-            // Main stack view
-            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
-            mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            // Collection view
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             // Loading indicator
             loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -216,10 +205,11 @@ public class MarketsTabSimpleViewController: UIViewController {
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
+                guard let self = self else { return }
                 if isLoading {
-                    self?.loadingIndicator.startAnimating()
+                    self.loadingIndicator.startAnimating()
                 } else {
-                    self?.loadingIndicator.stopAnimating()
+                    self.loadingIndicator.stopAnimating()
                 }
             }
             .store(in: &cancellables)
@@ -228,20 +218,54 @@ public class MarketsTabSimpleViewController: UIViewController {
         viewModel.errorPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
+                guard let self = self else { return }
                 if let error = error {
-                    self?.showError(error)
+                    self.showError(error)
                 }
             }
             .store(in: &cancellables)
+        
+        // Bind market groups data
+        viewModel.marketGroupsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] marketGroups in
+                guard let self = self else { return }
+                self.updateCollectionView(with: marketGroups)
+            }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - UI Update Methods
+    
+    private func updateCollectionView(with marketGroups: [MarketGroupWithIcons]) {
+        guard let dataSource = dataSource else {
+            return
+        }
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CollectionViewItem>()
+        
+        // Add all sections
+        snapshot.appendSections(Section.allCases)
+        
+        // Market type groups section
+        let marketTypeGroupItems = marketGroups.map { CollectionViewItem.marketTypeGroup($0) }
+        snapshot.appendItems(marketTypeGroupItems, toSection: .marketTypeGroups)
+        
+        dataSource.apply(snapshot, animatingDifferences: true, completion: { [weak self] in
+            guard let self = self else { return }
+            self.collectionView.layoutIfNeeded()
+        })
     }
     
     // MARK: - Helper Methods
     
     private func showError(_ message: String) {
+        
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
-            self?.viewModel.loadMarkets()
+            guard let self = self else { return }
+            self.viewModel.loadMarkets()
         })
         present(alert, animated: true)
     }

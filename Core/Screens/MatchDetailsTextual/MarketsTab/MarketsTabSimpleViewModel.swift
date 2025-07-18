@@ -7,27 +7,42 @@
 
 import Foundation
 import Combine
+import ServicesProvider
+import GomaUI
 
-public class MarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
+class MarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
     
     // MARK: - Properties
     
-    public let marketGroupId: String
-    public let marketGroupTitle: String
+    let marketGroupId: String
+    let marketGroupTitle: String
     
     // MARK: - Private Properties
     
+    private let eventId: String
+    private let marketGroupKey: String
+    private let servicesProvider: ServicesProvider.Client
+    
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
     private let errorSubject = CurrentValueSubject<String?, Never>(nil)
-    private let marketsSubject = CurrentValueSubject<[MarketData], Never>([])
+    private let marketGroupsSubject = CurrentValueSubject<[MarketGroupWithIcons], Never>([])
     
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     
-    public init(marketGroupId: String, marketGroupTitle: String) {
+    init(
+        marketGroupId: String,
+        marketGroupTitle: String,
+        eventId: String,
+        marketGroupKey: String,
+        servicesProvider: ServicesProvider.Client = Env.servicesProvider
+    ) {
         self.marketGroupId = marketGroupId
         self.marketGroupTitle = marketGroupTitle
+        self.eventId = eventId
+        self.marketGroupKey = marketGroupKey
+        self.servicesProvider = servicesProvider
         
         // Start loading markets
         loadMarkets()
@@ -35,47 +50,139 @@ public class MarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
     
     // MARK: - Publishers
     
-    public var isLoadingPublisher: AnyPublisher<Bool, Never> {
+    var isLoadingPublisher: AnyPublisher<Bool, Never> {
         isLoadingSubject.eraseToAnyPublisher()
     }
     
-    public var errorPublisher: AnyPublisher<String?, Never> {
+    var errorPublisher: AnyPublisher<String?, Never> {
         errorSubject.eraseToAnyPublisher()
     }
     
-    public var marketsPublisher: AnyPublisher<[MarketData], Never> {
-        marketsSubject.eraseToAnyPublisher()
+    var marketGroupsPublisher: AnyPublisher<[MarketGroupWithIcons], Never> {
+        marketGroupsSubject.eraseToAnyPublisher()
     }
     
     // MARK: - Methods
     
-    public func loadMarkets() {
+    func loadMarkets() {
         isLoadingSubject.send(true)
         errorSubject.send(nil)
         
-        // Simulate async loading
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
-            
-            // Generate sample markets based on market group
-            let markets = self.generateSampleMarkets()
-            self.marketsSubject.send(markets)
-            self.isLoadingSubject.send(false)
-        }
+        // Subscribe to market group details via WebSocket
+        servicesProvider.subscribeToMarketGroupDetails(eventId: eventId, marketGroupKey: marketGroupKey)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.errorSubject.send("Failed to load markets: \(error.localizedDescription)")
+                    self?.isLoadingSubject.send(false)
+                }
+            } receiveValue: { [weak self] subscribableContent in
+                self?.handleMarketGroupDetailsContent(subscribableContent)
+            }
+            .store(in: &cancellables)
     }
     
-    public func refreshMarkets() {
+    func refreshMarkets() {
         loadMarkets()
     }
     
-    public func selectMarket(id: String) {
-        // Handle market selection
-        print("Selected market: \(id) in group: \(marketGroupId)")
+    func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType) {
+        print("Outcome selected - Group: \(marketGroupId), Line: \(lineId), Type: \(outcomeType)")
+        // TODO: Add to bet slip
     }
     
     // MARK: - Private Methods
     
-    private func generateSampleMarkets() -> [MarketData] {
-        return [MarketData(), MarketData()]
+    private func handleMarketGroupDetailsContent(_ content: SubscribableContent<[ServicesProvider.Market]>) {
+        switch content {
+        case .connected(let subscription):
+            print("✅ Connected to market group details: \(subscription.id)")
+            // Keep loading state active until we get content
+            
+        case .contentUpdate(let markets):
+            // print("📊 Received \(markets.count) markets for group: \(marketGroupId)")
+            
+            // Group markets by type and convert to MarketGroupData
+            let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)
+            let marketGroups = groupMarketsByType(mappedMarkets)
+            marketGroupsSubject.send(marketGroups)
+            isLoadingSubject.send(false)
+            
+        case .disconnected:
+            print("❌ Disconnected from market group details")
+            // Keep existing data but stop loading
+            isLoadingSubject.send(false)
+        }
     }
+    
+    private func groupMarketsByType(_ markets: [Market]) -> [MarketGroupWithIcons] {
+        // Group markets by typeId
+        let groupedMarkets = Dictionary(grouping: markets) { market in
+            market.marketTypeId ?? market.id
+        }
+        
+        // Convert each group to MarketGroupWithIcons
+        let marketGroups = groupedMarkets.compactMap { (typeId, marketsInGroup) -> MarketGroupWithIcons? in
+            guard let firstMarket = marketsInGroup.first else { return nil }
+            
+            // Sort markets within group (e.g., by nameDigit1 for Over/Under)
+            let sortedMarkets = marketsInGroup.sorted { market1, market2 in
+                let id1 = market1.id
+                let id2 = market2.id
+                return id1 < id2
+            }
+            
+            // Use MarketOutcomesMultiLineViewModel's existing factory method
+            let marketLines = Self.createMarketLinesFromMarkets(marketsInGroup)
+            
+            // Create market group data with empty groupTitle to hide MarketOutcomesMultiLineView title
+            let marketGroup = MarketGroupData(
+                id: typeId,
+                groupTitle: nil, // Hide title in MarketOutcomesMultiLineView
+                marketLines: marketLines
+            )
+
+            return MarketGroupWithIcons(
+                marketGroup: marketGroup,
+                icons: [],
+                groupName: firstMarket.marketTypeName ?? firstMarket.name // Title for collection view cell
+            )
+        }
+        
+        // Sort groups by position or name
+        return marketGroups.sorted { group1, group2 in
+            return group1.groupName < group2.groupName
+        }
+    }
+    
+    private static func createMarketLinesFromMarkets(_ markets: [Market]) -> [MarketLineData] {
+        return markets.compactMap { market in
+            guard !market.outcomes.isEmpty else { return nil }
+            
+            let outcomes = market.outcomes.map { outcome in
+                MarketOutcomeData(
+                    id: outcome.id,
+                    title: outcome.translatedName,
+                    value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
+                    oddsChangeDirection: .none,
+                    isSelected: false,
+                    isDisabled: !outcome.bettingOffer.isAvailable
+                )
+            }
+            
+            // Determine line structure based on number of outcomes
+            let lineType: MarketLineType = outcomes.count == 3 ? .threeColumn : .twoColumn
+            let displayMode: MarketDisplayMode = outcomes.count == 3 ? .triple : .double
+            
+            return MarketLineData(
+                id: market.id,
+                leftOutcome: outcomes.first,
+                middleOutcome: outcomes.count == 3 ? outcomes[1] : nil,
+                rightOutcome: outcomes.last,
+                displayMode: displayMode,
+                lineType: lineType
+            )
+        }
+    }
+    
 }
