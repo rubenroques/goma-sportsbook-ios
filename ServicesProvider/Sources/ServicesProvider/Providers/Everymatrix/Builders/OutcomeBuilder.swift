@@ -29,7 +29,8 @@ extension EveryMatrix {
                 code: outcome.code,
                 bettingOffers: hierarchicalBettingOffers,
                 headerName: outcome.headerName,
-                headerNameKey: outcome.headerNameKey
+                headerNameKey: outcome.headerNameKey,
+                paramFloat1: outcome.paramFloat1
             )
         }
     }

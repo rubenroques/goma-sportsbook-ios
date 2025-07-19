@@ -21,7 +21,7 @@ class MarketTypeGroupCollectionViewCell: UICollectionViewCell {
     private let headerView = UIView()
     private let titleLabel = UILabel()
     private let iconsStackView = UIStackView()
-    private var marketOutcomesView: MarketOutcomesMultiLineView?
+    private var marketOutcomesView: MarketOutcomesMultiLineView!
     
     // MARK: - Callbacks
     
@@ -50,9 +50,9 @@ class MarketTypeGroupCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        // Clean up previous market outcomes view
-        marketOutcomesView?.removeFromSuperview()
-        marketOutcomesView = nil
+        // Reset to loading state instead of removing the view
+        let loadingViewModel = MockMarketOutcomesMultiLineViewModel.loadingMarketGroup
+        marketOutcomesView.configure(with: loadingViewModel)
         currentViewModel = nil
         
         // Clear icons
@@ -97,6 +97,12 @@ class MarketTypeGroupCollectionViewCell: UICollectionViewCell {
         iconsStackView.alignment = .center
         iconsStackView.distribution = .fill
         headerView.addSubview(iconsStackView)
+        
+        // Market outcomes view - create with loading state initially
+        let loadingViewModel = MockMarketOutcomesMultiLineViewModel.loadingMarketGroup
+        marketOutcomesView = MarketOutcomesMultiLineView(viewModel: loadingViewModel)
+        marketOutcomesView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(marketOutcomesView)
     }
     
     private func setupConstraints() {
@@ -121,7 +127,13 @@ class MarketTypeGroupCollectionViewCell: UICollectionViewCell {
             // Icons stack view
             iconsStackView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
             iconsStackView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            iconsStackView.heightAnchor.constraint(equalToConstant: 20)
+            iconsStackView.heightAnchor.constraint(equalToConstant: 20),
+            
+            // Market outcomes view - complete the constraint chain
+            marketOutcomesView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 12),
+            marketOutcomesView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            marketOutcomesView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            marketOutcomesView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
         ])
     }
     
@@ -137,33 +149,25 @@ class MarketTypeGroupCollectionViewCell: UICollectionViewCell {
         // Configure icons
         configureIcons(icons)
         
-        // Create and configure market outcomes view using existing Core implementation
+        // Create and configure market outcomes view model
         let viewModel = MarketOutcomesMultiLineViewModel(marketGroupData: marketGroup)
         currentViewModel = viewModel
         
-        let outcomesView = MarketOutcomesMultiLineView(viewModel: viewModel)
-        outcomesView.translatesAutoresizingMaskIntoConstraints = false
+        // Use configure method instead of recreating the view
+        marketOutcomesView.configure(with: viewModel)
         
-        // Set up callbacks
-        outcomesView.onOutcomeSelected = { [weak self] lineId, outcomeType in
+        // Set up callbacks (view instance stays the same)
+        marketOutcomesView.onOutcomeSelected = { [weak self] lineId, outcomeType in
             self?.onOutcomeSelected?(lineId, outcomeType)
         }
         
-        outcomesView.onOutcomeDeselected = { [weak self] lineId, outcomeType in
+        marketOutcomesView.onOutcomeDeselected = { [weak self] lineId, outcomeType in
             self?.onOutcomeDeselected?(lineId, outcomeType)
         }
         
-        // Add to container
-        containerView.addSubview(outcomesView)
-        
-        NSLayoutConstraint.activate([
-            outcomesView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 12),
-            outcomesView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            outcomesView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            outcomesView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
-        ])
-        
-        marketOutcomesView = outcomesView
+        // Force layout update after content configuration
+        setNeedsLayout()
+        invalidateIntrinsicContentSize()
     }
     
     private func configureIcons(_ icons: [MarketInfoIcon]) {

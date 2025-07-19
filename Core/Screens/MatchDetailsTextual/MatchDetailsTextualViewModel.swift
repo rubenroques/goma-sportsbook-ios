@@ -43,47 +43,32 @@ class MatchDetailsTextualViewModel {
     
     let statisticsWidgetViewModel: StatisticsWidgetViewModelProtocol
     
-    private(set) var marketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol
+    let marketGroupSelectorTabViewModel: MatchDetailsMarketGroupSelectorTabViewModel
     
     // MARK: - Initialization
     
     /// Initialize with a Match object (preferred for navigation from match lists)
     init(match: Match) {
-        // Store match reference for WebSocket subscription
         self.currentMatch = match
         self.currentMatchId = match.id
         
-        // Create child ViewModels (Vertical Pattern) with real match data
         self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
         self.matchDateNavigationBarViewModel = MatchDateNavigationBarViewModel(match: match)
         self.matchHeaderCompactViewModel = MatchHeaderCompactViewModel(match: match)
         self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
-        
-        // Create production market group selector for real match data
         self.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
-        marketGroupSelectorTabViewModelSubject.send(self.marketGroupSelectorTabViewModel)
         
-        setupBindings()
-        loadMatchDetails(matchId: match.id)
+        commonInit()
     }
     
-    /// Initialize with a match ID (for deep linking or bookmarking)
-    init(matchId: String) {
-        // Store match ID for WebSocket subscription
-        self.currentMatch = nil
-        self.currentMatchId = matchId
-        
-        // Create child ViewModels (Vertical Pattern) with mock data initially
-        // The real match data will be loaded asynchronously
-        self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
-        self.matchDateNavigationBarViewModel = MockMatchDateNavigationBarViewModel.liveMock
-        self.matchHeaderCompactViewModel = MockMatchHeaderCompactViewModel.default
-        self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
-        self.marketGroupSelectorTabViewModel = MockMarketGroupSelectorTabViewModel.standardSportsMarkets
+    
+    private func commonInit() {
         marketGroupSelectorTabViewModelSubject.send(self.marketGroupSelectorTabViewModel)
-        
         setupBindings()
-        loadMatchDetails(matchId: matchId)
+        
+        if let matchId = currentMatchId {
+            loadMatchDetails(matchId: matchId)
+        }
     }
     
     // MARK: - Publishers
@@ -139,14 +124,14 @@ class MatchDetailsTextualViewModel {
                     print("   Status: \(match.status)")
                     print("   Markets: \(match.markets.count)")
                     
-                    // Update current match and recreate market group selector with real data
+                    // Update current match and update market group selector with real data
                     self?.currentMatch = match
-                    self?.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
-                    self?.marketGroupSelectorTabViewModelSubject.send(self?.marketGroupSelectorTabViewModel)
+                    
+                    // Update existing view model instead of recreating it
+                    self?.marketGroupSelectorTabViewModel.updateMatch(match)
                     
                     // Mark event details as loaded
                     self?.isEventDetailsLoaded = true
-                    self?.setupMarketGroupsLoadingObserver()
                     self?.checkLoadingCompletion()
                     
                 case .disconnected:
@@ -176,24 +161,12 @@ class MatchDetailsTextualViewModel {
     private func setupBindings() {
         // Setup communication between child ViewModels
         
-        // Step 4: Wire up MatchHeaderCompactView statistics button to toggle StatisticsWidgetView
+        // Wire up MatchHeaderCompactView statistics button to toggle StatisticsWidgetView
         matchHeaderCompactViewModel.onStatisticsTapped = { [weak self] in
             self?.toggleStatistics()
         }
         
-        // This will be expanded as we add each component
-    }
-    
-    // MARK: - Loading Coordination
-    
-    private func setupMarketGroupsLoadingObserver() {
-        // Cancel any existing market groups subscription to avoid memory leaks
-        marketGroupsSubscription?.cancel()
-        
-        // Reset market groups loaded state since we're observing a new view model
-        isMarketGroupsLoaded = false
-        
-        
+        // Setup loading coordination with market groups
         // Subscribe to market groups data changes to know when they load
         marketGroupsSubscription = marketGroupSelectorTabViewModel.marketGroupsPublisher
             .receive(on: DispatchQueue.main)
@@ -207,6 +180,8 @@ class MatchDetailsTextualViewModel {
                 }
             }
     }
+    
+    // MARK: - Loading Coordination
     
     private func checkLoadingCompletion() {
         let isFullyLoaded = isEventDetailsLoaded && isMarketGroupsLoaded

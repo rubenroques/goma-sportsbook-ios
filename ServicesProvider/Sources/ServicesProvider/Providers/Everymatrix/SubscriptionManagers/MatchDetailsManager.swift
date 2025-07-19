@@ -23,10 +23,14 @@ class MatchDetailsManager {
     
     // MARK: - State Management
     private let store = EveryMatrix.EntityStore()
+    private var marketGroupStores = [String: EveryMatrix.EntityStore]()
+    
     private var matchAggregatorSubscription: EndpointPublisherIdentifiable?
     private var marketGroupsSubscription: EndpointPublisherIdentifiable?
     private var marketGroupDetailsSubscriptions = [String: EndpointPublisherIdentifiable]()
+    
     private var marketDetailsSubscription: EndpointPublisherIdentifiable?
+    
     private var cancellables = Set<AnyCancellable>()
     
     // Cached data
@@ -122,6 +126,9 @@ class MatchDetailsManager {
             connector.unsubscribe(existing)
         }
         
+        // Create isolated EntityStore for this market group
+        marketGroupStores[marketGroupKey] = EveryMatrix.EntityStore()
+        
         let router = WAMPRouter.matchMarketGroupDetailsPublisher(
             operatorId: operatorId,
             language: language,
@@ -136,7 +143,7 @@ class MatchDetailsManager {
                 }
             })
             .compactMap { [weak self] content -> SubscribableContent<[Market]>? in
-                return try? self?.handleMarketGroupDetailsContent(content)
+                return try? self?.handleMarketGroupDetailsContent(content, marketGroupKey: marketGroupKey)
             }
             .mapError { error -> ServiceProviderError in
                 if let serviceError = error as? ServiceProviderError {
@@ -186,6 +193,7 @@ class MatchDetailsManager {
         unsubscribeMarketDetails()
         cancellables.removeAll()
         store.clear()
+        marketGroupStores.removeAll()
         cachedMarketGroups.removeAll()
         marketGroupsLoaded = false
     }
@@ -211,6 +219,7 @@ class MatchDetailsManager {
             connector.unsubscribe(subscription)
         }
         marketGroupDetailsSubscriptions.removeAll()
+        marketGroupStores.removeAll()
     }
     
     private func unsubscribeMarketDetails() {
@@ -271,18 +280,18 @@ class MatchDetailsManager {
         }
     }
     
-    private func handleMarketGroupDetailsContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) throws -> SubscribableContent<[Market]>? {
+    private func handleMarketGroupDetailsContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>, marketGroupKey: String) throws -> SubscribableContent<[Market]>? {
         switch content {
         case .connect(let publisherIdentifiable):
             let subscription = Subscription(id: "\(publisherIdentifiable.identificationCode)")
             return SubscribableContent.connected(subscription: subscription)
             
         case .initialContent(let response), .updatedContent(let response):
-            // Parse markets data
-            parseMarketsData(from: response)
+            // Parse markets data into isolated store for this market group
+            parseMarketsDataForGroup(from: response, marketGroupKey: marketGroupKey)
             
-            // Build and return markets array
-            let markets = buildMarketsArray()
+            // Build and return markets array from isolated store
+            let markets = buildMarketsArrayForGroup(marketGroupKey: marketGroupKey)
             return .contentUpdate(content: markets)
             
         case .disconnect:
@@ -378,6 +387,25 @@ class MatchDetailsManager {
         // Build markets
         let markets = marketDTOs.compactMap { marketDTO -> Market? in
             guard let internalMarket = EveryMatrix.MarketBuilder.build(from: marketDTO, store: store) else {
+                return nil
+            }
+            return EveryMatrixModelMapper.market(fromInternalMarket: internalMarket)
+        }
+        
+        return markets
+    }
+    
+    private func buildMarketsArrayForGroup(marketGroupKey: String) -> [Market] {
+        // Get markets from isolated store for this market group
+        guard let groupStore = marketGroupStores[marketGroupKey] else {
+            return []
+        }
+        
+        let marketDTOs = groupStore.getAll(EveryMatrix.MarketDTO.self)
+        
+        // Build markets using the isolated store
+        let markets = marketDTOs.compactMap { marketDTO -> Market? in
+            guard let internalMarket = EveryMatrix.MarketBuilder.build(from: marketDTO, store: groupStore) else {
                 return nil
             }
             return EveryMatrixModelMapper.market(fromInternalMarket: internalMarket)
@@ -526,6 +554,49 @@ class MatchDetailsManager {
     }
     
     // MARK: - Markets Parsing
+    private func parseMarketsDataForGroup(from response: EveryMatrix.AggregatorResponse, marketGroupKey: String) {
+        guard let groupStore = marketGroupStores[marketGroupKey] else {
+            return
+        }
+        
+        for record in response.records {
+            switch record {
+            case .match(let dto):
+                groupStore.store(dto)
+                
+            case .market(let dto):
+                groupStore.store(dto)
+            case .outcome(let dto):
+                groupStore.store(dto)
+            case .bettingOffer(let dto):
+                groupStore.store(dto)
+            case .marketOutcomeRelation(let dto):
+                groupStore.store(dto)
+            case .marketInfo(let dto):
+                groupStore.store(dto)
+            case .mainMarket(let dto):
+                groupStore.store(dto)
+            case .eventInfo(let dto):
+                groupStore.store(dto)
+            case .eventCategory(let dto):
+                groupStore.store(dto)
+            case .marketGroup(let dto):
+                groupStore.store(dto)
+            
+                
+            // Handle change records
+            case .changeRecord(let changeRecord):
+                handleMarketsChangeRecordForGroup(changeRecord, groupStore: groupStore)
+                
+            // Skip non-market entities
+            case .sport, .location, .tournament, .nextMatchesNumber:
+                break
+            case .unknown:
+                break
+            }
+        }
+    }
+    
     private func parseMarketsData(from response: EveryMatrix.AggregatorResponse) {
         for record in response.records {
             switch record {
@@ -565,6 +636,25 @@ class MatchDetailsManager {
         }
     }
     
+    private func handleMarketsChangeRecordForGroup(_ change: EveryMatrix.ChangeRecord, groupStore: EveryMatrix.EntityStore) {
+        // Process all entity types for markets using isolated store
+        switch change.changeType {
+        case .create:
+            if let entityData = change.entity {
+                storeEntityInStore(entityData, store: groupStore)
+            }
+            
+        case .update:
+            guard let changedProperties = change.changedProperties else {
+                return
+            }
+            groupStore.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+            
+        case .delete:
+            groupStore.deleteEntity(type: change.entityType, id: change.id)
+        }
+    }
+    
     private func handleMarketsChangeRecord(_ change: EveryMatrix.ChangeRecord) {
         // Process all entity types for markets
         switch change.changeType {
@@ -581,6 +671,41 @@ class MatchDetailsManager {
             
         case .delete:
             store.deleteEntity(type: change.entityType, id: change.id)
+        }
+    }
+    
+    private func storeEntityInStore(_ entity: EveryMatrix.EntityData, store: EveryMatrix.EntityStore) {
+        switch entity {
+        case .match(let dto):
+            store.store(dto)
+        case .market(let dto):
+            store.store(dto)
+        case .outcome(let dto):
+            store.store(dto)
+        case .bettingOffer(let dto):
+            store.store(dto)
+        case .marketOutcomeRelation(let dto):
+            store.store(dto)
+        case .marketInfo(let dto):
+            store.store(dto)
+        case .mainMarket(let dto):
+            store.store(dto)
+        case .eventInfo(let dto):
+            store.store(dto)
+        case .eventCategory(let dto):
+            store.store(dto)
+        case .tournament(let dto):
+            store.store(dto)
+        case .location(let dto):
+            store.store(dto)
+        case .sport(let dto):
+            store.store(dto)
+        case .nextMatchesNumber(let dto):
+            store.store(dto)
+        case .marketGroup(let dto):
+            store.store(dto)
+        case .unknown:
+            break
         }
     }
     

@@ -28,7 +28,19 @@ extension EveryMatrix {
             let hierarchicalOutcomes = marketOutcomes.compactMap { outcome in
                 OutcomeBuilder.build(from: outcome, store: store)
             }
-
+            
+            // Sort outcomes using headerNameKey for consistent ordering
+            let sortedOutcomes = hierarchicalOutcomes.sorted { outcome1, outcome2 in
+                let sortValue1 = outcome1.headerNameKey.flatMap { EveryMatrixModelMapper.sortValue(
+                    forOutcomeHeaderKey: $0,
+                    paramFloat1: outcome1.paramFloat1) } ?? 1000
+                let sortValue2 = outcome2.headerNameKey.flatMap { EveryMatrixModelMapper.sortValue(
+                    forOutcomeHeaderKey: $0,
+                    paramFloat1: outcome2.paramFloat1) } ?? 1000
+                
+                return sortValue1 < sortValue2
+            }
+            
             return Market(
                 id: market.id,
                 name: market.name,
@@ -39,10 +51,12 @@ extension EveryMatrix {
                     name: market.bettingTypeName,
                     shortName: market.shortBettingTypeName
                 ),
-                outcomes: hierarchicalOutcomes,
+                outcomes: sortedOutcomes,
                 isAvailable: market.isAvailable,
                 isMainLine: market.mainLine,
-                paramFloat1: market.paramFloat1
+                paramFloat1: market.paramFloat1,
+                paramFloat2: market.paramFloat2,
+                paramFloat3: market.paramFloat3
             )
         }
     }

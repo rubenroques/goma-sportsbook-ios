@@ -20,7 +20,7 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Dependencies
-    private let match: Match
+    private var match: Match
     private let servicesProvider: ServicesProvider.Client
     
     // MARK: - Initialization
@@ -147,7 +147,36 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
         }
     }
     
+    // MARK: - App-Specific Update Methods
+    
+    /// Updates the match and reloads market groups data
+    /// Clears current market groups and restarts subscription for the new match
+    func updateMatch(_ newMatch: Match) {
+        self.match = newMatch
+        
+        // Clear current market groups since they belong to the old match
+        // and update the tab data ID to reflect the new match
+        let clearedData = MarketGroupSelectorTabData(
+            id: "match_details_market_groups_\(newMatch.id)",
+            marketGroups: [], // Clear old market groups
+            selectedMarketGroupId: nil // Clear selection
+        )
+        tabDataSubject.send(clearedData)
+        
+        // Restart subscription with new match data
+        reloadMarketGroups()
+    }
+    
     // MARK: - Private Methods
+    
+    /// Cancels existing subscriptions and reloads market groups for the current match
+    private func reloadMarketGroups() {
+        // Cancel existing subscriptions to prevent memory leaks
+        cancellables.removeAll()
+        
+        // Restart market groups loading
+        loadMarketGroups()
+    }
     
     private func loadMarketGroups() {
         // Use new subscription-based approach
@@ -194,7 +223,7 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
         
         // Auto-select the default market group or first available
         if let defaultGroup = marketGroups.first(where: { $0.isDefault ?? false }) {
-            selectMarketGroup(id: defaultGroup.id)
+            selectMarketGroup(id: defaultGroup.groupKey ?? defaultGroup.type)
         } else {
             selectFirstAvailableMarketGroup()
         }

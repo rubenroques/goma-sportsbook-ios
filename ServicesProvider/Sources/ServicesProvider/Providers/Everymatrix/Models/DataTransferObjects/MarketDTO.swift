@@ -24,6 +24,8 @@ extension EveryMatrix {
         let isComplete: Bool
         let isClosed: Bool
         let paramFloat1: Double?
+        let paramFloat2: Double?
+        let paramFloat3: Double?
         let bettingTypeName: String
         let shortBettingTypeName: String
         let eventPartName: String

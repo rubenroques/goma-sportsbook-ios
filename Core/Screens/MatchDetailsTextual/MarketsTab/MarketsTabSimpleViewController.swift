@@ -74,24 +74,7 @@ public class MarketsTabSimpleViewController: UIViewController {
         
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    public override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    public override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-    
-    public override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-    }
-    
     // MARK: - Setup
-    
     private func setupUI() {
         
         view.backgroundColor = UIColor.App.backgroundPrimary
@@ -135,14 +118,18 @@ public class MarketsTabSimpleViewController: UIViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 12
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
+                section.contentInsets = NSDirectionalEdgeInsets(
+                    top: 16,
+                    leading: 0,
+                    bottom: 16,
+                    trailing: 0
+                )
                 return section
             }
         }
     }
     
     // MARK: - Data Source Configuration
-    
     private func configureDataSource() {
         
         // Register the custom cells
@@ -253,7 +240,12 @@ public class MarketsTabSimpleViewController: UIViewController {
         
         dataSource.apply(snapshot, animatingDifferences: true, completion: { [weak self] in
             guard let self = self else { return }
-            self.collectionView.layoutIfNeeded()
+            
+            // Force layout recalculation after data update
+            DispatchQueue.main.async {
+                self.collectionView.collectionViewLayout.invalidateLayout()
+                self.collectionView.layoutIfNeeded()
+            }
         })
     }
     

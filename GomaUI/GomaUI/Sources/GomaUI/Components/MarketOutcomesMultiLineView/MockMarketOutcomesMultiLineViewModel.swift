@@ -442,4 +442,13 @@ extension MockMarketOutcomesMultiLineViewModel {
             emptyStateMessage: "Markets temporarily unavailable"
         )
     }
+    
+    /// Empty state without title
+    public static var loadingMarketGroup: MockMarketOutcomesMultiLineViewModel {
+        return MockMarketOutcomesMultiLineViewModel(
+            groupTitle: nil,
+            lineViewModels: [],
+            emptyStateMessage: "Loading markets"
+        )
+    }
 }

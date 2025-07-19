@@ -238,7 +238,10 @@ class MatchDetailsTextualViewController: UIViewController {
         pageViewController.dataSource = self
         pageViewController.delegate = self
         
+        pageViewController.willMove(toParent: self)
+        
         addChild(pageViewController)
+        
         pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
         pageContainerView.addSubview(pageViewController.view)
         pageViewController.didMove(toParent: self)

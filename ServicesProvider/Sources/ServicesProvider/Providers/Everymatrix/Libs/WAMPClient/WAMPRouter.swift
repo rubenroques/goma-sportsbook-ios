@@ -48,6 +48,19 @@ enum WAMPRouter {
     case popularMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case todayMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case todayMatchesFilterPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int, timeRange: String)
+    case customMatchesAggregatorPublisher(
+        operatorId: String,
+        language: String,
+        sportId: String,
+        locationId: String,
+        tournamentId: String,
+        hoursInterval: String,
+        sortEventsBy: String,
+        liveStatus: String,
+        eventLimit: Int,
+        mainMarketsLimit: Int,
+        optionalUserId: String?
+    )
     case matchDetailsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupDetailsPublisher(operatorId: String, language: String, matchId: String, marketGroupName: String)
@@ -141,6 +154,12 @@ enum WAMPRouter {
         case .todayMatchesFilterPublisher(let operatorId, let language, let sportId, let matchesCount, let timeRange):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(timeRange)/\(matchesCount)/\(marketsCount)"
+        case .customMatchesAggregatorPublisher(let operatorId, let language, let sportId, let locationId, let tournamentId, let hoursInterval, let sortEventsBy, let liveStatus, let eventLimit, let mainMarketsLimit, let optionalUserId):
+            if let userId = optionalUserId {
+                return "/sports/\(operatorId)/\(language)/custom-matches-aggregator/\(sportId)/\(locationId)/\(tournamentId)/\(hoursInterval)/\(sortEventsBy)/\(liveStatus)/\(eventLimit)/\(mainMarketsLimit)/\(userId)"
+            } else {
+                return "/sports/\(operatorId)/\(language)/custom-matches-aggregator/\(sportId)/\(locationId)/\(tournamentId)/\(hoursInterval)/\(sortEventsBy)/\(liveStatus)/\(eventLimit)/\(mainMarketsLimit)"
+            }
         case .competitionsMatchesPublisher(let operatorId, let language, _, let events):
             let marketsCount = 5
             let eventsIds = events.joined(separator: ",")
@@ -312,6 +331,8 @@ enum WAMPRouter {
         case .todayMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesFilterPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .customMatchesAggregatorPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .bannersInfoPublisher:
             return .sportsInitialDump(topic: self.procedure)

@@ -132,37 +132,30 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         let currentState = marketStateSubject.value
         var newOutcomes: [OutcomeType: MarketOutcomeData] = [:]
         
-        // Map market outcomes to our outcome types
-        let sortedOutcomes = market.outcomes.sorted { lhs, rhs in
-            // Sort by orderValue if available, otherwise by id
-            if let lhsOrder = lhs.orderValue, let rhsOrder = rhs.orderValue {
-                return lhsOrder < rhsOrder
-            }
-            return lhs.id < rhs.id
-        }
+        let outcomes = market.outcomes
         
         // Determine display mode based on number of outcomes
         let displayMode: MarketDisplayMode
-        if sortedOutcomes.count == 2 {
+        if outcomes.count == 2 {
             displayMode = .double
             // Map to left/right
-            if let first = sortedOutcomes.first {
+            if let first = outcomes.first {
                 newOutcomes[.left] = createOutcomeData(from: first)
             }
-            if sortedOutcomes.count > 1 {
-                newOutcomes[.right] = createOutcomeData(from: sortedOutcomes[1])
+            if outcomes.count > 1 {
+                newOutcomes[.right] = createOutcomeData(from: outcomes[1])
             }
-        } else if sortedOutcomes.count >= 3 {
+        } else if outcomes.count >= 3 {
             displayMode = .triple
             // Map to left/middle/right
-            if let first = sortedOutcomes.first {
+            if let first = outcomes.first {
                 newOutcomes[.left] = createOutcomeData(from: first)
             }
-            if sortedOutcomes.count > 1 {
-                newOutcomes[.middle] = createOutcomeData(from: sortedOutcomes[1])
+            if outcomes.count > 1 {
+                newOutcomes[.middle] = createOutcomeData(from: outcomes[1])
             }
-            if sortedOutcomes.count > 2 {
-                newOutcomes[.right] = createOutcomeData(from: sortedOutcomes[2])
+            if outcomes.count > 2 {
+                newOutcomes[.right] = createOutcomeData(from: outcomes[2])
             }
         } else {
             // No outcomes available
@@ -324,19 +317,13 @@ extension MarketOutcomesLineViewModel {
             )
         }
         
-        let sortedOutcomes = market.outcomes.sorted { lhs, rhs in
-            // Sort by orderValue if available, otherwise by id
-            if let lhsOrder = lhs.orderValue, let rhsOrder = rhs.orderValue {
-                return lhsOrder < rhsOrder
-            }
-            return lhs.id < rhs.id
-        }
+        let outcomes = market.outcomes
         
-        let displayMode: MarketDisplayMode = sortedOutcomes.count >= 3 ? .triple : .double
+        let displayMode: MarketDisplayMode = outcomes.count >= 3 ? .triple : .double
         
-        let leftOutcome = sortedOutcomes.count > 0 ? createOutcomeData(from: sortedOutcomes[0]) : nil
-        let middleOutcome = sortedOutcomes.count > 2 ? createOutcomeData(from: sortedOutcomes[1]) : nil
-        let rightOutcome = sortedOutcomes.count > 1 ? createOutcomeData(from: sortedOutcomes[sortedOutcomes.count >= 3 ? 2 : 1]) : nil
+        let leftOutcome = outcomes.count > 0 ? createOutcomeData(from: outcomes[0]) : nil
+        let middleOutcome = outcomes.count > 2 ? createOutcomeData(from: outcomes[1]) : nil
+        let rightOutcome = outcomes.count > 1 ? createOutcomeData(from: outcomes[outcomes.count >= 3 ? 2 : 1]) : nil
         
         return MarketOutcomesLineDisplayState(
             displayMode: displayMode,

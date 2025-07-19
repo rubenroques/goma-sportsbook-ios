@@ -46,13 +46,12 @@ extension EveryMatrixModelMapper {
         }
 
         // Convert EveryMatrix.Market array to external Market array
-        var markets = internalMatch.markets.map(Self.market(fromInternalMarket:))
-        markets = markets.sorted { $0.id < $1.id }
+        let markets = internalMatch.markets.map(Self.market(fromInternalMarket:))
         
         // Convert match status
         let eventStatus = Self.eventStatus(fromInternalMatchStatus: internalMatch.status)
 
-        var homeTeamName = internalMatch.homeParticipant?.name ?? ""
+        let homeTeamName = internalMatch.homeParticipant?.name ?? ""
         let awayTeamName = internalMatch.awayParticipant?.name ?? ""
 
         return Event(
@@ -99,15 +98,6 @@ extension EveryMatrixModelMapper {
     static func market(fromInternalMarket internalMarket: EveryMatrix.Market) -> Market {
         // Convert EveryMatrix.Outcome array to external Outcome array
         var outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
-        outcomes = outcomes.sorted { outcome1, outcome2 in
-            if let orderValue1 = outcome1.orderValue, let sortValue1 = Self.sortValue(forOutcomeHeaderKey: orderValue1),
-               let orderValue2 = outcome2.orderValue, let sortValue2 = Self.sortValue(forOutcomeHeaderKey: orderValue2) {
-                sortValue1 < sortValue2
-            }
-            else {
-                outcome1.id < outcome2.id
-            }
-        }
         
         // Map betting type information
         let marketTypeId = internalMarket.bettingType?.id ?? ""
@@ -224,7 +214,7 @@ extension EveryMatrixModelMapper {
 
 extension EveryMatrixModelMapper {
     
-    static func sortValue(forOutcomeHeaderKey key: String) -> Int? {
+    static func sortValue(forOutcomeHeaderKey key: String, paramFloat1: Double? = nil) -> Int? {
         
         switch key.lowercased() {
         case "yes": return 10
@@ -312,6 +302,13 @@ extension EveryMatrixModelMapper {
         case "2": return 30
             
         default:
+            // If we have a paramFloat1 value, use it for sorting (e.g., "race_to_x" patterns)
+            if let paramValue = paramFloat1 {
+                // Use paramFloat1 as sort value with base 1000 to ensure it sorts after standard patterns
+                return 1000 + Int(paramValue * 10) // e.g., 1.0 -> 1010, 2.0 -> 1020, 3.0 -> 1030
+            }
+            
+            print("SortKey: NOT FOUND (\(key))")
             return nil
         }
     }

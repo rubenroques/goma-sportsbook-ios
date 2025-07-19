@@ -16,5 +16,6 @@ extension EveryMatrix {
         let bettingOffers: [BettingOffer]
         let headerName: String?
         let headerNameKey: String?
+        let paramFloat1: Double?
     }
 }

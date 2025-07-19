@@ -18,6 +18,8 @@ extension EveryMatrix {
         let isAvailable: Bool?
         let isMainLine: Bool?
         let paramFloat1: Double?
+        let paramFloat2: Double?
+        let paramFloat3: Double?
 
         struct BettingType: Identifiable, Hashable {
             let id: String

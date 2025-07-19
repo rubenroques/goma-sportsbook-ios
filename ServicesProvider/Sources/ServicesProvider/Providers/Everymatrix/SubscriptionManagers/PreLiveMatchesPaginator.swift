@@ -69,10 +69,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
         // Clear the store for fresh subscription
         store.clear()
 
-        // Create the WAMP router using the existing popularMatchesPublisher case
-        // I am using this live version to better test the changes in the matches/market/outcomes
-        // TODO: revert to popularMatchesPublisher when the changes are tested
-        let router = WAMPRouter.popularMatchesPublisher( // liveMatchesPublisher( // ) popularMatchesPublisher(
+        let router = WAMPRouter.popularMatchesPublisher(
             operatorId: "4093",
             language: "en",
             sportId: sportId,
@@ -496,7 +493,8 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             code: outcome.code,
             bettingOffers: [modifiedOffer], // Use only the modified offer
             headerName: outcome.headerName,
-            headerNameKey: outcome.headerNameKey
+            headerNameKey: outcome.headerNameKey,
+            paramFloat1: outcome.paramFloat1
         )
                 
         // Convert to public Outcome model
