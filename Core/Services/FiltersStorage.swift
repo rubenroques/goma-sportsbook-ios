@@ -25,7 +25,7 @@ public class FilterStorage: ObservableObject {
     // MARK: - Default Values
     public static let defaultFilterSelection = GeneralFilterSelection(
         sportId: "1",
-        timeValue: 1.0,
+        timeValue: 0.0,
         sortTypeId: "1",
         leagueId: "all"
     )

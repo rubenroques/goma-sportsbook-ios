@@ -4179,6 +4179,14 @@
 		CE63A85F2DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8592DEF8B9800E1FF01 /* NextUpEventsViewModel.swift */; };
 		CE63A8602DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8592DEF8B9800E1FF01 /* NextUpEventsViewModel.swift */; };
 		CE63A8612DEF8B9800E1FF01 /* NextUpEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE63A8592DEF8B9800E1FF01 /* NextUpEventsViewModel.swift */; };
+		CE74A1332E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */; };
+		CE74A1342E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */; };
+		CE74A1352E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */; };
+		CE74A1362E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */; };
+		CE74A1372E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */; };
+		CE74A1382E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */; };
+		CE74A1392E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */; };
+		CE74A13A2E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */; };
 		CE794C292D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C162D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift */; };
 		CE794C2A2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C132D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift */; };
 		CE794C2B2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE794C172D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift */; };
@@ -10048,6 +10056,7 @@
 		CE63A83F2DEF3E7600E1FF01 /* MarketGroupSelectorTabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroupSelectorTabViewModel.swift; sourceTree = "<group>"; };
 		CE63A8502DEF878200E1FF01 /* MarketGroupCardsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroupCardsViewModel.swift; sourceTree = "<group>"; };
 		CE63A8592DEF8B9800E1FF01 /* NextUpEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextUpEventsViewModel.swift; sourceTree = "<group>"; };
+		CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GeneralFilterSelection+MatchesFilterOptions.swift"; sourceTree = "<group>"; };
 		CE794C122D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Animations.swift"; sourceTree = "<group>"; };
 		CE794C132D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Configuration.swift"; sourceTree = "<group>"; };
 		CE794C142D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreLiveMatchWidgetCollectionViewCell+Factory.swift"; sourceTree = "<group>"; };
@@ -12308,6 +12317,7 @@
 			children = (
 				657308DD2E0C046B00B3D4C5 /* CombinedFiltersViewController.swift */,
 				657308DE2E0C046B00B3D4C5 /* MockCombinedFiltersViewModel.swift */,
+				CE74A1322E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift */,
 				657308DF2E0C046B00B3D4C5 /* CombinedFiltersViewModelProtocol.swift */,
 			);
 			path = CombinedFilters;
@@ -17487,6 +17497,7 @@
 				A9A521702A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				450B794628F58574009229E3 /* FavoriteGoma.swift in Sources */,
 				653A38422D53921900B89CDF /* BettingPracticesViewController.swift in Sources */,
+				CE74A1392E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */,
 				CE0AEAB02D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */,
 				65F141392E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				450B794828F58574009229E3 /* Fonts.swift in Sources */,
@@ -18426,6 +18437,7 @@
 				A9A5216F2A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				45A3315D298976BA008181E9 /* UserInfoSimpleCardView.swift in Sources */,
 				45A3315E298976BA008181E9 /* FavoriteGoma.swift in Sources */,
+				CE74A1352E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */,
 				653A383D2D53921900B89CDF /* BettingPracticesViewController.swift in Sources */,
 				65F141362E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CE0AEAAB2D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */,
@@ -19335,6 +19347,7 @@
 				45F6BC082AB3732C00C81DE1 /* CardsStyleViewController.swift in Sources */,
 				45F6BC092AB3732C00C81DE1 /* UserInfoSimpleCardView.swift in Sources */,
 				45F6BC0A2AB3732C00C81DE1 /* FavoriteGoma.swift in Sources */,
+				CE74A13A2E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */,
 				653A38452D53921900B89CDF /* BettingPracticesViewController.swift in Sources */,
 				65F1413B2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CE0AEAB12D8A41EE007CCFC3 /* MatchHeaderView.swift in Sources */,
@@ -20705,6 +20718,7 @@
 				CE12A3A42D31347E0022BDF7 /* CashbackLearnMoreView.swift in Sources */,
 				CE12A3A52D31347E0022BDF7 /* SportsbookTarget.swift in Sources */,
 				CE12A3A62D31347E0022BDF7 /* BetslipModels.swift in Sources */,
+				CE74A1362E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */,
 				CE12A3A72D31347E0022BDF7 /* RibDocsViewController.swift in Sources */,
 				CE12A3A82D31347E0022BDF7 /* FailableDecodable.swift in Sources */,
 				CE12A3A92D31347E0022BDF7 /* UserProfileInfoViewModel.swift in Sources */,
@@ -21162,6 +21176,7 @@
 				CE8F24552DD371350071238E /* MatchHeaderView.swift in Sources */,
 				CE8F24562DD371350071238E /* Fonts.swift in Sources */,
 				CE8F24572DD371350071238E /* ScreenState.swift in Sources */,
+				CE74A1382E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */,
 				CE8F24582DD371350071238E /* UserProfileInfoViewController.swift in Sources */,
 				65F141382E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CE8F24592DD371350071238E /* NotEmpty.swift in Sources */,
@@ -22071,6 +22086,7 @@
 				CEB3A1C22DD379800024043B /* MatchHeaderView.swift in Sources */,
 				CEB3A1C32DD379800024043B /* Fonts.swift in Sources */,
 				CEB3A1C42DD379800024043B /* ScreenState.swift in Sources */,
+				CE74A1342E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */,
 				CEB3A1C52DD379800024043B /* UserProfileInfoViewController.swift in Sources */,
 				65F1413C2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CEB3A1C62DD379800024043B /* NotEmpty.swift in Sources */,
@@ -22980,6 +22996,7 @@
 				CEB3A64A2DD379890024043B /* BettingPracticesViewController.swift in Sources */,
 				CEB3A64B2DD379890024043B /* MatchHeaderView.swift in Sources */,
 				CEB3A64C2DD379890024043B /* Fonts.swift in Sources */,
+				CE74A1372E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */,
 				CEB3A64D2DD379890024043B /* ScreenState.swift in Sources */,
 				65F1413D2E143C9C004BDE6B /* DepositVerificationViewModelProtocol.swift in Sources */,
 				CEB3A64E2DD379890024043B /* UserProfileInfoViewController.swift in Sources */,
@@ -23697,6 +23714,7 @@
 				CEF1940D2DA834E900C81F12 /* FilterSliderInfoView.swift in Sources */,
 				CE9C9E922DE77D2600642EFF /* Bonus.swift in Sources */,
 				CEF1940E2DA834E900C81F12 /* CustomPageIndicator.swift in Sources */,
+				CE74A1332E2C705E00DDE78D /* GeneralFilterSelection+MatchesFilterOptions.swift in Sources */,
 				CEF1940F2DA834E900C81F12 /* TopCompetitionDetailsViewController.swift in Sources */,
 				CEB9BB902DB659B000E8084B /* Promotions.swift in Sources */,
 				65F141592E154554004BDE6B /* DepositAlternativeStepsViewModelProtocol.swift in Sources */,

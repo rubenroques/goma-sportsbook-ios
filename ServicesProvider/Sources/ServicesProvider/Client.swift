@@ -238,6 +238,24 @@ extension Client {
                                                       endDate: endDate,
                                                       sortType: sortType)
     }
+    
+    // MARK: - New Filtered Subscription Methods
+    
+    /// Subscribe to filtered pre-live matches using custom-matches-aggregator
+    public func subscribeToFilteredPreLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeToFilteredPreLiveMatches(filters: filters)
+    }
+    
+    /// Subscribe to filtered live matches using custom-matches-aggregator
+    public func subscribeToFilteredLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeToFilteredLiveMatches(filters: filters)
+    }
 
     func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard

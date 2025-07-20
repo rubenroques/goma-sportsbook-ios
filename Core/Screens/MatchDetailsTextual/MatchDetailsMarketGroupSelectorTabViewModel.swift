@@ -212,10 +212,18 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     private func handleMarketGroupsResponse(_ marketGroups: [MarketGroup]) {
         // Convert MarketGroup domain models to MarketGroupTabItemData UI models
         let tabItems = marketGroups.map { marketGroup -> MarketGroupTabItemData in
-            MarketGroupTabItemData(
+            // Calculate badge count from market group data
+            let badgeCount = calculateBadgeCount(for: marketGroup)
+            
+            // Determine icon type based on market group properties
+            let iconType = determineIconType(for: marketGroup)
+            
+            return MarketGroupTabItemData(
                 id: marketGroup.groupKey ?? marketGroup.type,
                 title: marketGroup.translatedName ?? marketGroup.type,
-                visualState: .idle
+                visualState: .idle,
+                iconTypeName: iconType,
+                badgeCount: badgeCount
             )
         }
         
@@ -234,10 +242,50 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
         let allMarketsGroup = MarketGroupTabItemData(
             id: "all_markets",
             title: "All Markets",
-            visualState: .idle
+            visualState: .idle,
+            iconTypeName: nil,
+            badgeCount: nil // No badge for fallback group
         )
         
         updateMarketGroups([allMarketsGroup])
         selectMarketGroup(id: "all_markets")
+    }
+    
+    // MARK: - Badge Count and Icon Calculation
+    
+    /// Calculates the badge count for a market group based on available market data
+    /// - Parameter marketGroup: The ServicesProvider MarketGroup to calculate count for
+    /// - Returns: The number of markets in the group, or nil if no count is available
+    private func calculateBadgeCount(for marketGroup: MarketGroup) -> Int? {
+        // Primary: Use numberOfMarkets if available (most reliable)
+        if let numberOfMarkets = marketGroup.numberOfMarkets, numberOfMarkets > 0 {
+            return numberOfMarkets
+        }
+        
+        // Fallback: Use actual markets array count if available
+        if let markets = marketGroup.markets, !markets.isEmpty {
+            return markets.count
+        }
+        
+        // No badge if no market count data is available
+        return nil
+    }
+    
+    /// Determines the appropriate icon type for a market group based on its properties
+    /// - Parameter marketGroup: The ServicesProvider MarketGroup to determine icon for
+    /// - Returns: The icon type string that AppMarketGroupTabImageResolver can resolve
+    private func determineIconType(for marketGroup: MarketGroup) -> String? {
+        // Priority 1: BetBuilder markets get bet_builder_info icon
+        if marketGroup.isBetBuilder == true {
+            return "betbuilder"
+        }
+        
+        // Priority 2: Fast markets get most_popular_info icon
+        if marketGroup.isFast == true {
+            return "fast"
+        }
+        
+        // No specific icon for other market groups
+        return nil
     }
 }

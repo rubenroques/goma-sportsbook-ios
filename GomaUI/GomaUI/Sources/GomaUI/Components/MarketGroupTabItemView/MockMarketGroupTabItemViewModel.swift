@@ -30,7 +30,7 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
     
     public var iconTypePublisher: AnyPublisher<String?, Never> {
         tabItemDataSubject
-            .map(\.iconType)
+            .map(\.iconTypeName)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
@@ -70,7 +70,7 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
             id: currentData.id,
             title: currentData.title,
             visualState: state,
-            iconType: currentData.iconType,
+            iconTypeName: currentData.iconTypeName,
             badgeCount: currentData.badgeCount
         )
         tabItemDataSubject.send(updatedData)
@@ -82,19 +82,19 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
             id: currentData.id,
             title: title,
             visualState: currentData.visualState,
-            iconType: currentData.iconType,
+            iconTypeName: currentData.iconTypeName,
             badgeCount: currentData.badgeCount
         )
         tabItemDataSubject.send(updatedData)
     }
     
-    public func updateIconType(_ iconType: String?) {
+    public func updateIconType(_ iconTypeName: String?) {
         let currentData = tabItemDataSubject.value
         let updatedData = MarketGroupTabItemData(
             id: currentData.id,
             title: currentData.title,
             visualState: currentData.visualState,
-            iconType: iconType,
+            iconTypeName: iconTypeName,
             badgeCount: currentData.badgeCount
         )
         tabItemDataSubject.send(updatedData)
@@ -106,7 +106,7 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
             id: currentData.id,
             title: currentData.title,
             visualState: currentData.visualState,
-            iconType: currentData.iconType,
+            iconTypeName: currentData.iconTypeName,
             badgeCount: count
         )
         tabItemDataSubject.send(updatedData)
@@ -183,13 +183,21 @@ extension MockMarketGroupTabItemViewModel {
         )
     }
     
-    public static func customTab(id: String, title: String, selected: Bool = false, iconType: String? = nil, badgeCount: Int? = nil) -> MockMarketGroupTabItemViewModel {
+    public static func customTab(
+        id: String,
+        title: String,
+        selected: Bool = false,
+        iconTypeName: String? = nil,
+        badgeCount: Int? = nil
+    )
+    -> MockMarketGroupTabItemViewModel
+    {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: id,
                 title: title,
                 visualState: selected ? .selected : .idle,
-                iconType: iconType,
+                iconTypeName: iconTypeName,
                 badgeCount: badgeCount
             )
         )
@@ -212,7 +220,7 @@ extension MockMarketGroupTabItemViewModel {
                 id: "betbuilder",
                 title: "BetBuilder",
                 visualState: .idle,
-                iconType: "betbuilder",
+                iconTypeName: "betbuilder",
                 badgeCount: count
             )
         )
@@ -224,7 +232,7 @@ extension MockMarketGroupTabItemViewModel {
                 id: "popular",
                 title: "Popular",
                 visualState: .idle,
-                iconType: "popular",
+                iconTypeName: "popular",
                 badgeCount: count
             )
         )

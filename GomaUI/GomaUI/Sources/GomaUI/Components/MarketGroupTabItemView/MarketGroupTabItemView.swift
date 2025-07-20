@@ -374,13 +374,13 @@ import SwiftUI
             ("Sets", false, nil, 16)
         ]
 
-        for (title, selected, iconType, badgeCount) in tabs {
+        for (title, selected, iconTypeName, badgeCount) in tabs {
             let tabView = MarketGroupTabItemView(
                 viewModel: MockMarketGroupTabItemViewModel.customTab(
                     id: title.lowercased().replacingOccurrences(of: " ", with: ""),
                     title: title,
                     selected: selected,
-                    iconType: iconType,
+                    iconTypeName: iconTypeName,
                     badgeCount: badgeCount
                 )
             )

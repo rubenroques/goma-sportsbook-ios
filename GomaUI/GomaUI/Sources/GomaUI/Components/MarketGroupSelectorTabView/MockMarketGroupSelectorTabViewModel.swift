@@ -244,10 +244,31 @@ extension MockMarketGroupSelectorTabViewModel {
     // Market category tabs from Figma design
     public static var marketCategoryTabs: MockMarketGroupSelectorTabViewModel {
         let marketGroups = [
-            MarketGroupTabItemData(id: "all", title: "All", visualState: .selected),
-            MarketGroupTabItemData(id: "betbuilder", title: "BetBuilder", visualState: .idle, iconType: "betbuilder", badgeCount: 16),
-            MarketGroupTabItemData(id: "popular", title: "Popular", visualState: .idle, iconType: "popular", badgeCount: 16),
-            MarketGroupTabItemData(id: "sets", title: "Sets", visualState: .idle, badgeCount: 16)
+            MarketGroupTabItemData(
+                id: "all",
+                title: "All",
+                visualState: .selected
+            ),
+            MarketGroupTabItemData(
+                id: "betbuilder",
+                title: "BetBuilder",
+                visualState: .idle,
+                iconTypeName: "betbuilder",
+                badgeCount: 16
+            ),
+            MarketGroupTabItemData(
+                id: "popular",
+                title: "Popular",
+                visualState: .idle,
+                iconTypeName: "popular",
+                badgeCount: 16
+            ),
+            MarketGroupTabItemData(
+                id: "sets",
+                title: "Sets",
+                visualState: .idle,
+                badgeCount: 16
+            )
         ]
         
         return MockMarketGroupSelectorTabViewModel(

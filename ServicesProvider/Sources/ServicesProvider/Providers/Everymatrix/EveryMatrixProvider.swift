@@ -105,6 +105,46 @@ class EveryMatrixEventsProvider: EventsProvider {
 
         return paginator.loadNextPage()
     }
+    
+    // MARK: - New Filtered Subscription Methods
+    
+    func subscribeToFilteredPreLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        // Clean up any existing paginator
+        prelivePaginator?.unsubscribe()
+        
+        // Create new paginator with filters
+        let numberOfEvents = 10 // Default value, could be made configurable
+        let numberOfMarkets = 5 // Default value, could be made configurable
+        
+        prelivePaginator = PreLiveMatchesPaginator(
+            connector: connector,
+            sportId: filters.sportId,
+            numberOfEvents: numberOfEvents,
+            numberOfMarkets: numberOfMarkets,
+            filters: filters
+        )
+        
+        return prelivePaginator!.subscribe()
+    }
+    
+    func subscribeToFilteredLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        // Clean up any existing paginator
+        livePaginator?.unsubscribe()
+        
+        // Create new paginator with filters
+        let numberOfEvents = 10 // Default value, could be made configurable
+        let numberOfMarkets = 5 // Default value, could be made configurable
+        
+        livePaginator = LiveMatchesPaginator(
+            connector: connector,
+            sportId: filters.sportId,
+            numberOfEvents: numberOfEvents,
+            numberOfMarkets: numberOfMarkets,
+            filters: filters
+        )
+        
+        return livePaginator!.subscribe()
+    }
 
     func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()

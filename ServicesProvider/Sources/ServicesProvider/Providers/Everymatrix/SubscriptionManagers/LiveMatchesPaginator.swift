@@ -32,18 +32,21 @@ class LiveMatchesPaginator: UnsubscriptionController {
     private let sportId: String
     private let numberOfEvents: Int
     private let numberOfMarkets: Int
+    private let filters: MatchesFilterOptions?
 
     // MARK: - Initialization
     init(connector: EveryMatrixConnector,
          sportId: String,
          numberOfEvents: Int = 10,
-         numberOfMarkets: Int = 5) {
+         numberOfMarkets: Int = 5,
+         filters: MatchesFilterOptions? = nil) {
         self.connector = connector
         self.store = EveryMatrix.EntityStore()
         self.eventInfoStore = EveryMatrix.EntityStore()
         self.sportId = sportId
         self.numberOfEvents = numberOfEvents
         self.numberOfMarkets = numberOfMarkets
+        self.filters = filters
     }
 
     //

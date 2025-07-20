@@ -39,20 +39,20 @@ public struct MarketGroupTabItemData: Equatable, Hashable {
     public let id: String
     public let title: String
     public let visualState: MarketGroupTabItemVisualState
-    public let iconType: String?
+    public let iconTypeName: String?
     public let badgeCount: Int?
     
     public init(
         id: String,
         title: String,
         visualState: MarketGroupTabItemVisualState = .idle,
-        iconType: String? = nil,
+        iconTypeName: String? = nil,
         badgeCount: Int? = nil
     ) {
         self.id = id
         self.title = title
         self.visualState = visualState
-        self.iconType = iconType
+        self.iconTypeName = iconTypeName
         self.badgeCount = badgeCount
     }
 }

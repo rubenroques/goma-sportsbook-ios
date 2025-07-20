@@ -208,7 +208,7 @@ public class MarketGroupSelectorTabView: UIView {
             id: marketGroup.id,
             title: marketGroup.title,
             visualState: .idle,  // Always start with idle, updateSelectionState will set correct state
-            iconType: marketGroup.iconType,
+            iconTypeName: marketGroup.iconTypeName,
             badgeCount: marketGroup.badgeCount
         )
         let tabViewModel = MockMarketGroupTabItemViewModel(tabItemData: tabItemData)

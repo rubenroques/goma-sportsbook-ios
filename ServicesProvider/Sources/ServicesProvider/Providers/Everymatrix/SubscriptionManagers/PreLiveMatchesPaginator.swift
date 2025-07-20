@@ -41,17 +41,20 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     private let sportId: String
     private let numberOfEvents: Int
     private let numberOfMarkets: Int
+    private let filters: MatchesFilterOptions?
 
     // MARK: - Initialization
     init(connector: EveryMatrixConnector,
          sportId: String,
          numberOfEvents: Int = 10,
-         numberOfMarkets: Int = 5) {
+         numberOfMarkets: Int = 5,
+         filters: MatchesFilterOptions? = nil) {
         self.connector = connector
         self.store = EveryMatrix.EntityStore()
         self.sportId = sportId
         self.numberOfEvents = numberOfEvents
         self.numberOfMarkets = numberOfMarkets
+        self.filters = filters
     }
 
     //
@@ -73,7 +76,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             operatorId: "4093",
             language: "en",
             sportId: sportId,
-            matchesCount: numberOfEvents // 1
+            matchesCount: numberOfEvents
         )
 
         // Subscribe to the websocket topic

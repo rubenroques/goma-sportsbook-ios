@@ -1238,6 +1238,16 @@ extension GomaProvider: EventsProvider {
             return GomaModelMapper.featuredTips(fromInternalFeaturedTips: featuredTipsResponse.featuredTips)
         }).eraseToAnyPublisher()
     }
+    
+    // MARK: - New Filtered Subscription Methods (Not Supported)
+    
+    func subscribeToFilteredPreLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeToFilteredLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
 }
 
