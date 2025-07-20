@@ -43,13 +43,16 @@ jobs:
           # Direct prompt for automated review (no @claude mention needed)
           direct_prompt: |
             Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
+            - Best practices
+            - Code quality
             - Performance considerations
             - Security concerns
-            - Test coverage
-            
+            - Mistakenly commited Debug prints and comments 
             Be constructive and helpful in your feedback.
+          # - Potential bugs or issues
+          # - Test coverage
+            
+            
 
           # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
           # use_sticky_comment: true
