@@ -147,8 +147,10 @@ class UserSessionStore {
                     self?.isUserProfileComplete = userProfile.isRegistrationCompleted
                     self?.isUserEmailVerified = userProfile.isEmailVerified
                     self?.userKnowYourCustomerStatus = userProfile.kycStatus
-
-                    Optimove.shared.setUserId(userProfile.userIdentifier)
+                    
+                    // TODO: Check for a more viable way to identify if Optimove is configured
+//                    Optimove.shared.setUserId(userProfile.userIdentifier)
+                    
                 }
                 else {
                     self?.isUserProfileComplete = nil

@@ -19,7 +19,8 @@ protocol PhoneLoginViewModelProtocol {
     var phoneNumber: String { get }
     var password: String { get }
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
-    var loginComplete: PassthroughSubject<Void, Never> { get }
+    var loginComplete: (() -> Void)? { get set }
+    var loginError: ((String) -> Void)? { get set }
 
-    func loginUser(phoneNumber: String, password: String)
+    func loginUser()
 }

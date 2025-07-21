@@ -76,7 +76,7 @@ class Environment {
     }()
     
     let filterStorage: FilterStorage = FilterStorage()
-
+    
     init() {
 
     }

@@ -337,6 +337,21 @@ public class SignUpForm {
 
 }
 
+public struct PhoneSignUpForm {
+    public var phone: String
+    public var phonePrefix: String
+    public var password: String
+    public var registrationId: String
+
+    public init(phone: String, phonePrefix: String, password: String, registrationId: String) {
+        self.phone = phone
+        self.phonePrefix = phonePrefix
+        self.password = password
+        self.registrationId = registrationId
+    }
+
+}
+
 public struct SignUpResponse {
 
     public struct SignUpError {
@@ -902,6 +917,7 @@ public struct UserNotificationsSettings: Codable {
 public enum SignUpFormType {
     case simple(SimpleSignUpForm)
     case full(SignUpForm)
+    case phone(PhoneSignUpForm)
 }
 
 enum UserSessionStatus {

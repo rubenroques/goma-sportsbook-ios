@@ -258,6 +258,8 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                 return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             })
             .eraseToAnyPublisher()
+        case .phone(_):
+            return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         }
     }
 
@@ -1410,6 +1412,10 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                 return Fail(outputType: [Referee].self, failure: ServiceProviderError.errorMessage(message: refereesResponse.status)).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
+    }
+    
+    func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 }
 

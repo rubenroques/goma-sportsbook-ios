@@ -82,6 +82,12 @@ public class Client {
             
             
             self.eventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector)
+            
+            // Player API for privilegedAccessManager
+            let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector()
+            let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(connector: everyMatrixPlayerAPIConnector)
+
+            self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
 
         // 
         case .goma:
@@ -1012,7 +1018,14 @@ extension Client {
         return privilegedAccessManager.verifyMobileCode(code: code, requestId: requestId)
     }
 
-
+    public func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getRegistrationConfig()
+    }
 }
 
 extension Client {

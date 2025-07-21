@@ -15,6 +15,7 @@ public struct TermsAcceptanceData {
     public let fullText: String
     public let termsText: String
     public let privacyText: String
+    public let cookiesText: String?
     public let isAccepted: Bool
     
     public init(
@@ -22,12 +23,14 @@ public struct TermsAcceptanceData {
         fullText: String,
         termsText: String,
         privacyText: String,
+        cookiesText: String? = nil,
         isAccepted: Bool = false
     ) {
         self.id = id
         self.fullText = fullText
         self.termsText = termsText
         self.privacyText = privacyText
+        self.cookiesText = cookiesText
         self.isAccepted = isAccepted
     }
 }

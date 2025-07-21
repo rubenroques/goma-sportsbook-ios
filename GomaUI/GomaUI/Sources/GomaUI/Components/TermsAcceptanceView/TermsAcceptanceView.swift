@@ -60,8 +60,9 @@ public final class TermsAcceptanceView: UIView {
     
     // MARK: - Public Properties
     public var onCheckboxToggled: ((Bool) -> Void) = { _ in }
-    public var onTermsLinkTapped: (() -> Void) = { }
-    public var onPrivacyLinkTapped: (() -> Void) = { }
+    public var onTermsLinkTapped: (() -> Void) = {}
+    public var onPrivacyLinkTapped: (() -> Void) = {}
+    public var onCookiesLinkTapped: (() -> Void) = {}
     
     // MARK: - Initialization
     public init(viewModel: TermsAcceptanceViewModelProtocol = MockTermsAcceptanceViewModel.defaultMock) {
@@ -158,6 +159,7 @@ public final class TermsAcceptanceView: UIView {
             fullText: currentData.fullText,
             termsText: currentData.termsText,
             privacyText: currentData.privacyText,
+            cookiesText: currentData.cookiesText,
             isAccepted: newState
         )
         
@@ -178,6 +180,12 @@ public final class TermsAcceptanceView: UIView {
         else if isLocationInText(location, text: data.privacyText, in: highlightedTextView) {
             print("Privacy tapped!")
             onPrivacyLinkTapped()
+        }
+        // Check if tap is on "Cookies"
+        else if let cookiesText = data.cookiesText ,
+                isLocationInText(location, text: cookiesText, in: highlightedTextView) {
+            print("Cookies tapped!")
+            onCookiesLinkTapped()
         }
     }
     

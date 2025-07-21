@@ -2457,6 +2457,22 @@
 		65CD19E22D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
 		65CD19E52D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
 		65CD19E82D96C5DC00CA23E0 /* BetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */; };
+		65EF4C762E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
+		65EF4C772E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
+		65EF4C782E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
+		65EF4C792E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
+		65EF4C7A2E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
+		65EF4C7B2E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
+		65EF4C7C2E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
+		65EF4C7D2E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */; };
+		65EF4C7F2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */; };
+		65EF4C802E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */; };
+		65EF4C812E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */; };
+		65EF4C822E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */; };
+		65EF4C832E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */; };
+		65EF4C842E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */; };
+		65EF4C852E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */; };
+		65EF4C862E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */; };
 		65EFF2F22D80672C00F1FC57 /* PromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2F12D80672C00F1FC57 /* PromotionsViewController.swift */; };
 		65EFF2F52D80672C00F1FC57 /* PromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2F12D80672C00F1FC57 /* PromotionsViewController.swift */; };
 		65EFF2F62D80672C00F1FC57 /* PromotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2F12D80672C00F1FC57 /* PromotionsViewController.swift */; };
@@ -9588,6 +9604,8 @@
 		65CD19C52D94707800CA23E0 /* SocialMyTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMyTicketTableViewCell.swift; sourceTree = "<group>"; };
 		65CD19D12D94738900CA23E0 /* SettingsTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTitleView.swift; sourceTree = "<group>"; };
 		65CD19DD2D96C5DC00CA23E0 /* BetslipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipViewModel.swift; sourceTree = "<group>"; };
+		65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationConfig.swift; sourceTree = "<group>"; };
+		65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+RegistrationConfig.swift"; sourceTree = "<group>"; };
 		65EFF2F12D80672C00F1FC57 /* PromotionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionsViewController.swift; sourceTree = "<group>"; };
 		65EFF2FC2D80889100F1FC57 /* PromotionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionTableViewCell.swift; sourceTree = "<group>"; };
 		65EFF3072D81DEB600F1FC57 /* PromotionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionDetailViewController.swift; sourceTree = "<group>"; };
@@ -10922,6 +10940,7 @@
 				CE3575722D921D96009E0029 /* ServiceProviderModelMapper+Promotional.swift */,
 				CE9A37BB2D824750006B6176 /* ServiceProviderModelMapper+Banner.swift */,
 				65392E522D883DF00066FBE2 /* ServiceProviderModelMapper+Promotions.swift */,
+				65EF4C7E2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift */,
 			);
 			path = ModelMappers;
 			sourceTree = "<group>";
@@ -11943,6 +11962,7 @@
 				653A387A2D660D7000B89CDF /* RegisterFlowType.swift */,
 				658E2CC52E0027A800FD4940 /* FilterModels.swift */,
 				65EFF3762D831C1100F1FC57 /* Promotions.swift */,
+				65EF4C752E1FCBA9004CE196 /* RegistrationConfig.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -17399,6 +17419,7 @@
 				450B78FE28F58574009229E3 /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				450B78FF28F58574009229E3 /* Throttler.swift in Sources */,
 				450B790328F58574009229E3 /* PopularDetailsViewModel.swift in Sources */,
+				65EF4C7F2E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */,
 				450B790428F58574009229E3 /* FeaturedTipDetailsViewController.swift in Sources */,
 				450B790528F58574009229E3 /* BonusHistoryTableViewCell.swift in Sources */,
 				450B790728F58574009229E3 /* CALayer+Shift.swift in Sources */,
@@ -17592,6 +17613,7 @@
 				CEAB0B9F2D77588D00541098 /* OddDoubleCollectionViewCell.swift in Sources */,
 				CEAB0BA02D77588D00541098 /* MatchLineTableViewCell.swift in Sources */,
 				CE794C3E2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				65EF4C7C2E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */,
 				CE25C5602DFC412500EF7107 /* InPlayEventsViewModel.swift in Sources */,
 				CE794C3F2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE794C402D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
@@ -18339,6 +18361,7 @@
 				45A33113298976BA008181E9 /* Throttler.swift in Sources */,
 				45A33117298976BA008181E9 /* PopularDetailsViewModel.swift in Sources */,
 				45A33118298976BA008181E9 /* FeaturedTipDetailsViewController.swift in Sources */,
+				65EF4C812E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */,
 				45A33119298976BA008181E9 /* BonusHistoryTableViewCell.swift in Sources */,
 				45A3311B298976BA008181E9 /* CALayer+Shift.swift in Sources */,
 				CECF6A242D68D534003ABDDF /* URLEndpoints.swift in Sources */,
@@ -18532,6 +18555,7 @@
 				CEAB0A3A2D77588D00541098 /* OddDoubleCollectionViewCell.swift in Sources */,
 				CEAB0A3B2D77588D00541098 /* MatchLineTableViewCell.swift in Sources */,
 				CE794C4C2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				65EF4C7B2E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */,
 				CE25C55D2DFC412500EF7107 /* InPlayEventsViewModel.swift in Sources */,
 				CE794C4D2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE794C4E2D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
@@ -19249,6 +19273,7 @@
 				45F6BBB32AB3732C00C81DE1 /* PopularDetailsViewModel.swift in Sources */,
 				45F6BBB42AB3732C00C81DE1 /* FeaturedTipDetailsViewController.swift in Sources */,
 				45F6BBB52AB3732C00C81DE1 /* BonusHistoryTableViewCell.swift in Sources */,
+				65EF4C842E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */,
 				45F6BBB72AB3732C00C81DE1 /* CALayer+Shift.swift in Sources */,
 				45F6BBB92AB3732C00C81DE1 /* RequestLocationAccessViewController.swift in Sources */,
 				CECF6A212D68D534003ABDDF /* URLEndpoints.swift in Sources */,
@@ -19442,6 +19467,7 @@
 				CEAB0B5F2D77588D00541098 /* OddDoubleCollectionViewCell.swift in Sources */,
 				CEAB0B602D77588D00541098 /* MatchLineTableViewCell.swift in Sources */,
 				CE794C372D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Layout.swift in Sources */,
+				65EF4C7A2E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */,
 				CE25C55C2DFC412500EF7107 /* InPlayEventsViewModel.swift in Sources */,
 				CE794C382D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CE794C392D95E17100275FDF /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
@@ -20431,6 +20457,7 @@
 				CE12A2DA2D31347E0022BDF7 /* UIView+Shift.swift in Sources */,
 				CE12A2DB2D31347E0022BDF7 /* MessageDetailViewModel.swift in Sources */,
 				65F141602E15456F004BDE6B /* MockDepositAlternativeStepsViewModel.swift in Sources */,
+				65EF4C802E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */,
 				65CD19A12D946F0300CA23E0 /* ActionSearchTextFieldView.swift in Sources */,
 				CE12A2DD2D31347E0022BDF7 /* KeychainInterface.swift in Sources */,
 				65EFF34C2D82F8DF00F1FC57 /* VideoSectionView.swift in Sources */,
@@ -20614,6 +20641,7 @@
 				CE25A6022D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
 				65F1414D2E143CEB004BDE6B /* DepositVerificationViewController.swift in Sources */,
 				CE12A38A2D31347E0022BDF7 /* CardsCollectionViewLayout.swift in Sources */,
+				65EF4C762E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */,
 				CE12A38B2D31347E0022BDF7 /* RePlayFeatureHelper.swift in Sources */,
 				CE12A38C2D31347E0022BDF7 /* BonusActiveCellViewModel.swift in Sources */,
 				CE12A38D2D31347E0022BDF7 /* BetBuilder.swift in Sources */,
@@ -21078,6 +21106,7 @@
 				CE8F23F52DD371350071238E /* BonusHistoryTableViewCell.swift in Sources */,
 				CE8F23F62DD371350071238E /* CALayer+Shift.swift in Sources */,
 				CE8F23F72DD371350071238E /* URLEndpoints.swift in Sources */,
+				65EF4C862E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */,
 				CE8F23F82DD371350071238E /* RequestLocationAccessViewController.swift in Sources */,
 				CE8F23F92DD371350071238E /* OptionRadioView.swift in Sources */,
 				CE8F23FA2DD371350071238E /* ServiceProviderType.swift in Sources */,
@@ -21271,6 +21300,7 @@
 				CE8F24AC2DD371350071238E /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CE8F24AD2DD371350071238E /* PreLiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CE8F24AE2DD371350071238E /* PreLiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65EF4C7D2E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */,
 				CE25C55F2DFC412500EF7107 /* InPlayEventsViewModel.swift in Sources */,
 				CE8F24AF2DD371350071238E /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CE8F24B02DD371350071238E /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
@@ -21988,6 +22018,7 @@
 				CEB3A1622DD379800024043B /* BonusHistoryTableViewCell.swift in Sources */,
 				CEB3A1632DD379800024043B /* CALayer+Shift.swift in Sources */,
 				CEB3A1642DD379800024043B /* URLEndpoints.swift in Sources */,
+				65EF4C822E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */,
 				CEB3A1652DD379800024043B /* RequestLocationAccessViewController.swift in Sources */,
 				CEB3A1662DD379800024043B /* OptionRadioView.swift in Sources */,
 				CEB3A1672DD379800024043B /* ServiceProviderType.swift in Sources */,
@@ -22181,6 +22212,7 @@
 				CEB3A2192DD379800024043B /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEB3A21A2DD379800024043B /* PreLiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
 				CEB3A21B2DD379800024043B /* PreLiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
+				65EF4C772E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */,
 				CE25C5622DFC412500EF7107 /* InPlayEventsViewModel.swift in Sources */,
 				CEB3A21C2DD379800024043B /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
 				CEB3A21D2DD379800024043B /* PreLiveMatchWidgetCollectionViewCell.swift in Sources */,
@@ -22898,6 +22930,7 @@
 				CEB3A5EB2DD379890024043B /* BonusHistoryTableViewCell.swift in Sources */,
 				CEB3A5EC2DD379890024043B /* CALayer+Shift.swift in Sources */,
 				CEB3A5ED2DD379890024043B /* URLEndpoints.swift in Sources */,
+				65EF4C852E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */,
 				CEB3A5EE2DD379890024043B /* RequestLocationAccessViewController.swift in Sources */,
 				CEB3A5EF2DD379890024043B /* OptionRadioView.swift in Sources */,
 				CEB3A5F02DD379890024043B /* ServiceProviderType.swift in Sources */,
@@ -23091,6 +23124,7 @@
 				CEB3A6A12DD379890024043B /* PreLiveMatchWidgetCollectionViewCell+Configuration.swift in Sources */,
 				CEB3A6A22DD379890024043B /* PreLiveMatchWidgetCollectionViewCell+Styling.swift in Sources */,
 				CEB3A6A32DD379890024043B /* PreLiveMatchWidgetCollectionViewCell+Factory.swift in Sources */,
+				65EF4C782E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */,
 				CE25C55B2DFC412500EF7107 /* InPlayEventsViewModel.swift in Sources */,
 				CEB3A6A42DD379890024043B /* PreLiveMatchWidgetCollectionViewCell+Interactions.swift in Sources */,
 				CEB3A6A52DD379890024043B /* PreLiveMatchWidgetCollectionViewCell+Animations.swift in Sources */,
@@ -23804,6 +23838,7 @@
 				CEF1945E2DA834E900C81F12 /* FunctionalUtils.swift in Sources */,
 				CEF1945F2DA834E900C81F12 /* (null) in Sources */,
 				CEF194612DA834E900C81F12 /* MarketGroupDetailsStore.swift in Sources */,
+				65EF4C832E1FCBE5004CE196 /* ServiceProviderModelMapper+RegistrationConfig.swift in Sources */,
 				CEF194622DA834E900C81F12 /* StyleHelpers.swift in Sources */,
 				CEF194632DA834E900C81F12 /* PictureInPictureView.swift in Sources */,
 				CEF194642DA834E900C81F12 /* BetslipViewController.swift in Sources */,
@@ -24396,6 +24431,7 @@
 				CEF1966E2DA834E900C81F12 /* TipsTableViewCell.swift in Sources */,
 				CEF1966F2DA834E900C81F12 /* ViewContext.swift in Sources */,
 				CEF196702DA834E900C81F12 /* RankingsViewModel.swift in Sources */,
+				65EF4C792E1FCBA9004CE196 /* RegistrationConfig.swift in Sources */,
 				CEF196712DA834E900C81F12 /* ModalTransitionPresentationController.swift in Sources */,
 				CEF196722DA834E900C81F12 /* TransactionsHistoryViewController.swift in Sources */,
 				CEF196732DA834E900C81F12 /* TitleTextFieldView.swift in Sources */,

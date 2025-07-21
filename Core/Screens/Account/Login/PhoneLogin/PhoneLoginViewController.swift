@@ -77,7 +77,7 @@ class PhoneLoginViewController: UIViewController {
         return constraint
     }()
 
-    private let viewModel: PhoneLoginViewModelProtocol
+    private var viewModel: PhoneLoginViewModelProtocol
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -175,10 +175,9 @@ class PhoneLoginViewController: UIViewController {
     private func setupBindings() {
         
         loginButton.onButtonTapped = { [weak self] in
-            if let phoneNumber = self?.viewModel.phoneNumber,
-               let password = self?.viewModel.password {
-                self?.viewModel.loginUser(phoneNumber: phoneNumber, password: password)
-            }
+            
+            self?.viewModel.loginUser()
+            
         }
         
         viewModel.isLoadingPublisher
@@ -188,6 +187,33 @@ class PhoneLoginViewController: UIViewController {
             }
             .store(in: &cancellables)
         
+        viewModel.loginError = { [weak self] errorMessage in
+            self?.showLoginErrorAlert(errorMessage: errorMessage)
+
+        }
+        
+        viewModel.loginComplete = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+        
+    }
+    
+    func showLoginErrorAlert(errorMessage: String) {
+        
+        let alert = UIAlertController(
+            title: "Login Error",
+            message: errorMessage,
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(
+            title: localized("ok"),
+            style: .default
+        )
+        
+        alert.addAction(okAction)
+        
+        present(alert, animated: true)
     }
 
     @objc private func didTapCloseButton() {

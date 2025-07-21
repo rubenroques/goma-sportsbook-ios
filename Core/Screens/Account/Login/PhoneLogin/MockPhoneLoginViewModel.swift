@@ -19,7 +19,8 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
     var isLoadingPublisher: AnyPublisher<Bool, Never> { isLoadingSubject.eraseToAnyPublisher() }
     
-    let loginComplete = PassthroughSubject<Void, Never>()
+    var loginComplete: (() -> Void)?
+    var loginError: ((String) -> Void)?
     
     var phoneNumber: String = ""
     var password: String = ""
@@ -38,7 +39,7 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
         
         phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
                                                                                                   placeholder: "Phone number *",
-                                                                                                  prefix: "+237",
+//                                                                                                  prefix: "+237",
                                                                                                   isSecure: false,
                                                                                                   visualState: .idle,
                                                                                                   keyboardType: .phonePad,
@@ -79,14 +80,33 @@ class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
             .store(in: &cancellables)
     }
     
-    func loginUser(phoneNumber: String, password: String) {
+    func loginUser() {
         
         isLoadingSubject.send(true)
-        // Simulate endpoint delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            self?.isLoadingSubject.send(false)
-            
-            self?.loginComplete.send()
-        }
+        
+        let username = "\(phoneNumber)"
+        let password = "\(password)"
+        
+        Env.userSessionStore.login(withUsername: username, password: password)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    switch error {
+                    case .errorMessage(let errorMessage):
+                        self?.loginError?(errorMessage)
+                    default:
+                        self?.loginError?("Login after register error")
+                    }
+                case .finished:
+                    ()
+                }
+                
+                self?.isLoadingSubject.send(false)
+            }, receiveValue: { [weak self] _ in
+                self?.loginComplete?()
+            })
+            .store(in: &cancellables)
+        
     }
 }
