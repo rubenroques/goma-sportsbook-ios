@@ -365,7 +365,9 @@ class RootAdaptiveViewController: UIViewController {
                 self?.openPhoneRegistration()
             }
             else if widgetId == "avatar" {
-                // TODO: Set a logged out state for testing
+                self?.viewModel.logoutUser()
+                
+                // TODO: BetssonCM - this should be done via the viewmodel
                 self?.widgetToolBarView.setLoggedInState(false)
             }
             

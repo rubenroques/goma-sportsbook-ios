@@ -58,6 +58,10 @@ class RootAdaptiveScreenViewModel: ObservableObject {
     func hideCurrentScreen() {
         currentScreen = nil
     }
+    
+    func logoutUser() {
+        Env.userSessionStore.logout()
+    }
 
     // MARK: - Private Methods
     private func setupTabBarBinding() {

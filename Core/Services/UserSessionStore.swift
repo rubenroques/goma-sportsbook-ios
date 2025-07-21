@@ -200,7 +200,6 @@ class UserSessionStore {
 
     //
     func logout() {
-        
         Env.userSessionStore.loginFlowSuccess.send(false)
         
         if !self.isUserLogged() {
@@ -230,7 +229,7 @@ class UserSessionStore {
         self.userCashbackBalance.send(nil)
         self.kycExpire = nil
 
-        Optimove.shared.signOutUser()
+        // Optimove.shared.signOutUser()
     }
 
     func login(withUsername username: String, password: String) -> AnyPublisher<Void, UserSessionError> {
