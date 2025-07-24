@@ -122,3 +122,6 @@ ServicesProvider/swagger/node_modules
 **/__pycache__/
 
 .cursorignore
+.claude
+CLAUDE.md
+tasks-sportsbook.txt

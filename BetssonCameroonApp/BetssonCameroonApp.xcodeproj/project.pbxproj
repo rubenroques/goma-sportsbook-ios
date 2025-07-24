@@ -1,0 +1,756 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CE60145D2E2FE56400C6A9DD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */; };
+		CE60145F2E2FE56400C6A9DD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CE60145E2E2FE56400C6A9DD /* FirebaseAuth */; };
+		CE6014612E2FE56400C6A9DD /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE6014602E2FE56400C6A9DD /* FirebaseCrashlytics */; };
+		CE6014632E2FE56400C6A9DD /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = CE6014622E2FE56400C6A9DD /* FirebaseDatabase */; };
+		CE6014652E2FE56400C6A9DD /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = CE6014642E2FE56400C6A9DD /* FirebaseMessaging */; };
+		CE6014682E2FE5E400C6A9DD /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CE6014672E2FE5E400C6A9DD /* IQKeyboardManagerSwift */; };
+		CE60146B2E2FE61100C6A9DD /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = CE60146A2E2FE61100C6A9DD /* Reachability */; };
+		CE60146E2E2FE63A00C6A9DD /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE60146D2E2FE63A00C6A9DD /* PhraseSDK */; };
+		CE74A2272E2E8EA100DDE78D /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A2262E2E8EA100DDE78D /* GomaUI */; };
+		CE74A7D82E2EB0E700DDE78D /* ServicesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A7D72E2EB0E700DDE78D /* ServicesProvider */; };
+		CE74A81C2E2EB9C300DDE78D /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A81B2E2EB9C300DDE78D /* PresentationProvider */; };
+		CE74A9CF2E2EFB2A00DDE78D /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A9CE2E2EFB2A00DDE78D /* SharedModels */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CE74A1632E2E8D9500DDE78D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE74A1442E2E8D9400DDE78D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE74A14B2E2E8D9400DDE78D;
+			remoteInfo = BetssonCameroonApp;
+		};
+		CE74A16D2E2E8D9500DDE78D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE74A1442E2E8D9400DDE78D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE74A14B2E2E8D9400DDE78D;
+			remoteInfo = BetssonCameroonApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		CE74A14C2E2E8D9400DDE78D /* BetssonCameroonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BetssonCameroonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE74A1622E2E8D9500DDE78D /* BetssonCameroonAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetssonCameroonAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE74A16C2E2E8D9500DDE78D /* BetssonCameroonAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetssonCameroonAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CE394B982E2FD45200715418 /* Exceptions for "App" folder in "BetssonCameroonApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"SupportingFiles/Misc-Dev/BetssonCM-Dev-Info.plist",
+				"SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist",
+				"SupportingFiles/Misc-Prod/GoogleService-Info.plist",
+			);
+			target = CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		CE74A14E2E2E8D9400DDE78D /* App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CE394B982E2FD45200715418 /* Exceptions for "App" folder in "BetssonCameroonApp" target */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		CE74A1652E2E8D9500DDE78D /* Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		CE74A16F2E2E8D9500DDE78D /* UITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CE74A1492E2E8D9400DDE78D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE6014652E2FE56400C6A9DD /* FirebaseMessaging in Frameworks */,
+				CE60146B2E2FE61100C6A9DD /* Reachability in Frameworks */,
+				CE74A9CF2E2EFB2A00DDE78D /* SharedModels in Frameworks */,
+				CE60145F2E2FE56400C6A9DD /* FirebaseAuth in Frameworks */,
+				CE74A81C2E2EB9C300DDE78D /* PresentationProvider in Frameworks */,
+				CE6014612E2FE56400C6A9DD /* FirebaseCrashlytics in Frameworks */,
+				CE60146E2E2FE63A00C6A9DD /* PhraseSDK in Frameworks */,
+				CE6014682E2FE5E400C6A9DD /* IQKeyboardManagerSwift in Frameworks */,
+				CE74A2272E2E8EA100DDE78D /* GomaUI in Frameworks */,
+				CE60145D2E2FE56400C6A9DD /* FirebaseAnalytics in Frameworks */,
+				CE6014632E2FE56400C6A9DD /* FirebaseDatabase in Frameworks */,
+				CE74A7D82E2EB0E700DDE78D /* ServicesProvider in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE74A15F2E2E8D9500DDE78D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE74A1692E2E8D9500DDE78D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CE74A1432E2E8D9400DDE78D = {
+			isa = PBXGroup;
+			children = (
+				CE74A14E2E2E8D9400DDE78D /* App */,
+				CE74A1652E2E8D9500DDE78D /* Tests */,
+				CE74A16F2E2E8D9500DDE78D /* UITests */,
+				CE74A2252E2E8EA100DDE78D /* Frameworks */,
+				CE74A14D2E2E8D9400DDE78D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CE74A14D2E2E8D9400DDE78D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CE74A14C2E2E8D9400DDE78D /* BetssonCameroonApp.app */,
+				CE74A1622E2E8D9500DDE78D /* BetssonCameroonAppTests.xctest */,
+				CE74A16C2E2E8D9500DDE78D /* BetssonCameroonAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE74A2252E2E8EA100DDE78D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE74A1752E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonApp" */;
+			buildPhases = (
+				CE74A1482E2E8D9400DDE78D /* Sources */,
+				CE74A1492E2E8D9400DDE78D /* Frameworks */,
+				CE74A14A2E2E8D9400DDE78D /* Resources */,
+				CE6015432E31872900C6A9DD /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CE74A14E2E2E8D9400DDE78D /* App */,
+			);
+			name = BetssonCameroonApp;
+			packageProductDependencies = (
+				CE74A2262E2E8EA100DDE78D /* GomaUI */,
+				CE74A7D72E2EB0E700DDE78D /* ServicesProvider */,
+				CE74A81B2E2EB9C300DDE78D /* PresentationProvider */,
+				CE74A9CE2E2EFB2A00DDE78D /* SharedModels */,
+				CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */,
+				CE60145E2E2FE56400C6A9DD /* FirebaseAuth */,
+				CE6014602E2FE56400C6A9DD /* FirebaseCrashlytics */,
+				CE6014622E2FE56400C6A9DD /* FirebaseDatabase */,
+				CE6014642E2FE56400C6A9DD /* FirebaseMessaging */,
+				CE6014672E2FE5E400C6A9DD /* IQKeyboardManagerSwift */,
+				CE60146A2E2FE61100C6A9DD /* Reachability */,
+				CE60146D2E2FE63A00C6A9DD /* PhraseSDK */,
+			);
+			productName = BetssonCameroonApp;
+			productReference = CE74A14C2E2E8D9400DDE78D /* BetssonCameroonApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CE74A1612E2E8D9500DDE78D /* BetssonCameroonAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE74A17A2E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonAppTests" */;
+			buildPhases = (
+				CE74A15E2E2E8D9500DDE78D /* Sources */,
+				CE74A15F2E2E8D9500DDE78D /* Frameworks */,
+				CE74A1602E2E8D9500DDE78D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE74A1642E2E8D9500DDE78D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CE74A1652E2E8D9500DDE78D /* Tests */,
+			);
+			name = BetssonCameroonAppTests;
+			packageProductDependencies = (
+			);
+			productName = BetssonCameroonAppTests;
+			productReference = CE74A1622E2E8D9500DDE78D /* BetssonCameroonAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CE74A16B2E2E8D9500DDE78D /* BetssonCameroonAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE74A17D2E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonAppUITests" */;
+			buildPhases = (
+				CE74A1682E2E8D9500DDE78D /* Sources */,
+				CE74A1692E2E8D9500DDE78D /* Frameworks */,
+				CE74A16A2E2E8D9500DDE78D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE74A16E2E2E8D9500DDE78D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CE74A16F2E2E8D9500DDE78D /* UITests */,
+			);
+			name = BetssonCameroonAppUITests;
+			packageProductDependencies = (
+			);
+			productName = BetssonCameroonAppUITests;
+			productReference = CE74A16C2E2E8D9500DDE78D /* BetssonCameroonAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CE74A1442E2E8D9400DDE78D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					CE74A14B2E2E8D9400DDE78D = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					CE74A1612E2E8D9500DDE78D = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = CE74A14B2E2E8D9400DDE78D;
+					};
+					CE74A16B2E2E8D9500DDE78D = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = CE74A14B2E2E8D9400DDE78D;
+					};
+				};
+			};
+			buildConfigurationList = CE74A1472E2E8D9400DDE78D /* Build configuration list for PBXProject "BetssonCameroonApp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CE74A1432E2E8D9400DDE78D;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				CE6014662E2FE5E400C6A9DD /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability" */,
+				CE60146C2E2FE63A00C6A9DD /* XCRemoteSwiftPackageReference "ios-sdk" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = CE74A14D2E2E8D9400DDE78D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */,
+				CE74A1612E2E8D9500DDE78D /* BetssonCameroonAppTests */,
+				CE74A16B2E2E8D9500DDE78D /* BetssonCameroonAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CE74A14A2E2E8D9400DDE78D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE74A1602E2E8D9500DDE78D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE74A16A2E2E8D9500DDE78D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CE6015432E31872900C6A9DD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CE74A1482E2E8D9400DDE78D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE74A15E2E2E8D9500DDE78D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE74A1682E2E8D9500DDE78D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CE74A1642E2E8D9500DDE78D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */;
+			targetProxy = CE74A1632E2E8D9500DDE78D /* PBXContainerItemProxy */;
+		};
+		CE74A16E2E2E8D9500DDE78D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */;
+			targetProxy = CE74A16D2E2E8D9500DDE78D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		CE74A1762E2E8D9500DDE78D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0140;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/SupportingFiles/Misc-Dev/BetssonCM-Dev-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = BetssonCM;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE74A1772E2E8D9500DDE78D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0140;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/SupportingFiles/Misc-Dev/BetssonCM-Dev-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = BetssonCM;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CE74A1782E2E8D9500DDE78D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CE74A1792E2E8D9500DDE78D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CE74A17B2E2E8D9500DDE78D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+			};
+			name = Debug;
+		};
+		CE74A17C2E2E8D9500DDE78D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+			};
+			name = Release;
+		};
+		CE74A17E2E2E8D9500DDE78D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = BetssonCameroonApp;
+			};
+			name = Debug;
+		};
+		CE74A17F2E2E8D9500DDE78D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = BetssonCameroonApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CE74A1472E2E8D9400DDE78D /* Build configuration list for PBXProject "BetssonCameroonApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE74A1782E2E8D9500DDE78D /* Debug */,
+				CE74A1792E2E8D9500DDE78D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE74A1752E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE74A1762E2E8D9500DDE78D /* Debug */,
+				CE74A1772E2E8D9500DDE78D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE74A17A2E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE74A17B2E2E8D9500DDE78D /* Debug */,
+				CE74A17C2E2E8D9500DDE78D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE74A17D2E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE74A17E2E2E8D9500DDE78D /* Debug */,
+				CE74A17F2E2E8D9500DDE78D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+		CE6014662E2FE5E400C6A9DD /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+		CE60146C2E2FE63A00C6A9DD /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/phrase/ios-sdk/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		CE60145E2E2FE56400C6A9DD /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		CE6014602E2FE56400C6A9DD /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		CE6014622E2FE56400C6A9DD /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		CE6014642E2FE56400C6A9DD /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		CE6014672E2FE5E400C6A9DD /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE6014662E2FE5E400C6A9DD /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		CE60146A2E2FE61100C6A9DD /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability" */;
+			productName = Reachability;
+		};
+		CE60146D2E2FE63A00C6A9DD /* PhraseSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE60146C2E2FE63A00C6A9DD /* XCRemoteSwiftPackageReference "ios-sdk" */;
+			productName = PhraseSDK;
+		};
+		CE74A2262E2E8EA100DDE78D /* GomaUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GomaUI;
+		};
+		CE74A7D72E2EB0E700DDE78D /* ServicesProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServicesProvider;
+		};
+		CE74A81B2E2EB9C300DDE78D /* PresentationProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PresentationProvider;
+		};
+		CE74A9CE2E2EFB2A00DDE78D /* SharedModels */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedModels;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = CE74A1442E2E8D9400DDE78D /* Project object */;
+}

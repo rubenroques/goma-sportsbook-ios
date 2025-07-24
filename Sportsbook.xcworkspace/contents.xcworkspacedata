@@ -2,12 +2,42 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Sportsbook.xcodeproj">
+      location = "group:BetssonFranceApp/Sportsbook.xcodeproj">
    </FileRef>
    <FileRef
-      location = "container:GomaUI/GomaUIDemo.xcodeproj">
+      location = "container:BetssonCameroonApp/BetssonCameroonApp.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:GomaUI/GomaUI">
+      location = "container:Frameworks/GomaUI/GomaUIDemo.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/GomaUI/GomaUI">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/ServicesProvider">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/HeaderTextField">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/SharedModels">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/Theming">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/Extensions">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/PresentationProvider">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/RegisterFlow">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/CountrySelectionFeature">
+   </FileRef>
+   <FileRef
+      location = "container:Frameworks/AdresseFrancaise">
    </FileRef>
 </Workspace>

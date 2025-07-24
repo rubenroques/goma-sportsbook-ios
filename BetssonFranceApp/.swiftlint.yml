@@ -1,0 +1,81 @@
+included: # paths to include during linting. `--path` is ignored if present.
+  - Core
+  - Clients
+
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Carthage
+  - Pods
+  - Core/Tools
+
+line_length:
+  warning: 160
+  # Some improbably large number because we don't want compile errors
+  # just because of style problems
+  error: 200
+  ignores_urls: true
+  ignores_comments: true
+
+
+#type_body_length:
+#  - 300 # warning
+#  - 400 # error
+
+#function_body_length:
+#  - 60 # warning
+#  - 100 # error
+
+identifier_name:
+  excluded: # excluded names
+    - id
+    - ok
+    - i
+    - j
+
+enum_case_associated_values_count: # Number of associated values in an enum case should be low
+  - 6 # warning - default: 5
+  - 8 # error - default: 6
+
+private_outlet:
+  severity: error
+force_cast:
+  error
+force_try:
+  error
+
+#statement_position:
+#  statement_mode: uncuddled_else
+
+disabled_rules:
+  - empty_count
+  - for_where
+  - opening_brace
+  - trailing_whitespace
+  - redundant_string_enum_value
+  - large_tuple
+  - type_name
+  - trailing_comma
+  - trailing_closure
+  - file_length
+  - cyclomatic_complexity
+  - function_body_length
+  - type_body_length
+  - nesting
+  - private_outlet
+  - statement_position
+
+opt_in_rules:
+  - private_outlet
+  - private_action
+  - void_return
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - empty_count
+  - discouraged_direct_init
+  - duplicate_imports
+  - empty_enum_arguments
+  - enum_case_associated_values_count
+  - redundant_optional_initialization
+  - prohibited_super_call
+  - overridden_super_call
+  - no_space_in_method_call
+
