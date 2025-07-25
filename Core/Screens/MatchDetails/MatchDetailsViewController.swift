@@ -913,18 +913,37 @@ class MatchDetailsViewController: UIViewController {
             }
             .store(in: &self.cancellables)
 
-        self.viewModel.shouldRenderFieldWidget
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] shouldRender in
-                if shouldRender {
-                    self?.headerButtonsBaseView.isHidden = false
-                    self?.setupMatchField()
-                }
-                else {
-                    self?.headerButtonsBaseView.isHidden = true
-                }
-            })
-            .store(in: &self.cancellables)
+        Publishers.CombineLatest3(
+            self.viewModel.shouldRenderFieldWidget,
+            Env.userSessionStore.userProfilePublisher,
+            self.viewModel.matchPublisher
+        )
+        .receive(on: DispatchQueue.main)
+        .sink(receiveValue: { [weak self] shouldRender, userProfile, matchLoadable in
+            guard let self = self else { return }
+            
+            // Check if we should hide: Anonymous AND Tennis
+            var shouldHide = false
+            
+            let isAnonymous = (userProfile == nil)
+            
+            if case .loaded(let match) = matchLoadable {
+                let sportCode = match.sport.alphaId ?? ""
+                let isTennis = sportCode.lowercased().hasPrefix("tns") || sportCode.lowercased().contains("tns")
+                
+                // Hide ONLY if both conditions are true
+                shouldHide = isAnonymous && isTennis
+            }
+            
+            // Apply the final visibility logic
+            if shouldRender && !shouldHide {
+                self.headerButtonsBaseView.isHidden = false
+                self.setupMatchField()
+            } else {
+                self.headerButtonsBaseView.isHidden = true
+            }
+        })
+        .store(in: &self.cancellables)
 
         self.viewModel.scrollToTopAction = { [weak self] indexRow in
 
