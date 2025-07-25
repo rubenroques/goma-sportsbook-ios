@@ -11,14 +11,53 @@ import Combine
 import ServicesProvider
 
 // MARK: - NextUpEventsViewModel
-class NextUpEventsViewModel: ObservableObject {
+class NextUpEventsViewModel {
 
     // MARK: - Published Properties
-    @Published var allMatches: [Match] = []
-    @Published var marketGroups: [MarketGroupTabItemData] = []
-    @Published var selectedMarketGroupId: String?
-    @Published var isLoading: Bool = false
-    @Published var mainMarkets: [MainMarket]? = nil
+    private let allMatchesSubject = CurrentValueSubject<[Match], Never>([])
+    var allMatchesPublisher: AnyPublisher<[Match], Never> {
+        allMatchesSubject.eraseToAnyPublisher()
+    }
+    var allMatches: [Match] {
+        get { allMatchesSubject.value }
+        set { allMatchesSubject.send(newValue) }
+    }
+    
+    private let marketGroupsSubject = CurrentValueSubject<[MarketGroupTabItemData], Never>([])
+    var marketGroupsPublisher: AnyPublisher<[MarketGroupTabItemData], Never> {
+        marketGroupsSubject.eraseToAnyPublisher()
+    }
+    var marketGroups: [MarketGroupTabItemData] {
+        get { marketGroupsSubject.value }
+        set { marketGroupsSubject.send(newValue) }
+    }
+    
+    private let selectedMarketGroupIdSubject = CurrentValueSubject<String?, Never>(nil)
+    var selectedMarketGroupIdPublisher: AnyPublisher<String?, Never> {
+        selectedMarketGroupIdSubject.eraseToAnyPublisher()
+    }
+    var selectedMarketGroupId: String? {
+        get { selectedMarketGroupIdSubject.value }
+        set { selectedMarketGroupIdSubject.send(newValue) }
+    }
+    
+    private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+    var isLoadingPublisher: AnyPublisher<Bool, Never> {
+        isLoadingSubject.eraseToAnyPublisher()
+    }
+    var isLoading: Bool {
+        get { isLoadingSubject.value }
+        set { isLoadingSubject.send(newValue) }
+    }
+    
+    private let mainMarketsSubject = CurrentValueSubject<[MainMarket]?, Never>(nil)
+    var mainMarketsPublisher: AnyPublisher<[MainMarket]?, Never> {
+        mainMarketsSubject.eraseToAnyPublisher()
+    }
+    var mainMarkets: [MainMarket]? {
+        get { mainMarketsSubject.value }
+        set { mainMarketsSubject.send(newValue) }
+    }
 
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
@@ -26,8 +65,21 @@ class NextUpEventsViewModel: ObservableObject {
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
     var generalFiltersBarViewModel: GeneralFilterBarViewModelProtocol
 
+    // MARK: - Navigation Closures (MVVM-C Pattern)
+    // ViewModels signal navigation intent through closures - Coordinators handle actual navigation
+    var onMatchSelected: ((Match) -> Void) = { match in
+        print("Empty clojure")
+    }
+    var onSportsSelectionRequested: (() -> Void)  = {
+        print("Empty clojure")
+    }
+    var onFiltersRequested: (() -> Void) = {
+        print("Empty clojure")
+    }
+
     // MARK: - Private Properties
     var sport: Sport
+    private let servicesProvider: ServicesProvider.Client
     private var eventsStateSubject = CurrentValueSubject<LoadableContent<[Match]>, Never>.init(.loading)
     private var cancellables: Set<AnyCancellable> = []
     private var preLiveMatchesCancellable: AnyCancellable?
@@ -42,8 +94,9 @@ class NextUpEventsViewModel: ObservableObject {
     
     var filterOptionItems: CurrentValueSubject<[FilterOptionItem], Never> = .init([])
 
-    init(sport: Sport? = nil) {
-        self.sport = sport ?? Env.sportsStore.football
+    init(sport: Sport, servicesProvider: ServicesProvider.Client) {
+        self.sport = sport
+        self.servicesProvider = servicesProvider
         
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
@@ -138,6 +191,10 @@ class NextUpEventsViewModel: ObservableObject {
     func getCurrentSelectedMarketGroupId() -> String? {
         return marketGroupSelectorViewModel.currentSelectedMarketGroupId
     }
+    
+    func getMatch(withId matchId: String) -> Match? {
+        return allMatches.first { $0.id == matchId }
+    }
 
     // MARK: - Private Methods
     private func loadEvents() {
@@ -146,7 +203,7 @@ class NextUpEventsViewModel: ObservableObject {
 
         preLiveMatchesCancellable?.cancel()
 
-        preLiveMatchesCancellable = Env.servicesProvider.subscribePreLiveMatches(
+        preLiveMatchesCancellable = servicesProvider.subscribePreLiveMatches(
             forSportType: ServiceProviderModelMapper.serviceProviderSportType(fromSport: sport),
             sortType: EventListSort.popular)
         .receive(on: DispatchQueue.main)
@@ -163,7 +220,7 @@ class NextUpEventsViewModel: ObservableObject {
                 
                 print("[NextUpEventsViewModel] 📡 received pre-live groups \(content.count) mapped to matches \(matches.count)")
                 if let mainMarkets = mainMarkets {
-                    print("[NextUpEventsViewModel] 📊 received \(mainMarkets.count) main markets")
+                    print("[NextUpEventsViewModel] received \(mainMarkets.count) main markets")
                 }
                       
                 self?.processMatches(matches, mainMarkets: mainMarkets)
@@ -175,7 +232,7 @@ class NextUpEventsViewModel: ObservableObject {
     }
 
     private func processMatches(_ matches: [Match], mainMarkets: [MainMarket]? = nil) {
-        print("[NextUpEvents] processMatches called with \(matches.count) matches")
+        print("[NextUpEventsViewModel] processMatches called with \(matches.count) matches")
         isLoading = false
         allMatches = matches
         self.mainMarkets = mainMarkets
@@ -185,7 +242,8 @@ class NextUpEventsViewModel: ObservableObject {
         marketGroupSelectorViewModel.updateWithMatches(matches, mainMarkets: mainMarkets)
 
         // Update all existing market group ViewModels with new matches
-        for (marketType, viewModel) in marketGroupCardsViewModels {
+        for (marketTypeName, viewModel) in marketGroupCardsViewModels {
+            print("Updating matches for \(marketTypeName)")
             viewModel.updateMatches(matches)
         }
 
@@ -196,16 +254,16 @@ class NextUpEventsViewModel: ObservableObject {
         // Create ViewModels for new market groups
         for marketGroup in marketGroups {
             if marketGroupCardsViewModels[marketGroup.id] == nil {
-                print("[NextUpEvents] Creating new MarketGroupCardsViewModel for market type: \(marketGroup.id)")
+                print("[NextUpEventsViewModel] Creating new MarketGroupCardsViewModel for market type: \(marketGroup.id)")
                 let marketGroupCardsViewModel = MarketGroupCardsViewModel(marketTypeId: marketGroup.id)
 
                 // Update with current matches
                 marketGroupCardsViewModel.updateMatches(allMatches)
 
                 marketGroupCardsViewModels[marketGroup.id] = marketGroupCardsViewModel
-                print("[NextUpEvents] Created and initialized MarketGroupCardsViewModel for market type: \(marketGroup.id)")
+                print("[NextUpEventsViewModel] Created and initialized MarketGroupCardsViewModel for market type: \(marketGroup.id)")
             } else {
-                print("[NextUpEvents] MarketGroupCardsViewModel already exists for market type: \(marketGroup.id)")
+                print("[NextUpEventsViewModel] MarketGroupCardsViewModel already exists for market type: \(marketGroup.id)")
             }
         }
 
@@ -214,7 +272,7 @@ class NextUpEventsViewModel: ObservableObject {
         let viewModelsToRemove = marketGroupCardsViewModels.keys.filter { !currentMarketGroupIds.contains($0) }
         for idToRemove in viewModelsToRemove {
             marketGroupCardsViewModels.removeValue(forKey: idToRemove)
-            print("[NextUpEvents] Removed MarketGroupCardsViewModel for market type: \(idToRemove)")
+            print("[NextUpEventsViewModel] Removed MarketGroupCardsViewModel for market type: \(idToRemove)")
         }
 
         self.marketGroups = marketGroups

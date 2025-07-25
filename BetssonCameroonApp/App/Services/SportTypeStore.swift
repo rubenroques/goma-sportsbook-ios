@@ -13,7 +13,7 @@ class SportTypeStore {
 
     var defaultSport: Sport {
         if case .loaded(let sports) = self.activeSportsCurrentValueSubject.value,
-            let firstSport = sports.first {
+           let firstSport = sports.sorted(by: \.id).first {
             return firstSport
         }
         else {

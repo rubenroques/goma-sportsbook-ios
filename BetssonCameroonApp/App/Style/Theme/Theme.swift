@@ -5,7 +5,7 @@
 import UIKit
 import Combine
 
-struct Theme: Codable {
+struct Theme: Codable, Hashable {
     let id: String
     let name: String
     let lightColors: ThemeColors

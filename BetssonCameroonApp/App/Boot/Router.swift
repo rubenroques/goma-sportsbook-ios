@@ -16,8 +16,6 @@ class Router {
         UIApplication.shared.windows.first?.rootViewController
     }
 
-    var rootActionable: RootActionable?
-
     private var cancellables = Set<AnyCancellable>()
     private var showingDebugViewController: Bool = false
 
@@ -47,7 +45,8 @@ class Router {
 
     func makeKeyAndVisible() {
         
-        self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
+        // MIGRATED
+        // self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         
 //        #if DEBUG
 //        // manual theme override
@@ -67,12 +66,13 @@ class Router {
 //            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
 //        }
 //        #endif
-        
-        let splashInformativeViewController = SplashInformativeViewController(loadingCompleted: {
-            self.showPostLoadingFlow()
-        })
-        self.rootWindow.rootViewController = splashInformativeViewController
-        self.rootWindow.makeKeyAndVisible()
+
+//
+//        let splashInformativeViewController = SplashInformativeViewController(loadingCompleted: {
+//            self.showPostLoadingFlow()
+//        })
+//        self.rootWindow.rootViewController = splashInformativeViewController
+//        self.rootWindow.makeKeyAndVisible()
     }
 
     @objc func applicationDidBecomeActive(notification: NSNotification) {
@@ -80,63 +80,65 @@ class Router {
     }
 
     func showPostLoadingFlow() {
-        var bootRootViewController: UIViewController
-        
-        let viewModel = RootAdaptiveScreenViewModel()
-        let rootViewController = RootAdaptiveViewController(viewModel: viewModel)
-        self.rootActionable = rootViewController
-        bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
-
-        //
-        self.subscribeToUserActionBlockers()
-        
-        self.subscribeToURLRedirects()
-        
-        self.subscribeToNotificationsOpened()
-        
-        self.rootWindow.rootViewController = bootRootViewController
+        // MIGRATED
+//        var bootRootViewController: UIViewController
+//        
+//        let viewModel = RootAdaptiveScreenViewModel()
+//        let rootViewController = RootAdaptiveViewController(viewModel: viewModel)
+//        self.rootActionable = rootViewController
+//        bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
+//
+//        //
+//        self.subscribeToUserActionBlockers()
+//        
+//        self.subscribeToURLRedirects()
+//        
+//        self.subscribeToNotificationsOpened()
+//        
+//        self.rootWindow.rootViewController = bootRootViewController
     }
 
     func subscribeToUserActionBlockers() {
-        Env.businessSettingsSocket.maintenanceModePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { maintenanceMode in
-
-                switch maintenanceMode {
-                case .enabled(let message):
-                    self.showUnderMaintenanceScreen(withReason: message)
-                case .disabled:
-                    self.hideUnderMaintenanceScreen()
-                case .unknown:
-                    break
-                }
-            }
-            .store(in: &self.cancellables)
-
-        Env.businessSettingsSocket.requiredVersionPublisher
-            .receive(on: DispatchQueue.main)
-            .delay(for: 3, scheduler: DispatchQueue.main)
-            .sink { serverVersion in
-
-                guard
-                    let currentVersion = Bundle.main.versionNumber,
-                    let serverRequiredVersion = serverVersion.required,
-                    let serverCurrentVersion = serverVersion.current
-                else {
-                    return
-                }
-
-                if currentVersion.compare(serverRequiredVersion, options: .numeric) == .orderedAscending {
-                    self.showRequiredUpdateScreen()
-                }
-                else if currentVersion.compare(serverCurrentVersion, options: .numeric) == .orderedAscending {
-                    self.showAvailableUpdateScreen()
-                }
-                else {
-                    self.hideRequiredUpdateScreen()
-                }
-            }
-            .store(in: &cancellables)
+        // MIGRATED
+//        Env.businessSettingsSocket.maintenanceModePublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink { maintenanceMode in
+//
+//                switch maintenanceMode {
+//                case .enabled(let message):
+//                    self.showUnderMaintenanceScreen(withReason: message)
+//                case .disabled:
+//                    self.hideUnderMaintenanceScreen()
+//                case .unknown:
+//                    break
+//                }
+//            }
+//            .store(in: &self.cancellables)
+//
+//        Env.businessSettingsSocket.requiredVersionPublisher
+//            .receive(on: DispatchQueue.main)
+//            .delay(for: 3, scheduler: DispatchQueue.main)
+//            .sink { serverVersion in
+//
+//                guard
+//                    let currentVersion = Bundle.main.versionNumber,
+//                    let serverRequiredVersion = serverVersion.required,
+//                    let serverCurrentVersion = serverVersion.current
+//                else {
+//                    return
+//                }
+//
+//                if currentVersion.compare(serverRequiredVersion, options: .numeric) == .orderedAscending {
+//                    self.showRequiredUpdateScreen()
+//                }
+//                else if currentVersion.compare(serverCurrentVersion, options: .numeric) == .orderedAscending {
+//                    self.showAvailableUpdateScreen()
+//                }
+//                else {
+//                    self.hideRequiredUpdateScreen()
+//                }
+//            }
+//            .store(in: &cancellables)
 
     }
 

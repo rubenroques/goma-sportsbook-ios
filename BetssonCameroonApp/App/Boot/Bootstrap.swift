@@ -12,102 +12,24 @@ import GomaUI
 
 class Bootstrap {
 
-    var router: Router
+    private let window: UIWindow
+    private var appCoordinator: AppCoordinator?
+    private var appStateManager: AppStateManager?
 
-    private var environment: Environment?
-    private var cancellables = Set<AnyCancellable>()
-
-    private var bootTriggerCancellable: AnyCancellable?
-    private var themeCancellable: AnyCancellable?
-
-    init(router: Router) {
-        self.router = router
+    init(window: UIWindow) {
+        self.window = window
     }
 
     func boot() {
-        self.environment = Env
-
-        guard let environment = self.environment else { return }
-
-        environment.businessSettingsSocket.connectAfterAuth()
-
-        // Prepare the router for boot
-        self.setSupportedLanguages()
-
-        // Setup GomaUI components (Colors and Fonts)
-        self.setupGomaUIComponents()
-
-        self.bootTriggerCancellable = environment.businessSettingsSocket.maintenanceModePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] maintenanceModeType in
-                switch maintenanceModeType {
-                case .enabled:
-                    self?.router.showUnderMaintenanceScreenOnBoot()
-                case .disabled:
-                    self?.connectServiceProvider()
-                    self?.router.makeKeyAndVisible()
-                    self?.bootTriggerCancellable?.cancel()
-                case .unknown:
-                    break
-                }
-            })
-
+        // Create AppStateManager and AppCoordinator
+        let appStateManager = AppStateManager(environment: Env)
+        let appCoordinator = AppCoordinator(window: window, environment: Env, appStateManager: appStateManager)
+        
+        self.appStateManager = appStateManager
+        self.appCoordinator = appCoordinator
+        
+        // Start the coordinator-based app flow
+        appCoordinator.start()
     }
 
-    func setSupportedLanguages() {
-        // Force the target supported languages
-        let targetSupportedLanguages = TargetVariables.supportedLanguages.map(\.languageCode)
-        UserDefaults.standard.set(targetSupportedLanguages, forKey: "AppleLanguages")
-        UserDefaults.standard.synchronize()
-    }
-
-    func setupGomaUIComponents() {
-        // Setup GomaUI components StyleProviderColors
-        self.themeCancellable = ThemeService.shared.themePublisher
-            // we need to map the app theme to GomaUI StyleProviderColors structure
-            .map(StyleProviderColors.create(fromTheme:))
-            .receive(on: DispatchQueue.main)
-            .sink { (styleProviderColors: StyleProviderColors) in
-                GomaUI.StyleProvider.customize(colors: styleProviderColors)
-            }
-
-        // Setup GomaUI components Fonts
-        GomaUI.StyleProvider.setFontProvider({ (type: StyleProvider.FontType, size: CGFloat) -> UIFont in
-            let appFont = AppFont.AppFontType.fontTypeFrom(styleProviderFontType: type)
-            return AppFont.with(type: appFont, size: size)
-        })
-    }
-
-    func connectServiceProvider() {
-
-        guard let environment = self.environment else { return }
-
-        environment.servicesProvider.connect()
-        environment.betslipManager.start()
-
-        // TODO: Check this part to enable app initialization without socket connected
-        //
-        environment.servicesProvider.eventsConnectionStatePublisher
-            .filter { connectorState in
-                return connectorState == .connected
-            }
-            .sink { _ in
-                environment.sportsStore.requestInitialSportsData()
-                environment.filterStorage.getCurrentCompetitions()
-            }
-            .store(in: &self.cancellables)
-
-        // ConnectModules
-        Publishers.CombineLatest(environment.servicesProvider.bettingConnectionStatePublisher,
-                                 environment.userSessionStore.userProfilePublisher)
-            .filter({ connectorState, userSession in
-                return connectorState == .connected && userSession != nil
-            })
-            .map({ _ in return () })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: {
-                environment.favoritesManager.getUserFavorites()
-            })
-            .store(in: &self.cancellables)
-    }
 }

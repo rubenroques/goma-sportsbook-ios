@@ -20,6 +20,7 @@ class MatchDetailsTextualViewModel {
     private let statisticsVisibilitySubject = CurrentValueSubject<Bool, Never>(false)
     private let marketGroupSelectorTabViewModelSubject = CurrentValueSubject<MarketGroupSelectorTabViewModelProtocol?, Never>(nil)
     
+    private let servicesProvider: ServicesProvider.Client
     private var cancellables = Set<AnyCancellable>()
     
     // WebSocket subscription management
@@ -48,7 +49,8 @@ class MatchDetailsTextualViewModel {
     // MARK: - Initialization
     
     /// Initialize with a Match object (preferred for navigation from match lists)
-    init(match: Match) {
+    init(match: Match, servicesProvider: ServicesProvider.Client) {
+        self.servicesProvider = servicesProvider
         self.currentMatch = match
         self.currentMatchId = match.id
         
@@ -103,7 +105,7 @@ class MatchDetailsTextualViewModel {
         self.currentMatchId = matchId
         isLoadingSubject.send(true)
         
-        eventDetailsSubscription = Env.servicesProvider.subscribeEventDetails(eventId: matchId)
+        eventDetailsSubscription = servicesProvider.subscribeEventDetails(eventId: matchId)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("Event details subscription completed: \(completion)")

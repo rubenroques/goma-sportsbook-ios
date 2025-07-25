@@ -1,5 +1,5 @@
 //
-//  RootViewController.swift
+//  RootTabBarViewController.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 24/09/2021.
@@ -11,7 +11,7 @@ import LocalAuthentication
 import ServicesProvider
 import GomaUI
 
-class RootAdaptiveViewController: UIViewController {
+class RootTabBarViewController: UIViewController {
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
@@ -43,19 +43,11 @@ class RootAdaptiveViewController: UIViewController {
     private lazy var blockingWindow: BlockingWindow = Self.createBlockingWindow()
 
     //
-    // Embeded View Controllers
+    // Base views for coordinator-managed view controllers
     private lazy var nextUpEventsBaseView: UIView = Self.createNextUpEventsBaseView()
-    private lazy var nextUpEventsViewController: NextUpEventsViewController = {
-        let viewModel = NextUpEventsViewModel()
-        return NextUpEventsViewController(viewModel: viewModel)
-    }()
     private var nextUpEventsViewControllerLoaded: Bool = false
 
     private lazy var inPlayEventsBaseView: UIView = Self.createInPlayEventsBaseView()
-    private lazy var inPlayEventsViewController: InPlayEventsViewController = {
-        let viewModel = InPlayEventsViewModel()
-        return InPlayEventsViewController(viewModel: viewModel)
-    }()
     private var inPlayEventsViewControllerLoaded: Bool = false
 
     // Dummy view controllers for unimplemented screens
@@ -83,7 +75,11 @@ class RootAdaptiveViewController: UIViewController {
     private var casinoSearchViewControllerLoaded: Bool = false
 
     // Constraints
-    private var viewModel: RootAdaptiveScreenViewModel
+    private var viewModel: RootTabBarViewModel
+    
+    // MARK: - Tab Switching Coordination
+    // Closure called when tabs are selected to enable coordinator-based lazy loading
+    var onTabSelected: ((TabItem) -> Void)?
 
     // General properties
     var isLocalAuthenticationCoveringView: Bool = true {
@@ -103,7 +99,7 @@ class RootAdaptiveViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and cycle
-    init(viewModel: RootAdaptiveScreenViewModel) {
+    init(viewModel: RootTabBarViewModel) {
         self.viewModel = viewModel
 
         self.adaptiveTabBarView = AdaptiveTabBarView(viewModel: viewModel.adaptiveTabBarViewModel)
@@ -178,7 +174,7 @@ class RootAdaptiveViewController: UIViewController {
         self.setupWithTheme()
 
         // Detects a new login
-        Env.userSessionStore.userProfilePublisher
+        viewModel.userProfilePublisher
             .receive(on: DispatchQueue.main)
             .sink { userProfile in
                 if let userProfile = userProfile {
@@ -191,8 +187,7 @@ class RootAdaptiveViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.userSessionStore
-            .isLoadingUserSessionPublisher
+        viewModel.isLoadingUserSessionPublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoadingUserSession in
@@ -233,10 +228,7 @@ class RootAdaptiveViewController: UIViewController {
 
         self.authenticateUser()
 
-        // Set default screen on startup
-        DispatchQueue.main.async {
-            self.viewModel.presentScreen(.nextUpEvents)
-        }
+        // Default screen will be shown by MainCoordinator after startup
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -321,19 +313,7 @@ class RootAdaptiveViewController: UIViewController {
 
     // MARK: - Reactive Bindings for Screen Management
     private func setupScreenBindings() {
-        // React to screen changes
-        viewModel.$currentScreen
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] screenType in
-                if let screenType = screenType {
-                    self?.presentScreen(screenType)
-                } else {
-                    self?.hideAllScreens()
-                }
-            }
-            .store(in: &cancellables)
-
-        // Setup tab bar integration
+        // Setup tab bar integration - screen presentation now handled by coordinators
         adaptiveTabBarView.onTabSelected = { [weak self] tabItem in
             self?.handleTabSelection(tabItem)
         }
@@ -368,37 +348,81 @@ class RootAdaptiveViewController: UIViewController {
 
     // MARK: - Tab Bar Integration
     private func handleTabSelection(_ tabItem: TabItem) {
-        switch tabItem.identifier {
-        // Sportsbook tabs
-        case .nextUpEvents:
-            viewModel.presentScreen(.nextUpEvents)
-        case .inPlayEvents:
-            viewModel.presentScreen(.inPlayEvents)
-        case .myBets:
-            viewModel.presentScreen(.myBets)
-        case .sportsSearch:
-            viewModel.presentScreen(.search)
-
-        // Casino tabs
-        case .casinoHome:
-            viewModel.presentScreen(.casinoHome)
-        case .casinoVirtualSports:
-            viewModel.presentScreen(.casinoVirtualSports)
-        case .casinoAviatorGame:
-            viewModel.presentScreen(.casinoAviatorGame)
-        case .casinoSearch:
-            viewModel.presentScreen(.casinoSearch)
-
-        case .sportsHome:
-            viewModel.presentScreen(.nextUpEvents)
-        default:
-            // Handle other tab selections or keep current screen
-            break
-        }
+        // Notify the coordinator for lazy loading and business logic
+        // MainCoordinator will handle all screen presentation through Coordinator Integration API methods
+        onTabSelected?(tabItem)
     }
 
     func openBetslipModal() {
         
+    }
+    
+    // MARK: - Coordinator Integration API
+    // Methods for MainCoordinator to show specific screens
+    func showNextUpEventsScreen(with viewController: UIViewController) {
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: nextUpEventsBaseView, loadedFlag: &nextUpEventsViewControllerLoaded)
+        nextUpEventsBaseView.isHidden = false
+    }
+    
+    func showInPlayEventsScreen(with viewController: UIViewController) {
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: inPlayEventsBaseView, loadedFlag: &inPlayEventsViewControllerLoaded)
+        inPlayEventsBaseView.isHidden = false
+    }
+    
+    func showMyBetsScreen(with viewController: UIViewController) {
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: myBetsBaseView, loadedFlag: &myBetsViewControllerLoaded)
+        myBetsBaseView.isHidden = false
+    }
+    
+    func showSearchScreen(with viewController: UIViewController) {
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: searchBaseView, loadedFlag: &searchViewControllerLoaded)
+        searchBaseView.isHidden = false
+    }
+    
+    func showCasinoHomeScreen(with viewController: UIViewController) {
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: casinoHomeBaseView, loadedFlag: &casinoHomeViewControllerLoaded)
+        casinoHomeBaseView.isHidden = false
+    }
+    
+    func showCasinoVirtualSportsScreen(with viewController: UIViewController) {
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: casinoTablesBaseView, loadedFlag: &casinoTablesViewControllerLoaded)
+        casinoTablesBaseView.isHidden = false
+    }
+    
+    func showCasinoAviatorGameScreen(with viewController: UIViewController) {
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: casinoJackpotsBaseView, loadedFlag: &casinoJackpotsViewControllerLoaded)
+        casinoJackpotsBaseView.isHidden = false
+    }
+    
+    func showCasinoSearchScreen(with viewController: UIViewController) {
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: casinoSearchBaseView, loadedFlag: &casinoSearchViewControllerLoaded)
+        casinoSearchBaseView.isHidden = false
+    }
+    
+    private func embedViewControllerIfNeeded(_ viewController: UIViewController, in containerView: UIView, loadedFlag: inout Bool) {
+        guard !loadedFlag else { return } // Already embedded
+        
+        addChild(viewController)
+        containerView.addSubview(viewController.view)
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            viewController.view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            viewController.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            viewController.view.topAnchor.constraint(equalTo: containerView.topAnchor),
+            viewController.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        viewController.didMove(toParent: self)
+        loadedFlag = true
     }
 
     func openExternalBrowser(onURL url: URL) {
@@ -452,7 +476,7 @@ class RootAdaptiveViewController: UIViewController {
     // User functions
     func authenticateUser() {
 
-        if Env.userSessionStore.shouldAuthenticateUser {
+        if viewModel.shouldAuthenticateUser() {
             print("LocalAuth shouldAuthenticateUser yes")
         }
         else {
@@ -461,7 +485,7 @@ class RootAdaptiveViewController: UIViewController {
             return
         }
 
-        if !Env.userSessionStore.shouldRequestBiometrics() {
+        if !viewModel.shouldRequestBiometrics() {
             self.unlockAppAnonymous()
             return
         }
@@ -572,89 +596,26 @@ class RootAdaptiveViewController: UIViewController {
         casinoSearchBaseView.isHidden = true
     }
 
-    private func presentScreen(_ screenType: ScreenType) {
-        self.hideAllScreens()
-
-        switch screenType {
-        case .nextUpEvents:
-            presentChildViewController(
-                nextUpEventsViewController,
-                in: nextUpEventsBaseView,
-                loadedFlag: &nextUpEventsViewControllerLoaded
-            )
-        case .inPlayEvents:
-            // Use dummy instead of real controller
-            presentChildViewController(
-                inPlayEventsViewController,
-                in: inPlayEventsBaseView,
-                loadedFlag: &inPlayEventsViewControllerLoaded
-            )
-        case .myBets:
-            presentChildViewController(
-                myBetsDummyViewController,
-                in: myBetsBaseView,
-                loadedFlag: &myBetsViewControllerLoaded
-            )
-        case .search:
-            presentChildViewController(
-                searchDummyViewController,
-                in: searchBaseView,
-                loadedFlag: &searchViewControllerLoaded
-            )
-        case .casinoHome:
-            presentChildViewController(
-                casinoHomeDummyViewController,
-                in: casinoHomeBaseView,
-                loadedFlag: &casinoHomeViewControllerLoaded
-            )
-        case .casinoVirtualSports:
-            presentChildViewController(
-                casinoTablesDummyViewController,
-                in: casinoTablesBaseView,
-                loadedFlag: &casinoTablesViewControllerLoaded
-            )
-        case .casinoAviatorGame:
-            presentChildViewController(
-                casinoJackpotsDummyViewController,
-                in: casinoJackpotsBaseView,
-                loadedFlag: &casinoJackpotsViewControllerLoaded
-            )
-        case .casinoSearch:
-            presentChildViewController(
-                casinoSearchDummyViewController,
-                in: casinoSearchBaseView,
-                loadedFlag: &casinoSearchViewControllerLoaded
-            )
-        }
-    }
-
-    @objc private func didTapShowEventsButton() {
-        viewModel.presentScreen(.nextUpEvents)
-    }
-
-    @objc private func didTapShowInPlayEventsButton() {
-        viewModel.presentScreen(.inPlayEvents)
-    }
 
 }
 
 // MARK: App States
-extension RootAdaptiveViewController {
+extension RootTabBarViewController {
 
     // App States
     func unlockAppWithUser() {
         // Unlock the app
 
-        Env.userSessionStore.startUserSession()
+        viewModel.unlockAppWithUser()
     }
 
     func unlockAppAnonymous() {
-        Env.userSessionStore.logout()
+        viewModel.unlockAppAnonymous()
         self.isLocalAuthenticationCoveringView = false
     }
 
     func showLocalAuthenticationCoveringViewIfNeeded() {
-        if Env.userSessionStore.shouldRequestBiometrics() {
+        if viewModel.shouldRequestBiometrics() {
             self.isLocalAuthenticationCoveringView = true
         }
     }
@@ -669,10 +630,10 @@ extension RootAdaptiveViewController {
     }
 
     @objc func appWillEnterForeground() {
-        if Env.userSessionStore.shouldRequestBiometrics() {
+        if viewModel.handleAppWillEnterForeground() {
             self.authenticateUser()
         }
-        else if Env.userSessionStore.isUserLogged() {
+        else if viewModel.isUserLogged() {
 
         }
         print("LocalAuth Foreground")
@@ -717,7 +678,7 @@ extension RootAdaptiveViewController {
 
 
 // MARK: - Shake Gesture Handling
-extension RootAdaptiveViewController {
+extension RootTabBarViewController {
 
     override var canBecomeFirstResponder: Bool {
         return true
@@ -737,7 +698,7 @@ extension RootAdaptiveViewController {
     }
 }
 
-extension RootAdaptiveViewController {
+extension RootTabBarViewController {
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -1151,85 +1112,23 @@ extension RootAdaptiveViewController {
 
 }
 
-extension RootAdaptiveViewController: RootActionable {
+extension RootTabBarViewController {
     
     func openPhoneLogin() {
         var phoneLoginViewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()
-        
         let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
-        
         let navigationController = Router.navigationController(with: phoneLoginViewController)
-        
 //        phoneLoginViewModel.loginComplete = { [weak self] in
 //            navigationController.dismiss(animated: true)
 //            self?.widgetToolBarView.setLoggedInState(true)
 //        }
-        
         present(navigationController, animated: true)
     }
     
     func openPhoneRegistration() {
-        
         var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
-        
         let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
-        
         let navigationController = Router.navigationController(with: phoneRegistrationViewController)
-        
         present(navigationController, animated: true)
-        
     }
-    
-    func openMatchDetail(matchId: String) {
-
-    }
-
-    func openBetslipModalWithShareData(ticketToken: String) {
-
-    }
-
-    func openCompetitionDetail(competitionId: String) {
-
-    }
-
-    func openContactSettings() {
-
-    }
-
-    func openBetswipe() {
-
-    }
-
-    func openDeposit() {
-
-    }
-
-    func openBonus() {
-
-    }
-
-    func openDocuments() {
-
-    }
-
-    func openCustomerSupport() {
-
-    }
-
-    func openFavorites() {
-
-    }
-
-    func openPromotions() {
-
-    }
-
-    func openRegisterWithCode(code: String) {
-
-    }
-
-    func openResponsibleForm() {
-
-    }
-
 }

@@ -392,6 +392,7 @@ class MatchDetailsTextualViewController: UIViewController {
     }
     
     private func setupBindings() {
+        
         // Bind loading state
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
@@ -442,6 +443,7 @@ class MatchDetailsTextualViewController: UIViewController {
                 self.subscribeToMarketGroupsData()
             }
             .store(in: &cancellables)
+        
         
         // Initial subscription to market groups data
         subscribeToMarketGroupsData()

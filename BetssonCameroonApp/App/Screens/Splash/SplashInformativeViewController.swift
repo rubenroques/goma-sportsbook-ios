@@ -6,10 +6,6 @@
 //
 
 import UIKit
-import Combine
-import FirebaseMessaging
-import Reachability
-import ServicesProvider
 
 class SplashInformativeViewController: UIViewController {
     
@@ -23,12 +19,7 @@ class SplashInformativeViewController: UIViewController {
     private lazy var brandImageView: UIImageView = Self.createBrandImageView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private lazy var loadingMessageLabel: UILabel = Self.createLoadingMessageLabel()
-    
-    private var isLoadingBootDataSubscription: AnyCancellable?
-    private var loadingCompleted: () -> Void
-    private var reachability: Reachability?
-    
-    private var cancellables: Set<AnyCancellable> = []
+        
     private var messageTimer: Timer?
     private var currentMessageIndex: Int = 0
     
@@ -39,8 +30,7 @@ class SplashInformativeViewController: UIViewController {
         "Preparing your experience..."
     ]
     
-    init(loadingCompleted: @escaping () -> Void) {
-        self.loadingCompleted = loadingCompleted
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -62,68 +52,11 @@ class SplashInformativeViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        self.reachability = try? Reachability()
-        
-        self.reachability?.whenUnreachable = { _ in
-            let alert = UIAlertController(
-                title: localized("no_internet"),
-                message: localized("no_internet_connection_found_check_settings"),
-                preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        
-        // Start theme
-        ThemeService.shared.fetchThemeFromServer()
-        
-        // Load presentation configuration
-        Env.presentationConfigurationStore.loadConfiguration()
-        
-        self.isLoadingBootDataSubscription = Env.sportsStore.activeSportsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("activeSportsPublisher: completion \(completion)")
-            } receiveValue: { [weak self] sportsLoadingState in
-                switch sportsLoadingState {
-                case .idle:
-                    break
-                case .loading:
-                    break
-                case .loaded(let sportsData):
-                    self?.splashLoadingCompleted()
-                case .failed:
-                    break
-                }
-            }
-//        
-//        Env.presentationConfigurationStore.loadState
-//            .sink { completion in
-//                print("configurationStore: completion \(completion)")
-//            } receiveValue: { configurationStore in
-//                print("configurationStore: \(configurationStore)")
-//            }
-//            .store(in: &self.cancellables)
-//        
-//        Env.servicesProvider.preFetchHomeContent()
-//            .sink { completion in
-//                print("preFetchHomeContent: completion \(completion)")
-//            } receiveValue: { preFetchHomeContent in
-//                print("preFetchHomeContent: \(preFetchHomeContent)")
-//            }
-//            .store(in: &self.cancellables)
-//
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         stopMessageAnimation()
-    }
-    
-    func splashLoadingCompleted() {
-        self.isLoadingBootDataSubscription = nil
-        self.loadingCompleted()
     }
     
 }
@@ -182,7 +115,7 @@ private extension SplashInformativeViewController {
         updateLoadingMessage()
         
         // Start timer to rotate messages
-        messageTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+        messageTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
             self?.updateLoadingMessage()
         }
     }
@@ -195,12 +128,12 @@ private extension SplashInformativeViewController {
     func updateLoadingMessage() {
         guard !loadingMessages.isEmpty else { return }
         
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: 0.2, animations: {
             self.loadingMessageLabel.alpha = 0.0
         }) { _ in
             self.loadingMessageLabel.text = self.loadingMessages[self.currentMessageIndex]
             
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.12) {
                 self.loadingMessageLabel.alpha = 1.0
             }
             

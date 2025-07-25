@@ -11,22 +11,77 @@ import Combine
 import ServicesProvider
 
 // MARK: - InPlayEventsViewModel
-class InPlayEventsViewModel: ObservableObject {
+class InPlayEventsViewModel {
 
     // MARK: - Published Properties
-    @Published var allMatches: [Match] = []
-    @Published var marketGroups: [MarketGroupTabItemData] = []
-    @Published var selectedMarketGroupId: String?
-    @Published var isLoading: Bool = false
-    @Published var mainMarkets: [MainMarket]? = nil
+    private let allMatchesSubject = CurrentValueSubject<[Match], Never>([])
+    var allMatchesPublisher: AnyPublisher<[Match], Never> {
+        allMatchesSubject.eraseToAnyPublisher()
+    }
+    var allMatches: [Match] {
+        get { allMatchesSubject.value }
+        set { allMatchesSubject.send(newValue) }
+    }
+    
+    private let marketGroupsSubject = CurrentValueSubject<[MarketGroupTabItemData], Never>([])
+    var marketGroupsPublisher: AnyPublisher<[MarketGroupTabItemData], Never> {
+        marketGroupsSubject.eraseToAnyPublisher()
+    }
+    var marketGroups: [MarketGroupTabItemData] {
+        get { marketGroupsSubject.value }
+        set { marketGroupsSubject.send(newValue) }
+    }
+    
+    private let selectedMarketGroupIdSubject = CurrentValueSubject<String?, Never>(nil)
+    var selectedMarketGroupIdPublisher: AnyPublisher<String?, Never> {
+        selectedMarketGroupIdSubject.eraseToAnyPublisher()
+    }
+    var selectedMarketGroupId: String? {
+        get { selectedMarketGroupIdSubject.value }
+        set { selectedMarketGroupIdSubject.send(newValue) }
+    }
+    
+    private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+    var isLoadingPublisher: AnyPublisher<Bool, Never> {
+        isLoadingSubject.eraseToAnyPublisher()
+    }
+    var isLoading: Bool {
+        get { isLoadingSubject.value }
+        set { isLoadingSubject.send(newValue) }
+    }
+    
+    private let mainMarketsSubject = CurrentValueSubject<[MainMarket]?, Never>(nil)
+    var mainMarketsPublisher: AnyPublisher<[MainMarket]?, Never> {
+        mainMarketsSubject.eraseToAnyPublisher()
+    }
+    var mainMarkets: [MainMarket]? {
+        get { mainMarketsSubject.value }
+        set { mainMarketsSubject.send(newValue) }
+    }
 
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
 
+    // MARK: - Navigation Closures (MVVM-C Pattern)
+    // ViewModels signal navigation intent through closures - Coordinators handle actual navigation
+    var onMatchSelected: ((Match) -> Void) = { _ in
+        print("Empty clojure")
+    }
+    var onSportsSelectionRequested: (() -> Void)  = {
+        print("Empty clojure")
+    }
+    var onFiltersRequested: (() -> Void) = {
+        print("Empty clojure")
+    }
+    var onLiveStatsRequested: ((String) -> Void) = { _ in
+        print("Empty clojure")
+    }
+    
     // MARK: - Private Properties
     var sport: Sport
+    private let servicesProvider: ServicesProvider.Client
     private var eventsStateSubject = CurrentValueSubject<LoadableContent<[Match]>, Never>.init(.loading)
     private var cancellables: Set<AnyCancellable> = []
     private var preLiveMatchesCancellable: AnyCancellable?
@@ -39,8 +94,9 @@ class InPlayEventsViewModel: ObservableObject {
         return self.eventsStateSubject.eraseToAnyPublisher()
     }
 
-    init(sport: Sport? = nil) {
-        self.sport = sport ?? Env.sportsStore.football
+    init(sport: Sport, servicesProvider: ServicesProvider.Client) {
+        self.sport = sport
+        self.servicesProvider = servicesProvider
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
@@ -128,37 +184,38 @@ class InPlayEventsViewModel: ObservableObject {
     func getCurrentSelectedMarketGroupId() -> String? {
         return marketGroupSelectorViewModel.currentSelectedMarketGroupId
     }
+    
+    func getMatch(withId matchId: String) -> Match? {
+        return allMatches.first { $0.id == matchId }
+    }
 
     // MARK: - Private Methods
     private func loadEvents() {
-        print("📡 InPlayEventsViewModel: loadEvents() called for sport: \(sport.name)")
         isLoading = true
         eventsStateSubject.send(.loading)
 
         // Cancel any existing subscription
         if preLiveMatchesCancellable != nil {
-            print("🛑 InPlayEventsViewModel: Cancelling existing subscription")
             preLiveMatchesCancellable?.cancel()
             preLiveMatchesCancellable = nil
         }
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: sport)
-        print("🔌 InPlayEventsViewModel: Creating new subscription for sport type: \(sportType)")
         
-        preLiveMatchesCancellable = Env.servicesProvider.subscribeLiveMatches(forSportType: sportType)
+        preLiveMatchesCancellable = servicesProvider.subscribeLiveMatches(forSportType: sportType)
         .receive(on: DispatchQueue.main)
         .sink { completion in
-            print("📡 InPlayEventsViewModel: subscribePreLiveMatches completion: \(completion)")
+            print("InPlayEventsViewModel: subscribePreLiveMatches completion: \(completion)")
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
             guard let self = self else { return }
             
             switch subscribableContent {
             case .connected(let subscription):
-                print("✅ InPlayEventsViewModel: Connected to live matches subscription - ID: \(subscription.id), Sport: \(self.sport.name)")
+                print("InPlayEventsViewModel: 🟢 Connected to live matches subscription - ID: \(subscription.id), Sport: \(self.sport.name)")
                 break
 
             case .contentUpdate(let content):
-                print("📦 InPlayEventsViewModel: Received content update with \(content.count) event groups for sport: \(self.sport.name)")
+                print("InPlayEventsViewModel: 📡 Received content update with \(content.count) event groups for sport: \(self.sport.name)")
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: content)
                 let mainMarkets = ServiceProviderModelMapper.mainMarkets(fromEventsGroups: content)
                 
@@ -170,14 +227,14 @@ class InPlayEventsViewModel: ObservableObject {
                 self.processMatches(matches, mainMarkets: mainMarkets)
 
             case .disconnected:
-                print("🔌 InPlayEventsViewModel: Disconnected from live matches subscription for sport: \(self.sport.name)")
+                print("InPlayEventsViewModel: 🔴 Disconnected from live matches subscription for sport: \(self.sport.name)")
                 break
             }
         }
     }
 
     private func processMatches(_ matches: [Match], mainMarkets: [MainMarket]? = nil) {
-        print("[NextUpEvents] processMatches called with \(matches.count) matches")
+        print("[InPlayEventsViewModel] processMatches called with \(matches.count) matches")
         isLoading = false
         allMatches = matches
         self.mainMarkets = mainMarkets
@@ -197,16 +254,16 @@ class InPlayEventsViewModel: ObservableObject {
         // Create ViewModels for new market groups
         for marketGroup in marketGroups {
             if marketGroupCardsViewModels[marketGroup.id] == nil {
-                print("[NextUpEvents] Creating new MarketGroupCardsViewModel for market type: \(marketGroup.id)")
+                print("[InPlayEventsViewModel] Creating new MarketGroupCardsViewModel for market type: \(marketGroup.id)")
                 let marketGroupCardsViewModel = MarketGroupCardsViewModel(marketTypeId: marketGroup.id)
 
                 // Update with current matches
                 marketGroupCardsViewModel.updateMatches(allMatches)
 
                 marketGroupCardsViewModels[marketGroup.id] = marketGroupCardsViewModel
-                print("[NextUpEvents] Created and initialized MarketGroupCardsViewModel for market type: \(marketGroup.id)")
+                print("[InPlayEventsViewModel] Created and initialized MarketGroupCardsViewModel for market type: \(marketGroup.id)")
             } else {
-                print("[NextUpEvents] MarketGroupCardsViewModel already exists for market type: \(marketGroup.id)")
+                print("[InPlayEventsViewModel] MarketGroupCardsViewModel already exists for market type: \(marketGroup.id)")
             }
         }
 
@@ -215,7 +272,7 @@ class InPlayEventsViewModel: ObservableObject {
         let viewModelsToRemove = marketGroupCardsViewModels.keys.filter { !currentMarketGroupIds.contains($0) }
         for idToRemove in viewModelsToRemove {
             marketGroupCardsViewModels.removeValue(forKey: idToRemove)
-            print("[NextUpEvents] Removed MarketGroupCardsViewModel for market type: \(idToRemove)")
+            print("[InPlayEventsViewModel] Removed MarketGroupCardsViewModel for market type: \(idToRemove)")
         }
         self.marketGroups = marketGroups
     }

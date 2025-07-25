@@ -13,7 +13,9 @@ class ThemeService {
     // Current theme publisher
     private var themeSubject = CurrentValueSubject<Theme, Never>(Theme.defaultTheme)
     var themePublisher: AnyPublisher<Theme, Never> {
-        return self.themeSubject.eraseToAnyPublisher()
+        return self.themeSubject
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     var currentTheme: Theme {

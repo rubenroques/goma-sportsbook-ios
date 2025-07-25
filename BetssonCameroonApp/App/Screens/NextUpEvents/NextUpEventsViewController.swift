@@ -166,9 +166,9 @@ class NextUpEventsViewController: UIViewController {
         let filterPillView = PillItemView(viewModel: filterPillViewModel)
         filterPillView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Handle filter button tap
+        // Handle filter button tap - delegate to ViewModel (MVVM-C pattern)
         filterPillView.onPillSelected = { [weak self] in
-            self?.presentFilters()
+            self?.viewModel.onFiltersRequested()
         }
         
         // Add filter pill to container with padding
@@ -197,18 +197,18 @@ class NextUpEventsViewController: UIViewController {
             filterPillView.heightAnchor.constraint(equalToConstant: 40)
         ])
         
-        // Handle pill selection events
+        // Handle pill selection events - delegate to ViewModel (MVVM-C pattern)
         pillSelectorBarView.onPillSelected = { [weak self] pillId in
             print("🎯 NextUpEventsViewController: Pill selected - \(pillId)")
             if pillId == "sport_selector" {
-                self?.presentSportsSelector()
+                self?.viewModel.onSportsSelectionRequested()
             }
             // Other pills can be handled here as needed
         }
         
-        // Handle sports selector modal presentation
+        // Handle sports selector modal presentation - delegate to ViewModel (MVVM-C pattern)
         viewModel.pillSelectorBarViewModel.onShowSportsSelector = { [weak self] in
-            // self?.presentSportsSelector()
+            self?.viewModel.onSportsSelectionRequested()
         }
     }
 
@@ -255,7 +255,7 @@ class NextUpEventsViewController: UIViewController {
 
     private func setupBindings() {
         // Bind to market groups changes from ViewModel
-        viewModel.$marketGroups
+        viewModel.marketGroupsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] marketGroups in
                 self?.updateMarketGroupControllers(marketGroups: marketGroups)
@@ -263,7 +263,7 @@ class NextUpEventsViewController: UIViewController {
             .store(in: &cancellables)
 
         // Bind to selection changes from ViewModel
-        viewModel.$selectedMarketGroupId
+        viewModel.selectedMarketGroupIdPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] selectedId in
                 guard let selectedId = selectedId else { return }
@@ -272,7 +272,7 @@ class NextUpEventsViewController: UIViewController {
             .store(in: &cancellables)
 
         // Bind to loading state (optional, for showing loading indicators)
-        viewModel.$isLoading
+        viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 self?.setLoadingIndicatorVisible(isLoading)
@@ -339,9 +339,9 @@ class NextUpEventsViewController: UIViewController {
                 controller.scrollDelegate = self
                 controller.topContentInset = headerHeight
                 
-                // Add card tap callback for match detail navigation
+                // Add card tap callback for match detail navigation - delegate to ViewModel (MVVM-C pattern)
                 controller.onCardTapped = { [weak self] selectedMatch in
-                    self?.handleCardTapped(selectedMatch)
+                    self?.viewModel.onMatchSelected(selectedMatch)
                 }
                 
                 marketGroupControllers[marketGroup.id] = controller
@@ -482,42 +482,16 @@ class NextUpEventsViewController: UIViewController {
         )
     }
     
-    // MARK: - Sports Selector Modal
-    private func presentSportsSelector() {
-        // Create fresh SportSelectorViewModel on-demand
-        let sportSelectorViewModel = PreLiveSportSelectorViewModel()
-        let sportsViewController = SportTypeSelectorViewController(viewModel: sportSelectorViewModel)
-        
-        // Use SportSelectorViewModel callback to get full Sport object
-        sportSelectorViewModel.onSportSelected = { [weak self] sport in
-            self?.viewModel.updateSportType(sport)
-            sportsViewController.dismiss()
-        }
-        
-        // Handle cancellation - presenter manages navigation
-        sportsViewController.onCancel = {
-            sportsViewController.dismiss()
-        }
-        
-        sportsViewController.presentModally(from: self)
-    }
-    
-    // MARK: - Card Tap Handling
-    private func handleCardTapped(_ selectedMatch: Match) {
-        // Create MatchDetailsTextualViewModel from the selected match
-        let matchDetailsViewModel = MatchDetailsTextualViewModel(match: selectedMatch)
-        
-        // Create and present the MatchDetailsTextualViewController
-        let matchDetailsViewController = MatchDetailsTextualViewController(viewModel: matchDetailsViewModel)
-        
-        // Present the controller using navigation stack
-        navigationController?.pushViewController(matchDetailsViewController, animated: true)
-    }
-    
-    // MARK: - Filter Modal
-    private func presentFilters() {
-        self.openCombinedFilters()
-    }
+    // MARK: - Navigation Methods Removed (MVVM-C Pattern)
+    // All navigation now handled by coordinators through ViewModel closures:
+    // - presentSportsSelector() -> viewModel.onSportsSelectionRequested?()  
+    // - presentFilters() -> viewModel.onFiltersRequested?()
+    // - onMatchSelected() -> viewModel.onMatchSelected?(match)
+    //
+    // This follows proper MVVM-C separation:
+    // - ViewController: Pure UI presentation
+    // - ViewModel: Business logic + navigation signals (closures)
+    // - Coordinator: Navigation implementation
 }
 
 // MARK: - UIPageViewControllerDataSource

@@ -63,6 +63,7 @@ class UserSessionStore {
     }
     
     var loginFlowSuccess: CurrentValueSubject<Bool, Never> = .init(false)
+    
     var shouldAuthenticateUser = true
     var shouldRecordUserSession = true
     

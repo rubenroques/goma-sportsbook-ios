@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         //
         self.window = UIWindow()
 
-        self.bootstrap = Bootstrap(router: Router(window: self.window!))
+        self.bootstrap = Bootstrap(window: self.window!)
         self.bootstrap.boot()
 
         return true
@@ -295,24 +295,28 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     private func openRoute(_ route: Route, onApplication application: UIApplication) {
 
         if application.applicationState == .active {
-            self.bootstrap.router.openedNotificationRouteWhileActive(route)
+            // This should be sent to AppCoordinator
+            // self.bootstrap.router.openedNotificationRouteWhileActive(route)
         }
         else if application.applicationState == .inactive {
-            self.bootstrap.router.configureStartingRoute(route)
+            // This should be sent to AppCoordinator
+            // self.bootstrap.router.configureStartingRoute(route)
         }
         else if application.applicationState == .background {
-            self.bootstrap.router.configureStartingRoute(route)
+            // This should be sent to AppCoordinator
+            // self.bootstrap.router.configureStartingRoute(route)
         }
 
     }
 
     private func openSharedRoute(_ route: Route, onApplication application: UIApplication) {
-
-        self.bootstrap.router.openPushNotificationRoute(route)
+        // // This should be sent to AppCoordinator
+        // self.bootstrap.router.openPushNotificationRoute(route)
     }
 
     private func openPushNotificationRoute(_ route: Route) {
-        self.bootstrap.router.openPushNotificationRoute(route)
+        // This should be sent to AppCoordinator
+        // self.bootstrap.router.openPushNotificationRoute(route)
     }
 
 }

@@ -4,7 +4,7 @@
 
 import UIKit
 
-struct ThemeColors: Codable {
+struct ThemeColors: Codable, Hashable {
 
     // Highlights colors
     let highlightPrimaryContrast: String
