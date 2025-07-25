@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rg:*)",
+      "Bash(awk:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(find * | xargs grep * | grep * | head *)",
+      "Bash(xcodebuild:*)",
+      "Bash(swift package:*)",
+
+      "mcp__Brave_Search__brave_web_search",
+      "mcp__Xcodebuildmcp__discover_projs",
+      "mcp__Xcodebuildmcp__list_schems_proj",
+      "mcp__Xcodebuildmcp__list_sims",
+      "mcp__Xcodebuildmcp__build_run_ios_sim_id_proj",
+      "mcp__Xcodebuildmcp__screenshot",
+      "mcp__Xcodebuildmcp__open_sim",
+      "mcp__Xcodebuildmcp__launch_app_sim",
+      "mcp__Xcodebuildmcp__start_sim_log_cap",
+      "mcp__Xcodebuildmcp__stop_sim_log_cap",
+      "mcp__Xcodebuildmcp__build_run_ios_sim_name_ws",
+      "mcp__Xcodebuildmcp__swipe",
+      "mcp__Xcodebuildmcp__tap",
+      "mcp__Xcodebuildmcp__key_press",
+      "mcp__Xcodebuildmcp__build_run_ios_sim_name_proj",
+      "mcp__Xcodebuildmcp__list_schems_ws",
+      "mcp__Xcodebuildmcp__boot_sim",
+      "mcp__Framelink_Figma_MCP__get_figma_data",
+      "mcp__Xcodebuildmcp__build_ios_sim_name_ws",
+      
+      "WebFetch(domain:docs.anthropic.com)",
+
+      "mcp__figma-dev-mode-mcp-server__get_image",
+      "mcp__figma-dev-mode-mcp-server__get_code",
+      "mcp__figma-dev-mode-mcp-server__get_variable_defs",
+
+      "mcp__github__get_pull_request",
+      "mcp__github__get_pull_request_files",
+      "mcp__github__get_pull_request_diff",
+      "mcp__github__search_issues",
+      "mcp__github__get_file_contents"
+    ],
+    "deny": []
+  }
+}
