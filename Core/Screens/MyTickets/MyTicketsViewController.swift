@@ -76,7 +76,7 @@ class MyTicketsViewController: UIViewController {
 
         self.ticketsTableView.delegate = self.viewModel
         self.ticketsTableView.dataSource = self.viewModel
-        self.ticketsTableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
+        self.ticketsTableView.register(MyTicketTableViewCell.self, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
         self.ticketsTableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.ticketsTableView.separatorStyle = .none
 

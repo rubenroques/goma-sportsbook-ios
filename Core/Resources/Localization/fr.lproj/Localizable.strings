@@ -2114,3 +2114,5 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "spin_wheel_dialog_message" = "Ton pari est éligible au Coup de Boost ! Si tu cliques sur Continuer, tu ne pourras plus tourner la roue du Coup de boost de la journée.";
 "spin_wheel_tooltip_info_link_url" = "https://betsson.fr";
 "coup_de_boost" = "Coup de Boost";
+
+"pari_bonus" = "Mon pari, ton bonus";

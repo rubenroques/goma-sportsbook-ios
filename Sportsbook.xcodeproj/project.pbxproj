@@ -612,7 +612,7 @@
 		450B7ACF28F58574009229E3 /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		450B7AD028F58574009229E3 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		450B7AD128F58574009229E3 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		450B7AD228F58574009229E3 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		450B7AD228F58574009229E3 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -1529,7 +1529,7 @@
 		457CBBFA282D27D000ED0F00 /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		457CBBFB282D27D000ED0F00 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		457CBBFC282D27D000ED0F00 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		457CBBFD282D27D000ED0F00 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		457CBBFD282D27D000ED0F00 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -2060,7 +2060,7 @@
 		457CBEA2282D2CD100ED0F00 /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		457CBEA3282D2CD100ED0F00 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		457CBEA4282D2CD100ED0F00 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		457CBEA5282D2CD100ED0F00 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		457CBEA5282D2CD100ED0F00 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		457CBEA6282D2CD100ED0F00 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -2592,7 +2592,7 @@
 		4589C978282024E400243547 /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		4589C979282024E400243547 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		4589C97A282024E400243547 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		4589C97B282024E400243547 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		4589C97B282024E400243547 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		4589C97C282024E400243547 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -3363,7 +3363,7 @@
 		45A332F8298976BA008181E9 /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		45A332F9298976BA008181E9 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		45A332FA298976BA008181E9 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		45A332FB298976BA008181E9 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		45A332FB298976BA008181E9 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		45A332FC298976BA008181E9 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		45A33300298976BA008181E9 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		45A33301298976BA008181E9 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -3902,7 +3902,7 @@
 		45A6BDD128246A7500D9B416 /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		45A6BDD228246A7500D9B416 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		45A6BDD328246A7500D9B416 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		45A6BDD428246A7500D9B416 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		45A6BDD428246A7500D9B416 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		45A6BDD528246A7500D9B416 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		45A6BDDA28246A7500D9B416 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -5075,7 +5075,7 @@
 		45F6BDD62AB3732C00C81DE1 /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		45F6BDD82AB3732C00C81DE1 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		45F6BDDB2AB3732C00C81DE1 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		45F6BDDD2AB3732C00C81DE1 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		45F6BDDE2AB3732C00C81DE1 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
 		45F6BDE22AB3732C00C81DE1 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
@@ -6891,7 +6891,7 @@
 		A9C3432728F9A74A0055360B /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		A9C3432828F9A74A0055360B /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		A9C3432928F9A74A0055360B /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		A9C3432A28F9A74A0055360B /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		A9C3432A28F9A74A0055360B /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		A9C3432F28F9A74A0055360B /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		A9C3433028F9A74A0055360B /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -8024,7 +8024,7 @@
 		CE12A4612D31347E0022BDF7 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		CE12A4622D31347E0022BDF7 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		CE12A4632D31347E0022BDF7 /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
-		CE12A4642D31347E0022BDF7 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		CE12A4642D31347E0022BDF7 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		CE12A4652D31347E0022BDF7 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		CE12A4662D31347E0022BDF7 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		CE12A4672D31347E0022BDF7 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */; };
@@ -9115,7 +9115,7 @@
 		CEA569322D5A58D800696793 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
 		CEA569332D5A58D800696793 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		CEA569342D5A58D800696793 /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
-		CEA569352D5A58D800696793 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		CEA569352D5A58D800696793 /* MyTicketTableViewCell_legacy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */; };
 		CEA569362D5A58D800696793 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		CEA569372D5A58D800696793 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		CEA5693A2D5A58D800696793 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -9229,6 +9229,76 @@
 		CEC57BD82D53C74900EA0D60 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = CEC57BD62D53C74900EA0D60 /* zendesk_support.html */; };
 		CEE52B322DB9204B00D89755 /* AdjustSdk in Frameworks */ = {isa = PBXBuildFile; productRef = CEE52B312DB9204B00D89755 /* AdjustSdk */; };
 		CEE52B342DB9204B00D89755 /* AdjustWebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = CEE52B332DB9204B00D89755 /* AdjustWebBridge */; };
+		CEE7E4072E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E4082E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E4092E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E40A2E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E40B2E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E40C2E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E40D2E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E40E2E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E40F2E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E4102E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E4112E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E4122E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E4132E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E4142E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E4152E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E4162E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E4172E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E4182E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E4192E344F66003AB610 /* MyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */; };
+		CEE7E41A2E344F66003AB610 /* MyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */; };
+		CEE7E41D2E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E41E2E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E41F2E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E4202E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E4212E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E4222E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E4232E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E4242E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E4252E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E4262E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */; };
+		CEE7E4282E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E4292E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E42A2E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E42B2E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E42C2E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E42D2E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E42E2E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E42F2E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E4302E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E4312E345698003AB610 /* MockDataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4272E345698003AB610 /* MockDataFactory.swift */; };
+		CEE7E4332E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E4342E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E4352E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E4362E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E4372E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E4382E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E4392E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E43A2E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E43B2E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E43C2E345856003AB610 /* ShareTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4322E345856003AB610 /* ShareTestViewController.swift */; };
+		CEE7E44A2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E44B2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E44C2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E44D2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E44E2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E44F2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E4502E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E4512E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E4522E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E4532E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E4542E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E4552E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E4562E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E4572E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E4582E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E4592E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E45A2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E45B2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E45C2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
+		CEE7E45D2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
 		F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
@@ -9564,7 +9634,7 @@
 		458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyTicketsViewController.xib; sourceTree = "<group>"; };
 		458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketsViewModel.swift; sourceTree = "<group>"; };
 		458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketTableViewCell.swift; sourceTree = "<group>"; };
-		458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyTicketTableViewCell.xib; sourceTree = "<group>"; };
+		458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyTicketTableViewCell_legacy.xib; sourceTree = "<group>"; };
 		458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTicketBetLineView.swift; sourceTree = "<group>"; };
 		458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyTicketBetLineView.xib; sourceTree = "<group>"; };
 		458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveEventsViewModel.swift; sourceTree = "<group>"; };
@@ -10287,6 +10357,13 @@
 		CEA569BA2D5A59C500696793 /* TargetVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetVariables.swift; sourceTree = "<group>"; };
 		CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleAspectFitImageView.swift; sourceTree = "<group>"; };
 		CEC57BD62D53C74900EA0D60 /* zendesk_support.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
+		CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketCardView.swift; sourceTree = "<group>"; };
+		CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyTicketCardView.xib; sourceTree = "<group>"; };
+		CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandedTicketShareView.swift; sourceTree = "<group>"; };
+		CEE7E4272E345698003AB610 /* MockDataFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataFactory.swift; sourceTree = "<group>"; };
+		CEE7E4322E345856003AB610 /* ShareTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTestViewController.swift; sourceTree = "<group>"; };
+		CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMyTicketCardView.swift; sourceTree = "<group>"; };
+		CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SimpleMyTicketCardView.xib; sourceTree = "<group>"; };
 		F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
@@ -11329,6 +11406,7 @@
 		455A0D2226BDE7B900EC572D /* DebugHelper */ = {
 			isa = PBXGroup;
 			children = (
+				CEE7E4272E345698003AB610 /* MockDataFactory.swift */,
 				4593DCE62CBDCF6100C52C42 /* TestControllers */,
 				457BD61027BADEB100E5612E /* TestsViewController.swift */,
 				457BD61127BADEB200E5612E /* TestsViewController.xib */,
@@ -11338,6 +11416,7 @@
 				456B342B26C18C75009D7D27 /* LogViewerViewController.swift */,
 				456B342C26C18C75009D7D27 /* LogViewerViewController.xib */,
 				45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */,
+				CEE7E4322E345856003AB610 /* ShareTestViewController.swift */,
 			);
 			path = DebugHelper;
 			sourceTree = "<group>";
@@ -11865,6 +11944,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CEE7E41C2E3453FF003AB610 /* BrandedTicketShareView */,
 				CE0C6C912D56327E00EAD26B /* SmallToolTipView */,
 				653A37902D4BDBB500B89CDF /* Questions */,
 				CE16F27C2D417E9A000BEF9F /* ChipsTypeView */,
@@ -11971,8 +12051,12 @@
 		458BAC722770AC32006C4BC7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CEE7E4052E344F66003AB610 /* MyTicketCardView.swift */,
+				CEE7E4062E344F66003AB610 /* MyTicketCardView.xib */,
+				CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */,
+				CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */,
 				458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */,
-				458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */,
+				458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell_legacy.xib */,
 				458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */,
 				458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */,
 			);
@@ -14332,6 +14416,14 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		CEE7E41C2E3453FF003AB610 /* BrandedTicketShareView */ = {
+			isa = PBXGroup;
+			children = (
+				CEE7E41B2E3453FF003AB610 /* BrandedTicketShareView.swift */,
+			);
+			path = BrandedTicketShareView;
+			sourceTree = "<group>";
+		};
 		F410E62727BC4F78005C1964 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -15093,7 +15185,7 @@
 				450B7AD028F58574009229E3 /* WelcomeViewController.xib in Resources */,
 				450B7AD128F58574009229E3 /* UploadView.xib in Resources */,
 				6531BB902C0A295B002C696D /* replay_coin.json in Resources */,
-				450B7AD228F58574009229E3 /* MyTicketTableViewCell.xib in Resources */,
+				450B7AD228F58574009229E3 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */,
 				450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */,
 				CE0C6CE02D56377800EAD26B /* avatar5-dark.json in Resources */,
@@ -15122,6 +15214,7 @@
 				450B7AE528F58574009229E3 /* CountrySelectorTableViewCell.xib in Resources */,
 				450B7AE628F58574009229E3 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				45E46C182A08FEB900BB9B85 /* sports-loading.json in Resources */,
+				CEE7E4512E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				450B7AE728F58574009229E3 /* EmailVerificationTableViewCell.xib in Resources */,
 				450B7AE828F58574009229E3 /* DepositViewController.xib in Resources */,
 				450B7AEA28F58574009229E3 /* HomeFilterViewController.xib in Resources */,
@@ -15150,6 +15243,7 @@
 				45290A242CB6AAFC00D69021 /* Roboto-LightItalic.ttf in Resources */,
 				45290A252CB6AAFC00D69021 /* Roboto-Regular.ttf in Resources */,
 				450B7AF528F58574009229E3 /* PersonalInfoViewController.xib in Resources */,
+				CEE7E4142E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				450B7AF628F58574009229E3 /* FullRegisterAddressCountryViewController.xib in Resources */,
 				450B7AF728F58574009229E3 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				450B7AF828F58574009229E3 /* HomeAwayCardStatsView.xib in Resources */,
@@ -15259,7 +15353,7 @@
 				6531BB942C0A295B002C696D /* replay_coin.json in Resources */,
 				457CBBFB282D27D000ED0F00 /* WelcomeViewController.xib in Resources */,
 				457CBBFC282D27D000ED0F00 /* UploadView.xib in Resources */,
-				457CBBFD282D27D000ED0F00 /* MyTicketTableViewCell.xib in Resources */,
+				457CBBFD282D27D000ED0F00 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
 				457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */,
@@ -15267,6 +15361,7 @@
 				457CBC05282D27D000ED0F00 /* SportSelectionViewController.xib in Resources */,
 				457CBC06282D27D000ED0F00 /* FilterRowView.xib in Resources */,
 				4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
+				CEE7E4152E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				457CBC07282D27D000ED0F00 /* ProfileLimitsManagementViewController.xib in Resources */,
 				457CBC08282D27D000ED0F00 /* WithdrawWebViewController.xib in Resources */,
 				457CBC09282D27D000ED0F00 /* DocumentPickerView.xib in Resources */,
@@ -15280,6 +15375,7 @@
 				457CBC12282D27D000ED0F00 /* DepositViewController.xib in Resources */,
 				457CBC14282D27D000ED0F00 /* HomeFilterViewController.xib in Resources */,
 				457CBC15282D27D000ED0F00 /* FilterSliderInfoView.xib in Resources */,
+				CEE7E45B2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				457CBC17282D27D000ED0F00 /* EmailVerificationViewController.xib in Resources */,
 				457CBC18282D27D000ED0F00 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				457CBC19282D27D000ED0F00 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -15400,7 +15496,7 @@
 				457CBEA3282D2CD100ED0F00 /* WelcomeViewController.xib in Resources */,
 				6531BB952C0A295B002C696D /* replay_coin.json in Resources */,
 				457CBEA4282D2CD100ED0F00 /* UploadView.xib in Resources */,
-				457CBEA5282D2CD100ED0F00 /* MyTicketTableViewCell.xib in Resources */,
+				457CBEA5282D2CD100ED0F00 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				457CBEA6282D2CD100ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
 				457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */,
@@ -15409,6 +15505,7 @@
 				457CBEAE282D2CD100ED0F00 /* FilterRowView.xib in Resources */,
 				457CBEAF282D2CD100ED0F00 /* ProfileLimitsManagementViewController.xib in Resources */,
 				457CBEB0282D2CD100ED0F00 /* WithdrawWebViewController.xib in Resources */,
+				CEE7E4192E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				457CBEB1282D2CD100ED0F00 /* DocumentPickerView.xib in Resources */,
 				457CBEB2282D2CD100ED0F00 /* MaintenanceViewController.xib in Resources */,
 				457CBEB5282D2CD100ED0F00 /* SimpleRegisterEmailSentViewController.xib in Resources */,
@@ -15422,6 +15519,7 @@
 				457CBEBD282D2CD100ED0F00 /* FilterSliderInfoView.xib in Resources */,
 				457CBEBF282D2CD100ED0F00 /* EmailVerificationViewController.xib in Resources */,
 				457CBEC0282D2CD100ED0F00 /* MultipleBettingTicketTableViewCell.xib in Resources */,
+				CEE7E45D2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				457CBEC1282D2CD100ED0F00 /* OddDoubleCollectionViewCell.xib in Resources */,
 				457CBEC2282D2CD100ED0F00 /* SearchTitleSectionHeaderView.xib in Resources */,
 				457CBEC3282D2CD100ED0F00 /* MarketDetailCollectionViewCell.xib in Resources */,
@@ -15542,7 +15640,7 @@
 				4589C979282024E400243547 /* WelcomeViewController.xib in Resources */,
 				6531BB912C0A295B002C696D /* replay_coin.json in Resources */,
 				4589C97A282024E400243547 /* UploadView.xib in Resources */,
-				4589C97B282024E400243547 /* MyTicketTableViewCell.xib in Resources */,
+				4589C97B282024E400243547 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				4589C97C282024E400243547 /* HeadToHeadCardStatsView.xib in Resources */,
 				4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */,
 				4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */,
@@ -15551,6 +15649,7 @@
 				4589C984282024E400243547 /* FilterRowView.xib in Resources */,
 				4589C986282024E400243547 /* ProfileLimitsManagementViewController.xib in Resources */,
 				4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
+				CEE7E4172E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				4589C987282024E400243547 /* WithdrawWebViewController.xib in Resources */,
 				4589C988282024E400243547 /* DocumentPickerView.xib in Resources */,
 				4589C989282024E400243547 /* MaintenanceViewController.xib in Resources */,
@@ -15564,6 +15663,7 @@
 				4589C991282024E400243547 /* DepositViewController.xib in Resources */,
 				4589C993282024E400243547 /* HomeFilterViewController.xib in Resources */,
 				4589C994282024E400243547 /* FilterSliderInfoView.xib in Resources */,
+				CEE7E4572E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				4589C997282024E400243547 /* EmailVerificationViewController.xib in Resources */,
 				4589C998282024E400243547 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				4589C999282024E400243547 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -15696,7 +15796,7 @@
 				45A332F8298976BA008181E9 /* MatchFiltersViewController.xib in Resources */,
 				45A332F9298976BA008181E9 /* WelcomeViewController.xib in Resources */,
 				45A332FA298976BA008181E9 /* UploadView.xib in Resources */,
-				45A332FB298976BA008181E9 /* MyTicketTableViewCell.xib in Resources */,
+				45A332FB298976BA008181E9 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				45A332FC298976BA008181E9 /* HeadToHeadCardStatsView.xib in Resources */,
 				A92BDCF82A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				45A33300298976BA008181E9 /* LoadingMoreTableViewCell.xib in Resources */,
@@ -15710,6 +15810,7 @@
 				45A33307298976BA008181E9 /* WithdrawWebViewController.xib in Resources */,
 				45A33308298976BA008181E9 /* DocumentPickerView.xib in Resources */,
 				455897F12A9CE5C300E39598 /* progress_end_animation.json in Resources */,
+				CEE7E44B2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				45A33309298976BA008181E9 /* MaintenanceViewController.xib in Resources */,
 				45A3330B298976BA008181E9 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				45A3330D298976BA008181E9 /* CountrySelectorTableViewCell.xib in Resources */,
@@ -15733,6 +15834,7 @@
 				45A33320298976BA008181E9 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				CE315EDD2D00B3FA0080D900 /* replay_sucess.json in Resources */,
 				45A33321298976BA008181E9 /* HomeAwayCardStatsView.xib in Resources */,
+				CEE7E4112E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				CE0C6CB02D56376B00EAD26B /* avatar3-light.json in Resources */,
 				CE0C6CB12D56376B00EAD26B /* avatar2-dark.json in Resources */,
 				CE0C6CB22D56376B00EAD26B /* avatar5-light.json in Resources */,
@@ -15841,7 +15943,7 @@
 				45A6BDD228246A7500D9B416 /* WelcomeViewController.xib in Resources */,
 				45A6BDD328246A7500D9B416 /* UploadView.xib in Resources */,
 				6531BB932C0A295B002C696D /* replay_coin.json in Resources */,
-				45A6BDD428246A7500D9B416 /* MyTicketTableViewCell.xib in Resources */,
+				45A6BDD428246A7500D9B416 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				45A6BDD528246A7500D9B416 /* HeadToHeadCardStatsView.xib in Resources */,
 				45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */,
 				45A6BE3528246AFA00D9B416 /* Colors.xcassets in Resources */,
@@ -15887,6 +15989,7 @@
 				45A6BDF628246A7500D9B416 /* ForbiddenLocationViewController.xib in Resources */,
 				45290A3E2CB6AAFC00D69021 /* Roboto-Bold.ttf in Resources */,
 				45290A3F2CB6AAFC00D69021 /* Roboto-Black.ttf in Resources */,
+				CEE7E40B2E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				45290A402CB6AAFC00D69021 /* Roboto-MediumItalic.ttf in Resources */,
 				45290A412CB6AAFC00D69021 /* Roboto-Light.ttf in Resources */,
 				45290A422CB6AAFC00D69021 /* Roboto-Thin.ttf in Resources */,
@@ -15894,6 +15997,7 @@
 				45290A442CB6AAFC00D69021 /* Roboto-BoldItalic.ttf in Resources */,
 				45290A452CB6AAFC00D69021 /* Roboto-BlackItalic.ttf in Resources */,
 				45290A462CB6AAFC00D69021 /* Roboto-Italic.ttf in Resources */,
+				CEE7E4532E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				45290A472CB6AAFC00D69021 /* Roboto-Medium.ttf in Resources */,
 				45290A482CB6AAFC00D69021 /* Roboto-LightItalic.ttf in Resources */,
 				45290A492CB6AAFC00D69021 /* Roboto-Regular.ttf in Resources */,
@@ -15998,7 +16102,7 @@
 				45F6BDD82AB3732C00C81DE1 /* WelcomeViewController.xib in Resources */,
 				45F6BDDB2AB3732C00C81DE1 /* UploadView.xib in Resources */,
 				6531BB8F2C0A295B002C696D /* replay_coin.json in Resources */,
-				45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell.xib in Resources */,
+				45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				45F6BDDD2AB3732C00C81DE1 /* HeadToHeadCardStatsView.xib in Resources */,
 				45F6BDDE2AB3732C00C81DE1 /* success_thumbs_up.json in Resources */,
 				45F6BDE22AB3732C00C81DE1 /* LoadingMoreTableViewCell.xib in Resources */,
@@ -16024,6 +16128,7 @@
 				45F6BDF92AB3732C00C81DE1 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45F6BDFA2AB3732C00C81DE1 /* OddDoubleCollectionViewCell.xib in Resources */,
 				45F6BDFB2AB3732C00C81DE1 /* SearchTitleSectionHeaderView.xib in Resources */,
+				CEE7E44D2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				45F6BDFC2AB3732C00C81DE1 /* MarketDetailCollectionViewCell.xib in Resources */,
 				45F6BDFD2AB3732C00C81DE1 /* Gradients.xcassets in Resources */,
 				45F6BDFE2AB3732C00C81DE1 /* SearchViewController.xib in Resources */,
@@ -16047,6 +16152,7 @@
 				45F6BE052AB3732C00C81DE1 /* HomeAwayCardStatsView.xib in Resources */,
 				455420242B0E218300B22EBD /* field_widget_dark.html in Resources */,
 				CE315EDA2D00B3FA0080D900 /* replay_sucess.json in Resources */,
+				CEE7E4102E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				CE0C6CBC2D56376B00EAD26B /* avatar3-light.json in Resources */,
 				CE0C6CBD2D56376B00EAD26B /* avatar2-dark.json in Resources */,
 				CE0C6CBE2D56376B00EAD26B /* avatar5-light.json in Resources */,
@@ -16162,7 +16268,7 @@
 				A9C3432828F9A74A0055360B /* WelcomeViewController.xib in Resources */,
 				A9C3432928F9A74A0055360B /* UploadView.xib in Resources */,
 				6531BB922C0A295B002C696D /* replay_coin.json in Resources */,
-				A9C3432A28F9A74A0055360B /* MyTicketTableViewCell.xib in Resources */,
+				A9C3432A28F9A74A0055360B /* MyTicketTableViewCell_legacy.xib in Resources */,
 				A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */,
 				A92BDCFB2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				A9C3432F28F9A74A0055360B /* LoadingMoreTableViewCell.xib in Resources */,
@@ -16172,6 +16278,7 @@
 				A9C3433328F9A74A0055360B /* FilterRowView.xib in Resources */,
 				A9C3433428F9A74A0055360B /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9C3433528F9A74A0055360B /* CilinderSceneKitScene.scn in Resources */,
+				CEE7E4092E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				A9C3433628F9A74A0055360B /* WithdrawWebViewController.xib in Resources */,
 				A9C3433728F9A74A0055360B /* DocumentPickerView.xib in Resources */,
 				455897F42A9CE5C300E39598 /* progress_end_animation.json in Resources */,
@@ -16185,6 +16292,7 @@
 				A9C3434228F9A74A0055360B /* HomeFilterViewController.xib in Resources */,
 				CE544FCC2D07029900AA24CA /* first_deposit_8.json in Resources */,
 				A9C3434328F9A74A0055360B /* FilterSliderInfoView.xib in Resources */,
+				CEE7E4592E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				A9C3434528F9A74A0055360B /* EmailVerificationViewController.xib in Resources */,
 				A9C3434628F9A74A0055360B /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				A9C3434728F9A74A0055360B /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -16305,7 +16413,7 @@
 				CE12A4612D31347E0022BDF7 /* WelcomeViewController.xib in Resources */,
 				CE12A4622D31347E0022BDF7 /* UploadView.xib in Resources */,
 				CE12A4632D31347E0022BDF7 /* replay_coin.json in Resources */,
-				CE12A4642D31347E0022BDF7 /* MyTicketTableViewCell.xib in Resources */,
+				CE12A4642D31347E0022BDF7 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				CE12A4652D31347E0022BDF7 /* HeadToHeadCardStatsView.xib in Resources */,
 				CE12A4662D31347E0022BDF7 /* LoadingMoreTableViewCell.xib in Resources */,
 				CE0C6CD42D56377800EAD26B /* avatar5-dark.json in Resources */,
@@ -16334,6 +16442,7 @@
 				CE12A4722D31347E0022BDF7 /* CountrySelectorTableViewCell.xib in Resources */,
 				CE12A4732D31347E0022BDF7 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				CE12A4742D31347E0022BDF7 /* sports-loading.json in Resources */,
+				CEE7E44F2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				CE12A4752D31347E0022BDF7 /* EmailVerificationTableViewCell.xib in Resources */,
 				CE12A4762D31347E0022BDF7 /* DepositViewController.xib in Resources */,
 				CE12A4772D31347E0022BDF7 /* HomeFilterViewController.xib in Resources */,
@@ -16362,6 +16471,7 @@
 				CE12A48E2D31347E0022BDF7 /* Roboto-Regular.ttf in Resources */,
 				CE12A48F2D31347E0022BDF7 /* PersonalInfoViewController.xib in Resources */,
 				CE12A4902D31347E0022BDF7 /* FullRegisterAddressCountryViewController.xib in Resources */,
+				CEE7E40D2E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				CE12A4912D31347E0022BDF7 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				CE12A4922D31347E0022BDF7 /* HomeAwayCardStatsView.xib in Resources */,
 				CE12A4932D31347E0022BDF7 /* field_widget_dark.html in Resources */,
@@ -16480,7 +16590,7 @@
 				CEA569322D5A58D800696793 /* WelcomeViewController.xib in Resources */,
 				CEA569332D5A58D800696793 /* UploadView.xib in Resources */,
 				CEA569342D5A58D800696793 /* replay_coin.json in Resources */,
-				CEA569352D5A58D800696793 /* MyTicketTableViewCell.xib in Resources */,
+				CEA569352D5A58D800696793 /* MyTicketTableViewCell_legacy.xib in Resources */,
 				CEA569362D5A58D800696793 /* HeadToHeadCardStatsView.xib in Resources */,
 				CEA569372D5A58D800696793 /* LoadingMoreTableViewCell.xib in Resources */,
 				CEA5693A2D5A58D800696793 /* MatchLineTableViewCell.xib in Resources */,
@@ -16491,6 +16601,7 @@
 				CEA5693F2D5A58D800696793 /* ProfileLimitsManagementViewController.xib in Resources */,
 				CEA569402D5A58D800696793 /* WithdrawWebViewController.xib in Resources */,
 				CEA5694F2D5A58D800696793 /* DocumentPickerView.xib in Resources */,
+				CEE7E4552E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */,
 				CEA569502D5A58D800696793 /* MaintenanceViewController.xib in Resources */,
 				CEA569512D5A58D800696793 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				CEA569522D5A58D800696793 /* sports-loading.json in Resources */,
@@ -16519,6 +16630,7 @@
 				CEA569692D5A58D800696793 /* Roboto-Italic.ttf in Resources */,
 				CEA5696A2D5A58D800696793 /* Roboto-Medium.ttf in Resources */,
 				CEA5696B2D5A58D800696793 /* Roboto-LightItalic.ttf in Resources */,
+				CEE7E4072E344F66003AB610 /* MyTicketCardView.xib in Resources */,
 				CEA5696C2D5A58D800696793 /* Roboto-Regular.ttf in Resources */,
 				CEA5696E2D5A58D800696793 /* MatchDetailsViewController.xib in Resources */,
 				CEA5696F2D5A58D800696793 /* PersonalInfoViewController.xib in Resources */,
@@ -16838,6 +16950,7 @@
 				450B788528F58574009229E3 /* BettingHistoryRootViewController.swift in Sources */,
 				450B788628F58574009229E3 /* DepositViewModel.swift in Sources */,
 				450B788828F58574009229E3 /* UserSession.swift in Sources */,
+				CEE7E4502E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				4521F0902CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				450B788928F58574009229E3 /* MessagesViewController.swift in Sources */,
 				450B788A28F58574009229E3 /* LoadableContent.swift in Sources */,
@@ -17004,6 +17117,7 @@
 				450B791828F58574009229E3 /* NewGroupHeaderFooterView.swift in Sources */,
 				450B791928F58574009229E3 /* EmailVerificationViewController.swift in Sources */,
 				450B791A28F58574009229E3 /* SuggestedBetTableViewCell.swift in Sources */,
+				CEE7E4222E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				450B791B28F58574009229E3 /* Optional+Extensions.swift in Sources */,
 				450B791C28F58574009229E3 /* OutcomeSelectionButtonView.swift in Sources */,
 				A9A43C702A4B2A33008FB399 /* IdentificationDocsViewModel.swift in Sources */,
@@ -17175,6 +17289,7 @@
 				450B79A028F58574009229E3 /* MessageDetailViewModel.swift in Sources */,
 				450B79A128F58574009229E3 /* MatchLineTableViewCell.swift in Sources */,
 				450B79A228F58574009229E3 /* KeychainInterface.swift in Sources */,
+				CEE7E4352E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				A90FB7FA29B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				450B79A328F58574009229E3 /* UserDefaults.swift in Sources */,
 				450B79A428F58574009229E3 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
@@ -17290,6 +17405,7 @@
 				450B79FF28F58574009229E3 /* BetSelectionCellViewModel.swift in Sources */,
 				450B7A0228F58574009229E3 /* BetslipSelectionState.swift in Sources */,
 				450B7A0328F58574009229E3 /* BonusDetailViewController.swift in Sources */,
+				CEE7E4132E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				450B7A0428F58574009229E3 /* MatchFiltersViewController.swift in Sources */,
 				A9A43C8B2A4B2BE7008FB399 /* ManualUploadsDocumentsViewModel.swift in Sources */,
 				450B7A0628F58574009229E3 /* CGFloat+Extensions.swift in Sources */,
@@ -17394,6 +17510,7 @@
 				450B7A5228F58574009229E3 /* LogViewerViewController.swift in Sources */,
 				A9527C152A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
 				450B7A5328F58574009229E3 /* TransactionsHistoryRootViewController.swift in Sources */,
+				CEE7E42D2E345698003AB610 /* MockDataFactory.swift in Sources */,
 				45970A022C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				450B7A5428F58574009229E3 /* FavoritesManager.swift in Sources */,
 				4542DFEA2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -17708,6 +17825,7 @@
 				457CBA26282D27D000ED0F00 /* FilterSliderInfoView.swift in Sources */,
 				A90C372529C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				450FC3E22A2A3899000DB866 /* MatchWidgetContainerTableViewCell.swift in Sources */,
+				CEE7E45A2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				457CBA27282D27D000ED0F00 /* BannerScrollTableViewCell.swift in Sources */,
 				45372F6029D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				A9958C7C2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
@@ -17874,6 +17992,7 @@
 				A93FE2122A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				457CBA8E282D27D000ED0F00 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				A98EC7E9288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
+				CEE7E4252E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				457CBA8F282D27D000ED0F00 /* HeadToHeadCardStatsView.swift in Sources */,
 				457CBA90282D27D000ED0F00 /* AppearanceViewModel.swift in Sources */,
 				45B6E222283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift in Sources */,
@@ -18045,6 +18164,7 @@
 				45C10F7428772DA700037BBE /* UIView+Shift.swift in Sources */,
 				457CBAFC282D27D000ED0F00 /* FriendStatusTableViewCell.swift in Sources */,
 				A9B331F0289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
+				CEE7E43C2E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				457CBAFE282D27D000ED0F00 /* MatchLineTableViewCell.swift in Sources */,
 				457CBAFF282D27D000ED0F00 /* KeychainInterface.swift in Sources */,
 				457CBB00282D27D000ED0F00 /* UserDefaults.swift in Sources */,
@@ -18160,6 +18280,7 @@
 				457CBB4C282D27D000ED0F00 /* BonusDetailViewController.swift in Sources */,
 				A982959B283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */,
 				457CBB4D282D27D000ED0F00 /* MatchFiltersViewController.swift in Sources */,
+				CEE7E4162E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				457CBB4F282D27D000ED0F00 /* CGFloat+Extensions.swift in Sources */,
 				457CBB50282D27D000ED0F00 /* SportGroupViewModel.swift in Sources */,
 				457CBB51282D27D000ED0F00 /* BonusAvailableTableViewCell.swift in Sources */,
@@ -18264,6 +18385,7 @@
 				457CBB8E282D27D000ED0F00 /* FavoritesManager.swift in Sources */,
 				45B6E208283E3F29001B570C /* EditGroupAddFriendViewModel.swift in Sources */,
 				457CBB8F282D27D000ED0F00 /* MyTicketsRootViewController.swift in Sources */,
+				CEE7E42B2E345698003AB610 /* MockDataFactory.swift in Sources */,
 				A9A43CAB2A4C9368008FB399 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				455AE1392A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				4587353B2AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
@@ -18386,6 +18508,7 @@
 				6584F9052BA0B84200E317EA /* EmptyReferralView.swift in Sources */,
 				457CBCA0282D2CD100ED0F00 /* SplashViewController.swift in Sources */,
 				A9BB46302AB366400003741E /* RegisterErrorViewController.swift in Sources */,
+				CEE7E4312E345698003AB610 /* MockDataFactory.swift in Sources */,
 				457CBCA1282D2CD100ED0F00 /* BonusHistoryDataSource.swift in Sources */,
 				457CBCA2282D2CD100ED0F00 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				A90FB80929B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
@@ -18549,6 +18672,7 @@
 				457CBD0C282D2CD100ED0F00 /* MarketGroupDetailsStore.swift in Sources */,
 				45085660284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */,
 				4546A89A29D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
+				CEE7E45C2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				A986D35128CB47A900AF95D7 /* TipsViewModel.swift in Sources */,
 				457CBD0D282D2CD100ED0F00 /* StyleHelpers.swift in Sources */,
 				457CBD0F282D2CD100ED0F00 /* PictureInPictureView.swift in Sources */,
@@ -18614,6 +18738,7 @@
 				457CBD36282D2CD100ED0F00 /* AppModels.swift in Sources */,
 				A99CC2F62A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				A9863ED0286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
+				CEE7E41A2E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				457CBD37282D2CD100ED0F00 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				457CBD38282D2CD100ED0F00 /* HeadToHeadCardStatsView.swift in Sources */,
 				A98EC7EA288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
@@ -18788,6 +18913,7 @@
 				457CBDA7282D2CD100ED0F00 /* KeychainInterface.swift in Sources */,
 				457CBDA8282D2CD100ED0F00 /* UserDefaults.swift in Sources */,
 				457CBDA9282D2CD100ED0F00 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
+				CEE7E4202E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				CE16F28E2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				457CBDAA282D2CD100ED0F00 /* ActivationAlertView.swift in Sources */,
 				457CBDAB282D2CD100ED0F00 /* Internationalization.swift in Sources */,
@@ -18849,6 +18975,7 @@
 				65238E072C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				A9B946BB28BFAA3E0091296E /* FeaturedTipView.swift in Sources */,
 				457CBDD1282D2CD100ED0F00 /* CountrySelectorTableViewCell.swift in Sources */,
+				CEE7E4392E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				A9DF8E6328E751F10083BF56 /* ListTitleHeaderFooterView.swift in Sources */,
 				457CBDD2282D2CD100ED0F00 /* BannerTopCollectionViewCell.swift in Sources */,
 				45C10F3328772DA700037BBE /* NavControllerTrasntitionDismissing.swift in Sources */,
@@ -19186,6 +19313,7 @@
 				4589C7A8282024E400243547 /* BettingHistoryRootViewController.swift in Sources */,
 				4589C7A9282024E400243547 /* DepositViewModel.swift in Sources */,
 				4589C7AA282024E400243547 /* UserSession.swift in Sources */,
+				CEE7E4562E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				4521F0922CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				A9B331BC288EF21300D097F0 /* MessagesViewController.swift in Sources */,
 				4589C7AB282024E400243547 /* LoadableContent.swift in Sources */,
@@ -19352,6 +19480,7 @@
 				4589C81D282024E400243547 /* EmailVerificationViewController.swift in Sources */,
 				4589C81E282024E400243547 /* SuggestedBetTableViewCell.swift in Sources */,
 				4589C81F282024E400243547 /* Optional+Extensions.swift in Sources */,
+				CEE7E41E2E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				4589C821282024E400243547 /* OutcomeSelectionButtonView.swift in Sources */,
 				4589C822282024E400243547 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				A9A43C712A4B2A33008FB399 /* IdentificationDocsViewModel.swift in Sources */,
@@ -19523,6 +19652,7 @@
 				A9B331EE289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
 				4589C882282024E400243547 /* MatchLineTableViewCell.swift in Sources */,
 				4589C883282024E400243547 /* KeychainInterface.swift in Sources */,
+				CEE7E4372E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				A90FB7FB29B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				4589C884282024E400243547 /* UserDefaults.swift in Sources */,
 				4589C885282024E400243547 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
@@ -19638,6 +19768,7 @@
 				A98295A7283BA1420014066A /* BetSelectionCellViewModel.swift in Sources */,
 				4589C8CD282024E400243547 /* BetslipSelectionState.swift in Sources */,
 				4589C8CE282024E400243547 /* BonusDetailViewController.swift in Sources */,
+				CEE7E4182E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				4589C8CF282024E400243547 /* MatchFiltersViewController.swift in Sources */,
 				A9A43C8C2A4B2BE7008FB399 /* ManualUploadsDocumentsViewModel.swift in Sources */,
 				4589C8D1282024E400243547 /* CGFloat+Extensions.swift in Sources */,
@@ -19742,6 +19873,7 @@
 				4589C90E282024E400243547 /* TransactionsHistoryRootViewController.swift in Sources */,
 				A9527C162A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
 				4589C90F282024E400243547 /* FavoritesManager.swift in Sources */,
+				CEE7E42A2E345698003AB610 /* MockDataFactory.swift in Sources */,
 				45970A032C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				4589C910282024E400243547 /* MyTicketsRootViewController.swift in Sources */,
 				4542DFEB2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -19926,6 +20058,7 @@
 				45A33096298976BA008181E9 /* BettingHistoryRootViewController.swift in Sources */,
 				45A33097298976BA008181E9 /* DepositViewModel.swift in Sources */,
 				45A33098298976BA008181E9 /* UserSession.swift in Sources */,
+				CEE7E44A2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				4521F0912CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				45A33099298976BA008181E9 /* MessagesViewController.swift in Sources */,
 				45A3309A298976BA008181E9 /* LoadableContent.swift in Sources */,
@@ -20092,6 +20225,7 @@
 				45A3312E298976BA008181E9 /* EmailVerificationViewController.swift in Sources */,
 				45A3312F298976BA008181E9 /* SuggestedBetTableViewCell.swift in Sources */,
 				45A33130298976BA008181E9 /* Optional+Extensions.swift in Sources */,
+				CEE7E41F2E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				45A33131298976BA008181E9 /* OutcomeSelectionButtonView.swift in Sources */,
 				45A33132298976BA008181E9 /* ServiceProviderModelMapper+Betting.swift in Sources */,
 				A9A43C6F2A4B2A33008FB399 /* IdentificationDocsViewModel.swift in Sources */,
@@ -20263,6 +20397,7 @@
 				45A331B8298976BA008181E9 /* UIView+Shift.swift in Sources */,
 				45A331BA298976BA008181E9 /* MessageDetailViewModel.swift in Sources */,
 				45A331BB298976BA008181E9 /* MatchLineTableViewCell.swift in Sources */,
+				CEE7E43B2E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				A90FB7F929B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				45A331BC298976BA008181E9 /* KeychainInterface.swift in Sources */,
 				45A331BD298976BA008181E9 /* UserDefaults.swift in Sources */,
@@ -20378,6 +20513,7 @@
 				45A3321C298976BA008181E9 /* ChatTicketInMessageView.swift in Sources */,
 				45A3321D298976BA008181E9 /* BetSelectionCellViewModel.swift in Sources */,
 				45A33220298976BA008181E9 /* BetslipSelectionState.swift in Sources */,
+				CEE7E4122E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				45A33221298976BA008181E9 /* BonusDetailViewController.swift in Sources */,
 				A9A43C8A2A4B2BE7008FB399 /* ManualUploadsDocumentsViewModel.swift in Sources */,
 				45A33222298976BA008181E9 /* MatchFiltersViewController.swift in Sources */,
@@ -20482,6 +20618,7 @@
 				45A33272298976BA008181E9 /* ServiceProviderModelMapper+Country.swift in Sources */,
 				45A33273298976BA008181E9 /* LogViewerViewController.swift in Sources */,
 				A9527C142A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
+				CEE7E42F2E345698003AB610 /* MockDataFactory.swift in Sources */,
 				45970A002C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				45A33274298976BA008181E9 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE82C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -20666,6 +20803,7 @@
 				45A6BBF728246A7500D9B416 /* UserSession.swift in Sources */,
 				45B6E24628415269001B570C /* SelectFriendTableViewCell.swift in Sources */,
 				45A6BBF828246A7500D9B416 /* LoadableContent.swift in Sources */,
+				CEE7E4522E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				45A6BBF928246A7500D9B416 /* CollapsibleView.swift in Sources */,
 				45A6BBFA28246A7500D9B416 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				4542DFE42C009E340033BFB8 /* TabularScrollView.swift in Sources */,
@@ -20832,6 +20970,7 @@
 				45A6BC7228246A7500D9B416 /* MultiSliderExtensions.swift in Sources */,
 				45C10F5B28772DA700037BBE /* CATransform3D+Shift.swift in Sources */,
 				A9BA04132A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
+				CEE7E4262E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				A9A43C982A4B316B008FB399 /* CompetitionListIconCollectionViewCell.swift in Sources */,
 				A986D35828CB48F100AF95D7 /* TipsListViewModel.swift in Sources */,
 				45B6E213283F7D1F001B570C /* SharedBetTicket.swift in Sources */,
@@ -21003,6 +21142,7 @@
 				45D64AF62B6002F70092DA8E /* BoostedBetConfirmationView.swift in Sources */,
 				45B6E21A283FCF7E001B570C /* SentTicketMessageTableViewCell.swift in Sources */,
 				45A6BCE328246A7500D9B416 /* MyTicketBetLineView.swift in Sources */,
+				CEE7E43A2E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				45A6BCE428246A7500D9B416 /* HomeViewController.swift in Sources */,
 				A91A64632A7A66B5002A6984 /* MyGamesTypeList.swift in Sources */,
 				45A6BCE528246A7500D9B416 /* NewGroupManagementViewModel.swift in Sources */,
@@ -21118,6 +21258,7 @@
 				45A6BD2428246A7500D9B416 /* BetslipSelectionState.swift in Sources */,
 				45ECD7822A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				A9059F1F2ABB5B1400796583 /* DocumentLevelStatus.swift in Sources */,
+				CEE7E40C2E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				45A6BD2528246A7500D9B416 /* BonusDetailViewController.swift in Sources */,
 				45A6BD2628246A7500D9B416 /* MatchFiltersViewController.swift in Sources */,
 				45A6BD2828246A7500D9B416 /* CGFloat+Extensions.swift in Sources */,
@@ -21222,6 +21363,7 @@
 				45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */,
 				45A6BD6428246A7500D9B416 /* LogViewerViewController.swift in Sources */,
 				45A6BD6528246A7500D9B416 /* TransactionsHistoryRootViewController.swift in Sources */,
+				CEE7E42C2E345698003AB610 /* MockDataFactory.swift in Sources */,
 				45B9F97B2A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				45970A052C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				45A6BD6628246A7500D9B416 /* FavoritesManager.swift in Sources */,
@@ -21406,6 +21548,7 @@
 				45F6BB312AB3732C00C81DE1 /* BettingHistoryRootViewController.swift in Sources */,
 				45F6BB322AB3732C00C81DE1 /* DepositViewModel.swift in Sources */,
 				45F6BB332AB3732C00C81DE1 /* UserSession.swift in Sources */,
+				CEE7E44C2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				4521F08E2CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				45F6BB342AB3732C00C81DE1 /* MessagesViewController.swift in Sources */,
 				45F6BB352AB3732C00C81DE1 /* LoadableContent.swift in Sources */,
@@ -21572,6 +21715,7 @@
 				45F6BBCD2AB3732C00C81DE1 /* SuggestedBetTableViewCell.swift in Sources */,
 				45F6BBCE2AB3732C00C81DE1 /* Optional+Extensions.swift in Sources */,
 				45F6BBCF2AB3732C00C81DE1 /* OutcomeSelectionButtonView.swift in Sources */,
+				CEE7E4242E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				45F6BBD02AB3732C00C81DE1 /* ServiceProviderModelMapper+Betting.swift in Sources */,
 				45F6BBD12AB3732C00C81DE1 /* IdentificationDocsViewModel.swift in Sources */,
 				45F6BBD22AB3732C00C81DE1 /* MyFavoriteMatchesDataSource.swift in Sources */,
@@ -21743,6 +21887,7 @@
 				45F6BC692AB3732C00C81DE1 /* UIView+Shift.swift in Sources */,
 				45F6BC6A2AB3732C00C81DE1 /* MessageDetailViewModel.swift in Sources */,
 				45F6BC6B2AB3732C00C81DE1 /* MatchLineTableViewCell.swift in Sources */,
+				CEE7E4382E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				45F6BC6C2AB3732C00C81DE1 /* TipInfoView.swift in Sources */,
 				45F6BC6D2AB3732C00C81DE1 /* KeychainInterface.swift in Sources */,
 				45F6BC6E2AB3732C00C81DE1 /* UserDefaults.swift in Sources */,
@@ -21858,6 +22003,7 @@
 				45F6BCD22AB3732C00C81DE1 /* RefusedAccessViewController.swift in Sources */,
 				45F6BCD32AB3732C00C81DE1 /* ChatTicketInMessageView.swift in Sources */,
 				45F6BCD42AB3732C00C81DE1 /* BetSelectionCellViewModel.swift in Sources */,
+				CEE7E40F2E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				45F6BCD52AB3732C00C81DE1 /* BetslipSelectionState.swift in Sources */,
 				45F6BCD62AB3732C00C81DE1 /* BonusDetailViewController.swift in Sources */,
 				45F6BCD72AB3732C00C81DE1 /* ManualUploadsDocumentsViewModel.swift in Sources */,
@@ -21962,6 +22108,7 @@
 				45F6BD2F2AB3732C00C81DE1 /* ServiceProviderModelMapper+Country.swift in Sources */,
 				45F6BD302AB3732C00C81DE1 /* LogViewerViewController.swift in Sources */,
 				45F6BD312AB3732C00C81DE1 /* MyCompetitionsRootViewController.swift in Sources */,
+				CEE7E4292E345698003AB610 /* MockDataFactory.swift in Sources */,
 				45970A012C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				45F6BD322AB3732C00C81DE1 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE92C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
@@ -22092,6 +22239,7 @@
 				A93FE21A2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				A9C340B228F9A74A0055360B /* PopUpPromotionView.swift in Sources */,
 				A925480A2A28E0AA0056F832 /* ListTypeIconCollectionViewCell.swift in Sources */,
+				CEE7E4302E345698003AB610 /* MockDataFactory.swift in Sources */,
 				A9C340B328F9A74A0055360B /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
 				A9C340B428F9A74A0055360B /* CheckboxToggleView.swift in Sources */,
 				A9C340B528F9A74A0055360B /* MatchDetailsViewController.swift in Sources */,
@@ -22255,6 +22403,7 @@
 				A9527C372A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				A9C3413028F9A74A0055360B /* WelcomeViewController.swift in Sources */,
 				A9C3413128F9A74A0055360B /* CGPoint+Shift.swift in Sources */,
+				CEE7E4582E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				45ECD7812A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				A90FB80629B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
 				A9C3413328F9A74A0055360B /* UserSettings.swift in Sources */,
@@ -22320,6 +22469,7 @@
 				A9C3416228F9A74A0055360B /* ChatNotificationsViewModel.swift in Sources */,
 				A9C3416328F9A74A0055360B /* RequestLocationAccessViewController.swift in Sources */,
 				A9C3416428F9A74A0055360B /* Market.swift in Sources */,
+				CEE7E40A2E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				4546A89729D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				A9C3416528F9A74A0055360B /* MyTicketTableViewCell.swift in Sources */,
 				A90C372329C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
@@ -22494,6 +22644,7 @@
 				A9C341F628F9A74A0055360B /* FriendStatusCellViewModel.swift in Sources */,
 				A9C341F728F9A74A0055360B /* FriendStatusTableViewCell.swift in Sources */,
 				A9C341F828F9A74A0055360B /* UIView+Shift.swift in Sources */,
+				CEE7E4232E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				CE16F28C2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				A9C341FA28F9A74A0055360B /* MessageDetailViewModel.swift in Sources */,
 				A9C341FB28F9A74A0055360B /* MatchLineTableViewCell.swift in Sources */,
@@ -22555,6 +22706,7 @@
 				A9C3422B28F9A74A0055360B /* TransactionHistory.swift in Sources */,
 				A9C3422C28F9A74A0055360B /* EnvironmentType.swift in Sources */,
 				A9C3422D28F9A74A0055360B /* CountrySelectorTableViewCell.swift in Sources */,
+				CEE7E4332E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				4583864A293E66DF001B96DB /* ServiceProviderModelMapper+Betting.swift in Sources */,
 				A9C3422E28F9A74A0055360B /* FeaturedTipView.swift in Sources */,
 				A9C3422F28F9A74A0055360B /* BannerTopCollectionViewCell.swift in Sources */,
@@ -22892,6 +23044,7 @@
 				CE12A18F2D31347E0022BDF7 /* BettingHistoryRootViewController.swift in Sources */,
 				CE12A1902D31347E0022BDF7 /* DepositViewModel.swift in Sources */,
 				CE12A1912D31347E0022BDF7 /* UserSession.swift in Sources */,
+				CEE7E44E2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				CE12A1922D31347E0022BDF7 /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				CE12A1932D31347E0022BDF7 /* MessagesViewController.swift in Sources */,
 				CE12A1942D31347E0022BDF7 /* LoadableContent.swift in Sources */,
@@ -23058,6 +23211,7 @@
 				CE12A2342D31347E0022BDF7 /* EmailVerificationViewController.swift in Sources */,
 				CE12A2352D31347E0022BDF7 /* SuggestedBetTableViewCell.swift in Sources */,
 				CE12A2362D31347E0022BDF7 /* Optional+Extensions.swift in Sources */,
+				CEE7E41D2E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				CE12A2372D31347E0022BDF7 /* OutcomeSelectionButtonView.swift in Sources */,
 				CE12A2382D31347E0022BDF7 /* IdentificationDocsViewModel.swift in Sources */,
 				CE12A2392D31347E0022BDF7 /* ServiceProviderModelMapper+Betting.swift in Sources */,
@@ -23229,6 +23383,7 @@
 				CE12A2DC2D31347E0022BDF7 /* MatchLineTableViewCell.swift in Sources */,
 				CE12A2DD2D31347E0022BDF7 /* KeychainInterface.swift in Sources */,
 				CE12A2DE2D31347E0022BDF7 /* TipInfoView.swift in Sources */,
+				CEE7E4362E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				CE12A2DF2D31347E0022BDF7 /* UserDefaults.swift in Sources */,
 				CE12A2E02D31347E0022BDF7 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
 				CE12A2E12D31347E0022BDF7 /* ActivationAlertView.swift in Sources */,
@@ -23344,6 +23499,7 @@
 				CE12A34C2D31347E0022BDF7 /* BetslipSelectionState.swift in Sources */,
 				CE12A34D2D31347E0022BDF7 /* BonusDetailViewController.swift in Sources */,
 				CE12A34E2D31347E0022BDF7 /* MatchFiltersViewController.swift in Sources */,
+				CEE7E40E2E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				CE12A34F2D31347E0022BDF7 /* ManualUploadsDocumentsViewModel.swift in Sources */,
 				CE12A3502D31347E0022BDF7 /* CGFloat+Extensions.swift in Sources */,
 				CE12A3512D31347E0022BDF7 /* SportGroupViewModel.swift in Sources */,
@@ -23448,6 +23604,7 @@
 				CE12A3AF2D31347E0022BDF7 /* MyCompetitionsRootViewController.swift in Sources */,
 				CE12A3B02D31347E0022BDF7 /* TransactionsHistoryRootViewController.swift in Sources */,
 				CE12A3B12D31347E0022BDF7 /* PromotedBetslip.swift in Sources */,
+				CEE7E42E2E345698003AB610 /* MockDataFactory.swift in Sources */,
 				CE12A3B22D31347E0022BDF7 /* FavoritesManager.swift in Sources */,
 				CE12A3B32D31347E0022BDF7 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				CE12A3B42D31347E0022BDF7 /* BonusTypeMapper.swift in Sources */,
@@ -23632,6 +23789,7 @@
 				CEA566582D5A58D800696793 /* SelectFriendTableViewCell.swift in Sources */,
 				CEA566592D5A58D800696793 /* LoadableContent.swift in Sources */,
 				CEA5665A2D5A58D800696793 /* CollapsibleView.swift in Sources */,
+				CEE7E4542E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */,
 				CEA5665B2D5A58D800696793 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				CEA5665C2D5A58D800696793 /* TabularScrollView.swift in Sources */,
 				CEA5665D2D5A58D800696793 /* CompetitionSectionViewModel.swift in Sources */,
@@ -23798,6 +23956,7 @@
 				CEA566FC2D5A58D800696793 /* CATransform3D+Shift.swift in Sources */,
 				CEA566FD2D5A58D800696793 /* ManualUploadDocumentsViewController.swift in Sources */,
 				CEA566FE2D5A58D800696793 /* CompetitionListIconCollectionViewCell.swift in Sources */,
+				CEE7E4212E3453FF003AB610 /* BrandedTicketShareView.swift in Sources */,
 				CEA566FF2D5A58D800696793 /* TipsListViewModel.swift in Sources */,
 				CEA567002D5A58D800696793 /* SharedBetTicket.swift in Sources */,
 				CEA567012D5A58D800696793 /* SentMessageTableViewCell.swift in Sources */,
@@ -23969,6 +24128,7 @@
 				CEA567A82D5A58D800696793 /* MyTicketBetLineView.swift in Sources */,
 				CEA567A92D5A58D800696793 /* HomeViewController.swift in Sources */,
 				CEA567AA2D5A58D800696793 /* MyGamesTypeList.swift in Sources */,
+				CEE7E4342E345856003AB610 /* ShareTestViewController.swift in Sources */,
 				CEA567AB2D5A58D800696793 /* NewGroupManagementViewModel.swift in Sources */,
 				CEA567AC2D5A58D800696793 /* EveryMatrixSocketResponse.swift in Sources */,
 				CEA567AD2D5A58D800696793 /* MyTicketCellViewModel.swift in Sources */,
@@ -24084,6 +24244,7 @@
 				CEA5681A2D5A58D800696793 /* DocumentLevelStatus.swift in Sources */,
 				CEA5681B2D5A58D800696793 /* BonusDetailViewController.swift in Sources */,
 				CEA5681C2D5A58D800696793 /* MatchFiltersViewController.swift in Sources */,
+				CEE7E4082E344F66003AB610 /* MyTicketCardView.swift in Sources */,
 				CEA5681D2D5A58D800696793 /* CGFloat+Extensions.swift in Sources */,
 				CEA5681E2D5A58D800696793 /* SportGroupViewModel.swift in Sources */,
 				CEA5681F2D5A58D800696793 /* BonusAvailableTableViewCell.swift in Sources */,
@@ -24188,6 +24349,7 @@
 				CEA568802D5A58D800696793 /* TransactionsHistoryRootViewController.swift in Sources */,
 				CEA568812D5A58D800696793 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				CEA568822D5A58D800696793 /* PromotedBetslip.swift in Sources */,
+				CEE7E4282E345698003AB610 /* MockDataFactory.swift in Sources */,
 				CEA568832D5A58D800696793 /* FavoritesManager.swift in Sources */,
 				CEA568842D5A58D800696793 /* UserConsentType.swift in Sources */,
 				CEA568852D5A58D800696793 /* MyTicketsRootViewController.swift in Sources */,

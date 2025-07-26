@@ -17,6 +17,12 @@ public struct WheelStatusResponse: Codable {
         case message = "message"
         case data = "data"
     }
+    
+    public init(status: String, message: String?, data: WheelEligibility?) {
+        self.status = status
+        self.message = message
+        self.data = data
+    }
 }
 
 public struct WheelEligibility: Codable {
@@ -28,6 +34,12 @@ public struct WheelEligibility: Codable {
         case productCode = "productCode"
         case gameTransId = "gameTranId"
         case winBoosts = "winBoosts"
+    }
+    
+    public init(productCode: String, gameTransId: String, winBoosts: [WheelStatus]) {
+        self.productCode = productCode
+        self.gameTransId = gameTransId
+        self.winBoosts = winBoosts
     }
 }
 
@@ -45,6 +57,14 @@ public struct WheelStatus: Codable {
         case message = "message"
         case configuration = "configuration"
     }
+    
+    public init(winBoostId: String?, gameTransId: String?, status: String, message: String?, configuration: WheelConfiguration?) {
+        self.winBoostId = winBoostId
+        self.gameTransId = gameTransId
+        self.status = status
+        self.message = message
+        self.configuration = configuration
+    }
 }
 
 public struct WheelConfiguration: Codable {
@@ -57,6 +77,12 @@ public struct WheelConfiguration: Codable {
         case title = "title"
         case tiers = "tiers"
     }
+    
+    public init(id: String, title: String, tiers: [WheelTier]) {
+        self.id = id
+        self.title = title
+        self.tiers = tiers
+    }
 }
 
 public struct WheelTier: Codable {
@@ -68,6 +94,12 @@ public struct WheelTier: Codable {
         case name = "name"
         case chance = "chance"
         case boostMultiplier = "boostMultiplier"
+    }
+    
+    public init(name: String, chance: Double, boostMultiplier: Double) {
+        self.name = name
+        self.chance = chance
+        self.boostMultiplier = boostMultiplier
     }
 }
 
@@ -83,6 +115,13 @@ public struct WheelOptInData: Codable {
         case gameTranId = "gameTranId"
         case awardedTier = "awardedTier"
     }
+    
+    public init(status: String, winBoostId: String?, gameTranId: String?, awardedTier: WheelAwardedTier?) {
+        self.status = status
+        self.winBoostId = winBoostId
+        self.gameTranId = gameTranId
+        self.awardedTier = awardedTier
+    }
 }
 
 public struct WheelAwardedTier: Codable {
@@ -94,6 +133,12 @@ public struct WheelAwardedTier: Codable {
         case configurationId = "configurationId"
         case name = "name"
         case boostMultiplier = "boostMultiplier"
+    }
+    
+    public init(configurationId: String?, name: String, boostMultiplier: Double) {
+        self.configurationId = configurationId
+        self.name = name
+        self.boostMultiplier = boostMultiplier
     }
 }
 
@@ -107,6 +152,12 @@ public struct GrantedWinBoostsResponse: Codable {
         case message = "message"
         case data = "data"
     }
+    
+    public init(status: String, message: String?, data: [GrantedWinBoosts]?) {
+        self.status = status
+        self.message = message
+        self.data = data
+    }
 }
 
 public struct GrantedWinBoosts: Codable {
@@ -116,6 +167,11 @@ public struct GrantedWinBoosts: Codable {
     enum CodingKeys: String, CodingKey {
         case gameTranId = "gameTranId"
         case winBoosts = "winBoosts"
+    }
+    
+    public init(gameTranId: String, winBoosts: [GrantedWinBoostInfo]) {
+        self.gameTranId = gameTranId
+        self.winBoosts = winBoosts
     }
 }
 
@@ -133,4 +189,13 @@ public struct GrantedWinBoostInfo: Codable {
         case awardedTier = "awardedTier"
         case boostAmount = "boostAmount"
     }
+    
+    public init(winBoostId: String, gameTranId: String, status: String, awardedTier: WheelAwardedTier?, boostAmount: Double?) {
+        self.winBoostId = winBoostId
+        self.gameTranId = gameTranId
+        self.status = status
+        self.awardedTier = awardedTier
+        self.boostAmount = boostAmount
+    }
+    
 }
