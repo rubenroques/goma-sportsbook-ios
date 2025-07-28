@@ -103,40 +103,49 @@ class Router {
     }
 
     func showPostLoadingFlow() {
-
-        var bootRootViewController: UIViewController
         
-// FAST TEST
-//        #if DEBUG
-// Boot directly into a ViewController for testing BrandedTicketShareView (ShareTestViewController in this test)
-
-//        bootRootViewController = Router.navigationController(with: ShareTestViewController())
-//        Logger.log("🔧 DEBUG MODE: Booting into ShareTestViewController")
+        // FAST TEST CONFIGURATION
+        // ========================
+        // Set to true for development/testing, false for production
+        // This enables rapid development iterations: create → build → test
+        // Check Router+FastTest.swift file for definition and details
         
-//
-//        #else
-//
-//
-// PROD CODE
-//
-
-        if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
-            let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
-            self.mainRootViewController = rootViewController
-            bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
+#if DEBUG
+        let useFastTestMode = true
+#else
+        let useFastTestMode = false
+#endif
+        
+        let bootRootViewController: UIViewController
+        
+        if useFastTestMode {
+            // 🧪 FAST TEST MODE - Direct boot into test screens
+            // Configure which test screen to boot into when useFastTestMode = true
+            let fastTestTarget: FastTestTarget = .betSubmissionSuccess(.singleFootball)
+            
+            bootRootViewController = createFastTestViewController(target: fastTestTarget)
+            Logger.log("🔧 FAST TEST MODE: Booting into \(fastTestTarget)")
+        } else {
+            // 🏭 PRODUCTION MODE - Normal app flow
+            bootRootViewController = createProductionViewController()
+            Logger.log("📱 PRODUCTION MODE: Normal app startup")
         }
-        else {
-            bootRootViewController = Router.createLoginViewControllerFlow()
-        }
-//
-//        #endif
         
-
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()
         self.subscribeToNotificationsOpened()
 
         self.rootWindow.rootViewController = bootRootViewController
+    }
+    
+    private func createProductionViewController() -> UIViewController {
+        if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
+            let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
+            self.mainRootViewController = rootViewController
+            return Router.mainScreenViewControllerFlow(rootViewController)
+        } else {
+            return Router.createLoginViewControllerFlow()
+        }
     }
 
     func subscribeToUserActionBlockers() {

@@ -49,7 +49,6 @@ class MyTicketCardView: NibView {
     
     @IBOutlet private weak var cashbackValueLabel: UILabel!
     
-    
     // remaining bottom views
     @IBOutlet private weak var partialAmountsView: UIView!
     @IBOutlet private weak var originalAmountValueLabel: UILabel!

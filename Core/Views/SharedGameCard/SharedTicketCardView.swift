@@ -517,14 +517,13 @@ extension SharedTicketCardView {
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 14),
-            self.titleLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.shareButton.leadingAnchor, constant: -8),
 
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3),
             self.subtitleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
 
             self.shareButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12),
-            self.shareButton.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.shareButton.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 12),
             self.shareButton.heightAnchor.constraint(equalToConstant: 32),
 
             self.betCardsBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),

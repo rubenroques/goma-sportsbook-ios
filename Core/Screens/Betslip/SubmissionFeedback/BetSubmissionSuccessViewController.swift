@@ -595,7 +595,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                 self?.presentShareActivityViewController(with: shareImage)
             }
 
-            brandedShareView.removeFromSuperview()
+            // brandedShareView.removeFromSuperview()
         }
     }
     
@@ -625,31 +625,16 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
     
     private func presentShareActivityViewController(with image: UIImage) {
-        //        let shareText = TargetVariables.clientBaseUrl
-        //
-        //
-        //        // 2. Park it in /tmp
-        //        let url = FileManager.default.temporaryDirectory
-        //            .appendingPathComponent(UUID().uuidString)
-        //            .appendingPathExtension("png")
-        //
-        //        try? image.pngData()?.write(to: url) // save the generated image into
-        //
-        //
-        //
-        //        // Use custom activity item source to ensure image is properly shared with text as metadata
-        //        let shareItemSource = BrandedTicketShareItemSource(image: image, shareText: shareText)
-        //
-                // 3. Build share‑sheet
-                let item = ShareableImageMetaSource(
-                    payload: image,
-                    thumbnail: UIImage(named: "share_thumb_icon") ?? image,
-                    title: localized("partage_pari"),
-                    subtitle: "betsson.fr"
-                )
-                
-                let activityViewController = UIActivityViewController(activityItems: [item], applicationActivities: nil)
-                
+        
+        let item = ShareableImageMetaSource(
+            payload: image,
+            thumbnail: UIImage(named: "share_thumb_icon") ?? image,
+            title: localized("partage_pari"),
+            subtitle: "betsson.fr"
+        )
+        
+        let activityViewController = UIActivityViewController(activityItems: [image, item], applicationActivities: nil)
+        
         // Configure for iPad
         if let popoverController = activityViewController.popoverPresentationController {
             popoverController.sourceView = self.view

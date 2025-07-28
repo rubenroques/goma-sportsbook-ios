@@ -147,7 +147,7 @@ class BrandedTicketShareView: UIView {
                 case .failure(let error):
                     print("GET REFERRAL LINK ERROR: \(error)")
                     // Use fallback code on error
-                    self?.referralCode = "XYZ"
+                    self?.referralCode = "CODE"
                 }
                 self?.isReferralCodeFetched = true
                 self?.setupBrandingElements()
@@ -167,7 +167,7 @@ class BrandedTicketShareView: UIView {
     
     private func setupBrandingElements() {
         let shareText = localized("share_bet_description") // Rejoins l'équipe Betsson avec mon code parrainage: {userCode} et empoche 10€ de Bonus!
-        let userCode = self.referralCode ?? "XYZ" // Use fetched code or fallback
+        let userCode = self.referralCode ?? "CODE" // Use fetched code or fallback
         
         // Configure referral messaging with attributed text
         self.referralTitleLabel.attributedText = createAttributedShareText(text: shareText, userCode: userCode)

@@ -126,10 +126,12 @@ class MyTicketTableViewCell: UITableViewCell {
 }
 
 extension MyTicketTableViewCell {
+    
     static var dateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short
         dateFormatter.dateStyle = .short
         return dateFormatter
     }()
+    
 }

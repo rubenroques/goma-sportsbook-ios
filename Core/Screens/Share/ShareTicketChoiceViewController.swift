@@ -305,7 +305,7 @@ class ShareTicketChoiceViewController: UIViewController {
             if betStatus.lowercased() == "opened" || betStatus.lowercased() == "open",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
                 let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
-                //let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
+
                 let matchUrl = URL(string: "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)")
 
                 metadata.url = matchUrl
