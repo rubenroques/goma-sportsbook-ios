@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import ServicesProvider
+import LinkPresentation
 
 class BrandedTicketShareView: UIView {
 
@@ -33,6 +34,10 @@ class BrandedTicketShareView: UIView {
     private var onViewReady: (() -> Void)?
     private var isReferralCodeFetched = false
     private var isLayoutComplete = false
+    
+    // MARK: - Share Data Properties
+    private var betHistoryEntry: BetHistoryEntry?
+    private var betShareToken: String?
     
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
@@ -104,7 +109,12 @@ class BrandedTicketShareView: UIView {
     func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry,
                    countryCodes: [String],
                    viewModel: MyTicketCellViewModel,
-                   grantedWinBoost: GrantedWinBoostInfo? = nil) {
+                   grantedWinBoost: GrantedWinBoostInfo? = nil,
+                   betShareToken: String? = nil) {
+        // Store configuration data
+        self.betHistoryEntry = betHistoryEntry
+        self.betShareToken = betShareToken
+        
         // Configure the embedded ticket card view
         ticketCardView.configure(withBetHistoryEntry: betHistoryEntry,
                                countryCodes: countryCodes,
@@ -123,6 +133,65 @@ class BrandedTicketShareView: UIView {
         return renderer.image { _ in
             self.drawHierarchy(in: self.bounds, afterScreenUpdates: true)
         }
+    }
+    
+    func generateShareContent() -> ShareContent? {
+        guard let shareImage = generateShareImage() else { return nil }
+        
+        // Check if this is an OPEN bet with a shareable token
+        if betHistoryEntry?.status?.lowercased() == "open" || betHistoryEntry?.status?.lowercased() == "opened",
+           let betShareToken = self.betShareToken {
+            
+            // OPEN BET: Include shareable URL and rich metadata
+            let shareText = createShareText(withKey: "look_bet_made")
+            let shareURL = generateShareURL(betShareToken: betShareToken)
+            // let metadata = createLinkMetadata(image: shareImage, url: shareURL)
+            
+            return ShareContent(
+                image: shareImage,
+                shareText: shareText + "\n" + shareURL,
+                url: nil,
+                metadata: nil
+            )
+        }
+        else {
+            // CLOSED BET: Image only sharing
+            let shareText = createShareText(withKey: "check_bet_result")
+            
+            return ShareContent(
+                image: shareImage,
+                shareText: shareText,
+                url: nil,
+                metadata: nil
+            )
+        }
+    }
+    
+    private func generateShareURL(betShareToken: String) -> String {
+        let urlMobile = TargetVariables.clientBaseUrl
+        let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode ?? "fr"
+        let urlString = "\(urlMobile)/\(userLocale)/share/bet/\(betShareToken)"
+        return urlString
+    }
+    
+    private func createLinkMetadata(image: UIImage, url: URL?) -> LPLinkMetadata? {
+        guard let url = url else { return nil }
+        
+        let metadata = LPLinkMetadata()
+        metadata.url = url
+        metadata.originalURL = url
+        metadata.title = localized("look_bet_made")
+        
+        let imageProvider = NSItemProvider(object: image)
+        metadata.imageProvider = imageProvider
+        
+        return metadata
+    }
+    
+    private func createShareText(withKey key: String) -> String {
+        let shareText = localized(key)
+        let userCode = self.referralCode ?? "CODE"
+        return shareText.replacingOccurrences(of: "{userCode}", with: userCode)
     }
     
     private func setupTicketCardView() {

@@ -2,29 +2,29 @@
 //  LinkPresentationItemSource.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 17/02/2022.
+//  Created by Ruben Roques on 28/07/2025.
 //
 
-import Foundation
+import UIKit
 import LinkPresentation
 
 class LinkPresentationItemSource: NSObject, UIActivityItemSource {
-    var linkMetaData = LPLinkMetadata()
-
-    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
-
-        return linkMetaData
-    }
-
-    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-        return ""
-    }
-
-    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-        return linkMetaData.originalURL
-    }
-
+    private let metadata: LPLinkMetadata
+    
     init(metaData: LPLinkMetadata) {
-        self.linkMetaData = metaData
+        self.metadata = metaData
+        super.init()
+    }
+    
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        return metadata.url ?? ""
+    }
+    
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        return metadata.url
+    }
+    
+    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+        return metadata
     }
 }

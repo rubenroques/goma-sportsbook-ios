@@ -117,23 +117,16 @@ import UniformTypeIdentifiers
 final class ShareableImageMetaSource: NSObject, UIActivityItemSource {
 
     // MARK: private: stored stuff
-    private let fileURL: URL         // what will actually be shared
     private let thumb:   UIImage     // header thumbnail
     private let title:   String
     private let subtitle: String?
 
     // MARK: init
-    init(payload image: UIImage,
+    init(
          thumbnail: UIImage,
          title: String,
          subtitle: String? = nil)
     {
-        let tmp = FileManager.default.temporaryDirectory
-                     .appendingPathComponent(UUID().uuidString)
-                     .appendingPathExtension("png")
-        try? image.pngData()?.write(to: tmp)
-        
-        self.fileURL  = tmp
         self.thumb    = thumbnail
         self.title    = title
         self.subtitle = subtitle

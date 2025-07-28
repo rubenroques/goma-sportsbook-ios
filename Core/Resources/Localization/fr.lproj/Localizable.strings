@@ -473,7 +473,7 @@
 "login_required_text" = "Vous devez être connecté pour pouvoir voir vos paris";
 "login_tc_agreement" = "En vous inscrivant, vous acceptez notre";
 "logout" = "Se déconnecter";
-"look_bet_made" = "Regardez le pari que je viens de placer ! Rejoins moi.";
+
 "loss_limit" = "Limite de perte";
 "loss_limit_locked" = "La limite de perte définie pour votre compte est verrouillée. Vous pourrez à nouveau mettre à jour cette limite après : {période}";
 "loss_limit_removal_error" = "Nous ne pouvons pas supprimer votre limite de perte pour le moment. Veuillez réessayer plus tard.";
@@ -1350,7 +1350,6 @@
 
 "bonus_terms_and_conditions" = "Bonus T&C";
 
-"check_bet_result" = "Consultez le résultat de ce pari!";
 "my_documents" = "Mes Documents";
 
 "bonus_deposit_title" = "Souhaitez-vous recevoir un bonus pour ce dépôt?";
@@ -2117,4 +2116,9 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 
 "pari_bonus" = "Mon pari, ton bonus";
 
+
 "share_bet_description" = "Rejoins l'équipe Betsson avec mon code parrainage: {userCode} et empoche 10€ de Bonus!";
+
+"look_bet_made" = "Je tente ce pari, et si tu veux te lancer aussi, rejoins l’équipe Betsson avec mon code parrainage {userCode} et on empoche chacun 10€ de bonus!";
+
+"check_bet_result" = "Consultez le résultat de ce pari!";

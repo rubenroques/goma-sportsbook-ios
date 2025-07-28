@@ -580,7 +580,8 @@ class BetSubmissionSuccessViewController: UIViewController {
         brandedShareView.configure(withBetHistoryEntry: betHistoryEntry,
                                    countryCodes: [],
                                    viewModel: viewModel,
-                                   grantedWinBoost: nil)
+                                   grantedWinBoost: nil,
+                                   betShareToken: "\(betHistoryEntry.betslipId ?? 0)")
         
         brandedShareView.setNeedsLayout()
         brandedShareView.layoutIfNeeded()
@@ -591,8 +592,8 @@ class BetSubmissionSuccessViewController: UIViewController {
             brandedShareView.setNeedsLayout()
             brandedShareView.layoutIfNeeded()
             
-            if let shareImage = brandedShareView.generateShareImage() {
-                self?.presentShareActivityViewController(with: shareImage)
+            if let shareContent = brandedShareView.generateShareContent() {
+                self?.presentShareActivityViewController(with: shareContent)
             }
 
             // brandedShareView.removeFromSuperview()
@@ -624,16 +625,8 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.shareLoadingActivityIndicator.stopAnimating()
     }
     
-    private func presentShareActivityViewController(with image: UIImage) {
-        
-        let item = ShareableImageMetaSource(
-            payload: image,
-            thumbnail: UIImage(named: "share_thumb_icon") ?? image,
-            title: localized("partage_pari"),
-            subtitle: "betsson.fr"
-        )
-        
-        let activityViewController = UIActivityViewController(activityItems: [image, item], applicationActivities: nil)
+    private func presentShareActivityViewController(with shareContent: ShareContent) {
+        let activityViewController = UIActivityViewController(activityItems: shareContent.activityItems, applicationActivities: nil)
         
         // Configure for iPad
         if let popoverController = activityViewController.popoverPresentationController {
@@ -912,7 +905,6 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
     
     private func configureWinBoostLayout() {
-        
         self.configureBetCards(withBetHistoryEntries: self.betHistoryEntries)
         
         self.topImageView.image = UIImage(named: "sucess_wheel_banner")

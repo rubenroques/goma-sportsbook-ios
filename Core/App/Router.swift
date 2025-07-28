@@ -111,7 +111,7 @@ class Router {
         // Check Router+FastTest.swift file for definition and details
         
 #if DEBUG
-        let useFastTestMode = true
+        let useFastTestMode = false
 #else
         let useFastTestMode = false
 #endif

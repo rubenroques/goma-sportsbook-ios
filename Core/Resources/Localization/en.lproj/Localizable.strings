@@ -472,7 +472,7 @@
 "login_required_text" = "You need to be logged in to be able to see your bets"; // UNUSED
 "login_tc_agreement" = "By Signing Up you agree to our"; // UNUSED
 "logout" = "Logout";
-"look_bet_made" = "Look at the bet I just made! Join me.";
+
 "loss_limit" = "Loss Limit"; // UNUSED
 "loss_limit_locked" = "Loss limit set for your account is locked. You can update this limit again after: {period}"; // UNUSED
 "loss_limit_removal_error" = "We can't remove your Loss Limit at this moment. Please try again later."; // UNUSED
@@ -1287,7 +1287,7 @@
 
 "bonus_terms_and_conditions" = "Bonus T&C";
 
-"check_bet_result" = "Check the result of this bet!";
+
 "my_documents" = "My Documents";
 
 "bonus_deposit_title" = "Would you like to receive a bonus with this deposit?";
@@ -2018,4 +2018,9 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 
 "pari_bonus" = "My bet, your bonus";
 
-"share_bet_description" = "Rejoins l'équipe Betsson avec mon code parrainage: {userCode} et empoche 10€ de Bonus!";
+
+"share_bet_description" = "Join the Betsson team with my referral code: {userCode} and pocket a €10 Bonus!";
+
+"look_bet_made" = "I'll take this bet, and if you want to go for it too, join the Betsson team with my referral code {userCode} and we'll each pocket a €10 bonus!";
+
+"check_bet_result" = "Check the result of this bet!";
