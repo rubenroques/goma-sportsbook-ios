@@ -13,7 +13,7 @@ class SharedTicketCardView: UIView {
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
-    private lazy var shareButton: UIButton = Self.createShareButton()
+    private lazy var shareButton: CustomShareButton = Self.createShareButton()
     private lazy var betCardsBaseView: UIView = Self.createBetCardsBaseView()
     private lazy var betCardsStackView: UIStackView = Self.createBetCardsStackView()
     private lazy var bottomBaseView: UIView = Self.createBottomBaseView()
@@ -82,7 +82,9 @@ class SharedTicketCardView: UIView {
 //        }
         self.shareButton.isHidden = false
         
-        self.shareButton.addTarget(self, action: #selector(didTapShareButton), for: .primaryActionTriggered)
+        self.shareButton.onTap = { [weak self] in
+            self?.didTapShareButton()
+        }
 
         self.cashbackInfoView.didTapInfoAction = { [weak self] in
 
@@ -282,11 +284,9 @@ extension SharedTicketCardView {
         return label
     }
 
-    private static func createShareButton() -> UIButton {
-        let button = UIButton()
+    private static func createShareButton() -> CustomShareButton {
+        let button = CustomShareButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "send_bet_icon"), for: .normal)
         return button
     }
 
@@ -517,16 +517,15 @@ extension SharedTicketCardView {
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 14),
-            self.titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.baseView.trailingAnchor, constant: -36),
+            self.titleLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.shareButton.leadingAnchor, constant: -8),
 
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3),
             self.subtitleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
 
-            self.shareButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -5),
-            self.shareButton.widthAnchor.constraint(equalToConstant: 40),
-            self.shareButton.heightAnchor.constraint(equalTo: self.shareButton.widthAnchor),
+            self.shareButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12),
             self.shareButton.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.shareButton.heightAnchor.constraint(equalToConstant: 32),
 
             self.betCardsBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.betCardsBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),

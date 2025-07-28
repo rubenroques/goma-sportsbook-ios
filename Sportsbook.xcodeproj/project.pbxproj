@@ -9299,6 +9299,26 @@
 		CEE7E45B2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
 		CEE7E45C2E34F64E003AB610 /* SimpleMyTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */; };
 		CEE7E45D2E34F64E003AB610 /* SimpleMyTicketCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */; };
+		CEE7E45F2E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4602E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4612E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4622E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4632E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4642E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4652E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4662E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4672E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E4682E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */; };
+		CEE7E46A2E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E46B2E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E46C2E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E46D2E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E46E2E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E46F2E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E4702E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E4712E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E4722E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
+		CEE7E4732E3798D4003AB610 /* CustomShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */; };
 		F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
@@ -10364,6 +10384,8 @@
 		CEE7E4322E345856003AB610 /* ShareTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTestViewController.swift; sourceTree = "<group>"; };
 		CEE7E4482E34F64E003AB610 /* SimpleMyTicketCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMyTicketCardView.swift; sourceTree = "<group>"; };
 		CEE7E4492E34F64E003AB610 /* SimpleMyTicketCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SimpleMyTicketCardView.xib; sourceTree = "<group>"; };
+		CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandedTicketShareItemSource.swift; sourceTree = "<group>"; };
+		CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShareButton.swift; sourceTree = "<group>"; };
 		F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
@@ -11579,6 +11601,7 @@
 				455A0CDA26BD9D9000EC572D /* CountryName.swift */,
 				A9B8408026CFB49000269B05 /* DateUserLocation.swift */,
 				45936CAF270EEFA200E8260E /* LoadableContent.swift */,
+				CEE7E45E2E352D4B003AB610 /* BrandedTicketShareItemSource.swift */,
 				454E0A8D2731B01F00794E0C /* FailableDecodable.swift */,
 				A91F4B2927BE918C008C7510 /* LinkPresentationItemSource.swift */,
 				45065D2E2922E46700E0A205 /* Loadable.swift */,
@@ -11944,6 +11967,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */,
 				CEE7E41C2E3453FF003AB610 /* BrandedTicketShareView */,
 				CE0C6C912D56327E00EAD26B /* SmallToolTipView */,
 				653A37902D4BDBB500B89CDF /* Questions */,
@@ -17283,6 +17307,7 @@
 				450B799B28F58574009229E3 /* SupportPageViewModel.swift in Sources */,
 				450B799C28F58574009229E3 /* FriendStatusCellViewModel.swift in Sources */,
 				450B799D28F58574009229E3 /* FriendStatusTableViewCell.swift in Sources */,
+				CEE7E4682E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				4566339729DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A90FB7F029B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				450B799E28F58574009229E3 /* UIView+Shift.swift in Sources */,
@@ -17515,6 +17540,7 @@
 				450B7A5428F58574009229E3 /* FavoritesManager.swift in Sources */,
 				4542DFEA2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				A9A7B52729DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
+				CEE7E4732E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				450B7A5528F58574009229E3 /* MyTicketsRootViewController.swift in Sources */,
 				450B7A5628F58574009229E3 /* Throwable.swift in Sources */,
 				450B7A5828F58574009229E3 /* NotificationsViewController.swift in Sources */,
@@ -18158,6 +18184,7 @@
 				CE0C6C9A2D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
 				CE0C6C9B2D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				457CBAF9282D27D000ED0F00 /* DateHeaderFooterView.swift in Sources */,
+				CEE7E4632E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				451B0A42286AFD7300005FA5 /* SupportPageViewModel.swift in Sources */,
 				457CBAFA282D27D000ED0F00 /* MaintenanceViewController.swift in Sources */,
 				457CBAFB282D27D000ED0F00 /* FriendStatusCellViewModel.swift in Sources */,
@@ -18390,6 +18417,7 @@
 				455AE1392A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				4587353B2AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				A9A6517C2A52F0A2001D7A22 /* TitleDropdownView.swift in Sources */,
+				CEE7E46C2E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				A9A5217D2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				457CBB90282D27D000ED0F00 /* Throwable.swift in Sources */,
 				457CBB92282D27D000ED0F00 /* NotificationsViewController.swift in Sources */,
@@ -19046,6 +19074,7 @@
 				A99CC2FE2A262ABB0035BA3D /* ScreenState.swift in Sources */,
 				457CBDFC282D2CD100ED0F00 /* RealtimeSocketClient.swift in Sources */,
 				457CBDFD282D2CD100ED0F00 /* AddFriendTableViewCell.swift in Sources */,
+				CEE7E4702E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				450FC3E32A2A3899000DB866 /* MatchWidgetContainerTableViewCell.swift in Sources */,
 				45B6E1F7283E3EEE001B570C /* EditGroupViewModel.swift in Sources */,
 				457CBDFE282D2CD100ED0F00 /* Discipline.swift in Sources */,
@@ -19179,6 +19208,7 @@
 				45C10F9F28772DA700037BBE /* DefaultShiftAnimation.swift in Sources */,
 				459EF29B2BC01AD20098A7F6 /* ScoreView.swift in Sources */,
 				457CBE50282D2CD100ED0F00 /* Event.swift in Sources */,
+				CEE7E4652E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				457CBE51282D2CD100ED0F00 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45C10E2328759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				A9B331E1288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
@@ -19646,6 +19676,7 @@
 				451B0A40286AFD7300005FA5 /* SupportPageViewModel.swift in Sources */,
 				45A6BB832821459200D9B416 /* FriendStatusCellViewModel.swift in Sources */,
 				45A6BB84282145BB00D9B416 /* FriendStatusTableViewCell.swift in Sources */,
+				CEE7E4602E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				4566339829DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A90FB7F129B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				45C10F7228772DA700037BBE /* UIView+Shift.swift in Sources */,
@@ -19878,6 +19909,7 @@
 				4589C910282024E400243547 /* MyTicketsRootViewController.swift in Sources */,
 				4542DFEB2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				A9A7B52829DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
+				CEE7E46E2E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				4589C911282024E400243547 /* Throwable.swift in Sources */,
 				4589C913282024E400243547 /* NotificationsViewController.swift in Sources */,
 				45B6E2432841525F001B570C /* NewMessageViewController.swift in Sources */,
@@ -20391,6 +20423,7 @@
 				45A331B4298976BA008181E9 /* MaintenanceViewController.swift in Sources */,
 				45A331B5298976BA008181E9 /* SupportPageViewModel.swift in Sources */,
 				45A331B6298976BA008181E9 /* FriendStatusCellViewModel.swift in Sources */,
+				CEE7E4672E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				4566339629DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A90FB7EF29B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				45A331B7298976BA008181E9 /* FriendStatusTableViewCell.swift in Sources */,
@@ -20623,6 +20656,7 @@
 				45A33274298976BA008181E9 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE82C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				45A33275298976BA008181E9 /* FavoritesManager.swift in Sources */,
+				CEE7E4722E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				45A33276298976BA008181E9 /* MyTicketsRootViewController.swift in Sources */,
 				45A33277298976BA008181E9 /* Throwable.swift in Sources */,
@@ -21136,6 +21170,7 @@
 				45A6BCDF28246A7500D9B416 /* EmailVerificationTableViewCell.swift in Sources */,
 				45A6BCE028246A7500D9B416 /* ForbiddenLocationViewController.swift in Sources */,
 				45A6BCE128246A7500D9B416 /* OddFormatter.swift in Sources */,
+				CEE7E45F2E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				459EF2752BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift in Sources */,
 				45A6BCE228246A7500D9B416 /* FavoriteMatchesDataSource.swift in Sources */,
 				A98EFDA5287C66B000655A26 /* SharedTicketCardView.swift in Sources */,
@@ -21368,6 +21403,7 @@
 				45970A052C5C8AB200E8F91D /* PromotedBetslip.swift in Sources */,
 				45A6BD6628246A7500D9B416 /* FavoritesManager.swift in Sources */,
 				A9A1B2C22A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
+				CEE7E46D2E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				45A6BD6728246A7500D9B416 /* MyTicketsRootViewController.swift in Sources */,
 				45A6BD6828246A7500D9B416 /* Throwable.swift in Sources */,
 				45B6E2422841525F001B570C /* NewMessageViewController.swift in Sources */,
@@ -21881,6 +21917,7 @@
 				45F6BC632AB3732C00C81DE1 /* MaintenanceViewController.swift in Sources */,
 				45F6BC642AB3732C00C81DE1 /* SupportPageViewModel.swift in Sources */,
 				45F6BC652AB3732C00C81DE1 /* FriendStatusCellViewModel.swift in Sources */,
+				CEE7E4622E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				45F6BC662AB3732C00C81DE1 /* AnonymousSideMenuViewController.swift in Sources */,
 				45F6BC672AB3732C00C81DE1 /* TipsControlViewController.swift in Sources */,
 				45F6BC682AB3732C00C81DE1 /* FriendStatusTableViewCell.swift in Sources */,
@@ -22113,6 +22150,7 @@
 				45F6BD322AB3732C00C81DE1 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4542DFE92C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				45F6BD332AB3732C00C81DE1 /* FavoritesManager.swift in Sources */,
+				CEE7E4712E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				45F6BD342AB3732C00C81DE1 /* BonusTypeMapper.swift in Sources */,
 				45F6BD352AB3732C00C81DE1 /* MyTicketsRootViewController.swift in Sources */,
 				45F6BD362AB3732C00C81DE1 /* Throwable.swift in Sources */,
@@ -22777,6 +22815,7 @@
 				A9C3425E28F9A74A0055360B /* MatchFiltersViewController.swift in Sources */,
 				A9C3426028F9A74A0055360B /* CGFloat+Extensions.swift in Sources */,
 				A91A64422A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */,
+				CEE7E46A2E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				A9C3426128F9A74A0055360B /* SportGroupViewModel.swift in Sources */,
 				A9C3426228F9A74A0055360B /* BonusAvailableTableViewCell.swift in Sources */,
 				A9C3426328F9A74A0055360B /* MyFavoritesViewModel.swift in Sources */,
@@ -22910,6 +22949,7 @@
 				65238E042C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				A9C342CE28F9A74A0055360B /* RecentSearchHeaderView.swift in Sources */,
 				A9BDD4F3292E3F08001A7799 /* SportTypeStore.swift in Sources */,
+				CEE7E4612E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				A9C342CF28F9A74A0055360B /* SharedGameCardView.swift in Sources */,
 				A9C342D028F9A74A0055360B /* DefaultShiftAnimation.swift in Sources */,
 				A9C342D128F9A74A0055360B /* Event.swift in Sources */,
@@ -23377,6 +23417,7 @@
 				CE12A2D62D31347E0022BDF7 /* FriendStatusCellViewModel.swift in Sources */,
 				CE12A2D72D31347E0022BDF7 /* FriendStatusTableViewCell.swift in Sources */,
 				CE12A2D82D31347E0022BDF7 /* AnonymousSideMenuViewController.swift in Sources */,
+				CEE7E4642E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				CE12A2D92D31347E0022BDF7 /* TipsControlViewController.swift in Sources */,
 				CE12A2DA2D31347E0022BDF7 /* UIView+Shift.swift in Sources */,
 				CE12A2DB2D31347E0022BDF7 /* MessageDetailViewModel.swift in Sources */,
@@ -23609,6 +23650,7 @@
 				CE12A3B32D31347E0022BDF7 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				CE12A3B42D31347E0022BDF7 /* BonusTypeMapper.swift in Sources */,
 				CE12A3B52D31347E0022BDF7 /* MyTicketsRootViewController.swift in Sources */,
+				CEE7E46F2E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				CE12A3B62D31347E0022BDF7 /* Throwable.swift in Sources */,
 				CE12A3B72D31347E0022BDF7 /* NotificationsViewController.swift in Sources */,
 				CE12A3B82D31347E0022BDF7 /* NewMessageViewController.swift in Sources */,
@@ -24122,6 +24164,7 @@
 				CEA567A22D5A58D800696793 /* OddFormatter.swift in Sources */,
 				CEA567A32D5A58D800696793 /* ServiceProviderModelMapper+Scores.swift in Sources */,
 				CEA567A42D5A58D800696793 /* FavoriteMatchesDataSource.swift in Sources */,
+				CEE7E4662E352D4B003AB610 /* BrandedTicketShareItemSource.swift in Sources */,
 				CEA567A52D5A58D800696793 /* SharedTicketCardView.swift in Sources */,
 				CEA567A62D5A58D800696793 /* BoostedBetConfirmationView.swift in Sources */,
 				CEA567A72D5A58D800696793 /* SentTicketMessageTableViewCell.swift in Sources */,
@@ -24354,6 +24397,7 @@
 				CEA568842D5A58D800696793 /* UserConsentType.swift in Sources */,
 				CEA568852D5A58D800696793 /* MyTicketsRootViewController.swift in Sources */,
 				CEA568862D5A58D800696793 /* Throwable.swift in Sources */,
+				CEE7E46B2E3798D4003AB610 /* CustomShareButton.swift in Sources */,
 				CEA568872D5A58D800696793 /* NewMessageViewController.swift in Sources */,
 				CEA568882D5A58D800696793 /* UserProfileTipsViewModel.swift in Sources */,
 				CEA568892D5A58D800696793 /* NotificationsViewController.swift in Sources */,

@@ -434,70 +434,22 @@ class MyTicketCardView: NibView {
         
         shareButtonPlaceholderView.clipsToBounds = false
         
-        // Create main container view
-        let containerView = UIView()
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Styling to match Figma design
-        containerView.backgroundColor = UIColor.App.backgroundSecondary
-        containerView.layer.borderWidth = 1.5
-        containerView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-        containerView.layer.cornerRadius = CornerRadius.checkBox
-        
-        // Inner glow effect
-        containerView.layer.shadowColor = UIColor.App.highlightPrimary.cgColor
-        containerView.layer.shadowOpacity = 0.8
-        containerView.layer.shadowRadius = 2.5
-        containerView.layer.shadowOffset = .zero
-        containerView.layer.masksToBounds = false
-        
-        containerView.clipsToBounds = false
-        
-        // Create label
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("pari_bonus")
-        label.textColor = UIColor.App.highlightPrimary
-        label.font = AppFont.with(type: .bold, size: 11)
-        
-        // Create share icon
-        let shareIcon = UIImageView()
-        if let iconImage = UIImage(named: "icon_share_v3") {
-            shareIcon.image = iconImage.withRenderingMode(.alwaysTemplate)
-            shareIcon.tintColor = UIColor.App.highlightPrimary
+        // Create and configure custom share button
+        let customShareButton = CustomShareButton()
+        customShareButton.onTap = { [weak self] in
+            self?.didTapShareButton()
         }
-        shareIcon.contentMode = .scaleAspectFit
-        shareIcon.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add tap gesture
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapShareButton))
-        containerView.addGestureRecognizer(tapGesture)
-        containerView.isUserInteractionEnabled = true
         
         // Add to view hierarchy
-        shareButtonPlaceholderView.addSubview(containerView)
-        containerView.addSubview(label)
-        containerView.addSubview(shareIcon)
+        shareButtonPlaceholderView.addSubview(customShareButton)
         
         // Layout constraints
         NSLayoutConstraint.activate([
-            // Container fills placeholder
-            containerView.leadingAnchor.constraint(equalTo: shareButtonPlaceholderView.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: shareButtonPlaceholderView.trailingAnchor),
-            containerView.topAnchor.constraint(equalTo: shareButtonPlaceholderView.topAnchor),
-            containerView.bottomAnchor.constraint(equalTo: shareButtonPlaceholderView.bottomAnchor),
-            
-            containerView.heightAnchor.constraint(equalToConstant: 32),
-            // Label centered in container
-            label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
-            label.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            
-            // Icon positioning
-            shareIcon.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
-            shareIcon.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
-            shareIcon.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            shareIcon.widthAnchor.constraint(equalToConstant: 12),
-            shareIcon.heightAnchor.constraint(equalToConstant: 12)
+            customShareButton.leadingAnchor.constraint(equalTo: shareButtonPlaceholderView.leadingAnchor),
+            customShareButton.trailingAnchor.constraint(equalTo: shareButtonPlaceholderView.trailingAnchor),
+            customShareButton.topAnchor.constraint(equalTo: shareButtonPlaceholderView.topAnchor),
+            customShareButton.bottomAnchor.constraint(equalTo: shareButtonPlaceholderView.bottomAnchor),
+            customShareButton.heightAnchor.constraint(equalToConstant: 32)
         ])
     }
     

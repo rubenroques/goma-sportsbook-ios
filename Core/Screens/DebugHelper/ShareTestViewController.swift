@@ -143,6 +143,7 @@ class ShareTestViewController: UIViewController {
         testButtonsStackView.addArrangedSubview(shareImageButton)
         testButtonsStackView.addArrangedSubview(switchDataButton)
         testButtonsStackView.addArrangedSubview(closeButton)
+        
     }
     
     private func setupLayout() {

@@ -27,6 +27,13 @@ class BrandedTicketShareView: UIView {
         return view
     }()
     
+    // MARK: - Referral Code Properties
+    private var referralCode: String?
+    private var cancellables = Set<AnyCancellable>()
+    private var onViewReady: (() -> Void)?
+    private var isReferralCodeFetched = false
+    private var isLayoutComplete = false
+    
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -45,7 +52,7 @@ class BrandedTicketShareView: UIView {
     func commonInit() {
         self.setupSubviews()
         self.setupTicketCardView()
-        self.setupBrandingElements()
+        self.fetchReferralCode()
     }
 
     func setupWithTheme() {
@@ -89,6 +96,11 @@ class BrandedTicketShareView: UIView {
     }
 
     // MARK: Functions
+    func setOnViewReady(_ callback: @escaping () -> Void) {
+        self.onViewReady = callback
+        checkIfReady()
+    }
+    
     func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry,
                    countryCodes: [String],
                    viewModel: MyTicketCellViewModel,
@@ -98,6 +110,11 @@ class BrandedTicketShareView: UIView {
                                countryCodes: countryCodes,
                                viewModel: viewModel,
                                grantedWinBoost: grantedWinBoost)
+        
+        DispatchQueue.main.async {
+            self.isLayoutComplete = true
+            self.checkIfReady()
+        }
     }
     
     func generateShareImage() -> UIImage? {
@@ -120,9 +137,37 @@ class BrandedTicketShareView: UIView {
         ])
     }
     
+    private func fetchReferralCode() {
+        Env.servicesProvider.getReferralLink()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print("GET REFERRAL LINK ERROR: \(error)")
+                    // Use fallback code on error
+                    self?.referralCode = "XYZ"
+                }
+                self?.isReferralCodeFetched = true
+                self?.setupBrandingElements()
+                self?.checkIfReady()
+            }, receiveValue: { [weak self] referralLink in
+                let mappedReferralLink = ServiceProviderModelMapper.referralLink(fromServiceProviderReferralLink: referralLink)
+                self?.referralCode = mappedReferralLink.code
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func checkIfReady() {
+        if isReferralCodeFetched && isLayoutComplete {
+            onViewReady?()
+        }
+    }
+    
     private func setupBrandingElements() {
         let shareText = localized("share_bet_description") // Rejoins l'équipe Betsson avec mon code parrainage: {userCode} et empoche 10€ de Bonus!
-        let userCode = "XYZ" // Friend code from WS
+        let userCode = self.referralCode ?? "XYZ" // Use fetched code or fallback
         
         // Configure referral messaging with attributed text
         self.referralTitleLabel.attributedText = createAttributedShareText(text: shareText, userCode: userCode)

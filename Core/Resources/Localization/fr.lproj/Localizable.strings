@@ -2116,3 +2116,5 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "coup_de_boost" = "Coup de Boost";
 
 "pari_bonus" = "Mon pari, ton bonus";
+
+"share_bet_description" = "Rejoins l'équipe Betsson avec mon code parrainage: {userCode} et empoche 10€ de Bonus!";

@@ -106,11 +106,20 @@ class Router {
 
         var bootRootViewController: UIViewController
         
-        #if DEBUG
-        // Boot directly into ShareTestViewController for testing BrandedTicketShareView
-        bootRootViewController = Router.navigationController(with: ShareTestViewController())
-        Logger.log("🔧 DEBUG MODE: Booting into ShareTestViewController")
-        #else
+// FAST TEST
+//        #if DEBUG
+// Boot directly into a ViewController for testing BrandedTicketShareView (ShareTestViewController in this test)
+
+//        bootRootViewController = Router.navigationController(with: ShareTestViewController())
+//        Logger.log("🔧 DEBUG MODE: Booting into ShareTestViewController")
+        
+//
+//        #else
+//
+//
+// PROD CODE
+//
+
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
             let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
             self.mainRootViewController = rootViewController
@@ -119,7 +128,9 @@ class Router {
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
-        #endif
+//
+//        #endif
+        
 
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()

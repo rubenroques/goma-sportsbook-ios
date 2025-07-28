@@ -104,6 +104,22 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var aspectRatio: CGFloat = 1.0
 
     private var cancellables = Set<AnyCancellable>()
+    
+    private lazy var shareLoadingOverlayView: UIView = {
+        let overlayView = UIView()
+        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        overlayView.isHidden = true
+        return overlayView
+    }()
+    
+    private lazy var shareLoadingActivityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .white
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
 
     var willDismissAction: (() -> Void)?
 
@@ -317,6 +333,9 @@ class BetSubmissionSuccessViewController: UIViewController {
         let mainViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapMainView))
            mainViewTapGesture.cancelsTouchesInView = false
            self.view.addGestureRecognizer(mainViewTapGesture)
+        
+        // Setup share loading overlay
+        self.setupShareLoadingOverlay()
     }
     
     private func resizeTopViewAndAnimate() {
@@ -543,22 +562,102 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     private func showBetShareScreen() {
+        guard let betHistoryEntry = self.sharedBetHistory else { return }
+        
+        self.showShareLoadingOverlay()
+        
+        let brandedShareView = BrandedTicketShareView()
+        self.view.insertSubview(brandedShareView, at: 0)
+        
+        NSLayoutConstraint.activate([
+            brandedShareView.trailingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -10),
+            brandedShareView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            brandedShareView.topAnchor.constraint(equalTo: self.view.topAnchor)
+        ])
+        
+        // Configure with bet data
+        let viewModel = MyTicketCellViewModel(ticket: betHistoryEntry, allowedCashback: false)
+        brandedShareView.configure(withBetHistoryEntry: betHistoryEntry,
+                                   countryCodes: [],
+                                   viewModel: viewModel,
+                                   grantedWinBoost: nil)
+        
+        brandedShareView.setNeedsLayout()
+        brandedShareView.layoutIfNeeded()
 
-        if let betHistoryEntry = self.sharedBetHistory,
-           let sharedBetToken = self.sharedBetToken,
-           let ticketSnapshot = self.ticketSnapshots[betHistoryEntry.betId] {
-            let clickedShareTicketInfo = ClickedShareTicketInfo(snapshot: ticketSnapshot,
-                                                                betId: betHistoryEntry.betId,
-                                                                betStatus: betHistoryEntry.status ?? "",
-                                                                betToken: sharedBetToken,
-                                                                ticket: betHistoryEntry)
+        brandedShareView.setOnViewReady { [weak self] in
+            self?.hideShareLoadingOverlay()
+            
+            brandedShareView.setNeedsLayout()
+            brandedShareView.layoutIfNeeded()
+            
+            if let shareImage = brandedShareView.generateShareImage() {
+                self?.presentShareActivityViewController(with: shareImage)
+            }
 
-            let shareTicketChoiceViewModel = ShareTicketChoiceViewModel(clickedShareTicketInfo: clickedShareTicketInfo)
-
-            let shareTicketChoiceViewController = ShareTicketChoiceViewController(viewModel: shareTicketChoiceViewModel)
-
-            self.present(shareTicketChoiceViewController, animated: true, completion: nil)
+            brandedShareView.removeFromSuperview()
         }
+    }
+    
+    private func setupShareLoadingOverlay() {
+        self.shareLoadingOverlayView.addSubview(self.shareLoadingActivityIndicator)
+        self.view.addSubview(self.shareLoadingOverlayView)
+        
+        NSLayoutConstraint.activate([
+            self.shareLoadingOverlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.shareLoadingOverlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.shareLoadingOverlayView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.shareLoadingOverlayView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            self.shareLoadingActivityIndicator.centerXAnchor.constraint(equalTo: self.shareLoadingOverlayView.centerXAnchor),
+            self.shareLoadingActivityIndicator.centerYAnchor.constraint(equalTo: self.shareLoadingOverlayView.centerYAnchor)
+        ])
+    }
+    
+    private func showShareLoadingOverlay() {
+        self.shareLoadingOverlayView.isHidden = false
+        self.shareLoadingActivityIndicator.startAnimating()
+    }
+    
+    private func hideShareLoadingOverlay() {
+        self.shareLoadingOverlayView.isHidden = true
+        self.shareLoadingActivityIndicator.stopAnimating()
+    }
+    
+    private func presentShareActivityViewController(with image: UIImage) {
+        //        let shareText = TargetVariables.clientBaseUrl
+        //
+        //
+        //        // 2. Park it in /tmp
+        //        let url = FileManager.default.temporaryDirectory
+        //            .appendingPathComponent(UUID().uuidString)
+        //            .appendingPathExtension("png")
+        //
+        //        try? image.pngData()?.write(to: url) // save the generated image into
+        //
+        //
+        //
+        //        // Use custom activity item source to ensure image is properly shared with text as metadata
+        //        let shareItemSource = BrandedTicketShareItemSource(image: image, shareText: shareText)
+        //
+                // 3. Build share‑sheet
+                let item = ShareableImageMetaSource(
+                    payload: image,
+                    thumbnail: UIImage(named: "share_thumb_icon") ?? image,
+                    title: localized("partage_pari"),
+                    subtitle: "betsson.fr"
+                )
+                
+                let activityViewController = UIActivityViewController(activityItems: [item], applicationActivities: nil)
+                
+        // Configure for iPad
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        
+        self.present(activityViewController, animated: true, completion: nil)
     }
 
     private func loadBetTicket(withId id: String) -> AnyPublisher<BetHistoryEntry, ServiceProviderError> {

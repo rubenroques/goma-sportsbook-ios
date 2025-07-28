@@ -155,7 +155,127 @@ class MockDataFactory {
                 priceValue: 1.70,
                 status: .opened,
                 result: .open
-            )
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3001",
+                sportName: "Football",
+                eventName: "Chelsea vs Arsenal",
+                homeParticipantName: "Chelsea",
+                awayParticipantName: "Arsenal",
+                marketName: "1X2",
+                betName: "1",
+                priceValue: 2.10,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3002",
+                sportName: "Football",
+                eventName: "Tottenham vs Manchester City",
+                homeParticipantName: "Tottenham",
+                awayParticipantName: "Manchester City",
+                marketName: "Both Teams to Score",
+                betName: "Yes",
+                priceValue: 1.70,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3001",
+                sportName: "Football",
+                eventName: "Chelsea vs Arsenal",
+                homeParticipantName: "Chelsea",
+                awayParticipantName: "Arsenal",
+                marketName: "1X2",
+                betName: "1",
+                priceValue: 2.10,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3002",
+                sportName: "Football",
+                eventName: "Tottenham vs Manchester City",
+                homeParticipantName: "Tottenham",
+                awayParticipantName: "Manchester City",
+                marketName: "Both Teams to Score",
+                betName: "Yes",
+                priceValue: 1.70,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3001",
+                sportName: "Football",
+                eventName: "Chelsea vs Arsenal",
+                homeParticipantName: "Chelsea",
+                awayParticipantName: "Arsenal",
+                marketName: "1X2",
+                betName: "1",
+                priceValue: 2.10,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3002",
+                sportName: "Football",
+                eventName: "Tottenham vs Manchester City",
+                homeParticipantName: "Tottenham",
+                awayParticipantName: "Manchester City",
+                marketName: "Both Teams to Score",
+                betName: "Yes",
+                priceValue: 1.70,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3001",
+                sportName: "Football",
+                eventName: "Chelsea vs Arsenal",
+                homeParticipantName: "Chelsea",
+                awayParticipantName: "Arsenal",
+                marketName: "1X2",
+                betName: "1",
+                priceValue: 2.10,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3002",
+                sportName: "Football",
+                eventName: "Tottenham vs Manchester City",
+                homeParticipantName: "Tottenham",
+                awayParticipantName: "Manchester City",
+                marketName: "Both Teams to Score",
+                betName: "Yes",
+                priceValue: 1.70,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3001",
+                sportName: "Football",
+                eventName: "Chelsea vs Arsenal",
+                homeParticipantName: "Chelsea",
+                awayParticipantName: "Arsenal",
+                marketName: "1X2",
+                betName: "1",
+                priceValue: 2.10,
+                status: .opened,
+                result: .open
+            ),
+            createMockBetHistoryEntrySelection(
+                outcomeId: "3002",
+                sportName: "Football",
+                eventName: "Tottenham vs Manchester City",
+                homeParticipantName: "Tottenham",
+                awayParticipantName: "Manchester City",
+                marketName: "Both Teams to Score",
+                betName: "Yes",
+                priceValue: 1.70,
+                status: .opened,
+                result: .open
+            ),
         ]
         
         return BetHistoryEntry(
