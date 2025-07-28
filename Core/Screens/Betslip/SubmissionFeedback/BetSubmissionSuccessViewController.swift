@@ -596,7 +596,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                 self?.presentShareActivityViewController(with: shareContent)
             }
 
-            // brandedShareView.removeFromSuperview()
+            brandedShareView.removeFromSuperview()
         }
     }
     
