@@ -31,6 +31,8 @@ struct FirebaseClientSettings: Codable {
     let ungroupedMarkets: [String]
     
     let featuredCompetition: FeaturedCompetition?
+    
+    let jonum: JonumFeature?
 
     struct Locale: Codable {
         var currency: String
@@ -59,6 +61,7 @@ struct FirebaseClientSettings: Codable {
         case hasRollingWeeklyLimits = "limit_type_rolling"
         case homeLiveEventsCount = "home_live_num_matches"
         case featuredCompetition = "feature_competition"
+        case jonum = "jonum"
     }
 
     init(from decoder: Decoder) throws {
@@ -125,6 +128,9 @@ struct FirebaseClientSettings: Codable {
         
         let featuredCompetition = try container.decodeIfPresent(FeaturedCompetition.self, forKey: .featuredCompetition)
         self.featuredCompetition = featuredCompetition
+        
+        let jonumFeature = try container.decodeIfPresent(JonumFeature.self, forKey: .jonum)
+        self.jonum = jonumFeature
     }
 
     init(showInformationPopUp: Bool,
@@ -139,7 +145,8 @@ struct FirebaseClientSettings: Codable {
          replaySportsCodes: [String],
          ungroupedMarkets: [String],
          hasRollingWeeklyLimits: Bool, homeLiveEventsCount: Int,
-         featuredCompetition: FeaturedCompetition?) {
+         featuredCompetition: FeaturedCompetition?,
+         jonum: JonumFeature?) {
 
         self.showInformationPopUp = showInformationPopUp
         self.currentAppVersion = currentAppVersion
@@ -155,6 +162,7 @@ struct FirebaseClientSettings: Codable {
         self.hasRollingWeeklyLimits = hasRollingWeeklyLimits
         self.homeLiveEventsCount = homeLiveEventsCount
         self.featuredCompetition = featuredCompetition
+        self.jonum = jonum
     }
 
 }
@@ -174,6 +182,7 @@ extension FirebaseClientSettings {
                                       ungroupedMarkets: [],
                                       hasRollingWeeklyLimits: false,
                                       homeLiveEventsCount: 3,
-        featuredCompetition: nil)
+                                      featuredCompetition: nil,
+                                      jonum: nil)
     }
 }
