@@ -254,6 +254,12 @@ class BrandedTicketShareView: UIView {
     }
     
     private func createAttributedShareText(text: String, userCode: String) -> NSAttributedString {
+        
+        let darkTraits = UITraitCollection(userInterfaceStyle: .dark)
+
+        let primaryColor = UIColor.App.highlightPrimary.resolvedColor(with: darkTraits)
+        let secondaryTextColor = UIColor.App.textSecondary.resolvedColor(with: darkTraits)
+        
         let attributedString = NSMutableAttributedString(string: text.replacingOccurrences(of: "{userCode}", with: userCode))
         
         // Default white color for the entire text
@@ -262,7 +268,7 @@ class BrandedTicketShareView: UIView {
         // Apply secondary color to user code
         if let userCodeRange = attributedString.string.range(of: userCode) {
             let nsRange = NSRange(userCodeRange, in: attributedString.string)
-            attributedString.addAttribute(.foregroundColor, value: UIColor.App.textSecondary, range: nsRange)
+            attributedString.addAttribute(.foregroundColor, value: secondaryTextColor, range: nsRange)
         }
         
         // Apply highlight color to bonus amount (looking for pattern like "10€ de Bonus")
@@ -270,7 +276,7 @@ class BrandedTicketShareView: UIView {
         if let regex = try? NSRegularExpression(pattern: bonusPattern, options: []) {
             let matches = regex.matches(in: attributedString.string, options: [], range: NSRange(location: 0, length: attributedString.length))
             for match in matches {
-                attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: match.range)
+                attributedString.addAttribute(.foregroundColor, value: primaryColor, range: match.range)
             }
         }
         
