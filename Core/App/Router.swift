@@ -14,7 +14,7 @@ enum Route {
     case openBet(id: String)
     case resolvedBet(id: String)
     case event(id: String)
-    case ticket(id: String)
+    case ticket(id: String, referralCode: String?)
     case chatMessage(id: String)
     case chatNotifications
     case contactSettings
@@ -103,7 +103,8 @@ class Router {
     }
 
     func showPostLoadingFlow() {
-        
+        let bootRootViewController: UIViewController
+
         // FAST TEST CONFIGURATION
         // ========================
         // Set to true for development/testing, false for production
@@ -113,18 +114,18 @@ class Router {
 #if DEBUG
         let useFastTestMode = false
 #else
-        let useFastTestMode = false
+        let useFastTestMode = false 
 #endif
-        
-        let bootRootViewController: UIViewController
-        
+
         if useFastTestMode {
+#if DEBUG
             // 🧪 FAST TEST MODE - Direct boot into test screens
             // Configure which test screen to boot into when useFastTestMode = true
-            let fastTestTarget: FastTestTarget = .betSubmissionSuccess(.singleFootball)
+            let fastTestTarget: FastTestTarget = .shareTestView // .betSubmissionSuccess(.singleFootball)
             
             bootRootViewController = createFastTestViewController(target: fastTestTarget)
             Logger.log("🔧 FAST TEST MODE: Booting into \(fastTestTarget)")
+#endif
         } else {
             // 🏭 PRODUCTION MODE - Normal app flow
             bootRootViewController = createProductionViewController()
@@ -317,8 +318,8 @@ class Router {
             self.showMyTickets(ticketType: MyTicketsType.resolved, ticketId: id)
         case .event(let id):
             self.showMatchDetailScreen(matchId: id)
-        case .ticket(let id):
-            self.showBetslipWithTicket(token: id)
+        case .ticket(let id, let referralCode):
+            self.showBetslipWithTicket(token: id, referralCode: referralCode)
         case .chatMessage(let id):
             self.showChatDetails(withId: id)
         case .chatNotifications:
@@ -509,8 +510,11 @@ class Router {
         self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
     }
 
-    func showBetslipWithTicket(token: String) {
+    func showBetslipWithTicket(token: String, referralCode: String?) {
 
+        // Store the referral code if the users try to register later on
+        UserDefaults.standard.referralCode = referralCode
+        
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -546,10 +550,6 @@ class Router {
                                 currentViewController.openBetslipModalWithShareData(ticketToken: token)
                             }
                         }
-//                        let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
-//
-//                        let navigationViewController = Router.navigationController(with: betslipViewController)
-//                        self?.rootViewController?.present(navigationViewController, animated: true, completion: nil)
                     })
                     .store(in: &cancellables)
             }

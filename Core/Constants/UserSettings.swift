@@ -28,6 +28,7 @@ enum UserDefaultsKey: String {
     case oddsValueType = "oddsValueType"
 
     case startedUserRegisterInfo = "RegistrationFormDataKey"
+    case referralCode = "referralCode"
 
     var key: String {
         return self.rawValue
@@ -251,6 +252,20 @@ extension UserDefaults {
         }
         set {
             self.setValue(newValue, forKey: UserDefaultsKey.acceptedTracking.key)
+            self.synchronize()
+        }
+    }
+
+    var referralCode: String? {
+        get {
+            return self.string(forKey: UserDefaultsKey.referralCode.key)
+        }
+        set {
+            if let newValue = newValue {
+                self.set(newValue, forKey: UserDefaultsKey.referralCode.key)
+            } else {
+                self.removeObject(forKey: UserDefaultsKey.referralCode.key)
+            }
             self.synchronize()
         }
     }

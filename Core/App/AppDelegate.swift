@@ -222,9 +222,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                     self.openSharedRoute(Route.competition(id: competitionDetailId), onApplication: application)
                 }
             }
-            else if urlSections.contains("bet") {
+            else if urlSections.contains("share") && urlSections.contains("bet") {
                 if let ticketId = urlSections.last {
-                    self.openSharedRoute(Route.ticket(id: ticketId), onApplication: application)
+                    
+                    let queryItems = urlComponents?.queryItems
+                    if let code = urlComponents?.queryItems?.first(where: {
+                        $0.name == "referralCode"
+                    })?.value {
+                        self.openSharedRoute(Route.ticket(id: ticketId, referralCode: code), onApplication: application)
+                    }
+                    else {
+                        self.openSharedRoute(Route.ticket(id: ticketId, referralCode: nil), onApplication: application)
+                    }
                 }
             }
             else if urlSections.contains("contact-settings") {

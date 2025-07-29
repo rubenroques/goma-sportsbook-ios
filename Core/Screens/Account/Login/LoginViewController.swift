@@ -306,6 +306,10 @@ class LoginViewController: UIViewController {
         if let referralCode = self.referralCode {
             userRegisterEnvelopValue.godfatherCode = referralCode
         }
+        
+        if let referralCode = UserDefaults.standard.referralCode {
+            userRegisterEnvelopValue.godfatherCode = referralCode
+        }
 
         let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
 
@@ -362,6 +366,8 @@ class LoginViewController: UIViewController {
                 
                 self?.triggerLoginAfterRegister(username: nickname, password: password, withUserConsents: registeredUser.acceptedMarketing)
                 self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)
+                
+                UserDefaults.standard.referralCode = nil
             }
         }
         

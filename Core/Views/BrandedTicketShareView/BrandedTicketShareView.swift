@@ -136,15 +136,16 @@ class BrandedTicketShareView: UIView {
     }
     
     func generateShareContent() -> ShareContent? {
-        guard let shareImage = generateShareImage() else { return nil }
+        guard
+            let shareImage = generateShareImage(),
+                let betShareToken = self.betShareToken else { return nil }
         
         // Check if this is an OPEN bet with a shareable token
-        if betHistoryEntry?.status?.lowercased() == "open" || betHistoryEntry?.status?.lowercased() == "opened",
-           let betShareToken = self.betShareToken {
+        if betHistoryEntry?.status?.lowercased() == "open" || betHistoryEntry?.status?.lowercased() == "opened" {
             
-            // OPEN BET: Include shareable URL and rich metadata
+            // OPEN BET
             let shareText = createShareText(withKey: "look_bet_made")
-            let shareURL = generateShareURL(betShareToken: betShareToken)
+            let shareURL = generateShareURL(betShareToken: betShareToken, referralCode: self.referralCode)
             // let metadata = createLinkMetadata(image: shareImage, url: shareURL)
             
             return ShareContent(
@@ -155,22 +156,28 @@ class BrandedTicketShareView: UIView {
             )
         }
         else {
-            // CLOSED BET: Image only sharing
+            // ALL OTHER SETTLED BET states
             let shareText = createShareText(withKey: "check_bet_result")
+            let shareURL = generateShareURL(betShareToken: betShareToken, referralCode: self.referralCode)
             
             return ShareContent(
                 image: shareImage,
-                shareText: shareText,
+                shareText: shareText, // + "\n" + shareURL, //
                 url: nil,
                 metadata: nil
             )
         }
     }
     
-    private func generateShareURL(betShareToken: String) -> String {
+    private func generateShareURL(betShareToken: String, referralCode: String?) -> String {
         let urlMobile = TargetVariables.clientBaseUrl
         let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode ?? "fr"
-        let urlString = "\(urlMobile)/\(userLocale)/share/bet/\(betShareToken)"
+        var urlString = "\(urlMobile)/\(userLocale)/share/bet/\(betShareToken)"
+        
+        if let referralCode {
+            urlString += "?referralCode=\(referralCode)"
+        }
+        
         return urlString
     }
     
