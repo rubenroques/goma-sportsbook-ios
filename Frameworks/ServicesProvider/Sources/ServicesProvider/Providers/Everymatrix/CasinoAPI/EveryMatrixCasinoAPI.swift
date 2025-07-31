@@ -1,0 +1,115 @@
+import Foundation
+
+enum EveryMatrixCasinoAPI {
+    case getCategories(language: String, platform: String)
+    case getGamesByCategory(categoryId: String, language: String, platform: String, offset: Int, limit: Int)
+    case getGameDetails(gameId: String, language: String, platform: String)
+    case getRecentlyPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
+}
+
+extension EveryMatrixCasinoAPI: Endpoint {
+    var url: String {
+        return EveryMatrixCasinoAPIEnvironment.staging.baseURL
+    }
+    
+    var endpoint: String {
+        switch self {
+        case .getCategories:
+            return "/v1/casino/categories"
+        case .getGamesByCategory:
+            return "/v1/casino/games"
+        case .getGameDetails:
+            return "/v1/casino/games"
+        case .getRecentlyPlayedGames(let playerId, _, _, _, _):
+            return "/v1/player/\(playerId)/games/last-played"
+        }
+    }
+    
+    var query: [URLQueryItem]? {
+        switch self {
+        case .getCategories(let language, let platform):
+            return [
+                URLQueryItem(name: "language", value: language),
+                URLQueryItem(name: "platform", value: platform),
+                URLQueryItem(name: "pagination", value: "offset=0,games(offset=0,limit=0)"),
+                URLQueryItem(name: "fields", value: "id,name,href,games")
+            ]
+            
+        case .getGamesByCategory(let categoryId, let language, let platform, let offset, let limit):
+            return [
+                URLQueryItem(name: "language", value: language),
+                URLQueryItem(name: "platform", value: platform),
+                URLQueryItem(name: "pagination", value: "offset=\(offset),limit=\(limit)"),
+                URLQueryItem(name: "expand", value: "vendor"),
+                URLQueryItem(name: "filter", value: "categories(id=\(categoryId))"),
+                URLQueryItem(name: "sortedField", value: "popularity")
+            ]
+            
+        case .getGameDetails(let gameId, let language, let platform):
+            return [
+                URLQueryItem(name: "language", value: language),
+                URLQueryItem(name: "platform", value: platform),
+                URLQueryItem(name: "expand", value: "vendor"),
+                URLQueryItem(name: "filter", value: "id=\(gameId)")
+            ]
+            
+        case .getRecentlyPlayedGames(_, let language, let platform, let offset, let limit):
+            return [
+                URLQueryItem(name: "language", value: language),
+                URLQueryItem(name: "platform", value: platform),
+                URLQueryItem(name: "offset", value: String(offset)),
+                URLQueryItem(name: "limit", value: String(limit)),
+                URLQueryItem(name: "unique", value: "true"),
+                URLQueryItem(name: "hasGameModel", value: "true"),
+                URLQueryItem(name: "order", value: "ASCENDING")
+            ]
+        }
+    }
+    
+    var headers: HTTP.Headers? {
+        return [
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "GOMA/native-app/iOS",
+            "X-Session-Type": "others"
+        ]
+    }
+    
+    var cachePolicy: URLRequest.CachePolicy {
+        return .reloadIgnoringLocalCacheData
+    }
+    
+    var method: HTTP.Method {
+        return .get
+    }
+    
+    var body: Data? {
+        return nil
+    }
+    
+    var timeout: TimeInterval {
+        return 30
+    }
+    
+    var requireSessionKey: Bool {
+        switch self {
+        case .getRecentlyPlayedGames:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var comment: String? {
+        switch self {
+        case .getCategories:
+            return "Fetch casino game categories"
+        case .getGamesByCategory:
+            return "Fetch games for a specific category with pagination"
+        case .getGameDetails:
+            return "Fetch details for a specific game"
+        case .getRecentlyPlayedGames:
+            return "Fetch recently played games for authenticated user"
+        }
+    }
+}

@@ -62,4 +62,10 @@ public enum ServiceProviderError: Error, Equatable, Hashable {
     case notSupportedForProvider
     case matchDetailsManagerNotFound
     case unknown
+    
+    // Casino specific errors
+    case casinoProviderNotFound
+    case notFound
+    case rateLimitExceeded
+    case noNetworkConnection
 }

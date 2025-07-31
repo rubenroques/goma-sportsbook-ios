@@ -31,6 +31,7 @@ public class Client {
     private var downloadableContentsProvider: (any DownloadableContentsProvider)?
 
     private var analyticsProvider: (any AnalyticsProvider)?
+    private var casinoProvider: (any CasinoProvider)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -88,6 +89,10 @@ public class Client {
             let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(connector: everyMatrixPlayerAPIConnector)
 
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
+            
+            // Casino API
+            let everyMatrixCasinoConnector = EveryMatrixCasinoConnector()
+            self.casinoProvider = EveryMatrixCasinoProvider(connector: everyMatrixCasinoConnector)
 
         // 
         case .goma:
@@ -512,7 +517,7 @@ extension Client {
 }
 
 extension Client {
-
+    
     public func getMarketGroups(forEvent event: Event, includeMixMatchGroup hasMixMatchGroup: Bool, includeAllMarketsGroup hasAllMarketsGroup: Bool)
     -> AnyPublisher<[MarketGroup], Never>
     {
@@ -532,77 +537,77 @@ extension Client {
         }
         return eventsProvider.getMarketGroups(forEvent: event, includeMixMatchGroup: hasMixMatchGroup, includeAllMarketsGroup: hasAllMarketsGroup)
     }
-
+    
     public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getFieldWidgetId(eventId: eventId)
     }
-
+    
     public func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getFieldWidget(eventId: eventId, isDarkTheme: isDarkTheme)
     }
-
+    
     public func getStatsWidget(eventId: String, marketTypeName: String, isDarkTheme: Bool?) -> AnyPublisher<StatsWidgetRenderDataType, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getStatsWidget(eventId: eventId, marketTypeName: marketTypeName, isDarkTheme: isDarkTheme)
     }
-
+    
     public func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getSportRegions(sportId: sportId)
     }
-
+    
     public func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getRegionCompetitions(regionId: regionId)
     }
-
+    
     public func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getCompetitionMarketGroups(competitionId: competitionId)
     }
-
+    
     public func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool = false) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page, isLive: isLive)
     }
-
+    
     //
     //
     public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
@@ -611,41 +616,41 @@ extension Client {
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getPromotedSports()
     }
-
+    
     public func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getHomeSliders()
     }
-
+    
     public func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getEventForMarketGroup(withId: marketGroupId)
     }
-
-
+    
+    
     public func getEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getEventGroup(withId: eventGroupId)
     }
-
+    
     //
     //
     public func getEventSummary(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError> {
@@ -654,133 +659,131 @@ extension Client {
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getEventSummary(eventId: eventId, marketLimit: marketLimit)
     }
-
+    
     public func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getEventSummary(forMarketId: marketId)
     }
-
+    
     public func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getMarketInfo(marketId: marketId)
     }
-
+    
     public func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getFavoritesList()
     }
-
+    
     public func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.addFavoritesList(name: name)
     }
-
+    
     public func deleteFavoritesList(listId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.deleteFavoritesList(listId: listId)
     }
-
+    
     public func addFavoritesToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.addFavoriteToList(listId: listId, eventId: eventId)
     }
-
+    
     public func getFavoritesFromList(listId: Int) -> AnyPublisher<FavoriteEventResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getFavoritesFromList(listId: listId)
     }
-
+    
     public func deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
-
+        
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.deleteFavoriteFromList(eventId: eventId)
     }
-
+    
     public func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.subscribeToEventAndSecondaryMarkets(withId: id)
     }
-
+    
     public func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getPromotedBetslips(userId: userId)
     }
-
+    
     public func getHighlightedLiveEventsPointers(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getHighlightedLiveEventsPointers(eventCount: eventCount, userId: userId)
     }
-
+    
     public func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<Events, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
+        
         return eventsProvider.getHighlightedLiveEvents(eventCount: eventCount, userId: userId)
     }
-
 }
-
 
 extension Client {
 
@@ -2082,6 +2085,52 @@ extension Client {
         }
 
         return downloadableContentsProvider.getDownloadableContentItems()
+    }
+
+}
+
+// MARK: - Casino Provider Methods
+//
+extension Client {
+
+    public func getCasinoCategories(language: String? = nil, platform: String? = nil) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getCasinoCategories(language: language, platform: platform)
+    }
+    
+    public func getGamesByCategory(categoryId: String, language: String? = nil, platform: String? = nil, pagination: CasinoPaginationParams = CasinoPaginationParams()) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getGamesByCategory(categoryId: categoryId, language: language, platform: platform, pagination: pagination)
+    }
+    
+    public func getGameDetails(gameId: String, language: String? = nil, platform: String? = nil) -> AnyPublisher<CasinoGame?, ServiceProviderError> {
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getGameDetails(gameId: gameId, language: language, platform: platform)
+    }
+    
+    public func getRecentlyPlayedGames(playerId: String, language: String? = nil, platform: String? = nil, pagination: CasinoPaginationParams = CasinoPaginationParams()) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getRecentlyPlayedGames(playerId: playerId, language: language, platform: platform, pagination: pagination)
+    }
+    
+    public func buildCasinoGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String? = nil, language: String? = nil) -> String? {
+        guard let casinoProvider = self.casinoProvider else {
+            return nil
+        }
+        
+        return casinoProvider.buildGameLaunchUrl(for: game, mode: mode, sessionId: sessionId, language: language)
     }
 
 }

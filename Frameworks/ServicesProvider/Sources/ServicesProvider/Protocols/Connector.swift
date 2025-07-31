@@ -13,7 +13,7 @@ public enum ConnectorState {
     case disconnected
 }
 
-protocol Connector {
+public protocol Connector {
  
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> { get }
     
