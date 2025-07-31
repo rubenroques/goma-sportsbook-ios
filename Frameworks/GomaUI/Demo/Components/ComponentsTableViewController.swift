@@ -22,6 +22,33 @@ class ComponentsTableViewController: UITableViewController {
     // MARK: - Properties
     private let components: [UIComponent] = [
         UIComponent(
+            title: "Casino Category Section",
+            description: "MVVM-compliant component combining CasinoCategoryBarView with horizontal collection of CasinoGameCardViews, featuring child ViewModel management and reactive updates",
+            viewController: CasinoCategorySectionViewController.self,
+            previewFactory: {
+                let viewModel = MockCasinoCategorySectionViewModel.newGamesSection
+                return CasinoCategorySectionView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Recently Played Games",
+            description: "Horizontal collection view displaying recently played casino games with PillView header, image loading, and game selection callbacks",
+            viewController: RecentlyPlayedGamesViewController.self,
+            previewFactory: {
+                let viewModel = MockRecentlyPlayedGamesViewModel.defaultRecentlyPlayed
+                return RecentlyPlayedGamesView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Casino Category Bar",
+            description: "Simple category bar with title label on the left and action button with count and chevron on the right",
+            viewController: CasinoCategoryBarViewController.self,
+            previewFactory: {
+                let viewModel = MockCasinoCategoryBarViewModel.newGames
+                return CasinoCategoryBarView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
             title: "Casino Game Card",
             description: "Casino game card component with optional viewModel initialization, image loading, thunderbolt ratings in capsule, and runtime configuration support",
             viewController: CasinoGameCardViewController.self,

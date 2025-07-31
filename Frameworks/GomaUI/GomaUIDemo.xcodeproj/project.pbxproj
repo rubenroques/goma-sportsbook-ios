@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		65F13FFD2E0EAD18004BDE6B /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE05AACA2DFB4CEE00D20357 /* GomaUI */; };
 		CE830E5F2E3B99AB00CA097F /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE830E5E2E3B99AB00CA097F /* GomaUI */; };
+		CE830E642E3BBEF600CA097F /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE830E632E3BBEF600CA097F /* GomaUI */; };
+		CE830E692E3BC15C00CA097F /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE830E682E3BC15C00CA097F /* GomaUI */; };
+		CE830E6F2E3BCB0F00CA097F /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE830E6E2E3BCB0F00CA097F /* GomaUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,8 +73,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE830E6F2E3BCB0F00CA097F /* GomaUI in Frameworks */,
+				CE830E692E3BC15C00CA097F /* GomaUI in Frameworks */,
 				CE830E5F2E3B99AB00CA097F /* GomaUI in Frameworks */,
 				65F13FFD2E0EAD18004BDE6B /* GomaUI in Frameworks */,
+				CE830E642E3BBEF600CA097F /* GomaUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +148,9 @@
 			packageProductDependencies = (
 				CE05AACA2DFB4CEE00D20357 /* GomaUI */,
 				CE830E5E2E3B99AB00CA097F /* GomaUI */,
+				CE830E632E3BBEF600CA097F /* GomaUI */,
+				CE830E682E3BC15C00CA097F /* GomaUI */,
+				CE830E6E2E3BCB0F00CA097F /* GomaUI */,
 			);
 			productName = TestCase;
 			productReference = CE07675D2DDB8AD700103999 /* Demo.app */;
@@ -226,7 +235,6 @@
 			mainGroup = CE0767542DDB8AD700103999;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				CE830E5D2E3B99AB00CA097F /* XCLocalSwiftPackageReference "GomaUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CE07675E2DDB8AD700103999 /* Products */;
@@ -592,19 +600,24 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		CE830E5D2E3B99AB00CA097F /* XCLocalSwiftPackageReference "GomaUI" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = GomaUI;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
 		CE05AACA2DFB4CEE00D20357 /* GomaUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GomaUI;
 		};
 		CE830E5E2E3B99AB00CA097F /* GomaUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GomaUI;
+		};
+		CE830E632E3BBEF600CA097F /* GomaUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GomaUI;
+		};
+		CE830E682E3BC15C00CA097F /* GomaUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GomaUI;
+		};
+		CE830E6E2E3BCB0F00CA097F /* GomaUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GomaUI;
 		};

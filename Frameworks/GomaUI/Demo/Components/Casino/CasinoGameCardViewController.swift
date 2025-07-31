@@ -26,7 +26,7 @@ class CasinoGameCardViewController: UIViewController {
     
     // MARK: - Setup
     private func setupViews() {
-        view.backgroundColor = .systemGray4
+        view.backgroundColor = UIColor(red: 0.1, green: 0, blue: 0, alpha: 1)
         
         // Description label
         descriptionLabel = UILabel()

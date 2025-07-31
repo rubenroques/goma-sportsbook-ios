@@ -7,21 +7,21 @@ final public class CasinoGameCardView: UIView {
     // MARK: - Constants
     private enum Constants {
         static let cardWidth: CGFloat = 164.0
-        static let cardHeight: CGFloat = 266.0
+        static let cardHeight: CGFloat = 272.0
         static let cornerRadius: CGFloat = 8.0
         
         // Image
         static let imageHeight: CGFloat = 164.0
         
         // Content padding
-        static let contentPadding: CGFloat = 12.0
-        static let titleToRatingSpacing: CGFloat = 8.0
+        static let contentPadding: CGFloat = 11.0
+        static let titleToRatingSpacing: CGFloat = 4.0
         
         // Rating capsule (based on Figma specs)
         static let ratingCapsuleCornerRadius: CGFloat = 12.0
         static let ratingCapsuleHorizontalPadding: CGFloat = 7.0
         static let ratingCapsuleVerticalPadding: CGFloat = 5.0
-        static let thunderboltSize: CGFloat = 16.0
+        static let thunderboltSize: CGFloat = 15.0
         static let thunderboltSpacing: CGFloat = 2.0
     }
     
@@ -35,6 +35,8 @@ final public class CasinoGameCardView: UIView {
     
     private let contentStackView = UIStackView()
     private let gameTitleLabel = UILabel()
+    private let providerLabel = UILabel()
+    private let minStakeLabel = UILabel()
     private let ratingCapsuleView = UIView()
     private let starsStackView = UIStackView()
     
@@ -139,6 +141,20 @@ final public class CasinoGameCardView: UIView {
         gameTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentStackView.addArrangedSubview(gameTitleLabel)
         
+        // Provider label
+        providerLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
+        providerLabel.textColor = StyleProvider.Color.textSecondary
+        providerLabel.numberOfLines = 1
+        providerLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentStackView.addArrangedSubview(providerLabel)
+        
+        // Min stake label
+        minStakeLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
+        minStakeLabel.textColor = StyleProvider.Color.textSecondary
+        minStakeLabel.numberOfLines = 1
+        minStakeLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentStackView.addArrangedSubview(minStakeLabel)
+        
         // Rating capsule setup
         ratingCapsuleView.backgroundColor = StyleProvider.Color.backgroundPrimary
         ratingCapsuleView.layer.cornerRadius = Constants.ratingCapsuleCornerRadius
@@ -231,6 +247,22 @@ final public class CasinoGameCardView: UIView {
             }
             .store(in: &cancellables)
         
+        // Provider name
+        viewModel.providerNamePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] provider in
+                self?.providerLabel.text = provider
+            }
+            .store(in: &cancellables)
+        
+        // Min stake
+        viewModel.minStakePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] minStake in
+                self?.minStakeLabel.text = "Min Stake:" + minStake
+            }
+            .store(in: &cancellables)
+        
         // Rating
         viewModel.ratingPublisher
             .receive(on: DispatchQueue.main)
@@ -261,6 +293,8 @@ final public class CasinoGameCardView: UIView {
     
     private func renderPlaceholderState() {
         gameTitleLabel.text = "Loading..."
+        providerLabel.text = "Provider"
+        minStakeLabel.text = "Min Stake"
         gameImageView.image = nil
         updateStarRating(0.0)
         showImageFailureState() // Show placeholder state with "?"
