@@ -25,6 +25,7 @@ class RootTabBarCoordinator: Coordinator {
     
     private var nextUpEventsCoordinator: NextUpEventsCoordinator?
     private var inPlayEventsCoordinator: InPlayEventsCoordinator?
+    private var casinoCoordinator: CasinoCoordinator?
     
     // MARK: - Initialization
     
@@ -57,6 +58,7 @@ class RootTabBarCoordinator: Coordinator {
         // Clean up lazy coordinators
         nextUpEventsCoordinator = nil
         inPlayEventsCoordinator = nil
+        casinoCoordinator = nil
         rootTabBarViewController = nil
     }
     
@@ -173,6 +175,11 @@ class RootTabBarCoordinator: Coordinator {
             servicesProvider: environment.servicesProvider
         )
         
+        // Setup navigation closures
+        matchDetailsViewModel.onNavigateBack = { [weak self] in
+            self?.navigationController.popViewController(animated: true)
+        }
+        
         // Create and present the MatchDetailsTextualViewController
         let matchDetailsViewController = MatchDetailsTextualViewController(viewModel: matchDetailsViewModel)
         
@@ -265,8 +272,31 @@ class RootTabBarCoordinator: Coordinator {
     }
     
     private func showCasinoHomeScreen() {
-        let dummyViewController = DummyViewController(displayText: "Casino Home")
-        rootTabBarViewController?.showCasinoHomeScreen(with: dummyViewController)
+        // Lazy loading: only create coordinator when needed
+        if casinoCoordinator == nil {
+            let coordinator = CasinoCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment
+            )
+            
+            // Set up navigation closures
+            coordinator.onShowGamePlay = { [weak self] gameId in
+                print("🎰 Casino: Game play started for game: \(gameId)")
+                // Additional game play handling if needed
+            }
+            
+            casinoCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+        
+        // Show the screen through RootTabBarViewController
+        if let viewController = casinoCoordinator?.viewController {
+            rootTabBarViewController?.showCasinoHomeScreen(with: viewController)
+        }
+        
+        // Refresh if needed
+        casinoCoordinator?.refresh()
     }
     
     private func showCasinoVirtualSportsScreen() {

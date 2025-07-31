@@ -75,20 +75,7 @@ public protocol CasinoProvider: Connector {
         sessionId: String?,
         language: String?
     ) -> String?
-    
-    /// Check if a game supports the specified launch mode
-    /// - Parameters:
-    ///   - game: Casino game to check
-    ///   - mode: Game launch mode to verify
-    /// - Returns: True if the mode is supported
-    func supportsGameMode(game: CasinoGame, mode: CasinoGameMode) -> Bool
-    
-    // MARK: - Helper Methods
-    
-    /// Filter categories to only include those with available games
-    /// - Parameter categories: Array of categories to filter
-    /// - Returns: Filtered array with only categories that have games
-    func filterCategoriesWithGames(_ categories: [CasinoCategory]) -> [CasinoCategory]
+
 }
 
 

@@ -321,8 +321,7 @@ class MatchDetailsTextualViewController: UIViewController {
     }
     
     private func handleBackTapped() {
-        // Or directly navigate
-        navigationController?.popViewController(animated: true)
+        viewModel.navigateBack()
     }
     
     private func handleWidgetSelection(_ widgetID: String) {

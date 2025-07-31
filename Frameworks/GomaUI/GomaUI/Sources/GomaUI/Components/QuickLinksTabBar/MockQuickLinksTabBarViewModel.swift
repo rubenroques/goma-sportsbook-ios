@@ -17,6 +17,9 @@ final public class MockQuickLinksTabBarViewModel: QuickLinksTabBarViewModelProto
         return quickLinksSubject.eraseToAnyPublisher()
     }
     
+    // MARK: - Actions
+    public var onTabSelected: ((String) -> Void) = { _ in }
+    
     // MARK: - Initialization
     public init(quickLinks: [QuickLinkItem]? = nil) {
         // Use provided quick links or default to standard mock links

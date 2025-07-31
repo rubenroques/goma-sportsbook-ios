@@ -42,23 +42,11 @@ class RootTabBarViewController: UIViewController {
 
     private lazy var blockingWindow: BlockingWindow = Self.createBlockingWindow()
 
+    // 
     //
-    // Base views for coordinator-managed view controllers
-    private lazy var nextUpEventsBaseView: UIView = Self.createNextUpEventsBaseView()
-    private var nextUpEventsViewControllerLoaded: Bool = false
-
-    private lazy var inPlayEventsBaseView: UIView = Self.createInPlayEventsBaseView()
-    private var inPlayEventsViewControllerLoaded: Bool = false
-
-    // Dummy view controllers for unimplemented screens
-    private lazy var myBetsDummyViewController = DummyViewController(displayText: "My Bets")
-    private lazy var searchDummyViewController = DummyViewController(displayText: "Search")
-    private lazy var casinoHomeDummyViewController = DummyViewController(displayText: "Casino Home")
-    private lazy var casinoTablesDummyViewController = DummyViewController(displayText: "Virtual Sports")
-    private lazy var casinoJackpotsDummyViewController = DummyViewController(displayText: "Aviator")
-    private lazy var casinoSearchDummyViewController = DummyViewController(displayText: "Casino Search")
-
-    // Base views for dummy screens
+    // Base views for coordinator-managed view controllers (some dummy ones yet)
+    private lazy var nextUpEventsBaseView: UIView = Self.createBaseView()
+    private lazy var inPlayEventsBaseView: UIView = Self.createBaseView()
     private lazy var myBetsBaseView: UIView = Self.createBaseView()
     private lazy var searchBaseView: UIView = Self.createBaseView()
     private lazy var casinoHomeBaseView: UIView = Self.createBaseView()
@@ -67,12 +55,16 @@ class RootTabBarViewController: UIViewController {
     private lazy var casinoSearchBaseView: UIView = Self.createBaseView()
 
     // Loaded flags
+    private var nextUpEventsViewControllerLoaded: Bool = false
+    private var inPlayEventsViewControllerLoaded: Bool = false
     private var myBetsViewControllerLoaded: Bool = false
     private var searchViewControllerLoaded: Bool = false
     private var casinoHomeViewControllerLoaded: Bool = false
     private var casinoTablesViewControllerLoaded: Bool = false
     private var casinoJackpotsViewControllerLoaded: Bool = false
     private var casinoSearchViewControllerLoaded: Bool = false
+    //
+    //
 
     // Constraints
     private var viewModel: RootTabBarViewModel
@@ -802,18 +794,6 @@ extension RootTabBarViewController {
     }
 
     private static func createFeaturedCompetitionBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createNextUpEventsBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createInPlayEventsBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

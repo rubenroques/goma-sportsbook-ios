@@ -38,14 +38,6 @@ class EveryMatrixCasinoConnector: Connector {
                 
                 if let httpResponse = result.response as? HTTPURLResponse {
                     
-                    if let cookies = HTTPCookie.cookies(withResponseHeaderFields: httpResponse.allHeaderFields as? [String: String] ?? [:], for: finalRequest.url!) {
-                        for cookie in cookies where cookie.name == "sessionId" {
-                            if self.sessionToken == nil {
-                                self.sessionToken = EveryMatrixSessionToken(sessionId: cookie.value, id: "")
-                            }
-                        }
-                    }
-                    
                     switch httpResponse.statusCode {
                     case 200, 201:
                         return result.data

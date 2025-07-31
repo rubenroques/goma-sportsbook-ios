@@ -64,6 +64,9 @@ public protocol CasinoGameCardViewModelProtocol: AnyObject {
     var gameId: String { get }
     var gameURL: String { get }
     
+    // Actions
+    var onGameSelected: ((String) -> Void) { get set }
+    
     // Image loading callbacks
     func imageLoadingFailed()
     func imageLoadingSucceeded()

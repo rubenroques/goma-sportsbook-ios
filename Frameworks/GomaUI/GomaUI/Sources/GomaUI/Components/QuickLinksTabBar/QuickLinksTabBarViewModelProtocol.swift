@@ -55,6 +55,9 @@ public protocol QuickLinksTabBarViewModelProtocol {
     /// Publisher for the current quick links to be displayed
     var quickLinksPublisher: AnyPublisher<[QuickLinkItem], Never> { get }
     
+    /// Callback for when a tab is selected
+    var onTabSelected: ((String) -> Void) { get set }
+    
     /// Optional method to handle when a quick link is tapped.
     /// Implementations may use this to track analytics or perform other actions.
     func didTapQuickLink(type: QuickLinkType)

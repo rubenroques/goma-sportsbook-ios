@@ -46,6 +46,9 @@ public class MockCasinoGameCardViewModel: CasinoGameCardViewModelProtocol {
         gameData.gameURL
     }
     
+    // MARK: - Actions
+    public var onGameSelected: ((String) -> Void) = { _ in }
+    
     // MARK: - Initialization
     public init(gameData: CasinoGameCardData) {
         self.gameData = gameData

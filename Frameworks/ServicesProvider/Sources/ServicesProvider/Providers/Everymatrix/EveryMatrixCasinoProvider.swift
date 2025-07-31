@@ -27,12 +27,12 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             platform: finalPlatform
         )
         
-        let publisher: AnyPublisher<CasinoCategoriesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoCategoriesResponseDTO, ServiceProviderError> = connector.request(endpoint)
         
         return publisher
             .map { response in
-                let categories = response.items?.map { EveryMatrixModelMapper.casinoCategory(from: $0) } ?? []
-                return self.filterCategoriesWithGames(categories)
+                let categories = response.items.compactMap(\.content).map { EveryMatrixModelMapper.casinoCategory(from: $0) }
+                return categories
             }
             .eraseToAnyPublisher()
     }
@@ -49,15 +49,15 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             limit: pagination.limit
         )
         
-        let publisher: AnyPublisher<CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
         
         return publisher
             .map { response in
-                let games = response.items?.map { EveryMatrixModelMapper.casinoGame(from: $0) } ?? []
-                
+                let games = response.items.compactMap(\.content).map { EveryMatrixModelMapper.casinoGame(from: $0)
+                }
                 return CasinoGamesResponse(
                     count: games.count,
-                    total: response.total ?? 0,
+                    total: response.total,
                     games: games,
                     pagination: response.pages.map { EveryMatrixModelMapper.casinoPaginationInfo(from: $0) }
                 )
@@ -75,11 +75,11 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             platform: finalPlatform
         )
         
-        let publisher: AnyPublisher<CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
         
         return publisher
             .map { response in
-                guard let firstGame = response.items?.first else { return nil }
+                guard let firstGame = response.items.compactMap(\.content).first else { return nil }
                 return EveryMatrixModelMapper.casinoGame(from: firstGame)
             }
             .eraseToAnyPublisher()
@@ -109,17 +109,17 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             limit: pagination.limit
         )
         
-        let publisher: AnyPublisher<CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)
         
         return publisher
             .map { response in
-                let games = response.items?.compactMap { item in
-                    item.gameModel.map { EveryMatrixModelMapper.casinoGame(from: $0) }
-                } ?? []
+                let games = response.items.compactMap(\.content).compactMap { item in
+                    item.gameModel?.content.map { EveryMatrixModelMapper.casinoGame(from: $0) }
+                }
                 
                 return CasinoGamesResponse(
                     count: games.count,
-                    total: response.total ?? 0,
+                    total: response.total,
                     games: games,
                     pagination: response.pages.map { EveryMatrixModelMapper.casinoPaginationInfo(from: $0) }
                 )
@@ -128,11 +128,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     }
     
     func buildGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String?, language: String?) -> String? {
-        
-        guard supportsGameMode(game: game, mode: mode) else {
-            return nil
-        }
-        
+
         let gameLaunchBaseURL: String
         switch environment {
         case .staging:

@@ -12,6 +12,9 @@ import ServicesProvider
 
 class MatchDetailsTextualViewModel {
     
+    // MARK: - Navigation Closures for RootTabBarCoordinator
+    var onNavigateBack: (() -> Void) = { }
+    
     // MARK: - Private Properties
     
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
@@ -156,6 +159,10 @@ class MatchDetailsTextualViewModel {
         if let currentMatchId = self.currentMatchId {
             self.loadMatchDetails(matchId: currentMatchId)
         }
+    }
+    
+    func navigateBack() {
+        onNavigateBack()
     }
     
     // MARK: - Private Methods

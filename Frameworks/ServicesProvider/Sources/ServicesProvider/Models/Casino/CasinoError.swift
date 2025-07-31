@@ -33,7 +33,7 @@ public enum CasinoError: Error, Hashable {
     case gameNotAvailable(String)
     
     /// Network errors
-    case networkError(Error)
+    case networkError
     case timeout
     case noInternetConnection
     
@@ -77,8 +77,8 @@ extension CasinoError: LocalizedError {
         case .gameNotAvailable(let reason):
             return "Game is not available: \(reason)"
             
-        case .networkError(let error):
-            return "Network error: \(error.localizedDescription)"
+        case .networkError:
+            return "Network error"
         case .timeout:
             return "Request timed out. Please try again."
         case .noInternetConnection:
@@ -86,41 +86,6 @@ extension CasinoError: LocalizedError {
             
         case .unknown(let message):
             return message
-        }
-    }
-}
-
-extension CasinoError {
-    
-    /// Convert from generic ServiceProviderError to CasinoError
-    public static func fromServiceProviderError(_ error: ServiceProviderError) -> CasinoError {
-        switch error {
-        case .networkError(let underlyingError):
-            return .networkError(underlyingError)
-        case .timeout:
-            return .timeout
-        case .invalidResponse:
-            return .invalidAPIResponse
-        case .unknown(let message):
-            return .unknown(message)
-        default:
-            return .unknown("Service provider error: \(error.localizedDescription)")
-        }
-    }
-    
-    /// Convert to ServiceProviderError for framework compatibility
-    public func toServiceProviderError() -> ServiceProviderError {
-        switch self {
-        case .networkError(let error):
-            return .networkError(error)
-        case .timeout:
-            return .timeout
-        case .invalidAPIResponse, .malformedData:
-            return .invalidResponse
-        case .noInternetConnection:
-            return .networkError(URLError(.notConnectedToInternet))
-        default:
-            return .unknown(self.localizedDescription)
         }
     }
 }
