@@ -300,25 +300,9 @@ class NextUpEventsViewController: UIViewController {
     
     // MARK: Functions
     private func openCombinedFilters() {
-        
-        let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
-
-        let viewModel = MockCombinedFiltersViewModel(filterConfiguration: configuration,
-                                                 contextId: "sports")
-        
-        let combinedFiltersViewController = CombinedFiltersViewController(viewModel: viewModel)
-        
-        combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
-            guard let self = self else { return }
-            
-//            self.viewModel.selectedGeneralFilterSelection = combinedGeneralFilterSelection
-//            
-//            // Build filter options for collection view
-//            self.viewModel.selectedFilterOptions = self.viewModel.buildFilterOptions(from: combinedGeneralFilterSelection)
-//            self.generalFilterBarView.updateFilterItems(filterOptionItems: self.viewModel.selectedFilterOptions)
-            
-        }
-        self.present(combinedFiltersViewController, animated: true)
+        // Filter presentation should be handled by the Coordinator
+        // This method delegates navigation to the ViewModel closure
+        viewModel.onFiltersRequested()
     }
 
     // MARK: - UI Updates

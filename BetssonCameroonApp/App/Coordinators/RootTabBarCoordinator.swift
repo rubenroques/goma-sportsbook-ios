@@ -203,16 +203,21 @@ class RootTabBarCoordinator: Coordinator {
     }
     
     private func showFilters() {
-        // Create filters configuration and view model
+        // Create filters configuration using stateless approach
         let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
-        let filtersViewModel = MockCombinedFiltersViewModel(filterConfiguration: configuration, contextId: "sports")
-        let combinedFiltersViewController = CombinedFiltersViewController(viewModel: filtersViewModel)
         
-        // Handle filter application
-        combinedFiltersViewController.onApply = { [weak self] combinedGeneralFilterSelection in
-            // Update the current filters in the system
-            self?.applyFilters(combinedGeneralFilterSelection)
-        }
+        // Get current filters from active screen (TODO: implement proper filter state management)
+        let currentFilters = AppliedEventsFilters.defaultFilters
+        
+        let combinedFiltersViewController = CombinedFiltersViewController(
+            currentFilters: currentFilters,
+            filterConfiguration: configuration,
+            servicesProvider: environment.servicesProvider,
+            onApply: { [weak self] newFilters in
+                // Update the current filters in the system
+                self?.applyFilters(newFilters)
+            }
+        )
         
         // Present modally from navigationController
         navigationController.present(combinedFiltersViewController, animated: true)
@@ -242,9 +247,9 @@ class RootTabBarCoordinator: Coordinator {
         print("🚀 MainCoordinator: Updated current sport to: \(sport.name)")
     }
     
-    private func applyFilters(_ filterSelection: GeneralFilterSelection) {
-        // Update filters in the current system
-        // This would typically update Env.filterStorage or similar
+    private func applyFilters(_ filterSelection: AppliedEventsFilters) {
+        // Update filters in the current system using stateless approach
+        // Filters are now passed directly to ViewModels instead of global state
         print("🚀 MainCoordinator: Applied filters: \(filterSelection)")
         
         // Refresh current screens with new filters

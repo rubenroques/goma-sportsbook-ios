@@ -382,6 +382,69 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         return sportTournamentsManager!.subscribe()
     }
+    
+    // MARK: - RPC Methods for Tournaments
+    
+    /// Get popular tournaments via RPC call (one-time fetch)
+    func getPopularTournaments(forSportType sportType: SportType, tournamentsCount: Int = 10) -> AnyPublisher<[Tournament], ServiceProviderError> {
+        let sportId = sportType.numericId ?? "1"
+        let language = "en" // Could be made configurable
+        
+        let router = WAMPRouter.getPopularTournaments(language: language, sportId: sportId)
+        
+        return connector.request<EveryMatrix.AggregatorResponse>(router)
+            .map { [weak self] aggregatorResponse in
+                return self?.processTournamentsFromAggregatorResponse(aggregatorResponse) ?? []
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    /// Get all tournaments via RPC call (one-time fetch)
+    func getTournaments(forSportType sportType: SportType) -> AnyPublisher<[Tournament], ServiceProviderError> {
+        let sportId = sportType.numericId ?? "1"
+        let language = "en" // Could be made configurable
+        
+        let router = WAMPRouter.getTournaments(language: language, sportId: sportId)
+        
+        return connector.request<EveryMatrix.AggregatorResponse>(router)
+            .map { [weak self] aggregatorResponse in
+                return self?.processTournamentsFromAggregatorResponse(aggregatorResponse) ?? []
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Private Tournament Processing
+    
+    /// Process tournaments from aggregator response (shared logic for RPC and subscriptions)
+    private func processTournamentsFromAggregatorResponse(_ response: EveryMatrix.AggregatorResponse) -> [Tournament] {
+        // Create temporary store for processing
+        let tempStore = EveryMatrix.EntityStore()
+        
+        // Parse tournament entities from the response
+        response.records.forEach { record in
+            if record.type == EveryMatrix.TournamentDTO.rawType {
+                tempStore.addOrUpdate(entity: record)
+            }
+        }
+        
+        // Get all tournaments from the store
+        let tournamentsDTO = tempStore.getAllInOrder(EveryMatrix.TournamentDTO.self)
+        
+        // Convert DTOs to internal tournament models
+        let internalTournaments = tournamentsDTO.compactMap { tournamentDTO in
+            EveryMatrix.TournamentBuilder.build(from: tournamentDTO, store: tempStore)
+        }
+        
+        // Map to domain Tournament objects
+        let tournaments = internalTournaments.compactMap { internalTournament in
+            EveryMatrixModelMapper.tournament(fromInternalTournament: internalTournament)
+        }
+        
+        // Filter tournaments that have events or are active
+        return tournaments.filter { tournament in
+            tournament.numberOfEvents > 0
+        }
+    }
 
     func getMarketGroups(forEvent event: Event, includeMixMatchGroup: Bool, includeAllMarketsGroup: Bool) -> AnyPublisher<[MarketGroup], Never> {
         // Check if we have an active match details manager for this event

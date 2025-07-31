@@ -93,10 +93,12 @@ class NextUpEventsViewModel {
     }
     
     var filterOptionItems: CurrentValueSubject<[FilterOptionItem], Never> = .init([])
+    var appliedFilters: AppliedEventsFilters
 
-    init(sport: Sport, servicesProvider: ServicesProvider.Client) {
+    init(sport: Sport, servicesProvider: ServicesProvider.Client, appliedFilters: AppliedEventsFilters = AppliedEventsFilters.defaultFilters) {
         self.sport = sport
         self.servicesProvider = servicesProvider
+        self.appliedFilters = appliedFilters
         
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
@@ -143,26 +145,17 @@ class NextUpEventsViewModel {
             }
             .store(in: &cancellables)
         
-        Env.filterStorage.$currentFilterSelection
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] currentFilterSelection in
-                
-                if let selectedFilterOptions = self?.buildFilterOptions(from: currentFilterSelection) {
-                    
-                    self?.filterOptionItems.send(selectedFilterOptions)
-                }
-                
-            })
-            .store(in: &cancellables)
+        // Filters are now managed statefully by parent coordinator
+        // No reactive binding to global filter state needed
     }
 
     private func setupFilters() {
         
-        let sportFilterOption = self.getSportOption(for: Env.filterStorage.currentFilterSelection.sportId)
+        let sportFilterOption = self.getSportOption(for: appliedFilters.sportId)
         
-        // let sortOption = self.getSortOption(for: Env.filterStorage.currentFilterSelection.sortTypeId)
-        
-        // let leagueOption = self.getLeagueOption(for: Env.filterStorage.currentFilterSelection.leagueId)
+        // TODO: Add back sort and league options if needed
+        // let sortOption = self.getSortOption(for: appliedFilters.sortTypeId)
+        // let leagueOption = self.getLeagueOption(for: appliedFilters.leagueId)
                 
         self.generalFiltersBarViewModel.updateFilterOptionItems(filterOptionItems: [sportFilterOption])
 
@@ -280,7 +273,7 @@ class NextUpEventsViewModel {
     }
     
     // Filters functions
-    func buildFilterOptions(from selection: GeneralFilterSelection) -> [FilterOptionItem] {
+    func buildFilterOptions(from selection: AppliedEventsFilters) -> [FilterOptionItem] {
         var options: [FilterOptionItem] = []
         
         let sportOption = getSportOption(for: selection.sportId)
@@ -318,9 +311,9 @@ class NextUpEventsViewModel {
 
     private func getLeagueOption(for leagueId: String) -> FilterOptionItem {
         let allLeaguesOption = SortOption(id: "0", icon: "league_icon", title: "All Popular Leagues", count: 0)
-        let currentCompetition = Env.filterStorage.currentCompetitions.first(where: {
-            $0.id == leagueId
-        })
-        return FilterOptionItem(type: .league, title: "\(currentCompetition?.name ?? allLeaguesOption.title)", icon: "league_icon")
+        // TODO: Competition data should be provided through parameters or RPC calls
+        // For now, use default "All Popular Leagues" title
+        let title = leagueId == "all" || leagueId == "0" ? allLeaguesOption.title : "League \(leagueId)"
+        return FilterOptionItem(type: .league, title: title, icon: "league_icon")
     }
 }
