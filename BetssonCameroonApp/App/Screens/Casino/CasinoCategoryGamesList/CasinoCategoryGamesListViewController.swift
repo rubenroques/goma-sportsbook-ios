@@ -79,7 +79,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
         static let cellSpacing: CGFloat = 16.0
         static let horizontalPadding: CGFloat = 16.0
         static let itemsPerRow: Int = 2
-        static let itemAspectRatio: CGFloat = 164.0 / 272.0 // width / height from CasinoGameCardView
+        static let itemAspectRatio: CGFloat = 167.0 / 266.0 // width / height from CasinoGameCardView
     }
     
     // MARK: - Lifecycle

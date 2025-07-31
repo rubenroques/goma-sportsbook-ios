@@ -203,6 +203,47 @@ The component supports:
 - High contrast support through StyleProvider
 - Proper touch target sizing (minimum 44pt)
 
+## Collection View Integration
+
+For use within UICollectionView layouts, use the provided wrapper cell:
+
+### RecentlyPlayedGamesCollectionViewCell
+
+```swift
+import GomaUI
+
+// Register the cell
+collectionView.register(RecentlyPlayedGamesCollectionViewCell.self, forCellWithReuseIdentifier: "RecentlyPlayedCell")
+
+// Configure in cellForItemAt
+func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecentlyPlayedCell", for: indexPath) as! RecentlyPlayedGamesCollectionViewCell
+    
+    // Configure with your view model
+    cell.configure(with: recentlyPlayedGamesViewModel)
+    
+    // Setup callbacks
+    cell.onGameSelected = { gameId in
+        print("Recently played game selected: \(gameId)")
+        // Handle game selection navigation
+    }
+    
+    return cell
+}
+
+// Size for collection view layout
+func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return CGSize(width: collectionView.bounds.width, height: 100)
+}
+```
+
+### Collection View Cell Features
+
+- **Automatic cleanup**: Properly handles reuse and memory management
+- **Callback forwarding**: All RecentlyPlayedGamesView callbacks are available
+- **Configuration support**: Works with any RecentlyPlayedGamesViewModelProtocol
+- **Placeholder handling**: Falls back to placeholder state when no viewModel provided
+
 ## Demo
 
 See `RecentlyPlayedGamesViewController` in the GomaUI Demo app for interactive examples showcasing:

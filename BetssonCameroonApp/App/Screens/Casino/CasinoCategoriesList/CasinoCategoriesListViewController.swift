@@ -13,8 +13,7 @@ class CasinoCategoriesListViewController: UIViewController {
     
     // MARK: - UI Components
     private let quickLinksTabBarView: QuickLinksTabBarView
-    private let scrollView = UIScrollView()
-    private let contentStackView = UIStackView()
+    private let collectionView: UICollectionView
     
     private let loadingIndicatorView: UIView = {
         let view = UIView()
@@ -39,12 +38,29 @@ class CasinoCategoriesListViewController: UIViewController {
     // MARK: - Properties
     let viewModel: CasinoCategoriesListViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var categorySectionViews: [CasinoCategorySectionView] = []
+    private var categorySections: [MockCasinoCategorySectionViewModel] = []
+    
+    // MARK: - Constants
+    private enum Constants {
+        static let topBannerHeight: CGFloat = 200.0
+        static let recentlyPlayedHeight: CGFloat = 132.0
+        static let categorySectionHeight: CGFloat = 330.0 // CasinoCategorySectionView height + spacing
+        static let verticalSpacing: CGFloat = 16.0
+    }
     
     // MARK: - Lifecycle
     init(viewModel: CasinoCategoriesListViewModel) {
         self.viewModel = viewModel
         self.quickLinksTabBarView = QuickLinksTabBarView(viewModel: viewModel.quickLinksTabBarViewModel)
+        
+        // Setup collection view layout
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        
+        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -70,8 +86,7 @@ class CasinoCategoriesListViewController: UIViewController {
         view.backgroundColor = StyleProvider.Color.backgroundColor
         
         setupQuickLinksTabBar()
-        setupScrollView()
-        setupContentStackView()
+        setupCollectionView()
         setupLoadingIndicator()
         setupConstraints()
     }
@@ -81,20 +96,26 @@ class CasinoCategoriesListViewController: UIViewController {
         view.addSubview(quickLinksTabBarView)
     }
     
-    private func setupScrollView() {
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.showsVerticalScrollIndicator = true
-        scrollView.showsHorizontalScrollIndicator = false
-        view.addSubview(scrollView)
-    }
-    
-    private func setupContentStackView() {
-        contentStackView.translatesAutoresizingMaskIntoConstraints = false
-        contentStackView.axis = .vertical
-        contentStackView.spacing = 24
-        contentStackView.alignment = .fill
-        contentStackView.distribution = .fill
-        scrollView.addSubview(contentStackView)
+    private func setupCollectionView() {
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = true
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.contentInset = UIEdgeInsets(top: Constants.verticalSpacing, left: 0, bottom: Constants.verticalSpacing, right: 0)
+        
+        // Register cell types
+        collectionView.register(TopBannerSliderCollectionViewCell.self, forCellWithReuseIdentifier: "TopBannerCell")
+        collectionView.register(RecentlyPlayedGamesCollectionViewCell.self, forCellWithReuseIdentifier: "RecentlyPlayedCell")
+        collectionView.register(CasinoCategorySectionCollectionViewCell.self, forCellWithReuseIdentifier: "CategorySectionCell")
+        
+        // Set delegates
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.contentInset = .init(top: 0, left: 0, bottom: 60, right: 0)
+        collectionView.scrollIndicatorInsets = .init(top: 0, left: 0, bottom: 60, right: 0)
+  
+        view.addSubview(collectionView)
     }
     
     private func setupLoadingIndicator() {
@@ -108,18 +129,11 @@ class CasinoCategoriesListViewController: UIViewController {
             quickLinksTabBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             quickLinksTabBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            // Scroll View
-            scrollView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            // Content Stack View
-            contentStackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
-            contentStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
-            contentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            // Collection View
+            collectionView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             // Loading Indicator
             loadingIndicatorView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -143,7 +157,8 @@ class CasinoCategoriesListViewController: UIViewController {
         viewModel.$categorySections
             .receive(on: DispatchQueue.main)
             .sink { [weak self] categorySections in
-                self?.updateCategorySections(categorySections)
+                self?.categorySections = categorySections
+                self?.collectionView.reloadData()
             }
             .store(in: &cancellables)
         
@@ -162,36 +177,7 @@ class CasinoCategoriesListViewController: UIViewController {
         viewModel.reloadCategories()
     }
     
-    // MARK: - UI Updates
-    private func updateCategorySections(_ categorySections: [MockCasinoCategorySectionViewModel]) {
-        // Clear existing views
-        categorySectionViews.forEach { $0.removeFromSuperview() }
-        categorySectionViews.removeAll()
-        
-        // Remove all arranged subviews
-        contentStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        // Create new category section views
-        for categorySection in categorySections {
-            let sectionView = CasinoCategorySectionView(viewModel: categorySection)
-            
-            // Setup callbacks
-            sectionView.onCategoryButtonTapped = { [weak self] categoryId in
-                self?.viewModel.categoryButtonTapped(
-                    categoryId: categoryId,
-                    categoryTitle: categorySection.categoryTitle
-                )
-            }
-            
-            sectionView.onGameSelected = { gameId in
-                print("Game selected in categories list: \(gameId)")
-                // Games can be selected from the preview, but navigation happens via category button
-            }
-            
-            categorySectionViews.append(sectionView)
-            contentStackView.addArrangedSubview(sectionView)
-        }
-    }
+    // MARK: - Error Handling
     
     private func showError(_ message: String) {
         let alert = UIAlertController(
@@ -206,5 +192,92 @@ class CasinoCategoriesListViewController: UIViewController {
         })
         
         present(alert, animated: true)
+    }
+}
+
+// MARK: - UICollectionViewDataSource
+extension CasinoCategoriesListViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // 1 TopBanner + 1 RecentlyPlayed + n CategorySections
+        return 2 + categorySections.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        switch indexPath.item {
+        case 0:
+            // Top Banner Slider
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopBannerCell", for: indexPath) as! TopBannerSliderCollectionViewCell
+            
+            // Configure with mock viewModel for now
+            cell.configure(with: viewModel.topBannerSliderViewModel)
+            
+            // Setup callbacks
+            cell.onBannerTapped = { bannerIndex in
+                print("Banner tapped at index: \(bannerIndex)")
+                // TODO: Handle banner tap navigation
+            }
+            
+            return cell
+            
+        case 1:
+            // Recently Played Games
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecentlyPlayedCell", for: indexPath) as! RecentlyPlayedGamesCollectionViewCell
+            
+            // Configure with mock viewModel for now  
+            cell.configure(with: viewModel.recentlyPlayedGamesViewModel)
+            
+            // Setup callbacks
+            cell.onGameSelected = { [weak self] gameId in
+                print("Recently played game selected: \(gameId)")
+                // TODO: Handle game selection navigation via coordinator
+            }
+            
+            return cell
+            
+        default:
+            // Casino Category Sections
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategorySectionCell", for: indexPath) as! CasinoCategorySectionCollectionViewCell
+            
+            let categoryIndex = indexPath.item - 2
+            let categorySection = categorySections[categoryIndex]
+            
+            cell.configure(with: categorySection)
+            
+            // Setup callbacks
+            cell.onCategoryButtonTapped = { [weak self] categoryId in
+                self?.viewModel.categoryButtonTapped(
+                    categoryId: categoryId,
+                    categoryTitle: categorySection.categoryTitle
+                )
+            }
+            
+            cell.onGameSelected = { gameId in
+                print("Game selected in category section: \(gameId)")
+                // Games can be selected from the preview, but navigation happens via category button
+            }
+            
+            return cell
+        }
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension CasinoCategoriesListViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.bounds.width
+        
+        switch indexPath.item {
+        case 0:
+            // Top Banner Slider
+            return CGSize(width: width, height: Constants.topBannerHeight)
+        case 1:
+            // Recently Played Games
+            return CGSize(width: width, height: Constants.recentlyPlayedHeight)
+        default:
+            // Casino Category Sections
+            return CGSize(width: width, height: Constants.categorySectionHeight)
+        }
     }
 }

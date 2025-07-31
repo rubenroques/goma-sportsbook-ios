@@ -296,6 +296,53 @@ class CasinoMainScreenViewModel {
 - **Memory Management**: Weak references prevent retain cycles
 - **Reactive Updates**: Combine publishers are properly disposed
 
+## Collection View Integration
+
+For use within UICollectionView layouts, use the provided wrapper cell:
+
+### CasinoCategorySectionCollectionViewCell
+
+```swift
+import GomaUI
+
+// Register the cell
+collectionView.register(CasinoCategorySectionCollectionViewCell.self, forCellWithReuseIdentifier: "CategorySectionCell")
+
+// Configure in cellForItemAt
+func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategorySectionCell", for: indexPath) as! CasinoCategorySectionCollectionViewCell
+    
+    // Configure with your view model
+    let categorySection = categorySections[indexPath.item]
+    cell.configure(with: categorySection)
+    
+    // Setup callbacks
+    cell.onCategoryButtonTapped = { categoryId in
+        print("Category button tapped: \(categoryId)")
+        // Handle navigation to full category view
+    }
+    
+    cell.onGameSelected = { gameId in
+        print("Game selected: \(gameId)")
+        // Handle game selection navigation
+    }
+    
+    return cell
+}
+
+// Size for collection view layout
+func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return CGSize(width: collectionView.bounds.width, height: 330) // CasinoCategorySectionView height + spacing
+}
+```
+
+### Collection View Cell Features
+
+- **Automatic cleanup**: Properly handles reuse and memory management
+- **Callback forwarding**: All CasinoCategorySectionView callbacks are available
+- **Configuration support**: Works with any CasinoCategorySectionViewModelProtocol
+- **Placeholder handling**: Falls back to placeholder state when no viewModel provided
+
 ## Demo
 
 See `CasinoCategorySectionViewController` in the GomaUI Demo app for interactive examples showcasing:

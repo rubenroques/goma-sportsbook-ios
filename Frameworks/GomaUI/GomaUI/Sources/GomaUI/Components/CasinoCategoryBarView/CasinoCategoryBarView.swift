@@ -131,7 +131,7 @@ final public class CasinoCategoryBarView: UIView {
             stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -Constants.verticalPadding),
             
             // Button constraints
-            actionButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+            actionButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 34),
             
             // Button stack view
             buttonStackView.topAnchor.constraint(equalTo: actionButton.topAnchor, constant: Constants.buttonVerticalPadding),

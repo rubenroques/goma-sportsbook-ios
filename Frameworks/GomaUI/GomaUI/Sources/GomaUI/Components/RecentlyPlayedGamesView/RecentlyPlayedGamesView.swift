@@ -6,7 +6,7 @@ final public class RecentlyPlayedGamesView: UIView {
     
     // MARK: - Constants
     private enum Constants {
-        static let verticalSpacing: CGFloat = 12.0
+        static let verticalPadding: CGFloat = 16.0
         static let horizontalPadding: CGFloat = 16.0
         static let cellSpacing: CGFloat = 12.0
         static let collectionHeight: CGFloat = 56.0
@@ -76,7 +76,7 @@ final public class RecentlyPlayedGamesView: UIView {
         
         // Main stack view
         stackView.axis = .vertical
-        stackView.spacing = Constants.verticalSpacing
+        stackView.spacing = 12
         stackView.alignment = .fill
         stackView.distribution = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -139,10 +139,10 @@ final public class RecentlyPlayedGamesView: UIView {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             // Stack view
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 1),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.verticalPadding),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
             
             // Collection view height
             collectionView.heightAnchor.constraint(equalToConstant: Constants.collectionHeight)

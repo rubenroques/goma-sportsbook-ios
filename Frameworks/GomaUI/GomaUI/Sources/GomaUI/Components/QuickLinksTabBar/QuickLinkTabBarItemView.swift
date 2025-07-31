@@ -43,8 +43,11 @@ final public class QuickLinkTabBarItemView: UIView {
     // MARK: - Configuration
     public func configure(with item: QuickLinkItem) {
         self.linkType = item.type
-        self.iconImageView.image = item.icon
+        self.iconImageView.image = item.icon?.withRenderingMode(.alwaysTemplate)
         self.titleLabel.text = item.title
+        
+        self.iconImageView.tintColor = StyleProvider.Color.iconSecondary
+        self.titleLabel.textColor = StyleProvider.Color.iconSecondary
     }
 
     // MARK: - Private Methods

@@ -268,7 +268,70 @@ extension MockTopBannerSliderViewModel {
         )
     }
 
-    // MARK: - Helper Methods
+    /// Casino-themed mock with Beast Below style banner
+    public static var casinoGameMock: MockTopBannerSliderViewModel {
+        let bannerFactories = [
+            BannerViewFactory(id: "beast_below_banner") {
+                let buttonConfig = ButtonConfig(
+                    title: "PLAY",
+                    backgroundColor: UIColor.white,
+                    textColor: StyleProvider.Color.highlightPrimary,
+                    cornerRadius: 4
+                )
+                let bannerData = SingleButtonBannerData(
+                    type: "casino_game_banner",
+                    isVisible: true,
+                    backgroundImage: UIImage(named: "casinoBannerGameDemo", in: Bundle.module, with: nil),
+                    messageText: "Discover 10 New Tom\nHorn Games",
+                    buttonConfig: buttonConfig
+                )
+                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
+            },
+            BannerViewFactory(id: "casino_promo_banner") {
+                let buttonConfig = ButtonConfig(
+                    title: "CLAIM BONUS",
+                    backgroundColor: UIColor.white,
+                    textColor: StyleProvider.Color.highlightPrimary,
+                    cornerRadius: 4
+                )
+                let bannerData = SingleButtonBannerData(
+                    type: "casino_promo_banner",
+                    isVisible: true,
+                    backgroundImage: UIImage(named: "casinoBannerGameDemo", in: Bundle.module, with: nil),
+                    messageText: "Win up to €50,000\nMega Jackpot!",
+                    buttonConfig: buttonConfig
+                )
+                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
+            },
+            BannerViewFactory(id: "welcome_bonus_banner") {
+                let buttonConfig = ButtonConfig(
+                    title: "GET STARTED",
+                    backgroundColor: UIColor.white,
+                    textColor: StyleProvider.Color.highlightPrimary,
+                    cornerRadius: 4
+                )
+                let bannerData = SingleButtonBannerData(
+                    type: "welcome_bonus_banner",
+                    isVisible: true,
+                    backgroundImage: UIImage(named: "casinoBannerGameDemo", in: Bundle.module, with: nil),
+                    messageText: "100% Match + 50 Free Spins\nWelcome Bonus!",
+                    buttonConfig: buttonConfig
+                )
+                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
+            }
+        ]
+
+        let sliderData = TopBannerSliderData(
+            bannerViewFactories: bannerFactories,
+            isAutoScrollEnabled: false,
+            autoScrollInterval: 0.0,
+            showPageIndicators: true,
+            currentPageIndex: 0
+        )
+
+        return MockTopBannerSliderViewModel(sliderData: sliderData)
+    }
+    
     private static func createGradientImage(colors: [UIColor], size: CGSize) -> UIImage? {
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { context in

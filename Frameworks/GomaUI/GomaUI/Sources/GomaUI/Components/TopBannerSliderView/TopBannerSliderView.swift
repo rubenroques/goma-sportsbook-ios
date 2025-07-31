@@ -302,4 +302,12 @@ private class BannerCollectionViewCell: UICollectionViewCell {
     .frame(height: 200)
 }
 
+@available(iOS 17.0, *)
+#Preview("Casino Game Banner") {
+    PreviewUIView {
+        TopBannerSliderView(viewModel: MockTopBannerSliderViewModel.casinoGameMock)
+    }
+    .frame(height: 200)
+}
+
 #endif 

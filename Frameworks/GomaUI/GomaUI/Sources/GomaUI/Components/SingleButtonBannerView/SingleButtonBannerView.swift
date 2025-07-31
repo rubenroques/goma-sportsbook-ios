@@ -52,7 +52,7 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
 
         // Setup message label
         messageLabel.font = StyleProvider.fontWith(type: .bold, size: 22)
-        messageLabel.textColor = StyleProvider.Color.textPrimary
+        messageLabel.textColor = .white // StyleProvider.Color.textPrimary
         messageLabel.numberOfLines = 0
         messageLabel.textAlignment = .left
         messageLabel.translatesAutoresizingMaskIntoConstraints = false

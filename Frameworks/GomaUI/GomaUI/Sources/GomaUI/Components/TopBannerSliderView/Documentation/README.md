@@ -253,6 +253,52 @@ The component includes built-in accessibility support:
 - VoiceOver navigation works seamlessly
 - Page indicators announce current position
 
+## Collection View Integration
+
+For use within UICollectionView layouts, use the provided wrapper cell:
+
+### TopBannerSliderCollectionViewCell
+
+```swift
+import GomaUI
+
+// Register the cell
+collectionView.register(TopBannerSliderCollectionViewCell.self, forCellWithReuseIdentifier: "TopBannerCell")
+
+// Configure in cellForItemAt
+func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopBannerCell", for: indexPath) as! TopBannerSliderCollectionViewCell
+    
+    // Configure with your view model
+    cell.configure(with: topBannerSliderViewModel)
+    
+    // Setup callbacks
+    cell.onBannerTapped = { bannerIndex in
+        print("Banner tapped at index: \(bannerIndex)")
+        // Handle banner tap navigation
+    }
+    
+    cell.onPageChanged = { pageIndex in
+        print("Page changed to: \(pageIndex)")
+        // Handle page change if needed
+    }
+    
+    return cell
+}
+
+// Size for collection view layout
+func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return CGSize(width: collectionView.bounds.width, height: 200)
+}
+```
+
+### Collection View Cell Features
+
+- **Automatic cleanup**: Properly handles reuse and memory management
+- **Callback forwarding**: All TopBannerSliderView callbacks are available
+- **Configuration support**: Works with any TopBannerSliderViewModelProtocol
+- **Placeholder handling**: Falls back to mock data when no viewModel provided
+
 ## Requirements
 
 - iOS 15.0+

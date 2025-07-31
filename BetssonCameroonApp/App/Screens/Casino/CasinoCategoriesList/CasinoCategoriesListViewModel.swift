@@ -22,6 +22,8 @@ class CasinoCategoriesListViewModel: ObservableObject {
     
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: MockQuickLinksTabBarViewModel
+    let topBannerSliderViewModel: TopBannerSliderViewModelProtocol
+    let recentlyPlayedGamesViewModel: RecentlyPlayedGamesViewModelProtocol
     
     // MARK: - Properties
     private let servicesProvider: ServicesProvider.Client
@@ -31,6 +33,8 @@ class CasinoCategoriesListViewModel: ObservableObject {
     init(servicesProvider: ServicesProvider.Client) {
         self.servicesProvider = servicesProvider
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
+        self.topBannerSliderViewModel = MockTopBannerSliderViewModel.casinoGameMock
+        self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.defaultRecentlyPlayed
         
         setupCategorySections()
         setupChildViewModelCallbacks()
