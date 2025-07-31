@@ -747,20 +747,3 @@ public extension CombinedFiltersViewController {
         self.createFilterConfiguration()
     }
 }
-
-#if DEBUG
-import SwiftUI
-import ServicesProvider
-
-@available(iOS 17.0, *)
-struct CombinedFiltersViewController_Preview: PreviewProvider {
-    static var previews: some View {
-        PreviewUIViewController {
-            let viewController = CombinedFiltersViewController.withMockData()
-            let navigationController = UINavigationController(rootViewController: viewController)
-            return navigationController
-        }
-    }
-}
-
-#endif

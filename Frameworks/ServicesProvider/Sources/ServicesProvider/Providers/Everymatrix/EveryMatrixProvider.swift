@@ -392,7 +392,8 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         let router = WAMPRouter.getPopularTournaments(language: language, sportId: sportId)
         
-        return connector.request<EveryMatrix.AggregatorResponse>(router)
+        let aggregatorResponsePublisher: AnyPublisher<EveryMatrix.AggregatorResponse, ServiceProviderError> = connector.request(router)
+        return aggregatorResponsePublisher
             .map { [weak self] aggregatorResponse in
                 return self?.processTournamentsFromAggregatorResponse(aggregatorResponse) ?? []
             }
@@ -406,7 +407,8 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         let router = WAMPRouter.getTournaments(language: language, sportId: sportId)
         
-        return connector.request<EveryMatrix.AggregatorResponse>(router)
+        let aggregatorResponsePublisher: AnyPublisher<EveryMatrix.AggregatorResponse, ServiceProviderError> = connector.request(router)
+        return aggregatorResponsePublisher
             .map { [weak self] aggregatorResponse in
                 return self?.processTournamentsFromAggregatorResponse(aggregatorResponse) ?? []
             }
@@ -420,10 +422,44 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Create temporary store for processing
         let tempStore = EveryMatrix.EntityStore()
         
-        // Parse tournament entities from the response
+        // Store all entities from the response (tournaments, venues, sports, etc.)
+        // The tournament builder might need other DTOs to create composed Tournament objects
         response.records.forEach { record in
-            if record.type == EveryMatrix.TournamentDTO.rawType {
-                tempStore.addOrUpdate(entity: record)
+            switch record {
+            case .sport(let dto):
+                tempStore.store(dto)
+            case .match(let dto):
+                tempStore.store(dto)
+            case .market(let dto):
+                tempStore.store(dto)
+            case .outcome(let dto):
+                tempStore.store(dto)
+            case .bettingOffer(let dto):
+                tempStore.store(dto)
+            case .location(let dto):
+                tempStore.store(dto)
+            case .eventCategory(let dto):
+                tempStore.store(dto)
+            case .marketOutcomeRelation(let dto):
+                tempStore.store(dto)
+            case .mainMarket(let dto):
+                tempStore.store(dto)
+            case .marketInfo(let dto):
+                tempStore.store(dto)
+            case .nextMatchesNumber(let dto):
+                tempStore.store(dto)
+            case .tournament(let dto):
+                tempStore.store(dto)
+            case .eventInfo(let dto):
+                tempStore.store(dto)
+            case .marketGroup(let dto):
+                tempStore.store(dto)
+            case .changeRecord(let changeRecord):
+                // Handle change records if needed for tournament data
+                break
+            case .unknown:
+                // Skip unknown record types
+                break
             }
         }
         

@@ -1,0 +1,37 @@
+{
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(curl:*)",
+      "mcp__Xcodebuildmcp__list_schems_proj",
+      "mcp__Xcodebuildmcp__list_sims",
+      "mcp__Xcodebuildmcp__build_run_ios_sim_id_proj",
+      "mcp__Xcodebuildmcp__swipe",
+      "mcp__Xcodebuildmcp__build_ios_sim_name_proj",
+      "Bash(rg:*)",
+      "mcp__Xcodebuildmcp__build_run_ios_sim_name_proj",
+      "Bash(./gradlew:*)",
+      "Bash(java:*)",
+      "Bash(/usr/libexec/java_home:*)",
+      "Bash(brew install:*)",
+      "Bash(ls:*)",
+      "Bash(echo $JAVA_HOME)",
+      "mcp__mobile__mobile_use_default_device",
+      "WebFetch(domain:github.com)",
+      "Bash(adb:*)",
+      "Bash($HOME/Library/Android/sdk/emulator/emulator:*)",
+      "Bash(git add:*)",
+      "Bash(xcodebuild build:*)",
+      "Bash(grep:*)",
+      "mcp__Xcodebuildmcp__discover_projs",
+      "Bash(xcodebuild test:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(xcodebuild:*)",
+      "mcp__figma-dev-mode-mcp-server__get_image",
+      "mcp__figma-dev-mode-mcp-server__get_code"
+    ],
+    "deny": []
+  }
+}
