@@ -15,6 +15,8 @@ class CasinoCategoriesListViewModel: ObservableObject {
     // MARK: - Navigation Closures for CasinoCoordinator
     var onCategorySelected: ((String, String) -> Void) = { _, _ in }
     
+    private static let gamesPlatform = "PC"
+    
     // MARK: - Published Properties
     @Published private(set) var categorySections: [MockCasinoCategorySectionViewModel] = []
     @Published private(set) var isLoading: Bool = false
@@ -36,45 +38,153 @@ class CasinoCategoriesListViewModel: ObservableObject {
         self.topBannerSliderViewModel = MockTopBannerSliderViewModel.casinoGameMock
         self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.defaultRecentlyPlayed
         
-        setupCategorySections()
         setupChildViewModelCallbacks()
+        loadCategoriesFromAPI()
     }
     
     // MARK: - Public Methods
     func reloadCategories() {
-        isLoading = true
-        errorMessage = nil
-        
-        // Simulate network call - replace with real service call later
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.setupCategorySections()
-            self?.isLoading = false
-        }
+        loadCategoriesFromAPI()
     }
     
     func categoryButtonTapped(categoryId: String, categoryTitle: String) {
         onCategorySelected(categoryId, categoryTitle)
     }
     
-    // MARK: - Private Methods
-    private func setupCategorySections() {
-        // Create mock casino category sections using existing GomaUI components
-        categorySections = [
-            MockCasinoCategorySectionViewModel.newGamesSection,
-            MockCasinoCategorySectionViewModel.popularGamesSection,
-            MockCasinoCategorySectionViewModel.slotGamesSection,
-            createLiveGamesSection(),
-            createJackpotGamesSection(),
-            createTableGamesSection()
-        ]
+    // MARK: - Private Methods - API Integration
+    
+    /// Main method to load casino categories and their preview games from API
+    private func loadCategoriesFromAPI() {
+        isLoading = true
+        errorMessage = nil
         
-        // Setup callbacks for each section
-        setupSectionCallbacks()
+        servicesProvider.getCasinoCategories(language: "en", platform: Self.gamesPlatform)
+            .map { categories in
+                // Filter categories with games available
+                categories.filter { $0.gamesTotal > 0 }
+            }
+            .flatMap { validCategories in
+                self.loadPreviewGamesForAllCategories(validCategories)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    self?.handleAPICompletion(completion)
+                },
+                receiveValue: { [weak self] sectionViewModels in
+                    self?.categorySections = sectionViewModels
+                    self?.isLoading = false
+                }
+            )
+            .store(in: &cancellables)
     }
     
-    private func setupSectionCallbacks() {
-        // Callbacks will be set up in the view controller when creating CasinoCategorySectionViews
-        // This keeps the separation of concerns - ViewModels don't know about UI callbacks directly
+    /// Load preview games for all categories concurrently while preserving order
+    private func loadPreviewGamesForAllCategories(_ categories: [CasinoCategory]) -> AnyPublisher<[MockCasinoCategorySectionViewModel], ServiceProviderError> {
+        let indexedPublishers = categories.enumerated().map { index, category in
+            loadPreviewGamesForCategory(category)
+                .map { sectionViewModel in
+                    (index: index, sectionViewModel: sectionViewModel)
+                }
+        }
+        
+        return Publishers.MergeMany(indexedPublishers)
+            .collect()
+            .map { indexedResults in
+                // Sort by original index to restore category order
+                indexedResults
+                    .sorted { $0.index < $1.index }
+                    .map { $0.sectionViewModel }
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    /// Load preview games for a single category (10 games + See More card if needed)
+    private func loadPreviewGamesForCategory(_ category: CasinoCategory) -> AnyPublisher<MockCasinoCategorySectionViewModel, ServiceProviderError> {
+        let pagination = CasinoPaginationParams(offset: 0, limit: 10) // Load 10 games as requested
+        
+        return servicesProvider.getGamesByCategory(
+            categoryId: category.id,
+            language: "en",
+            platform: Self.gamesPlatform,
+            pagination: pagination
+        )
+        .map { gamesResponse in
+            // Convert CasinoGame[] to CasinoGameCardData[]
+            let gameCardData = gamesResponse.games.map { 
+                ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
+            }
+            
+            // Add "See More" card if there are more games available
+            let gamesWithSeeMore = self.addSeeMoreCardIfNeeded(
+                games: gameCardData,
+                category: category,
+                totalGames: gamesResponse.total
+            )
+            
+            // Create section data using mapping
+            let sectionData = ServiceProviderModelMapper.casinoCategorySectionData(
+                fromCasinoCategory: category,
+                games: gamesWithSeeMore
+            )
+            
+            // Create section ViewModel
+            return MockCasinoCategorySectionViewModel(sectionData: sectionData)
+        }
+        .eraseToAnyPublisher()
+    }
+    
+    /// Add "See More" card if there are additional games beyond the loaded ones
+    private func addSeeMoreCardIfNeeded(
+        games: [CasinoGameCardData],
+        category: CasinoCategory,
+        totalGames: Int
+    ) -> [CasinoGameCardData] {
+        guard games.count < totalGames else {
+            return games // No more games available
+        }
+        
+        let remainingGamesCount = totalGames - games.count
+        let seeMoreCard = ServiceProviderModelMapper.seeMoreCard(
+            categoryId: category.id,
+            remainingGamesCount: remainingGamesCount
+        )
+        
+        return games + [seeMoreCard]
+    }
+    
+    /// Handle API completion (success or failure)
+    private func handleAPICompletion(_ completion: Subscribers.Completion<ServiceProviderError>) {
+        isLoading = false
+        
+        switch completion {
+        case .finished:
+            break
+        case .failure(let error):
+            errorMessage = mapServiceProviderErrorToDisplayMessage(error)
+            
+            // Fallback to minimal mock data if API fails completely
+            if categorySections.isEmpty {
+                setupFallbackCategories()
+            }
+        }
+    }
+    
+    /// Map ServiceProviderError to user-friendly display messages
+    private func mapServiceProviderErrorToDisplayMessage(_ error: ServiceProviderError) -> String {
+        switch error {
+        case .casinoProviderNotFound:
+            return "Casino service not available"
+        case .unauthorized:
+            return "Authentication required"
+        default:
+            return "Unable to load casino games. Please try again."
+        }
+    }
+    
+    /// Minimal fallback categories if API fails completely
+    private func setupFallbackCategories() {
+        categorySections = [MockCasinoCategorySectionViewModel.emptySection]
     }
     
     private func setupChildViewModelCallbacks() {
@@ -83,120 +193,5 @@ class CasinoCategoriesListViewModel: ObservableObject {
             print("Casino Categories: Tab selected: \(tabId)")
             // Handle tab switching if needed
         }
-    }
-    
-    // MARK: - Mock Category Sections
-    private func createLiveGamesSection() -> MockCasinoCategorySectionViewModel {
-        let games = [
-            CasinoGameCardData(
-                id: "live-001",
-                name: "Live Blackjack",
-                gameURL: "https://casino.example.com/games/live-blackjack",
-                imageURL: "casinoGameDemo",
-                rating: 4.9,
-                provider: "Evolution Gaming",
-                minStake: "XAF 500"
-            ),
-            CasinoGameCardData(
-                id: "live-002",
-                name: "Live Roulette",
-                gameURL: "https://casino.example.com/games/live-roulette",
-                imageURL: "casinoGameDemo",
-                rating: 4.8,
-                provider: "NetEnt Live",
-                minStake: "XAF 100"
-            ),
-            CasinoGameCardData(
-                id: "live-003",
-                name: "Live Baccarat",
-                gameURL: "https://casino.example.com/games/live-baccarat",
-                imageURL: "casinoGameDemo",
-                rating: 4.7,
-                provider: "Pragmatic Play Live",
-                minStake: "XAF 250"
-            )
-        ]
-        
-        let sectionData = CasinoCategorySectionData(
-            id: "live-games",
-            categoryTitle: "Live Games",
-            categoryButtonText: "All 23",
-            games: games
-        )
-        
-        return MockCasinoCategorySectionViewModel(sectionData: sectionData)
-    }
-    
-    private func createJackpotGamesSection() -> MockCasinoCategorySectionViewModel {
-        let games = [
-            CasinoGameCardData(
-                id: "jackpot-001",
-                name: "Mega Fortune",
-                gameURL: "https://casino.example.com/games/mega-fortune",
-                imageURL: "casinoGameDemo",
-                rating: 4.6,
-                provider: "NetEnt",
-                minStake: "XAF 50"
-            ),
-            CasinoGameCardData(
-                id: "jackpot-002",
-                name: "Hall of Gods",
-                gameURL: "https://casino.example.com/games/hall-of-gods",
-                imageURL: "casinoGameDemo",
-                rating: 4.5,
-                provider: "NetEnt",
-                minStake: "XAF 100"
-            )
-        ]
-        
-        let sectionData = CasinoCategorySectionData(
-            id: "jackpot-games",
-            categoryTitle: "Jackpot Games",
-            categoryButtonText: "All 12",
-            games: games
-        )
-        
-        return MockCasinoCategorySectionViewModel(sectionData: sectionData)
-    }
-    
-    private func createTableGamesSection() -> MockCasinoCategorySectionViewModel {
-        let games = [
-            CasinoGameCardData(
-                id: "table-001",
-                name: "European Roulette",
-                gameURL: "https://casino.example.com/games/european-roulette",
-                imageURL: "casinoGameDemo",
-                rating: 4.7,
-                provider: "NetEnt",
-                minStake: "XAF 10"
-            ),
-            CasinoGameCardData(
-                id: "table-002",
-                name: "Classic Blackjack",
-                gameURL: "https://casino.example.com/games/classic-blackjack",
-                imageURL: "casinoGameDemo",
-                rating: 4.8,
-                provider: "NetEnt",
-                minStake: "XAF 50"
-            ),
-            CasinoGameCardData(
-                id: "table-003",
-                name: "Punto Banco",
-                gameURL: "https://casino.example.com/games/punto-banco",
-                imageURL: "casinoGameDemo",
-                rating: 4.4,
-                provider: "NetEnt",
-                minStake: "XAF 25"
-            )
-        ]
-        
-        let sectionData = CasinoCategorySectionData(
-            id: "table-games",
-            categoryTitle: "Table Games",
-            categoryButtonText: "All 18",
-            games: games
-        )
-        
-        return MockCasinoCategorySectionViewModel(sectionData: sectionData)
     }
 }

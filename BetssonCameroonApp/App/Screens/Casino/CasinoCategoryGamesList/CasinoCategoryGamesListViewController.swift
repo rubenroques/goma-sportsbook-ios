@@ -124,7 +124,6 @@ class CasinoCategoryGamesListViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updateCollectionViewLayout()
     }
     
     // MARK: - Setup
@@ -173,6 +172,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
         
         // Register cells
         collectionView.register(CasinoGameCardCollectionViewCell.self, forCellWithReuseIdentifier: "GameCardCell")
+        collectionView.register(SeeMoreButtonCollectionViewCell.self, forCellWithReuseIdentifier: "SeeMoreButtonCell")
         
         // Set delegates
         collectionView.dataSource = self
@@ -237,10 +237,11 @@ class CasinoCategoryGamesListViewController: UIViewController {
     // MARK: - Bindings
     private func setupBindings() {
         // Loading state
-        viewModel.$isLoading
+        viewModel.$loadingState
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                self?.loadingIndicatorView.isHidden = !isLoading
+            .sink { [weak self] loadingState in
+                let showFullScreenLoader = (loadingState == .initialLoading)
+                self?.loadingIndicatorView.isHidden = !showFullScreenLoader
             }
             .store(in: &cancellables)
         
@@ -269,20 +270,16 @@ class CasinoCategoryGamesListViewController: UIViewController {
                 self?.showError(errorMessage)
             }
             .store(in: &cancellables)
+        
+        // HasMoreGames state (triggers collection view updates)
+        viewModel.$hasMoreGames
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.collectionView.reloadData()
+            }
+            .store(in: &cancellables)
     }
     
-    // MARK: - Layout
-    private func updateCollectionViewLayout() {
-        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
-        
-        let availableWidth = collectionView.bounds.width
-        let totalHorizontalPadding = layout.sectionInset.left + layout.sectionInset.right
-        let totalSpacing = layout.minimumInteritemSpacing * CGFloat(Constants.itemsPerRow - 1)
-        let itemWidth = (availableWidth - totalHorizontalPadding - totalSpacing) / CGFloat(Constants.itemsPerRow)
-        let itemHeight = itemWidth / Constants.itemAspectRatio
-        
-        layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
-    }
     
     // MARK: - Error Handling
     private func showError(_ message: String) {
@@ -309,22 +306,59 @@ class CasinoCategoryGamesListViewController: UIViewController {
 // MARK: - Collection View Data Source
 extension CasinoCategoryGamesListViewController: UICollectionViewDataSource {
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2 // Section 0: Games, Section 1: See More Button
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return games.count
+        switch section {
+        case 0: return games.count // Game cards
+        case 1: return viewModel.hasMoreGames ? 1 : 0 // See More button
+        default: return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameCardCell", for: indexPath) as! CasinoGameCardCollectionViewCell
-        
-        let gameViewModel = games[indexPath.item]
-        cell.configure(with: gameViewModel)
-        
-        // Set callback for game selection
-        cell.onGameSelected = { [weak self] gameId in
-            self?.viewModel.gameSelected(gameId)
+        switch indexPath.section {
+        case 0: // Game cards section
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameCardCell", for: indexPath) as! CasinoGameCardCollectionViewCell
+            
+            let gameViewModel = games[indexPath.item]
+            cell.configure(with: gameViewModel)
+            
+            // Set callback for game selection
+            cell.onGameSelected = { [weak self] gameId in
+                self?.viewModel.gameSelected(gameId)
+            }
+            
+            return cell
+            
+        case 1: // See More button section
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SeeMoreButtonCell", for: indexPath) as! SeeMoreButtonCollectionViewCell
+            
+            // Configure See More button
+            let buttonData = SeeMoreButtonData(
+                id: "load-more-\(viewModel.categoryTitle)",
+                title: "Load More Games",
+                remainingCount: nil
+            )
+            
+            cell.configure(
+                with: buttonData,
+                isLoading: viewModel.isLoadingMore,
+                isEnabled: !viewModel.isLoadingMore
+            )
+            
+            // Set callback for see more button tap
+            cell.onSeeMoreTapped = { [weak self] in
+                self?.viewModel.loadMoreGames()
+            }
+            
+            return cell
+            
+        default:
+            fatalError("Unexpected section: \(indexPath.section)")
         }
-        
-        return cell
     }
 }
 
@@ -332,7 +366,58 @@ extension CasinoCategoryGamesListViewController: UICollectionViewDataSource {
 extension CasinoCategoryGamesListViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let gameViewModel = games[indexPath.item]
-        viewModel.gameSelected(gameViewModel.gameId)
+        switch indexPath.section {
+        case 0: // Game cards section
+            let gameViewModel = games[indexPath.item]
+            viewModel.gameSelected(gameViewModel.gameId)
+        case 1: // See More button section
+            viewModel.loadMoreGames()
+        default:
+            break
+        }
+    }
+}
+
+// MARK: - Collection View Flow Layout Delegate
+extension CasinoCategoryGamesListViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        switch indexPath.section {
+        case 0: // Game cards - use existing 2-column grid logic
+            let availableWidth = collectionView.bounds.width
+            let totalHorizontalPadding = Constants.horizontalPadding * 2
+            let totalSpacing = Constants.cellSpacing * CGFloat(Constants.itemsPerRow - 1)
+            let itemWidth = (availableWidth - totalHorizontalPadding - totalSpacing) / CGFloat(Constants.itemsPerRow)
+            let itemHeight = itemWidth / Constants.itemAspectRatio
+            
+            return CGSize(width: itemWidth, height: itemHeight)
+            
+        case 1: // See More button - full width, fixed height
+            let availableWidth = collectionView.bounds.width
+            let totalHorizontalPadding = Constants.horizontalPadding * 2
+            let buttonWidth = availableWidth - totalHorizontalPadding
+            let buttonHeight: CGFloat = 60 // 44pt button + 16pt padding
+            
+            return CGSize(width: buttonWidth, height: buttonHeight)
+            
+        default:
+            return .zero
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        switch section {
+        case 0: return Constants.cellSpacing // Normal spacing for game cards
+        case 1: return 0 // No inter-item spacing for See More button (single item)
+        default: return 0
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        switch section {
+        case 0: return Constants.cellSpacing // Normal spacing for game cards
+        case 1: return 8 // Small spacing above See More button
+        default: return 0
+        }
     }
 }
