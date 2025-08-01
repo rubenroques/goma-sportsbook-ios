@@ -26,7 +26,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: MockQuickLinksTabBarViewModel
     let topBannerSliderViewModel: TopBannerSliderViewModelProtocol
-    let recentlyPlayedGamesViewModel: RecentlyPlayedGamesViewModelProtocol
+    private(set) var recentlyPlayedGamesViewModel: MockRecentlyPlayedGamesViewModel
     
     // MARK: - Properties
     private let servicesProvider: ServicesProvider.Client
@@ -37,7 +37,8 @@ class CasinoCategoriesListViewModel: ObservableObject {
         self.servicesProvider = servicesProvider
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.topBannerSliderViewModel = MockTopBannerSliderViewModel.casinoGameMock
-        self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.defaultRecentlyPlayed
+        // Initialize with empty recently played - will be populated when categories load
+        self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.emptyRecentlyPlayed
         
         setupChildViewModelCallbacks()
         loadCategoriesFromAPI()
@@ -78,6 +79,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
                 },
                 receiveValue: { [weak self] sectionViewModels in
                     self?.categorySections = sectionViewModels
+                    self?.updateRecentlyPlayedFromCategories()
                     self?.isLoading = false
                 }
             )
@@ -190,6 +192,26 @@ class CasinoCategoriesListViewModel: ObservableObject {
     /// Minimal fallback categories if API fails completely
     private func setupFallbackCategories() {
         categorySections = [MockCasinoCategorySectionViewModel.emptySection]
+    }
+    
+    /// Update recently played games with first game from each loaded category
+    private func updateRecentlyPlayedFromCategories() {
+        // Extract first game from each category section (excluding "See More" cards)
+        let recentGames = categorySections.compactMap { section -> RecentlyPlayedGameData? in
+            // Get first real game (not a "See More" card)
+            guard let firstGame = section.sectionData.games.first(where: { !$0.id.contains("see-more") }) else {
+                return nil
+            }
+            
+            // Convert CasinoGameCardData to RecentlyPlayedGameData
+            return ServiceProviderModelMapper.recentlyPlayedGameData(fromCasinoGameCardData: firstGame)
+        }
+        
+        // Take up to 5 games to avoid overcrowding the recently played section
+        let limitedGames = Array(recentGames.prefix(5))
+        
+        // Update the recently played games ViewModel
+        recentlyPlayedGamesViewModel.updateGames(limitedGames)
     }
     
     private func setupChildViewModelCallbacks() {

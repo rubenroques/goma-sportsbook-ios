@@ -106,7 +106,7 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 })
                 
                 phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
-                                                                                           placeholder: "New number *",
+                                                                                           placeholder: "Mobile Phone Number *",
 //                                                                                           prefix: phoneConfig?.defaultValue ?? "",
                                                                                            isSecure: false,
                                                                                            visualState: .idle,
@@ -118,7 +118,7 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 })
                 
                 passwordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "password",
-                                                                                           placeholder: "Password (4 characters minimum) *",
+                                                                                           placeholder: "Password (4 characters) *",
                                                                                            isSecure: true,
                                                                                            visualState: .idle,
                                                                                            keyboardType: .default,

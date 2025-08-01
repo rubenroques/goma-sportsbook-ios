@@ -16,7 +16,7 @@ class CasinoGamePrePlayViewModel: ObservableObject {
     var onNavigateBack: (() -> Void) = { }
     var onLoginRequested: (() -> Void) = { }
     var onDepositRequested: (() -> Void) = { }
-    var onStartGame: ((CasinoGamePlayMode) -> Void) = { _ in }
+    var onStartGame: ((CasinoGamePlayMode, CasinoGame?) -> Void) = { _, _ in }
     
     // MARK: - Published Properties
     @Published private(set) var isLoading: Bool = false
@@ -65,7 +65,7 @@ class CasinoGamePrePlayViewModel: ObservableObject {
         }
         
         playSelectorViewModel.onStartGame = { [weak self] mode in
-            self?.onStartGame(mode)
+            self?.onStartGame(mode, self?.playSelectorViewModel.loadedGameDetails)
         }
     }
 }
@@ -98,6 +98,11 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
     var onLoginRequested: (() -> Void) = { }
     var onDepositRequested: (() -> Void) = { }
     var onStartGame: ((CasinoGamePlayMode) -> Void) = { _ in }
+    
+    // Expose gameDetails for access by parent ViewModel
+    var loadedGameDetails: CasinoGame? {
+        return gameDetails
+    }
     
     // MARK: - Initialization
     init(gameId: String, servicesProvider: ServicesProvider.Client) {

@@ -59,6 +59,19 @@ extension ServiceProviderModelMapper {
         )
     }
     
+    // MARK: - Recently Played Mapping
+    
+    /// Convert CasinoGameCardData to RecentlyPlayedGameData for recently played section
+    static func recentlyPlayedGameData(fromCasinoGameCardData cardData: CasinoGameCardData) -> RecentlyPlayedGameData {
+        return RecentlyPlayedGameData(
+            id: cardData.id,
+            name: cardData.name,
+            provider: cardData.provider,
+            imageURL: cardData.imageURL,
+            gameURL: cardData.gameURL
+        )
+    }
+    
     // MARK: - Private Helper Methods
     
     /// Get best available image URL with priority: thumbnail > backgroundImageUrl > icons["88"]

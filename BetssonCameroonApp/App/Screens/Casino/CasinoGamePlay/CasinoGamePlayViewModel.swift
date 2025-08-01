@@ -28,6 +28,7 @@ class CasinoGamePlayViewModel: ObservableObject {
     private let gameId: String
     private let servicesProvider: ServicesProvider.Client
     private var cancellables = Set<AnyCancellable>()
+    private var casinoGame: CasinoGame?
     
     // WebView reference for navigation control
     weak var webView: WKWebView? {
@@ -37,16 +38,32 @@ class CasinoGamePlayViewModel: ObservableObject {
     }
     
     // MARK: - Initialization
+    
+    /// Initialize with CasinoGame object (preferred - uses real launchUrl)
+    init(casinoGame: CasinoGame, servicesProvider: ServicesProvider.Client) {
+        self.gameId = casinoGame.id
+        self.servicesProvider = servicesProvider
+        self.casinoGame = casinoGame
+        
+        loadGameDataFromObject()
+    }
+    
+    /// Initialize with gameId only (fallback - uses mock URLs)
     init(gameId: String, servicesProvider: ServicesProvider.Client) {
         self.gameId = gameId
         self.servicesProvider = servicesProvider
+        self.casinoGame = nil
         
         loadGameData()
     }
     
     // MARK: - Public Methods
     func reloadGame() {
-        loadGameData()
+        if let casinoGame = casinoGame {
+            loadGameDataFromObject()
+        } else {
+            loadGameData()
+        }
     }
     
     func goBack() {
@@ -89,6 +106,29 @@ class CasinoGamePlayViewModel: ObservableObject {
             
             self.isLoading = false
         }
+    }
+    
+    /// Load game data from CasinoGame object (uses real launchUrl)
+    private func loadGameDataFromObject() {
+        guard let casinoGame = casinoGame else {
+            errorMessage = "No game data available"
+            return
+        }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        // Use real game data from CasinoGame object
+        gameTitle = casinoGame.name
+        
+        // Use real launchUrl from the API
+        if let url = URL(string: casinoGame.launchUrl), !casinoGame.launchUrl.isEmpty {
+            gameURL = url
+        } else {
+            errorMessage = "Invalid game URL from server"
+        }
+        
+        isLoading = false
     }
     
     private func setupWebViewObservers() {

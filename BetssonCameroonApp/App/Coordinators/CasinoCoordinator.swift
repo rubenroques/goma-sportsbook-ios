@@ -85,12 +85,12 @@ class CasinoCoordinator: Coordinator {
             print("CasinoCoordinator: Deposit requested") 
         }
         
-        gamePrePlayViewModel.onStartGame = { [weak self] mode in
+        gamePrePlayViewModel.onStartGame = { [weak self] mode, casinoGame in
             switch mode {
             case .practice:
-                self?.showGamePlay(gameId: gameId, mode: .practice)
+                self?.showGamePlay(gameId: gameId, casinoGame: casinoGame, mode: .practice)
             case .realMoney:
-                self?.showGamePlay(gameId: gameId, mode: .realMoney)
+                self?.showGamePlay(gameId: gameId, casinoGame: casinoGame, mode: .realMoney)
             }
         }
         
@@ -102,12 +102,15 @@ class CasinoCoordinator: Coordinator {
         self.navigationController.pushViewController(gamePrePlayViewController, animated: true)
     }
     
-    private func showGamePlay(gameId: String, mode: CasinoGamePlayMode) {
-        // Create game play view model
-        let gamePlayViewModel = CasinoGamePlayViewModel(
-            gameId: gameId,
-            servicesProvider: environment.servicesProvider
-        )
+    private func showGamePlay(gameId: String, casinoGame: CasinoGame?, mode: CasinoGamePlayMode) {
+        // Create game play view model with CasinoGame object if available
+        let gamePlayViewModel: CasinoGamePlayViewModel
+        if let casinoGame = casinoGame {
+            gamePlayViewModel = CasinoGamePlayViewModel(casinoGame: casinoGame, servicesProvider: environment.servicesProvider)
+        } else {
+            // Fallback to gameId-based initialization
+            gamePlayViewModel = CasinoGamePlayViewModel(gameId: gameId, servicesProvider: environment.servicesProvider)
+        }
         
         // Setup navigation closures
         gamePlayViewModel.onNavigateBack = { [weak self] in

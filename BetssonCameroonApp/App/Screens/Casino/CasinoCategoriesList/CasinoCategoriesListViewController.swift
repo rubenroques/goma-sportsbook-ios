@@ -229,8 +229,7 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
             
             // Setup callbacks
             cell.onGameSelected = { [weak self] gameId in
-                print("Recently played game selected: \(gameId)")
-                // TODO: Handle game selection navigation via coordinator
+                self?.viewModel.gameSelected(gameId)
             }
             
             return cell
