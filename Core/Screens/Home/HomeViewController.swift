@@ -29,6 +29,7 @@ class HomeViewController: UIViewController {
     var requestRegisterAction: () -> Void = { }
     var requestLiveAction: () -> Void = { }
     var requestContactSettingsAction: () -> Void = { }
+    var didTapJonumBannerAction: (() -> Void)?
 
     // MARK: - Private Properties
     // Sub Views
@@ -709,20 +710,12 @@ class HomeViewController: UIViewController {
     
     private func openJonum() {
         let appScheme = "jonum://"
-        
         if let appURL = URL(string: appScheme),
            UIApplication.shared.canOpenURL(appURL) {
-            
             UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-            
         }
         else {
-            
-            if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url,
-               let url = URL(string: jonumUrlString) {
-                
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
+            self.didTapJonumBannerAction?()
         }
     }
 

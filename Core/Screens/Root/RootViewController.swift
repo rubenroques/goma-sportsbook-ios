@@ -498,6 +498,41 @@ class RootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        // Jonum reactive feature button
+        // Also handles the show hide of cashback because they use the same "slot" in the bar
+        Env.businessSettingsSocket.clientSettingsPublisher
+            .compactMap({ $0?.jonum })
+            .receive(on: DispatchQueue.main)
+            .sink { jonumFeature in
+                if jonumFeature.isActive {
+                    
+                    if TargetVariables.hasFeatureEnabled(feature: .cashback) {
+                        self.cashbackButtonBaseView.isHidden = true
+                    }
+                    
+                    self.jonumButtonBaseView.isHidden = false
+                    
+                    let jonumIcon = jonumFeature.icon
+                    if let url = URL(string: jonumIcon) {
+                        self.jonumIconImageView.kf.setImage(with: url)
+                    }
+                    
+                    let jonumName = jonumFeature.name
+                    self.jonumTitleLabel.text = jonumName
+                }
+                else {
+                    self.jonumButtonBaseView.isHidden = true
+                    
+                    if TargetVariables.hasFeatureEnabled(feature: .cashback) {
+                        self.cashbackButtonBaseView.isHidden = false
+                    }
+                    else {
+                        self.cashbackButtonBaseView.isHidden = true
+                    }
+                }
+            }
+            .store(in: &self.cancellables)
+        
         let debugTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLogoImageView))
         logoImageView.addGestureRecognizer(debugTapGesture)
         logoImageView.isUserInteractionEnabled = true
@@ -758,13 +793,6 @@ class RootViewController: UIViewController {
             self.tipsButtonBaseView.isHidden = true
         }
         
-        if TargetVariables.hasFeatureEnabled(feature: .cashback) {
-            self.cashbackButtonBaseView.isHidden = false
-        }
-        else {
-            self.cashbackButtonBaseView.isHidden = true
-        }
-        
         if let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition,
            let featuredCompetitionId = featuredCompetition.id {
             self.featuredCompetitionButtonBaseView.isHidden = false
@@ -785,31 +813,7 @@ class RootViewController: UIViewController {
         else {
             self.featuredCompetitionButtonBaseView.isHidden = true
         }
-        
-        if let jonumFeature = Env.businessSettingsSocket.clientSettings.jonum,
-           jonumFeature.isActive {
-            self.jonumButtonBaseView.isHidden = false
-            
-            let jonumIcon = jonumFeature.icon
-            
-            if let url = URL(string: jonumIcon) {
-                
-                self.jonumIconImageView.kf.setImage(with: url)
-            
-            }
-            
-            let jonumName = jonumFeature.name
-            
-            self.jonumTitleLabel.text = jonumName
-            
-            if TargetVariables.hasFeatureEnabled(feature: .cashback) {
-                self.cashbackButtonBaseView.isHidden = true
-            }
-        }
-        else {
-            self.jonumButtonBaseView.isHidden = true
-        }
-        
+
         //
         self.view.insertSubview(self.topGradientBackgroundView, belowSubview: self.topSafeAreaView)
         
@@ -1274,12 +1278,17 @@ class RootViewController: UIViewController {
 
     }
     
-    func openPromotions() {
+    func openPromotions(customUrl: String? = nil) {
         
         let promotionsWebViewModel = PromotionsWebViewModel()
-        let appLanguage = "fr"
-        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
+        let urlString: String
+        if let customUrl = customUrl {
+            urlString = customUrl
+        } else {
+            let appLanguage = "fr"
+            let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
+            urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
+        }
 
         if let url = URL(string: urlString) {
             
@@ -1471,6 +1480,12 @@ extension RootViewController {
             
             self.homeViewController.requestContactSettingsAction = { [weak self] in
                 self?.openContactSettings()
+            }
+            
+            self.homeViewController.didTapJonumBannerAction = { [weak self] in
+                if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url {
+                    self?.openPromotions(customUrl: jonumUrlString)
+                }
             }
             
             homeViewControllerLoaded = true
@@ -1874,21 +1889,13 @@ extension RootViewController {
     }
     
     @objc private func didTapJonumTabItem() {
-                
         let appScheme = "jonum://"
-        
-        if let appURL = URL(string: appScheme),
-           UIApplication.shared.canOpenURL(appURL) {
-            
+        if let appURL = URL(string: appScheme), UIApplication.shared.canOpenURL(appURL) {
             UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-            
         }
         else {
-            
-            if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url,
-               let url = URL(string: jonumUrlString) {
-                
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url {
+                self.openPromotions(customUrl: jonumUrlString)
             }
         }
         

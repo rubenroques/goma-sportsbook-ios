@@ -162,7 +162,7 @@ class BrandedTicketShareView: UIView {
             
             return ShareContent(
                 image: shareImage,
-                shareText: shareText, // + "\n" + shareURL, //
+                shareText: shareText + "\n" + shareURL,
                 url: nil,
                 metadata: nil
             )
