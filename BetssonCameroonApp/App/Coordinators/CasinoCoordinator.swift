@@ -21,6 +21,7 @@ class CasinoCoordinator: Coordinator {
     private let environment: Environment
     private var casinoCategoriesListViewController: CasinoCategoriesListViewController?
     private var casinoCategoryGamesListViewController: CasinoCategoryGamesListViewController?
+    private var casinoGamePrePlayViewController: CasinoGamePrePlayViewController?
     private var casinoGamePlayViewController: CasinoGamePlayViewController?
     
     // Public accessor for RootTabBarCoordinator
@@ -47,7 +48,7 @@ class CasinoCoordinator: Coordinator {
         
         // Setup navigation closures
         categoryGamesViewModel.onGameSelected = { [weak self] gameId in
-            self?.showGamePlay(gameId: gameId)
+            self?.showGamePrePlay(gameId: gameId)
         }
         
         categoryGamesViewModel.onNavigateBack = { [weak self] in
@@ -62,7 +63,46 @@ class CasinoCoordinator: Coordinator {
         self.navigationController.pushViewController(categoryGamesViewController, animated: true)
     }
     
-    private func showGamePlay(gameId: String) {
+    private func showGamePrePlay(gameId: String) {
+        // Create game pre-play view model
+        let gamePrePlayViewModel = CasinoGamePrePlayViewModel(
+            gameId: gameId,
+            servicesProvider: environment.servicesProvider
+        )
+        
+        // Setup navigation closures
+        gamePrePlayViewModel.onNavigateBack = { [weak self] in
+            self?.navigationController.popViewController(animated: true)
+        }
+        
+        gamePrePlayViewModel.onLoginRequested = { [weak self] in
+            // TODO: Navigate to login screen
+            print("CasinoCoordinator: Login requested")
+        }
+        
+        gamePrePlayViewModel.onDepositRequested = { [weak self] in
+            // TODO: Navigate to deposit screen
+            print("CasinoCoordinator: Deposit requested") 
+        }
+        
+        gamePrePlayViewModel.onStartGame = { [weak self] mode in
+            switch mode {
+            case .practice:
+                self?.showGamePlay(gameId: gameId, mode: .practice)
+            case .realMoney:
+                self?.showGamePlay(gameId: gameId, mode: .realMoney)
+            }
+        }
+        
+        // Create view controller
+        let gamePrePlayViewController = CasinoGamePrePlayViewController(viewModel: gamePrePlayViewModel)
+        self.casinoGamePrePlayViewController = gamePrePlayViewController
+        
+        // Navigate using the existing navigation controller
+        self.navigationController.pushViewController(gamePrePlayViewController, animated: true)
+    }
+    
+    private func showGamePlay(gameId: String, mode: CasinoGamePlayMode) {
         // Create game play view model
         let gamePlayViewModel = CasinoGamePlayViewModel(
             gameId: gameId,
@@ -98,6 +138,10 @@ class CasinoCoordinator: Coordinator {
             self?.showCategoryGamesList(categoryId: categoryId, categoryTitle: categoryTitle)
         }
         
+        viewModel.onGameSelected = { [weak self] gameId in
+            self?.showGamePrePlay(gameId: gameId)
+        }
+        
         // Create view controller
         let viewController = CasinoCategoriesListViewController(viewModel: viewModel)
         self.casinoCategoriesListViewController = viewController
@@ -109,6 +153,7 @@ class CasinoCoordinator: Coordinator {
         childCoordinators.removeAll()
         casinoCategoriesListViewController = nil
         casinoCategoryGamesListViewController = nil
+        casinoGamePrePlayViewController = nil
         casinoGamePlayViewController = nil
     }
     

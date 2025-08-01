@@ -16,6 +16,11 @@ class MatchDetailsTextualViewController: UIViewController {
     private let viewModel: MatchDetailsTextualViewModel
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Authentication Navigation Closures
+    // Closures called when authentication is requested - handled by coordinator
+    var onLoginRequested: (() -> Void)?
+    var onRegistrationRequested: (() -> Void)?
+    
     // MARK: - UI Components
     private lazy var topSafeAreaView: UIView = {
         let view = UIView()
@@ -339,11 +344,9 @@ class MatchDetailsTextualViewController: UIViewController {
             // Show support/help
             break
         case "loginButton":
-            // Navigate to login
-            break
+            onLoginRequested?()
         case "joinButton":
-            // Navigate to registration
-            break
+            onRegistrationRequested?()
         default:
             break
         }

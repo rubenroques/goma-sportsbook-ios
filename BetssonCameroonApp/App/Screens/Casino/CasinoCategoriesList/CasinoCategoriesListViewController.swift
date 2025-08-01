@@ -252,9 +252,8 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
                 )
             }
             
-            cell.onGameSelected = { gameId in
-                print("Game selected in category section: \(gameId)")
-                // Games can be selected from the preview, but navigation happens via category button
+            cell.onGameSelected = { [weak self] gameId in
+                self?.viewModel.gameSelected(gameId)
             }
             
             return cell

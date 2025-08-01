@@ -715,6 +715,50 @@ class ComponentsTableViewController: UITableViewController {
                 return statusInfoView
             }
         ),
+        UIComponent(
+            title: "See More Button",
+            description: "Reusable button component for 'Load More' functionality with loading states, designed for pagination in collection views and table views",
+            viewController: SeeMoreButtonViewController.self,
+            previewFactory: {
+                let containerView = UIView()
+                let stackView = UIStackView()
+                stackView.axis = .horizontal
+                stackView.spacing = 12
+                stackView.alignment = .center
+                stackView.distribution = .fillEqually
+                
+                // Create sample buttons showing different states
+                let defaultButton = SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.defaultMock)
+                let countButton = SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.withCountMock)
+                
+                stackView.addArrangedSubview(defaultButton)
+                stackView.addArrangedSubview(countButton)
+                
+                containerView.addSubview(stackView)
+                stackView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+                    stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+                    stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                    stackView.heightAnchor.constraint(equalToConstant: 44)
+                ])
+                
+                return containerView
+            }
+        ),
+        UIComponent(
+            title: "Casino Game Play Mode Selector",
+            description: "Sophisticated pre-game component displaying game details with configurable play mode buttons that adapt to different user states (logged out, logged in, insufficient funds)",
+            viewController: CasinoGamePlayModeSelectorViewController.self,
+            previewFactory: {
+                let viewModel = MockCasinoGamePlayModeSelectorViewModel.defaultMock
+                let selectorView = CasinoGamePlayModeSelectorView(viewModel: viewModel)
+                selectorView.backgroundColor = StyleProvider.Color.backgroundColor
+                selectorView.layer.cornerRadius = 12
+                selectorView.clipsToBounds = true
+                return selectorView
+            }
+        ),
     ]
 
     // MARK: - View Lifecycle

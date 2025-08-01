@@ -14,6 +14,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     
     // MARK: - Navigation Closures for CasinoCoordinator
     var onCategorySelected: ((String, String) -> Void) = { _, _ in }
+    var onGameSelected: ((String) -> Void) = { _ in }
     
     private static let gamesPlatform = "PC"
     
@@ -49,6 +50,10 @@ class CasinoCategoriesListViewModel: ObservableObject {
     
     func categoryButtonTapped(categoryId: String, categoryTitle: String) {
         onCategorySelected(categoryId, categoryTitle)
+    }
+    
+    func gameSelected(_ gameId: String) {
+        onGameSelected(gameId)
     }
     
     // MARK: - Private Methods - API Integration

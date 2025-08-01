@@ -20,6 +20,11 @@ class RootTabBarCoordinator: Coordinator {
     private let environment: Environment
     private var rootTabBarViewController: RootTabBarViewController?
     
+    // MARK: - Navigation Closures
+    // Authentication navigation - to be implemented by parent coordinator
+    var onShowLogin: (() -> Void)?
+    var onShowRegistration: (() -> Void)?
+    
     // MARK: - Lazy Screen Coordinators
     // These are only created when the user navigates to the respective tabs
     
@@ -45,6 +50,16 @@ class RootTabBarCoordinator: Coordinator {
         rootTabBarViewController.onTabSelected = { [weak self] tabItem in
             self?.handleTabSelection(tabItem)
         }
+        
+        // Setup authentication navigation
+        rootTabBarViewController.onLoginRequested = { [weak self] in
+            self?.showLogin()
+        }
+        
+        rootTabBarViewController.onRegistrationRequested = { [weak self] in
+            self?.showRegistration()
+        }
+        
         self.rootTabBarViewController = rootTabBarViewController
         navigationController.setViewControllers([rootTabBarViewController], animated: false)
         
@@ -183,6 +198,15 @@ class RootTabBarCoordinator: Coordinator {
         // Create and present the MatchDetailsTextualViewController
         let matchDetailsViewController = MatchDetailsTextualViewController(viewModel: matchDetailsViewModel)
         
+        // Setup authentication navigation for MatchDetailsTextualViewController
+        matchDetailsViewController.onLoginRequested = { [weak self] in
+            self?.showLogin()
+        }
+        
+        matchDetailsViewController.onRegistrationRequested = { [weak self] in
+            self?.showRegistration()
+        }
+        
         // Present the controller using navigation stack
         navigationController.pushViewController(matchDetailsViewController, animated: true)
         print("🚀 MainCoordinator: Navigated to match detail for match: \(match.id)")
@@ -229,6 +253,44 @@ class RootTabBarCoordinator: Coordinator {
         // Present modally from navigationController
         navigationController.present(combinedFiltersViewController, animated: true)
         print("🚀 MainCoordinator: Presented filters modal")
+    }
+    
+    private func showLogin() {
+        if let onShowLogin = onShowLogin {
+            onShowLogin()
+        } else {
+            // Temporary fallback - implement authentication presentation directly
+            // This should be removed once parent coordinator implements onShowLogin
+            presentAuthenticationDirectly(isLogin: true)
+        }
+        print("🚀 RootTabBarCoordinator: Login requested")
+    }
+    
+    private func showRegistration() {
+        if let onShowRegistration = onShowRegistration {
+            onShowRegistration()
+        } else {
+            // Temporary fallback - implement authentication presentation directly
+            // This should be removed once parent coordinator implements onShowRegistration
+            presentAuthenticationDirectly(isLogin: false)
+        }
+        print("🚀 RootTabBarCoordinator: Registration requested")
+    }
+    
+    // MARK: - Temporary Authentication Implementation
+    // TODO: Remove this once parent coordinator implements authentication closures
+    private func presentAuthenticationDirectly(isLogin: Bool) {
+        if isLogin {
+            var phoneLoginViewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()
+            let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
+            let authNavigationController = Router.navigationController(with: phoneLoginViewController)
+            navigationController.present(authNavigationController, animated: true)
+        } else {
+            var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
+            let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
+            let authNavigationController = Router.navigationController(with: phoneRegistrationViewController)
+            navigationController.present(authNavigationController, animated: true)
+        }
     }
     
     // MARK: - Helper Methods

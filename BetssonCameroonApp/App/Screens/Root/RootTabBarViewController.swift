@@ -72,6 +72,11 @@ class RootTabBarViewController: UIViewController {
     // MARK: - Tab Switching Coordination
     // Closure called when tabs are selected to enable coordinator-based lazy loading
     var onTabSelected: ((TabItem) -> Void)?
+    
+    // MARK: - Authentication Navigation Closures
+    // Closures called when authentication is requested - handled by coordinator
+    var onLoginRequested: (() -> Void)?
+    var onRegistrationRequested: (() -> Void)?
 
     // General properties
     var isLocalAuthenticationCoveringView: Bool = true {
@@ -312,10 +317,10 @@ class RootTabBarViewController: UIViewController {
         
         widgetToolBarView.onWidgetSelected = { [weak self] widgetId in
             if widgetId == "loginButton" {
-                self?.openPhoneLogin()
+                self?.onLoginRequested?()
             }
             else if widgetId == "joinButton" {
-                self?.openPhoneRegistration()
+                self?.onRegistrationRequested?()
             }
             else if widgetId == "avatar" {
                 self?.viewModel.logoutUser()
@@ -1092,23 +1097,6 @@ extension RootTabBarViewController {
 
 }
 
-extension RootTabBarViewController {
-    
-    func openPhoneLogin() {
-        var phoneLoginViewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()
-        let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
-        let navigationController = Router.navigationController(with: phoneLoginViewController)
-//        phoneLoginViewModel.loginComplete = { [weak self] in
-//            navigationController.dismiss(animated: true)
-//            self?.widgetToolBarView.setLoggedInState(true)
-//        }
-        present(navigationController, animated: true)
-    }
-    
-    func openPhoneRegistration() {
-        var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
-        let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
-        let navigationController = Router.navigationController(with: phoneRegistrationViewController)
-        present(navigationController, animated: true)
-    }
-}
+// MARK: - Authentication Navigation Removed
+// Authentication navigation is now handled by RootTabBarCoordinator via closures
+// onLoginRequested and onRegistrationRequested are called instead
