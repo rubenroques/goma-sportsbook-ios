@@ -240,7 +240,6 @@ class AppStateManager {
             }
             .sink { [weak self] _ in
                 self?.environment.sportsStore.requestInitialSportsData()
-                self?.environment.filterStorage.getCurrentCompetitions()
             }
             .store(in: &cancellables)
 

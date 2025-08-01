@@ -6,14 +6,14 @@ final public class CasinoCategorySectionView: UIView {
     
     // MARK: - Constants
     private enum Constants {
-        static let verticalSpacing: CGFloat = 12.0
+        static let verticalPadding: CGFloat = 12.0
         static let horizontalPadding: CGFloat = 16.0
         static let cellSpacing: CGFloat = 12.0
-        static let collectionHeight: CGFloat = 272.0 // CasinoGameCardView height
+        static let categoryBarHeight: CGFloat = 48.0
+        static let collectionHeight: CGFloat = 266.0 // CasinoGameCardView and wrapper cell height
     }
     
     // MARK: - UI Elements
-    private let stackView = UIStackView()
     private let categoryBarView = CasinoCategoryBarView()
     private let collectionView: UICollectionView
     
@@ -71,14 +71,6 @@ final public class CasinoCategorySectionView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = StyleProvider.Color.backgroundColor
         
-        // Main stack view
-        stackView.axis = .vertical
-        stackView.spacing = Constants.verticalSpacing
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(stackView)
-        
         setupCategoryBar()
         setupCollectionView()
         setupConstraints()
@@ -87,7 +79,7 @@ final public class CasinoCategorySectionView: UIView {
     private func setupCategoryBar() {
         // Category bar setup
         categoryBarView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(categoryBarView)
+        addSubview(categoryBarView)
     }
     
     private func setupCollectionView() {
@@ -103,16 +95,20 @@ final public class CasinoCategorySectionView: UIView {
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        stackView.addArrangedSubview(collectionView)
+        addSubview(collectionView)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Stack view
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            categoryBarView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            categoryBarView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            categoryBarView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            categoryBarView.heightAnchor.constraint(equalToConstant: Constants.categoryBarHeight),
+            
+            collectionView.topAnchor.constraint(equalTo: categoryBarView.bottomAnchor, constant: 16),
+            collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8),
             
             // Collection view height
             collectionView.heightAnchor.constraint(equalToConstant: Constants.collectionHeight)

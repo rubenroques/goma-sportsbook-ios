@@ -10,13 +10,13 @@ import Combine
 import GomaUI
 import ServicesProvider
 
-public class MockCombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
+public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     
     var popularLeagues = [SortOption]()
     var popularCountryLeagues = [CountryLeagueOptions]()
     var otherCountryLeagues = [CountryLeagueOptions]()
     
-    var generalFilterSelection: GeneralFilterSelection
+    var appliedFilters: AppliedEventsFilters
     
     var filterConfiguration: FilterConfiguration
     var currentContextId: String
@@ -27,12 +27,17 @@ public class MockCombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     
     private var cancellables = Set<AnyCancellable>()
     
+    private let servicesProvider: ServicesProvider.Client
+    
     init(filterConfiguration: FilterConfiguration,
+         currentFilters: AppliedEventsFilters,
+         servicesProvider: ServicesProvider.Client,
          contextId: String = "sports") {
         
-        self.generalFilterSelection = Env.filterStorage.currentFilterSelection
+        self.appliedFilters = currentFilters
         self.filterConfiguration = filterConfiguration
         self.currentContextId = contextId
+        self.servicesProvider = servicesProvider
         
         createDynamicViewModels(for: filterConfiguration, contextId: currentContextId)
 
@@ -43,7 +48,7 @@ public class MockCombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     func getAllLeagues(sportId: String? = nil) {
         self.isLoadingPublisher.send(true)
         
-        var currentSportId = Env.filterStorage.currentFilterSelection.sportId
+        var currentSportId = appliedFilters.sportId
         
         if let sportId {
             currentSportId = sportId
@@ -62,31 +67,15 @@ public class MockCombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                                   numberOutrightMarkets: 0,
                                   numberLiveEvents: 0)
         
-        let sportTournamentsPublisher = Env.servicesProvider.subscribeSportTournaments(forSportType: sportType)
-            .filter { content in
-                if case .contentUpdate = content { return true }
-                return false
+        let sportTournamentsPublisher = servicesProvider.getTournaments(forSportType: sportType)
+            .map { tournaments -> [Competition] in
+                return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
-            .map { content -> [Competition] in
-                if case .contentUpdate(let tournaments) = content {
-                    return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
-                }
-                return []
-            }
-            .prefix(1) // Only take the first .contentUpdate
 
-        let popularTournamentsPublisher = Env.servicesProvider.subscribePopularTournaments(forSportType: sportType, tournamentsCount: 10)
-            .filter { content in
-                if case .contentUpdate = content { return true }
-                return false
+        let popularTournamentsPublisher = servicesProvider.getPopularTournaments(forSportType: sportType, tournamentsCount: 10)
+            .map { tournaments -> [Competition] in
+                return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
-            .map { content -> [Competition] in
-                if case .contentUpdate(let tournaments) = content {
-                    return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
-                }
-                return []
-            }
-            .prefix(1) // Only take the first .contentUpdate
 
         Publishers.Zip(sportTournamentsPublisher, popularTournamentsPublisher)
             .receive(on: DispatchQueue.main)
@@ -94,9 +83,9 @@ public class MockCombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 receiveCompletion: { completion in
                     switch completion {
                     case .finished:
-                        print("All tournaments subscriptions completed")
+                        print("All tournaments RPC calls completed")
                     case .failure(let error):
-                        print("Tournaments subscriptions failed: \(error)")
+                        print("Tournaments RPC calls failed: \(error)")
                     }
                 },
                 receiveValue: { [weak self] sportCompetitions, popularCompetitions in

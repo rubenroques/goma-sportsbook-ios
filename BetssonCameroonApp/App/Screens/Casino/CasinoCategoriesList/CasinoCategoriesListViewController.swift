@@ -44,7 +44,7 @@ class CasinoCategoriesListViewController: UIViewController {
     private enum Constants {
         static let topBannerHeight: CGFloat = 200.0
         static let recentlyPlayedHeight: CGFloat = 132.0
-        static let categorySectionHeight: CGFloat = 330.0 // CasinoCategorySectionView height + spacing
+        static let categorySectionHeight: CGFloat = 338.0
         static let verticalSpacing: CGFloat = 16.0
     }
     

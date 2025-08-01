@@ -15,7 +15,7 @@ protocol CombinedFiltersViewModelProtocol {
     var popularCountryLeagues: [CountryLeagueOptions] { get }
     var otherCountryLeagues: [CountryLeagueOptions] { get }
     
-    var generalFilterSelection: GeneralFilterSelection { get set }
+    var appliedFilters: AppliedEventsFilters { get set }
     var filterConfiguration: FilterConfiguration { get }
     var currentContextId: String { get }
     

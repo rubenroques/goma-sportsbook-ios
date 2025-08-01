@@ -669,6 +669,16 @@ class SportRadarEventsProvider: EventsProvider {
     func subscribeSportTournaments(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
+    
+    // MARK: - Tournament RPC Methods
+    
+    func getPopularTournaments(forSportType sportType: SportType, tournamentsCount: Int) -> AnyPublisher<[Tournament], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getTournaments(forSportType sportType: SportType) -> AnyPublisher<[Tournament], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 }
 
 //

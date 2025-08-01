@@ -123,13 +123,23 @@ public class CombinedFiltersViewController: UIViewController {
     // Callbacks
     public var onReset: (() -> Void)?
     public var onClose: (() -> Void)?
-    public var onApply: ((GeneralFilterSelection) -> Void)?
+    public var onApply: ((AppliedEventsFilters) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    init(viewModel: CombinedFiltersViewModelProtocol) {
-        self.viewModel = viewModel
+    init(currentFilters: AppliedEventsFilters,
+         filterConfiguration: FilterConfiguration,
+         servicesProvider: ServicesProvider.Client,
+         onApply: @escaping (AppliedEventsFilters) -> Void) {
+        
+        self.viewModel = CombinedFiltersViewModel(
+            filterConfiguration: filterConfiguration,
+            currentFilters: currentFilters,
+            servicesProvider: servicesProvider
+        )
+        
+        self.onApply = onApply
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -260,17 +270,19 @@ public class CombinedFiltersViewController: UIViewController {
     
     // MARK: Functions
     private func resetFilters() {
+        let defaultFilters = AppliedEventsFilters.defaultFilters
+        viewModel.appliedFilters = defaultFilters
+        
         // Reset sports filter
         if let sportViewModel = viewModel.dynamicViewModels["sportsFilter"] as? SportGamesFilterViewModelProtocol {
-            sportViewModel.selectedId.send(Env.filterStorage.currentFilterSelection.sportId)
-
+            sportViewModel.selectedId.send(defaultFilters.sportId)
         }
         
         // Reset time slider
         if let timeViewModel = viewModel.dynamicViewModels["timeFilter"] as? TimeSliderViewModelProtocol {
             let selectedIndex: Float
             
-            if let index = timeViewModel.timeOptions.firstIndex(where: { $0.value == Env.filterStorage.currentFilterSelection.timeValue }) {
+            if let index = timeViewModel.timeOptions.firstIndex(where: { $0.value == defaultFilters.timeValue }) {
                 selectedIndex = Float(index)
             } else {
                 selectedIndex = 0.0
@@ -281,28 +293,27 @@ public class CombinedFiltersViewController: UIViewController {
         
         // Reset sort filter
         if let sortViewModel = viewModel.dynamicViewModels["sortByFilter"] as? SortFilterViewModelProtocol {
-            sortViewModel.selectedOptionId.send(Env.filterStorage.currentFilterSelection.sortTypeId)
+            sortViewModel.selectedOptionId.send(defaultFilters.sortTypeId)
         }
         
         // Reset leagues filter
         if let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol {
-            leaguesViewModel.selectedOptionId.send(Env.filterStorage.currentFilterSelection.leagueId)
+            leaguesViewModel.selectedOptionId.send(defaultFilters.leagueId)
         }
         
         // Reset popular countries filter
         if let popularCountriesViewModel = viewModel.dynamicViewModels["popularCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
-            popularCountriesViewModel.selectedOptionId.send(Env.filterStorage.currentFilterSelection.leagueId)
+            popularCountriesViewModel.selectedOptionId.send(defaultFilters.leagueId)
         }
         
         // Reset other countries filter
         if let otherCountriesViewModel = viewModel.dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
-            otherCountriesViewModel.selectedOptionId.send(Env.filterStorage.currentFilterSelection.leagueId)
+            otherCountriesViewModel.selectedOptionId.send(defaultFilters.leagueId)
         }
     }
     
     // MARK: - Actions
     @objc private func resetButtonTapped() {
-        Env.filterStorage.resetToDefault()
         self.resetFilters()
         onReset?()
     }
@@ -319,8 +330,8 @@ public class CombinedFiltersViewController: UIViewController {
     }
 
     @objc private func applyButtonTapped() {
-        print("APPLIED FILTERS: \(self.viewModel.generalFilterSelection)")
-        Env.filterStorage.updateFilterSelection(self.viewModel.generalFilterSelection)
+        print("APPLIED FILTERS: \(self.viewModel.appliedFilters)")
+        onApply?(self.viewModel.appliedFilters)
         self.closeButtonTapped()
     }
     
@@ -501,7 +512,7 @@ extension CombinedFiltersViewController {
         // Sports Filter
         if let sportView = dynamicFilterViews["sportsFilter"] as? SportGamesFilterView {
             sportView.onSportSelected = { [weak self] selectedId in
-                self?.viewModel.generalFilterSelection.sportId = selectedId
+                self?.viewModel.appliedFilters.sportId = selectedId
                 self?.viewModel.getAllLeagues(sportId: selectedId)
             }
         }
@@ -516,7 +527,7 @@ extension CombinedFiltersViewController {
                     if arrayIndex >= 0 && arrayIndex < timeViewModel.timeOptions.count {
                         let actualTimeValue = timeViewModel.timeOptions[arrayIndex].value
                         print("Time filter selected: \(actualTimeValue)")
-                        self.viewModel.generalFilterSelection.timeValue = actualTimeValue
+                        self.viewModel.appliedFilters.timeValue = actualTimeValue
                     }
                 }
             }
@@ -525,14 +536,14 @@ extension CombinedFiltersViewController {
         // Sort Filter
         if let sortView = dynamicFilterViews["sortByFilter"] as? SortFilterView {
             sortView.onSortFilterSelected = { [weak self] selectedId in
-                self?.viewModel.generalFilterSelection.sortTypeId = selectedId
+                self?.viewModel.appliedFilters.sortTypeId = selectedId
             }
         }
         
         // Leagues Filter with cross-synchronization
         if let leaguesView = dynamicFilterViews["leaguesFilter"] as? SortFilterView {
             leaguesView.onSortFilterSelected = { [weak self] selectedId in
-                self?.viewModel.generalFilterSelection.leagueId = selectedId
+                self?.viewModel.appliedFilters.leagueId = selectedId
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "leaguesFilter")
             }
         }
@@ -540,7 +551,7 @@ extension CombinedFiltersViewController {
         // Popular Countries Filter
         if let popularCountriesView = dynamicFilterViews["popularCountryLeaguesFilter"] as? CountryLeaguesFilterView {
             popularCountriesView.onLeagueFilterSelected = { [weak self] selectedId in
-                self?.viewModel.generalFilterSelection.leagueId = selectedId
+                self?.viewModel.appliedFilters.leagueId = selectedId
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "popularCountryLeaguesFilter")
             }
         }
@@ -548,7 +559,7 @@ extension CombinedFiltersViewController {
         // Other Countries Filter
         if let otherCountriesView = dynamicFilterViews["otherCountryLeaguesFilter"] as? CountryLeaguesFilterView {
             otherCountriesView.onLeagueFilterSelected = { [weak self] selectedId in
-                self?.viewModel.generalFilterSelection.leagueId = selectedId
+                self?.viewModel.appliedFilters.leagueId = selectedId
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "otherCountryLeaguesFilter")
             }
         }
@@ -561,7 +572,7 @@ extension CombinedFiltersViewController {
            let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol,
            leaguesViewModel.selectedOptionId.value != selectedId {
             leaguesViewModel.selectedOptionId.send(selectedId)
-            viewModel.generalFilterSelection.leagueId = selectedId
+            viewModel.appliedFilters.leagueId = selectedId
         }
         
         // Synchronize with popular countries
@@ -581,7 +592,7 @@ extension CombinedFiltersViewController {
 }
 
 // MARK: - Filter View Models Setup
-extension MockCombinedFiltersViewModel {
+extension CombinedFiltersViewModel {
     
     public func createDynamicViewModels(for configuration: FilterConfiguration, contextId: String) {
         guard let context = configuration.filtersByContext.first(where: { $0.id == contextId }) else {
@@ -630,7 +641,7 @@ extension MockCombinedFiltersViewModel {
         
         return MockSportGamesFilterViewModel(
             title: widget.label, sportFilters: sportFilters,
-            selectedId: generalFilterSelection.sportId
+            selectedId: appliedFilters.sportId
         )
     }
     
@@ -656,7 +667,7 @@ extension MockCombinedFiltersViewModel {
         
         // Find the index of the time option that matches the current timeValue
         let selectedIndex: Float
-        if let index = timeOptions.firstIndex(where: { $0.value == generalFilterSelection.timeValue }) {
+        if let index = timeOptions.firstIndex(where: { $0.value == appliedFilters.timeValue }) {
             selectedIndex = Float(index)
         } else {
             selectedIndex = 0.0
@@ -696,11 +707,11 @@ extension MockCombinedFiltersViewModel {
                     )
                 }
             }
-            selectedId = generalFilterSelection.sortTypeId
+            selectedId = appliedFilters.sortTypeId
         } else if widget.id == "leaguesFilter" {
             sortOptions = popularLeagues
             sortFilterType = .league
-            selectedId = generalFilterSelection.leagueId
+            selectedId = appliedFilters.leagueId
         }
         
         return MockSortFilterViewModel(
@@ -723,7 +734,7 @@ extension MockCombinedFiltersViewModel {
         return MockCountryLeaguesFilterViewModel(
             title: widget.label,
             countryLeagueOptions: countryLeagueOptions,
-            selectedId: generalFilterSelection.leagueId
+            selectedId: appliedFilters.leagueId
         )
     }
     
@@ -732,39 +743,7 @@ extension MockCombinedFiltersViewModel {
 // MARK: - Convenience Initializer
 public extension CombinedFiltersViewController {
     
-    static func withMockData() -> CombinedFiltersViewController {
-        
-        let generalFilterSelection = GeneralFilterSelection(
-            sportId: "1", timeValue: 1.0, sortTypeId: "1",
-            leagueId: "0"
-        )
-        
-        let configuration = createMockFilterConfiguration()
-
-        let viewModel = MockCombinedFiltersViewModel(filterConfiguration: configuration,
-                                                 contextId: "sports")
-        
-        return CombinedFiltersViewController( viewModel: viewModel)
-    }
-    
     static func createMockFilterConfiguration() -> FilterConfiguration {
         self.createFilterConfiguration()
     }
 }
-
-#if DEBUG
-import SwiftUI
-import ServicesProvider
-
-@available(iOS 17.0, *)
-struct CombinedFiltersViewController_Preview: PreviewProvider {
-    static var previews: some View {
-        PreviewUIViewController {
-            let viewController = CombinedFiltersViewController.withMockData()
-            let navigationController = UINavigationController(rootViewController: viewController)
-            return navigationController
-        }
-    }
-}
-
-#endif

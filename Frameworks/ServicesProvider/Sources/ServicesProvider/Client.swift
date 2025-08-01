@@ -421,6 +421,26 @@ extension Client {
         }
         return eventsProvider.subscribeSportTournaments(forSportType: sportType)
     }
+    
+    // MARK: - Tournament RPC Methods (one-time fetch)
+    
+    public func getPopularTournaments(forSportType sportType: SportType, tournamentsCount: Int = 10) -> AnyPublisher<[Tournament], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getPopularTournaments(forSportType: sportType, tournamentsCount: tournamentsCount)
+    }
+
+    public func getTournaments(forSportType sportType: SportType) -> AnyPublisher<[Tournament], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getTournaments(forSportType: sportType)
+    }
     //
     //
     public func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {

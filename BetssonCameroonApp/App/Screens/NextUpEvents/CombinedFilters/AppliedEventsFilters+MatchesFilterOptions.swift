@@ -1,15 +1,15 @@
 //
-//  GeneralFilterSelection+MatchesFilterOptions.swift
+//  AppliedEventsFilters+MatchesFilterOptions.swift
 //  Sportsbook
 //
 
 import Foundation
 import ServicesProvider
 
-// MARK: - GeneralFilterSelection Extension
-extension GeneralFilterSelection {
+// MARK: - AppliedEventsFilters Extension
+extension AppliedEventsFilters {
     
-    /// Converts GeneralFilterSelection to MatchesFilterOptions
+    /// Converts AppliedEventsFilters to MatchesFilterOptions
     public func toMatchesFilterOptions(optionalUserId: String? = nil) -> MatchesFilterOptions {
         // Convert timeValue (Float) to TimeRange enum
         let timeRange: TimeRange
@@ -53,7 +53,7 @@ extension GeneralFilterSelection {
             sportId: sportId,
             timeRange: timeRange,
             sortBy: sortBy,
-            location: .all, // GeneralFilterSelection doesn't have location
+            location: .all, // AppliedEventsFilters doesn't have location
             tournament: tournament,
             optionalUserId: optionalUserId
         )
@@ -63,8 +63,8 @@ extension GeneralFilterSelection {
 // MARK: - MatchesFilterOptions Extension
 extension MatchesFilterOptions {
     
-    /// Converts MatchesFilterOptions back to GeneralFilterSelection
-    public func toGeneralFilterSelection() -> GeneralFilterSelection {
+    /// Converts MatchesFilterOptions back to AppliedEventsFilters
+    public func toAppliedEventsFilters() -> AppliedEventsFilters {
         // Convert TimeRange back to Float
         let timeValue: Float
         switch timeRange {
@@ -100,7 +100,7 @@ extension MatchesFilterOptions {
             leagueId = id
         }
         
-        return GeneralFilterSelection(
+        return AppliedEventsFilters(
             sportId: sportId,
             timeValue: timeValue,
             sortTypeId: sortTypeId,

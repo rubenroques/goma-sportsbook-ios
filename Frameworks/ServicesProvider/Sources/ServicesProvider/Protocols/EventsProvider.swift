@@ -59,6 +59,11 @@ protocol EventsProvider: Connector {
     func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError>
     
     func subscribeSportTournaments(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError>
+    
+    // Tournament RPC Methods (one-time fetch)
+    func getPopularTournaments(forSportType sportType: SportType, tournamentsCount: Int) -> AnyPublisher<[Tournament], ServiceProviderError>
+    
+    func getTournaments(forSportType sportType: SportType) -> AnyPublisher<[Tournament], ServiceProviderError>
 
     //
     //
