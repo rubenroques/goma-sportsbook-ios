@@ -45,6 +45,12 @@ class FirstDepositPromotionsViewController: UIViewController {
     private let bonusCardsScrollView: PromotionalBonusCardsScrollView
     
     private let viewModel: FirstDepositPromotionsViewModelProtocol
+    
+    // MARK: - Navigation Closures
+    // Called when user selects a bonus card - handled by coordinator
+    var onBonusSelected: ((PromotionalBonusCardData) -> Void)?
+    var onSkipRequested: (() -> Void)?
+    var onCloseRequested: (() -> Void)?
 
     init(viewModel: FirstDepositPromotionsViewModelProtocol = MockFirstDepositPromotionsViewModel()) {
         self.viewModel = viewModel
@@ -119,22 +125,18 @@ class FirstDepositPromotionsViewController: UIViewController {
     private func setupBindings() {
         
         self.bonusCardsScrollView.onCardClaimBonus = { [weak self] cardBonus in
-            self?.openFirstDepositBonus(cardBonus: cardBonus)
+            self?.onBonusSelected?(cardBonus)
         }
         
         self.bonusCardsScrollView.onCardTermsTapped = { [weak self] cardBonus in
-            ()
+            // TODO: Handle terms and conditions display
         }
-    }
-    
-    private func openFirstDepositBonus(cardBonus: PromotionalBonusCardData) {
-        let depositBonusViewModel: DepositBonusViewModelProtocol = MockDepositBonusViewModel(promotionalBonusCardData: cardBonus)
-        let depositBonusViewController = DepositBonusViewController(viewModel: depositBonusViewModel)
         
-        self.present(depositBonusViewController, animated: true)
+        // Setup close button action
+        closeButton.addTarget(self, action: #selector(didTapClose), for: .touchUpInside)
     }
 
     @objc private func didTapClose() {
-        self.dismiss(animated: true)
+        onCloseRequested?()
     }
 }

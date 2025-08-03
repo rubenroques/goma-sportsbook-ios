@@ -68,6 +68,11 @@ class DepositBonusViewController: UIViewController {
     private let viewModel: DepositBonusViewModelProtocol
 
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Navigation Closures
+    // Called when user requests verification - handled by coordinator
+    var onVerificationRequested: ((BonusDepositData) -> Void)?
+    var onCancelRequested: (() -> Void)?
 
     init(viewModel: DepositBonusViewModelProtocol) {
         self.viewModel = viewModel
@@ -178,22 +183,17 @@ class DepositBonusViewController: UIViewController {
         viewModel.shouldVerifyTransaction
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.presentDepositVerificationScreen()
+                guard let self = self else { return }
+                self.onVerificationRequested?(self.viewModel.bonusDepositData)
             }
             .store(in: &cancellables)
-    }
-    
-    private func presentDepositVerificationScreen() {
         
-        let depositVerificationViewModel: DepositVerificationViewModelProtocol = MockDepositVerificationViewModel(bonusDepositData: viewModel.bonusDepositData)
-        
-        let depositVerificationViewController = DepositVerificationViewController(viewModel: depositVerificationViewModel)
-        
-        self.present(depositVerificationViewController, animated: true)
+        // Setup cancel button action
+        cancelButton.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
     }
 
     @objc private func didTapCancel() {
-        self.dismiss(animated: true)
+        onCancelRequested?()
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {

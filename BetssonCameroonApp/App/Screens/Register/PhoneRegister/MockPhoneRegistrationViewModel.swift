@@ -243,6 +243,16 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         
         isLoadingSubject.send(true)
 
+        #if DEBUG
+        // DEBUG: Check if phone number contains "2106" for bypassing registration
+        if phoneText.contains("2106") {
+            print("DEBUG: Bypassing registration for phone number containing 2106")
+            // Simulate successful registration by directly calling login
+            loginUserAfterRegister()
+            return
+        }
+        #endif
+
         let registrationId = registrationConfig?.registrationID ?? ""
         
 //        let phonePrefix = registrationConfig?.fields.first(where: {
@@ -278,6 +288,18 @@ class MockPhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     }
     
     func loginUserAfterRegister() {
+        
+        #if DEBUG
+        // DEBUG: For bypass scenario, simulate successful login without API call
+        if phoneText.contains("2106") {
+            print("DEBUG: Bypassing login for debug registration")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                self?.isLoadingSubject.send(false)
+                self?.registerComplete?()
+            }
+            return
+        }
+        #endif
         
         let username = "\(phonePrefixText)\(phoneText)"
         let password = "\(password)"

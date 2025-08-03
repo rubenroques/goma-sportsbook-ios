@@ -11,6 +11,11 @@ import GomaUI
 
 class DepositAlternativeStepsViewController: UIViewController {
     private let viewModel: DepositAlternativeStepsViewModelProtocol
+    
+    // MARK: - Navigation Closures
+    // Called when alternative steps flow needs navigation - handled by coordinator
+    var onDepositComplete: ((BonusDepositData) -> Void)?
+    var onCancelRequested: (() -> Void)?
 
     private let navigationView: CustomNavigationView
     private let titleLabel: UILabel = {
@@ -123,11 +128,12 @@ class DepositAlternativeStepsViewController: UIViewController {
     
     private func setupBindings() {
         navigationView.onCloseTapped = { [weak self] in
-            self?.dismiss(animated: true)
+            self?.onCancelRequested?()
         }
         
         confirmButton.onButtonTapped = { [weak self] in
-            self?.presentDepositSuccessScreen()
+            guard let self = self else { return }
+            self.onDepositComplete?(self.viewModel.bonusDepositData)
         }
         
         resendButton.onButtonTapped = { [weak self] in
@@ -135,15 +141,7 @@ class DepositAlternativeStepsViewController: UIViewController {
         }
         
         cancelButton.onButtonTapped = { [weak self] in
-            self?.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+            self?.onCancelRequested?()
         }
-    }
-    
-    private func presentDepositSuccessScreen() {
-        let depositBonusSuccessViewModel: DepositBonusSuccessViewModelProtocol = MockDepositBonusSuccessViewModel(bonusDepositData: viewModel.bonusDepositData)
-        
-        let depositBonusSuccessViewController = DepositBonusSuccessViewController(viewModel: depositBonusSuccessViewModel)
-        
-        self.present(depositBonusSuccessViewController, animated: true)
     }
 }

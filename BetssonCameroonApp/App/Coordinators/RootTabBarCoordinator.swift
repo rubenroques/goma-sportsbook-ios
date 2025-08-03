@@ -286,10 +286,80 @@ class RootTabBarCoordinator: Coordinator {
             let authNavigationController = Router.navigationController(with: phoneLoginViewController)
             navigationController.present(authNavigationController, animated: true)
         } else {
-            var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
-            let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
-            let authNavigationController = Router.navigationController(with: phoneRegistrationViewController)
-            navigationController.present(authNavigationController, animated: true)
+            presentRegistrationWithFirstDepositFlow()
+        }
+    }
+    
+    // MARK: - Registration with First Deposit Flow
+    
+    private func presentRegistrationWithFirstDepositFlow() {
+        var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
+        
+        // Setup registration success callback to trigger first deposit flow
+        phoneRegistrationViewModel.registerComplete = { [weak self] in
+            self?.showFirstDepositPromotionsAfterRegistration()
+        }
+        
+        let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
+        let authNavigationController = Router.navigationController(with: phoneRegistrationViewController)
+        navigationController.present(authNavigationController, animated: true)
+        
+        print("🚀 RootTabBarCoordinator: Presented registration with first deposit integration")
+    }
+    
+    private func showFirstDepositPromotionsAfterRegistration() {
+        // Dismiss the registration screen first
+        navigationController.dismiss(animated: true) { [weak self] in
+            self?.presentFirstDepositPromotionsFlow()
+        }
+    }
+    
+    private func presentFirstDepositPromotionsFlow() {
+        let firstDepositCoordinator = FirstDepositPromotionsCoordinator(
+            navigationController: navigationController,
+            environment: environment
+        )
+        
+        // Setup completion callbacks
+        firstDepositCoordinator.onFirstDepositComplete = { [weak self] in
+            self?.handleFirstDepositComplete()
+        }
+        
+        firstDepositCoordinator.onFirstDepositSkipped = { [weak self] in
+            self?.handleFirstDepositSkipped()
+        }
+        
+        // Add as child coordinator
+        addChildCoordinator(firstDepositCoordinator)
+        
+        // Start the first deposit flow
+        firstDepositCoordinator.startFromRegistration()
+        
+        print("🎁 RootTabBarCoordinator: Started first deposit promotions flow after registration")
+    }
+    
+    private func handleFirstDepositComplete() {
+        // User completed first deposit - dismiss flow and return to main app
+        navigationController.dismiss(animated: true) { [weak self] in
+            self?.cleanupFirstDepositFlow()
+            // User is now logged in with first deposit bonus
+            print("🎁 RootTabBarCoordinator: First deposit completed - returning to main app")
+        }
+    }
+    
+    private func handleFirstDepositSkipped() {
+        // User skipped first deposit - dismiss flow and return to main app
+        navigationController.dismiss(animated: true) { [weak self] in
+            self?.cleanupFirstDepositFlow()
+            // User is now logged in without first deposit bonus
+            print("🎁 RootTabBarCoordinator: First deposit skipped - returning to main app")
+        }
+    }
+    
+    private func cleanupFirstDepositFlow() {
+        // Remove any first deposit coordinators from child coordinators
+        childCoordinators.removeAll { coordinator in
+            coordinator is FirstDepositPromotionsCoordinator
         }
     }
     

@@ -43,6 +43,12 @@ class DepositVerificationViewController: UIViewController {
     private var viewModel: DepositVerificationViewModelProtocol
 
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Navigation Closures
+    // Called when verification flow needs navigation - handled by coordinator
+    var onAlternativeStepsRequested: ((BonusDepositData) -> Void)?
+    var onVerificationComplete: ((BonusDepositData) -> Void)?
+    var onCancelRequested: (() -> Void)?
 
     init(viewModel: DepositVerificationViewModelProtocol) {
         self.viewModel = viewModel
@@ -110,11 +116,13 @@ class DepositVerificationViewController: UIViewController {
     private func setupBindings() {
         
         cancelTransactionButton.onButtonTapped = { [weak self] in
-            self?.dismiss(animated: true)
+            guard let self = self else { return }
+            self.onVerificationComplete?(self.viewModel.bonusDepositData)
         }
         
         alternativeStepsButton.onButtonTapped = { [weak self] in
-            self?.presentAlternativeStepsViewController()
+            guard let self = self else { return }
+            self.onAlternativeStepsRequested?(self.viewModel.bonusDepositData)
         }
         
         viewModel.shouldUpdateTransactionState
@@ -124,19 +132,6 @@ class DepositVerificationViewController: UIViewController {
             })
             .store(in: &cancellables)
     }
-    
-    private func presentAlternativeStepsViewController() {
-        var alternativeStepsViewModel: DepositAlternativeStepsViewModelProtocol = MockDepositAlternativeStepsViewModel(bonusDepositData: viewModel.bonusDepositData)
-        
-        let alternativeStepsViewController = DepositAlternativeStepsViewController(viewModel: alternativeStepsViewModel)
-        
-        alternativeStepsViewModel.shouldResendAction = { [weak self] in
-            self?.viewModel.resendTransaction()
-            alternativeStepsViewController.dismiss(animated: true)
-        }
-        
-        self.present(alternativeStepsViewController, animated: true)
-    }
 
     private func updateButtonVisibility() {
         cancelTransactionButton.isHidden = viewModel.isShowingAlternativeSteps
@@ -144,6 +139,6 @@ class DepositVerificationViewController: UIViewController {
     }
 
     @objc private func didTapCancel() {
-        self.dismiss(animated: true)
+        onCancelRequested?()
     }
 }

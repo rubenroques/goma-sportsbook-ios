@@ -30,6 +30,10 @@ class DepositBonusSuccessViewController: UIViewController {
     private let infoRowViews: [InfoRowView]
 
     private let viewModel: DepositBonusSuccessViewModelProtocol
+    
+    // MARK: - Navigation Closures
+    // Called when success flow completes - handled by coordinator
+    var onContinueRequested: (() -> Void)?
 
     init(viewModel: DepositBonusSuccessViewModelProtocol) {
         self.viewModel = viewModel
@@ -81,6 +85,6 @@ class DepositBonusSuccessViewController: UIViewController {
     }
 
     @objc private func didTapClose() {
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        onContinueRequested?()
     }
 }
