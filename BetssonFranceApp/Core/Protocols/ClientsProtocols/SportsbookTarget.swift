@@ -55,7 +55,6 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
 
     static var topCompetitionWidgetVersion: TopCompetitionWidgetVersion { get }
     
-    static var useAdaptiveRootViewController: Bool { get }
 }
 
 enum SportsbookTargetFeatures: Codable, CaseIterable {
@@ -133,10 +132,7 @@ extension SportsbookTarget {
     static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool {
         return getCurrentFeatures().contains(feature)
     }
-    
-    static var useAdaptiveRootViewController: Bool {
-        return false
-    }
+
 }
 
 /*

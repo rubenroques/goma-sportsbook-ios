@@ -212,10 +212,7 @@ struct TargetVariables: SportsbookTarget {
     static var topCompetitionWidgetVersion: TopCompetitionWidgetVersion {
         return .version1
     }
-    
-    static var useAdaptiveRootViewController: Bool {
-        return true
-    }
+
 }
 
 

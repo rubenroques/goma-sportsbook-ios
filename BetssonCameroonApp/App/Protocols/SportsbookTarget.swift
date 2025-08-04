@@ -66,10 +66,7 @@ extension SportsbookTarget {
     static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool {
         return getCurrentFeatures().contains(feature)
     }
-    
-    static var useAdaptiveRootViewController: Bool {
-        return false
-    }
+
 }
 
 /*

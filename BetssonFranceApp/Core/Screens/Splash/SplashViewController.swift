@@ -56,55 +56,34 @@ class SplashViewController: UIViewController {
         // Start theme
         ThemeService.shared.fetchThemeFromServer()
 
-        // Load presentation configuration
-        Env.presentationConfigurationStore.loadConfiguration()
-        
-        // Env.appSession.isLoadingAppSettingsPublisher,
-        self.isLoadingBootDataSubscription = Publishers.CombineLatest3(
-            Env.sportsStore.activeSportsPublisher.map({ input in
-                return input
-            }),
-            Env.servicesProvider.preFetchHomeContent().map({ input in
-                return input
-            }),
-            Env.presentationConfigurationStore.loadState.map({ input in
-                return input
-            })
-                .map { state -> Bool in
-                // Check if the presentation configuration is loaded
-                if case .loaded = state {
-                    return true // Configuration is loaded
-                }
-                return false // Configuration is not loaded yet or failed
-            }
-            .setFailureType(to: ServiceProviderError.self)
-        )
-        .map({ sportsLoadState, _, presentationConfigLoaded -> Bool in
-            // Only return true if:
-            // 1. Sports are loaded or failed (not loading or idle)
-            // 2. Presentation configuration is loaded
-
-            let sportsLoaded = sportsLoadState != .loading && sportsLoadState != .idle
-            return sportsLoaded && presentationConfigLoaded
-        })
-        .receive(on: DispatchQueue.main)
-        .sink(receiveCompletion: { [weak self] completion in
-            switch completion {
-            case .finished:
-                break
-            case .failure(let failure):
-                switch failure {
-                case .invalidUserLocation:
-                    self?.invalidLocationDetected()
-                default:
+        Env.sportsStore.activeSportsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("activeSportsPublisher: completion \(completion)")
+            } receiveValue: { [weak self] sportsLoadingState in
+                print("Sports: \(sportsLoadingState)")
+                
+                switch sportsLoadingState {
+                case .idle:
+                    break
+                case .loading:
+                    break
+                case .loaded(let sportsData):
+                    self?.splashLoadingCompleted()
+                case .failed:
                     break
                 }
             }
-        }, receiveValue: { [weak self] allRequirementsLoaded in
-            if allRequirementsLoaded {
-                self?.splashLoadingCompleted()
+            .store(in: &self.cancellables)
+  
+        Env.servicesProvider.preFetchHomeContent()
+            .sink { completion in
+                print("preFetchHomeContent: completion \(completion)")
+            } receiveValue: { preFetchHomeContent in
+                print("preFetchHomeContent: \(preFetchHomeContent)")
             }
-        })
+            .store(in: &self.cancellables)
+        
     }
 
     func splashLoadingCompleted() {

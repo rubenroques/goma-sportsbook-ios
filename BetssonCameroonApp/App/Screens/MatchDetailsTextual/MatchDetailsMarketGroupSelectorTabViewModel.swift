@@ -210,8 +210,20 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     }
     
     private func handleMarketGroupsResponse(_ marketGroups: [MarketGroup]) {
-        // Convert MarketGroup domain models to MarketGroupTabItemData UI models
-        let tabItems = marketGroups.map { marketGroup -> MarketGroupTabItemData in
+        // Filter out market groups that have no available markets
+        let filteredMarketGroups = marketGroups.filter { marketGroup in
+            hasAvailableMarkets(marketGroup: marketGroup)
+        }
+        
+        // If no market groups have markets, create fallback and return early
+        if filteredMarketGroups.isEmpty {
+            print("⚠️ All market groups are empty, creating fallback")
+            createFallbackMarketGroups()
+            return
+        }
+        
+        // Convert filtered MarketGroup domain models to MarketGroupTabItemData UI models
+        let tabItems = filteredMarketGroups.map { marketGroup -> MarketGroupTabItemData in
             // Calculate badge count from market group data
             let badgeCount = calculateBadgeCount(for: marketGroup)
             
@@ -229,8 +241,8 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
         
         updateMarketGroups(tabItems)
         
-        // Auto-select the default market group or first available
-        if let defaultGroup = marketGroups.first(where: { $0.isDefault ?? false }) {
+        // Auto-select the default market group or first available from filtered groups
+        if let defaultGroup = filteredMarketGroups.first(where: { $0.isDefault ?? false }) {
             selectMarketGroup(id: defaultGroup.groupKey ?? defaultGroup.type)
         } else {
             selectFirstAvailableMarketGroup()
@@ -238,20 +250,39 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     }
     
     private func createFallbackMarketGroups() {
-        // Create simple "All Markets" group as fallback
+        // Create simple "All Markets" group as fallback when no market groups have markets
         let allMarketsGroup = MarketGroupTabItemData(
-            id: "all_markets",
+            id: "all_markets_fallback",
             title: "All Markets",
             visualState: .idle,
             iconTypeName: nil,
-            badgeCount: nil // No badge for fallback group
+            badgeCount: nil // No badge for fallback group since it represents empty state
         )
         
         updateMarketGroups([allMarketsGroup])
-        selectMarketGroup(id: "all_markets")
+        selectMarketGroup(id: "all_markets_fallback")
     }
     
-    // MARK: - Badge Count and Icon Calculation
+    // MARK: - Market Group Filtering and Badge Count Calculation
+    
+    /// Checks if a market group has any available markets
+    /// - Parameter marketGroup: The MarketGroup to check
+    /// - Returns: True if the market group has markets, false if empty
+    private func hasAvailableMarkets(marketGroup: MarketGroup) -> Bool {
+        // Primary: Use numberOfMarkets if available (most reliable)
+        if let numberOfMarkets = marketGroup.numberOfMarkets {
+            return numberOfMarkets > 0
+        }
+        
+        // Fallback: Use actual markets array count if available
+        if let markets = marketGroup.markets {
+            return !markets.isEmpty
+        }
+        
+        // If no market count data is available, assume it might have markets
+        // This prevents filtering out potentially valid market groups
+        return true
+    }
     
     /// Calculates the badge count for a market group based on available market data
     /// - Parameter marketGroup: The ServicesProvider MarketGroup to calculate count for
