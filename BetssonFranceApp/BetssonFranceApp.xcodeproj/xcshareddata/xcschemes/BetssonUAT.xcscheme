@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CE8F22BB2DD371350071238E"
-               BuildableName = "BetssonCM PROD.app"
-               BlueprintName = "BetssonCM PROD"
-               ReferencedContainer = "container:Sportsbook.xcodeproj">
+               BlueprintIdentifier = "45F6BAA72AB3732C00C81DE1"
+               BuildableName = "Betsson UAT.app"
+               BlueprintName = "Betsson UAT"
+               ReferencedContainer = "container:BetssonFranceApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -44,19 +44,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CE8F22BB2DD371350071238E"
-            BuildableName = "BetssonCM PROD.app"
-            BlueprintName = "BetssonCM PROD"
-            ReferencedContainer = "container:Sportsbook.xcodeproj">
+            BlueprintIdentifier = "45F6BAA72AB3732C00C81DE1"
+            BuildableName = "Betsson UAT.app"
+            BlueprintName = "Betsson UAT"
+            ReferencedContainer = "container:BetssonFranceApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "OS_ACTIVITY_MODE"
-            value = "disabled"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -68,10 +61,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CE8F22BB2DD371350071238E"
-            BuildableName = "BetssonCM PROD.app"
-            BlueprintName = "BetssonCM PROD"
-            ReferencedContainer = "container:Sportsbook.xcodeproj">
+            BlueprintIdentifier = "45F6BAA72AB3732C00C81DE1"
+            BuildableName = "Betsson UAT.app"
+            BlueprintName = "Betsson UAT"
+            ReferencedContainer = "container:BetssonFranceApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
