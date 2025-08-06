@@ -46,6 +46,7 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     }
     
     func getAllLeagues(sportId: String? = nil) {
+        print("🔍 CombinedFiltersViewModel: getAllLeagues called with sportId: \(sportId ?? "nil")")
         self.isLoadingPublisher.send(true)
         
         var currentSportId = appliedFilters.sportId
@@ -58,6 +59,8 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
             $0.id == currentSportId
         })
         
+        print("🔍 CombinedFiltersViewModel: Current sport - id: \(currentSportId), name: \(currentSport?.name ?? "unknown")")
+        
         let sportType = SportType(name: currentSport?.name ?? "",
                                   numericId: currentSport?.numericId ?? "",
                                   alphaId: currentSport?.alphaId ?? "", iconId: currentSport?.id ?? "",
@@ -67,12 +70,34 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                                   numberOutrightMarkets: 0,
                                   numberLiveEvents: 0)
         
+        print("🔍 CombinedFiltersViewModel: Making RPC calls to getTournaments and getPopularTournaments...")
+        
         let sportTournamentsPublisher = servicesProvider.getTournaments(forSportType: sportType)
+            .handleEvents(
+                receiveOutput: { tournaments in
+                    print("✅ CombinedFiltersViewModel: getTournaments returned \(tournaments.count) tournaments")
+                },
+                receiveCompletion: { completion in
+                    if case .failure(let error) = completion {
+                        print("❌ CombinedFiltersViewModel: getTournaments failed with error: \(error)")
+                    }
+                }
+            )
             .map { tournaments -> [Competition] in
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
 
         let popularTournamentsPublisher = servicesProvider.getPopularTournaments(forSportType: sportType, tournamentsCount: 10)
+            .handleEvents(
+                receiveOutput: { tournaments in
+                    print("✅ CombinedFiltersViewModel: getPopularTournaments returned \(tournaments.count) tournaments")
+                },
+                receiveCompletion: { completion in
+                    if case .failure(let error) = completion {
+                        print("❌ CombinedFiltersViewModel: getPopularTournaments failed with error: \(error)")
+                    }
+                }
+            )
             .map { tournaments -> [Competition] in
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
@@ -80,12 +105,16 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
         Publishers.Zip(sportTournamentsPublisher, popularTournamentsPublisher)
             .receive(on: DispatchQueue.main)
             .sink(
-                receiveCompletion: { completion in
+                receiveCompletion: { [weak self] completion in
                     switch completion {
                     case .finished:
                         print("All tournaments RPC calls completed")
                     case .failure(let error):
                         print("Tournaments RPC calls failed: \(error)")
+                        // Make sure to hide loading spinner on error
+                        self?.isLoadingPublisher.send(false)
+                        // Setup empty data on error
+                        self?.setupAllLeagues(popularCompetitions: [], sportCompetitions: [])
                     }
                 },
                 receiveValue: { [weak self] sportCompetitions, popularCompetitions in
@@ -97,7 +126,7 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     }
     
     func setupAllLeagues(popularCompetitions: [Competition], sportCompetitions: [Competition]) {
-        isLoadingPublisher.send(true)
+        // Don't set loading here - it's already set in getAllLeagues
         
         popularLeagues.removeAll()
         popularCountryLeagues.removeAll()

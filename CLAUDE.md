@@ -289,6 +289,113 @@ class ModernViewController: UIViewController {
 - **Mixed Patterns**: Gradual migration from legacy patterns to protocol-driven architecture
 - **Package Optimization**: Some packages (SharedModels, Theming) need consolidation or deprecation
 
+## MCP Server Tools
+
+### Available MCP Servers
+
+This workspace has two specialized MCP (Model Context Protocol) servers configured:
+
+#### **1. SwiftLens** (`mcp__swiftlens__*`)
+*Compiler-accurate Swift code analysis using SourceKit-LSP*
+
+**Core Capabilities**:
+- **Symbol Analysis**: Parse and understand Swift AST with compiler accuracy
+- **Cross-file References**: Find all usages of symbols across entire codebase
+- **Type-aware Navigation**: Jump to exact definitions, understand protocols and inheritance
+- **Code Modification**: Safely replace symbol bodies while preserving signatures
+- **Pattern Search**: Regex-based searches with line/character positions
+
+**When to Use SwiftLens**:
+- Finding all references to a class, method, or property across the codebase
+- Navigating to exact symbol definitions (not just text matches)
+- Understanding type relationships, protocol conformances, inheritance chains
+- Refactoring symbol implementations (rename, replace method bodies)
+- Getting accurate symbol counts and file structure
+- Validating Swift syntax and compilation errors
+
+**Example Use Cases**:
+```bash
+# Find all references to a ViewModel across the project
+mcp__swiftlens__swift_find_symbol_references_files
+
+# Get detailed symbol structure of a file
+mcp__swiftlens__swift_analyze_files
+
+# Replace a method implementation
+mcp__swiftlens__swift_replace_symbol_body
+
+# Validate Swift file compilation
+mcp__swiftlens__swift_validate_file
+```
+
+#### **2. iOS Simulator MCP** (`mcp__ios-simulator-mcp__*`)
+*Automated iOS Simulator interaction and UI testing*
+
+**Core Capabilities**:
+- **UI Interaction**: Tap, swipe, type text into simulator
+- **Accessibility Testing**: Describe UI elements and screen structure
+- **Visual Capture**: Take screenshots, record videos
+- **Element Inspection**: Get information about UI elements at coordinates
+
+**When to Use iOS Simulator MCP**:
+- Automated UI testing and validation
+- Capturing screenshots for documentation
+- Testing user flows and interactions
+- Accessibility compliance verification
+- Visual regression testing
+- Debugging UI layout issues
+
+**Example Use Cases**:
+```bash
+# Take a screenshot of current screen
+mcp__ios-simulator-mcp__screenshot
+
+# Tap on specific coordinates
+mcp__ios-simulator-mcp__ui_tap
+
+# Get accessibility description of entire screen
+mcp__ios-simulator-mcp__ui_describe_all
+
+# Input text into focused field
+mcp__ios-simulator-mcp__ui_type
+```
+
+### SwiftLens vs Built-in Tools Decision Matrix
+
+| Task | Use SwiftLens | Use Built-in Tools |
+|------|---------------|-------------------|
+| Find all symbol references | ✅ Precise, cross-file | ❌ Text-based, may miss |
+| Read full file contents | ❌ Only symbols | ✅ Complete context |
+| Navigate to definitions | ✅ Type-aware | ⚠️ Text search |
+| Search comments/TODOs | ❌ Code only | ✅ All text |
+| Understand business logic | ❌ Structure only | ✅ Full implementation |
+| Refactor symbol names | ✅ Safe, precise | ⚠️ Manual verification |
+| Edit multiple files | ⚠️ Limited | ✅ Full flexibility |
+| Non-Swift files | ❌ Swift only | ✅ Any file type |
+| Quick exploration | ❌ Needs index | ✅ Immediate |
+
+### MCP Setup & Maintenance
+
+**Index Building** (Required after significant changes):
+```bash
+# Build SwiftLens index for BetssonCameroonApp
+xcodebuild -workspace Sportsbook.xcworkspace \
+  -scheme "BetssonCameroonApp" \
+  -configuration Debug \
+  build \
+  COMPILER_INDEX_STORE_ENABLE=YES \
+  INDEX_ENABLE_DATA_STORE=YES \
+  -derivedDataPath .build
+```
+
+**When to Rebuild Index**:
+- After adding new Swift files
+- After changing public interfaces
+- When symbol references seem incomplete
+- After major refactoring
+
+**Configuration Location**: `.mcp.json` in project root
+
 ## Tool Usage Guidelines
 
 ### When to Use Concurrent Tool Calls
@@ -297,6 +404,7 @@ class ModernViewController: UIViewController {
 - Adding debug code across multiple packages in same investigation
 - Running parallel bash commands for different schemes/targets
 - Gathering information from multiple Swift packages concurrently
+- Combining SwiftLens analysis with built-in file reading for complete context
 
 ### Workspace-Specific Operations
 
@@ -304,6 +412,7 @@ class ModernViewController: UIViewController {
 - **Scheme-specific work**: Choose appropriate scheme based on development context
 - **Package dependency**: Remember manual Xcode project integration for new Swift packages
 - **Multi-project impact**: Consider changes across BetssonCameroonApp and BetssonFranceApp
+- **MCP Integration**: Use SwiftLens for precise Swift operations, built-in tools for exploration
 
 ## Root Cause Analysis Framework
 

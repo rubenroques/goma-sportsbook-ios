@@ -30,8 +30,14 @@
       "WebFetch(domain:docs.anthropic.com)",
       "Bash(xcodebuild:*)",
       "mcp__figma-dev-mode-mcp-server__get_image",
-      "mcp__figma-dev-mode-mcp-server__get_code"
+      "mcp__figma-dev-mode-mcp-server__get_code",
+      "mcp__ios-simulator-mcp__*",
+      "mcp__swiftlens__*"
     ],
     "deny": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "ios-simulator-mcp",
+    "swiftlens"
+  ]
 }

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "ios-simulator-mcp": {
+      "command": "npx",
+      "args": ["-y", "ios-simulator-mcp"]
+    },
+    "swiftlens": {
+      "command": "/Users/rroques/.local/bin/uvx",
+      "args": ["--python", "python3.13", "swiftlens"]
+    }
+  }
+}

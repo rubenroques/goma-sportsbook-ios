@@ -38,6 +38,51 @@ extension EveryMatrix {
             // Notify observers of the change
             notifyEntityChange(entity)
         }
+        
+        // Store entity from EntityRecord - automatically handles all entity types
+        func storeFromRecord(_ record: EntityRecord) {
+            switch record {
+            case .sport(let dto):
+                store(dto)
+            case .match(let dto):
+                store(dto)
+            case .market(let dto):
+                store(dto)
+            case .outcome(let dto):
+                store(dto)
+            case .bettingOffer(let dto):
+                store(dto)
+            case .location(let dto):
+                store(dto)
+            case .eventCategory(let dto):
+                store(dto)
+            case .marketOutcomeRelation(let dto):
+                store(dto)
+            case .mainMarket(let dto):
+                store(dto)
+            case .marketInfo(let dto):
+                store(dto)
+            case .nextMatchesNumber(let dto):
+                store(dto)
+            case .tournament(let dto):
+                store(dto)
+            case .eventInfo(let dto):
+                store(dto)
+            case .marketGroup(let dto):
+                store(dto)
+            case .changeRecord(_):
+                // Change records are not entities, skip them
+                break
+            case .unknown:
+                // Skip unknown record types
+                break
+            }
+        }
+        
+        // Bulk store multiple records
+        func storeRecords(_ records: [EntityRecord]) {
+            records.forEach { storeFromRecord($0) }
+        }
 
         // Retrieve entity by type and id
         func get<T: Entity>(_ type: T.Type, id: String) -> T? {

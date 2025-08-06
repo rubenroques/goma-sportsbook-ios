@@ -392,10 +392,10 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         let router = WAMPRouter.getPopularTournaments(language: language, sportId: sportId)
         
-        let aggregatorResponsePublisher: AnyPublisher<EveryMatrix.AggregatorResponse, ServiceProviderError> = connector.request(router)
-        return aggregatorResponsePublisher
-            .map { [weak self] aggregatorResponse in
-                return self?.processTournamentsFromAggregatorResponse(aggregatorResponse) ?? []
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = connector.request(router)
+        return rpcResponsePublisher
+            .map { [weak self] rpcResponse in
+                return self?.processTournamentsFromRPCResponse(rpcResponse) ?? []
             }
             .eraseToAnyPublisher()
     }
@@ -407,61 +407,23 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         let router = WAMPRouter.getTournaments(language: language, sportId: sportId)
         
-        let aggregatorResponsePublisher: AnyPublisher<EveryMatrix.AggregatorResponse, ServiceProviderError> = connector.request(router)
-        return aggregatorResponsePublisher
-            .map { [weak self] aggregatorResponse in
-                return self?.processTournamentsFromAggregatorResponse(aggregatorResponse) ?? []
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = connector.request(router)
+        return rpcResponsePublisher
+            .map { [weak self] rpcResponse in
+                return self?.processTournamentsFromRPCResponse(rpcResponse) ?? []
             }
             .eraseToAnyPublisher()
     }
     
     // MARK: - Private Tournament Processing
     
-    /// Process tournaments from aggregator response (shared logic for RPC and subscriptions)
-    private func processTournamentsFromAggregatorResponse(_ response: EveryMatrix.AggregatorResponse) -> [Tournament] {
+    /// Process tournaments from RPC response
+    private func processTournamentsFromRPCResponse(_ response: EveryMatrix.RPCResponse) -> [Tournament] {
         // Create temporary store for processing
         let tempStore = EveryMatrix.EntityStore()
         
-        // Store all entities from the response (tournaments, venues, sports, etc.)
-        // The tournament builder might need other DTOs to create composed Tournament objects
-        response.records.forEach { record in
-            switch record {
-            case .sport(let dto):
-                tempStore.store(dto)
-            case .match(let dto):
-                tempStore.store(dto)
-            case .market(let dto):
-                tempStore.store(dto)
-            case .outcome(let dto):
-                tempStore.store(dto)
-            case .bettingOffer(let dto):
-                tempStore.store(dto)
-            case .location(let dto):
-                tempStore.store(dto)
-            case .eventCategory(let dto):
-                tempStore.store(dto)
-            case .marketOutcomeRelation(let dto):
-                tempStore.store(dto)
-            case .mainMarket(let dto):
-                tempStore.store(dto)
-            case .marketInfo(let dto):
-                tempStore.store(dto)
-            case .nextMatchesNumber(let dto):
-                tempStore.store(dto)
-            case .tournament(let dto):
-                tempStore.store(dto)
-            case .eventInfo(let dto):
-                tempStore.store(dto)
-            case .marketGroup(let dto):
-                tempStore.store(dto)
-            case .changeRecord(let changeRecord):
-                // Handle change records if needed for tournament data
-                break
-            case .unknown:
-                // Skip unknown record types
-                break
-            }
-        }
+        // Store all entities from the response using the new bulk store method
+        tempStore.storeRecords(response.records)
         
         // Get all tournaments from the store
         let tournamentsDTO = tempStore.getAllInOrder(EveryMatrix.TournamentDTO.self)
