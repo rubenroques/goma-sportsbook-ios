@@ -11,6 +11,7 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     private let servicesProvider = Env.servicesProvider
     
     // MARK: - Subjects
+    var outcomeDataSubject: CurrentValueSubject<GomaUI.OutcomeItemData, Never>
     private let displayStateSubject: CurrentValueSubject<GomaUI.OutcomeDisplayState, Never>
     private let titleSubject: CurrentValueSubject<String, Never>
     private let valueSubject: CurrentValueSubject<String, Never>
@@ -52,6 +53,7 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         outcomeId: String,
         initialOutcomeData: GomaUI.OutcomeItemData
     ) {
+        self.outcomeDataSubject = .init(initialOutcomeData)
         self.outcomeId = outcomeId
         self.titleSubject = CurrentValueSubject(initialOutcomeData.title)
         self.valueSubject = CurrentValueSubject(initialOutcomeData.value)

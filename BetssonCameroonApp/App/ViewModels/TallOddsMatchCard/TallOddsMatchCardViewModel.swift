@@ -4,7 +4,7 @@ import GomaUI
 import ServicesProvider
 
 final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
-
+    
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<TallOddsMatchCardDisplayState, Never>
     fileprivate let matchHeaderViewModelSubject: CurrentValueSubject<MatchHeaderViewModelProtocol, Never>
@@ -90,6 +90,46 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     func onOutcomeSelected(outcomeId: String) {
         print("Production: Outcome selected: \(outcomeId) for match: \(matchData.matchId)")
         // TODO: Implement betslip management
+        
+        let outcome = marketOutcomesViewModelSubject.value.lineViewModels.compactMap { lineVewModel in
+            if lineVewModel.marketStateSubject.value.leftOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.leftOutcome
+            } else if lineVewModel.marketStateSubject.value.middleOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.middleOutcome
+            } else if lineVewModel.marketStateSubject.value.rightOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.rightOutcome
+            }
+            return nil
+        }.first
+        
+        let oddDouble = Double(outcome?.value ?? "")
+        
+        let bettingTicket = BettingTicket(id: outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil)
+        
+        
+        Env.betslipManager.addBettingTicket(bettingTicket)
+    }
+    
+    func onOutcomeDeselected(outcomeId: String) {
+        print("Production: Outcome deselected: \(outcomeId) for match: \(matchData.matchId)")
+
+        let outcome = marketOutcomesViewModelSubject.value.lineViewModels.compactMap { lineVewModel in
+            if lineVewModel.marketStateSubject.value.leftOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.leftOutcome
+            } else if lineVewModel.marketStateSubject.value.middleOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.middleOutcome
+            } else if lineVewModel.marketStateSubject.value.rightOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.rightOutcome
+            }
+            return nil
+        }.first
+        
+        let oddDouble = Double(outcome?.value ?? "")
+        
+        let bettingTicket = BettingTicket(id: outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil)
+        
+        
+        Env.betslipManager.removeBettingTicket(bettingTicket)
     }
     
     func onMarketInfoTapped() {

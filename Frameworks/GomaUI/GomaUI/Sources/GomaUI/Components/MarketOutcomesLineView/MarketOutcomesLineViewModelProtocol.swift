@@ -146,6 +146,7 @@ public struct MarketOutcomesLineDisplayState: Equatable {
 // MARK: - View Model Protocol
 public protocol MarketOutcomesLineViewModelProtocol {
     // Single state publisher for all market data
+    var marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never> { get }
     var marketStatePublisher: AnyPublisher<MarketOutcomesLineDisplayState, Never> { get }
 
     // Odds change events for animation triggers (separate for performance)

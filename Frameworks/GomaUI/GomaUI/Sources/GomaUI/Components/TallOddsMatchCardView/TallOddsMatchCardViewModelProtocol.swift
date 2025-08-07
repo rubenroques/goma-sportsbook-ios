@@ -74,6 +74,7 @@ public protocol TallOddsMatchCardViewModelProtocol {
     func onMatchHeaderAction()
     func onFavoriteToggle()
     func onOutcomeSelected(outcomeId: String)
+    func onOutcomeDeselected(outcomeId: String)
     func onMarketInfoTapped()
     func onCardTapped()
 }

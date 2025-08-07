@@ -10,6 +10,7 @@ class NextUpEventsViewController: UIViewController {
     private var pillSelectorBarView: PillSelectorBarView!
     private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
     private var pageViewController: UIPageViewController!
+    private var betslipFloatingView: BetslipFloatingView!
     
     private let loadingIndicatorView: UIView = {
         let view = UIView()
@@ -97,6 +98,7 @@ class NextUpEventsViewController: UIViewController {
         setupPillSelectorBarView()
         setupMarketGroupSelectorTabView()
         setupPageViewController()
+        setupBetslipFloatingView()
         setupLoadingIndicator()
         setupConstraints()
     }
@@ -130,6 +132,25 @@ class NextUpEventsViewController: UIViewController {
         
         // Send page view controller to back so header can overlay
         view.sendSubviewToBack(pageViewController.view)
+    }
+    
+    private func setupBetslipFloatingView() {
+        
+        let betslipFloatingViewModel = viewModel.betslipFloatingViewModel
+        
+        betslipFloatingView = BetslipFloatingView(viewModel: betslipFloatingViewModel)
+        betslipFloatingView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(betslipFloatingView)
+        
+        // Setup base constraints (trailing and bottom)
+        NSLayoutConstraint.activate([
+            betslipFloatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            betslipFloatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
+        ])
+        
+        // The width and leading constraints are now handled internally by the BetslipFloatingView
+        // based on the state changes from the view model
     }
 
     private func setupQuickLinksTabBar() {

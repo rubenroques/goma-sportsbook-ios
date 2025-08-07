@@ -11,7 +11,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     private let servicesProvider = Env.servicesProvider
     
     // MARK: - Subjects
-    private let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
+    public let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OddsChangeEvent, Never>
     private var cancellables = Set<AnyCancellable>()
     

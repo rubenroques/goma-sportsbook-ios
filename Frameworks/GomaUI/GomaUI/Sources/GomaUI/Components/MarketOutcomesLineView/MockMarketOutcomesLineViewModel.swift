@@ -5,7 +5,7 @@ import UIKit
 final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
 
     // MARK: - Publishers
-    private let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
+    public let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OddsChangeEvent, Never>
 
     public var marketStatePublisher: AnyPublisher<MarketOutcomesLineDisplayState, Never> {

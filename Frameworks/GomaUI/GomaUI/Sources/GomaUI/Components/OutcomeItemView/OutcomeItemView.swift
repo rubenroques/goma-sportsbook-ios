@@ -54,7 +54,7 @@ final public class OutcomeItemView: UIView {
     private var viewModel: OutcomeItemViewModelProtocol
 
     // MARK: - Public Properties
-    public var onTap: (() -> Void) = { }
+    public var onTap: ((String) -> Void) = { _ in }
     public var onLongPress: (() -> Void) = { }
 
     // MARK: - Constants
@@ -435,8 +435,12 @@ final public class OutcomeItemView: UIView {
 
     // MARK: - Gesture Handlers
     @objc private func handleTap() {
+        viewModel.toggleSelection()
+        
         let wasSelected = viewModel.toggleSelection()
-        onTap()
+        let outcomeId = viewModel.outcomeDataSubject.value.id
+        
+        onTap(outcomeId)
 
         // Provide haptic feedback
         if wasSelected {

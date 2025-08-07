@@ -64,6 +64,7 @@ class NextUpEventsViewModel {
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
     var generalFiltersBarViewModel: GeneralFilterBarViewModelProtocol
+    var betslipFloatingViewModel: BetslipFloatingViewModelProtocol
 
     // MARK: - Navigation Closures (MVVM-C Pattern)
     // ViewModels signal navigation intent through closures - Coordinators handle actual navigation
@@ -103,7 +104,8 @@ class NextUpEventsViewModel {
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
-                
+        self.betslipFloatingViewModel = BetslipFloatingViewModel()
+        
         let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter", icon: "filter_icon", actionIcon: "right_arrow_icon")
 
         self.generalFiltersBarViewModel = MockGeneralFilterBarViewModel(items: [], mainFilterItem: mainFilter)

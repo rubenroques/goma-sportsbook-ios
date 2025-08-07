@@ -5,7 +5,7 @@ import UIKit
 final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
     // MARK: - Publishers
-    private let outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never>
+    public let outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OutcomeItemOddsChangeEvent, Never>
 
     // MARK: - Internal Properties

@@ -304,6 +304,10 @@ extension TallOddsMatchCardView {
             self?.onOutcomeSelected(outcomeId)
             self?.viewModel.onOutcomeSelected(outcomeId: outcomeId)
         }
+        
+        marketOutcomesView.onOutcomeDeselected = { [weak self] outcomeId, outcomeType in
+            self?.viewModel.onOutcomeDeselected(outcomeId: outcomeId)
+        }
     }
 
 }

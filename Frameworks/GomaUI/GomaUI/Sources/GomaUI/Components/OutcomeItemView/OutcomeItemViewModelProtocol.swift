@@ -198,6 +198,7 @@ public struct OutcomeItemOddsChangeEvent: Equatable {
 public protocol OutcomeItemViewModelProtocol {
     // Publishers
     var oddsChangeEventPublisher: AnyPublisher<OutcomeItemOddsChangeEvent, Never> { get }
+    var outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never> { get }
 
     // Individual publishers for granular updates (backward compatibility)
     var titlePublisher: AnyPublisher<String, Never> { get }

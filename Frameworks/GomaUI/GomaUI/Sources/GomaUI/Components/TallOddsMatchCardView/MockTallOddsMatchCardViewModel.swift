@@ -2,6 +2,7 @@ import Combine
 import UIKit
 
 final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
+    
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<TallOddsMatchCardDisplayState, Never>
     private let matchHeaderViewModelSubject: CurrentValueSubject<MatchHeaderViewModelProtocol, Never>
@@ -71,6 +72,10 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
     
     public func onOutcomeSelected(outcomeId: String) {
         print("Outcome selected: \(outcomeId) for match: \(matchData.matchId)")
+    }
+    
+    public func onOutcomeDeselected(outcomeId: String) {
+        print("Outcome deselected: \(outcomeId) for match: \(matchData.matchId)")
     }
     
     public func onMarketInfoTapped() {
