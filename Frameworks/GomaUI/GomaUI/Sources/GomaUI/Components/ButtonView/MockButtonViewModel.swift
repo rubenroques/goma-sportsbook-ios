@@ -39,6 +39,17 @@ final public class MockButtonViewModel: ButtonViewModelProtocol {
         )
         buttonDataSubject.send(updatedData)
     }
+    
+    public func updateTitle(_ title: String) {
+        let currentData = buttonDataSubject.value
+        let updatedData = ButtonData(
+            id: currentData.id,
+            title: title,
+            style: currentData.style,
+            isEnabled: currentData.isEnabled
+        )
+        buttonDataSubject.send(updatedData)
+    }
 }
 
 // MARK: - Mock Factory
