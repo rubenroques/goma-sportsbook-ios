@@ -41,4 +41,7 @@ public protocol ButtonViewModelProtocol {
     
     /// Update button state
     func setEnabled(_ isEnabled: Bool)
+    
+    /// Update button title
+    func updateTitle(_ title: String)
 }

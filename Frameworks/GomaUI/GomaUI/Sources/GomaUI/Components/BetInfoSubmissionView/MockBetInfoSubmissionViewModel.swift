@@ -8,12 +8,24 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<BetInfoSubmissionData, Never>
     
+    // Child view models
+    private let amountTextFieldViewModelInstance: BorderedTextFieldViewModelProtocol
+    private let placeBetButtonViewModelInstance: ButtonViewModelProtocol
+    
     public var dataPublisher: AnyPublisher<BetInfoSubmissionData, Never> {
         dataSubject.eraseToAnyPublisher()
     }
     
     public var currentData: BetInfoSubmissionData {
         dataSubject.value
+    }
+    
+    public var amountTextFieldViewModel: BorderedTextFieldViewModelProtocol {
+        amountTextFieldViewModelInstance
+    }
+    
+    public var placeBetButtonViewModel: ButtonViewModelProtocol {
+        placeBetButtonViewModelInstance
     }
     
     // MARK: - Initialization
@@ -32,6 +44,23 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             isEnabled: isEnabled
         )
         self.dataSubject = CurrentValueSubject(initialData)
+        
+        // Initialize child view models
+        self.amountTextFieldViewModelInstance = MockBorderedTextFieldViewModel(
+            textFieldData: BorderedTextFieldData(
+                id: "amount",
+                text: amount,
+                placeholder: "Amount",
+                keyboardType: .numberPad
+            )
+        )
+        
+        self.placeBetButtonViewModelInstance = MockButtonViewModel(buttonData: ButtonData(
+            id: "place_bet",
+            title: "Place Bet \(placeBetAmount)",
+            style: .solidBackground,
+            isEnabled: isEnabled
+        ))
     }
     
     // MARK: - Protocol Methods
@@ -81,6 +110,11 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             isEnabled: currentData.isEnabled
         )
         dataSubject.send(newData)
+        
+        // Update amount text field
+        if let mockAmountViewModel = amountTextFieldViewModelInstance as? MockBorderedTextFieldViewModel {
+            mockAmountViewModel.updateText(amount)
+        }
     }
     
     public func updatePlaceBetAmount(_ amount: String) {
@@ -93,6 +127,11 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             isEnabled: currentData.isEnabled
         )
         dataSubject.send(newData)
+        
+        // Update place bet button title
+        if let mockButtonViewModel = placeBetButtonViewModelInstance as? MockButtonViewModel {
+            mockButtonViewModel.updateTitle("Place Bet \(amount)")
+        }
     }
     
     public func setEnabled(_ isEnabled: Bool) {
@@ -105,13 +144,21 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             isEnabled: isEnabled
         )
         dataSubject.send(newData)
+        
+        // Update place bet button enabled state
+        placeBetButtonViewModelInstance.setEnabled(isEnabled)
     }
     
     public func onQuickAddTapped(_ amount: Int) {
         // Mock implementation - in real app this would add the amount to current amount
-        let currentAmount = Double(currentData.amount) ?? 0.0
-        let newAmount = currentAmount + Double(amount)
-        updateAmount(String(format: "%.0f", newAmount))
+        let newAmount = Double(amount)
+        let amountString = String(format: "%.0f", newAmount)
+        updateAmount(amountString)
+        
+        // Update the place bet button text and state since amount changed
+        updatePlaceBetAmount("XAF \(amountString)")
+        let isEnabled = !amountString.isEmpty
+        setEnabled(isEnabled)
     }
     
     public func onPlaceBetTapped() {
@@ -122,6 +169,10 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     public func onAmountChanged(_ amount: String) {
         updateAmount(amount)
         updatePlaceBetAmount("XAF \(amount.isEmpty ? "0" : amount)")
+        
+        // Enable/disable place bet button based on amount
+        let isEnabled = !amount.isEmpty
+        setEnabled(isEnabled)
     }
 }
 

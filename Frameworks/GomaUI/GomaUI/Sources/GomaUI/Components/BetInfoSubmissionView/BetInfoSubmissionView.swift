@@ -21,17 +21,6 @@ public final class BetInfoSubmissionView: UIView {
         return view
     }()
     
-    // Main stack view
-    private lazy var mainStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.spacing = 16
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        return stackView
-    }()
-    
     // Bet summary section
     private lazy var betSummaryStackView: UIStackView = {
         let stackView = UIStackView()
@@ -39,7 +28,7 @@ public final class BetInfoSubmissionView: UIView {
         stackView.axis = .vertical
         stackView.spacing = 8
         stackView.alignment = .fill
-        stackView.distribution = .fill
+        stackView.distribution = .equalSpacing
         return stackView
     }()
     
@@ -58,27 +47,9 @@ public final class BetInfoSubmissionView: UIView {
         return BetSummaryRowView(title: "PAYOUT", value: "XAF 0.00")
     }()
     
-    // Amount input section
-    private lazy var amountInputStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        return stackView
-    }()
-    
     // Amount text field
     private lazy var amountTextField: BorderedTextFieldView = {
-        let viewModel = MockBorderedTextFieldViewModel(
-            textFieldData: BorderedTextFieldData(
-                id: "amount",
-                placeholder: "Amount",
-                keyboardType: .numberPad
-            )
-        )
-        let textField = BorderedTextFieldView(viewModel: viewModel)
+        let textField = BorderedTextFieldView(viewModel: viewModel.amountTextFieldViewModel)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.onTextChanged = { [weak self] text in
             self?.viewModel.onAmountChanged(text)
@@ -118,13 +89,7 @@ public final class BetInfoSubmissionView: UIView {
     
     // Place bet button
     private lazy var placeBetButton: ButtonView = {
-        let buttonViewModel = MockButtonViewModel(buttonData: ButtonData(
-            id: "place_bet",
-            title: "Place Bet XAF 0",
-            style: .solidBackground,
-            isEnabled: false
-        ))
-        let button = ButtonView(viewModel: buttonViewModel)
+        let button = ButtonView(viewModel: viewModel.placeBetButtonViewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.onButtonTapped = { [weak self] in
             self?.viewModel.onPlaceBetTapped()
@@ -148,26 +113,24 @@ public final class BetInfoSubmissionView: UIView {
     // MARK: - Setup
     private func setupSubviews() {
         addSubview(containerView)
-        containerView.addSubview(mainStackView)
         
-        // Add bet summary section
-        mainStackView.addArrangedSubview(betSummaryStackView)
+        // Add bet summary section directly to container
+        containerView.addSubview(betSummaryStackView)
         betSummaryStackView.addArrangedSubview(potentialWinningsRow)
         betSummaryStackView.addArrangedSubview(winBonusRow)
         betSummaryStackView.addArrangedSubview(payoutRow)
         
-        // Add amount input section
-        mainStackView.addArrangedSubview(amountInputStackView)
-        amountInputStackView.addArrangedSubview(amountTextField)
-        amountInputStackView.addArrangedSubview(quickAddStackView)
+        // Add amount text field directly to container
+        containerView.addSubview(amountTextField)
         
-        // Add quick add buttons
+        // Add quick add buttons stack directly to container
+        containerView.addSubview(quickAddStackView)
         quickAddStackView.addArrangedSubview(quickAdd100Button)
         quickAddStackView.addArrangedSubview(quickAdd250Button)
         quickAddStackView.addArrangedSubview(quickAdd500Button)
         
-        // Add place bet button
-        mainStackView.addArrangedSubview(placeBetButton)
+        // Add place bet button directly to container
+        containerView.addSubview(placeBetButton)
     }
     
     private func setupConstraints() {
@@ -178,17 +141,33 @@ public final class BetInfoSubmissionView: UIView {
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            // Main stack view
-            mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            mainStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            mainStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            // Bet summary stack view
+            betSummaryStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            betSummaryStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            betSummaryStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            
+            // Amount text field
+            amountTextField.topAnchor.constraint(equalTo: betSummaryStackView.bottomAnchor, constant: 16),
+            amountTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            amountTextField.heightAnchor.constraint(equalToConstant: 52),
+//            amountTextField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            
+            // Quick add buttons stack
+            quickAddStackView.leadingAnchor.constraint(equalTo: amountTextField.trailingAnchor, constant: 8),
+            quickAddStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            quickAddStackView.heightAnchor.constraint(equalToConstant: 50),
+            quickAddStackView.centerYAnchor.constraint(equalTo: amountTextField.centerYAnchor, constant: -2),
             
             // Quick add buttons equal width
-            quickAdd100Button.widthAnchor.constraint(equalTo: quickAdd250Button.widthAnchor),
-            quickAdd250Button.widthAnchor.constraint(equalTo: quickAdd500Button.widthAnchor),
+            quickAdd100Button.widthAnchor.constraint(equalToConstant: 50),
+            quickAdd250Button.widthAnchor.constraint(equalToConstant: 50),
+            quickAdd500Button.widthAnchor.constraint(equalToConstant: 50),
             
-            // Place bet button height
+            // Place bet button
+            placeBetButton.topAnchor.constraint(equalTo: amountTextField.bottomAnchor, constant: 12),
+            placeBetButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            placeBetButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            placeBetButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
             placeBetButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
@@ -209,19 +188,6 @@ public final class BetInfoSubmissionView: UIView {
         winBonusRow.updateValue(data.winBonus)
         payoutRow.updateValue(data.payout)
         
-//        // Update amount text field
-//        if amountTextField.viewModel.currentData.text != data.amount {
-//            amountTextField.viewModel.updateText(data.amount)
-//        }
-        
-        // Update place bet button
-        placeBetButton.viewModel.setEnabled(data.isEnabled)
-        
-        // Update place bet button title
-        let buttonTitle = "Place Bet \(data.placeBetAmount)"
-        if let buttonViewModel = placeBetButton.viewModel as? MockButtonViewModel {
-            buttonViewModel.updateTitle(buttonTitle)
-        }
     }
 }
 
@@ -230,7 +196,7 @@ private final class BetSummaryRowView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .regular, size: 14)
+        label.font = StyleProvider.fontWith(type: .semibold, size: 10)
         label.textColor = StyleProvider.Color.textPrimary
         return label
     }()
@@ -238,7 +204,7 @@ private final class BetSummaryRowView: UIView {
     private let valueLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .regular, size: 14)
+        label.font = StyleProvider.fontWith(type: .bold, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .right
         return label
@@ -291,11 +257,9 @@ private final class QuickAddButton: UIButton {
     private func setupButton(amount: Int) {
         setTitle("+\(amount)", for: .normal)
         setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
-        titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
-        backgroundColor = StyleProvider.Color.backgroundPrimary
+        titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 12)
+        backgroundColor = StyleProvider.Color.inputBackground
         layer.cornerRadius = 4
-        layer.borderWidth = 1
-        layer.borderColor = StyleProvider.Color.backgroundBorder.cgColor
         
         addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
@@ -310,28 +274,37 @@ private final class QuickAddButton: UIButton {
 
 @available(iOS 17.0, *)
 #Preview("Default") {
-    PreviewUIView {
-        BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.defaultMock())
+    ZStack {
+        Color.gray.opacity(0.1)
+        PreviewUIView {
+            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.defaultMock())
+        }
     }
-    .frame(height: 300)
+    .frame(height: 200)
     .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Sample Data") {
-    PreviewUIView {
-        BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.sampleMock())
+    ZStack {
+        Color.gray.opacity(0.1)
+        PreviewUIView {
+            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.sampleMock())
+        }
     }
-    .frame(height: 300)
+    .frame(height: 200)
     .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Disabled") {
-    PreviewUIView {
-        BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.disabledMock())
+    ZStack {
+        Color.gray.opacity(0.1)
+        PreviewUIView {
+            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.disabledMock())
+        }
     }
-    .frame(height: 300)
+    .frame(height: 200)
     .padding()
 }
 

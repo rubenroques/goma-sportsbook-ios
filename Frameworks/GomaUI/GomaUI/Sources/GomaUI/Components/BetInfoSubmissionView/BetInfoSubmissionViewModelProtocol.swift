@@ -34,6 +34,10 @@ public protocol BetInfoSubmissionViewModelProtocol {
     /// Current data (for immediate access)
     var currentData: BetInfoSubmissionData { get }
     
+    /// Child view models
+    var amountTextFieldViewModel: BorderedTextFieldViewModelProtocol { get }
+    var placeBetButtonViewModel: ButtonViewModelProtocol { get }
+    
     /// Update potential winnings
     func updatePotentialWinnings(_ amount: String)
     
