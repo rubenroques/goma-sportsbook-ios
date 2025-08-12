@@ -2,15 +2,15 @@ import Foundation
 import UIKit
 
 /// Coordinator for the betslip screen
-public final class BetslipCoordinator: Coordinator {
+class BetslipCoordinator: Coordinator {
     
     // MARK: - Properties
     public var childCoordinators: [Coordinator] = []
     public var navigationController: UINavigationController
     
     // Services (for production ViewModel)
-    private let betslipManager: BetslipManager?
-    
+    private let environment: Environment
+
     // Navigation closures
     public var onCloseBetslip: (() -> Void)?
     public var onShowRegistration: (() -> Void)?
@@ -20,10 +20,10 @@ public final class BetslipCoordinator: Coordinator {
     // MARK: - Initialization
     public init(
         navigationController: UINavigationController,
-        betslipManager: BetslipManager? = nil
+        environment: Environment
     ) {
         self.navigationController = navigationController
-        self.betslipManager = betslipManager
+        self.environment = environment
     }
     
     // MARK: - Coordinator
@@ -31,13 +31,7 @@ public final class BetslipCoordinator: Coordinator {
         // Create appropriate ViewModel based on available services
         let viewModel: BetslipViewModelProtocol
         
-        if let betslipManager = betslipManager {
-            // Use production ViewModel with real services
-            viewModel = BetslipViewModel(betslipManager: betslipManager)
-        } else {
-            // Use mock ViewModel for testing/preview
-            viewModel = MockBetslipViewModel.defaultMock()
-        }
+        viewModel = BetslipViewModel()
         
         let viewController = BetslipViewController(viewModel: viewModel)
         
