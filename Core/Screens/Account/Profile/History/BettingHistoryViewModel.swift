@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import ServicesProvider
+import UIKit
 
 class BettingHistoryViewModel {
 
@@ -31,6 +32,13 @@ class BettingHistoryViewModel {
     var cachedViewModels: [String: MyTicketCellViewModel] = [:]
     var filterApplied: FilterHistoryViewModel.FilterValue = .past30Days
     
+    // Shares
+    var clickedCellSnapshot: UIImage?
+    var clickedBetId: String?
+    var clickedBetStatus: String?
+    var clickedBetTokenPublisher: CurrentValueSubject<String, Never> = .init("")
+    var clickedBetHistory: BetHistoryEntry?
+
     // MARK: - Publishers
     var titlePublisher: CurrentValueSubject<String, Never>
     var listStatePublisher: CurrentValueSubject<ListState, Never> = .init(.loading)
@@ -707,6 +715,22 @@ class BettingHistoryViewModel {
         }
         
         return gameTransId
+    }
+    
+    func storeSharedBetData(snapshot: UIImage, ticket: BetHistoryEntry) {
+        self.clickedCellSnapshot = snapshot
+        self.clickedBetId = ticket.betId
+        self.clickedBetStatus = ticket.status ?? ""
+        self.clickedBetHistory = ticket
+        self.getSharedBetTokens()
+    }
+    
+    func getSharedBetTokens() {
+
+        if let betslipId = self.clickedBetId {
+            self.clickedBetTokenPublisher.send(betslipId)
+        }
+
     }
     
     func refresh() {

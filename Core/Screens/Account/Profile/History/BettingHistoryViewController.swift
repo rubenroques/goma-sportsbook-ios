@@ -24,6 +24,22 @@ class BettingHistoryViewController: UIViewController {
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
     private lazy var emptyStateSecondaryLabel: UILabel = Self.createEmptyStateSecondaryLabel()
     private lazy var emptyStateButton: UIButton = Self.createEmptyStateButton()
+    
+    private lazy var shareLoadingOverlayView: UIView = {
+        let overlayView = UIView()
+        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        overlayView.isHidden = true
+        return overlayView
+    }()
+    
+    private lazy var shareLoadingActivityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .white
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
 
     // Logic
     private var cancellables: Set<AnyCancellable> = []
@@ -58,7 +74,7 @@ class BettingHistoryViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
+        self.tableView.register(MyTicketTableViewCell.self, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
 
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
@@ -66,6 +82,9 @@ class BettingHistoryViewController: UIViewController {
 
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
+        
+        // Setup share loading overlay
+        self.setupShareLoadingOverlay()
 
         self.viewModel.listStatePublisher
             .receive(on: DispatchQueue.main)
@@ -178,6 +197,15 @@ class BettingHistoryViewController: UIViewController {
         viewModel.showCashoutSuspendedAction = { [weak self] in
             self?.showSimpleAlert(title: localized("cashout_error"), message: localized("cashout_no_longer_available"))
         }
+        
+        viewModel.clickedBetTokenPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] token in
+                if token != "" {
+                    self?.shareBet()
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func showLoading() {
@@ -188,6 +216,31 @@ class BettingHistoryViewController: UIViewController {
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
         self.loadingActivityIndicatorView.stopAnimating()
+    }
+    
+    private func setupShareLoadingOverlay() {
+        self.shareLoadingOverlayView.addSubview(self.shareLoadingActivityIndicator)
+        self.view.addSubview(self.shareLoadingOverlayView)
+        
+        NSLayoutConstraint.activate([
+            self.shareLoadingOverlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.shareLoadingOverlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.shareLoadingOverlayView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.shareLoadingOverlayView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            self.shareLoadingActivityIndicator.centerXAnchor.constraint(equalTo: self.shareLoadingOverlayView.centerXAnchor),
+            self.shareLoadingActivityIndicator.centerYAnchor.constraint(equalTo: self.shareLoadingOverlayView.centerYAnchor)
+        ])
+    }
+    
+    private func showShareLoadingOverlay() {
+        self.shareLoadingOverlayView.isHidden = false
+        self.shareLoadingActivityIndicator.startAnimating()
+    }
+    
+    private func hideShareLoadingOverlay() {
+        self.shareLoadingOverlayView.isHidden = true
+        self.shareLoadingActivityIndicator.stopAnimating()
     }
 
     func reloadDataWithFilter(newFilter: FilterHistoryViewModel.FilterValue) {
@@ -215,6 +268,58 @@ class BettingHistoryViewController: UIViewController {
 
         self.present(alert, animated: true, completion: nil)
         
+    }
+    
+    private func shareBet() {
+        guard let betHistoryEntry = self.viewModel.clickedBetHistory else { return }
+        
+        self.showShareLoadingOverlay()
+        
+        let brandedShareView = BrandedTicketShareView()
+        self.view.insertSubview(brandedShareView, at: 0)
+        
+        NSLayoutConstraint.activate([
+            brandedShareView.trailingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -10),
+            brandedShareView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            brandedShareView.topAnchor.constraint(equalTo: self.view.topAnchor)
+        ])
+        
+        // Configure with bet data
+        let viewModel = MyTicketCellViewModel(ticket: betHistoryEntry, allowedCashback: false)
+        brandedShareView.configure(withBetHistoryEntry: betHistoryEntry,
+                                   countryCodes: [],
+                                   viewModel: viewModel,
+                                   grantedWinBoost: nil,
+                                   betShareToken: "\(betHistoryEntry.betslipId ?? 0)")
+        
+        brandedShareView.setNeedsLayout()
+        brandedShareView.layoutIfNeeded()
+
+        brandedShareView.setOnViewReady { [weak self] in
+            self?.hideShareLoadingOverlay()
+            
+            brandedShareView.setNeedsLayout()
+            brandedShareView.layoutIfNeeded()
+            
+            if let shareContent = brandedShareView.generateShareContent() {
+                self?.presentShareActivityViewController(with: shareContent)
+            }
+
+            brandedShareView.removeFromSuperview()
+        }
+    }
+    
+    private func presentShareActivityViewController(with shareContent: ShareContent) {
+        let activityViewController = UIActivityViewController(activityItems: shareContent.activityItems, applicationActivities: nil)
+        
+        // Configure for iPad
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        
+        self.present(activityViewController, animated: true, completion: nil)
     }
 
     private func redrawTableView(withScroll: Bool) {
@@ -389,7 +494,8 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
 
             cell.tappedShareAction = { [weak self] cellSnapshotImage, ticketValue in
                 if let ticketStatus = ticketValue.status {
-                    self?.requestShareActivityView?(cellSnapshotImage, ticketValue.betId, ticketStatus)
+//                    self?.requestShareActivityView?(cellSnapshotImage, ticketValue.betId, ticketStatus)
+                    self?.viewModel.storeSharedBetData(snapshot: cellSnapshotImage, ticket: ticketValue)
                 }
             }
 
