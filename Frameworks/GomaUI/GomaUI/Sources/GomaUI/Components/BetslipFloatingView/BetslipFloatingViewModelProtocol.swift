@@ -44,6 +44,6 @@ public protocol BetslipFloatingViewModelProtocol {
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     
-    /// Handle tap on the betslip button
-    func onBetslipTapped()
+    /// Callback closure for tap on the betslip button
+    var onBetslipTapped: (() -> Void)? { get set }
 }

@@ -7,7 +7,13 @@ import SwiftUI
 public final class BetslipTicketView: UIView {
     
     // MARK: - Properties
-    private let viewModel: BetslipTicketViewModelProtocol
+    public var viewModel: BetslipTicketViewModelProtocol {
+        didSet {
+            // Clear old cancellables and re-setup bindings for new view model
+            cancellables.removeAll()
+            setupBindings()
+        }
+    }
     private var cancellables = Set<AnyCancellable>()
     private var oddsChangeTimer: Timer?
     

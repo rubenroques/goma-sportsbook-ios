@@ -15,6 +15,9 @@ public final class MockEmptyStateActionViewModel: EmptyStateActionViewModelProto
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<EmptyStateActionData, Never>
     
+    // Callback closures
+    public var onActionButtonTapped: (() -> Void)?
+    
     public var dataPublisher: AnyPublisher<EmptyStateActionData, Never> {
         return dataSubject.eraseToAnyPublisher()
     }
@@ -54,11 +57,6 @@ public final class MockEmptyStateActionViewModel: EmptyStateActionViewModelProto
         let newData = EmptyStateActionData(state: currentData.state, title: currentData.title, actionButtonTitle: currentData.actionButtonTitle, image: currentData.image, isEnabled: isEnabled)
         dataSubject.send(newData)
     }
-    
-    public func onActionButtonTapped() {
-        // Mock implementation - in real implementation this would handle the tap
-        print("Action button tapped in mock view model")
-    }
 }
 
 // MARK: - Factory Methods
@@ -66,7 +64,7 @@ public extension MockEmptyStateActionViewModel {
     
     /// Creates a mock view model for logged out state
     static func loggedOutMock() -> MockEmptyStateActionViewModel {
-        return MockEmptyStateActionViewModel(
+        MockEmptyStateActionViewModel(
             state: .loggedOut,
             title: "You need at least 1 selection\nin your betslip to place a bet",
             actionButtonTitle: "Log in to bet",
@@ -76,16 +74,17 @@ public extension MockEmptyStateActionViewModel {
     
     /// Creates a mock view model for logged in state
     static func loggedInMock() -> MockEmptyStateActionViewModel {
-        return MockEmptyStateActionViewModel(
+        MockEmptyStateActionViewModel(
             state: .loggedIn,
             title: "You need at least 1 selection\nin your betslip to place a bet",
+            actionButtonTitle: "Start betting",
             image: UIImage(systemName: "ticket") ?? UIImage()
         )
     }
     
     /// Creates a mock view model for disabled state
     static func disabledMock() -> MockEmptyStateActionViewModel {
-        return MockEmptyStateActionViewModel(
+        MockEmptyStateActionViewModel(
             state: .loggedOut,
             title: "You need at least 1 selection\nin your betslip to place a bet",
             actionButtonTitle: "Log in to bet",

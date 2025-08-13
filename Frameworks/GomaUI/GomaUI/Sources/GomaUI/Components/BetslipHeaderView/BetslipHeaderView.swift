@@ -19,7 +19,7 @@ public final class BetslipHeaderView: UIView {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         view.layer.cornerRadius = 8
         return view
     }()
@@ -171,11 +171,6 @@ public final class BetslipHeaderView: UIView {
     private let viewModel: BetslipHeaderViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
-    // MARK: - Public Properties
-    public var onJoinNowTapped: (() -> Void) = { }
-    public var onLogInTapped: (() -> Void) = { }
-    public var onCloseTapped: (() -> Void) = { }
-    
     // MARK: - Initialization
     public init(viewModel: BetslipHeaderViewModelProtocol) {
         self.viewModel = viewModel
@@ -305,18 +300,15 @@ public final class BetslipHeaderView: UIView {
     
     // MARK: - Actions
     @objc private func handleJoinNowTapped() {
-        viewModel.onJoinNowTapped()
-        onJoinNowTapped()
+        viewModel.onJoinNowTapped?()
     }
     
     @objc private func handleLogInTapped() {
-        viewModel.onLogInTapped()
-        onLogInTapped()
+        viewModel.onLogInTapped?()
     }
     
     @objc private func handleCloseTapped() {
-        viewModel.onCloseTapped()
-        onCloseTapped()
+        viewModel.onCloseTapped?()
     }
 }
 

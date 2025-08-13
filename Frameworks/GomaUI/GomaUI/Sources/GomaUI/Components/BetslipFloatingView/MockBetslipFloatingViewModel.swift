@@ -15,6 +15,9 @@ public final class MockBetslipFloatingViewModel: BetslipFloatingViewModelProtoco
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<BetslipFloatingData, Never>
     
+    // Callback closures
+    public var onBetslipTapped: (() -> Void)?
+    
     public var dataPublisher: AnyPublisher<BetslipFloatingData, Never> {
         return dataSubject.eraseToAnyPublisher()
     }
@@ -39,27 +42,22 @@ public final class MockBetslipFloatingViewModel: BetslipFloatingViewModelProtoco
         let newData = BetslipFloatingData(state: currentData.state, isEnabled: isEnabled)
         dataSubject.send(newData)
     }
-    
-    public func onBetslipTapped() {
-        // Mock implementation - in real implementation this would handle the tap
-        print("Betslip tapped in mock view model")
-    }
 }
 
 // MARK: - Factory Methods
-extension MockBetslipFloatingViewModel {
+public extension MockBetslipFloatingViewModel {
     
-    /// Creates a mock with no tickets state
-    public static func noTicketsMock() -> MockBetslipFloatingViewModel {
-        return MockBetslipFloatingViewModel(state: .noTickets)
+    /// Creates a mock view model for no tickets state
+    static func noTicketsMock() -> MockBetslipFloatingViewModel {
+        MockBetslipFloatingViewModel(state: .noTickets)
     }
     
-    /// Creates a mock with tickets state
-    public static func withTicketsMock(
-        selectionCount: Int = 1,
-        odds: String = "1.55",
-        winBoostPercentage: String? = nil,
-        totalEligibleCount: Int = 3
+    /// Creates a mock view model for with tickets state
+    static func withTicketsMock(
+        selectionCount: Int = 2,
+        odds: String = "2.50",
+        winBoostPercentage: String? = "10%",
+        totalEligibleCount: Int = 6
     ) -> MockBetslipFloatingViewModel {
         let state = BetslipFloatingState.withTickets(
             selectionCount: selectionCount,
@@ -70,25 +68,8 @@ extension MockBetslipFloatingViewModel {
         return MockBetslipFloatingViewModel(state: state)
     }
     
-    /// Creates a mock with win boost activated
-    public static func winBoostActivatedMock() -> MockBetslipFloatingViewModel {
-        let state = BetslipFloatingState.withTickets(
-            selectionCount: 3,
-            odds: "2.45",
-            winBoostPercentage: "3%",
-            totalEligibleCount: 6
-        )
-        return MockBetslipFloatingViewModel(state: state)
-    }
-    
-    /// Creates a mock with multiple selections but no win boost
-    public static func multipleSelectionsMock() -> MockBetslipFloatingViewModel {
-        let state = BetslipFloatingState.withTickets(
-            selectionCount: 2,
-            odds: "3.20",
-            winBoostPercentage: nil,
-            totalEligibleCount: 4
-        )
-        return MockBetslipFloatingViewModel(state: state)
+    /// Creates a mock view model for disabled state
+    static func disabledMock() -> MockBetslipFloatingViewModel {
+        MockBetslipFloatingViewModel(state: .noTickets, isEnabled: false)
     }
 }

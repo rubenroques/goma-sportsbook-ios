@@ -19,6 +19,9 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
     // MARK: - Dependencies
     private let betslipManager: BetslipManager
     
+    // MARK: - Callback closures
+    public var onBetslipTapped: (() -> Void)?
+    
     // MARK: - Protocol Conformance
     public var dataPublisher: AnyPublisher<BetslipFloatingData, Never> {
         return dataSubject.eraseToAnyPublisher()
@@ -95,17 +98,5 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
     public func setEnabled(_ isEnabled: Bool) {
         let newData = BetslipFloatingData(state: currentData.state, isEnabled: isEnabled)
         dataSubject.send(newData)
-    }
-    
-    public func onBetslipTapped() {
-        // Handle betslip tap - this could navigate to betslip screen
-        // For now, just print a message
-        print("Betslip tapped - should navigate to betslip screen")
-        
-        // TODO: Implement navigation to betslip screen
-        // This could be done by:
-        // 1. Using a closure passed from the coordinator
-        // 2. Using a notification
-        // 3. Using a router service
     }
 }

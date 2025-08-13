@@ -59,6 +59,6 @@ public protocol EmptyStateActionViewModelProtocol {
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     
-    /// Handle tap on action button
-    func onActionButtonTapped()
+    /// Callback closure for action button tap
+    var onActionButtonTapped: (() -> Void)? { get set }
 } 

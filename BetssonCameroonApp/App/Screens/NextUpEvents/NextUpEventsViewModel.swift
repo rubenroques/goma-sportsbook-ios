@@ -77,6 +77,7 @@ class NextUpEventsViewModel {
     var onFiltersRequested: (() -> Void) = {
         print("Empty clojure")
     }
+    var onBetslipRequested: (() -> Void)?
 
     // MARK: - Private Properties
     var sport: Sport
@@ -149,6 +150,10 @@ class NextUpEventsViewModel {
         
         // Filters are now managed statefully by parent coordinator
         // No reactive binding to global filter state needed
+        
+        betslipFloatingViewModel.onBetslipTapped = { [weak self] in
+            self?.onBetslipRequested?()
+        }
     }
 
     private func setupFilters() {

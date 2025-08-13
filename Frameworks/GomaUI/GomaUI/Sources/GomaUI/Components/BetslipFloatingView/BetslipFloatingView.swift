@@ -189,9 +189,6 @@ public final class BetslipFloatingView: UIView {
     private let viewModel: BetslipFloatingViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
-    // MARK: - Public Properties
-    public var onBetslipTapped: (() -> Void) = { }
-    
     // MARK: - Constraint Properties (for external access)
     private var circularButtonLeadingConstraint: NSLayoutConstraint?
     private var detailedContainerLeadingConstraint: NSLayoutConstraint?
@@ -450,13 +447,11 @@ public final class BetslipFloatingView: UIView {
     
     // MARK: - Actions
     @objc private func handleTap() {
-        viewModel.onBetslipTapped()
-        onBetslipTapped()
+        viewModel.onBetslipTapped?()
     }
     
     @objc private func handleOpenBetslipTapped() {
-        viewModel.onBetslipTapped()
-        onBetslipTapped()
+        viewModel.onBetslipTapped?()
     }
 }
 
@@ -468,7 +463,7 @@ public final class BetslipFloatingView: UIView {
     PreviewUIView {
         BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .noTickets))
     }
-    .frame(height: 80)
+    .frame(height: 56)
 }
 
 @available(iOS 17.0, *)

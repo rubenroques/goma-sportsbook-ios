@@ -10,11 +10,16 @@ class BetslipCoordinator: Coordinator {
     
     // Services (for production ViewModel)
     private let environment: Environment
-
+    
+    // View model and view controller references
+    private var betslipViewModel: BetslipViewModel?
+    public var betslipViewController: BetslipViewController?
+    
     // Navigation closures
     public var onCloseBetslip: (() -> Void)?
     public var onShowRegistration: (() -> Void)?
     public var onShowLogin: (() -> Void)?
+    public var onEmptyStateAction: (() -> Void)?
     public var onBetPlaced: (() -> Void)?
     
     // MARK: - Initialization
@@ -29,14 +34,16 @@ class BetslipCoordinator: Coordinator {
     // MARK: - Coordinator
     public func start() {
         // Create appropriate ViewModel based on available services
-        let viewModel: BetslipViewModelProtocol
+        var viewModel: BetslipViewModelProtocol
+
+        let betslipViewModel = BetslipViewModel()
+        viewModel = betslipViewModel
         
-        viewModel = BetslipViewModel()
-        
-        let viewController = BetslipViewController(viewModel: viewModel)
-        
+        self.betslipViewModel = betslipViewModel
+                
         // Setup navigation closures in ViewModel
         viewModel.onHeaderCloseTapped = { [weak self] in
+            self?.finish()
             self?.onCloseBetslip?()
         }
         
@@ -48,26 +55,30 @@ class BetslipCoordinator: Coordinator {
             self?.onShowLogin?()
         }
         
+        viewModel.onEmptyStateActionTapped = { [weak self] in
+            self?.onEmptyStateAction?()
+        }
+        
         viewModel.onPlaceBetTapped = { [weak self] in
             self?.onBetPlaced?()
         }
         
-        // Present the view controller
-        navigationController.pushViewController(viewController, animated: true)
+        let viewController = BetslipViewController(viewModel: viewModel)
+        self.betslipViewController = viewController
+
     }
     
     public func finish() {
-        // Remove from navigation stack
-        navigationController.popViewController(animated: true)
+        childCoordinators.removeAll()
+        betslipViewController = nil
+        betslipViewModel = nil
     }
     
     // MARK: - Public Methods
     
-    /// Update the betslip with ticket information
-    public func updateTickets(hasTickets: Bool, count: Int) {
-        // In a real implementation, this would update the ViewModel
-        // For now, we'll just print the update
-        print("BetslipCoordinator: Updated tickets - hasTickets: \(hasTickets), count: \(count)")
+    /// Update the betslip with actual ticket data
+    public func updateTickets(_ tickets: [BettingTicket]) {
+        betslipViewModel?.updateTickets(tickets)
     }
     
     /// Refresh the betslip data

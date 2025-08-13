@@ -26,25 +26,28 @@ public final class BetInfoSubmissionView: UIView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 8
-        stackView.alignment = .fill
+        stackView.spacing = 16
         stackView.distribution = .equalSpacing
         return stackView
     }()
     
-    // Potential winnings row
+    // Bet summary rows using new components
     private lazy var potentialWinningsRow: BetSummaryRowView = {
-        return BetSummaryRowView(title: "POTENTIAL WINNINGS", value: "XAF 0.00")
+        let betSummaryRowView = BetSummaryRowView(viewModel: viewModel.potentialWinningsRowViewModel)
+        betSummaryRowView.translatesAutoresizingMaskIntoConstraints = false
+        return betSummaryRowView
     }()
     
-    // Win bonus row
     private lazy var winBonusRow: BetSummaryRowView = {
-        return BetSummaryRowView(title: "X% WIN BONUS", value: "-XAF 0.00")
+        let betSummaryRowView = BetSummaryRowView(viewModel: viewModel.winBonusRowViewModel)
+        betSummaryRowView.translatesAutoresizingMaskIntoConstraints = false
+        return betSummaryRowView
     }()
     
-    // Payout row
     private lazy var payoutRow: BetSummaryRowView = {
-        return BetSummaryRowView(title: "PAYOUT", value: "XAF 0.00")
+        let betSummaryRowView = BetSummaryRowView(viewModel: viewModel.payoutRowViewModel)
+        betSummaryRowView.translatesAutoresizingMaskIntoConstraints = false
+        return betSummaryRowView
     }()
     
     // Amount text field
@@ -68,23 +71,17 @@ public final class BetInfoSubmissionView: UIView {
         return stackView
     }()
     
-    // Quick add buttons
-    private lazy var quickAdd100Button: QuickAddButton = {
-        return QuickAddButton(amount: 100) { [weak self] in
-            self?.viewModel.onQuickAddTapped(100)
-        }
+    // Quick add buttons using new components
+    private lazy var quickAdd100Button: QuickAddButtonView = {
+        return QuickAddButtonView(viewModel: viewModel.amount100ButtonViewModel)
     }()
     
-    private lazy var quickAdd250Button: QuickAddButton = {
-        return QuickAddButton(amount: 250) { [weak self] in
-            self?.viewModel.onQuickAddTapped(250)
-        }
+    private lazy var quickAdd250Button: QuickAddButtonView = {
+        return QuickAddButtonView(viewModel: viewModel.amount250ButtonViewModel)
     }()
     
-    private lazy var quickAdd500Button: QuickAddButton = {
-        return QuickAddButton(amount: 500) { [weak self] in
-            self?.viewModel.onQuickAddTapped(500)
-        }
+    private lazy var quickAdd500Button: QuickAddButtonView = {
+        return QuickAddButtonView(viewModel: viewModel.amount500ButtonViewModel)
     }()
     
     // Place bet button
@@ -92,7 +89,7 @@ public final class BetInfoSubmissionView: UIView {
         let button = ButtonView(viewModel: viewModel.placeBetButtonViewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.onButtonTapped = { [weak self] in
-            self?.viewModel.onPlaceBetTapped()
+            self?.viewModel.onPlaceBetTapped?()
         }
         return button
     }()
@@ -150,7 +147,6 @@ public final class BetInfoSubmissionView: UIView {
             amountTextField.topAnchor.constraint(equalTo: betSummaryStackView.bottomAnchor, constant: 16),
             amountTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             amountTextField.heightAnchor.constraint(equalToConstant: 52),
-//            amountTextField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
             
             // Quick add buttons stack
             quickAddStackView.leadingAnchor.constraint(equalTo: amountTextField.trailingAnchor, constant: 8),
@@ -183,89 +179,7 @@ public final class BetInfoSubmissionView: UIView {
     
     // MARK: - Rendering
     private func render(data: BetInfoSubmissionData) {
-        // Update bet summary
-        potentialWinningsRow.updateValue(data.potentialWinnings)
-        winBonusRow.updateValue(data.winBonus)
-        payoutRow.updateValue(data.payout)
         
-    }
-}
-
-// MARK: - BetSummaryRowView
-private final class BetSummaryRowView: UIView {
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .semibold, size: 10)
-        label.textColor = StyleProvider.Color.textPrimary
-        return label
-    }()
-    
-    private let valueLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .bold, size: 12)
-        label.textColor = StyleProvider.Color.textPrimary
-        label.textAlignment = .right
-        return label
-    }()
-    
-    init(title: String, value: String) {
-        super.init(frame: .zero)
-        setupSubviews()
-        titleLabel.text = title
-        valueLabel.text = value
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupSubviews() {
-        addSubview(titleLabel)
-        addSubview(valueLabel)
-        
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
-            valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            valueLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            valueLabel.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: 8)
-        ])
-    }
-    
-    func updateValue(_ value: String) {
-        valueLabel.text = value
-    }
-}
-
-// MARK: - QuickAddButton
-private final class QuickAddButton: UIButton {
-    private var action: (() -> Void)?
-    
-    init(amount: Int, action: @escaping () -> Void) {
-        super.init(frame: .zero)
-        self.action = action
-        setupButton(amount: amount)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupButton(amount: Int) {
-        setTitle("+\(amount)", for: .normal)
-        setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
-        titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 12)
-        backgroundColor = StyleProvider.Color.inputBackground
-        layer.cornerRadius = 4
-        
-        addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    }
-    
-    @objc private func buttonTapped() {
-        action?()
     }
 }
 
@@ -289,7 +203,7 @@ private final class QuickAddButton: UIButton {
     ZStack {
         Color.gray.opacity(0.1)
         PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.sampleMock())
+            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.withAmountsMock())
         }
     }
     .frame(height: 200)

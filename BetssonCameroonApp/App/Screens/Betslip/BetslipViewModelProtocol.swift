@@ -5,17 +5,14 @@ import GomaUI
 /// Data model for the betslip view
 public struct BetslipData: Equatable {
     public let isEnabled: Bool
-    public let hasTickets: Bool
-    public let ticketCount: Int
+    public let tickets: [BettingTicket]
     
     public init(
         isEnabled: Bool = true,
-        hasTickets: Bool = false,
-        ticketCount: Int = 0
+        tickets: [BettingTicket] = []
     ) {
         self.isEnabled = isEnabled
-        self.hasTickets = hasTickets
-        self.ticketCount = ticketCount
+        self.tickets = tickets
     }
 }
 
@@ -29,23 +26,19 @@ public protocol BetslipViewModelProtocol {
     
     /// Child view models
     var headerViewModel: BetslipHeaderViewModelProtocol { get }
+    var emptyStateViewModel: EmptyStateActionViewModelProtocol { get }
     var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol { get }
     
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     
-    /// Update ticket information
-    func updateTickets(hasTickets: Bool, count: Int)
+    /// Update tickets with actual ticket data
+    func updateTickets(_ tickets: [BettingTicket])
     
-    /// Handle header close action
-    func onHeaderCloseTapped()
-    
-    /// Handle header join now action
-    func onHeaderJoinNowTapped()
-    
-    /// Handle header log in action
-    func onHeaderLogInTapped()
-    
-    /// Handle place bet action
-    func onPlaceBetTapped()
+    /// Callback closures for coordinator communication
+    var onHeaderCloseTapped: (() -> Void)? { get set }
+    var onHeaderJoinNowTapped: (() -> Void)? { get set }
+    var onHeaderLogInTapped: (() -> Void)? { get set }
+    var onEmptyStateActionTapped: (() -> Void)? { get set }
+    var onPlaceBetTapped: (() -> Void)? { get set }
 } 

@@ -10,8 +10,16 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     
     // Child view models
-    public let headerViewModel: BetslipHeaderViewModelProtocol
-    public let betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
+    public var headerViewModel: BetslipHeaderViewModelProtocol
+    public var emptyStateViewModel: EmptyStateActionViewModelProtocol
+    public var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
+    
+    // Callback closures for coordinator communication
+    public var onHeaderCloseTapped: (() -> Void)?
+    public var onHeaderJoinNowTapped: (() -> Void)?
+    public var onHeaderLogInTapped: (() -> Void)?
+    public var onEmptyStateActionTapped: (() -> Void)?
+    public var onPlaceBetTapped: (() -> Void)?
     
     public var dataPublisher: AnyPublisher<BetslipData, Never> {
         dataSubject.eraseToAnyPublisher()
@@ -23,17 +31,16 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     
     // MARK: - Initialization
     public init() {
-        
-        let initialData = BetslipData(
-            isEnabled: true,
-            hasTickets: false,
-            ticketCount: 0
-        )
+        let initialData = BetslipData(isEnabled: true)
         self.dataSubject = CurrentValueSubject(initialData)
         
         // Initialize child view models
         self.headerViewModel = MockBetslipHeaderViewModel.notLoggedInMock()
+        self.emptyStateViewModel = MockEmptyStateActionViewModel.loggedOutMock()
         self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel.defaultMock()
+        
+        // Wire up child view model callbacks
+        setupChildViewModelCallbacks()
         
         setupBindings()
     }
@@ -44,10 +51,22 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
-                let hasTickets = !tickets.isEmpty
-                let count = tickets.count
-                self?.updateTickets(hasTickets: hasTickets, count: count)
+                
+                self?.updateTickets(tickets)
             }
+            .store(in: &cancellables)
+        
+        Env.userSessionStore.userProfilePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] userProfile in
+                
+                if userProfile != nil {
+                    self?.updateToLoggedInState()
+                }
+                else {
+                    self?.updateToLoggedOutState()
+                }
+            })
             .store(in: &cancellables)
     }
     
@@ -55,65 +74,61 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     public func setEnabled(_ isEnabled: Bool) {
         let newData = BetslipData(
             isEnabled: isEnabled,
-            hasTickets: currentData.hasTickets,
-            ticketCount: currentData.ticketCount
+            tickets: currentData.tickets
         )
         dataSubject.send(newData)
         
         // Update child view models
+        emptyStateViewModel.setEnabled(isEnabled)
         betInfoSubmissionViewModel.setEnabled(isEnabled)
     }
     
-    public func updateTickets(hasTickets: Bool, count: Int) {
+    public func updateTickets(_ tickets: [BettingTicket]) {
         let newData = BetslipData(
             isEnabled: currentData.isEnabled,
-            hasTickets: hasTickets,
-            ticketCount: count
+            tickets: tickets
         )
         dataSubject.send(newData)
-        
-        // Update child view models based on ticket state
-        if hasTickets {
-            updateHeaderToLoggedInState()
-        } else {
-            updateHeaderToNotLoggedInState()
-        }
-        
-        betInfoSubmissionViewModel.setEnabled(hasTickets)
-    }
-    
-    public func onHeaderCloseTapped() {
-        // In a real implementation, this would signal to close the betslip
-        // This would typically be handled by the coordinator
-        print("BetslipViewModel: Header close tapped")
-    }
-    
-    public func onHeaderJoinNowTapped() {
-        // In a real implementation, this would signal to show registration
-        // This would typically be handled by the coordinator
-        print("BetslipViewModel: Header join now tapped")
-    }
-    
-    public func onHeaderLogInTapped() {
-        // In a real implementation, this would signal to show login
-        // This would typically be handled by the coordinator
-        print("BetslipViewModel: Header log in tapped")
-    }
-    
-    public func onPlaceBetTapped() {
-        // In a real implementation, this would submit the bet
-        // This would typically be handled by the coordinator
-        print("BetslipViewModel: Place bet tapped")
     }
     
     // MARK: - Private Methods
-    private func updateHeaderToLoggedInState() {
-        let loggedInState = BetslipHeaderState.loggedIn(balance: "XAF 25,000")
-        headerViewModel.updateState(loggedInState)
+    private func setupChildViewModelCallbacks() {
+        // Wire header view model callbacks to our callbacks
+        headerViewModel.onCloseTapped = { [weak self] in
+            self?.onHeaderCloseTapped?()
+        }
+        
+        headerViewModel.onJoinNowTapped = { [weak self] in
+            self?.onHeaderJoinNowTapped?()
+        }
+        
+        headerViewModel.onLogInTapped = { [weak self] in
+            self?.onHeaderLogInTapped?()
+        }
+        
+        // Wire empty state view model callbacks to our callbacks
+        emptyStateViewModel.onActionButtonTapped = { [weak self] in
+            self?.onEmptyStateActionTapped?()
+        }
+        
+        // Wire bet info submission view model callbacks to our callbacks
+        betInfoSubmissionViewModel.onPlaceBetTapped = { [weak self] in
+            self?.onPlaceBetTapped?()
+        }
     }
     
-    private func updateHeaderToNotLoggedInState() {
+    private func updateToLoggedInState() {
+        let loggedInState = BetslipHeaderState.loggedIn(balance: "XAF 25,000")
+        headerViewModel.updateState(loggedInState)
+        
+        emptyStateViewModel.updateState(.loggedIn)
+    }
+    
+    private func updateToLoggedOutState() {
         let notLoggedInState = BetslipHeaderState.notLoggedIn
         headerViewModel.updateState(notLoggedInState)
+        
+        emptyStateViewModel.updateState(.loggedOut)
+
     }
 } 

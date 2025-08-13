@@ -1,6 +1,6 @@
 import Foundation
-import Combine
 import UIKit
+import Combine
 
 /// Mock implementation of BetInfoSubmissionViewModelProtocol for testing and previews
 public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol {
@@ -9,8 +9,17 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     private let dataSubject: CurrentValueSubject<BetInfoSubmissionData, Never>
     
     // Child view models
-    private let amountTextFieldViewModelInstance: BorderedTextFieldViewModelProtocol
-    private let placeBetButtonViewModelInstance: ButtonViewModelProtocol
+    public var potentialWinningsRowViewModel: BetSummaryRowViewModelProtocol
+    public var winBonusRowViewModel: BetSummaryRowViewModelProtocol
+    public var payoutRowViewModel: BetSummaryRowViewModelProtocol
+    public var amount100ButtonViewModel: QuickAddButtonViewModelProtocol
+    public var amount250ButtonViewModel: QuickAddButtonViewModelProtocol
+    public var amount500ButtonViewModel: QuickAddButtonViewModelProtocol
+    public var amountTextFieldViewModel: BorderedTextFieldViewModelProtocol
+    public var placeBetButtonViewModel: ButtonViewModelProtocol
+    
+    // Callback closures
+    public var onPlaceBetTapped: (() -> Void)?
     
     public var dataPublisher: AnyPublisher<BetInfoSubmissionData, Never> {
         dataSubject.eraseToAnyPublisher()
@@ -20,21 +29,15 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         dataSubject.value
     }
     
-    public var amountTextFieldViewModel: BorderedTextFieldViewModelProtocol {
-        amountTextFieldViewModelInstance
-    }
-    
-    public var placeBetButtonViewModel: ButtonViewModelProtocol {
-        placeBetButtonViewModelInstance
-    }
-    
     // MARK: - Initialization
-    public init(potentialWinnings: String = "XAF 0.00", 
-                winBonus: String = "-XAF 0.00", 
-                payout: String = "XAF 0.00", 
-                amount: String = "", 
-                placeBetAmount: String = "XAF 0", 
-                isEnabled: Bool = false) {
+    public init(
+        potentialWinnings: String = "XAF 0",
+        winBonus: String = "XAF 0",
+        payout: String = "XAF 0",
+        amount: String = "",
+        placeBetAmount: String = "Place Bet XAF 0",
+        isEnabled: Bool = true
+    ) {
         let initialData = BetInfoSubmissionData(
             potentialWinnings: potentialWinnings,
             winBonus: winBonus,
@@ -46,21 +49,34 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         self.dataSubject = CurrentValueSubject(initialData)
         
         // Initialize child view models
-        self.amountTextFieldViewModelInstance = MockBorderedTextFieldViewModel(
+        self.potentialWinningsRowViewModel = MockBetSummaryRowViewModel.potentialWinningsMock()
+        self.winBonusRowViewModel = MockBetSummaryRowViewModel.winBonusMock()
+        self.payoutRowViewModel = MockBetSummaryRowViewModel.payoutMock()
+        self.amount100ButtonViewModel = MockQuickAddButtonViewModel.amount100Mock()
+        self.amount250ButtonViewModel = MockQuickAddButtonViewModel.amount250Mock()
+        self.amount500ButtonViewModel = MockQuickAddButtonViewModel.amount500Mock()
+        self.amountTextFieldViewModel = MockBorderedTextFieldViewModel(
             textFieldData: BorderedTextFieldData(
                 id: "amount",
-                text: amount,
+                text: "",
                 placeholder: "Amount",
-                keyboardType: .numberPad
-            )
-        )
+                visualState: .idle,
+                keyboardType: .decimalPad,
+                textContentType: .flightNumber
+            ))
+        self.placeBetButtonViewModel = MockButtonViewModel(
+            buttonData: ButtonData(
+                id: "place_bet",
+                title: "Place Bet XAF 0",
+                style: .solidBackground,
+                isEnabled: false
+            ))
         
-        self.placeBetButtonViewModelInstance = MockButtonViewModel(buttonData: ButtonData(
-            id: "place_bet",
-            title: "Place Bet \(placeBetAmount)",
-            style: .solidBackground,
-            isEnabled: isEnabled
-        ))
+        // Wire up quick add button callbacks
+        setupQuickAddButtonCallbacks()
+        
+        // Update child view models with initial state
+        updateChildViewModels()
     }
     
     // MARK: - Protocol Methods
@@ -74,6 +90,9 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             isEnabled: currentData.isEnabled
         )
         dataSubject.send(newData)
+        
+        // Update child view models
+        potentialWinningsRowViewModel.updateValue(amount)
     }
     
     public func updateWinBonus(_ amount: String) {
@@ -86,6 +105,9 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             isEnabled: currentData.isEnabled
         )
         dataSubject.send(newData)
+        
+        // Update child view models
+        winBonusRowViewModel.updateValue(amount)
     }
     
     public func updatePayout(_ amount: String) {
@@ -98,6 +120,9 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             isEnabled: currentData.isEnabled
         )
         dataSubject.send(newData)
+        
+        // Update child view models
+        payoutRowViewModel.updateValue(amount)
     }
     
     public func updateAmount(_ amount: String) {
@@ -111,10 +136,9 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         )
         dataSubject.send(newData)
         
-        // Update amount text field
-        if let mockAmountViewModel = amountTextFieldViewModelInstance as? MockBorderedTextFieldViewModel {
-            mockAmountViewModel.updateText(amount)
-        }
+        // Update child view models
+        amountTextFieldViewModel.updateText(amount)
+        updatePlaceBetButtonState()
     }
     
     public func updatePlaceBetAmount(_ amount: String) {
@@ -128,10 +152,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         )
         dataSubject.send(newData)
         
-        // Update place bet button title
-        if let mockButtonViewModel = placeBetButtonViewModelInstance as? MockButtonViewModel {
-            mockButtonViewModel.updateTitle("Place Bet \(amount)")
-        }
+        // Update child view models
+        placeBetButtonViewModel.updateTitle(amount)
     }
     
     public func setEnabled(_ isEnabled: Bool) {
@@ -145,66 +167,91 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         )
         dataSubject.send(newData)
         
-        // Update place bet button enabled state
-        placeBetButtonViewModelInstance.setEnabled(isEnabled)
+        // Update child view models
+        potentialWinningsRowViewModel.setEnabled(isEnabled)
+        winBonusRowViewModel.setEnabled(isEnabled)
+        payoutRowViewModel.setEnabled(isEnabled)
+        amount100ButtonViewModel.setEnabled(isEnabled)
+        amount250ButtonViewModel.setEnabled(isEnabled)
+        amount500ButtonViewModel.setEnabled(isEnabled)
+        amountTextFieldViewModel.setEnabled(isEnabled)
+        placeBetButtonViewModel.setEnabled(isEnabled)
     }
     
     public func onQuickAddTapped(_ amount: Int) {
-        // Mock implementation - in real app this would add the amount to current amount
-        let newAmount = Double(amount)
-        let amountString = String(format: "%.0f", newAmount)
+        let amountString = String(amount)
         updateAmount(amountString)
+        updatePlaceBetAmount("Place Bet XAF \(amountString)")
         
-        // Update the place bet button text and state since amount changed
-        updatePlaceBetAmount("XAF \(amountString)")
-        let isEnabled = !amountString.isEmpty
-        setEnabled(isEnabled)
-    }
-    
-    public func onPlaceBetTapped() {
-        // Mock implementation - in real app this would handle placing the bet
-        print("Place bet tapped with amount: \(currentData.placeBetAmount)")
+        // Update child view models
+        amountTextFieldViewModel.updateText(amountString)
+        placeBetButtonViewModel.updateTitle("Place Bet XAF \(amountString)")
+        placeBetButtonViewModel.setEnabled(true)
     }
     
     public func onAmountChanged(_ amount: String) {
         updateAmount(amount)
-        updatePlaceBetAmount("XAF \(amount.isEmpty ? "0" : amount)")
+        updatePlaceBetButtonState()
+        placeBetButtonViewModel.updateTitle("Place Bet XAF \(amount)")
+    }
+    
+    // MARK: - Private Methods
+    private func setupQuickAddButtonCallbacks() {
+        // Wire quick add button callbacks to our onQuickAddTapped method
+        amount100ButtonViewModel.onButtonTapped = { [weak self] in
+            self?.onQuickAddTapped(100)
+        }
         
-        // Enable/disable place bet button based on amount
-        let isEnabled = !amount.isEmpty
-        setEnabled(isEnabled)
+        amount250ButtonViewModel.onButtonTapped = { [weak self] in
+            self?.onQuickAddTapped(250)
+        }
+        
+        amount500ButtonViewModel.onButtonTapped = { [weak self] in
+            self?.onQuickAddTapped(500)
+        }
+    }
+    
+    private func updateChildViewModels() {
+        potentialWinningsRowViewModel.updateValue(currentData.potentialWinnings)
+        winBonusRowViewModel.updateValue(currentData.winBonus)
+        payoutRowViewModel.updateValue(currentData.payout)
+        amountTextFieldViewModel.updateText(currentData.amount)
+        placeBetButtonViewModel.updateTitle(currentData.placeBetAmount)
+        placeBetButtonViewModel.setEnabled(currentData.isEnabled)
+    }
+    
+    private func updatePlaceBetButtonState() {
+        let isEnabled = !currentData.amount.isEmpty
+        placeBetButtonViewModel.setEnabled(isEnabled)
     }
 }
 
 // MARK: - Factory Methods
 public extension MockBetInfoSubmissionViewModel {
     
-    /// Creates a mock view model with default values
+    /// Creates a mock view model for default state
     static func defaultMock() -> MockBetInfoSubmissionViewModel {
-        return MockBetInfoSubmissionViewModel()
+        MockBetInfoSubmissionViewModel()
     }
     
-    /// Creates a mock view model with sample data
-    static func sampleMock() -> MockBetInfoSubmissionViewModel {
-        return MockBetInfoSubmissionViewModel(
-            potentialWinnings: "XAF 1,250.00",
-            winBonus: "XAF 37.50",
-            payout: "XAF 1,287.50",
-            amount: "500",
-            placeBetAmount: "XAF 500",
-            isEnabled: true
+    /// Creates a mock view model with specific amounts
+    static func withAmountsMock(
+        potentialWinnings: String = "XAF 50,000",
+        winBonus: String = "XAF 5,000",
+        payout: String = "XAF 55,000",
+        amount: String = "10,000"
+    ) -> MockBetInfoSubmissionViewModel {
+        MockBetInfoSubmissionViewModel(
+            potentialWinnings: potentialWinnings,
+            winBonus: winBonus,
+            payout: payout,
+            amount: amount,
+            placeBetAmount: "Place Bet XAF \(amount)"
         )
     }
     
     /// Creates a mock view model for disabled state
     static func disabledMock() -> MockBetInfoSubmissionViewModel {
-        return MockBetInfoSubmissionViewModel(
-            potentialWinnings: "XAF 0.00",
-            winBonus: "-XAF 0.00",
-            payout: "XAF 0.00",
-            amount: "",
-            placeBetAmount: "XAF 0",
-            isEnabled: false
-        )
+        MockBetInfoSubmissionViewModel(isEnabled: false)
     }
 } 

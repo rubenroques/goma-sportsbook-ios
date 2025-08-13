@@ -15,6 +15,11 @@ public final class MockBetslipHeaderViewModel: BetslipHeaderViewModelProtocol {
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<BetslipHeaderData, Never>
     
+    // Callback closures
+    public var onJoinNowTapped: (() -> Void)?
+    public var onLogInTapped: (() -> Void)?
+    public var onCloseTapped: (() -> Void)?
+    
     public var dataPublisher: AnyPublisher<BetslipHeaderData, Never> {
         return dataSubject.eraseToAnyPublisher()
     }
@@ -39,21 +44,6 @@ public final class MockBetslipHeaderViewModel: BetslipHeaderViewModelProtocol {
         let newData = BetslipHeaderData(state: currentData.state, isEnabled: isEnabled)
         dataSubject.send(newData)
     }
-    
-    public func onJoinNowTapped() {
-        // Mock implementation - in real implementation this would handle the tap
-        print("Join Now tapped in mock view model")
-    }
-    
-    public func onLogInTapped() {
-        // Mock implementation - in real implementation this would handle the tap
-        print("Log In tapped in mock view model")
-    }
-    
-    public func onCloseTapped() {
-        // Mock implementation - in real implementation this would handle the tap
-        print("Close tapped in mock view model")
-    }
 }
 
 // MARK: - Factory Methods
@@ -61,16 +51,16 @@ public extension MockBetslipHeaderViewModel {
     
     /// Creates a mock view model for not logged in state
     static func notLoggedInMock() -> MockBetslipHeaderViewModel {
-        return MockBetslipHeaderViewModel(state: .notLoggedIn)
+        MockBetslipHeaderViewModel(state: .notLoggedIn)
     }
     
     /// Creates a mock view model for logged in state
-    static func loggedInMock(balance: String = "XAF 2,000.00") -> MockBetslipHeaderViewModel {
-        return MockBetslipHeaderViewModel(state: .loggedIn(balance: balance))
+    static func loggedInMock(balance: String = "XAF 25,000") -> MockBetslipHeaderViewModel {
+        MockBetslipHeaderViewModel(state: .loggedIn(balance: balance))
     }
     
     /// Creates a mock view model for disabled state
     static func disabledMock() -> MockBetslipHeaderViewModel {
-        return MockBetslipHeaderViewModel(state: .notLoggedIn, isEnabled: false)
+        MockBetslipHeaderViewModel(state: .notLoggedIn, isEnabled: false)
     }
 } 

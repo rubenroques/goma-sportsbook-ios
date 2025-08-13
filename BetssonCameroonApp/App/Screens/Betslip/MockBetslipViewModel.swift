@@ -1,6 +1,6 @@
 import Foundation
-import Combine
 import UIKit
+import Combine
 import GomaUI
 
 /// Mock implementation of BetslipViewModelProtocol for testing and previews
@@ -10,8 +10,16 @@ public final class MockBetslipViewModel: BetslipViewModelProtocol {
     private let dataSubject: CurrentValueSubject<BetslipData, Never>
     
     // Child view models
-    public let headerViewModel: BetslipHeaderViewModelProtocol
-    public let betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
+    public var headerViewModel: BetslipHeaderViewModelProtocol
+    public var emptyStateViewModel: EmptyStateActionViewModelProtocol
+    public var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
+    
+    // Callback closures for coordinator communication
+    public var onHeaderCloseTapped: (() -> Void)?
+    public var onHeaderJoinNowTapped: (() -> Void)?
+    public var onHeaderLogInTapped: (() -> Void)?
+    public var onEmptyStateActionTapped: (() -> Void)?
+    public var onPlaceBetTapped: (() -> Void)?
     
     public var dataPublisher: AnyPublisher<BetslipData, Never> {
         dataSubject.eraseToAnyPublisher()
@@ -22,80 +30,66 @@ public final class MockBetslipViewModel: BetslipViewModelProtocol {
     }
     
     // MARK: - Initialization
-    public init(
-        isEnabled: Bool = true,
-        hasTickets: Bool = false,
-        ticketCount: Int = 0
-    ) {
-        let initialData = BetslipData(
-            isEnabled: isEnabled,
-            hasTickets: hasTickets,
-            ticketCount: ticketCount
-        )
+    public init() {
+        let initialData = BetslipData(isEnabled: true)
         self.dataSubject = CurrentValueSubject(initialData)
         
         // Initialize child view models
         self.headerViewModel = MockBetslipHeaderViewModel.notLoggedInMock()
+        self.emptyStateViewModel = MockEmptyStateActionViewModel.loggedOutMock()
         self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel.defaultMock()
         
-        // Update initial state based on parameters
-        if hasTickets {
-            updateHeaderToLoggedInState()
-        }
+        // Wire up child view model callbacks
+        setupChildViewModelCallbacks()
     }
     
     // MARK: - Protocol Methods
     public func setEnabled(_ isEnabled: Bool) {
         let newData = BetslipData(
             isEnabled: isEnabled,
-            hasTickets: currentData.hasTickets,
-            ticketCount: currentData.ticketCount
+            tickets: currentData.tickets
         )
         dataSubject.send(newData)
         
         // Update child view models
+        emptyStateViewModel.setEnabled(isEnabled)
         betInfoSubmissionViewModel.setEnabled(isEnabled)
     }
     
-    public func updateTickets(hasTickets: Bool, count: Int) {
+    public func updateTickets(_ tickets: [BettingTicket]) {
         let newData = BetslipData(
             isEnabled: currentData.isEnabled,
-            hasTickets: hasTickets,
-            ticketCount: count
+            tickets: tickets
         )
         dataSubject.send(newData)
-        
-        // Update child view models based on ticket state
-        if hasTickets {
-            updateHeaderToLoggedInState()
-        } else {
-            updateHeaderToNotLoggedInState()
-        }
-        
-        betInfoSubmissionViewModel.setEnabled(hasTickets)
-    }
-    
-    public func onHeaderCloseTapped() {
-        // Mock implementation - in real app this would signal to close the betslip
-        print("MockBetslipViewModel: Header close tapped")
-    }
-    
-    public func onHeaderJoinNowTapped() {
-        // Mock implementation - in real app this would signal to show registration
-        print("MockBetslipViewModel: Header join now tapped")
-    }
-    
-    public func onHeaderLogInTapped() {
-        // Mock implementation - in real app this would signal to show login
-        print("MockBetslipViewModel: Header log in tapped")
-    }
-    
-    public func onPlaceBetTapped() {
-        // Mock implementation - in real app this would submit the bet
-        print("MockBetslipViewModel: Place bet tapped")
     }
     
     // MARK: - Private Methods
+    private func setupChildViewModelCallbacks() {
+        // Wire header view model callbacks to our callbacks
+        headerViewModel.onCloseTapped = { [weak self] in
+            self?.onHeaderCloseTapped?()
+        }
+        
+        headerViewModel.onJoinNowTapped = { [weak self] in
+            self?.onHeaderJoinNowTapped?()
+        }
+        
+        headerViewModel.onLogInTapped = { [weak self] in
+            self?.onHeaderLogInTapped?()
+        }
+        
+        // Wire empty state view model callbacks to our callbacks
+        emptyStateViewModel.onActionButtonTapped = { [weak self] in
+            self?.onEmptyStateActionTapped?()
+        }
+        
+        // Wire bet info submission view model callbacks to our callbacks
+        betInfoSubmissionViewModel.onPlaceBetTapped = { [weak self] in
+            self?.onPlaceBetTapped?()
+        }
+    }
+    
     private func updateHeaderToLoggedInState() {
         let loggedInState = BetslipHeaderState.loggedIn(balance: "XAF 25,000")
         headerViewModel.updateState(loggedInState)
@@ -115,18 +109,4 @@ public extension MockBetslipViewModel {
         MockBetslipViewModel()
     }
     
-    /// Creates a mock view model with tickets
-    static func withTicketsMock() -> MockBetslipViewModel {
-        MockBetslipViewModel(
-            hasTickets: true,
-            ticketCount: 2
-        )
-    }
-    
-    /// Creates a mock view model for disabled state
-    static func disabledMock() -> MockBetslipViewModel {
-        MockBetslipViewModel(
-            isEnabled: false
-        )
-    }
 } 

@@ -44,12 +44,8 @@ public protocol BetslipHeaderViewModelProtocol {
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     
-    /// Handle tap on join now button
-    func onJoinNowTapped()
-    
-    /// Handle tap on log in button
-    func onLogInTapped()
-    
-    /// Handle tap on close button
-    func onCloseTapped()
+    /// Callback closures for button taps
+    var onJoinNowTapped: (() -> Void)? { get set }
+    var onLogInTapped: (() -> Void)? { get set }
+    var onCloseTapped: (() -> Void)? { get set }
 } 

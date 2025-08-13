@@ -54,7 +54,15 @@ public final class MockBetslipTicketViewModel: BetslipTicketViewModelProtocol {
     }
     
     public func updateOddsChangeState(_ state: OddsChangeState) {
-        let newData = BetslipTicketData(leagueName: currentData.leagueName, startDate: currentData.startDate, homeTeam: currentData.homeTeam, awayTeam: currentData.awayTeam, selectedTeam: currentData.selectedTeam, oddsValue: currentData.oddsValue, oddsChangeState: state, isEnabled: currentData.isEnabled)
+        let newData = BetslipTicketData(
+            leagueName: currentData.leagueName,
+            startDate: currentData.startDate,
+            homeTeam: currentData.homeTeam,
+            awayTeam: currentData.awayTeam,
+            selectedTeam: currentData.selectedTeam,
+            oddsValue: currentData.oddsValue,
+            oddsChangeState: state
+        )
         dataSubject.send(newData)
     }
     
@@ -72,7 +80,20 @@ public final class MockBetslipTicketViewModel: BetslipTicketViewModelProtocol {
 // MARK: - Factory Methods
 public extension MockBetslipTicketViewModel {
     
-    /// Creates a mock view model for a typical betslip ticket
+    /// Creates a mock view model for skeleton/placeholder state
+    static func skeletonMock() -> MockBetslipTicketViewModel {
+        MockBetslipTicketViewModel(
+            leagueName: "League",
+            startDate: "--:--",
+            homeTeam: "Home Team",
+            awayTeam: "Away Team",
+            selectedTeam: "--",
+            oddsValue: "-.--",
+            oddsChangeState: .none
+        )
+    }
+    
+    /// Creates a mock view model for typical use
     static func typicalMock() -> MockBetslipTicketViewModel {
         return MockBetslipTicketViewModel(
             leagueName: "Premier League",

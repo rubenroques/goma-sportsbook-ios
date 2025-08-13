@@ -1,6 +1,6 @@
 import Foundation
-import Combine
 import UIKit
+import Combine
 
 /// Data model for the bet info submission view
 public struct BetInfoSubmissionData: Equatable {
@@ -11,12 +11,14 @@ public struct BetInfoSubmissionData: Equatable {
     public let placeBetAmount: String
     public let isEnabled: Bool
     
-    public init(potentialWinnings: String = "XAF 0.00", 
-                winBonus: String = "-XAF 0.00", 
-                payout: String = "XAF 0.00", 
-                amount: String = "", 
-                placeBetAmount: String = "XAF 0", 
-                isEnabled: Bool = false) {
+    public init(
+        potentialWinnings: String = "XAF 0",
+        winBonus: String = "XAF 0",
+        payout: String = "XAF 0",
+        amount: String = "",
+        placeBetAmount: String = "Place Bet XAF 0",
+        isEnabled: Bool = true
+    ) {
         self.potentialWinnings = potentialWinnings
         self.winBonus = winBonus
         self.payout = payout
@@ -35,6 +37,12 @@ public protocol BetInfoSubmissionViewModelProtocol {
     var currentData: BetInfoSubmissionData { get }
     
     /// Child view models
+    var potentialWinningsRowViewModel: BetSummaryRowViewModelProtocol { get }
+    var winBonusRowViewModel: BetSummaryRowViewModelProtocol { get }
+    var payoutRowViewModel: BetSummaryRowViewModelProtocol { get }
+    var amount100ButtonViewModel: QuickAddButtonViewModelProtocol { get }
+    var amount250ButtonViewModel: QuickAddButtonViewModelProtocol { get }
+    var amount500ButtonViewModel: QuickAddButtonViewModelProtocol { get }
     var amountTextFieldViewModel: BorderedTextFieldViewModelProtocol { get }
     var placeBetButtonViewModel: ButtonViewModelProtocol { get }
     
@@ -59,8 +67,8 @@ public protocol BetInfoSubmissionViewModelProtocol {
     /// Handle quick add button tap
     func onQuickAddTapped(_ amount: Int)
     
-    /// Handle place bet button tap
-    func onPlaceBetTapped()
+    /// Callback closure for place bet button tap
+    var onPlaceBetTapped: (() -> Void)? { get set }
     
     /// Handle amount text field change
     func onAmountChanged(_ amount: String)

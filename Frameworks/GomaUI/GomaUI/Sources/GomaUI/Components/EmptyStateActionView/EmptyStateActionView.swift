@@ -68,9 +68,6 @@ public final class EmptyStateActionView: UIView {
     private let viewModel: EmptyStateActionViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
-    // MARK: - Public Properties
-    public var onActionButtonTapped: (() -> Void) = { }
-    
     // MARK: - Initialization
     public init(viewModel: EmptyStateActionViewModelProtocol) {
         self.viewModel = viewModel
@@ -165,8 +162,7 @@ public final class EmptyStateActionView: UIView {
     
     // MARK: - Actions
     @objc private func handleActionButtonTapped() {
-        viewModel.onActionButtonTapped()
-        onActionButtonTapped()
+        viewModel.onActionButtonTapped?()
     }
 }
 
