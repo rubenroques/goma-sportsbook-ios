@@ -1,45 +1,66 @@
 //
-//  EveryMatrixAPIConnector.swift
+//  EveryMatrixOddsMatrixAPIConnector.swift
 //  ServicesProvider
 //
-//  Created by André Lascas on 09/07/2025.
+//  Created by André Lascas on 14/08/2025.
 //
 
 import Foundation
 import Combine
 
-class EveryMatrixPlayerAPIConnector: Connector {
-    // Token/session management
-    var token: CurrentValueSubject<String?, Never> = .init(nil)
-    var tokenPublisher: AnyPublisher<String?, Never> { token.eraseToAnyPublisher() }
+class EveryMatrixOddsMatrixAPIConnector: Connector {
+    // Connection state management
     var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> { connectionStateSubject.eraseToAnyPublisher() }
 
+    // Session token management
+    private var sessionToken: String?
+    
     private let session: URLSession
     private let decoder: JSONDecoder
     private var cancellables: Set<AnyCancellable> = []
-    
-    private(set) var sessionToken: EveryMatrixSessionToken?
 
     init(session: URLSession = .shared, decoder: JSONDecoder = JSONDecoder()) {
         self.session = session
         self.decoder = decoder
     }
+    
+    // MARK: - Session Token Management
+    
+    func saveSessionToken(_ token: String) {
+        self.sessionToken = token
+    }
+    
+    func clearSessionToken() {
+        self.sessionToken = nil
+    }
+    
+    private func retrieveSessionToken() -> String? {
+        return self.sessionToken
+    }
 
     func request<T: Decodable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
         
+        // Check if session token is required
+        var additionalHeaders: HTTP.Headers?
+        if endpoint.requireSessionKey {
+            if let sessionToken = self.retrieveSessionToken() {
+                additionalHeaders = ["X-SessionId": sessionToken]
+            } else {
+                return Fail(error: ServiceProviderError.unauthorized).eraseToAnyPublisher()
+            }
+        }
+        
         // Build URLRequest using the Endpoint protocol
-        guard let request = endpoint.request() else {
+        guard let request = endpoint.request(aditionalHeaders: additionalHeaders) else {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
         
-        // Add session token if required
-        var finalRequest = request
-        if endpoint.requireSessionKey, let token = sessionToken?.sessionId {
-            finalRequest.setValue(token, forHTTPHeaderField: "X-SessionId")
-        }
-        
-        return session.dataTaskPublisher(for: finalRequest)
+        return performRequest(request)
+    }
+    
+    private func performRequest<T: Decodable>(_ request: URLRequest) -> AnyPublisher<T, ServiceProviderError> {
+        return session.dataTaskPublisher(for: request)
             .tryMap { result -> Data in
                 // Handle HTTP status codes
                 if let httpResponse = result.response as? HTTPURLResponse {
@@ -53,13 +74,13 @@ class EveryMatrixPlayerAPIConnector: Connector {
                     case 404:
                         throw ServiceProviderError.notSupportedForProvider
                     case 500...599:
-                        // Try to decode the error body
+                        // Try to decode the error body if available
                         if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
                             let errorMessage = apiError.thirdPartyResponse?.message ?? "Server Error"
                             throw ServiceProviderError.errorMessage(message: errorMessage)
                         } else {
                             throw ServiceProviderError.internalServerError
-                                            }
+                        }
                     default:
                         throw ServiceProviderError.unknown
                     }
@@ -93,18 +114,4 @@ class EveryMatrixPlayerAPIConnector: Connector {
             }
             .eraseToAnyPublisher()
     }
-    
-    func updateSessionToken(sessionId: String, id: String) {
-        self.sessionToken = EveryMatrixSessionToken(sessionId: sessionId, id: id)
-    }
-}
-
-public struct EveryMatrixSessionToken {
-    public let sessionId: String
-    public let id: String
-    
-    public init(sessionId: String, id: String) {
-        self.sessionId = sessionId
-        self.id = id
-    }
-}
+} 

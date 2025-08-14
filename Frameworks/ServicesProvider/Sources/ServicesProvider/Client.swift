@@ -70,6 +70,9 @@ public class Client {
         switch self.providerType {
         case .everymatrix:
             
+            // Session Coordinator
+            let sessionCoordinator = EveryMatrixSessionCoordinator()
+            
             // This will trigger the connection to the EM WAMP socket
             let wampConnectionManaget = WAMPManager()
             let everyMatrixConnector = EveryMatrixConnector(wampManager: wampConnectionManaget)
@@ -86,13 +89,21 @@ public class Client {
             
             // Player API for privilegedAccessManager
             let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector()
-            let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(connector: everyMatrixPlayerAPIConnector)
+            
+            let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(
+                connector: everyMatrixPlayerAPIConnector,
+                sessionCoordinator: sessionCoordinator
+            )
 
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
             
             // Casino API
             let everyMatrixCasinoConnector = EveryMatrixCasinoConnector()
             self.casinoProvider = EveryMatrixCasinoProvider(connector: everyMatrixCasinoConnector)
+            
+            // Betting API
+            let everyMatrixBettingProvider = EveryMatrixBettingProvider(sessionCoordinator: sessionCoordinator)
+            self.bettingProvider = everyMatrixBettingProvider
 
         // 
         case .goma:

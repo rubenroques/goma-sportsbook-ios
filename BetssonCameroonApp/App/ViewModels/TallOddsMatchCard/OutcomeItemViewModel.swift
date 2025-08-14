@@ -232,6 +232,7 @@ extension OutcomeItemViewModel {
     static func create(from outcome: Outcome) -> OutcomeItemViewModel {
         let outcomeData = GomaUI.OutcomeItemData(
             id: outcome.id,
+            bettingOfferId: outcome.bettingOffer.id,
             title: outcome.translatedName,
             value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
             oddsChangeDirection: .none,
@@ -250,12 +251,15 @@ extension OutcomeItemViewModel {
     /// Creates with initial data for immediate display while subscription loads
     static func create(
         outcomeId: String,
+        bettingOfferId: String?,
         title: String,
         odds: Double,
         isAvailable: Bool = true
     ) -> OutcomeItemViewModel {
         let outcomeData = GomaUI.OutcomeItemData(
             id: outcomeId,
+            bettingOfferId: bettingOfferId,
+            
             title: title,
             value: OddFormatter.formatOdd(withValue: odds),
             oddsChangeDirection: .none,

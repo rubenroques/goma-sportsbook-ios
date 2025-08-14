@@ -181,6 +181,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     private func createOutcomeData(from outcome: Outcome) -> MarketOutcomeData {
         return MarketOutcomeData(
             id: outcome.id,
+            bettingOfferId: outcome.bettingOffer.id,
             title: outcome.translatedName,
             value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
             oddsChangeDirection: .none,
@@ -239,6 +240,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         if let leftOutcome = displayState.leftOutcome {
             let leftVM = OutcomeItemViewModel.create(
                 outcomeId: leftOutcome.id,
+                bettingOfferId: leftOutcome.bettingOfferId,
                 title: leftOutcome.title,
                 odds: Double(leftOutcome.value) ?? 1.0,
                 isAvailable: !leftOutcome.isDisabled
@@ -250,6 +252,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         if let middleOutcome = displayState.middleOutcome {
             let middleVM = OutcomeItemViewModel.create(
                 outcomeId: middleOutcome.id,
+                bettingOfferId: middleOutcome.bettingOfferId,
                 title: middleOutcome.title,
                 odds: Double(middleOutcome.value) ?? 1.0,
                 isAvailable: !middleOutcome.isDisabled
@@ -261,6 +264,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         if let rightOutcome = displayState.rightOutcome {
             let rightVM = OutcomeItemViewModel.create(
                 outcomeId: rightOutcome.id,
+                bettingOfferId: rightOutcome.bettingOfferId,
                 title: rightOutcome.title,
                 odds: Double(rightOutcome.value) ?? 1.0,
                 isAvailable: !rightOutcome.isDisabled
@@ -336,6 +340,7 @@ extension MarketOutcomesLineViewModel {
     private static func createOutcomeData(from outcome: Outcome) -> MarketOutcomeData {
         return MarketOutcomeData(
             id: outcome.id,
+            bettingOfferId: outcome.bettingOffer.id,
             title: outcome.translatedName,
             value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
             oddsChangeDirection: .none,

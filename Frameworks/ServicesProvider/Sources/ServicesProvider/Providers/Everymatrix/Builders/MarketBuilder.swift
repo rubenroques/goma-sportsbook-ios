@@ -16,7 +16,8 @@ extension EveryMatrix {
             // Get outcomes for this market in original order
             let allOutcomes = store.getAllInOrder(OutcomeDTO.self)
             let allRelations = store.getAllInOrder(MarketOutcomeRelationDTO.self)
-
+            let allBettingOffers = store.getAllInOrder(BettingOfferDTO.self)
+            
             // Find outcomes related to this market
             let relatedOutcomeIds = allRelations
                 .filter { $0.marketId == market.id }

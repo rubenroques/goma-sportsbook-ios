@@ -91,20 +91,21 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         print("Production: Outcome selected: \(outcomeId) for match: \(matchData.matchId)")
         // TODO: Implement betslip management
         
-        let outcome = marketOutcomesViewModelSubject.value.lineViewModels.compactMap { lineVewModel in
-            if lineVewModel.marketStateSubject.value.leftOutcome?.id == outcomeId {
-                return lineVewModel.marketStateSubject.value.leftOutcome
-            } else if lineVewModel.marketStateSubject.value.middleOutcome?.id == outcomeId {
-                return lineVewModel.marketStateSubject.value.middleOutcome
-            } else if lineVewModel.marketStateSubject.value.rightOutcome?.id == outcomeId {
-                return lineVewModel.marketStateSubject.value.rightOutcome
+        let outcome = marketOutcomesViewModelSubject.value.lineViewModels.compactMap { lineViewModel in
+            if lineViewModel.marketStateSubject.value.leftOutcome?.id == outcomeId {
+                print("LINEVM: \(lineViewModel.marketStateSubject.value)")
+                return lineViewModel.marketStateSubject.value.leftOutcome
+            } else if lineViewModel.marketStateSubject.value.middleOutcome?.id == outcomeId {
+                return lineViewModel.marketStateSubject.value.middleOutcome
+            } else if lineViewModel.marketStateSubject.value.rightOutcome?.id == outcomeId {
+                return lineViewModel.marketStateSubject.value.rightOutcome
             }
             return nil
         }.first
         
         let oddDouble = Double(outcome?.value ?? "")
         
-        let bettingTicket = BettingTicket(id: outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil)
+        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil)
         
         
         Env.betslipManager.addBettingTicket(bettingTicket)

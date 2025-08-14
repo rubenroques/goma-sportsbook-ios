@@ -8,11 +8,18 @@ public final class BetslipTicketTableViewCell: UITableViewCell {
     // MARK: - Properties
     public static let reuseIdentifier = "BetslipTicketTableViewCell"
     
+    // Stored view model for callback access
+    private var currentViewModel: BetslipTicketViewModelProtocol?
+    
+    // Callback for ticket removal
+    public var onTicketRemoved: ((BettingTicket) -> Void)?
+    
     // MARK: - UI Components
     
     // Ticket view
-    private lazy var ticketView: BetslipTicketView = {
-        let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.skeletonMock())
+    lazy var ticketView: BetslipTicketView = {
+        let placeholderViewModel = MockBetslipTicketViewModel.skeletonMock()
+        let ticketView = BetslipTicketView(viewModel: placeholderViewModel)
         ticketView.translatesAutoresizingMaskIntoConstraints = false
         return ticketView
     }()
@@ -36,11 +43,12 @@ public final class BetslipTicketTableViewCell: UITableViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Ticket view fills the cell
-            ticketView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            ticketView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            ticketView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            ticketView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120),
+            
+            ticketView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            ticketView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            ticketView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            ticketView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
@@ -49,18 +57,53 @@ public final class BetslipTicketTableViewCell: UITableViewCell {
         backgroundColor = .clear
         selectionStyle = .none
         separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
     }
     
     // MARK: - Configuration
-    public func configure(with viewModel: BetslipTicketViewModelProtocol) {
-        // Set the new view model - the view will automatically re-bind and render
+    public func configure(with viewModel: BetslipTicketViewModelProtocol, ticket: BettingTicket) {
+        
+        currentViewModel = viewModel
+        
+        currentViewModel?.onCloseTapped = { [weak self] in
+            self?.onTicketRemoved?(ticket)
+        }
+        
         ticketView.viewModel = viewModel
+        
+        ticketView.setNeedsLayout()
+        ticketView.layoutIfNeeded()
+        
+        // Invalidate intrinsic content size to force recalculation
+        invalidateIntrinsicContentSize()
+        
+    }
+    
+    // MARK: - View Model Access
+    public var viewModel: BetslipTicketViewModelProtocol? {
+        return currentViewModel
     }
     
     // MARK: - Reuse
     public override func prepareForReuse() {
         super.prepareForReuse()
-        // Reset to skeleton state
-        ticketView.viewModel = MockBetslipTicketViewModel.skeletonMock()
+        
+        // Clear the stored view model reference
+        currentViewModel = nil
+        
+        // Reset to skeleton state with a fresh placeholder view model
+        let skeletonViewModel = MockBetslipTicketViewModel.skeletonMock()
+        ticketView.viewModel = skeletonViewModel
+        
+        // Clear any existing callbacks
+        skeletonViewModel.onCloseTapped = nil
+    }
+    
+    // MARK: - Intrinsic Content Size
+    public override func invalidateIntrinsicContentSize() {
+        super.invalidateIntrinsicContentSize()
+        // Force layout update when intrinsic size changes
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 } 

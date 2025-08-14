@@ -27,7 +27,6 @@ public final class ButtonIconView: UIView {
         button.backgroundColor = .clear
         button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
-        button.addTarget(self, action: #selector(handleButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -70,6 +69,7 @@ public final class ButtonIconView: UIView {
         setupSubviews()
         setupConstraints()
         setupBindings()
+        setupActions()
     }
     
     required init?(coder: NSCoder) {
@@ -117,6 +117,10 @@ public final class ButtonIconView: UIView {
             .store(in: &cancellables)
     }
     
+    private func setupActions() {
+        button.addTarget(self, action: #selector(handleButtonTapped), for: .touchUpInside)
+    }
+    
     // MARK: - Rendering
     private func render(data: ButtonIconData) {
         // Update title
@@ -153,7 +157,7 @@ public final class ButtonIconView: UIView {
     
     // MARK: - Actions
     @objc private func handleButtonTapped() {
-        viewModel.onButtonTapped()
+        viewModel.onButtonTapped?()
     }
 }
 

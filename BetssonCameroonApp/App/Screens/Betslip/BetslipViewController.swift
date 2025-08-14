@@ -7,7 +7,7 @@ import GomaUI
 public final class BetslipViewController: UIViewController {
     
     // MARK: - Properties
-    private let viewModel: BetslipViewModelProtocol
+    private var viewModel: BetslipViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
@@ -16,7 +16,7 @@ public final class BetslipViewController: UIViewController {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         return view
     }()
     
@@ -25,6 +25,29 @@ public final class BetslipViewController: UIViewController {
         let headerView = BetslipHeaderView(viewModel: viewModel.headerViewModel)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         return headerView
+    }()
+    
+    // Button bar view (Booking Code + Clear Betslip)
+    private lazy var buttonBarView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        return view
+    }()
+    
+    // Booking Code button
+    private lazy var bookingCodeButton: ButtonIconView = {
+        let button = ButtonIconView(viewModel: viewModel.bookingCodeButtonViewModel)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isHidden = true // Hidden for now as requested
+        return button
+    }()
+    
+    // Clear Betslip button
+    private lazy var clearBetslipButton: ButtonIconView = {
+        let button = ButtonIconView(viewModel: viewModel.clearBetslipButtonViewModel)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     // Empty state wrapper view
@@ -48,9 +71,6 @@ public final class BetslipViewController: UIViewController {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.register(BetslipTicketTableViewCell.self, forCellReuseIdentifier: BetslipTicketTableViewCell.reuseIdentifier)
-        tableView.delegate = self
-        tableView.dataSource = self
         return tableView
     }()
     
@@ -70,22 +90,27 @@ public final class BetslipViewController: UIViewController {
         setupSubviews()
         setupConstraints()
         setupBindings()
+        setupTableView()
     }
     
     // MARK: - Setup
     private func setupSubviews() {
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
-        
         view.addSubview(containerView)
+        
         containerView.addSubview(headerView)
+        containerView.addSubview(buttonBarView)
         containerView.addSubview(emptyStateView)
-        containerView.addSubview(betInfoSubmissionView)
         containerView.addSubview(ticketsTableView)
+        containerView.addSubview(betInfoSubmissionView)
+        
+        // Add buttons to button bar
+        buttonBarView.addSubview(bookingCodeButton)
+        buttonBarView.addSubview(clearBetslipButton)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Container
+            // Container view
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -95,6 +120,23 @@ public final class BetslipViewController: UIViewController {
             headerView.topAnchor.constraint(equalTo: containerView.topAnchor),
             headerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 52),
+            
+            // Button bar view
+            buttonBarView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            buttonBarView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            buttonBarView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            buttonBarView.heightAnchor.constraint(equalToConstant: 50),
+            
+            // Booking Code button
+            bookingCodeButton.topAnchor.constraint(equalTo: buttonBarView.topAnchor, constant: 8),
+            bookingCodeButton.leadingAnchor.constraint(equalTo: buttonBarView.leadingAnchor, constant: 16),
+            bookingCodeButton.bottomAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: -8),
+            
+            // Clear Betslip button
+            clearBetslipButton.topAnchor.constraint(equalTo: buttonBarView.topAnchor, constant: 8),
+            clearBetslipButton.trailingAnchor.constraint(equalTo: buttonBarView.trailingAnchor, constant: -16),
+            clearBetslipButton.bottomAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: -8),
             
             // Empty state view (initially hidden)
             emptyStateView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
@@ -103,26 +145,35 @@ public final class BetslipViewController: UIViewController {
             emptyStateView.bottomAnchor.constraint(equalTo: betInfoSubmissionView.topAnchor),
             
             // Tickets table view
-            ticketsTableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            ticketsTableView.topAnchor.constraint(equalTo: buttonBarView.bottomAnchor),
             ticketsTableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             ticketsTableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             ticketsTableView.bottomAnchor.constraint(equalTo: betInfoSubmissionView.topAnchor),
             
             // Bet info submission view
-            betInfoSubmissionView.topAnchor.constraint(greaterThanOrEqualTo: headerView.bottomAnchor, constant: 50),
             betInfoSubmissionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             betInfoSubmissionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            betInfoSubmissionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            betInfoSubmissionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
     
     private func setupBindings() {
+        // Bind to view model data
         viewModel.dataPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 self?.render(data: data)
             }
             .store(in: &cancellables)
+        
+        // Wire up button actions from view models
+        viewModel.clearBetslipButtonViewModel.onButtonTapped = { [weak self] in
+            self?.handleClearBetslipTapped()
+        }
+        
+        viewModel.bookingCodeButtonViewModel.onButtonTapped = { [weak self] in
+            self?.handleBookingCodeTapped()
+        }
     }
     
     // MARK: - Rendering
@@ -139,9 +190,71 @@ public final class BetslipViewController: UIViewController {
             // Show tickets table, hide empty state
             emptyStateView.isHidden = true
             ticketsTableView.isHidden = false
+            
+            // Update existing cells if possible, only reload if necessary
+            let currentCount = ticketsTableView.numberOfRows(inSection: 0)
+            if currentCount == data.tickets.count {
+                // Update existing cells
+                for (index, ticket) in data.tickets.enumerated() {
+                    let indexPath = IndexPath(row: index, section: 0)
+                    updateTicketCell(at: indexPath, with: ticket)
+                }
+            } else {
+                // Reload only if count changed
+                ticketsTableView.reloadData()
+            }
         }
         
-        ticketsTableView.reloadData()
+        // betInfoSubmissionView is always visible
+    }
+    
+    private func removeTicket(_ ticket: BettingTicket) {
+        viewModel.removeTicket(ticket)
+    }
+    
+    private func handleClearBetslipTapped() {
+        // Clear all tickets from the betslip
+        viewModel.clearAllTickets()
+    }
+    
+    private func handleBookingCodeTapped() {
+        // TODO: Implement booking code functionality
+        print("Booking code button tapped - functionality to be implemented")
+    }
+    
+    private func updateTicketCell(at indexPath: IndexPath, with ticket: BettingTicket) {
+        guard let cell = ticketsTableView.cellForRow(at: indexPath) as? BetslipTicketTableViewCell else { return }
+        
+        // Create a new view model with the actual ticket data
+        let ticketViewModel = MockBetslipTicketViewModel(
+            leagueName: ticket.competition ?? "Unknown League",
+            startDate: ticket.date?.formatted() ?? "Unknown Date",
+            homeTeam: ticket.homeParticipantName ?? "Home Team",
+            awayTeam: ticket.awayParticipantName ?? "Away Team",
+            selectedTeam: ticket.outcomeDescription,
+            oddsValue: String(format: "%.2f", ticket.decimalOdd),
+            oddsChangeState: .none
+        )
+        
+        // Configure the cell with the new view model and ticket
+        cell.onTicketRemoved = { [weak self] removedTicket in
+            self?.removeTicket(removedTicket)
+        }
+        cell.configure(with: ticketViewModel, ticket: ticket)
+    }
+    
+    private func setupTableView() {
+        ticketsTableView.delegate = self
+        ticketsTableView.dataSource = self
+        ticketsTableView.register(BetslipTicketTableViewCell.self, forCellReuseIdentifier: BetslipTicketTableViewCell.reuseIdentifier)
+        
+        // Configure table view for dynamic heights
+        ticketsTableView.rowHeight = UITableView.automaticDimension
+        ticketsTableView.estimatedRowHeight = 120
+        
+        // Ensure proper content sizing
+        ticketsTableView.setContentHuggingPriority(.required, for: .vertical)
+        ticketsTableView.setContentCompressionResistancePriority(.required, for: .vertical)
     }
 }
 
@@ -176,8 +289,12 @@ extension BetslipViewController: UITableViewDataSource {
             oddsChangeState: .none
         )
         
-        // Configure the cell with the new view model
-        cell.configure(with: ticketViewModel)
+        // Configure the cell with the new view model and ticket
+        cell.onTicketRemoved = { [weak self] removedTicket in
+            self?.removeTicket(removedTicket)
+        }
+        
+        cell.configure(with: ticketViewModel, ticket: ticket)
         return cell
     }
 }
@@ -192,6 +309,18 @@ extension BetslipViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        cell.setNeedsLayout()
+        cell.layoutIfNeeded()
+        
+        // Force the cell to maintain its height
+        if let ticketCell = cell as? BetslipTicketTableViewCell {
+            ticketCell.invalidateIntrinsicContentSize()
+        }
+    }
+    
 }
 
 // MARK: - EmptyStateView Wrapper

@@ -142,6 +142,7 @@ extension EveryMatrixModelMapper {
             name: internalOutcome.shortName ?? internalOutcome.name,
             odd: OddFormat.decimal(odd: odds),
             marketId: nil, // Not available at outcome level
+            bettingOfferId: bestOffer?.id,
             orderValue: internalOutcome.headerNameKey, // position in home/draw/away
             externalReference: nil, // Not available in EveryMatrix
             isTradable: isTradable,

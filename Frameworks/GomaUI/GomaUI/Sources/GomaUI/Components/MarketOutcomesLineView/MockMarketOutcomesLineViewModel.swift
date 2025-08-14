@@ -77,6 +77,7 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
 
         let updatedOutcome = MarketOutcomeData(
             id: currentOutcome.id,
+            bettingOfferId: currentOutcome.bettingOfferId,
             title: currentOutcome.title,
             value: value,
             oddsChangeDirection: changeDirection,
@@ -129,6 +130,7 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         // Convert MarketOutcomeData to OutcomeItemData
         let outcomeItemData = OutcomeItemData(
             id: outcomeData.id,
+            bettingOfferId: outcomeData.bettingOfferId,
             title: outcomeData.title,
             value: outcomeData.value,
             oddsChangeDirection: outcomeData.oddsChangeDirection,
@@ -204,6 +206,7 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
 
         let updatedOutcome = MarketOutcomeData(
             id: currentOutcome.id,
+            bettingOfferId: currentOutcome.bettingOfferId,
             title: currentOutcome.title,
             value: currentOutcome.value,
             oddsChangeDirection: currentOutcome.oddsChangeDirection,
@@ -226,6 +229,7 @@ extension MockMarketOutcomesLineViewModel {
             displayMode: .triple,
             leftOutcome: MarketOutcomeData(
                 id: "home",
+                bettingOfferId: nil,
                 title: "Home",
                 value: "1.85",
                 oddsChangeDirection: .none,
@@ -234,6 +238,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             middleOutcome: MarketOutcomeData(
                 id: "draw",
+                bettingOfferId: nil,
                 title: "Draw",
                 value: "3.55",
                 oddsChangeDirection: .none,
@@ -242,6 +247,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             rightOutcome: MarketOutcomeData(
                 id: "away",
+                bettingOfferId: nil,
                 title: "Away",
                 value: "4.20",
                 oddsChangeDirection: .none,
@@ -257,6 +263,7 @@ extension MockMarketOutcomesLineViewModel {
             displayMode: .double,
             leftOutcome: MarketOutcomeData(
                 id: "under",
+                bettingOfferId: nil,
                 title: "Under 2.5",
                 value: "1.95",
                 oddsChangeDirection: .none,
@@ -266,6 +273,7 @@ extension MockMarketOutcomesLineViewModel {
             middleOutcome: nil,
             rightOutcome: MarketOutcomeData(
                 id: "over",
+                bettingOfferId: nil,
                 title: "Over 2.5",
                 value: "1.85",
                 oddsChangeDirection: .none,
@@ -281,6 +289,7 @@ extension MockMarketOutcomesLineViewModel {
             displayMode: .triple,
             leftOutcome: MarketOutcomeData(
                 id: "home",
+                bettingOfferId: nil,
                 title: "Home",
                 value: "1.85",
                 oddsChangeDirection: .none,
@@ -289,6 +298,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             middleOutcome: MarketOutcomeData(
                 id: "draw",
+                bettingOfferId: nil,
                 title: "Draw",
                 value: "3.55",
                 oddsChangeDirection: .none,
@@ -297,6 +307,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             rightOutcome: MarketOutcomeData(
                 id: "away",
+                bettingOfferId: nil,
                 title: "Away",
                 value: "4.20",
                 oddsChangeDirection: .none,
@@ -312,6 +323,7 @@ extension MockMarketOutcomesLineViewModel {
             displayMode: .triple,
             leftOutcome: MarketOutcomeData(
                 id: "home",
+                bettingOfferId: nil,
                 title: "Home",
                 value: "1.90",
                 oddsChangeDirection: .up,
@@ -320,6 +332,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             middleOutcome: MarketOutcomeData(
                 id: "draw",
+                bettingOfferId: nil,
                 title: "Draw",
                 value: "3.55",
                 oddsChangeDirection: .none,
@@ -328,6 +341,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             rightOutcome: MarketOutcomeData(
                 id: "away",
+                bettingOfferId: nil,
                 title: "Away",
                 value: "4.10",
                 oddsChangeDirection: .down,
@@ -343,6 +357,7 @@ extension MockMarketOutcomesLineViewModel {
             displayMode: .triple,
             leftOutcome: MarketOutcomeData(
                 id: "home",
+                bettingOfferId: nil,
                 title: "Home",
                 value: "1.85",
                 oddsChangeDirection: .none,
@@ -351,6 +366,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             middleOutcome: MarketOutcomeData(
                 id: "draw",
+                bettingOfferId: nil,
                 title: "Draw",
                 value: "3.55",
                 oddsChangeDirection: .none,
@@ -359,6 +375,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             rightOutcome: MarketOutcomeData(
                 id: "away",
+                bettingOfferId: nil,
                 title: "Away",
                 value: "4.20",
                 oddsChangeDirection: .none,
@@ -388,6 +405,7 @@ extension MockMarketOutcomesLineViewModel {
             displayMode: .triple,
             leftOutcome: MarketOutcomeData(
                 id: "1x",
+                bettingOfferId: nil,
                 title: "1X",
                 value: "1.25",
                 oddsChangeDirection: .none,
@@ -396,6 +414,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             middleOutcome: MarketOutcomeData(
                 id: "12",
+                bettingOfferId: nil,
                 title: "12",
                 value: "1.15",
                 oddsChangeDirection: .none,
@@ -404,6 +423,7 @@ extension MockMarketOutcomesLineViewModel {
             ),
             rightOutcome: MarketOutcomeData(
                 id: "x2",
+                bettingOfferId: nil,
                 title: "X2",
                 value: "2.10",
                 oddsChangeDirection: .none,
@@ -419,6 +439,7 @@ extension MockMarketOutcomesLineViewModel {
             displayMode: .double,
             leftOutcome: MarketOutcomeData(
                 id: "home_handicap",
+                bettingOfferId: nil,
                 title: "Home -1.5",
                 value: "2.15",
                 oddsChangeDirection: .none,
@@ -428,6 +449,7 @@ extension MockMarketOutcomesLineViewModel {
             middleOutcome: nil,
             rightOutcome: MarketOutcomeData(
                 id: "away_handicap",
+                bettingOfferId: nil,
                 title: "Away +1.5",
                 value: "1.75",
                 oddsChangeDirection: .none,

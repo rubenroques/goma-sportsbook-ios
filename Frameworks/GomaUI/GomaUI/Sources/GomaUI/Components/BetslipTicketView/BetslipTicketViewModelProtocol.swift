@@ -33,7 +33,7 @@ public struct BetslipTicketData: Equatable {
 }
 
 /// Protocol defining the interface for BetslipTicketView ViewModels
-public protocol BetslipTicketViewModelProtocol {
+public protocol BetslipTicketViewModelProtocol: AnyObject {
     /// Publisher for the betslip ticket data
     var dataPublisher: AnyPublisher<BetslipTicketData, Never> { get }
     
@@ -64,6 +64,6 @@ public protocol BetslipTicketViewModelProtocol {
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     
-    /// Handle close button tap
-    func onCloseTapped()
+    /// Callback closure for close button tap
+    var onCloseTapped: (() -> Void)? { get set }
 } 

@@ -248,18 +248,24 @@ public final class BetslipTicketView: UIView {
     
     // MARK: - Rendering
     private func render(data: BetslipTicketData) {
+        
         // Update league and date info
         leagueDateLabel.text = "\(data.leagueName) • \(data.startDate)"
+        leagueDateLabel.isHidden = false
         
         // Update teams
         homeTeamLabel.text = data.homeTeam
+        homeTeamLabel.isHidden = false
         awayTeamLabel.text = data.awayTeam
+        awayTeamLabel.isHidden = false
         
         // Update selected team
         outcomeLabel.text = data.selectedTeam
+        outcomeLabel.isHidden = false
         
         // Update odds value
         oddsValueLabel.text = data.oddsValue
+        oddsValueLabel.isHidden = false
         
         // Update odds change state
         updateOddsChangeIndicator(data.oddsChangeState)
@@ -268,6 +274,11 @@ public final class BetslipTicketView: UIView {
         alpha = data.isEnabled ? 1.0 : 0.5
         isUserInteractionEnabled = data.isEnabled
         closeButton.isEnabled = data.isEnabled
+        
+        // Force layout update to ensure proper sizing
+        setNeedsLayout()
+        layoutIfNeeded()
+        
     }
     
     private func updateOddsChangeIndicator(_ state: OddsChangeState) {
@@ -367,7 +378,7 @@ public final class BetslipTicketView: UIView {
     
     // MARK: - Actions
     @objc private func handleCloseTapped() {
-        viewModel.onCloseTapped()
+        viewModel.onCloseTapped?()
     }
     
     // MARK: - Deinit

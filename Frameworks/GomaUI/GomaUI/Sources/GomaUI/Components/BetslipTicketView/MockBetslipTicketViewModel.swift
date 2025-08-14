@@ -71,10 +71,8 @@ public final class MockBetslipTicketViewModel: BetslipTicketViewModelProtocol {
         dataSubject.send(newData)
     }
     
-    public func onCloseTapped() {
-        // Mock implementation - in real app this would remove the ticket
-        print("Close button tapped")
-    }
+    // Callback closures
+    public var onCloseTapped: (() -> Void)?
 }
 
 // MARK: - Factory Methods

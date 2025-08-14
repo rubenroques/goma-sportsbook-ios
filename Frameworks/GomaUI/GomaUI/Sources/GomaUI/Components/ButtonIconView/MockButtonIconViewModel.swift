@@ -39,14 +39,16 @@ public final class MockButtonIconViewModel: ButtonIconViewModelProtocol {
     }
     
     public func setEnabled(_ isEnabled: Bool) {
-        let newData = ButtonIconData(title: currentData.title, icon: currentData.icon, layoutType: currentData.layoutType, isEnabled: isEnabled)
-        dataSubject.send(newData)
+        dataSubject.send(ButtonIconData(
+            title: currentData.title,
+            icon: currentData.icon,
+            layoutType: currentData.layoutType,
+            isEnabled: isEnabled
+        ))
     }
     
-    public func onButtonTapped() {
-        // Mock implementation - in real app this would handle the button tap
-        print("Button tapped: \(currentData.title)")
-    }
+    // MARK: - Callbacks
+    public var onButtonTapped: (() -> Void)?
 }
 
 // MARK: - Factory Methods

@@ -78,6 +78,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "over_under_0_5",
                 leftOutcome: MarketOutcomeData(
                     id: "over_0_5",
+                    bettingOfferId: nil,
                     title: "Over 0.5",
                     value: "1.80",
                     oddsChangeDirection: .none,
@@ -87,6 +88,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "under_0_5",
+                    bettingOfferId: nil,
                     title: "Under 0.5",
                     value: "3.20",
                     oddsChangeDirection: .none,
@@ -100,6 +102,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "over_under_1_0",
                 leftOutcome: MarketOutcomeData(
                     id: "over_1_0",
+                    bettingOfferId: nil,
                     title: "Over 1.0",
                     value: "1.80",
                     oddsChangeDirection: .none,
@@ -109,6 +112,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "under_1_0",
+                    bettingOfferId: nil,
                     title: "Under 1.0",
                     value: "3.20",
                     oddsChangeDirection: .none,
@@ -122,6 +126,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "over_under_1_5",
                 leftOutcome: MarketOutcomeData(
                     id: "over_1_5",
+                    bettingOfferId: nil,
                     title: "Over 1.5",
                     value: "1.80",
                     oddsChangeDirection: .none,
@@ -131,6 +136,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "under_1_5",
+                    bettingOfferId: nil,
                     title: "Under 1.5",
                     value: "3.20",
                     oddsChangeDirection: .none,
@@ -158,6 +164,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "full_time_1x2",
                 leftOutcome: MarketOutcomeData(
                     id: "home_ft",
+                    bettingOfferId: nil,
                     title: "Home",
                     value: "1.85",
                     oddsChangeDirection: .none,
@@ -166,6 +173,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 ),
                 middleOutcome: MarketOutcomeData(
                     id: "draw_ft",
+                    bettingOfferId: nil,
                     title: "Draw",
                     value: "3.55",
                     oddsChangeDirection: .none,
@@ -174,6 +182,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 ),
                 rightOutcome: MarketOutcomeData(
                     id: "away_ft",
+                    bettingOfferId: nil,
                     title: "Away",
                     value: "4.20",
                     oddsChangeDirection: .none,
@@ -187,6 +196,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "half_time_1x2",
                 leftOutcome: MarketOutcomeData(
                     id: "home_ht",
+                    bettingOfferId: nil,
                     title: "Home",
                     value: "2.10",
                     oddsChangeDirection: .none,
@@ -195,6 +205,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 ),
                 middleOutcome: MarketOutcomeData(
                     id: "draw_ht",
+                    bettingOfferId: nil,
                     title: "Draw",
                     value: "2.05",
                     oddsChangeDirection: .none,
@@ -203,6 +214,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 ),
                 rightOutcome: MarketOutcomeData(
                     id: "away_ht",
+                    bettingOfferId: nil,
                     title: "Away",
                     value: "5.50",
                     oddsChangeDirection: .none,
@@ -229,6 +241,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "over_under_0_5",
                 leftOutcome: MarketOutcomeData(
                     id: "over_0_5",
+                    bettingOfferId: nil,
                     title: "Over 0.5",
                     value: "1.80",
                     oddsChangeDirection: .none,
@@ -238,6 +251,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "under_0_5",
+                    bettingOfferId: nil,
                     title: "Under 0.5",
                     value: "3.20",
                     oddsChangeDirection: .none,
@@ -251,6 +265,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "over_under_1_5",
                 leftOutcome: MarketOutcomeData(
                     id: "over_1_5",
+                    bettingOfferId: nil,
                     title: "Over 1.5",
                     value: "1.80",
                     oddsChangeDirection: .none,
@@ -260,6 +275,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "under_1_5",
+                    bettingOfferId: nil,
                     title: "Under 1.5",
                     value: "3.20",
                     oddsChangeDirection: .none,
@@ -273,6 +289,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "over_under_2_5",
                 leftOutcome: MarketOutcomeData(
                     id: "over_2_5",
+                    bettingOfferId: nil,
                     title: "Over 2.5",
                     value: "2.10",
                     oddsChangeDirection: .none,
@@ -282,6 +299,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "under_2_5",
+                    bettingOfferId: nil,
                     title: "Under 2.5",
                     value: "1.75",
                     oddsChangeDirection: .none,
@@ -309,6 +327,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "match_result",
                 leftOutcome: MarketOutcomeData(
                     id: "home",
+                    bettingOfferId: nil,
                     title: "Home",
                     value: "1.85",
                     oddsChangeDirection: .none,
@@ -317,6 +336,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 ),
                 middleOutcome: MarketOutcomeData(
                     id: "draw",
+                    bettingOfferId: nil,
                     title: "Draw",
                     value: "3.55",
                     oddsChangeDirection: .none,
@@ -325,6 +345,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 ),
                 rightOutcome: MarketOutcomeData(
                     id: "away",
+                    bettingOfferId: nil,
                     title: "Away",
                     value: "4.20",
                     oddsChangeDirection: .none,
@@ -338,6 +359,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "both_teams_score",
                 leftOutcome: MarketOutcomeData(
                     id: "yes_btts",
+                    bettingOfferId: nil,
                     title: "Yes",
                     value: "1.90",
                     oddsChangeDirection: .none,
@@ -347,6 +369,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "no_btts",
+                    bettingOfferId: nil,
                     title: "No",
                     value: "1.85",
                     oddsChangeDirection: .none,
@@ -374,6 +397,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "over_under_2_5",
                 leftOutcome: MarketOutcomeData(
                     id: "over_2_5",
+                    bettingOfferId: nil,
                     title: "Over 2.5",
                     value: "1.95",
                     oddsChangeDirection: .up,
@@ -383,6 +407,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "under_2_5",
+                    bettingOfferId: nil,
                     title: "Under 2.5",
                     value: "1.80",
                     oddsChangeDirection: .down,
@@ -396,6 +421,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 id: "over_under_3_5",
                 leftOutcome: MarketOutcomeData(
                     id: "over_3_5",
+                    bettingOfferId: nil,
                     title: "Over 3.5",
                     value: "3.20",
                     oddsChangeDirection: .none,
@@ -405,6 +431,7 @@ extension MockMarketOutcomesMultiLineViewModel {
                 middleOutcome: nil,
                 rightOutcome: MarketOutcomeData(
                     id: "under_3_5",
+                    bettingOfferId: nil,
                     title: "Under 3.5",
                     value: "1.35",
                     oddsChangeDirection: .none,

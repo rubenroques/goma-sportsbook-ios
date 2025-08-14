@@ -28,12 +28,20 @@ public protocol BetslipViewModelProtocol {
     var headerViewModel: BetslipHeaderViewModelProtocol { get }
     var emptyStateViewModel: EmptyStateActionViewModelProtocol { get }
     var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol { get }
+    var bookingCodeButtonViewModel: ButtonIconViewModelProtocol { get set }
+    var clearBetslipButtonViewModel: ButtonIconViewModelProtocol { get set }
     
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     
     /// Update tickets with actual ticket data
     func updateTickets(_ tickets: [BettingTicket])
+    
+    /// Remove a specific ticket
+    func removeTicket(_ ticket: BettingTicket)
+    
+    /// Clear all tickets from the betslip
+    func clearAllTickets()
     
     /// Callback closures for coordinator communication
     var onHeaderCloseTapped: (() -> Void)? { get set }

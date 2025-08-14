@@ -9,10 +9,12 @@ public final class MockBetslipViewModel: BetslipViewModelProtocol {
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<BetslipData, Never>
     
-    // Child view models
+    // MARK: - Child View Models
     public var headerViewModel: BetslipHeaderViewModelProtocol
     public var emptyStateViewModel: EmptyStateActionViewModelProtocol
     public var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
+    public var bookingCodeButtonViewModel: ButtonIconViewModelProtocol
+    public var clearBetslipButtonViewModel: ButtonIconViewModelProtocol
     
     // Callback closures for coordinator communication
     public var onHeaderCloseTapped: (() -> Void)?
@@ -31,15 +33,16 @@ public final class MockBetslipViewModel: BetslipViewModelProtocol {
     
     // MARK: - Initialization
     public init() {
-        let initialData = BetslipData(isEnabled: true)
-        self.dataSubject = CurrentValueSubject(initialData)
+        self.dataSubject = CurrentValueSubject(BetslipData(isEnabled: true))
         
         // Initialize child view models
         self.headerViewModel = MockBetslipHeaderViewModel.notLoggedInMock()
         self.emptyStateViewModel = MockEmptyStateActionViewModel.loggedOutMock()
         self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel.defaultMock()
+        self.bookingCodeButtonViewModel = MockButtonIconViewModel.bookingCodeMock()
+        self.clearBetslipButtonViewModel = MockButtonIconViewModel.clearBetslipMock()
         
-        // Wire up child view model callbacks
+        // Setup child view model callbacks
         setupChildViewModelCallbacks()
     }
     
@@ -62,6 +65,28 @@ public final class MockBetslipViewModel: BetslipViewModelProtocol {
             tickets: tickets
         )
         dataSubject.send(newData)
+    }
+    
+    public func removeTicket(_ ticket: BettingTicket) {
+        var updatedTickets = currentData.tickets
+        updatedTickets.removeAll { $0.id == ticket.id }
+        
+        if updatedTickets.isEmpty {
+            updateHeaderToNotLoggedInState()
+        }
+        
+        dataSubject.send(BetslipData(
+            isEnabled: currentData.isEnabled,
+            tickets: updatedTickets
+        ))
+    }
+    
+    public func clearAllTickets() {
+        dataSubject.send(BetslipData(
+            isEnabled: currentData.isEnabled,
+            tickets: []
+        ))
+        updateHeaderToNotLoggedInState()
     }
     
     // MARK: - Private Methods

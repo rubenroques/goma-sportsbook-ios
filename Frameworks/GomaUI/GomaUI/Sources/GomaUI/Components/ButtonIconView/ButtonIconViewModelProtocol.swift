@@ -43,6 +43,6 @@ public protocol ButtonIconViewModelProtocol {
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     
-    /// Handle button tap
-    func onButtonTapped()
+    /// Callback for button tap
+    var onButtonTapped: (() -> Void)? { get set }
 } 

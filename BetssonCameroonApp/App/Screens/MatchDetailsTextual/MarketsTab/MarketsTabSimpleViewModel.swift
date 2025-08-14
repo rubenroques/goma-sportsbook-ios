@@ -162,6 +162,7 @@ class MarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
             let outcomes = market.outcomes.map { outcome in
                 MarketOutcomeData(
                     id: outcome.id,
+                    bettingOfferId: outcome.bettingOffer.id,
                     title: outcome.translatedName,
                     value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
                     oddsChangeDirection: .none,
