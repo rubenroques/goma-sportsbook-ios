@@ -126,7 +126,7 @@ public class BetslipTypeTabItemView: UIView {
     private func loadIcon() {
         // Try to load custom image first, then fall back to SF Symbol
         if let customImage = UIImage(named: viewModel.icon) {
-            iconImageView.image = customImage
+            iconImageView.image = customImage.withRenderingMode(.alwaysTemplate)
         } else {
             iconImageView.image = UIImage(systemName: viewModel.icon)
         }

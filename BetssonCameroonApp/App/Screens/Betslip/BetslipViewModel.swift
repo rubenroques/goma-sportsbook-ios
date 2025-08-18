@@ -1,116 +1,87 @@
+//
+//  BetslipViewModel.swift
+//  BetssonCameroonApp
+//
+//  Created by André Lascas on 14/08/2025.
+//
+
 import Foundation
 import Combine
 import GomaUI
 
-/// Production implementation of BetslipViewModelProtocol
 public final class BetslipViewModel: BetslipViewModelProtocol {
     
     // MARK: - Properties
-    private let dataSubject: CurrentValueSubject<BetslipData, Never>
+    private let dataSubject = CurrentValueSubject<BetslipData, Never>(BetslipData())
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Child View Models
     public var headerViewModel: BetslipHeaderViewModelProtocol
-    public var emptyStateViewModel: EmptyStateActionViewModelProtocol
-    public var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
-    public var bookingCodeButtonViewModel: ButtonIconViewModelProtocol
-    public var clearBetslipButtonViewModel: ButtonIconViewModelProtocol
     public var betslipTypeSelectorViewModel: BetslipTypeSelectorViewModelProtocol
+    public var sportsBetslipViewModel: SportsBetslipViewModelProtocol
+    public var virtualBetslipViewModel: VirtualBetslipViewModelProtocol
     
-    // Callback closures for coordinator communication
+    // MARK: - Callbacks
     public var onHeaderCloseTapped: (() -> Void)?
     public var onHeaderJoinNowTapped: (() -> Void)?
     public var onHeaderLogInTapped: (() -> Void)?
     public var onEmptyStateActionTapped: (() -> Void)?
-    public var onPlaceBetTapped: (() -> Void)?
+    public var onPlaceBetTapped: ((BetPlacedState) -> Void)?
+    
+    // MARK: - Initialization
+    public init() {
+        // Initialize child view models
+        self.headerViewModel = MockBetslipHeaderViewModel.notLoggedInMock()
+        self.betslipTypeSelectorViewModel = MockBetslipTypeSelectorViewModel.defaultMock()
+        self.sportsBetslipViewModel = MockSportsBetslipViewModel()
+        self.virtualBetslipViewModel = MockVirtualBetslipViewModel()
+        
+        // Setup initial data
+        setupInitialData()
+        setupPublishers()
+    }
     
     // MARK: - Publishers
     public var dataPublisher: AnyPublisher<BetslipData, Never> {
         return dataSubject.eraseToAnyPublisher()
     }
     
-    public var ticketsPublisher: AnyPublisher<[BettingTicket], Never> {
-        return dataSubject.map { $0.tickets }.eraseToAnyPublisher()
-    }
-    
     public var currentData: BetslipData {
-        dataSubject.value
+        return dataSubject.value
     }
     
-    // MARK: - Initialization
-    public init() {
-        self.dataSubject = CurrentValueSubject(BetslipData(isEnabled: true))
-        
-        // Initialize child view models
-        self.headerViewModel = MockBetslipHeaderViewModel.notLoggedInMock()
-        self.emptyStateViewModel = MockEmptyStateActionViewModel.loggedOutMock()
-        self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel.defaultMock()
-        self.bookingCodeButtonViewModel = MockButtonIconViewModel.bookingCodeMock()
-        self.clearBetslipButtonViewModel = MockButtonIconViewModel.clearBetslipMock()
-        self.betslipTypeSelectorViewModel = MockBetslipTypeSelectorViewModel.defaultMock()
-        
-        // Setup child view model callbacks
-        setupChildViewModelCallbacks()
-        
-        // Setup bindings
-        setupBindings()
+    // MARK: - Public Methods
+    public func setEnabled(_ isEnabled: Bool) {
+        var currentData = dataSubject.value
+        currentData = BetslipData(isEnabled: isEnabled, tickets: currentData.tickets)
+        dataSubject.send(currentData)
     }
     
-    // MARK: - Setup
-    private func setupBindings() {
-        // Subscribe to betslip changes
-        Env.betslipManager.bettingTicketsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] tickets in
-                self?.updateTickets(tickets)
-            }
-            .store(in: &cancellables)
+    // MARK: - Private Methods
+    private func setupInitialData() {
+        // Start with empty betslip
+        let initialData = BetslipData(isEnabled: true, tickets: [])
+        dataSubject.send(initialData)
+    }
+    
+    private func setupPublishers() {
         
         Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] userProfile in
+            .sink { [weak self] userProfile in
                 if userProfile != nil {
                     self?.updateToLoggedInState()
                 } else {
                     self?.updateToLoggedOutState()
                 }
-            })
+            }
             .store(in: &cancellables)
-    }
-    
-    // MARK: - Protocol Methods
-    public func setEnabled(_ isEnabled: Bool) {
-        let newData = BetslipData(
-            isEnabled: isEnabled,
-            tickets: currentData.tickets
-        )
-        dataSubject.send(newData)
         
-        // Update child view models
-        emptyStateViewModel.setEnabled(isEnabled)
-        betInfoSubmissionViewModel.setEnabled(isEnabled)
+        // Setup header callbacks for coordinator communication
+        setupHeaderCallbacks()
     }
     
-    public func updateTickets(_ tickets: [BettingTicket]) {
-        let newData = BetslipData(
-            isEnabled: currentData.isEnabled,
-            tickets: tickets
-        )
-        dataSubject.send(newData)
-        
-    }
-    
-    public func removeTicket(_ ticket: BettingTicket) {
-        Env.betslipManager.removeBettingTicket(ticket)
-    }
-    
-    public func clearAllTickets() {
-        // Clear all tickets from the betslip manager
-        Env.betslipManager.clearAllBettingTickets()
-    }
-    
-    // MARK: - Private Methods
-    private func setupChildViewModelCallbacks() {
+    private func setupHeaderCallbacks() {
         // Wire header view model callbacks to our callbacks
         headerViewModel.onCloseTapped = { [weak self] in
             self?.onHeaderCloseTapped?()
@@ -124,69 +95,41 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
             self?.onHeaderLogInTapped?()
         }
         
-        // Wire empty state view model callbacks to our callbacks
-        emptyStateViewModel.onActionButtonTapped = { [weak self] in
+        // Setup child view model callbacks
+        setupChildViewModelCallbacks()
+    }
+    
+    private func setupChildViewModelCallbacks() {
+        // Wire sports betslip view model callbacks
+        sportsBetslipViewModel.emptyStateViewModel.onActionButtonTapped = { [weak self] in
             self?.onEmptyStateActionTapped?()
         }
         
-        // Wire bet info submission view model callbacks to our callbacks
-        betInfoSubmissionViewModel.onPlaceBetTapped = { [weak self] in
-            let amount = Double(self?.betInfoSubmissionViewModel.currentData.amount ?? "") ?? 0.0
-            self?.placeBet(withAmount: amount)
-            self?.onPlaceBetTapped?()
-        }
-    }
-    
-    private func placeBet(withAmount amount: Double) {
+//        sportsBetslipViewModel.betInfoSubmissionViewModel.onPlaceBetTapped = { [weak self] in
+//            self?.onPlaceBetTapped?()
+//        }
         
-        Env.betslipManager.placeMultipleBet(withStake: amount, useFreebetBalance: false)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    var message = ""
-                    switch error {
-                    case .betPlacementDetailedError(let detailedMessage):
-                        message = detailedMessage
-                    default:
-                        message = localized("error_placing_bet")
-                    }
-                    
-                    print("Bet placed error: \(message)")
-                default: ()
-                }
-            }, receiveValue: { [weak self] betPlacedDetails in
-                
-                print("BETSLIP VM PLACE BET: \(betPlacedDetails)")
-                
-                Env.userSessionStore.refreshUserWallet()
-            })
-            .store(in: &cancellables)
+        sportsBetslipViewModel.showPlacedBetState = { [weak self] placedBetState in
+            self?.onPlaceBetTapped?(placedBetState)
+        }
+        
+        // Wire virtual betslip view model callbacks
+        virtualBetslipViewModel.emptyStateViewModel.onActionButtonTapped = { [weak self] in
+            self?.onEmptyStateActionTapped?()
+        }
+        
+//        virtualBetslipViewModel.betInfoSubmissionViewModel.onPlaceBetTapped = { [weak self] in
+//            self?.onPlaceBetTapped?()
+//        }
     }
     
     private func updateToLoggedInState() {
         let loggedInState = BetslipHeaderState.loggedIn(balance: "XAF 25,000")
         headerViewModel.updateState(loggedInState)
-        
-        emptyStateViewModel.updateState(.loggedIn)
     }
     
     private func updateToLoggedOutState() {
         let notLoggedInState = BetslipHeaderState.notLoggedIn
         headerViewModel.updateState(notLoggedInState)
-        
-        emptyStateViewModel.updateState(.loggedOut)
     }
-    
-    private func updateHeaderToLoggedInState() {
-        let loggedInState = BetslipHeaderState.loggedIn(balance: "XAF 25,000")
-        headerViewModel.updateState(loggedInState)
-        emptyStateViewModel.updateState(.loggedIn)
-    }
-    
-    private func updateHeaderToNotLoggedInState() {
-        let notLoggedInState = BetslipHeaderState.notLoggedIn
-        headerViewModel.updateState(notLoggedInState)
-        emptyStateViewModel.updateState(.loggedOut)
-    }
-} 
+}

@@ -64,7 +64,6 @@ class NextUpEventsViewModel {
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
     var generalFiltersBarViewModel: GeneralFilterBarViewModelProtocol
-    var betslipFloatingViewModel: BetslipFloatingViewModelProtocol
 
     // MARK: - Navigation Closures (MVVM-C Pattern)
     // ViewModels signal navigation intent through closures - Coordinators handle actual navigation
@@ -105,7 +104,6 @@ class NextUpEventsViewModel {
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
-        self.betslipFloatingViewModel = BetslipFloatingViewModel()
         
         let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter", icon: "filter_icon", actionIcon: "right_arrow_icon")
 
@@ -151,9 +149,6 @@ class NextUpEventsViewModel {
         // Filters are now managed statefully by parent coordinator
         // No reactive binding to global filter state needed
         
-        betslipFloatingViewModel.onBetslipTapped = { [weak self] in
-            self?.onBetslipRequested?()
-        }
     }
 
     private func setupFilters() {

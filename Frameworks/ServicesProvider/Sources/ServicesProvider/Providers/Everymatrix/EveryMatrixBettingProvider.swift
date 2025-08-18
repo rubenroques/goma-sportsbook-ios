@@ -70,9 +70,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Place Bets Implementation
     
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Convert BetTickets to PlaceBetRequest
-        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets)
+        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency)
         
         // Create the API endpoint
         let endpoint = EveryMatrixOddsMatrixAPI.placeBet(betData: placeBetRequest)
@@ -175,7 +175,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Private Helper Methods
     
-    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket]) -> PlaceBetRequest {
+    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?) -> PlaceBetRequest {
         let selections = betTickets.flatMap { betTicket in
             betTicket.tickets.map { selection in
                 BetSelectionInfo(
@@ -193,7 +193,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             ucsOperatorId: 4093, // Default operator ID, should be configurable
             userId: "6971184", // Default user ID, should come from user session
             username: "+237666888001", // Default username, should come from user session
-            currency: "EUR", // Default currency, should be configurable
+            currency: currency ?? "EUR",
             type: type,
             selections: selections,
             amount: totalAmount,

@@ -265,7 +265,9 @@ class BetslipManager: NSObject {
         
         let betTicket = BetTicket.init(tickets: betTicketSelections, stake: stake, betGroupingType: betGroupingType)
         
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance)
+        let userCurrency = Env.userSessionStore.userProfilePublisher.value?.currency
+        
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency)
             .mapError({ error in
                 switch error {
                 case .forbidden:

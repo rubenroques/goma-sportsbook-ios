@@ -37,6 +37,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     // MARK: - Live Data Properties
     private var liveDataCancellable: AnyCancellable?
     private var currentEventLiveData: EventLiveData?
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     init(matchData: TallOddsMatchData) {
@@ -67,6 +68,8 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         
         // Start live data subscription for live matches
         self.subscribeToLiveData()
+        
+        self.setupPublishers()
     }
     
     // MARK: - Cleanup
@@ -127,8 +130,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         
         let oddDouble = Double(outcome?.value ?? "")
         
-        let bettingTicket = BettingTicket(id: outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil)
-        
+        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil)
         
         Env.betslipManager.removeBettingTicket(bettingTicket)
     }
@@ -256,6 +258,15 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         )
     }
 
+    private func setupPublishers() {
+        
+//        Env.betslipManager.bettingTicketsPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] tickets in
+//
+//            })
+//            .store(in: &cancellables)
+    }
 }
 
 // MARK: - Factory Methods for Child ViewModels

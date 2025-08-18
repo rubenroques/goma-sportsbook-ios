@@ -56,12 +56,20 @@ class BetslipCoordinator: Coordinator {
         }
         
         viewModel.onEmptyStateActionTapped = { [weak self] in
-            self?.onEmptyStateAction?()
+//            self?.onEmptyStateAction?()
+            self?.onShowLogin?()
         }
         
-        viewModel.onPlaceBetTapped = { [weak self] in
-            self?.onBetPlaced?()
+        viewModel.onPlaceBetTapped = { [weak self] betPlacedState in
+            switch betPlacedState {
+            case .success:
+                self?.showBetslipSuccessScreen()
+            case .error(let message):
+                self?.showBetslipErrorAlert(message: message)
+            }
+            
         }
+        
         
         let viewController = BetslipViewController(viewModel: viewModel)
         self.betslipViewController = viewController
@@ -75,15 +83,53 @@ class BetslipCoordinator: Coordinator {
     }
     
     // MARK: - Public Methods
-    
-    /// Update the betslip with actual ticket data
-    public func updateTickets(_ tickets: [BettingTicket]) {
-        betslipViewModel?.updateTickets(tickets)
+    public func showBetslipSuccessScreen() {
+        
+        // Clear betslip
+        Env.betslipManager.clearAllBettingTickets()
+        
+        let betSuccessViewModel = BetSuccessViewModel()
+        
+        let betSuccessViewController = BetSuccessViewController(viewModel: betSuccessViewModel)
+        
+        self.betslipViewController?.present(betSuccessViewController, animated: true)
+        
+        betSuccessViewController.onContinueRequested = { [weak self] in
+            self?.finish()
+            self?.onCloseBetslip?()
+        }
     }
     
-    /// Refresh the betslip data
-    public func refresh() {
-        // In a real implementation, this would refresh the ViewModel
-        print("BetslipCoordinator: Refreshing betslip data")
+    public func showBetslipErrorAlert(message: String) {
+        let alert = UIAlertController(
+            title: "Bet Placement Error",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(
+            title: "OK",
+            style: .default,
+            handler: nil
+        )
+        
+        alert.addAction(okAction)
+        
+        // Present the alert from the betslip view controller
+        betslipViewController?.present(alert, animated: true)
     }
-} 
+    
+//    public func showBetslipSuccessScreen() {
+//        
+//        let betSuccessViewModel = MockDepositBonusSuccessViewModel(bonusDepositData: BonusDepositData(id: "", selectedAmount: 0.0, bonusAmount: 1.0))
+//        
+//        let betSuccessViewController = DepositBonusSuccessViewController(viewModel: betSuccessViewModel)
+//        
+//        self.betslipViewController?.present(betSuccessViewController, animated: true)
+//        
+//        betSuccessViewController.onContinueRequested = { [weak self] in
+//            self?.finish()
+//            self?.onCloseBetslip?()
+//        }
+//    }
+}

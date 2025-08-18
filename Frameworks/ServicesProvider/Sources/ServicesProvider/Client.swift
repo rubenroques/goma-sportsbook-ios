@@ -1119,13 +1119,13 @@ extension Client {
         return bettingProvider.calculatePotentialReturn(forBetTicket: betTicket)
     }
 
-    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
-        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance)
+        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance, currency: currency)
     }
 
     public func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {

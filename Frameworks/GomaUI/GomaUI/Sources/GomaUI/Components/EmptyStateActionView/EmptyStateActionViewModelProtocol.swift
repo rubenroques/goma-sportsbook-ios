@@ -22,10 +22,10 @@ public struct EmptyStateActionData: Equatable {
     public let state: EmptyStateActionState
     public let title: String
     public let actionButtonTitle: String
-    public let image: UIImage?
+    public let image: String?
     public let isEnabled: Bool
     
-    public init(state: EmptyStateActionState, title: String, actionButtonTitle: String = "Log in to bet", image: UIImage? = nil, isEnabled: Bool = true) {
+    public init(state: EmptyStateActionState, title: String, actionButtonTitle: String = "Log in to bet", image: String? = nil, isEnabled: Bool = true) {
         self.state = state
         self.title = title
         self.actionButtonTitle = actionButtonTitle
@@ -54,7 +54,7 @@ public protocol EmptyStateActionViewModelProtocol {
     func updateActionButtonTitle(_ title: String)
     
     /// Update the image
-    func updateImage(_ image: UIImage?)
+    func updateImage(_ image: String?)
     
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)

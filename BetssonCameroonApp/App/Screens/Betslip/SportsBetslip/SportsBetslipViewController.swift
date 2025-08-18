@@ -7,22 +7,15 @@
 
 import UIKit
 import Combine
+import GomaUI
 
 class SportsBetslipViewController: UIViewController {
     
     // MARK: - Properties
-    private var viewModel: BetslipViewModelProtocol
+    private var viewModel: SportsBetslipViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    
-    // Container view
-    private lazy var containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        return view
-    }()
     
     // Button bar view (Booking Code + Clear Betslip)
     private lazy var buttonBarView: UIView = {
@@ -36,7 +29,7 @@ class SportsBetslipViewController: UIViewController {
     private lazy var bookingCodeButton: ButtonIconView = {
         let button = ButtonIconView(viewModel: viewModel.bookingCodeButtonViewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.isHidden = true // Hidden for now as requested
+        button.isHidden = true 
         return button
     }()
     
@@ -45,14 +38,6 @@ class SportsBetslipViewController: UIViewController {
         let button = ButtonIconView(viewModel: viewModel.clearBetslipButtonViewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    }()
-    
-    // Separator line
-    private lazy var separatorLine: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundGradient2
-        return view
     }()
     
     // Empty state view
@@ -84,8 +69,24 @@ class SportsBetslipViewController: UIViewController {
         return view
     }()
     
+    // Loading view overlay
+    private lazy var loadingView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        view.isHidden = true
+        return view
+    }()
+    
+    private lazy var loadingActivityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = .white
+        return indicator
+    }()
+    
     // MARK: - Initialization
-    init(viewModel: BetslipViewModelProtocol) {
+    init(viewModel: SportsBetslipViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -105,30 +106,26 @@ class SportsBetslipViewController: UIViewController {
     
     // MARK: - Setup Methods
     private func setupSubviews() {
-        view.addSubview(containerView)
+        view.addSubview(buttonBarView)
+        view.addSubview(emptyStateView)
+        view.addSubview(ticketsTableView)
+        view.addSubview(betInfoSubmissionView)
         
-        containerView.addSubview(buttonBarView)
-        containerView.addSubview(emptyStateView)
-        containerView.addSubview(ticketsTableView)
-        containerView.addSubview(betInfoSubmissionView)
+        // Add loading view on top of everything
+        view.addSubview(loadingView)
+        loadingView.addSubview(loadingActivityIndicator)
         
         buttonBarView.addSubview(bookingCodeButton)
         buttonBarView.addSubview(clearBetslipButton)
-        buttonBarView.addSubview(separatorLine)
     }
     
     private func setupConstraints() {
+        
         NSLayoutConstraint.activate([
-            // Container view
-            containerView.topAnchor.constraint(equalTo: view.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            // Button bar view
-            buttonBarView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
-            buttonBarView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            buttonBarView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            // Button bar view - top of the view with content inset
+            buttonBarView.topAnchor.constraint(equalTo: view.topAnchor),
+            buttonBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            buttonBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             buttonBarView.heightAnchor.constraint(equalToConstant: 50),
             
             // Booking Code button
@@ -141,30 +138,33 @@ class SportsBetslipViewController: UIViewController {
             clearBetslipButton.trailingAnchor.constraint(equalTo: buttonBarView.trailingAnchor, constant: -16),
             clearBetslipButton.bottomAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: -8),
             
-            // Separator line
-            separatorLine.topAnchor.constraint(equalTo: buttonBarView.topAnchor, constant: 8),
-            separatorLine.bottomAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: -8),
-            separatorLine.leadingAnchor.constraint(equalTo: bookingCodeButton.trailingAnchor, constant: 16),
-            separatorLine.trailingAnchor.constraint(equalTo: clearBetslipButton.leadingAnchor, constant: -16),
-            separatorLine.widthAnchor.constraint(equalToConstant: 1),
+            // Empty state view - fill remaining space above bet info submission
+            emptyStateView.topAnchor.constraint(equalTo: view.topAnchor),
+            emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            // Empty state view (initially hidden)
-            emptyStateView.topAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: 8),
-            emptyStateView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            emptyStateView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            emptyStateView.bottomAnchor.constraint(equalTo: betInfoSubmissionView.topAnchor),
-            
-            // Tickets table view
+            // Tickets table view - fill remaining space above bet info submission
             ticketsTableView.topAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: 8),
-            ticketsTableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            ticketsTableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            ticketsTableView.bottomAnchor.constraint(equalTo: betInfoSubmissionView.topAnchor),
+            ticketsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            ticketsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ticketsTableView.bottomAnchor.constraint(equalTo: betInfoSubmissionView.topAnchor, constant: -8),
             
-            // Bet info submission view
-            betInfoSubmissionView.topAnchor.constraint(greaterThanOrEqualTo: ticketsTableView.bottomAnchor, constant: 50),
-            betInfoSubmissionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            betInfoSubmissionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            betInfoSubmissionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            // Bet info submission view - bottom of the view
+            betInfoSubmissionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            betInfoSubmissionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            betInfoSubmissionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        // Loading view constraints - covers the entire view
+        NSLayoutConstraint.activate([
+            loadingView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            // Center the activity indicator
+            loadingActivityIndicator.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor),
+            loadingActivityIndicator.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor)
         ])
     }
     
@@ -185,11 +185,37 @@ class SportsBetslipViewController: UIViewController {
         viewModel.bookingCodeButtonViewModel.onButtonTapped = { [weak self] in
             self?.handleBookingCodeTapped()
         }
+        
+        viewModel.betslipLoggedState = { [weak self] betslipLoggedState in
+            switch betslipLoggedState {
+            case .noTicketsLoggedOut:
+                self?.betInfoSubmissionView.isHidden = true
+            case .ticketsLoggedOut:
+                self?.betInfoSubmissionView.isHidden = true
+            case .noTicketsLoggedIn:
+                self?.betInfoSubmissionView.isHidden = false
+            case .ticketsLoggedIn:
+                self?.betInfoSubmissionView.isHidden = false
+                
+            }
+        }
+        
+        // Setup loading state callback
+        viewModel.isLoadingSubject
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                if isLoading {
+                    self?.showLoading()
+                } else {
+                    self?.hideLoading()
+                }
+            })
+            .store(in: &cancellables)
     }
     
     // MARK: - Private Methods
     private func updateUI() {
-        let hasTickets = !viewModel.currentData.tickets.isEmpty
+        let hasTickets = !viewModel.currentTickets.isEmpty
         
         // Show/hide appropriate views
         emptyStateView.isHidden = hasTickets
@@ -209,12 +235,23 @@ class SportsBetslipViewController: UIViewController {
         // TODO: Implement booking code functionality
         print("Booking code button tapped - functionality to be implemented")
     }
+    
+    // MARK: - Loading State Management
+    private func showLoading() {
+        loadingView.isHidden = false
+        loadingActivityIndicator.startAnimating()
+    }
+    
+    private func hideLoading() {
+        loadingView.isHidden = true
+        loadingActivityIndicator.stopAnimating()
+    }
 }
 
 // MARK: - UITableViewDataSource
-extension SportsBetslipViewController: UITableViewDataSource {
+extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.currentData.tickets.count
+        return viewModel.currentTickets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -222,10 +259,21 @@ extension SportsBetslipViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let ticket = viewModel.currentData.tickets[indexPath.row]
-        let ticketViewModel = MockBetslipTicketViewModel.skeletonMock()
+        let ticket = viewModel.currentTickets[indexPath.row]
         
-        cell.configure(with: ticketViewModel, ticket: ticket)
+        // Create a proper mock view model with the actual ticket data
+        let ticketViewModel = MockBetslipTicketViewModel(
+            leagueName: ticket.competition ?? "Unknown League",
+            startDate: ticket.date?.formatted() ?? "Unknown Date",
+            homeTeam: ticket.homeParticipantName ?? "Home Team",
+            awayTeam: ticket.awayParticipantName ?? "Away Team",
+            selectedTeam: ticket.outcomeDescription,
+            oddsValue: String(format: "%.2f", ticket.decimalOdd),
+            oddsChangeState: .none
+        )
+        
+        cell.configure(with: ticketViewModel)
+        
         cell.onTicketRemoved = { [weak self] in
             self?.viewModel.removeTicket(ticket)
         }
@@ -233,18 +281,3 @@ extension SportsBetslipViewController: UITableViewDataSource {
         return cell
     }
 }
-
-// MARK: - UITableViewDelegate
-extension SportsBetslipViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let ticketCell = cell as? BetslipTicketTableViewCell {
-            ticketCell.willDisplay()
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let ticketCell = cell as? BetslipTicketTableViewCell {
-            ticketCell.didEndDisplaying()
-        }
-    }
-} 

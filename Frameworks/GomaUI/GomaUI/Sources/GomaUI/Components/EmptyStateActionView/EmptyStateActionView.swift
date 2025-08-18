@@ -138,7 +138,12 @@ public final class EmptyStateActionView: UIView {
     // MARK: - Rendering
     private func render(data: EmptyStateActionData) {
         // Update image
-        imageView.image = data.image
+        if let customImage = UIImage(named: data.image ?? "") {
+            imageView.image = customImage
+        }
+        else if let systemImage = UIImage(systemName: data.image ?? "") {
+            imageView.image = systemImage
+        }
         
         // Update title
         titleLabel.text = data.title

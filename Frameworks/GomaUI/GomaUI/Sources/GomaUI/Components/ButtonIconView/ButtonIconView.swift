@@ -127,7 +127,12 @@ public final class ButtonIconView: UIView {
         titleLabel.text = data.title
         
         // Update icon
-        iconImageView.image = data.icon
+        if let customImage = UIImage(named: data.icon ?? "") {
+            iconImageView.image = customImage
+        }
+        else if let systemImage = UIImage(systemName: data.icon ?? "") {
+            iconImageView.image = systemImage
+        }
         
         // Update layout
         updateLayout(for: data.layoutType)

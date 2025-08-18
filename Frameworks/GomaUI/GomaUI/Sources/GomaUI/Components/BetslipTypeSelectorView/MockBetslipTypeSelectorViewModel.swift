@@ -82,8 +82,8 @@ public final class MockBetslipTypeSelectorViewModel: BetslipTypeSelectorViewMode
     // MARK: - Private Methods
     private func setupDefaultTabs() {
         let defaultTabs = [
-            BetslipTypeTabData(id: "sports", title: "Sports", icon: "soccerball", isSelected: true),
-            BetslipTypeTabData(id: "virtuals", title: "Virtuals", icon: "virtuals", isSelected: false)
+            BetslipTypeTabData(id: "sports", title: "Sports", icon: "sport_betslip_icon", isSelected: true),
+            BetslipTypeTabData(id: "virtuals", title: "Virtuals", icon: "virtual_betslip_icon", isSelected: false)
         ]
         
         tabsSubject.send(defaultTabs)

@@ -60,6 +60,10 @@ class RootTabBarCoordinator: Coordinator {
             self?.showRegistration()
         }
         
+        rootTabBarViewController.onBetslipRequested = { [weak self] in
+            self?.showBetslip()
+        }
+        
         self.rootTabBarViewController = rootTabBarViewController
         navigationController.setViewControllers([rootTabBarViewController], animated: false)
         

@@ -44,7 +44,7 @@ public final class BetslipHeaderView: UIView {
     private lazy var betslipIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betslip_icon", in: Bundle.module, with: nil) ?? UIImage(systemName: "ticket")
+        imageView.image = UIImage(named: "betslip_icon")?.withRenderingMode(.alwaysTemplate) ?? UIImage(systemName: "ticket")
         imageView.tintColor = StyleProvider.Color.highlightPrimary
         imageView.contentMode = .scaleAspectFit
         return imageView

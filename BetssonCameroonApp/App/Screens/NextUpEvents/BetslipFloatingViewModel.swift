@@ -43,7 +43,7 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
     // MARK: - Private Methods
     private func setupBindings() {
         // Subscribe to betting tickets changes
-        betslipManager.bettingTicketsPublisher
+        Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
                 self?.updateBetslipState(with: tickets)
@@ -58,7 +58,7 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
             let selectionCount = tickets.count
             let totalOdds = calculateTotalOdds(from: tickets)
             let winBoostPercentage = calculateWinBoostPercentage(for: selectionCount)
-            let totalEligibleCount = 6 // Standard requirement for win boost
+            let totalEligibleCount = 0
             
             let state = BetslipFloatingState.withTickets(
                 selectionCount: selectionCount,

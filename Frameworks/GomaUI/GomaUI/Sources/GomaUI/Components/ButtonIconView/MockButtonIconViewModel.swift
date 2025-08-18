@@ -17,7 +17,7 @@ public final class MockButtonIconViewModel: ButtonIconViewModelProtocol {
     }
     
     // MARK: - Initialization
-    public init(title: String = "Button", icon: UIImage? = nil, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true) {
+    public init(title: String = "Button", icon: String? = nil, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true) {
         let initialData = ButtonIconData(title: title, icon: icon, layoutType: layoutType, isEnabled: isEnabled)
         self.dataSubject = CurrentValueSubject(initialData)
     }
@@ -28,7 +28,7 @@ public final class MockButtonIconViewModel: ButtonIconViewModelProtocol {
         dataSubject.send(newData)
     }
     
-    public func updateIcon(_ icon: UIImage?) {
+    public func updateIcon(_ icon: String?) {
         let newData = ButtonIconData(title: currentData.title, icon: icon, layoutType: currentData.layoutType, isEnabled: currentData.isEnabled)
         dataSubject.send(newData)
     }
@@ -58,7 +58,7 @@ public extension MockButtonIconViewModel {
     static func bookingCodeMock() -> MockButtonIconViewModel {
         return MockButtonIconViewModel(
             title: "Booking Code",
-            icon: UIImage(systemName: "square.and.arrow.up"),
+            icon: "square.and.arrow.up",
             layoutType: .iconLeft
         )
     }
@@ -67,7 +67,7 @@ public extension MockButtonIconViewModel {
     static func clearBetslipMock() -> MockButtonIconViewModel {
         return MockButtonIconViewModel(
             title: "Clear Betslip",
-            icon: UIImage(systemName: "trash"),
+            icon: "trash",
             layoutType: .iconRight
         )
     }
@@ -76,7 +76,7 @@ public extension MockButtonIconViewModel {
     static func disabledMock() -> MockButtonIconViewModel {
         return MockButtonIconViewModel(
             title: "Disabled Button",
-            icon: UIImage(systemName: "star"),
+            icon: "star",
             layoutType: .iconLeft,
             isEnabled: false
         )

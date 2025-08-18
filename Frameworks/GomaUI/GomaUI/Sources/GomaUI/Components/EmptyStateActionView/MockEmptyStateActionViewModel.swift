@@ -27,7 +27,7 @@ public final class MockEmptyStateActionViewModel: EmptyStateActionViewModelProto
     }
     
     // MARK: - Initialization
-    public init(state: EmptyStateActionState, title: String, actionButtonTitle: String = "Log in to bet", image: UIImage? = nil, isEnabled: Bool = true) {
+    public init(state: EmptyStateActionState, title: String, actionButtonTitle: String = "Log in to bet", image: String? = nil, isEnabled: Bool = true) {
         let initialData = EmptyStateActionData(state: state, title: title, actionButtonTitle: actionButtonTitle, image: image, isEnabled: isEnabled)
         self.dataSubject = CurrentValueSubject(initialData)
     }
@@ -48,7 +48,7 @@ public final class MockEmptyStateActionViewModel: EmptyStateActionViewModelProto
         dataSubject.send(newData)
     }
     
-    public func updateImage(_ image: UIImage?) {
+    public func updateImage(_ image: String?) {
         let newData = EmptyStateActionData(state: currentData.state, title: currentData.title, actionButtonTitle: currentData.actionButtonTitle, image: image, isEnabled: currentData.isEnabled)
         dataSubject.send(newData)
     }
@@ -68,7 +68,7 @@ public extension MockEmptyStateActionViewModel {
             state: .loggedOut,
             title: "You need at least 1 selection\nin your betslip to place a bet",
             actionButtonTitle: "Log in to bet",
-            image: UIImage(systemName: "ticket") ?? UIImage()
+            image: "ticket"
         )
     }
     
@@ -78,7 +78,7 @@ public extension MockEmptyStateActionViewModel {
             state: .loggedIn,
             title: "You need at least 1 selection\nin your betslip to place a bet",
             actionButtonTitle: "Start betting",
-            image: UIImage(systemName: "ticket") ?? UIImage()
+            image: "ticket"
         )
     }
     
@@ -88,7 +88,7 @@ public extension MockEmptyStateActionViewModel {
             state: .loggedOut,
             title: "You need at least 1 selection\nin your betslip to place a bet",
             actionButtonTitle: "Log in to bet",
-            image: UIImage(systemName: "ticket") ?? UIImage(),
+            image: "ticket",
             isEnabled: false
         )
     }

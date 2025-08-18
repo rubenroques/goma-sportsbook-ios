@@ -31,7 +31,7 @@ public final class BetslipFloatingView: UIView {
     private lazy var betslipIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betslip_icon", in: Bundle.module, with: nil) ?? UIImage(systemName: "ticket")
+        imageView.image = UIImage(named: "betslip_icon") ?? UIImage(systemName: "ticket")
         imageView.tintColor = StyleProvider.Color.highlightSecondaryContrast
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -121,6 +121,7 @@ public final class BetslipFloatingView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = StyleProvider.Color.highlightSecondary
         view.layer.cornerRadius = 12
+        view.isHidden = true
         return view
     }()
     
@@ -160,6 +161,7 @@ public final class BetslipFloatingView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = StyleProvider.Color.backgroundTertiary
         view.layer.cornerRadius = 8
+        view.isHidden = true
         return view
     }()
     
@@ -194,6 +196,7 @@ public final class BetslipFloatingView: UIView {
     private var detailedContainerLeadingConstraint: NSLayoutConstraint?
     private var circularButtonTopConstraint: NSLayoutConstraint?
     private var circularButtonBottomConstraint: NSLayoutConstraint?
+    private var topBarStackViewBottomConstraint: NSLayoutConstraint?
     
     // MARK: - Initialization
     public init(viewModel: BetslipFloatingViewModelProtocol) {
@@ -220,6 +223,9 @@ public final class BetslipFloatingView: UIView {
             // Create height constraints for circular button
             circularButtonTopConstraint = circularButton.topAnchor.constraint(equalTo: topAnchor)
             circularButtonBottomConstraint = circularButton.bottomAnchor.constraint(equalTo: bottomAnchor)
+            
+            // Create the topBarStackView bottom constraint
+            topBarStackViewBottomConstraint = topBarStackView.bottomAnchor.constraint(equalTo: detailedContainerView.bottomAnchor, constant: -12)
             
             // Apply constraints based on current state
             updateWidthConstraints(for: viewModel.currentData.state)
@@ -289,6 +295,9 @@ public final class BetslipFloatingView: UIView {
             topBarStackView.topAnchor.constraint(equalTo: detailedContainerView.topAnchor, constant: 12),
             topBarStackView.leadingAnchor.constraint(equalTo: detailedContainerView.leadingAnchor, constant: 12),
             topBarStackView.trailingAnchor.constraint(equalTo: detailedContainerView.trailingAnchor, constant: -12),
+            
+            // Create but don't activate the bottom constraint initially
+            // It will be managed conditionally based on bottomSectionView visibility
             
             // Selection count view
             selectionCountView.widthAnchor.constraint(equalToConstant: 24),
@@ -390,6 +399,7 @@ public final class BetslipFloatingView: UIView {
         case .noTickets:
             circularButton.isHidden = false
             detailedContainerView.isHidden = true
+            bottomSectionView.isHidden = true
         case .withTickets(let selectionCount, let odds, let winBoostPercentage, let totalEligibleCount):
             circularButton.isHidden = true
             detailedContainerView.isHidden = false
@@ -402,20 +412,34 @@ public final class BetslipFloatingView: UIView {
             if let winBoost = winBoostPercentage {
                 winBoostLabel.text = "Win Boost:"
                 winBoostValueLabel.text = winBoost
-                winBoostCapsuleView.isHidden = false
+                // TODO: Enable when data is available
+                winBoostCapsuleView.isHidden = true
             } else {
                 winBoostLabel.text = "Win Boost:"
                 winBoostValueLabel.text = "-"
-                winBoostCapsuleView.isHidden = false
+                winBoostCapsuleView.isHidden = true
             }
             
             setupProgressSegments(ticketSelection: selectionCount, totalEligibleCount: totalEligibleCount)
             
-            let remainingSelections = max(0, totalEligibleCount - selectionCount)
-            if remainingSelections > 0 {
-                callToActionLabel.text = "Add \(remainingSelections) more qualifying events to get a 11% win boost"
+            // Show/hide bottom section based on totalEligibleCount
+            if totalEligibleCount > 0 {
+                bottomSectionView.isHidden = false
+                
+                // Deactivate the topBarStackView bottom constraint when bottom section is visible
+                topBarStackViewBottomConstraint?.isActive = false
+                
+                let remainingSelections = max(0, totalEligibleCount - selectionCount)
+                if remainingSelections > 0 {
+                    callToActionLabel.text = "Add \(remainingSelections) more qualifying events to get a 11% win boost"
+                } else {
+                    callToActionLabel.text = "Win boost activated!"
+                }
             } else {
-                callToActionLabel.text = "Win boost activated!"
+                bottomSectionView.isHidden = true
+                
+                // Activate the topBarStackView bottom constraint when bottom section is hidden
+                topBarStackViewBottomConstraint?.isActive = true
             }
         }
         
@@ -472,6 +496,14 @@ public final class BetslipFloatingView: UIView {
         BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 3, odds: "1.55", winBoostPercentage: "3%", totalEligibleCount: 6)))
     }
     .frame(height: 120)
+}
+
+@available(iOS 17.0, *)
+#Preview("With Tickets (No Bottom Section)") {
+    PreviewUIView {
+        BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 2, odds: "1.85", winBoostPercentage: nil, totalEligibleCount: 0)))
+    }
+    .frame(height: 80)
 }
 
 #endif

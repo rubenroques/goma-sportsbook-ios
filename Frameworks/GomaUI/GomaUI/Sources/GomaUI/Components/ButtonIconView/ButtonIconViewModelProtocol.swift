@@ -11,11 +11,11 @@ public enum ButtonIconLayoutType: Equatable {
 /// Data model for the button icon view
 public struct ButtonIconData: Equatable {
     public let title: String
-    public let icon: UIImage?
+    public let icon: String?
     public let layoutType: ButtonIconLayoutType
     public let isEnabled: Bool
     
-    public init(title: String, icon: UIImage? = nil, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true) {
+    public init(title: String, icon: String? = nil, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true) {
         self.title = title
         self.icon = icon
         self.layoutType = layoutType
@@ -35,7 +35,7 @@ public protocol ButtonIconViewModelProtocol {
     func updateTitle(_ title: String)
     
     /// Update the icon
-    func updateIcon(_ icon: UIImage?)
+    func updateIcon(_ icon: String?)
     
     /// Update the layout type
     func updateLayoutType(_ layoutType: ButtonIconLayoutType)

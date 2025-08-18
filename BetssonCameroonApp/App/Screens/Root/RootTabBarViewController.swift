@@ -29,6 +29,9 @@ class RootTabBarViewController: UIViewController {
 
     // FloatingOverlay
     private var floatingOverlayView: FloatingOverlayView!
+    
+    // BetslipFloatingView
+    private var betslipFloatingView: BetslipFloatingView!
 
     // WalletStatus Overlay
     private lazy var walletStatusOverlayView: UIView = Self.createWalletStatusOverlayView()
@@ -77,6 +80,10 @@ class RootTabBarViewController: UIViewController {
     // Closures called when authentication is requested - handled by coordinator
     var onLoginRequested: (() -> Void)?
     var onRegistrationRequested: (() -> Void)?
+    
+    // MARK: - Betslip Navigation Closure
+    // Closure called when betslip is requested - handled by coordinator
+    var onBetslipRequested: (() -> Void)?
 
     // General properties
     var isLocalAuthenticationCoveringView: Bool = true {
@@ -109,6 +116,10 @@ class RootTabBarViewController: UIViewController {
         
         self.walletStatusView = WalletStatusView(viewModel: MockWalletStatusViewModel.defaultMock)
         self.walletStatusView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Initialize betslipFloatingView with view model from RootTabBarViewModel
+        self.betslipFloatingView = BetslipFloatingView(viewModel: viewModel.betslipFloatingViewModel)
+        self.betslipFloatingView.translatesAutoresizingMaskIntoConstraints = false
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -122,6 +133,11 @@ class RootTabBarViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupSubviews()
+        
+        // Setup betslip callback
+        viewModel.onBetslipRequested = { [weak self] in
+            self?.showBetslip()
+        }
 
         self.blockingWindow.addSubview(self.localAuthenticationBaseView)
         
@@ -349,10 +365,6 @@ class RootTabBarViewController: UIViewController {
         // MainCoordinator will handle all screen presentation through Coordinator Integration API methods
         onTabSelected?(tabItem)
     }
-
-    func openBetslipModal() {
-        
-    }
     
     // MARK: - Coordinator Integration API
     // Methods for MainCoordinator to show specific screens
@@ -360,6 +372,9 @@ class RootTabBarViewController: UIViewController {
         hideAllScreens()
         embedViewControllerIfNeeded(viewController, in: nextUpEventsBaseView, loadedFlag: &nextUpEventsViewControllerLoaded)
         nextUpEventsBaseView.isHidden = false
+        
+        betslipFloatingView.isHidden = false
+
     }
     
     func showInPlayEventsScreen(with viewController: UIViewController) {
@@ -384,6 +399,9 @@ class RootTabBarViewController: UIViewController {
         hideAllScreens()
         embedViewControllerIfNeeded(viewController, in: casinoHomeBaseView, loadedFlag: &casinoHomeViewControllerLoaded)
         casinoHomeBaseView.isHidden = false
+        
+        betslipFloatingView.isHidden = true
+
     }
     
     func showCasinoVirtualSportsScreen(with viewController: UIViewController) {
@@ -948,6 +966,9 @@ extension RootTabBarViewController {
         // Add floating overlay at the top of the view hierarchy
         view.addSubview(floatingOverlayView)
         
+        // Add betslip floating view
+        view.addSubview(betslipFloatingView)
+        
         // Add wallet status overlay (initially hidden)
         view.addSubview(walletStatusOverlayView)
         walletStatusOverlayView.addSubview(walletStatusView)
@@ -1081,6 +1102,10 @@ extension RootTabBarViewController {
             self.floatingOverlayView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.floatingOverlayView.bottomAnchor.constraint(equalTo: self.adaptiveTabBarView.topAnchor, constant: -32),
             
+            // Betslip Floating View
+            self.betslipFloatingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.betslipFloatingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -100),
+            
             // Wallet Status Overlay
             self.walletStatusOverlayView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.walletStatusOverlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -1093,6 +1118,11 @@ extension RootTabBarViewController {
             self.walletStatusView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor, constant: 16),
         ])
 
+    }
+    
+    // MARK: - Betslip Navigation
+    private func showBetslip() {
+        onBetslipRequested?()
     }
 
 }

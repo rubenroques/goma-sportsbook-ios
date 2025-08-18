@@ -17,14 +17,6 @@ class BetslipViewController: UIViewController {
     
     // MARK: - UI Components
     
-    // Container view
-    private lazy var containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        return view
-    }()
-    
     // Header view
     private lazy var headerView: BetslipHeaderView = {
         let view = BetslipHeaderView(viewModel: viewModel.headerViewModel)
@@ -44,16 +36,21 @@ class BetslipViewController: UIViewController {
         let pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
         pageVC.dataSource = self
         pageVC.delegate = self
+        
+        // Configure to respect container bounds
+        pageVC.view.backgroundColor = .clear
+        pageVC.view.translatesAutoresizingMaskIntoConstraints = false
+        
         return pageVC
     }()
     
     // Child view controllers
     private lazy var sportsBetslipViewController: SportsBetslipViewController = {
-        return SportsBetslipViewController(viewModel: viewModel)
+        return SportsBetslipViewController(viewModel: viewModel.sportsBetslipViewModel)
     }()
     
     private lazy var virtualBetslipViewController: VirtualBetslipViewController = {
-        return VirtualBetslipViewController(viewModel: viewModel)
+        return VirtualBetslipViewController(viewModel: viewModel.virtualBetslipViewModel)
     }()
     
     private var currentIndex: Int = 0
@@ -77,44 +74,44 @@ class BetslipViewController: UIViewController {
         setupPageViewController()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+    }
+    
     // MARK: - Setup Methods
     private func setupSubviews() {
-        view.addSubview(containerView)
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         
-        containerView.addSubview(headerView)
-        containerView.addSubview(typeSelectorView)
-        containerView.addSubview(pageViewController.view)
+        view.addSubview(headerView)
+        view.addSubview(typeSelectorView)
+        view.addSubview(pageViewController.view)
         
         // Add page view controller as child
         addChild(pageViewController)
         pageViewController.didMove(toParent: self)
+        
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Container view
-            containerView.topAnchor.constraint(equalTo: view.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
             // Header view
-            headerView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            headerView.topAnchor.constraint(equalTo: view.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             headerView.heightAnchor.constraint(equalToConstant: 52),
             
             // Type selector view
             typeSelectorView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8),
-            typeSelectorView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            typeSelectorView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            typeSelectorView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            typeSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             typeSelectorView.heightAnchor.constraint(equalToConstant: 50),
             
             // Page view controller
             pageViewController.view.topAnchor.constraint(equalTo: typeSelectorView.bottomAnchor),
-            pageViewController.view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            pageViewController.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            pageViewController.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
@@ -126,25 +123,14 @@ class BetslipViewController: UIViewController {
                 self?.handleTypeSelection(event)
             }
             .store(in: &cancellables)
-        
-        // Setup header callbacks
-        viewModel.headerViewModel.onCloseTapped = { [weak self] in
-            self?.handleHeaderCloseTapped()
-        }
-        
-        viewModel.headerViewModel.onJoinNowTapped = { [weak self] in
-            self?.handleHeaderJoinNowTapped()
-        }
-        
-        viewModel.headerViewModel.onLogInTapped = { [weak self] in
-            self?.handleHeaderLogInTapped()
-        }
     }
     
     private func setupPageViewController() {
         // Set initial view controller
         pageViewController.setViewControllers([sportsBetslipViewController], direction: .forward, animated: false)
         currentIndex = 0
+        
+        // Initial frame setup will happen in viewDidLayoutSubviews
     }
     
     // MARK: - Private Methods
@@ -167,22 +153,9 @@ class BetslipViewController: UIViewController {
         
         pageViewController.setViewControllers([targetViewController], direction: direction, animated: true) { [weak self] _ in
             self?.currentIndex = targetIndex
+            // Update frames after the transition
+            // self?.updateChildViewControllerFrames() // Removed as per edit hint
         }
-    }
-    
-    private func handleHeaderCloseTapped() {
-        // TODO: Implement close action
-        print("Header close button tapped")
-    }
-    
-    private func handleHeaderJoinNowTapped() {
-        // TODO: Implement join now action
-        print("Header join now button tapped")
-    }
-    
-    private func handleHeaderLogInTapped() {
-        // TODO: Implement log in action
-        print("Header log in button tapped")
     }
 }
 

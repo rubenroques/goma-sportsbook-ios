@@ -77,6 +77,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         
         // Update child view models with initial state
         updateChildViewModels()
+        
+        self.updatePlaceBetButtonState()
     }
     
     // MARK: - Protocol Methods
@@ -177,6 +179,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         amountTextFieldViewModel.setEnabled(isEnabled)
         placeBetButtonViewModel.setEnabled(isEnabled)
     }
+    
+
     
     public func onQuickAddTapped(_ amount: Int) {
         let amountString = String(amount)

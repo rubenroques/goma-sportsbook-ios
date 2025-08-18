@@ -12,7 +12,7 @@ public final class BetslipTicketTableViewCell: UITableViewCell {
     private var currentViewModel: BetslipTicketViewModelProtocol?
     
     // Callback for ticket removal
-    public var onTicketRemoved: ((BettingTicket) -> Void)?
+    public var onTicketRemoved: (() -> Void)?
     
     // MARK: - UI Components
     
@@ -61,12 +61,12 @@ public final class BetslipTicketTableViewCell: UITableViewCell {
     }
     
     // MARK: - Configuration
-    public func configure(with viewModel: BetslipTicketViewModelProtocol, ticket: BettingTicket) {
+    public func configure(with viewModel: BetslipTicketViewModelProtocol) {
         
         currentViewModel = viewModel
         
         currentViewModel?.onCloseTapped = { [weak self] in
-            self?.onTicketRemoved?(ticket)
+            self?.onTicketRemoved?()
         }
         
         ticketView.viewModel = viewModel
