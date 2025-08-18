@@ -15,6 +15,7 @@ public final class MockBetslipViewModel: BetslipViewModelProtocol {
     public var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
     public var bookingCodeButtonViewModel: ButtonIconViewModelProtocol
     public var clearBetslipButtonViewModel: ButtonIconViewModelProtocol
+    public var betslipTypeSelectorViewModel: BetslipTypeSelectorViewModelProtocol
     
     // Callback closures for coordinator communication
     public var onHeaderCloseTapped: (() -> Void)?
@@ -23,8 +24,13 @@ public final class MockBetslipViewModel: BetslipViewModelProtocol {
     public var onEmptyStateActionTapped: (() -> Void)?
     public var onPlaceBetTapped: (() -> Void)?
     
+    // MARK: - Publishers
     public var dataPublisher: AnyPublisher<BetslipData, Never> {
-        dataSubject.eraseToAnyPublisher()
+        return dataSubject.eraseToAnyPublisher()
+    }
+    
+    public var ticketsPublisher: AnyPublisher<[BettingTicket], Never> {
+        return dataSubject.map { $0.tickets }.eraseToAnyPublisher()
     }
     
     public var currentData: BetslipData {
@@ -41,6 +47,7 @@ public final class MockBetslipViewModel: BetslipViewModelProtocol {
         self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel.defaultMock()
         self.bookingCodeButtonViewModel = MockButtonIconViewModel.bookingCodeMock()
         self.clearBetslipButtonViewModel = MockButtonIconViewModel.clearBetslipMock()
+        self.betslipTypeSelectorViewModel = MockBetslipTypeSelectorViewModel.defaultMock()
         
         // Setup child view model callbacks
         setupChildViewModelCallbacks()

@@ -21,15 +21,19 @@ public protocol BetslipViewModelProtocol {
     /// Publisher for the betslip data
     var dataPublisher: AnyPublisher<BetslipData, Never> { get }
     
+    /// Publisher for tickets updates (for child view controllers)
+    var ticketsPublisher: AnyPublisher<[BettingTicket], Never> { get }
+    
     /// Current data (for immediate access)
     var currentData: BetslipData { get }
     
-    /// Child view models
-    var headerViewModel: BetslipHeaderViewModelProtocol { get }
+    // MARK: - Child View Models
+    var headerViewModel: BetslipHeaderViewModelProtocol { get set }
     var emptyStateViewModel: EmptyStateActionViewModelProtocol { get }
     var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol { get }
     var bookingCodeButtonViewModel: ButtonIconViewModelProtocol { get set }
     var clearBetslipButtonViewModel: ButtonIconViewModelProtocol { get set }
+    var betslipTypeSelectorViewModel: BetslipTypeSelectorViewModelProtocol { get }
     
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
