@@ -236,7 +236,7 @@ class MyTicketsViewController: UIViewController {
         }
         
         self.viewModel.showCashoutState = { [weak self] alertType, text in
-            self?.reloadAllMyTickets?()
+//            self?.reloadAllMyTickets?()
             self?.showCashoutState(alertType: alertType, text: text)
         }
         

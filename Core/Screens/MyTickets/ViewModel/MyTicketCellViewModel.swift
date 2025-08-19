@@ -105,8 +105,14 @@ class MyTicketCellViewModel {
 
     func requestCashoutAvailability() {
         let ticket = self.ticket
-        let stake = String(format: "%.2f", ticket.totalBetAmount ?? 0.0)
+        
+        var stake = String(format: "%.2f", ticket.totalBetAmount ?? 0.0)
 
+        if let totalStake = ticket.totalBetAmount,
+           let partialCashoutStake = ticket.partialCashoutStake {
+            stake = String(format: "%.2f", totalStake - partialCashoutStake)
+        }
+        
         Env.servicesProvider.calculateCashout(betId: ticket.betId, stakeValue: stake)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
