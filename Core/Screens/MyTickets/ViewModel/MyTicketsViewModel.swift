@@ -709,6 +709,7 @@ class MyTicketsViewModel: NSObject {
         else {
             let allowedCashback = self.allowedCashoutBetIds.contains(ticket.betId)
             let viewModel = MyTicketCellViewModel(ticket: ticket, allowedCashback: allowedCashback)
+            
             viewModel.requestDataRefreshAction = { [weak self] in
                 Env.userSessionStore.refreshUserWalletAfterDelay()
                 self?.refresh()
