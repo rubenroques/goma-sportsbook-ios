@@ -22,6 +22,7 @@ public protocol VirtualBetslipViewModelProtocol {
     var clearBetslipButtonViewModel: ButtonIconViewModelProtocol { get set }
     var emptyStateViewModel: EmptyStateActionViewModelProtocol { get set }
     var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol { get set }
+    var oddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol { get set }
     
     /// Remove a specific ticket
     func removeTicket(_ ticket: BettingTicket)

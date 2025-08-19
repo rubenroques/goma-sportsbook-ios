@@ -55,6 +55,7 @@ class SportsBetslipViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.register(BetslipTicketTableViewCell.self, forCellReuseIdentifier: "BetslipTicketCell")
+        tableView.register(OddsVariationTableViewCell.self, forCellReuseIdentifier: "OddsVariationCell")
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 120
@@ -251,10 +252,25 @@ class SportsBetslipViewController: UIViewController {
 // MARK: - UITableViewDataSource
 extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.currentTickets.count
+        let ticketCount = viewModel.currentTickets.count
+        // Add 1 for the odds variation cell if there are tickets
+        return ticketCount > 0 ? ticketCount + 1 : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let ticketCount = viewModel.currentTickets.count
+        
+        // Check if this is the odds variation cell (last row when there are tickets)
+        if indexPath.row == ticketCount {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "OddsVariationCell", for: indexPath) as? OddsVariationTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            cell.configure(with: viewModel.oddsAcceptanceViewModel)
+            return cell
+        }
+        
+        // Regular ticket cell
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "BetslipTicketCell", for: indexPath) as? BetslipTicketTableViewCell else {
             return UITableViewCell()
         }

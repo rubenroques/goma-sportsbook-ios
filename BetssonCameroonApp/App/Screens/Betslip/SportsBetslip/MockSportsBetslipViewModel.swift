@@ -20,6 +20,7 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
     public var clearBetslipButtonViewModel: ButtonIconViewModelProtocol
     public var emptyStateViewModel: EmptyStateActionViewModelProtocol
     public var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
+    public var oddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol
     
     // MARK: - Publishers
     public var ticketsPublisher: AnyPublisher<[BettingTicket], Never> {
@@ -52,6 +53,7 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
         
         self.emptyStateViewModel = MockEmptyStateActionViewModel(state: .loggedOut, title: "You need at least 1 selection\nin your betslip to place a bet", actionButtonTitle: "Log in to bet", image: "empty_betslip_icon")
         self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel()
+        self.oddsAcceptanceViewModel = MockOddsAcceptanceViewModel.acceptedMock()
         
         // Setup real data subscription
         setupPublishers()

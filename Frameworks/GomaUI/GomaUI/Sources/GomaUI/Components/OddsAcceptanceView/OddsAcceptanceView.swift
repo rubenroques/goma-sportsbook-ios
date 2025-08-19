@@ -7,7 +7,13 @@ import SwiftUI
 public final class OddsAcceptanceView: UIView {
     
     // MARK: - Properties
-    private let viewModel: OddsAcceptanceViewModelProtocol
+    public var viewModel: OddsAcceptanceViewModelProtocol {
+        didSet {
+            // Clear old cancellables and re-setup bindings for new view model
+            cancellables.removeAll()
+            setupBindings()
+        }
+    }
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components

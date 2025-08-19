@@ -20,6 +20,7 @@ public final class MockVirtualBetslipViewModel: VirtualBetslipViewModelProtocol 
     public var clearBetslipButtonViewModel: ButtonIconViewModelProtocol
     public var emptyStateViewModel: EmptyStateActionViewModelProtocol
     public var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
+    public var oddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol
     
     // MARK: - Publishers
     public var ticketsPublisher: AnyPublisher<[BettingTicket], Never> {
@@ -47,6 +48,7 @@ public final class MockVirtualBetslipViewModel: VirtualBetslipViewModelProtocol 
         
         self.emptyStateViewModel = MockEmptyStateActionViewModel.loggedOutMock()
         self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel()
+        self.oddsAcceptanceViewModel = MockOddsAcceptanceViewModel.acceptedMock()
         
         // Setup initial mock data
         setupPublishers()
