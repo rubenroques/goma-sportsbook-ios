@@ -113,6 +113,10 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
             self?.onPlaceBetTapped?(placedBetState)
         }
         
+        sportsBetslipViewModel.showLoginScreen = { [weak self] in
+            self?.onHeaderLogInTapped?()
+        }
+        
         // Wire virtual betslip view model callbacks
         virtualBetslipViewModel.emptyStateViewModel.onActionButtonTapped = { [weak self] in
             self?.onEmptyStateActionTapped?()

@@ -72,4 +72,7 @@ public protocol BetInfoSubmissionViewModelProtocol {
     
     /// Handle amount text field change
     func onAmountChanged(_ amount: String)
-} 
+    
+    /// Callbacks
+    var amountChanged: (() -> Void)? { get set }
+}

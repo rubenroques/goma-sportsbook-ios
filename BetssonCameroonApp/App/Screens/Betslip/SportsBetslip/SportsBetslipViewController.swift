@@ -70,6 +70,20 @@ class SportsBetslipViewController: UIViewController {
         return view
     }()
     
+    // Code input view
+    private lazy var codeInputView: CodeInputView = {
+        let view = CodeInputView(viewModel: viewModel.codeInputViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    // Login button
+    private lazy var loginButton: ButtonView = {
+        let button = ButtonView(viewModel: viewModel.loginButtonViewModel)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     // Loading view overlay
     private lazy var loadingView: UIView = {
         let view = UIView()
@@ -111,6 +125,8 @@ class SportsBetslipViewController: UIViewController {
         view.addSubview(emptyStateView)
         view.addSubview(ticketsTableView)
         view.addSubview(betInfoSubmissionView)
+        view.addSubview(codeInputView)
+        view.addSubview(loginButton) // Add login button
         
         // Add loading view on top of everything
         view.addSubview(loadingView)
@@ -153,7 +169,17 @@ class SportsBetslipViewController: UIViewController {
             // Bet info submission view - bottom of the view
             betInfoSubmissionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             betInfoSubmissionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            betInfoSubmissionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            betInfoSubmissionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            // Code input view - bottom of the view
+            codeInputView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            codeInputView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            codeInputView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            // Login button - bottom of the view
+            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            loginButton.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         // Loading view constraints - covers the entire view
@@ -191,12 +217,20 @@ class SportsBetslipViewController: UIViewController {
             switch betslipLoggedState {
             case .noTicketsLoggedOut:
                 self?.betInfoSubmissionView.isHidden = true
+                self?.codeInputView.isHidden = true
+                self?.loginButton.isHidden = true
             case .ticketsLoggedOut:
                 self?.betInfoSubmissionView.isHidden = true
+                self?.codeInputView.isHidden = true
+                self?.loginButton.isHidden = false
             case .noTicketsLoggedIn:
-                self?.betInfoSubmissionView.isHidden = false
+                self?.betInfoSubmissionView.isHidden = true
+                self?.codeInputView.isHidden = false
+                self?.loginButton.isHidden = true
             case .ticketsLoggedIn:
                 self?.betInfoSubmissionView.isHidden = false
+                self?.codeInputView.isHidden = true
+                self?.loginButton.isHidden = true
                 
             }
         }
@@ -235,6 +269,11 @@ class SportsBetslipViewController: UIViewController {
     private func handleBookingCodeTapped() {
         // TODO: Implement booking code functionality
         print("Booking code button tapped - functionality to be implemented")
+    }
+    
+    private func handleLoginTapped() {
+        // TODO: Implement login functionality
+        print("Login button tapped - functionality to be implemented")
     }
     
     // MARK: - Loading State Management
@@ -280,7 +319,7 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
         // Create a proper mock view model with the actual ticket data
         let ticketViewModel = MockBetslipTicketViewModel(
             leagueName: ticket.competition ?? "Unknown League",
-            startDate: ticket.date?.formatted() ?? "Unknown Date",
+            startDate: formatTicketDate(ticket.date) ?? "Unknown Date",
             homeTeam: ticket.homeParticipantName ?? "Home Team",
             awayTeam: ticket.awayParticipantName ?? "Away Team",
             selectedTeam: ticket.outcomeDescription,
@@ -295,5 +334,17 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
         }
         
         return cell
+    }
+}
+
+// MARK: - Helper Methods
+extension SportsBetslipViewController {
+    private func formatTicketDate(_ date: Date?) -> String? {
+        guard let date = date else { return nil }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMMM, HH:mm"
+        
+        return formatter.string(from: date)
     }
 }

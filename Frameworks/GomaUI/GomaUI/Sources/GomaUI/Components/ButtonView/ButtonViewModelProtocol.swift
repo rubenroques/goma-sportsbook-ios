@@ -44,4 +44,7 @@ public protocol ButtonViewModelProtocol {
     
     /// Update button title
     func updateTitle(_ title: String)
+    
+    /// Callback closure for button tap
+    var onButtonTapped: (() -> Void)? { get set }
 }

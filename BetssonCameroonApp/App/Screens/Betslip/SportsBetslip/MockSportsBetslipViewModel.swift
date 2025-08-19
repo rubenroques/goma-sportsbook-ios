@@ -21,6 +21,8 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
     public var emptyStateViewModel: EmptyStateActionViewModelProtocol
     public var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol
     public var oddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol
+    public var codeInputViewModel: CodeInputViewModelProtocol
+    public var loginButtonViewModel: ButtonViewModelProtocol
     
     // MARK: - Publishers
     public var ticketsPublisher: AnyPublisher<[BettingTicket], Never> {
@@ -35,6 +37,7 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
     
     public var betslipLoggedState: ((BetslipLoggedState) -> Void)?
     public var showPlacedBetState: ((BetPlacedState) -> Void)?
+    public var showLoginScreen: (() -> Void)?
     
     // MARK: - Initialization
     public init() {
@@ -54,6 +57,12 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
         self.emptyStateViewModel = MockEmptyStateActionViewModel(state: .loggedOut, title: "You need at least 1 selection\nin your betslip to place a bet", actionButtonTitle: "Log in to bet", image: "empty_betslip_icon")
         self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel()
         self.oddsAcceptanceViewModel = MockOddsAcceptanceViewModel.acceptedMock()
+        self.codeInputViewModel = MockCodeInputViewModel()
+        
+        
+        self.loginButtonViewModel = MockButtonViewModel(buttonData:
+                                                            ButtonData(id: "login", title: "Login", style: .solidBackground)
+        )
         
         // Setup real data subscription
         setupPublishers()
@@ -77,6 +86,8 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
                 self?.ticketsSubject.send(tickets)
+                // Recalculate potential winnings when tickets change
+                self?.calculatePotentialWinnings()
             }
             .store(in: &cancellables)
         
@@ -119,6 +130,14 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
             self?.placeBet()
         }
         
+        betInfoSubmissionViewModel.amountChanged = { [weak self] in
+            self?.calculatePotentialWinnings()
+        }
+        
+        
+        loginButtonViewModel.onButtonTapped = { [weak self] in
+            self?.showLoginScreen?()
+        }
     }
     
     private func placeBet() {
@@ -149,6 +168,33 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
 
             })
             .store(in: &cancellables)
+    }
+    
+    private func calculatePotentialWinnings() {
+        // Get the current amount from the bet info submission view model
+        let amountString = betInfoSubmissionViewModel.currentData.amount
+        guard let amount = Double(amountString), amount > 0 else {
+            // If no amount or invalid amount, set potential winnings to 0
+            betInfoSubmissionViewModel.updatePotentialWinnings("XAF 0")
+            return
+        }
+        
+        // Calculate total odds by multiplying each odd value sequentially
+        var totalOdds = 1.0
+        for ticket in currentTickets {
+            totalOdds *= ticket.decimalOdd
+        }
+        
+        // Calculate potential winnings: amount * total odds
+        let potentialWinnings = amount * totalOdds
+        
+        // Format the potential winnings with currency
+        let formattedWinnings = String(format: "XAF %.2f", potentialWinnings)
+        
+        // Update the potential winnings in the bet info submission view model
+        betInfoSubmissionViewModel.updatePotentialWinnings(formattedWinnings)
+        
+        print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
     }
 }
 

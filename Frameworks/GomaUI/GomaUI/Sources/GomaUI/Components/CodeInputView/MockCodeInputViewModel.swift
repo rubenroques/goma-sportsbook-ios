@@ -116,23 +116,23 @@ public final class MockCodeInputViewModel: CodeInputViewModelProtocol {
     }
     
     public func onSubmitCode() {
-        // Mock implementation - in real app this would validate and submit the code
-        print("Code submitted: \(currentData.code)")
-        
-        // Simulate loading state
-        setLoading(true)
-        
-        // Simulate API call delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            guard let self = self else { return }
-            
-            // Simulate success/failure based on code content
-            if self.currentData.code.lowercased().contains("valid") {
-                self.setLoading(false)
-            } else {
-                self.setError("Booking Code can't be found. It either doesn't exist or expired.")
-            }
-        }
+//        // Mock implementation - in real app this would validate and submit the code
+//        print("Code submitted: \(currentData.code)")
+//        
+//        // Simulate loading state
+//        setLoading(true)
+//        
+//        // Simulate API call delay
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+//            guard let self = self else { return }
+//            
+//            // Simulate success/failure based on code content
+//            if self.currentData.code.lowercased().contains("valid") {
+//                self.setLoading(false)
+//            } else {
+//                self.setError("Booking Code can't be found. It either doesn't exist or expired.")
+//            }
+//        }
     }
     
     public func onButtonTapped() {

@@ -23,9 +23,12 @@ public protocol SportsBetslipViewModelProtocol {
     var emptyStateViewModel: EmptyStateActionViewModelProtocol { get set }
     var betInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol { get set }
     var oddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol { get set }
+    var codeInputViewModel: CodeInputViewModelProtocol { get set }
+    var loginButtonViewModel: ButtonViewModelProtocol { get set }
     
     var betslipLoggedState: ((BetslipLoggedState) -> Void)? { get set }
     var showPlacedBetState: ((BetPlacedState) -> Void)? { get set }
+    var showLoginScreen: (() -> Void)? { get set }
 
     var isLoadingSubject: CurrentValueSubject<Bool, Never> { get set }
 

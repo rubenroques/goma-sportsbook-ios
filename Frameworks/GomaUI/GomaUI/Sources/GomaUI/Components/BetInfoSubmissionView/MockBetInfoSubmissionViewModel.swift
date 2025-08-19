@@ -20,6 +20,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     // Callback closures
     public var onPlaceBetTapped: (() -> Void)?
+    public var amountChanged: (() -> Void)?
     
     public var dataPublisher: AnyPublisher<BetInfoSubmissionData, Never> {
         dataSubject.eraseToAnyPublisher()
@@ -196,6 +197,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     public func onAmountChanged(_ amount: String) {
         updateAmount(amount)
         updatePlaceBetButtonState()
+        amountChanged?()
         placeBetButtonViewModel.updateTitle("Place Bet XAF \(amount)")
     }
     

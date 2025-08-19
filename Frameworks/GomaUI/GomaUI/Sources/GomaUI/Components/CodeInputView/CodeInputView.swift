@@ -20,6 +20,17 @@ public final class CodeInputView: UIView {
         return view
     }()
     
+    // Main stack view for components
+    private lazy var mainStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 12
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        return stackView
+    }()
+    
     // Input field
     private lazy var codeTextField: BorderedTextFieldView = {
         let textField = BorderedTextFieldView(viewModel: viewModel.codeTextFieldViewModel)
@@ -89,11 +100,12 @@ public final class CodeInputView: UIView {
     // MARK: - Setup
     private func setupSubviews() {
         addSubview(containerView)
-        containerView.addSubview(codeTextField)
-        containerView.addSubview(errorView)
+        containerView.addSubview(mainStackView)
+        mainStackView.addArrangedSubview(codeTextField)
+        mainStackView.addArrangedSubview(errorView)
         errorView.addSubview(errorIconImageView)
         errorView.addSubview(errorMessageLabel)
-        containerView.addSubview(submitButton)
+        mainStackView.addArrangedSubview(submitButton)
         submitButton.addSubview(loadingIndicator)
     }
     
@@ -105,16 +117,14 @@ public final class CodeInputView: UIView {
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            // Code text field
-            codeTextField.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            codeTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            codeTextField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            codeTextField.heightAnchor.constraint(equalToConstant: 52),
+            // Main stack view
+            mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            mainStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            mainStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
             
-            // Error view
-            errorView.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 12),
-            errorView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            errorView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            // Code text field
+            codeTextField.heightAnchor.constraint(equalToConstant: 52),
             
             // Error icon
             errorIconImageView.leadingAnchor.constraint(equalTo: errorView.leadingAnchor, constant: 16),
@@ -129,16 +139,13 @@ public final class CodeInputView: UIView {
             errorMessageLabel.bottomAnchor.constraint(equalTo: errorView.bottomAnchor, constant: -12),
             
             // Submit button
-            submitButton.topAnchor.constraint(equalTo: errorView.bottomAnchor, constant: 12),
-            submitButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            submitButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            submitButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
             submitButton.heightAnchor.constraint(equalToConstant: 50),
             
             // Loading indicator
             loadingIndicator.centerXAnchor.constraint(equalTo: submitButton.centerXAnchor),
             loadingIndicator.centerYAnchor.constraint(equalTo: submitButton.centerYAnchor)
         ])
+        
     }
     
     private func setupBindings() {
@@ -148,6 +155,7 @@ public final class CodeInputView: UIView {
                 self?.render(data: data)
             }
             .store(in: &cancellables)
+        
     }
     
     private func setupActions() {
@@ -194,7 +202,6 @@ public final class CodeInputView: UIView {
         loadingIndicator.startAnimating()
         submitButton.isHidden = false
         submitButton.viewModel.updateTitle("")
-
     }
     
     private func renderErrorState(message: String) {
