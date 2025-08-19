@@ -70,9 +70,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Place Bets Implementation
     
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Convert BetTickets to PlaceBetRequest
-        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency)
+        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId)
         
         // Create the API endpoint
         let endpoint = EveryMatrixOddsMatrixAPI.placeBet(betData: placeBetRequest)
@@ -175,7 +175,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Private Helper Methods
     
-    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?) -> PlaceBetRequest {
+    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?) -> PlaceBetRequest {
         let selections = betTickets.flatMap { betTicket in
             betTicket.tickets.map { selection in
                 BetSelectionInfo(
@@ -191,8 +191,8 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         return PlaceBetRequest(
             ucsOperatorId: 4093, // Default operator ID, should be configurable
-            userId: "6971184", // Default user ID, should come from user session
-            username: "+237666888001", // Default username, should come from user session
+            userId: userId ?? "",
+            username: username ?? "",
             currency: currency ?? "EUR",
             type: type,
             selections: selections,

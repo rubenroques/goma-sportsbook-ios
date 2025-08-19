@@ -1351,7 +1351,7 @@ extension GomaProvider: BettingProvider {
         }).eraseToAnyPublisher()
     }
 
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
 
         let publishers = betTickets.map { betTicket in
             let endpoint = GomaAPISchema.placeBetTicket(betTicket: betTicket, useCashback: useFreebetBalance)
