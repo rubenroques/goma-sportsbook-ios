@@ -149,7 +149,14 @@ public final class BetslipFloatingView: UIView {
         button.setTitle("Open Betslip", for: .normal)
         button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 12)
-        button.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+        
+        if let customImage = UIImage(named: "caret_up_icon")?.withRenderingMode(.alwaysTemplate) {
+            button.setImage(customImage, for: .normal)
+        }
+        else if let systemImage = UIImage(systemName: "chevron.up") {
+            button.setImage(systemImage, for: .normal)
+        }
+        
         button.tintColor = StyleProvider.Color.highlightPrimary
         button.semanticContentAttribute = .forceRightToLeft
         return button

@@ -198,7 +198,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             selections: selections,
             amount: totalAmount,
             oddsValidationType: "ACCEPT_ANY", // Default validation type
-            terminalType: "DESKTOP", // Default terminal type
+            terminalType: "MOBILE",
             ubsWalletId: nil,
             freeBet: nil
         )

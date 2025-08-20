@@ -44,6 +44,22 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
 
         return newSelectionState
     }
+    
+    public func setOutcomeSelected(type: OutcomeType) {
+        let currentState = marketStateSubject.value
+        guard let currentOutcome = getOutcome(from: currentState, type: type) else { return }
+
+        let updatedState = updateOutcomeSelection(in: currentState, type: type, isSelected: true)
+        marketStateSubject.send(updatedState)
+    }
+    
+    public func setOutcomeDeselected(type: OutcomeType) {
+        let currentState = marketStateSubject.value
+        guard let currentOutcome = getOutcome(from: currentState, type: type) else { return }
+
+        let updatedState = updateOutcomeSelection(in: currentState, type: type, isSelected: false)
+        marketStateSubject.send(updatedState)
+    }
 
     // MARK: - Enhanced Odds Update (Primary Method)
     public func updateOddsValue(type: OutcomeType, newValue: String) {

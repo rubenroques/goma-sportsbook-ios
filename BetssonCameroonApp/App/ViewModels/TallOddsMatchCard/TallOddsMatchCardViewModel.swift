@@ -96,7 +96,6 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         
         let outcome = marketOutcomesViewModelSubject.value.lineViewModels.compactMap { lineViewModel in
             if lineViewModel.marketStateSubject.value.leftOutcome?.id == outcomeId {
-                print("LINEVM: \(lineViewModel.marketStateSubject.value)")
                 return lineViewModel.marketStateSubject.value.leftOutcome
             } else if lineViewModel.marketStateSubject.value.middleOutcome?.id == outcomeId {
                 return lineViewModel.marketStateSubject.value.middleOutcome

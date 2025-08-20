@@ -53,6 +53,18 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         return outcomeViewModel.toggleSelection()
     }
     
+    public func setOutcomeSelected(type: OutcomeType) {
+        guard let outcomeViewModel = outcomeViewModels[type] else { return }
+        
+        outcomeViewModel.setSelected(true)
+    }
+    
+    public func setOutcomeDeselected(type: OutcomeType) {
+        guard let outcomeViewModel = outcomeViewModels[type] else { return }
+        
+        outcomeViewModel.setSelected(false)
+    }
+    
     public func updateOddsValue(type: OutcomeType, newValue: String) {
         guard let outcomeViewModel = outcomeViewModels[type] else {
             return

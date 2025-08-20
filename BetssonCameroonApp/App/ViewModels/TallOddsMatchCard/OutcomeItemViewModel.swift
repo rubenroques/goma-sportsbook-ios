@@ -121,6 +121,16 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     
     public func setSelected(_ selected: Bool) {
         isSelectedSubject.send(selected)
+        
+        let currentDisplayState = displayStateSubject.value
+        switch currentDisplayState {
+        case .normal(_ , let isBoosted):
+            let newCurrentDisplayState = GomaUI.OutcomeDisplayState.normal(isSelected: selected, isBoosted: isBoosted)
+            displayStateSubject.send(newCurrentDisplayState)
+        default:
+            break
+        }
+        
     }
     
     public func setDisabled(_ disabled: Bool) {

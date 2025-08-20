@@ -12,6 +12,8 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Properties
     private var tallOddsMatchCardView: TallOddsMatchCardView?
+    
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Cell Identifier
     static let identifier = "TallOddsMatchCardCollectionViewCell"
@@ -33,6 +35,8 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
 
         // Prepare the card view for reuse instead of removing it
         tallOddsMatchCardView?.prepareForReuse()
+        
+        cancellables.removeAll()
     }
 
     // MARK: - Setup
@@ -55,6 +59,46 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
 
         // Set up action callbacks
         self.setupCardViewActions()
+        
+        Publishers.CombineLatest(Env.betslipManager.bettingTicketsPublisher, viewModel.marketOutcomesViewModelPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] tickets, marketOutcomes in
+                
+                // Check each line view model for all outcomes
+                for lineViewModel in marketOutcomes.lineViewModels {
+                    // Check left outcome
+                    if let leftOutcome = lineViewModel.marketStateSubject.value.leftOutcome {
+                        let shouldBeSelected = tickets.contains { $0.outcomeId == leftOutcome.id }
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .left)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .left)
+                        }
+                    }
+                    
+                    // Check middle outcome
+                    if let middleOutcome = lineViewModel.marketStateSubject.value.middleOutcome {
+                        let shouldBeSelected = tickets.contains { $0.outcomeId == middleOutcome.id }
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .middle)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .middle)
+                        }
+                    }
+                    
+                    // Check right outcome
+                    if let rightOutcome = lineViewModel.marketStateSubject.value.rightOutcome {
+                        let shouldBeSelected = tickets.contains { $0.outcomeId == rightOutcome.id }
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .right)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .right)
+                        }
+                    }
+                }
+            })
+            .store(in: &cancellables)
+        
     }
 
     // Configure cell position for proper styling

@@ -159,6 +159,8 @@ public protocol MarketOutcomesLineViewModelProtocol {
 
     // Actions
     func toggleOutcome(type: OutcomeType) -> Bool
+    func setOutcomeSelected(type: OutcomeType)
+    func setOutcomeDeselected(type: OutcomeType)
 
     // Enhanced odds update with automatic direction calculation
     func updateOddsValue(type: OutcomeType, newValue: String)

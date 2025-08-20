@@ -65,7 +65,7 @@ public class MockMarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
         loadMarkets()
     }
     
-    public func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType) {
+    public func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType, isSelected: Bool) {
         print("Mock: Outcome selected - Group: \(marketGroupId), Line: \(lineId), Type: \(outcomeType)")
     }
     

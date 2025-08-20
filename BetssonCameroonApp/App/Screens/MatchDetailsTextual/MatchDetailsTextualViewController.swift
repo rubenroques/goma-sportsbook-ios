@@ -21,6 +21,9 @@ class MatchDetailsTextualViewController: UIViewController {
     var onLoginRequested: (() -> Void)?
     var onRegistrationRequested: (() -> Void)?
     
+    // MARK: Coordinators
+    private var betslipCoordinator: BetslipCoordinator?
+    
     // MARK: - UI Components
     private lazy var topSafeAreaView: UIView = {
         let view = UIView()
@@ -96,6 +99,13 @@ class MatchDetailsTextualViewController: UIViewController {
         return view
     }()
     
+    // Betslip Floating View
+    private lazy var betslipFloatingView: BetslipFloatingView = {
+        let view = BetslipFloatingView(viewModel: viewModel.betslipFloatingViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private var pageViewController: UIPageViewController!
     private var marketControllers: [String: MarketsTabSimpleViewController] = [:]
     private var isAnimating = false
@@ -166,6 +176,9 @@ class MatchDetailsTextualViewController: UIViewController {
         view.addSubview(pageLoadingOverlay)
         pageLoadingOverlay.addSubview(pageLoadingIndicator)
         pageLoadingOverlay.addSubview(pageLoadingLabel)
+        
+        // Add betslip floating view
+        view.addSubview(betslipFloatingView)
         
         setupComponents()
     }
@@ -329,6 +342,42 @@ class MatchDetailsTextualViewController: UIViewController {
         viewModel.navigateBack()
     }
     
+    private func showBetslip() {
+        if betslipCoordinator == nil,
+           let navigationController {
+            let coordinator = BetslipCoordinator(
+                navigationController: navigationController,
+                environment: Env
+            )
+            
+            // Set up navigation closures
+            coordinator.onCloseBetslip = { [weak self] in
+                self?.betslipCoordinator = nil
+                navigationController.dismiss(animated: true)
+            }
+            
+            coordinator.onShowLogin = { [weak self] in
+                self?.betslipCoordinator = nil
+                navigationController.dismiss(animated: true)
+                self?.onLoginRequested?()
+            }
+            
+            coordinator.onShowRegistration = { [weak self] in
+                self?.betslipCoordinator = nil
+                navigationController.dismiss(animated: true)
+                self?.onRegistrationRequested?()
+            }
+            
+            betslipCoordinator = coordinator
+            coordinator.start()
+        }
+        
+        if let viewController = betslipCoordinator?.betslipViewController {
+            navigationController?.present(viewController, animated: true)
+        }
+        
+    }
+    
     private func handleWidgetSelection(_ widgetID: String) {
         print("Widget selected: \(widgetID)")
         
@@ -391,9 +440,28 @@ class MatchDetailsTextualViewController: UIViewController {
             pageLoadingLabel.leadingAnchor.constraint(greaterThanOrEqualTo: pageLoadingOverlay.leadingAnchor, constant: 20),
             pageLoadingLabel.trailingAnchor.constraint(lessThanOrEqualTo: pageLoadingOverlay.trailingAnchor, constant: -20)
         ])
+        
+        // Page container view constraints
+        NSLayoutConstraint.activate([
+            pageContainerView.topAnchor.constraint(equalTo: marketGroupSelectorTabView.bottomAnchor),
+            pageContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            pageContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pageContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        // Betslip floating view constraints
+        NSLayoutConstraint.activate([
+            betslipFloatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            betslipFloatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50)
+        ])
     }
     
     private func setupBindings() {
+        
+        // Setup betslip callback
+        viewModel.betslipFloatingViewModel.onBetslipTapped = { [weak self] in
+            self?.showBetslip()
+        }
         
         // Bind loading state
         viewModel.isLoadingPublisher
@@ -497,6 +565,14 @@ class MatchDetailsTextualViewController: UIViewController {
                 eventId: viewModel.eventId,
                 marketGroupKey: marketGroup.id // Using marketGroup.id as key for now
             )
+            
+            tabViewModel.onOutcomeSelected = { [weak self] marketGroup, outcomeId in
+                self?.viewModel.handleOutcomeSelection(marketGroup: marketGroup, outcomeId: outcomeId, isSelected: true)
+            }
+            
+            tabViewModel.onOutcomeDeselected = { [weak self] marketGroup, outcomeId in
+                self?.viewModel.handleOutcomeSelection(marketGroup: marketGroup, outcomeId: outcomeId, isSelected: false)
+            }
             
             let controller = MarketsTabSimpleViewController(viewModel: tabViewModel)
             marketControllers[marketGroup.id] = controller
