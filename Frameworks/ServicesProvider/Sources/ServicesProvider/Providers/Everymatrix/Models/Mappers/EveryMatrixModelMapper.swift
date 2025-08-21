@@ -10,4 +10,4 @@ import Foundation
 class EveryMatrixModelMapper {
     // Base mapper class for EveryMatrix models
     // Extensions will add specific mapping functionality
-} 
+}

@@ -21,16 +21,39 @@ public class EveryMatrixSessionCoordinator {
 
     private var accessTokensPublishers: [String: CurrentValueSubject<String?, Never>]
     private var accessTokensUpdaters: [String: EveryMatrixSessionTokenUpdater]
+    
+    // User ID storage
+    private var userIdPublisher: CurrentValueSubject<String?, Never> = .init(nil)
 
     public init() {
         self.accessTokensPublishers = [:]
         self.accessTokensUpdaters = [:]
+    }
+    
+    // MARK: - User ID Management
+    
+    public func saveUserId(_ userId: String) {
+        self.userIdPublisher.send(userId)
+    }
+    
+    public func clearUserId() {
+        self.userIdPublisher.send(nil)
+    }
+    
+    public func userId() -> AnyPublisher<String?, Never> {
+        return userIdPublisher.eraseToAnyPublisher()
+    }
+    
+    public var currentUserId: String? {
+        return userIdPublisher.value
     }
 
     public func clearSession() {
         for publisher in self.accessTokensPublishers.values {
             publisher.send(nil)
         }
+        // Also clear the user ID when clearing session
+        self.userIdPublisher.send(nil)
     }
 
     public func saveToken(_ token: String, withKey key: EveryMatrixSessionCoordinatorKey) {

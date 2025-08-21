@@ -14,6 +14,7 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     // MARK: - Properties
     private let dataSubject = CurrentValueSubject<BetslipData, Never>(BetslipData())
     private var cancellables = Set<AnyCancellable>()
+    private var environment: Environment
     
     // MARK: - Child View Models
     public var headerViewModel: BetslipHeaderViewModelProtocol
@@ -29,12 +30,13 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     public var onPlaceBetTapped: ((BetPlacedState) -> Void)?
     
     // MARK: - Initialization
-    public init() {
+    init(environment: Environment) {
+        self.environment = environment
         // Initialize child view models
         self.headerViewModel = MockBetslipHeaderViewModel.notLoggedInMock()
         self.betslipTypeSelectorViewModel = MockBetslipTypeSelectorViewModel.defaultMock()
-        self.sportsBetslipViewModel = MockSportsBetslipViewModel()
-        self.virtualBetslipViewModel = MockVirtualBetslipViewModel()
+        self.sportsBetslipViewModel = SportsBetslipViewModel(environment: environment)
+        self.virtualBetslipViewModel = VirtualBetslipViewModel(environment: environment)
         
         // Setup initial data
         setupInitialData()
@@ -66,11 +68,12 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     
     private func setupPublishers() {
         
-        Env.userSessionStore.userProfilePublisher
+        Publishers.CombineLatest(Env.userSessionStore.userProfilePublisher, Env.userSessionStore.userWalletPublisher)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userProfile in
-                if userProfile != nil {
-                    self?.updateToLoggedInState()
+            .sink { [weak self] userProfile, userWallet in
+                if userProfile != nil,
+                   let userWallet {
+                    self?.updateToLoggedInState(userWallet: userWallet)
                 } else {
                     self?.updateToLoggedOutState()
                 }
@@ -127,8 +130,9 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
 //        }
     }
     
-    private func updateToLoggedInState() {
-        let loggedInState = BetslipHeaderState.loggedIn(balance: "XAF 25,000")
+    private func updateToLoggedInState(userWallet: UserWallet) {
+        let walletBalance = "\(userWallet.currency) \(userWallet.total)"
+        let loggedInState = BetslipHeaderState.loggedIn(balance: walletBalance)
         headerViewModel.updateState(loggedInState)
     }
     

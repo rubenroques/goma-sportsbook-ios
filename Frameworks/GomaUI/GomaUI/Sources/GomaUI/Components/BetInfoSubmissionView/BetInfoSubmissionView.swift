@@ -191,7 +191,7 @@ public final class BetInfoSubmissionView: UIView {
     ZStack {
         Color.gray.opacity(0.1)
         PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.defaultMock())
+            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.defaultMock(currency: "XAF"))
         }
     }
     .frame(height: 200)
@@ -203,7 +203,7 @@ public final class BetInfoSubmissionView: UIView {
     ZStack {
         Color.gray.opacity(0.1)
         PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.withAmountsMock())
+            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.withAmountsMock(currency: "XAF"))
         }
     }
     .frame(height: 200)
@@ -215,7 +215,7 @@ public final class BetInfoSubmissionView: UIView {
     ZStack {
         Color.gray.opacity(0.1)
         PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.disabledMock())
+            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.disabledMock(currency: "XAF"))
         }
     }
     .frame(height: 200)

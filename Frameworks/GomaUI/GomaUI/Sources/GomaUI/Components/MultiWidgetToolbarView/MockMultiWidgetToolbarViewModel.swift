@@ -22,6 +22,9 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
     private let config: MultiWidgetToolbarConfig
     private var currentState: LayoutState
     
+    // Widget view models
+    public var walletViewModel: MockWalletWidgetViewModel?
+    
     // MARK: - Initialization
     
     public init(config: MultiWidgetToolbarConfig, initialState: LayoutState = .loggedOut) {
@@ -45,6 +48,7 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
 //        } else if id == "avatar" {
 //            setLayoutState(.loggedOut)
 //        }
+        
     }
     
     public func setLayoutState(_ state: LayoutState) {
@@ -53,6 +57,11 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
         currentState = state
         let newDisplayState = Self.createDisplayState(from: config, for: state)
         displayStateSubject.send(newDisplayState)
+    }
+    
+    public func setWalletBalance(balance: Double) {
+        
+        walletViewModel?.updateBalance("\(balance)")
     }
     
     // MARK: - Helper Methods

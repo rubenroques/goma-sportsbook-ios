@@ -70,9 +70,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Place Bets Implementation
     
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?, oddsValidationType: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Convert BetTickets to PlaceBetRequest
-        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId)
+        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType)
         
         // Create the API endpoint
         let endpoint = EveryMatrixOddsMatrixAPI.placeBet(betData: placeBetRequest)
@@ -175,7 +175,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Private Helper Methods
     
-    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?) -> PlaceBetRequest {
+    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?) -> PlaceBetRequest {
         let selections = betTickets.flatMap { betTicket in
             betTicket.tickets.map { selection in
                 BetSelectionInfo(
@@ -197,7 +197,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             type: type,
             selections: selections,
             amount: totalAmount,
-            oddsValidationType: "ACCEPT_ANY", // Default validation type
+            oddsValidationType: oddsValidationType ?? "ACCEPT_ANY",
             terminalType: "MOBILE",
             ubsWalletId: nil,
             freeBet: nil

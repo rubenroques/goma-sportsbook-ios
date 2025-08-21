@@ -17,6 +17,7 @@ class RootTabBarViewModel: ObservableObject {
     var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
     var floatingOverlayViewModel: FloatingOverlayViewModelProtocol
     var betslipFloatingViewModel: BetslipFloatingViewModelProtocol
+    var walletStatusViewModel: WalletStatusViewModelProtocol
 
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
@@ -55,9 +56,12 @@ class RootTabBarViewModel: ObservableObject {
         self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
         self.floatingOverlayViewModel = floatingOverlayViewModel
         self.betslipFloatingViewModel = betslipFloatingViewModel
-
+        self.walletStatusViewModel = MockWalletStatusViewModel.emptyBalanceMock
+        
         setupTabBarBinding()
         setupBetslipBinding()
+        setupMultiWidgetToolbarBinding()
+        setupWalletStatusBinding()
     }
     
     func logoutUser() {
@@ -154,6 +158,35 @@ class RootTabBarViewModel: ObservableObject {
             }
             .store(in: &cancellables)
 
+    }
+    
+    private func setupMultiWidgetToolbarBinding() {
+        
+        userSessionStore.userWalletPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] wallet in
+                
+                if let walletBalance = wallet?.total {
+                    self?.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func setupWalletStatusBinding() {
+        
+        userSessionStore.userWalletPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] wallet in
+                
+                self?.walletStatusViewModel.setTotalBalance(amount: "\(wallet?.total ?? 0.0)")
+                self?.walletStatusViewModel.setBonusBalance(amount: "\(wallet?.bonus ?? 0.0)")
+                self?.walletStatusViewModel.setCurrentBalance(amount: "\(wallet?.total ?? 0.0)")
+                self?.walletStatusViewModel.setWithdrawableBalance(amount: "\(wallet?.totalWithdrawable ?? 0.0)")
+                self?.walletStatusViewModel.setCashbackBalance(amount: "\(0.0)")
+
+            })
+            .store(in: &cancellables)
     }
 
 }

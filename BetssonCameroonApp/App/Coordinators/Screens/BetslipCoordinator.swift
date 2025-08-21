@@ -36,7 +36,7 @@ class BetslipCoordinator: Coordinator {
         // Create appropriate ViewModel based on available services
         var viewModel: BetslipViewModelProtocol
 
-        let betslipViewModel = BetslipViewModel()
+        let betslipViewModel = BetslipViewModel(environment: environment)
         viewModel = betslipViewModel
         
         self.betslipViewModel = betslipViewModel
@@ -119,17 +119,4 @@ class BetslipCoordinator: Coordinator {
         betslipViewController?.present(alert, animated: true)
     }
     
-//    public func showBetslipSuccessScreen() {
-//        
-//        let betSuccessViewModel = MockDepositBonusSuccessViewModel(bonusDepositData: BonusDepositData(id: "", selectedAmount: 0.0, bonusAmount: 1.0))
-//        
-//        let betSuccessViewController = DepositBonusSuccessViewController(viewModel: betSuccessViewModel)
-//        
-//        self.betslipViewController?.present(betSuccessViewController, animated: true)
-//        
-//        betSuccessViewController.onContinueRequested = { [weak self] in
-//            self?.finish()
-//            self?.onCloseBetslip?()
-//        }
-//    }
 }

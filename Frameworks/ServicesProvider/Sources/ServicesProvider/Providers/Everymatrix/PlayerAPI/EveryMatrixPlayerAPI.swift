@@ -13,6 +13,7 @@ enum EveryMatrixPlayerAPI {
     case registerStep(phoneText: String, password: String, mobilePrefix: String, registrationId: String)
     case register(registrationId: String)
     case getUserProfile(userId: String)
+    case getUserBalance(userId: String)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -35,6 +36,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/legislation/register"
         case .getUserProfile(let userId):
             return "/v1/player/\(userId)/details"
+        case .getUserBalance(let userId):
+            return "/v2/player/\(userId)/balance"
         }
     }
     
@@ -45,7 +48,7 @@ extension EveryMatrixPlayerAPI: Endpoint {
     var headers: HTTP.Headers? {
         
         switch self {
-        case .getUserProfile(let userId):
+        case .getUserProfile, .getUserBalance:
             let headers = [
                 "Content-Type": "application/json",
                 "User-Agent": "GOMA/native-app/iOS",
@@ -74,6 +77,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .register:
             return .put
         case .getUserProfile:
+            return .get
+        case .getUserBalance:
             return .get
         }
     }
@@ -131,6 +136,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
     var requireSessionKey: Bool {
         switch self {
         case .getUserProfile:
+            return true
+        case .getUserBalance:
             return true
         default:
             return false

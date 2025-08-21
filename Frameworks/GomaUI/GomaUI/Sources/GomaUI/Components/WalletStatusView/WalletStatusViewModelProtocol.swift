@@ -33,4 +33,11 @@ public protocol WalletStatusViewModelProtocol {
     
     /// View model for the withdraw button
     var withdrawButtonViewModel: ButtonViewModelProtocol { get }
+    
+    func setTotalBalance(amount: String)
+    func setCurrentBalance(amount: String)
+    func setBonusBalance(amount: String)
+    func setCashbackBalance(amount: String)
+    func setWithdrawableBalance(amount: String)
+
 }

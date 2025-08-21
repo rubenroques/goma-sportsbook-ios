@@ -20,7 +20,6 @@ public final class BetslipHeaderView: UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = StyleProvider.Color.backgroundPrimary
-        view.layer.cornerRadius = 8
         return view
     }()
     

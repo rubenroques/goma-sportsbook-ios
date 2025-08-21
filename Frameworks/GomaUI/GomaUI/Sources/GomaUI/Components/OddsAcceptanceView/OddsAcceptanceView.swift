@@ -41,7 +41,7 @@ public final class OddsAcceptanceView: UIView {
     private lazy var checkboxButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = StyleProvider.Color.backgroundBorder
+        button.backgroundColor = .clear
         button.layer.cornerRadius = 4
         button.layer.borderWidth = 1
         button.layer.borderColor = StyleProvider.Color.backgroundBorder.cgColor
@@ -169,7 +169,7 @@ public final class OddsAcceptanceView: UIView {
             checkboxButton.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
             checkmarkImageView.isHidden = false
         case .notAccepted:
-            checkboxButton.backgroundColor = StyleProvider.Color.backgroundBorder
+            checkboxButton.backgroundColor = .clear
             checkboxButton.layer.borderColor = StyleProvider.Color.backgroundBorder.cgColor
             checkmarkImageView.isHidden = true
         }

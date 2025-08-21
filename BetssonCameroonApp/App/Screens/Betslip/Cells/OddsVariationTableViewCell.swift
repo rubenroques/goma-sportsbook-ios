@@ -33,6 +33,8 @@ class OddsVariationTableViewCell: UITableViewCell {
     
     // MARK: - Setup Methods
     private func setupSubviews() {
+        backgroundColor = .clear
+        
         contentView.addSubview(oddsAcceptanceView)
     }
     
@@ -55,6 +57,5 @@ class OddsVariationTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         currentViewModel = nil
-        // Don't remove the view, just update the view model reference
     }
 } 

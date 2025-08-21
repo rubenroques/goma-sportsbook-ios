@@ -114,7 +114,7 @@ class RootTabBarViewController: UIViewController {
         self.floatingOverlayView = FloatingOverlayView(viewModel: viewModel.floatingOverlayViewModel)
         self.floatingOverlayView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.walletStatusView = WalletStatusView(viewModel: MockWalletStatusViewModel.defaultMock)
+        self.walletStatusView = WalletStatusView(viewModel: viewModel.walletStatusViewModel)
         self.walletStatusView.translatesAutoresizingMaskIntoConstraints = false
         
         // Initialize betslipFloatingView with view model from RootTabBarViewModel

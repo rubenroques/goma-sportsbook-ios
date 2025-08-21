@@ -1,5 +1,5 @@
 //
-//  MockVirtualBetslipViewModel.swift
+//  VirtualBetslipViewModel.swift
 //  BetssonCameroonApp
 //
 //  Created by André Lascas on 14/08/2025.
@@ -9,11 +9,12 @@ import Foundation
 import Combine
 import GomaUI
 
-public final class MockVirtualBetslipViewModel: VirtualBetslipViewModelProtocol {
+public final class VirtualBetslipViewModel: VirtualBetslipViewModelProtocol {
     
     // MARK: - Properties
     private let ticketsSubject = CurrentValueSubject<[BettingTicket], Never>([])
     private var cancellables = Set<AnyCancellable>()
+    private var environment: Environment
     
     // MARK: - Child View Models
     public var bookingCodeButtonViewModel: ButtonIconViewModelProtocol
@@ -32,7 +33,9 @@ public final class MockVirtualBetslipViewModel: VirtualBetslipViewModelProtocol 
     }
     
     // MARK: - Initialization
-    public init() {
+    init(environment: Environment) {
+        self.environment = environment
+        
         // Initialize child view models
         self.bookingCodeButtonViewModel = MockButtonIconViewModel(
             title: "Booking Code",
@@ -47,7 +50,8 @@ public final class MockVirtualBetslipViewModel: VirtualBetslipViewModelProtocol 
         )
         
         self.emptyStateViewModel = MockEmptyStateActionViewModel.loggedOutMock()
-        self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel()
+        let currency = Env.userSessionStore.userWalletPublisher.value?.currency ?? "XAF"
+        self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel(currency: currency)
         self.oddsAcceptanceViewModel = MockOddsAcceptanceViewModel.acceptedMock()
         
         // Setup initial mock data
@@ -57,12 +61,12 @@ public final class MockVirtualBetslipViewModel: VirtualBetslipViewModelProtocol 
     // MARK: - Public Methods
     public func removeTicket(_ ticket: BettingTicket) {
         // Remove ticket from the real betslip manager
-        Env.betslipManager.removeBettingTicket(ticket)
+        environment.betslipManager.removeBettingTicket(ticket)
     }
     
     public func clearAllTickets() {
         // Clear all tickets from the real betslip manager
-        Env.betslipManager.clearAllBettingTickets()
+        environment.betslipManager.clearAllBettingTickets()
     }
     
     // MARK: - Private Methods
@@ -76,7 +80,7 @@ public final class MockVirtualBetslipViewModel: VirtualBetslipViewModelProtocol 
 //            }
 //            .store(in: &cancellables)
         
-        Env.userSessionStore.userProfilePublisher
+        environment.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in
                 if userProfile != nil {

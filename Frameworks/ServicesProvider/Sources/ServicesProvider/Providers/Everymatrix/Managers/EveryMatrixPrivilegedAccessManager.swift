@@ -67,6 +67,9 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                 // Save the session token to the session coordinator for other APIs to access
                 self.sessionCoordinator.saveToken(phoneLoginResponse.sessionId, withKey: .playerSessionToken)
                 
+                // Save the user ID to the session coordinator for future use
+                self.sessionCoordinator.saveUserId(String(phoneLoginResponse.userId))
+                
                 let getUserProfileEndpoint = EveryMatrixPlayerAPI.getUserProfile(userId: String(phoneLoginResponse.userId))
                 
                 return self.connector.request(getUserProfileEndpoint)
@@ -199,7 +202,21 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     }
     
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        let currentUserId = sessionCoordinator.currentUserId ?? ""
+
+        let endpoint = EveryMatrixPlayerAPI.getUserBalance(userId: currentUserId)
+        let publisher: AnyPublisher<EveryMatrix.WalletBalance, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher
+            .flatMap { walletResponse -> AnyPublisher<UserWallet, ServiceProviderError> in
+                
+                let mappedWalletResponse = EveryMatrixModelMapper.userWallet(fromWalletBalance: walletResponse)
+                
+                return Just(mappedWalletResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                
+            }
+            .eraseToAnyPublisher()
+
     }
     
     func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError> {

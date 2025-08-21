@@ -10,6 +10,7 @@ public struct BetInfoSubmissionData: Equatable {
     public let amount: String
     public let placeBetAmount: String
     public let isEnabled: Bool
+    public let currency: String
     
     public init(
         potentialWinnings: String = "XAF 0",
@@ -17,7 +18,8 @@ public struct BetInfoSubmissionData: Equatable {
         payout: String = "XAF 0",
         amount: String = "",
         placeBetAmount: String = "Place Bet XAF 0",
-        isEnabled: Bool = true
+        isEnabled: Bool = true,
+        currency: String = "XAF"
     ) {
         self.potentialWinnings = potentialWinnings
         self.winBonus = winBonus
@@ -25,6 +27,7 @@ public struct BetInfoSubmissionData: Equatable {
         self.amount = amount
         self.placeBetAmount = placeBetAmount
         self.isEnabled = isEnabled
+        self.currency = currency
     }
 }
 

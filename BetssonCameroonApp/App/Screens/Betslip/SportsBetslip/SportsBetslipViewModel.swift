@@ -1,5 +1,5 @@
 //
-//  MockSportsBetslipViewModel.swift
+//  SportsBetslipViewModel.swift
 //  BetssonCameroonApp
 //
 //  Created by André Lascas on 14/08/2025.
@@ -9,11 +9,12 @@ import Foundation
 import Combine
 import GomaUI
 
-public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
+public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     
     // MARK: - Properties
     private let ticketsSubject = CurrentValueSubject<[BettingTicket], Never>([])
     private var cancellables = Set<AnyCancellable>()
+    private var environment: Environment
     
     // MARK: - Child View Models
     public var bookingCodeButtonViewModel: ButtonIconViewModelProtocol
@@ -40,7 +41,8 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
     public var showLoginScreen: (() -> Void)?
     
     // MARK: - Initialization
-    public init() {
+    init(environment: Environment) {
+        self.environment = environment
         // Initialize child view models
         self.bookingCodeButtonViewModel = MockButtonIconViewModel(
             title: "Booking Code",
@@ -55,7 +57,10 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
         )
         
         self.emptyStateViewModel = MockEmptyStateActionViewModel(state: .loggedOut, title: "You need at least 1 selection\nin your betslip to place a bet", actionButtonTitle: "Log in to bet", image: "empty_betslip_icon")
-        self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel()
+        
+        // Initialize with default currency, will be updated when user profile is available
+        let currency = environment.userSessionStore.userWalletPublisher.value?.currency ?? "XAF"
+        self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel(currency: currency)
         self.oddsAcceptanceViewModel = MockOddsAcceptanceViewModel.acceptedMock()
         self.codeInputViewModel = MockCodeInputViewModel()
         
@@ -70,19 +75,17 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
     
     // MARK: - Public Methods
     public func removeTicket(_ ticket: BettingTicket) {
-        // Remove ticket from the real betslip manager
-        Env.betslipManager.removeBettingTicket(ticket)
+        environment.betslipManager.removeBettingTicket(ticket)
     }
     
     public func clearAllTickets() {
-        // Clear all tickets from the real betslip manager
-        Env.betslipManager.clearAllBettingTickets()
+        environment.betslipManager.clearAllBettingTickets()
     }
     
     // MARK: - Private Methods
     private func setupPublishers() {
         // Subscribe to real betslip data from the manager
-        Env.betslipManager.bettingTicketsPublisher
+        environment.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
                 self?.ticketsSubject.send(tickets)
@@ -91,7 +94,7 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
             }
             .store(in: &cancellables)
         
-        Env.userSessionStore.userProfilePublisher
+        environment.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in
                 if userProfile != nil {
@@ -102,7 +105,7 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
             }
             .store(in: &cancellables)
         
-        Publishers.CombineLatest(Env.betslipManager.bettingTicketsPublisher, Env.userSessionStore.userProfilePublisher)
+        Publishers.CombineLatest(environment.betslipManager.bettingTicketsPublisher, environment.userSessionStore.userProfilePublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] tickets, userProfile in
                 
@@ -143,11 +146,12 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
     private func placeBet() {
         
         let stake = Double(betInfoSubmissionViewModel.currentData.amount) ?? 0.0
+        let oddsValidationType = oddsAcceptanceViewModel.currentData.state == .accepted ? "ACCEPT_ANY" : "ACCEPT_HIGHER"
         
         // Show loading state
         self.isLoadingSubject.send(true)
         
-        Env.betslipManager.placeMultipleBet(withStake: stake, useFreebetBalance: false)
+        environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 // Hide loading state
@@ -175,7 +179,8 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
         let amountString = betInfoSubmissionViewModel.currentData.amount
         guard let amount = Double(amountString), amount > 0 else {
             // If no amount or invalid amount, set potential winnings to 0
-            betInfoSubmissionViewModel.updatePotentialWinnings("XAF 0")
+            let currency = betInfoSubmissionViewModel.currentData.currency
+            betInfoSubmissionViewModel.updatePotentialWinnings("\(currency) 0")
             return
         }
         
@@ -188,8 +193,11 @@ public final class MockSportsBetslipViewModel: SportsBetslipViewModelProtocol {
         // Calculate potential winnings: amount * total odds
         let potentialWinnings = amount * totalOdds
         
-        // Format the potential winnings with currency
-        let formattedWinnings = String(format: "XAF %.2f", potentialWinnings)
+        // Get the currency from the bet info submission view model
+        let currency = betInfoSubmissionViewModel.currentData.currency
+        
+        // Format the potential winnings with the correct currency
+        let formattedWinnings = String(format: "%@ %.2f", currency, potentialWinnings)
         
         // Update the potential winnings in the bet info submission view model
         betInfoSubmissionViewModel.updatePotentialWinnings(formattedWinnings)

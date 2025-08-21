@@ -233,8 +233,20 @@ class BetslipManager: NSObject {
         return self.bettingTicketsPublisher.value
     }
     
-    // Place bets
-    func placeMultipleBet(withStake stake: Double, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+}
+
+//
+extension BetslipManager {
+    
+    func refreshAllowedBetTypes() {
+        self.requestAllowedBetTypes(withBettingTickets: self.bettingTicketsPublisher.value)
+    }
+    
+    func requestAllowedBetTypes(withBettingTickets bettingTickets: [BettingTicket]) {
+       
+    }
+    
+    func placeBet(withStake stake: Double, useFreebetBalance: Bool, oddsValidationType: String?) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         
         guard
             self.bettingTicketsPublisher.value.isNotEmpty
@@ -269,7 +281,7 @@ class BetslipManager: NSObject {
         let username = Env.userSessionStore.userProfilePublisher.value?.username
         let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
         
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId)
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType)
             .mapError({ error in
                 switch error {
                 case .forbidden:
@@ -291,6 +303,7 @@ class BetslipManager: NSObject {
                 default:
                     return BetslipErrorType.betPlacementError
                 }
+
             })
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 
@@ -303,28 +316,12 @@ class BetslipManager: NSObject {
                 let shouldUpdate: Bool = betPlacedDetailsArray.map(\.response.betSucceed).compactMap({ $0 }).allSatisfy { $0 }
                 if shouldUpdate {
                     self.newBetsPlacedPublisher.send()
+                    Env.userSessionStore.refreshUserWallet()
                 }
             })
             .eraseToAnyPublisher()
         
         return publisher
     }
-}
-
-//
-extension BetslipManager {
-    
-    func refreshAllowedBetTypes() {
-        self.requestAllowedBetTypes(withBettingTickets: self.bettingTicketsPublisher.value)
-    }
-    
-    func requestAllowedBetTypes(withBettingTickets bettingTickets: [BettingTicket]) {
-       
-    }
-    
-    func placeMultipleBet(withBettingTickets bettingTickets: [BettingTicket]) {
-        
-    }
-    
     
 }

@@ -7,6 +7,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<BetInfoSubmissionData, Never>
+    private let currency: String
     
     // Child view models
     public var potentialWinningsRowViewModel: BetSummaryRowViewModelProtocol
@@ -32,20 +33,30 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     // MARK: - Initialization
     public init(
-        potentialWinnings: String = "XAF 0",
-        winBonus: String = "XAF 0",
-        payout: String = "XAF 0",
+        potentialWinnings: String = "0",
+        winBonus: String = "0",
+        payout: String = "0",
         amount: String = "",
-        placeBetAmount: String = "Place Bet XAF 0",
-        isEnabled: Bool = true
+        placeBetAmount: String = "0",
+        isEnabled: Bool = true,
+        currency: String = "XAF"
     ) {
+        self.currency = currency
+        
+        // Format numeric values with the passed currency
+        let defaultPotentialWinnings = "\(currency) \(potentialWinnings)"
+        let defaultWinBonus = "\(currency) \(winBonus)"
+        let defaultPayout = "\(currency) \(payout)"
+        let defaultPlaceBetAmount = "Place Bet \(currency) \(placeBetAmount)"
+        
         let initialData = BetInfoSubmissionData(
-            potentialWinnings: potentialWinnings,
-            winBonus: winBonus,
-            payout: payout,
+            potentialWinnings: defaultPotentialWinnings,
+            winBonus: defaultWinBonus,
+            payout: defaultPayout,
             amount: amount,
-            placeBetAmount: placeBetAmount,
-            isEnabled: isEnabled
+            placeBetAmount: defaultPlaceBetAmount,
+            isEnabled: isEnabled,
+            currency: currency
         )
         self.dataSubject = CurrentValueSubject(initialData)
         
@@ -65,10 +76,11 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
                 keyboardType: .decimalPad,
                 textContentType: .flightNumber
             ))
+        
         self.placeBetButtonViewModel = MockButtonViewModel(
             buttonData: ButtonData(
                 id: "place_bet",
-                title: "Place Bet XAF 0",
+                title: "Place Bet \(currency) 0",
                 style: .solidBackground,
                 isEnabled: false
             ))
@@ -90,7 +102,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             payout: currentData.payout,
             amount: currentData.amount,
             placeBetAmount: currentData.placeBetAmount,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            currency: currentData.currency
         )
         dataSubject.send(newData)
         
@@ -105,7 +118,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             payout: currentData.payout,
             amount: currentData.amount,
             placeBetAmount: currentData.placeBetAmount,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            currency: currentData.currency
         )
         dataSubject.send(newData)
         
@@ -120,7 +134,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             payout: amount,
             amount: currentData.amount,
             placeBetAmount: currentData.placeBetAmount,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            currency: currentData.currency
         )
         dataSubject.send(newData)
         
@@ -135,7 +150,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             payout: currentData.payout,
             amount: amount,
             placeBetAmount: currentData.placeBetAmount,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            currency: currentData.currency
         )
         dataSubject.send(newData)
         
@@ -151,7 +167,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             payout: currentData.payout,
             amount: currentData.amount,
             placeBetAmount: amount,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            currency: currentData.currency
         )
         dataSubject.send(newData)
         
@@ -166,7 +183,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
             payout: currentData.payout,
             amount: currentData.amount,
             placeBetAmount: currentData.placeBetAmount,
-            isEnabled: isEnabled
+            isEnabled: isEnabled,
+            currency: currentData.currency
         )
         dataSubject.send(newData)
         
@@ -184,13 +202,18 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
 
     
     public func onQuickAddTapped(_ amount: Int) {
-        let amountString = String(amount)
-        updateAmount(amountString)
-        updatePlaceBetAmount("Place Bet XAF \(amountString)")
+        // Get the current amount and add the new amount
+        let currentAmountString = currentData.amount
+        let currentAmount = Double(currentAmountString) ?? 0.0
+        let newTotalAmount = currentAmount + Double(amount)
+        let newTotalAmountString = String(format: "%.0f", newTotalAmount)
+        
+        updateAmount(newTotalAmountString)
+        updatePlaceBetAmount("Place Bet \(currency) \(newTotalAmountString)")
         
         // Update child view models
-        amountTextFieldViewModel.updateText(amountString)
-        placeBetButtonViewModel.updateTitle("Place Bet XAF \(amountString)")
+        amountTextFieldViewModel.updateText(newTotalAmountString)
+        placeBetButtonViewModel.updateTitle("Place Bet \(currency) \(newTotalAmountString)")
         placeBetButtonViewModel.setEnabled(true)
     }
     
@@ -198,7 +221,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         updateAmount(amount)
         updatePlaceBetButtonState()
         amountChanged?()
-        placeBetButtonViewModel.updateTitle("Place Bet XAF \(amount)")
+        placeBetButtonViewModel.updateTitle("Place Bet \(currency) \(amount)")
     }
     
     // MARK: - Private Methods
@@ -236,28 +259,30 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
 public extension MockBetInfoSubmissionViewModel {
     
     /// Creates a mock view model for default state
-    static func defaultMock() -> MockBetInfoSubmissionViewModel {
-        MockBetInfoSubmissionViewModel()
+    static func defaultMock(currency: String = "XAF") -> MockBetInfoSubmissionViewModel {
+        MockBetInfoSubmissionViewModel(currency: currency)
     }
     
     /// Creates a mock view model with specific amounts
     static func withAmountsMock(
-        potentialWinnings: String = "XAF 50,000",
-        winBonus: String = "XAF 5,000",
-        payout: String = "XAF 55,000",
-        amount: String = "10,000"
+        potentialWinnings: String = "50,000",
+        winBonus: String = "5,000",
+        payout: String = "55,000",
+        amount: String = "10,000",
+        currency: String = "XAF"
     ) -> MockBetInfoSubmissionViewModel {
-        MockBetInfoSubmissionViewModel(
+        return MockBetInfoSubmissionViewModel(
             potentialWinnings: potentialWinnings,
             winBonus: winBonus,
             payout: payout,
             amount: amount,
-            placeBetAmount: "Place Bet XAF \(amount)"
+            placeBetAmount: amount,
+            currency: currency
         )
     }
     
     /// Creates a mock view model for disabled state
-    static func disabledMock() -> MockBetInfoSubmissionViewModel {
-        MockBetInfoSubmissionViewModel(isEnabled: false)
+    static func disabledMock(currency: String = "XAF") -> MockBetInfoSubmissionViewModel {
+        MockBetInfoSubmissionViewModel(isEnabled: false, currency: currency)
     }
 } 
