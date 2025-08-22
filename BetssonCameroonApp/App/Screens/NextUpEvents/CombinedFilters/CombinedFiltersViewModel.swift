@@ -71,10 +71,18 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
             .map { tournaments -> [Competition] in
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
+            .catch { error -> AnyPublisher<[Competition], Never> in
+                print("Sport tournaments failed: \(error)")
+                return Just([]).eraseToAnyPublisher()
+            }
 
         let popularTournamentsPublisher = servicesProvider.getPopularTournaments(forSportType: sportType, tournamentsCount: 10)
             .map { tournaments -> [Competition] in
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
+            }
+            .catch { error -> AnyPublisher<[Competition], Never> in
+                print("Popular tournaments failed: \(error)")
+                return Just([]).eraseToAnyPublisher()
             }
 
         Publishers.Zip(sportTournamentsPublisher, popularTournamentsPublisher)

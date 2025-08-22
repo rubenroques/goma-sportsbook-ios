@@ -97,7 +97,7 @@ public class LeagueOptionRowView: UIView {
 
         leftIndicatorView.isHidden = !isSelected
         
-        iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : .black
+        iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.iconSecondary
         
         titleLabel.font = isSelected ? StyleProvider.fontWith(type: .bold, size: 14) : StyleProvider.fontWith(type: .regular, size: 14)
         
@@ -118,7 +118,7 @@ public class LeagueOptionRowView: UIView {
         leagueOption = option
         leftIndicatorView.isHidden = !isSelected
         iconImageView.image = UIImage(named: option.icon ?? "")
-        iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : .black
+        iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.iconSecondary
         titleLabel.text = option.title
         countLabel.text = option.count > 0 ? String(option.count) : "No Events"
     }

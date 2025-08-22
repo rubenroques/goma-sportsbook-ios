@@ -30,9 +30,13 @@ public class CountryLeaguesFilterView: UIView {
     private let collapseButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
-        button.setImage(image, for: .normal)
-        button.tintColor = .black
+        if let customImage = UIImage(named: "chevron_up_icon")?.withRenderingMode(.alwaysTemplate) {
+            button.setImage(customImage, for: .normal)
+        }
+        else if let systemImage = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate) {
+            button.setImage(systemImage, for: .normal)
+        }
+        button.tintColor = StyleProvider.Color.iconPrimary
         return button
     }()
     
@@ -79,7 +83,7 @@ public class CountryLeaguesFilterView: UIView {
     
     // MARK: - Setup
     private func setupView() {
-        backgroundColor = .white
+        backgroundColor = StyleProvider.Color.backgroundTertiary
         layer.cornerRadius = 0
         
         addSubview(headerView)

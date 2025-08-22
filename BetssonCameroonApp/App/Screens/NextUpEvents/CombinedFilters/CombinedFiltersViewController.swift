@@ -87,7 +87,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let bottomContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
 
         // Add shadow
         view.layer.shadowColor = UIColor.black.cgColor
@@ -463,7 +463,6 @@ extension CombinedFiltersViewController {
             // Configure the view
             filterView?.translatesAutoresizingMaskIntoConstraints = false
             filterView?.layer.cornerRadius = 8
-            filterView?.backgroundColor = .white
             
             // Store references to the views for callbacks
             storeFilterViewReference(filterView, for: widget)

@@ -87,7 +87,7 @@ public class TimeSliderView: UIView {
     
     // MARK: - Setup
     private func setupView() {
-        backgroundColor = .white
+        backgroundColor = StyleProvider.Color.backgroundTertiary
         layer.cornerRadius = 8
         
         headerStackView.addArrangedSubview(timeIconImageView)

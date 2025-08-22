@@ -86,6 +86,7 @@ class EveryMatrixConnector: Connector {
         return self.serialQueue.sync {
             self.wampManager.getModel(router: router, decodingType: T.self)
                 .mapError { error -> ServiceProviderError in
+                    print("REQUEST ERROR: \(router.procedure)")
                     switch error {
                     case .notConnected:
                         return .onConnection

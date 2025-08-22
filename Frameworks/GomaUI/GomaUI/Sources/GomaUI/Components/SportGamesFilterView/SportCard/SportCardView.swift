@@ -49,6 +49,7 @@ public class SportCardView: UIView {
     
     // MARK: - Setup
     private func setupView() {
+        backgroundColor = StyleProvider.Color.backgroundSecondary
         translatesAutoresizingMaskIntoConstraints = false
         layer.cornerRadius = 8
         clipsToBounds = true
@@ -77,7 +78,7 @@ public class SportCardView: UIView {
     }
     
     private func updateAppearance() {
-        backgroundColor = isSelected ? StyleProvider.Color.highlightPrimary : .systemGray6
+        backgroundColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.backgroundSecondary
         iconImageView.tintColor = isSelected ? StyleProvider.Color.buttonTextPrimary : StyleProvider.Color.textPrimary
         titleLabel.textColor = isSelected ? StyleProvider.Color.buttonTextPrimary : StyleProvider.Color.textPrimary
     }
