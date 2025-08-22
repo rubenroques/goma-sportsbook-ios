@@ -145,7 +145,8 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     
     private func placeBet() {
         
-        let stake = Double(betInfoSubmissionViewModel.currentData.amount) ?? 0.0
+        let stake = convertToDouble(betInfoSubmissionViewModel.currentData.amount)
+        
         let oddsValidationType = oddsAcceptanceViewModel.currentData.state == .accepted ? "ACCEPT_ANY" : "ACCEPT_HIGHER"
         
         // Show loading state
@@ -203,6 +204,17 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         betInfoSubmissionViewModel.updatePotentialWinnings(formattedWinnings)
         
         print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
+    }
+    
+    func convertToDouble(_ string: String) -> Double {
+        // Remove any whitespace
+        let trimmed = string.trimmingCharacters(in: .whitespaces)
+        
+        guard !trimmed.isEmpty else { return 0.0 }
+        
+        let normalizedString = trimmed.replacingOccurrences(of: ",", with: ".")
+        
+        return Double(normalizedString) ?? 0.0
     }
 }
 
