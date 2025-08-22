@@ -69,7 +69,7 @@ final public class CasinoCategorySectionView: UIView {
     // MARK: - Setup
     private func setupSubviews() {
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = StyleProvider.Color.backgroundColor
+        backgroundColor = StyleProvider.Color.backgroundTertiary
         
         setupCategoryBar()
         setupCollectionView()
