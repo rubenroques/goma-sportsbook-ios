@@ -696,7 +696,7 @@ class ComponentsTableViewController: UITableViewController {
                 viewModel.startCountdown()
                 return countdownView
             }
-        )
+        ),
         UIComponent(
             title: "Status Info View",
             description: "A status info component, using StatusInfoView.",
