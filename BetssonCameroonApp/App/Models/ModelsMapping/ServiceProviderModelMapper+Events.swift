@@ -308,7 +308,7 @@ extension ServiceProviderModelMapper {
     
     static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome, marketName: String?) -> Outcome {
         let oddFormat: OddFormat = Self.oddFormat(fromServiceProviderOddFormat: outcome.odd)
-        let bettingOffer = BettingOffer(id: outcome.id,
+        let bettingOffer = BettingOffer(id: outcome.bettingOfferId ?? outcome.id,
                                         odd: oddFormat,
                                         statusId: "",
                                         isLive: true,

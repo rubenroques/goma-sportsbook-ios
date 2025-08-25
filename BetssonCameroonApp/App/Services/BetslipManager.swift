@@ -246,9 +246,82 @@ extension BetslipManager {
        
     }
     
-    func placeMultipleBet(withBettingTickets bettingTickets: [BettingTicket]) {
+    func placeBet(withStake stake: Double, useFreebetBalance: Bool, oddsValidationType: String?) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         
+        guard
+            self.bettingTicketsPublisher.value.isNotEmpty
+        else {
+            return Fail(error: BetslipErrorType.emptyBetslip).eraseToAnyPublisher()
+        }
+        
+        let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
+            let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
+            let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
+                                                                         eventName: bettingTicket.matchDescription,
+                                                                         homeTeamName: bettingTicket.homeParticipantName ?? "",
+                                                                         awayTeamName: bettingTicket.awayParticipantName ?? "",
+                                                                         marketName: bettingTicket.marketId,
+                                                                         outcomeName: bettingTicket.outcomeDescription,
+                                                                         odd: odd,
+                                                                         stake: stake,
+                                                                         sportIdCode: bettingTicket.sportIdCode,
+                                                                         outcomeId: bettingTicket.id)
+            return betTicketSelection
+        }
+        
+        var betGroupingType: BetGroupingType = .single(identifier: "S")
+        
+        if betTicketSelections.count > 1 {
+            betGroupingType = .multiple(identifier: "M")
+        }
+        
+        let betTicket = BetTicket.init(tickets: betTicketSelections, stake: stake, betGroupingType: betGroupingType)
+        
+        let userCurrency = Env.userSessionStore.userProfilePublisher.value?.currency
+        let username = Env.userSessionStore.userProfilePublisher.value?.username
+        let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
+        
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType)
+            .mapError({ error in
+                switch error {
+                case .forbidden:
+                    return BetslipErrorType.forbiddenRequest
+                case .errorMessage(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
+                case .notPlacedBet(let message):
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
+                case .betNeedsUserConfirmation(let betDetails):
+                    return BetslipErrorType.betNeedsUserConfirmation(betDetails: betDetails)
+                default:
+                    return BetslipErrorType.betPlacementError
+                }
+
+            })
+            .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
+                
+                print("Placed bet response: \(placedBetsResponse)")
+                
+                return Just([]).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
+                
+            })
+            .handleEvents(receiveOutput: { betPlacedDetailsArray in
+                let shouldUpdate: Bool = betPlacedDetailsArray.map(\.response.betSucceed).compactMap({ $0 }).allSatisfy { $0 }
+                if shouldUpdate {
+                    self.newBetsPlacedPublisher.send()
+                    Env.userSessionStore.refreshUserWallet()
+                }
+            })
+            .eraseToAnyPublisher()
+        
+        return publisher
     }
-    
     
 }

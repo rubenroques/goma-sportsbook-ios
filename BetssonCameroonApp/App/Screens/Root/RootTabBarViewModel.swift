@@ -16,10 +16,15 @@ class RootTabBarViewModel: ObservableObject {
     var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
     var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
     var floatingOverlayViewModel: FloatingOverlayViewModelProtocol
+    var betslipFloatingViewModel: BetslipFloatingViewModelProtocol
+    var walletStatusViewModel: WalletStatusViewModelProtocol
 
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
     private var lastActiveTabBarID: TabBarIdentifier?
+    
+    // MARK: - Navigation Callbacks
+    var onBetslipRequested: (() -> Void)?
     
     // MARK: - Authentication Publishers
     
@@ -43,14 +48,20 @@ class RootTabBarViewModel: ObservableObject {
     init(userSessionStore: UserSessionStore,
          multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol = MockMultiWidgetToolbarViewModel.defaultMock,
          adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
-         floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel())
+         floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel(),
+         betslipFloatingViewModel: BetslipFloatingViewModelProtocol = MockBetslipFloatingViewModel(state: .noTickets))
     {
         self.userSessionStore = userSessionStore
         self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel
         self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
         self.floatingOverlayViewModel = floatingOverlayViewModel
-
+        self.betslipFloatingViewModel = betslipFloatingViewModel
+        self.walletStatusViewModel = MockWalletStatusViewModel.emptyBalanceMock
+        
         setupTabBarBinding()
+        setupBetslipBinding()
+        setupMultiWidgetToolbarBinding()
+        setupWalletStatusBinding()
     }
     
     func logoutUser() {
@@ -90,6 +101,45 @@ class RootTabBarViewModel: ObservableObject {
     }
 
     // MARK: - Private Methods
+    private func setupBetslipBinding() {
+        // Setup betslip callback
+        betslipFloatingViewModel.onBetslipTapped = { [weak self] in
+            self?.onBetslipRequested?()
+        }
+        
+        // Subscribe to betslip manager tickets to update floating view state
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] tickets in
+                self?.updateBetslipFloatingState(tickets: tickets)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func updateBetslipFloatingState(tickets: [BettingTicket]) {
+        if tickets.isEmpty {
+            betslipFloatingViewModel.updateState(.noTickets)
+        } else {
+            // Calculate total odds and other betslip data
+            let selectionCount = tickets.count
+            let totalOdds = calculateTotalOdds(from: tickets)
+            let totalEligibleCount = 0
+            
+            betslipFloatingViewModel.updateState(.withTickets(
+                selectionCount: selectionCount,
+                odds: String(format: "%.2f", totalOdds),
+                winBoostPercentage: nil, // TODO: Implement win boost calculation
+                totalEligibleCount: totalEligibleCount
+            ))
+        }
+    }
+    
+    private func calculateTotalOdds(from tickets: [BettingTicket]) -> Double {
+        return tickets.reduce(1.0) { total, ticket in
+            total * ticket.decimalOdd
+        }
+    }
+    
     private func setupTabBarBinding() {
         // Listen to tab bar active bar id changes
         adaptiveTabBarViewModel.displayStatePublisher
@@ -108,6 +158,35 @@ class RootTabBarViewModel: ObservableObject {
             }
             .store(in: &cancellables)
 
+    }
+    
+    private func setupMultiWidgetToolbarBinding() {
+        
+        userSessionStore.userWalletPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] wallet in
+                
+                if let walletBalance = wallet?.total {
+                    self?.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func setupWalletStatusBinding() {
+        
+        userSessionStore.userWalletPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] wallet in
+                
+                self?.walletStatusViewModel.setTotalBalance(amount: "\(wallet?.total ?? 0.0)")
+                self?.walletStatusViewModel.setBonusBalance(amount: "\(wallet?.bonus ?? 0.0)")
+                self?.walletStatusViewModel.setCurrentBalance(amount: "\(wallet?.total ?? 0.0)")
+                self?.walletStatusViewModel.setWithdrawableBalance(amount: "\(wallet?.totalWithdrawable ?? 0.0)")
+                self?.walletStatusViewModel.setCashbackBalance(amount: "\(0.0)")
+
+            })
+            .store(in: &cancellables)
     }
 
 }

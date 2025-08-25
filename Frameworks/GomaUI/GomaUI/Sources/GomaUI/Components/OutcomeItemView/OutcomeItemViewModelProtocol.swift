@@ -48,6 +48,7 @@ public enum OutcomeDisplayState: Hashable {
 // MARK: - Data Models
 public struct OutcomeItemData: Equatable, Hashable {
     public let id: String
+    public let bettingOfferId: String?
     public let title: String
     public let value: String
     public let oddsChangeDirection: OddsChangeDirection
@@ -62,6 +63,7 @@ public struct OutcomeItemData: Equatable, Hashable {
     public var isDisabled: Bool { displayState.isDisabled }
 
     public init(id: String,
+                bettingOfferId: String?,
                 title: String,
                 value: String,
                 oddsChangeDirection: OddsChangeDirection = .none,
@@ -71,6 +73,7 @@ public struct OutcomeItemData: Equatable, Hashable {
                 previousValue: String? = nil,
                 changeTimestamp: Date? = nil) {
         self.id = id
+        self.bettingOfferId = bettingOfferId
         self.title = title
         self.value = value
         self.oddsChangeDirection = oddsChangeDirection
@@ -92,6 +95,7 @@ public struct OutcomeItemData: Equatable, Hashable {
         let direction = calculateOddsChangeDirection(from: self.value, to: newValue)
         return OutcomeItemData(
             id: self.id,
+            bettingOfferId: self.bettingOfferId,
             title: self.title,
             value: newValue,
             oddsChangeDirection: direction,
@@ -105,6 +109,7 @@ public struct OutcomeItemData: Equatable, Hashable {
     public func withClearedOddsChange() -> OutcomeItemData {
         return OutcomeItemData(
             id: self.id,
+            bettingOfferId: self.bettingOfferId,
             title: self.title,
             value: self.value,
             oddsChangeDirection: .none,
@@ -118,6 +123,7 @@ public struct OutcomeItemData: Equatable, Hashable {
     public func withDisplayState(_ newDisplayState: OutcomeDisplayState) -> OutcomeItemData {
         return OutcomeItemData(
             id: self.id,
+            bettingOfferId: self.bettingOfferId,
             title: self.title,
             value: self.value,
             oddsChangeDirection: self.oddsChangeDirection,
@@ -198,6 +204,7 @@ public struct OutcomeItemOddsChangeEvent: Equatable {
 public protocol OutcomeItemViewModelProtocol {
     // Publishers
     var oddsChangeEventPublisher: AnyPublisher<OutcomeItemOddsChangeEvent, Never> { get }
+    var outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never> { get }
 
     // Individual publishers for granular updates (backward compatibility)
     var titlePublisher: AnyPublisher<String, Never> { get }

@@ -76,6 +76,7 @@ class NextUpEventsViewModel {
     var onFiltersRequested: (() -> Void) = {
         print("Empty clojure")
     }
+    var onBetslipRequested: (() -> Void)?
 
     // MARK: - Private Properties
     var sport: Sport
@@ -103,7 +104,7 @@ class NextUpEventsViewModel {
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
-                
+        
         let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter", icon: "filter_icon", actionIcon: "right_arrow_icon")
 
         self.generalFiltersBarViewModel = MockGeneralFilterBarViewModel(items: [], mainFilterItem: mainFilter)
@@ -173,6 +174,7 @@ class NextUpEventsViewModel {
         
         // Filters are now managed statefully by parent coordinator
         // No reactive binding to global filter state needed
+        
     }
 
     private func setupFilters() {

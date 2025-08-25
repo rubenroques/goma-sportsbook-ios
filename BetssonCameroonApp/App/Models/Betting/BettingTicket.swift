@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct BettingTicket: Codable, Hashable {
+public struct BettingTicket: Codable, Hashable {
 
     var id: String
 
@@ -59,7 +59,7 @@ struct BettingTicket: Codable, Hashable {
         }
     }
 
-    static func == (lhs: BettingTicket, rhs: BettingTicket) -> Bool {
+    public static func == (lhs: BettingTicket, rhs: BettingTicket) -> Bool {
         return lhs.bettingId == rhs.bettingId &&
             lhs.matchDescription == rhs.matchDescription &&
             lhs.marketDescription == rhs.marketDescription &&

@@ -698,6 +698,16 @@ class ComponentsTableViewController: UITableViewController {
             }
         ),
         UIComponent(
+            title: "Betslip View",
+            description: "Complete betslip screen with header and bet submission components, following MVVM-C architecture pattern.",
+            viewController: BetslipDemoViewController.self,
+            previewFactory: {
+                let viewModel = MockBetslipViewModel.defaultMock()
+                let betslipView = BetslipViewController(viewModel: viewModel)
+                return betslipView.view
+            }
+        ),
+        UIComponent(
             title: "Status Info View",
             description: "A status info component, using StatusInfoView.",
             viewController: StatusInfoViewController.self,

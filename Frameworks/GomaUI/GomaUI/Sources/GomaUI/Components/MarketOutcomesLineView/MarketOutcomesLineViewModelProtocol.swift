@@ -4,6 +4,7 @@ import UIKit
 // MARK: - Data Models
 public struct MarketOutcomeData: Equatable, Hashable {
     public let id: String
+    public let bettingOfferId: String?
     public let title: String
     public let value: String
     public let oddsChangeDirection: OddsChangeDirection
@@ -15,6 +16,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
     public let changeTimestamp: Date?
 
     public init(id: String,
+                bettingOfferId: String?,
                 title: String,
                 value: String,
                 oddsChangeDirection: OddsChangeDirection = .none,
@@ -23,6 +25,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
                 previousValue: String? = nil,
                 changeTimestamp: Date? = nil) {
         self.id = id
+        self.bettingOfferId = bettingOfferId
         self.title = title
         self.value = value
         self.oddsChangeDirection = oddsChangeDirection
@@ -37,6 +40,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
         let direction = calculateOddsChangeDirection(from: self.value, to: newValue)
         return MarketOutcomeData(
             id: self.id,
+            bettingOfferId: self.bettingOfferId,
             title: self.title,
             value: newValue,
             oddsChangeDirection: direction,
@@ -51,6 +55,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
     public func withClearedOddsChange() -> MarketOutcomeData {
         return MarketOutcomeData(
             id: self.id,
+            bettingOfferId: self.bettingOfferId,
             title: self.title,
             value: self.value,
             oddsChangeDirection: .none,
@@ -146,6 +151,7 @@ public struct MarketOutcomesLineDisplayState: Equatable {
 // MARK: - View Model Protocol
 public protocol MarketOutcomesLineViewModelProtocol {
     // Single state publisher for all market data
+    var marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never> { get }
     var marketStatePublisher: AnyPublisher<MarketOutcomesLineDisplayState, Never> { get }
 
     // Odds change events for animation triggers (separate for performance)
@@ -153,6 +159,8 @@ public protocol MarketOutcomesLineViewModelProtocol {
 
     // Actions
     func toggleOutcome(type: OutcomeType) -> Bool
+    func setOutcomeSelected(type: OutcomeType)
+    func setOutcomeDeselected(type: OutcomeType)
 
     // Enhanced odds update with automatic direction calculation
     func updateOddsValue(type: OutcomeType, newValue: String)

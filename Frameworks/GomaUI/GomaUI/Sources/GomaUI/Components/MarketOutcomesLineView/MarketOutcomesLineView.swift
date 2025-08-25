@@ -29,8 +29,8 @@ final public class MarketOutcomesLineView: UIView {
     private var positionOverrides: [OutcomeType: OutcomePosition] = [:]
 
     // MARK: - Public Properties
-    public var onOutcomeSelected: ((OutcomeType) -> Void) = { _ in }
-    public var onOutcomeDeselected: ((OutcomeType) -> Void) = { _ in }
+    public var onOutcomeSelected: ((String, OutcomeType) -> Void) = { _, _ in }
+    public var onOutcomeDeselected: ((String, OutcomeType) -> Void) = { _, _ in }
     public var onOutcomeLongPress: ((OutcomeType) -> Void) = { _ in }
     public var onSeeAllTapped: (() -> Void) = { }
 
@@ -252,8 +252,8 @@ final public class MarketOutcomesLineView: UIView {
     }
 
     private func setupOutcomeViewCallbacks(_ outcomeView: OutcomeItemView, outcomeType: OutcomeType) {
-        outcomeView.onTap = { [weak self] in
-            self?.handleOutcomeTap(outcomeType)
+        outcomeView.onTap = { [weak self] outcomeId in
+            self?.handleOutcomeTap(outcomeType, outcomeId: outcomeId)
         }
 
         outcomeView.onLongPress = { [weak self] in
@@ -266,15 +266,15 @@ final public class MarketOutcomesLineView: UIView {
         onSeeAllTapped()
     }
 
-    private func handleOutcomeTap(_ type: OutcomeType) {
+    private func handleOutcomeTap(_ type: OutcomeType, outcomeId: String) {
         // Toggle the selection state and get the new state
         let isNowSelected = viewModel.toggleOutcome(type: type)
-
+        
         // Call the appropriate callback based on the new state
         if isNowSelected {
-            onOutcomeSelected(type)
+            onOutcomeSelected(outcomeId, type)
         } else {
-            onOutcomeDeselected(type)
+            onOutcomeDeselected(outcomeId, type)
         }
 
         // Provide haptic feedback

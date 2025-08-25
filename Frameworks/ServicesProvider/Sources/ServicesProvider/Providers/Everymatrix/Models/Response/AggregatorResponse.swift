@@ -11,7 +11,7 @@ extension EveryMatrix {
     struct AggregatorResponse: Codable {
         let version: String
         let format: String
-        let messageType: String
+        let messageType: String?
         let records: [EntityRecord]
     }
 }

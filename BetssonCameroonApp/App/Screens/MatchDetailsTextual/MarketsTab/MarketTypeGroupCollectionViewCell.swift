@@ -168,6 +168,47 @@ class MarketTypeGroupCollectionViewCell: UICollectionViewCell {
         // Force layout update after content configuration
         setNeedsLayout()
         invalidateIntrinsicContentSize()
+        
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] tickets in
+                guard let self = self,
+                      let currentViewModel = self.currentViewModel else { return }
+                
+                // Check each line view model for all outcomes
+                for lineViewModel in currentViewModel.lineViewModels {
+                    // Check left outcome
+                    if let leftOutcome = lineViewModel.marketStateSubject.value.leftOutcome {
+                        let shouldBeSelected = tickets.contains { $0.outcomeId == leftOutcome.id }
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .left)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .left)
+                        }
+                    }
+                    
+                    // Check middle outcome
+                    if let middleOutcome = lineViewModel.marketStateSubject.value.middleOutcome {
+                        let shouldBeSelected = tickets.contains { $0.outcomeId == middleOutcome.id }
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .middle)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .middle)
+                        }
+                    }
+                    
+                    // Check right outcome
+                    if let rightOutcome = lineViewModel.marketStateSubject.value.rightOutcome {
+                        let shouldBeSelected = tickets.contains { $0.outcomeId == rightOutcome.id }
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .right)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .right)
+                        }
+                    }
+                }
+            })
+            .store(in: &cancellables)
     }
     
     private func configureIcons(_ icons: [MarketInfoIcon]) {

@@ -172,6 +172,7 @@ extension TallOddsMatchCardView {
 
         // Invalidate intrinsic content size after outcomes update (most important for dynamic height)
         invalidateIntrinsicContentSize()
+        
     }
 
     private func updateScoreView(with viewModel: ScoreViewModelProtocol?) {
@@ -303,6 +304,10 @@ extension TallOddsMatchCardView {
         marketOutcomesView.onOutcomeSelected = { [weak self] outcomeId, outcomeType in
             self?.onOutcomeSelected(outcomeId)
             self?.viewModel.onOutcomeSelected(outcomeId: outcomeId)
+        }
+        
+        marketOutcomesView.onOutcomeDeselected = { [weak self] outcomeId, outcomeType in
+            self?.viewModel.onOutcomeDeselected(outcomeId: outcomeId)
         }
     }
 

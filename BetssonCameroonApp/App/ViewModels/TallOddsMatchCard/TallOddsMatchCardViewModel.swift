@@ -4,7 +4,7 @@ import GomaUI
 import ServicesProvider
 
 final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
-
+    
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<TallOddsMatchCardDisplayState, Never>
     fileprivate let matchHeaderViewModelSubject: CurrentValueSubject<MatchHeaderViewModelProtocol, Never>
@@ -37,6 +37,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     // MARK: - Live Data Properties
     private var liveDataCancellable: AnyCancellable?
     private var currentEventLiveData: EventLiveData?
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     init(matchData: TallOddsMatchData) {
@@ -67,6 +68,8 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         
         // Start live data subscription for live matches
         self.subscribeToLiveData()
+        
+        self.setupPublishers()
     }
     
     // MARK: - Cleanup
@@ -90,6 +93,51 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     func onOutcomeSelected(outcomeId: String) {
         print("Production: Outcome selected: \(outcomeId) for match: \(matchData.matchId)")
         // TODO: Implement betslip management
+        
+        let outcome = marketOutcomesViewModelSubject.value.lineViewModels.compactMap { lineViewModel in
+            if lineViewModel.marketStateSubject.value.leftOutcome?.id == outcomeId {
+                return lineViewModel.marketStateSubject.value.leftOutcome
+            } else if lineViewModel.marketStateSubject.value.middleOutcome?.id == outcomeId {
+                return lineViewModel.marketStateSubject.value.middleOutcome
+            } else if lineViewModel.marketStateSubject.value.rightOutcome?.id == outcomeId {
+                return lineViewModel.marketStateSubject.value.rightOutcome
+            }
+            return nil
+        }.first
+        
+        let oddDouble = Double(outcome?.value ?? "")
+        
+        // Parse the date string to a Date object
+        let matchDate = parseMatchDateString(matchData.leagueInfo.matchTime)
+        
+        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil, competition: matchData.leagueInfo.competitionName, date: matchDate)
+        
+        
+        Env.betslipManager.addBettingTicket(bettingTicket)
+    }
+    
+    func onOutcomeDeselected(outcomeId: String) {
+        print("Production: Outcome deselected: \(outcomeId) for match: \(matchData.matchId)")
+        
+        let outcome = marketOutcomesViewModelSubject.value.lineViewModels.compactMap { lineVewModel in
+            if lineVewModel.marketStateSubject.value.leftOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.leftOutcome
+            } else if lineVewModel.marketStateSubject.value.middleOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.middleOutcome
+            } else if lineVewModel.marketStateSubject.value.rightOutcome?.id == outcomeId {
+                return lineVewModel.marketStateSubject.value.rightOutcome
+            }
+            return nil
+        }.first
+        
+        let oddDouble = Double(outcome?.value ?? "")
+        
+        // Parse the date string to a Date object
+        let matchDate = parseMatchDateString(matchData.leagueInfo.matchTime)
+        
+        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil, competition: matchData.leagueInfo.competitionName, date: matchDate)
+        
+        Env.betslipManager.removeBettingTicket(bettingTicket)
     }
     
     func onMarketInfoTapped() {
@@ -122,7 +170,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                     self.currentEventLiveData = eventLiveData
                     self.updateScoreViewModel(from: eventLiveData)
                     self.updateMatchHeaderViewModel(from: eventLiveData)
-                
+                    
                 case .disconnected:
                     print("[TallOddsMatchCardViewModel] 🔴 Live data disconnected for match: \(self.matchData.matchId)")
                 }
@@ -194,7 +242,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                 scoreCells.append(scoreCell)
             }
         }
-
+        
         if scoreCells.isEmpty {
             // Add main score if available
             if let homeScore = eventLiveData.homeScore, let awayScore = eventLiveData.awayScore {
@@ -214,9 +262,18 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
             scoreCells: scoreCells
         )
     }
-
+    
+    private func setupPublishers() {
+        
+        //        Env.betslipManager.bettingTicketsPublisher
+        //            .receive(on: DispatchQueue.main)
+        //            .sink(receiveValue: { [weak self] tickets in
+        //
+        //            })
+        //            .store(in: &cancellables)
+    }
+    
 }
-
 // MARK: - Factory Methods for Child ViewModels
 extension TallOddsMatchCardViewModel {
     
@@ -282,9 +339,9 @@ extension TallOddsMatchCardViewModel {
         )
         
         let viewModel = TallOddsMatchCardViewModel(matchData: tallOddsMatchData)
-
+        
         viewModel.marketOutcomesViewModelSubject.send(outcomesViewModel)
-
+        
         return viewModel
     }
     
@@ -320,4 +377,24 @@ extension TallOddsMatchCardViewModel {
         return icons
     }
     
+    private func parseMatchDateString(_ dateString: String?) -> Date? {
+        guard let dateString = dateString else { return nil }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM, HH:mm"
+        
+        // Try to parse the date string
+        if let parsedDate = formatter.date(from: dateString) {
+            // If the parsed date is in the past, assume it's for next year
+            if parsedDate < Date() {
+                var components = Calendar.current.dateComponents([.day, .month, .hour, .minute], from: parsedDate)
+                components.year = Calendar.current.component(.year, from: Date()) + 1
+                return Calendar.current.date(from: components)
+            }
+            return parsedDate
+        }
+        
+        return nil
+    }
 }
+

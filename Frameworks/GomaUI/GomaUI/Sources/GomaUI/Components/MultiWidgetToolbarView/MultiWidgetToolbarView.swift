@@ -20,7 +20,7 @@ final public class MultiWidgetToolbarView: UIView {
         return stackView
     }()
 
-    private let viewModel: MultiWidgetToolbarViewModelProtocol
+    private var viewModel: MultiWidgetToolbarViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Public Properties
@@ -158,10 +158,13 @@ final public class MultiWidgetToolbarView: UIView {
     private func createWalletWidget(_ widget: Widget) -> UIView {
         let walletData = WalletWidgetData(
             id: widget.id,
-            balance: "2,000.01",
+            balance: "-.--",
             depositButtonTitle: "DEPOSIT"
         )
         let viewModel = MockWalletWidgetViewModel(walletData: walletData)
+        
+        self.viewModel.walletViewModel = viewModel
+        
         let walletView = WalletWidgetView(viewModel: viewModel)
         walletView.onDepositTapped = { [weak self] widgetID in
             self?.viewModel.selectWidget(id: widgetID)

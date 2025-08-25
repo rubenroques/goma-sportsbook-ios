@@ -42,7 +42,7 @@ public class LeagueOptionSelectionRowView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 10
-        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.borderColor = StyleProvider.Color.iconSecondary.cgColor
         button.backgroundColor = StyleProvider.Color.allWhite
         return button
     }()
@@ -127,7 +127,7 @@ public class LeagueOptionSelectionRowView: UIView {
         selectedDot.isHidden = !isSelected
         
         radioButton.layer.borderColor = isSelected ?
-        StyleProvider.Color.highlightPrimary.cgColor : UIColor.black.cgColor
+        StyleProvider.Color.highlightPrimary.cgColor : StyleProvider.Color.iconSecondary.cgColor
         
         radioButton.backgroundColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.allWhite
     }

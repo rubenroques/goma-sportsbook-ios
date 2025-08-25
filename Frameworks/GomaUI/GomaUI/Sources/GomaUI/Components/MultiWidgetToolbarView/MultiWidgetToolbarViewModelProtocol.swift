@@ -137,11 +137,15 @@ public protocol MultiWidgetToolbarViewModelProtocol {
     /// Publisher for the current display state of the toolbar
     var displayStatePublisher: AnyPublisher<MultiWidgetToolbarDisplayState, Never> { get }
     
+    var walletViewModel: MockWalletWidgetViewModel? { get set }
+    
     /// Handles widget selection
     func selectWidget(id: String)
     
     /// Changes the layout state (e.g., logged in vs logged out)
     func setLayoutState(_ state: LayoutState)
+    
+    func setWalletBalance(balance: Double)
 }
 
 // MARK: - Configuration Models

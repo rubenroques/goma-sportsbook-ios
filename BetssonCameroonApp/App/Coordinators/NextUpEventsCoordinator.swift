@@ -18,7 +18,8 @@ class NextUpEventsCoordinator: Coordinator {
     var onShowMatchDetail: ((Match) -> Void) = { _ in }
     var onShowSportsSelector: (() -> Void) = { }
     var onShowFilters: (() -> Void) = { }
-    
+    var onShowBetslip: (() -> Void) = { }
+
     // MARK: - Properties
     private let environment: Environment
     private var nextUpEventsViewModel: NextUpEventsViewModel?
@@ -49,6 +50,10 @@ class NextUpEventsCoordinator: Coordinator {
         onShowFilters()
     }
     
+    private func showBetslip() {
+        onShowBetslip()
+    }
+    
     // MARK: - Coordinator Protocol
     
     func start() {
@@ -70,6 +75,10 @@ class NextUpEventsCoordinator: Coordinator {
         
         viewModel.onFiltersRequested = { [weak self] in
             self?.showFilters()
+        }
+        
+        viewModel.onBetslipRequested = { [weak self] in
+            self?.showBetslip()
         }
         
         // Create view controller

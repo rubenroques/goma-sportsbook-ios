@@ -18,6 +18,9 @@ final public class MockButtonViewModel: ButtonViewModelProtocol {
         return buttonDataSubject.eraseToAnyPublisher()
     }
     
+    // MARK: - Callback
+    public var onButtonTapped: (() -> Void)?
+    
     // MARK: - Initialization
     public init(buttonData: ButtonData) {
         self.buttonDataSubject = CurrentValueSubject(buttonData)
@@ -27,6 +30,9 @@ final public class MockButtonViewModel: ButtonViewModelProtocol {
     public func buttonTapped() {
         let currentData = buttonDataSubject.value
         print("Button tapped: \(currentData.id)")
+        
+        // Call the callback if set
+        onButtonTapped?()
     }
     
     public func setEnabled(_ isEnabled: Bool) {
@@ -36,6 +42,17 @@ final public class MockButtonViewModel: ButtonViewModelProtocol {
             title: currentData.title,
             style: currentData.style,
             isEnabled: isEnabled
+        )
+        buttonDataSubject.send(updatedData)
+    }
+    
+    public func updateTitle(_ title: String) {
+        let currentData = buttonDataSubject.value
+        let updatedData = ButtonData(
+            id: currentData.id,
+            title: title,
+            style: currentData.style,
+            isEnabled: currentData.isEnabled
         )
         buttonDataSubject.send(updatedData)
     }

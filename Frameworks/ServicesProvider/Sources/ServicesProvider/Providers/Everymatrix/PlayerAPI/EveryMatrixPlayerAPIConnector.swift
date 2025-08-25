@@ -99,7 +99,12 @@ class EveryMatrixPlayerAPIConnector: Connector {
     }
 }
 
-struct EveryMatrixSessionToken {
-    let sessionId: String
-    let id: String
+public struct EveryMatrixSessionToken {
+    public let sessionId: String
+    public let id: String
+    
+    public init(sessionId: String, id: String) {
+        self.sessionId = sessionId
+        self.id = id
+    }
 }

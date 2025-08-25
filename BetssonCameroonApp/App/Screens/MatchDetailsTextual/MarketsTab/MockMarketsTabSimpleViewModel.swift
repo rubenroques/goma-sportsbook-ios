@@ -65,7 +65,7 @@ public class MockMarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
         loadMarkets()
     }
     
-    public func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType) {
+    public func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType, isSelected: Bool) {
         print("Mock: Outcome selected - Group: \(marketGroupId), Line: \(lineId), Type: \(outcomeType)")
     }
     
@@ -89,9 +89,9 @@ public class MockMarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
         let marketLines = [
             MarketLineData(
                 id: "match_result_ft",
-                leftOutcome: MarketOutcomeData(id: "home", title: "Home", value: "1.85", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
-                middleOutcome: MarketOutcomeData(id: "draw", title: "Draw", value: "3.40", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
-                rightOutcome: MarketOutcomeData(id: "away", title: "Away", value: "4.20", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                leftOutcome: MarketOutcomeData(id: "home", bettingOfferId: nil, title: "Home", value: "1.85", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                middleOutcome: MarketOutcomeData(id: "draw", bettingOfferId: nil, title: "Draw", value: "3.40", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                rightOutcome: MarketOutcomeData(id: "away", bettingOfferId: nil, title: "Away", value: "4.20", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 displayMode: .triple,
                 lineType: .threeColumn
             )
@@ -115,33 +115,33 @@ public class MockMarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
         let marketLines = [
             MarketLineData(
                 id: "over_under_0.5",
-                leftOutcome: MarketOutcomeData(id: "over_0.5", title: "Over 0.5", value: "1.05", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                leftOutcome: MarketOutcomeData(id: "over_0.5", bettingOfferId: nil, title: "Over 0.5", value: "1.05", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 middleOutcome: nil,
-                rightOutcome: MarketOutcomeData(id: "under_0.5", title: "Under 0.5", value: "12.00", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                rightOutcome: MarketOutcomeData(id: "under_0.5", bettingOfferId: nil, title: "Under 0.5", value: "12.00", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 displayMode: .double,
                 lineType: .twoColumn
             ),
             MarketLineData(
                 id: "over_under_1.5",
-                leftOutcome: MarketOutcomeData(id: "over_1.5", title: "Over 1.5", value: "1.25", oddsChangeDirection: .up, isSelected: false, isDisabled: false),
+                leftOutcome: MarketOutcomeData(id: "over_1.5", bettingOfferId: nil, title: "Over 1.5", value: "1.25", oddsChangeDirection: .up, isSelected: false, isDisabled: false),
                 middleOutcome: nil,
-                rightOutcome: MarketOutcomeData(id: "under_1.5", title: "Under 1.5", value: "3.75", oddsChangeDirection: .down, isSelected: false, isDisabled: false),
+                rightOutcome: MarketOutcomeData(id: "under_1.5", bettingOfferId: nil, title: "Under 1.5", value: "3.75", oddsChangeDirection: .down, isSelected: false, isDisabled: false),
                 displayMode: .double,
                 lineType: .twoColumn
             ),
             MarketLineData(
                 id: "over_under_2.5",
-                leftOutcome: MarketOutcomeData(id: "over_2.5", title: "Over 2.5", value: "1.90", oddsChangeDirection: .none, isSelected: true, isDisabled: false),
+                leftOutcome: MarketOutcomeData(id: "over_2.5", bettingOfferId: nil, title: "Over 2.5", value: "1.90", oddsChangeDirection: .none, isSelected: true, isDisabled: false),
                 middleOutcome: nil,
-                rightOutcome: MarketOutcomeData(id: "under_2.5", title: "Under 2.5", value: "1.90", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                rightOutcome: MarketOutcomeData(id: "under_2.5", bettingOfferId: nil, title: "Under 2.5", value: "1.90", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 displayMode: .double,
                 lineType: .twoColumn
             ),
             MarketLineData(
                 id: "over_under_3.5",
-                leftOutcome: MarketOutcomeData(id: "over_3.5", title: "Over 3.5", value: "3.10", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                leftOutcome: MarketOutcomeData(id: "over_3.5", bettingOfferId: nil, title: "Over 3.5", value: "3.10", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 middleOutcome: nil,
-                rightOutcome: MarketOutcomeData(id: "under_3.5", title: "Under 3.5", value: "1.35", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                rightOutcome: MarketOutcomeData(id: "under_3.5", bettingOfferId: nil, title: "Under 3.5", value: "1.35", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 displayMode: .double,
                 lineType: .twoColumn
             )
@@ -165,9 +165,9 @@ public class MockMarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
         let marketLines = [
             MarketLineData(
                 id: "btts",
-                leftOutcome: MarketOutcomeData(id: "yes", title: "Yes", value: "1.72", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                leftOutcome: MarketOutcomeData(id: "yes", bettingOfferId: nil, title: "Yes", value: "1.72", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 middleOutcome: nil,
-                rightOutcome: MarketOutcomeData(id: "no", title: "No", value: "2.05", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                rightOutcome: MarketOutcomeData(id: "no", bettingOfferId: nil, title: "No", value: "2.05", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 displayMode: .double,
                 lineType: .twoColumn
             )
@@ -190,9 +190,9 @@ public class MockMarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
         let marketLines = [
             MarketLineData(
                 id: "market_1",
-                leftOutcome: MarketOutcomeData(id: "option_1", title: "Option 1", value: "2.10", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                leftOutcome: MarketOutcomeData(id: "option_1", bettingOfferId: nil, title: "Option 1", value: "2.10", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 middleOutcome: nil,
-                rightOutcome: MarketOutcomeData(id: "option_2", title: "Option 2", value: "1.70", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
+                rightOutcome: MarketOutcomeData(id: "option_2", bettingOfferId: nil, title: "Option 2", value: "1.70", oddsChangeDirection: .none, isSelected: false, isDisabled: false),
                 displayMode: .double,
                 lineType: .twoColumn
             )

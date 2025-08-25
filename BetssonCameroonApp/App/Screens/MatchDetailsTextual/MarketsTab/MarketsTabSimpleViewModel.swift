@@ -29,6 +29,10 @@ class MarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
     
     private var cancellables = Set<AnyCancellable>()
     
+    // Callbacks
+    var onOutcomeSelected: ((MarketGroupWithIcons, String) -> Void)?
+    var onOutcomeDeselected: ((MarketGroupWithIcons, String) -> Void)?
+
     // MARK: - Initialization
     
     init(
@@ -86,9 +90,20 @@ class MarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
         loadMarkets()
     }
     
-    func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType) {
-        print("Outcome selected - Group: \(marketGroupId), Line: \(lineId), Type: \(outcomeType)")
-        // TODO: Add to bet slip
+    func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType, isSelected: Bool) {
+        print("Outcome selection - Group: \(marketGroupId), Line: \(lineId), Type: \(outcomeType)")
+                
+        if let marketGroup = marketGroupsSubject.value.first(where: {
+            $0.marketGroup.id == marketGroupId
+        }) {
+            if isSelected {
+                onOutcomeSelected?(marketGroup, lineId)
+            }
+            else {
+                onOutcomeDeselected?(marketGroup, lineId)
+            }
+        }
+        
     }
     
     // MARK: - Private Methods
@@ -162,6 +177,7 @@ class MarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
             let outcomes = market.outcomes.map { outcome in
                 MarketOutcomeData(
                     id: outcome.id,
+                    bettingOfferId: outcome.bettingOffer.id,
                     title: outcome.translatedName,
                     value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
                     oddsChangeDirection: .none,

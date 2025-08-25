@@ -49,6 +49,8 @@ class MatchDetailsTextualViewModel {
     
     let marketGroupSelectorTabViewModel: MatchDetailsMarketGroupSelectorTabViewModel
     
+    var betslipFloatingViewModel: BetslipFloatingViewModelProtocol
+    
     // MARK: - Initialization
     
     /// Initialize with a Match object (preferred for navigation from match lists)
@@ -62,6 +64,7 @@ class MatchDetailsTextualViewModel {
         self.matchHeaderCompactViewModel = MatchHeaderCompactViewModel(match: match)
         self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
         self.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
+        self.betslipFloatingViewModel = MockBetslipFloatingViewModel.noTicketsMock()
         
         commonInit()
     }
@@ -165,6 +168,33 @@ class MatchDetailsTextualViewModel {
         onNavigateBack()
     }
     
+    func handleOutcomeSelection(marketGroup: MarketGroupWithIcons, outcomeId: String, isSelected: Bool) {
+        
+        guard let match = currentMatch else { return }
+        
+        let outcome = marketGroup.marketGroup.marketLines.compactMap { marketLine in
+            if marketLine.leftOutcome?.id == outcomeId {
+                return marketLine.leftOutcome
+            } else if marketLine.middleOutcome?.id == outcomeId {
+                return marketLine.middleOutcome
+            } else if marketLine.rightOutcome?.id == outcomeId {
+                return marketLine.rightOutcome
+            }
+            return nil
+        }.first
+        
+        let oddDouble = Double(outcome?.value ?? "")
+        
+        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: marketGroup.marketGroup.id, matchId: match.id, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(match.homeParticipant.name) - \(match.awayParticipant.name)", marketDescription: marketGroup.groupName, outcomeDescription: outcome?.title ?? "", homeParticipantName: match.homeParticipant.name, awayParticipantName: match.awayParticipant.name, sportIdCode: match.sportIdCode, competition: match.competitionName, date: match.date)
+        
+        if isSelected {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+        }
+        else {
+            Env.betslipManager.removeBettingTicket(bettingTicket)
+        }
+    }
+    
     // MARK: - Private Methods
     
     private func setupBindings() {
@@ -174,6 +204,9 @@ class MatchDetailsTextualViewModel {
         matchHeaderCompactViewModel.onStatisticsTapped = { [weak self] in
             self?.toggleStatistics()
         }
+        
+        // Setup betslip binding
+        setupBetslipBinding()
         
         // Setup loading coordination with market groups
         // Subscribe to market groups data changes to know when they load
@@ -188,6 +221,41 @@ class MatchDetailsTextualViewModel {
                     self.checkLoadingCompletion()
                 }
             }
+    }
+    
+    // MARK: - Betslip Binding
+    private func setupBetslipBinding() {
+        // Subscribe to betslip manager tickets to update floating view state
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] tickets in
+                self?.updateBetslipFloatingState(tickets: tickets)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func updateBetslipFloatingState(tickets: [BettingTicket]) {
+        if tickets.isEmpty {
+            betslipFloatingViewModel.updateState(.noTickets)
+        } else {
+            // Calculate total odds and other betslip data
+            let selectionCount = tickets.count
+            let totalOdds = calculateTotalOdds(from: tickets)
+            let totalEligibleCount = 0
+            
+            betslipFloatingViewModel.updateState(.withTickets(
+                selectionCount: selectionCount,
+                odds: String(format: "%.2f", totalOdds),
+                winBoostPercentage: nil, // TODO: Implement win boost calculation
+                totalEligibleCount: totalEligibleCount
+            ))
+        }
+    }
+    
+    private func calculateTotalOdds(from tickets: [BettingTicket]) -> Double {
+        return tickets.reduce(1.0) { total, ticket in
+            total * ticket.decimalOdd
+        }
     }
     
     // MARK: - Loading Coordination

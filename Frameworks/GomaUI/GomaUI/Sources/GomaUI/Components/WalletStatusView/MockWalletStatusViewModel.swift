@@ -83,6 +83,26 @@ final public class MockWalletStatusViewModel: WalletStatusViewModelProtocol {
         self._withdrawButtonViewModel = MockButtonViewModel(buttonData: withdrawButtonData)
     }
     
+    public func setTotalBalance(amount: String) {
+        self.totalBalanceSubject.send(amount)
+    }
+    
+    public func setCurrentBalance(amount: String) {
+        self.currentBalanceSubject.send(amount)
+    }
+    
+    public func setBonusBalance(amount: String) {
+        self.bonusBalanceSubject.send(amount)
+    }
+    
+    public func setCashbackBalance(amount: String) {
+        self.cashbackBalanceSubject.send(amount)
+    }
+    
+    public func setWithdrawableBalance(amount: String) {
+        self.withdrawableAmountSubject.send(amount)
+    }
+    
     // MARK: - Public Methods
     
     /// Simulates a balance update from the server

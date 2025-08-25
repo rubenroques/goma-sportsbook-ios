@@ -40,7 +40,8 @@ public protocol MarketsTabSimpleViewModelProtocol: AnyObject {
     func refreshMarkets()
     
     /// Handle outcome selection
-    func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType)
+    func handleOutcomeSelection(marketGroupId: String, lineId: String, outcomeType: OutcomeType, isSelected: Bool)
+
 }
 
 // MARK: - Data Models

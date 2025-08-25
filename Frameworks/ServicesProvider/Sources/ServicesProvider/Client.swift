@@ -70,6 +70,9 @@ public class Client {
         switch self.providerType {
         case .everymatrix:
             
+            // Session Coordinator
+            let sessionCoordinator = EveryMatrixSessionCoordinator()
+            
             // This will trigger the connection to the EM WAMP socket
             let wampConnectionManaget = WAMPManager()
             let everyMatrixConnector = EveryMatrixConnector(wampManager: wampConnectionManaget)
@@ -86,13 +89,21 @@ public class Client {
             
             // Player API for privilegedAccessManager
             let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector()
-            let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(connector: everyMatrixPlayerAPIConnector)
+            
+            let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(
+                connector: everyMatrixPlayerAPIConnector,
+                sessionCoordinator: sessionCoordinator
+            )
 
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
             
             // Casino API
             let everyMatrixCasinoConnector = EveryMatrixCasinoConnector()
             self.casinoProvider = EveryMatrixCasinoProvider(connector: everyMatrixCasinoConnector)
+            
+            // Betting API
+            let everyMatrixBettingProvider = EveryMatrixBettingProvider(sessionCoordinator: sessionCoordinator)
+            self.bettingProvider = everyMatrixBettingProvider
 
         // 
         case .goma:
@@ -1108,13 +1119,13 @@ extension Client {
         return bettingProvider.calculatePotentialReturn(forBetTicket: betTicket)
     }
 
-    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String? = nil, userId: String? = nil, oddsValidationType: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
-        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance)
+        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType)
     }
 
     public func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {

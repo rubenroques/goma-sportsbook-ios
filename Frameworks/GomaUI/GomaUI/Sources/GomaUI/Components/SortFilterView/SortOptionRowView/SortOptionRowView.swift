@@ -51,7 +51,7 @@ public class SortOptionRowView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 10
-        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.borderColor = StyleProvider.Color.iconSecondary.cgColor
         button.backgroundColor = StyleProvider.Color.allWhite
         return button
     }()
@@ -135,7 +135,7 @@ public class SortOptionRowView: UIView {
         leftIndicatorView.isHidden = !isSelected
         
         if viewModel.sortOption.iconTintChange {
-            iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : .black
+            iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.iconSecondary
         }
         
         titleLabel.font = isSelected ? StyleProvider.fontWith(type: .bold, size: 14) : StyleProvider.fontWith(type: .regular, size: 14)
@@ -146,7 +146,7 @@ public class SortOptionRowView: UIView {
         selectedDot.isHidden = !isSelected
         
         radioButton.layer.borderColor = isSelected ?
-        StyleProvider.Color.highlightPrimary.cgColor : UIColor.black.cgColor
+        StyleProvider.Color.highlightPrimary.cgColor : StyleProvider.Color.iconSecondary.cgColor
         
         radioButton.backgroundColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.allWhite
     }
@@ -166,7 +166,7 @@ public class SortOptionRowView: UIView {
         
         if viewModel.sortOption.iconTintChange {
             iconImageView.image = UIImage(named: self.viewModel.sortOption.icon ?? "")?.withRenderingMode(.alwaysTemplate)
-            iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : .black
+            iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.iconSecondary
         }
         else {
             iconImageView.image = UIImage(named: self.viewModel.sortOption.icon ?? "")

@@ -232,10 +232,14 @@ final public class MarketOutcomesMultiLineView: UIView {
 
     private func setupLineCallbacks(lineView: MarketOutcomesLineView) {
         // Simplified callbacks - no line ID needed since individual line VMs handle their own state
-        lineView.onOutcomeSelected = { [weak self] outcomeType in
+        lineView.onOutcomeSelected = { [weak self] outcomeId, outcomeType in
             // Individual line view models handle their own selection state
             // Just notify about the interaction
-            self?.onOutcomeSelected("", outcomeType) // Empty string since line ID not needed in simple version
+            self?.onOutcomeSelected(outcomeId, outcomeType) // Empty string since line ID not needed in simple version
+        }
+        
+        lineView.onOutcomeDeselected = { [weak self] outcomeId, outcomeType in
+            self?.onOutcomeDeselected(outcomeId, outcomeType)
         }
         
         lineView.onOutcomeLongPress = { [weak self] outcomeType in

@@ -150,13 +150,19 @@ public class MarketsTabSimpleViewController: UIViewController {
                 self.viewModel.handleOutcomeSelection(
                     marketGroupId: marketGroupWithIcons.marketGroup.id,
                     lineId: lineId,
-                    outcomeType: outcomeType
+                    outcomeType: outcomeType,
+                    isSelected: true
                 )
             }
             
             cell.onOutcomeDeselected = { [weak self] lineId, outcomeType in
                 guard let self = self else { return }
-                // Handle deselection if needed
+                self.viewModel.handleOutcomeSelection(
+                    marketGroupId: marketGroupWithIcons.marketGroup.id,
+                    lineId: lineId,
+                    outcomeType: outcomeType,
+                    isSelected: false
+                )
             }
         }
         

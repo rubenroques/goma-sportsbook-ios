@@ -40,7 +40,7 @@ class RootTabBarCoordinator: Coordinator {
     private var nextUpEventsCoordinator: NextUpEventsCoordinator?
     private var inPlayEventsCoordinator: InPlayEventsCoordinator?
     private var casinoCoordinator: CasinoCoordinator?
-    
+    private var betslipCoordinator: BetslipCoordinator?
     // MARK: - Initialization
     
     init(navigationController: UINavigationController, environment: Environment) {
@@ -69,6 +69,10 @@ class RootTabBarCoordinator: Coordinator {
             self?.showRegistration()
         }
         
+        rootTabBarViewController.onBetslipRequested = { [weak self] in
+            self?.showBetslip()
+        }
+        
         self.rootTabBarViewController = rootTabBarViewController
         navigationController.setViewControllers([rootTabBarViewController], animated: false)
         
@@ -84,6 +88,7 @@ class RootTabBarCoordinator: Coordinator {
         inPlayEventsCoordinator = nil
         casinoCoordinator = nil
         rootTabBarViewController = nil
+        betslipCoordinator = nil
     }
     
     // MARK: - Private Methods
@@ -139,6 +144,10 @@ class RootTabBarCoordinator: Coordinator {
             
             coordinator.onShowFilters = { [weak self] in
                 self?.showFilters(isLiveMode: false)
+            }
+            
+            coordinator.onShowBetslip = { [weak self] in
+                self?.showBetslip()
             }
             
             nextUpEventsCoordinator = coordinator
@@ -288,6 +297,46 @@ class RootTabBarCoordinator: Coordinator {
             presentAuthenticationDirectly(isLogin: false)
         }
         print("🚀 RootTabBarCoordinator: Registration requested")
+    }
+    
+    private func showBetslip() {
+        if betslipCoordinator == nil {
+            let coordinator = BetslipCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment
+            )
+            
+            // Set up navigation closures
+            coordinator.onCloseBetslip = { [weak self] in
+                self?.removeChildCoordinator(coordinator)
+                self?.betslipCoordinator = nil
+                self?.navigationController.dismiss(animated: true)
+            }
+            
+            coordinator.onShowLogin = { [weak self] in
+                self?.removeChildCoordinator(coordinator)
+                self?.betslipCoordinator = nil
+                self?.navigationController.dismiss(animated: true)
+                self?.showLogin()
+            }
+            
+            coordinator.onShowRegistration = { [weak self] in
+                self?.removeChildCoordinator(coordinator)
+                self?.betslipCoordinator = nil
+                self?.navigationController.dismiss(animated: true)
+                self?.showRegistration()
+            }
+            
+            betslipCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+        
+        if let viewController = betslipCoordinator?.betslipViewController {
+            navigationController.present(viewController, animated: true)
+        }
+        
+        print("🚀 MainCoordinator: Presented betslip modal")
     }
     
     // MARK: - Temporary Authentication Implementation

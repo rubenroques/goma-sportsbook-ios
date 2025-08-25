@@ -5,7 +5,7 @@ import UIKit
 final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
     // MARK: - Publishers
-    private let outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never>
+    public let outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OutcomeItemOddsChangeEvent, Never>
 
     // MARK: - Internal Properties
@@ -84,6 +84,7 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
         // Update data with new value and specified direction
         let newData = OutcomeItemData(
             id: currentData.id,
+            bettingOfferId: currentData.bettingOfferId,
             title: currentData.title,
             value: newValue,
             oddsChangeDirection: changeDirection,
@@ -150,6 +151,7 @@ extension MockOutcomeItemViewModel {
     public static var homeOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "home",
+            bettingOfferId: nil,
             title: "Home",
             value: "1.85",
             displayState: .normal(isSelected: true, isBoosted: false)
@@ -161,6 +163,7 @@ extension MockOutcomeItemViewModel {
     public static var drawOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "draw",
+            bettingOfferId: nil,
             title: "Draw",
             value: "3.55",
             displayState: .normal(isSelected: false, isBoosted: false)
@@ -172,6 +175,7 @@ extension MockOutcomeItemViewModel {
     public static var awayOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "away",
+            bettingOfferId: nil,
             title: "Away",
             value: "4.20",
             displayState: .normal(isSelected: false, isBoosted: false)
@@ -183,6 +187,7 @@ extension MockOutcomeItemViewModel {
     public static var overOutcomeUp: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "over_2_5",
+            bettingOfferId: nil,
             title: "Over 2.5",
             value: "1.95",
             oddsChangeDirection: .up,
@@ -195,6 +200,7 @@ extension MockOutcomeItemViewModel {
     public static var underOutcomeDown: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "under_2_5",
+            bettingOfferId: nil,
             title: "Under 2.5",
             value: "1.80",
             oddsChangeDirection: .down,
@@ -207,6 +213,7 @@ extension MockOutcomeItemViewModel {
     public static var disabledOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "disabled",
+            bettingOfferId: nil,
             title: "Disabled",
             value: "2.50",
             displayState: .unavailable
@@ -224,6 +231,7 @@ extension MockOutcomeItemViewModel {
                                    displayState: OutcomeDisplayState? = nil) -> MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: id,
+            bettingOfferId: nil,
             title: title,
             value: value,
             oddsChangeDirection: oddsChangeDirection,
@@ -240,6 +248,7 @@ extension MockOutcomeItemViewModel {
     public static var loadingOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "loading",
+            bettingOfferId: nil,
             title: "Loading",
             value: "",
             displayState: .loading
@@ -251,6 +260,7 @@ extension MockOutcomeItemViewModel {
     public static var lockedOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "locked",
+            bettingOfferId: nil,
             title: "Locked",
             value: "",
             displayState: .locked
@@ -262,6 +272,7 @@ extension MockOutcomeItemViewModel {
     public static var unavailableOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "unavailable",
+            bettingOfferId: nil,
             title: "Unavailable",
             value: "-",
             displayState: .unavailable
@@ -273,6 +284,7 @@ extension MockOutcomeItemViewModel {
     public static var boostedOutcomeSelected: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "boosted_selected",
+            bettingOfferId: nil,
             title: "Home",
             value: "2.20",
             displayState: .normal(isSelected: true, isBoosted: true)
@@ -284,6 +296,7 @@ extension MockOutcomeItemViewModel {
     public static var boostedOutcome: MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "boosted",
+            bettingOfferId: nil,
             title: "Home",
             value: "2.20",
             displayState: .normal(isSelected: false, isBoosted: true)
