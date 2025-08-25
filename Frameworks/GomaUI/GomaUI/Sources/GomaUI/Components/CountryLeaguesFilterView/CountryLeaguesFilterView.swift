@@ -188,10 +188,13 @@ public class CountryLeaguesFilterView: UIView {
             
             let option = row.viewModel.countryLeagueOptions
             
-            row.isSelected = option.leagues.contains(where: {
-                $0.id == id
-            }) ? true : false
+            // Always clear selection first, then set if league exists in this country
+            row.isSelected = false
             
+            // Only mark as selected if the league exists in this country's leagues
+            if option.leagues.contains(where: { $0.id == id }) {
+                row.isSelected = true
+            }
         }
         
         self.updateViewModels(id: id)

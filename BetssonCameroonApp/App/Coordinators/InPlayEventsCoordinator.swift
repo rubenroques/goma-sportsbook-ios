@@ -94,6 +94,10 @@ class InPlayEventsCoordinator: Coordinator {
         inPlayEventsViewModel?.updateSportType(sport)
     }
     
+    func updateFilters(_ filters: AppliedEventsFilters) {
+        inPlayEventsViewModel?.updateFilters(filters)
+    }
+    
     func findMatch(withId matchId: String) -> Match? {
         return inPlayEventsViewModel?.getMatch(withId: matchId)
     }

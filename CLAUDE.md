@@ -414,6 +414,71 @@ xcodebuild -workspace Sportsbook.xcworkspace \
 - **Multi-project impact**: Consider changes across BetssonCameroonApp and BetssonFranceApp
 - **MCP Integration**: Use SwiftLens for precise Swift operations, built-in tools for exploration
 
+## cWAMP - WebSocket WAMP Client Tool
+
+### Overview
+
+**cWAMP** (`tools/wamp-client/`) is a cURL-like command-line tool for interacting with WAMP (WebSocket Application Messaging Protocol) servers, specifically designed for the EveryMatrix sports betting API.
+
+### Installation & Setup
+
+```bash
+# Install globally
+cd tools/wamp-client
+npm install -g .
+
+# Configure (creates ~/.cwamp.env)
+cp .cwamp.env.example ~/.cwamp.env
+# Edit ~/.cwamp.env with your credentials
+```
+
+### Usage Examples
+
+```bash
+# Test connection
+cwamp test
+
+# Make RPC calls (like cURL for WAMP)
+cwamp rpc -p "/sports#tournaments" -k '{"lang":"en","sportId":"1"}' --pretty
+
+# Subscribe to real-time updates
+cwamp subscribe -t "/sports/1/en/live-matches" -d 5000 --max-messages 10
+
+# Interactive mode for exploration
+cwamp interactive
+
+# With verbose logging
+cwamp rpc -p "/sports#operatorInfo" --verbose --timestamp
+```
+
+### Key Features
+
+- **RPC Calls**: Execute remote procedures on WAMP server
+- **Subscriptions**: Listen to real-time WebSocket updates
+- **Configuration Override**: Use `--url`, `--realm`, `--cid` to override defaults
+- **Structured Logging**: `--verbose` for RPC tracking, `--debug` for full WAMP messages
+- **Environment Flexibility**: Supports `.cwamp.env` in current dir, home dir, or project
+
+### Common EveryMatrix Endpoints
+
+**RPC Procedures:**
+- `/sports#tournaments` - Get tournaments for a sport
+- `/sports#matches` - Get match details
+- `/sports#odds` - Get betting odds
+- `/sports#searchV2` - Search for events
+
+**Subscription Topics:**
+- `/sports/{op}/{lang}/live-matches-aggregator-main/{sport}/...` - Live match updates
+- `/sports/{op}/{lang}/{matchId}/match-odds` - Specific match odds updates
+
+### When to Use cWAMP
+
+- **API Testing**: Quick verification of EveryMatrix WebSocket endpoints
+- **Real-time Monitoring**: Subscribe to live match updates during development
+- **Data Exploration**: Use interactive mode to explore available endpoints
+- **Debugging**: Verbose/debug modes help troubleshoot WebSocket issues
+- **Automation**: Script WebSocket interactions just like cURL scripts for HTTP
+
 ## Root Cause Analysis Framework
 
 ### Project-Specific Debugging

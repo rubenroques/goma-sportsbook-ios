@@ -11,41 +11,49 @@ extension AppliedEventsFilters {
     
     /// Converts AppliedEventsFilters to MatchesFilterOptions
     public func toMatchesFilterOptions(optionalUserId: String? = nil) -> MatchesFilterOptions {
-        // Convert timeValue (Float) to TimeRange enum
+        // Convert TimeFilter to TimeRange enum
         let timeRange: TimeRange
-        switch timeValue {
-        case 0:
+        switch timeFilter {
+        case .all:
             timeRange = .all
-        case 1:
+        case .oneHour:
             timeRange = .oneHour
-        case 8:
+        case .eightHours:
             timeRange = .eightHours
-        case 24:
+        case .today:
             timeRange = .today
-        case 48:
+        case .fortyEightHours:
             timeRange = .fortyEightHours
-        default:
-            timeRange = .all
         }
         
-        // Convert sortTypeId (String) to SortBy enum
+        // Convert SortType to SortBy enum
         let sortBy: SortBy
-        switch sortTypeId {
-        case "1":
+        switch sortType {
+        case .popular:
             sortBy = .popular
-        case "2":
+        case .upcoming:
             sortBy = .upcoming
-        case "3":
+        case .favorites:
             sortBy = .favorites
-        default:
-            sortBy = .popular
         }
         
-        // Convert leagueId to TournamentFilter
+        // Convert leagueId to TournamentFilter and LocationFilter
         let tournament: TournamentFilter
-        if leagueId == "all" || leagueId == "0" || leagueId.isEmpty {
+        let location: LocationFilter
+        
+        // Check for special "{countryId}_all" format
+        if leagueId.hasSuffix("_all") {
+            // Extract country ID and set location filter
+            let countryId = String(leagueId.dropLast(4)) // Remove "_all"
+            location = .specific(countryId)
+            tournament = .all
+        } else if leagueId == "all" || leagueId == "0" || leagueId.isEmpty {
+            // No specific filters
+            location = .all
             tournament = .all
         } else {
+            // Specific league selected, no country filter
+            location = .all
             tournament = .specific(leagueId)
         }
         
@@ -53,7 +61,7 @@ extension AppliedEventsFilters {
             sportId: sportId,
             timeRange: timeRange,
             sortBy: sortBy,
-            location: .all, // AppliedEventsFilters doesn't have location
+            location: location,
             tournament: tournament,
             optionalUserId: optionalUserId
         )
@@ -65,30 +73,30 @@ extension MatchesFilterOptions {
     
     /// Converts MatchesFilterOptions back to AppliedEventsFilters
     public func toAppliedEventsFilters() -> AppliedEventsFilters {
-        // Convert TimeRange back to Float
-        let timeValue: Float
+        // Convert TimeRange to TimeFilter
+        let timeFilter: AppliedEventsFilters.TimeFilter
         switch timeRange {
         case .all:
-            timeValue = 0
+            timeFilter = .all
         case .oneHour:
-            timeValue = 1
+            timeFilter = .oneHour
         case .eightHours:
-            timeValue = 8
+            timeFilter = .eightHours
         case .today:
-            timeValue = 24
+            timeFilter = .today
         case .fortyEightHours:
-            timeValue = 48
+            timeFilter = .fortyEightHours
         }
         
-        // Convert SortBy back to String
-        let sortTypeId: String
+        // Convert SortBy to SortType
+        let sortType: AppliedEventsFilters.SortType
         switch sortBy {
         case .popular:
-            sortTypeId = "1"
+            sortType = .popular
         case .upcoming:
-            sortTypeId = "2"
+            sortType = .upcoming
         case .favorites:
-            sortTypeId = "3"
+            sortType = .favorites
         }
         
         // Convert TournamentFilter back to String
@@ -102,8 +110,8 @@ extension MatchesFilterOptions {
         
         return AppliedEventsFilters(
             sportId: sportId,
-            timeValue: timeValue,
-            sortTypeId: sortTypeId,
+            timeFilter: timeFilter,
+            sortType: sortType,
             leagueId: leagueId
         )
     }

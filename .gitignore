@@ -123,3 +123,4 @@ ServicesProvider/swagger/node_modules
 
 .cursorignore
 tasks-sportsbook.txt
+Tools/wamp-client/node_modules

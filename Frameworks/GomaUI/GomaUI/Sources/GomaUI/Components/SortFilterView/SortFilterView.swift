@@ -171,12 +171,11 @@ public class SortFilterView: UIView {
         
         optionRows.forEach { row in
             let option = row.viewModel.sortOption
-            row.isSelected = option.id == id
-            
+            // Clear all selections, then set only if ID matches
+            row.isSelected = (option.id == id)
         }
         
         self.onSortFilterSelected?(id)
-
     }
     
     private func updateCollapseState() {

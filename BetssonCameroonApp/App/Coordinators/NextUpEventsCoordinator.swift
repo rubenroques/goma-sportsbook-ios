@@ -94,6 +94,10 @@ class NextUpEventsCoordinator: Coordinator {
         nextUpEventsViewModel?.updateSportType(sport)
     }
     
+    func updateFilters(_ filters: AppliedEventsFilters) {
+        nextUpEventsViewModel?.updateFilters(filters)
+    }
+    
     func findMatch(withId matchId: String) -> Match? {
         return nextUpEventsViewModel?.getMatch(withId: matchId)
     }

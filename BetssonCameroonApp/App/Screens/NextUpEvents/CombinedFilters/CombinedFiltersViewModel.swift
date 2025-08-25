@@ -20,6 +20,7 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     
     var filterConfiguration: FilterConfiguration
     var currentContextId: String
+    var isLiveMode: Bool
     
     var dynamicViewModels: [String: Any] = [:]
     
@@ -32,12 +33,14 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     init(filterConfiguration: FilterConfiguration,
          currentFilters: AppliedEventsFilters,
          servicesProvider: ServicesProvider.Client,
-         contextId: String = "sports") {
+         contextId: String = "sports",
+         isLiveMode: Bool = false) {
         
         self.appliedFilters = currentFilters
         self.filterConfiguration = filterConfiguration
         self.currentContextId = contextId
         self.servicesProvider = servicesProvider
+        self.isLiveMode = isLiveMode
         
         createDynamicViewModels(for: filterConfiguration, contextId: currentContextId)
 
@@ -46,7 +49,6 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     }
     
     func getAllLeagues(sportId: String? = nil) {
-        print("🔍 CombinedFiltersViewModel: getAllLeagues called with sportId: \(sportId ?? "nil")")
         self.isLoadingPublisher.send(true)
         
         var currentSportId = appliedFilters.sportId
@@ -59,8 +61,6 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
             $0.id == currentSportId
         })
         
-        print("🔍 CombinedFiltersViewModel: Current sport - id: \(currentSportId), name: \(currentSport?.name ?? "unknown")")
-        
         let sportType = SportType(name: currentSport?.name ?? "",
                                   numericId: currentSport?.numericId ?? "",
                                   alphaId: currentSport?.alphaId ?? "", iconId: currentSport?.id ?? "",
@@ -70,34 +70,12 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                                   numberOutrightMarkets: 0,
                                   numberLiveEvents: 0)
         
-        print("🔍 CombinedFiltersViewModel: Making RPC calls to getTournaments and getPopularTournaments...")
-        
         let sportTournamentsPublisher = servicesProvider.getTournaments(forSportType: sportType)
-            .handleEvents(
-                receiveOutput: { tournaments in
-                    print("✅ CombinedFiltersViewModel: getTournaments returned \(tournaments.count) tournaments")
-                },
-                receiveCompletion: { completion in
-                    if case .failure(let error) = completion {
-                        print("❌ CombinedFiltersViewModel: getTournaments failed with error: \(error)")
-                    }
-                }
-            )
             .map { tournaments -> [Competition] in
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
 
         let popularTournamentsPublisher = servicesProvider.getPopularTournaments(forSportType: sportType, tournamentsCount: 10)
-            .handleEvents(
-                receiveOutput: { tournaments in
-                    print("✅ CombinedFiltersViewModel: getPopularTournaments returned \(tournaments.count) tournaments")
-                },
-                receiveCompletion: { completion in
-                    if case .failure(let error) = completion {
-                        print("❌ CombinedFiltersViewModel: getPopularTournaments failed with error: \(error)")
-                    }
-                }
-            )
             .map { tournaments -> [Competition] in
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
@@ -137,11 +115,14 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
         
         // Convert competitions to SortOptions
         let newSortOptions = popularCompetitions.map { competition in
-            SortOption(
+            let count = isLiveMode ? 
+                (competition.numberLiveEvents ?? 0) : 
+                (competition.numberEvents ?? 0)
+            return SortOption(
                 id: competition.id,
                 icon: "league_icon",
                 title: competition.name,
-                count: competition.numberEvents ?? 0,
+                count: count,
                 iconTintChange: false
             )
         }
@@ -154,18 +135,33 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
         popularLeagues.append(contentsOf: newSortOptions)
         
         // Popular and Other Country Leagues
-        let popularVenueIds: Set<String> = Set(popularCompetitions.compactMap { $0.venue?.id })
+        // Extract popular league IDs (excluding the "all" option)
+        let popularLeagueIds = Set(popularLeagues.compactMap { league in
+            league.id == "all" ? nil : league.id
+        })
+        
+        // Find venues that have at least one popular league
+        var popularVenueIds = Set<String>()
+        for competition in sportCompetitions {
+            if let venueId = competition.venue?.id,
+               popularLeagueIds.contains(competition.id) {
+                popularVenueIds.insert(venueId)
+            }
+        }
 
         var venueDict: [String: (venueName: String, leagues: [LeagueOption])] = [:]
         
         for competition in sportCompetitions {
             let venueId = competition.venue?.id ?? ""
             let venueName = competition.venue?.name ?? ""
+            let count = isLiveMode ? 
+                (competition.numberLiveEvents ?? 0) : 
+                (competition.numberEvents ?? 0)
             let league = LeagueOption(
                 id: competition.id,
                 icon: nil,
                 title: competition.name,
-                count: competition.numberEvents ?? 0
+                count: count
             )
             if var entry = venueDict[venueId] {
                 entry.leagues.append(league)
@@ -179,11 +175,29 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
         var otherCountryLeaguesArr: [CountryLeagueOptions] = []
 
         for (index, (venueId, value)) in venueDict.enumerated() {
+            // Create "All" option for this country
+            var leaguesWithAll = [LeagueOption]()
+            
+            // Calculate total count for all leagues
+            let totalCount = value.leagues.reduce(0) { $0 + $1.count }
+            
+            // Add "All" option as first item
+            let allOption = LeagueOption(
+                id: "\(venueId)_all",
+                icon: nil,
+                title: "All Leagues",
+                count: totalCount
+            )
+            leaguesWithAll.append(allOption)
+            
+            // Add individual leagues
+            leaguesWithAll.append(contentsOf: value.leagues)
+            
             let countryLeague = CountryLeagueOptions(
                 id: venueId,
                 icon: venueId,
                 title: value.venueName,
-                leagues: value.leagues,
+                leagues: leaguesWithAll,
                 isExpanded: index == 0
             )
             if popularVenueIds.contains(venueId) {

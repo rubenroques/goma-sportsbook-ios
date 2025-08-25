@@ -390,7 +390,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         let sportId = sportType.numericId ?? "1"
         let language = "en" // Could be made configurable
         
-        let router = WAMPRouter.getPopularTournaments(language: language, sportId: sportId)
+        let router = WAMPRouter.getPopularTournaments(language: language, sportId: sportId, maxResults: tournamentsCount)
         
         let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = connector.request(router)
         return rpcResponsePublisher

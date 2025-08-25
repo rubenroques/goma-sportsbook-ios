@@ -407,7 +407,8 @@ extension ServiceProviderModelMapper {
             sport: sport,
             numberOutrightMarkets: tournament.numberOfOutrightMarkets ?? 0,
             outrightMarkets: [],
-            numberEvents: tournament.numberOfEvents + tournament.numberOfLiveEvents
+            numberEvents: tournament.numberOfEvents,
+            numberLiveEvents: tournament.numberOfLiveEvents
         )
     }
 

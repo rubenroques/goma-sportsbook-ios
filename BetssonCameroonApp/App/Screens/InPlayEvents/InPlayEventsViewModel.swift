@@ -81,6 +81,7 @@ class InPlayEventsViewModel {
     
     // MARK: - Private Properties
     var sport: Sport
+    private var appliedFilters = AppliedEventsFilters.defaultFilters
     private let servicesProvider: ServicesProvider.Client
     private var eventsStateSubject = CurrentValueSubject<LoadableContent<[Match]>, Never>.init(.loading)
     private var cancellables: Set<AnyCancellable> = []
@@ -100,6 +101,14 @@ class InPlayEventsViewModel {
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
+        
+        // Initialize filters with the sport
+        self.appliedFilters = AppliedEventsFilters(
+            sportId: sport.id,
+            timeFilter: .all,
+            sortType: .popular,
+            leagueId: "all"
+        )
 
         setupBindings()
     }
@@ -129,8 +138,9 @@ class InPlayEventsViewModel {
         }
         marketGroupCardsViewModels.removeAll()
         
-        // Update internal sport
+        // Update internal sport and filters
         self.sport = sport
+        appliedFilters.sportId = sport.id
         
         // Update UI
         pillSelectorBarViewModel.updateCurrentSport(sport)
@@ -140,6 +150,48 @@ class InPlayEventsViewModel {
         
         // Reload events for new sport
         print("🔄 InPlayEventsViewModel: Starting reload for new sport: \(sport.name)")
+        reloadEvents(forced: true)
+    }
+    
+    func updateFilters(_ filters: AppliedEventsFilters) {
+        // Check if filters actually changed
+        guard appliedFilters != filters else {
+            print("🎛️ InPlayEventsViewModel: Filters unchanged, skipping update")
+            return
+        }
+        
+        print("🎛️ InPlayEventsViewModel: Updating filters: \(filters)")
+        
+        // Cancel existing subscription
+        preLiveMatchesCancellable?.cancel()
+        preLiveMatchesCancellable = nil
+        
+        // Clear all state
+        allMatches = []
+        marketGroups = []
+        selectedMarketGroupId = nil
+        isLoading = true
+        eventsStateSubject.send(.loading)
+        
+        // Clear market group view models
+        for (_, viewModel) in marketGroupCardsViewModels {
+            viewModel.updateMatches([])
+        }
+        marketGroupCardsViewModels.removeAll()
+        
+        // Update filters
+        self.appliedFilters = filters
+        
+        // Update sport if it changed
+        if let newSport = Env.sportsStore.getActiveSports().first(where: { $0.id == filters.sportId }) {
+            self.sport = newSport
+            pillSelectorBarViewModel.updateCurrentSport(newSport)
+        }
+        
+        // Clear market group selector
+        marketGroupSelectorViewModel.updateWithMatches([])
+        
+        // Reload events with new filters
         reloadEvents(forced: true)
     }
 
@@ -200,12 +252,14 @@ class InPlayEventsViewModel {
             preLiveMatchesCancellable = nil
         }
 
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: sport)
+        // Convert AppliedEventsFilters to MatchesFilterOptions
+        let filterOptions = appliedFilters.toMatchesFilterOptions()
         
-        preLiveMatchesCancellable = servicesProvider.subscribeLiveMatches(forSportType: sportType)
+        // Use filtered subscription instead of unfiltered
+        preLiveMatchesCancellable = servicesProvider.subscribeToFilteredLiveMatches(filters: filterOptions)
         .receive(on: DispatchQueue.main)
         .sink { completion in
-            print("InPlayEventsViewModel: subscribePreLiveMatches completion: \(completion)")
+            print("InPlayEventsViewModel: subscribeToFilteredLiveMatches completion: \(completion)")
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
             guard let self = self else { return }
             

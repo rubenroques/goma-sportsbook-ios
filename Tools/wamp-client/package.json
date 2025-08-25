@@ -1,0 +1,28 @@
+{
+  "name": "cwamp",
+  "version": "1.0.0",
+  "description": "cWAMP - cURL-like tool for WAMP protocol (WebSocket Application Messaging Protocol)",
+  "main": "src/wamp-client.js",
+  "bin": {
+    "cwamp": "./bin/cwamp.js"
+  },
+  "scripts": {
+    "test": "node test/test-connection.js",
+    "start": "node bin/cwamp.js",
+    "link": "npm link",
+    "unlink": "npm unlink"
+  },
+  "keywords": ["wamp", "websocket", "everymatrix", "claude-code"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "autobahn": "^20.9.2",
+    "ws": "^8.16.0",
+    "dotenv": "^16.3.1",
+    "commander": "^11.1.0",
+    "chalk": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

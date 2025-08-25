@@ -20,6 +20,15 @@ class RootTabBarCoordinator: Coordinator {
     private let environment: Environment
     private var rootTabBarViewController: RootTabBarViewController?
     
+    // Filter State Management
+    private var currentFilters: AppliedEventsFilters = {
+        // Load filters from UserDefaults using Codable extension
+        if let savedFilters: AppliedEventsFilters = UserDefaults.standard.codable(forKey: "AppliedEventsFilters") {
+            return savedFilters
+        }
+        return AppliedEventsFilters.defaultFilters
+    }()
+    
     // MARK: - Navigation Closures
     // Authentication navigation - to be implemented by parent coordinator
     var onShowLogin: (() -> Void)?
@@ -129,12 +138,15 @@ class RootTabBarCoordinator: Coordinator {
             }
             
             coordinator.onShowFilters = { [weak self] in
-                self?.showFilters()
+                self?.showFilters(isLiveMode: false)
             }
             
             nextUpEventsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
+            
+            // Apply current filters to the new coordinator
+            coordinator.updateFilters(currentFilters)
         }
         
         // Show the screen through RootTabBarViewController
@@ -164,12 +176,15 @@ class RootTabBarCoordinator: Coordinator {
             }
             
             coordinator.onShowFilters = { [weak self] in
-                self?.showFilters()
+                self?.showFilters(isLiveMode: true)
             }
             
             inPlayEventsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
+            
+            // Apply current filters to the new coordinator
+            coordinator.updateFilters(currentFilters)
         }
         
         // Show the screen through RootTabBarViewController
@@ -233,17 +248,16 @@ class RootTabBarCoordinator: Coordinator {
         print("🚀 MainCoordinator: Presented sports selector modal")
     }
     
-    private func showFilters() {
+    private func showFilters(isLiveMode: Bool) {
         // Create filters configuration using stateless approach
         let configuration = CombinedFiltersViewController.createMockFilterConfiguration()
-        
-        // Get current filters from active screen (TODO: implement proper filter state management)
-        let currentFilters = AppliedEventsFilters.defaultFilters
-        
+
+        // Use the stored current filters instead of default
         let combinedFiltersViewController = CombinedFiltersViewController(
-            currentFilters: currentFilters,
+            currentFilters: self.currentFilters,
             filterConfiguration: configuration,
             servicesProvider: environment.servicesProvider,
+            isLiveMode: isLiveMode,
             onApply: { [weak self] newFilters in
                 // Update the current filters in the system
                 self?.applyFilters(newFilters)
@@ -252,7 +266,6 @@ class RootTabBarCoordinator: Coordinator {
         
         // Present modally from navigationController
         navigationController.present(combinedFiltersViewController, animated: true)
-        print("🚀 MainCoordinator: Presented filters modal")
     }
     
     private func showLogin() {
@@ -380,20 +393,23 @@ class RootTabBarCoordinator: Coordinator {
     }
     
     private func updateCurrentSport(_ sport: Sport) {
+        // Update the sport in current filters
+        currentFilters.sportId = sport.id
+        
         // Update sport in both coordinators if they exist and are active
         nextUpEventsCoordinator?.updateSport(sport)
         inPlayEventsCoordinator?.updateSport(sport)
-        print("🚀 MainCoordinator: Updated current sport to: \(sport.name)")
+        print("🚀 MainCoordinator: Updated current sport to: \(sport.name) and filters")
     }
     
     private func applyFilters(_ filterSelection: AppliedEventsFilters) {
-        // Update filters in the current system using stateless approach
-        // Filters are now passed directly to ViewModels instead of global state
+        // Store the new filters
+        self.currentFilters = filterSelection
         print("🚀 MainCoordinator: Applied filters: \(filterSelection)")
         
-        // Refresh current screens with new filters
-        nextUpEventsCoordinator?.refresh()
-        inPlayEventsCoordinator?.refresh()
+        // Update filters in child coordinators and refresh with new filters
+        nextUpEventsCoordinator?.updateFilters(filterSelection)
+        inPlayEventsCoordinator?.updateFilters(filterSelection)
     }
     
     // MARK: - Placeholder methods for other screens (using dummy controllers for now)

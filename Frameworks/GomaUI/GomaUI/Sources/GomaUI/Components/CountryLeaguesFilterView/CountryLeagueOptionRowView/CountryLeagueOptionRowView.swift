@@ -186,16 +186,31 @@ public class CountryLeagueOptionRowView: UIView {
     }
     
     private func updateSelection(forOptionId id: String) {
+        // Check if "All" option is selected (ends with "_all")
+        let isAllSelected = id.hasSuffix("_all")
+        let countryId = viewModel.countryLeagueOptions.id
+        
+        // Check if the selected league belongs to this country
+        let leagueBelongsToThisCountry = viewModel.countryLeagueOptions.leagues.contains { $0.id == id }
+        
         leagueRows.forEach { row in
-            
             let leagueOption = row.viewModel.leagueOption
-            if leagueOption.id == id {
+            
+            if !leagueBelongsToThisCountry {
+                // If league doesn't belong to this country, deselect all
+                row.isSelected = false
+            } else if isAllSelected && id == "\(countryId)_all" {
+                // If "All" is selected for this country, only select the "All" option
+                row.isSelected = (leagueOption.id == id)
+            } else if leagueOption.id == id {
+                // Individual league selected
                 row.isSelected = true
-            }
-            else {
+            } else if leagueOption.id == "\(countryId)_all" {
+                // Deselect "All" when individual league is selected
+                row.isSelected = false
+            } else {
                 row.isSelected = false
             }
-            
         }
         
         self.didTappedOption?(id)
@@ -284,7 +299,20 @@ public class CountryLeagueOptionRowView: UIView {
             row.configure(selectedLeagueId: viewModel.selectedOptionId.value)
             
             row.didTappedOption = { [weak self] tappedOption in
-                self?.viewModel.selectOption(withId: tappedOption.id)
+                guard let self = self else { return }
+                
+                // Handle "All" option selection logic
+                let countryId = self.viewModel.countryLeagueOptions.id
+                let allOptionId = "\(countryId)_all"
+                
+                if tappedOption.id == allOptionId {
+                    // "All" was tapped - select it exclusively
+                    self.viewModel.selectOption(withId: tappedOption.id)
+                } else {
+                    // Individual league was tapped
+                    // This will automatically deselect "All" in updateSelection
+                    self.viewModel.selectOption(withId: tappedOption.id)
+                }
             }
             
             leagueRows.append(row)

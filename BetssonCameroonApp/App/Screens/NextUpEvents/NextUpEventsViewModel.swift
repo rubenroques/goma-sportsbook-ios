@@ -118,6 +118,9 @@ class NextUpEventsViewModel {
         // Update internal sport
         self.sport = sport
         
+        // Also update the sport in filters
+        appliedFilters.sportId = sport.id
+        
         // Update UI
         pillSelectorBarViewModel.updateCurrentSport(sport)
         
@@ -126,6 +129,29 @@ class NextUpEventsViewModel {
         generalFiltersBarViewModel.updateFilterOptionItems(filterOptionItems: [sportFilterOption])
         
         // Reload events for new sport
+        reloadEvents(forced: true)
+    }
+    
+    func updateFilters(_ filters: AppliedEventsFilters) {
+        // Check if filters actually changed
+        guard appliedFilters != filters else {
+            print("[NextUpEventsViewModel] 🎛️ Filters unchanged, skipping update")
+            return
+        }
+        
+        print("[NextUpEventsViewModel] 🎛️ Updating filters: \(filters)")
+        self.appliedFilters = filters
+        
+        // Update sport if it changed
+        if let newSport = Env.sportsStore.getActiveSports().first(where: { $0.id == filters.sportId }) {
+            self.sport = newSport
+            pillSelectorBarViewModel.updateCurrentSport(newSport)
+        }
+        
+        // Update filter bar UI
+        setupFilters()  // Use existing method to update filter bar
+        
+        // Reload events with new filters
         reloadEvents(forced: true)
     }
 
@@ -196,12 +222,14 @@ class NextUpEventsViewModel {
 
         preLiveMatchesCancellable?.cancel()
 
-        preLiveMatchesCancellable = servicesProvider.subscribePreLiveMatches(
-            forSportType: ServiceProviderModelMapper.serviceProviderSportType(fromSport: sport),
-            sortType: EventListSort.popular)
+        // Convert AppliedEventsFilters to MatchesFilterOptions
+        let filterOptions = appliedFilters.toMatchesFilterOptions()
+        
+        // Use filtered subscription instead of unfiltered
+        preLiveMatchesCancellable = servicesProvider.subscribeToFilteredPreLiveMatches(filters: filterOptions)
         .receive(on: DispatchQueue.main)
         .sink { completion in
-            print("subscribePreLiveMatches \(completion)")
+            print("subscribeToFilteredPreLiveMatches \(completion)")
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
             switch subscribableContent {
             case .connected(let subscription):
@@ -278,7 +306,7 @@ class NextUpEventsViewModel {
         
         let sportOption = getSportOption(for: selection.sportId)
         
-        let sortOption = getSortOption(for: selection.sortTypeId)
+        let sortOption = getSortOption(for: selection.sortType.rawValue)
         
         let leagueOption = getLeagueOption(for: selection.leagueId)
         

@@ -16,7 +16,7 @@ public enum TimeRange: Equatable, CaseIterable {
     case fortyEightHours
     
     /// Converts to web app hoursInterval string format
-    public var webAppValue: String {
+    public var serverRawValue: String {
         switch self {
         case .all:
             return "all"
@@ -32,8 +32,8 @@ public enum TimeRange: Equatable, CaseIterable {
     }
     
     /// Creates TimeRange from web app hoursInterval string
-    public static func from(webAppValue: String) -> TimeRange {
-        switch webAppValue {
+    public static func from(serverRawValue: String) -> TimeRange {
+        switch serverRawValue {
         case "all":
             return .all
         case "0-1":
@@ -73,7 +73,7 @@ public enum SortBy: Equatable, CaseIterable {
     case favorites
     
     /// Converts to web app sortEventsBy string format
-    public var webAppValue: String {
+    public var serverRawValue: String {
         switch self {
         case .popular:
             return "POPULAR"
@@ -85,8 +85,8 @@ public enum SortBy: Equatable, CaseIterable {
     }
     
     /// Creates SortBy from web app sortEventsBy string
-    public static func from(webAppValue: String) -> SortBy {
-        switch webAppValue.uppercased() {
+    public static func from(serverRawValue: String) -> SortBy {
+        switch serverRawValue.uppercased() {
         case "POPULAR":
             return .popular
         case "UPCOMING":
@@ -117,7 +117,7 @@ public enum LocationFilter: Equatable {
     case specific(String)
     
     /// Converts to web app locationId string format
-    public var webAppValue: String {
+    public var serverRawValue: String {
         switch self {
         case .all:
             return "all"
@@ -127,11 +127,11 @@ public enum LocationFilter: Equatable {
     }
     
     /// Creates LocationFilter from web app locationId string
-    public static func from(webAppValue: String) -> LocationFilter {
-        if webAppValue == "all" || webAppValue.isEmpty {
+    public static func from(serverRawValue: String) -> LocationFilter {
+        if serverRawValue == "all" || serverRawValue.isEmpty {
             return .all
         }
-        return .specific(webAppValue)
+        return .specific(serverRawValue)
     }
 }
 
@@ -141,7 +141,7 @@ public enum TournamentFilter: Equatable {
     case specific(String)
     
     /// Converts to web app tournamentId string format
-    public var webAppValue: String {
+    public var serverRawValue: String {
         switch self {
         case .all:
             return "all"
@@ -151,11 +151,11 @@ public enum TournamentFilter: Equatable {
     }
     
     /// Creates TournamentFilter from web app tournamentId string
-    public static func from(webAppValue: String) -> TournamentFilter {
-        if webAppValue == "all" || webAppValue.isEmpty {
+    public static func from(serverRawValue: String) -> TournamentFilter {
+        if serverRawValue == "all" || serverRawValue.isEmpty {
             return .all
         }
-        return .specific(webAppValue)
+        return .specific(serverRawValue)
     }
 }
 

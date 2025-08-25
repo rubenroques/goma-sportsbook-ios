@@ -19,8 +19,8 @@ enum WAMPRouter {
     // Locations & Tournaments
     case getLocations(language: String, sortByPopularity: Bool = false)
     case getCustomTournaments(language: String, sportId: String)
-    case getTournaments(language: String, sportId: String)
-    case getPopularTournaments(language: String, sportId: String)
+    case getTournaments(language: String, sportId: String, liveStatus: String = "BOTH", sortByPopularity: Bool = true)
+    case getPopularTournaments(language: String, sportId: String, liveStatus: String = "BOTH", sortByPopularity: Bool = true, maxResults: Int = 10)
 
     // Matches & Odds
     case getMatchDetails(language: String, matchId: String)
@@ -254,12 +254,17 @@ enum WAMPRouter {
 
         case .getCustomTournaments(let language, _):
             return ["lang": language]
-        case .getTournaments(let language, let sportId):
+        case .getTournaments(let language, let sportId, let liveStatus, let sortByPopularity):
             return ["lang": language,
-                    "sportId": sportId]
-        case .getPopularTournaments(let language, let sportId):
+                    "sportId": sportId,
+                    "liveStatus": liveStatus,
+                    "sortByPopularity": sortByPopularity]
+        case .getPopularTournaments(let language, let sportId, let liveStatus, let sortByPopularity, let maxResults):
             return ["lang": language,
-                    "sportId": sportId]
+                    "sportId": sportId,
+                    "liveStatus": liveStatus,
+                    "sortByPopularity": sortByPopularity,
+                    "maxResults": maxResults]
         
         case .getMatchOdds(let language, let matchId, let bettingTypeId):
             return ["lang": language,

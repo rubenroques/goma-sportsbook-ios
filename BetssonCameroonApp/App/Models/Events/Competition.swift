@@ -16,6 +16,7 @@ struct Competition: Hashable {
     var numberOutrightMarkets: Int
     var outrightMarkets: [Market]?
     var numberEvents: Int?
+    var numberLiveEvents: Int?
 
     init(id: String,
          name: String,
@@ -24,7 +25,8 @@ struct Competition: Hashable {
          sport: Sport?,
          numberOutrightMarkets: Int,
          outrightMarkets: [Market]?,
-         numberEvents: Int?) {
+         numberEvents: Int?,
+         numberLiveEvents: Int? = nil) {
 
         self.id = id
         self.name = name
@@ -34,5 +36,6 @@ struct Competition: Hashable {
         self.numberOutrightMarkets = numberOutrightMarkets
         self.outrightMarkets = outrightMarkets
         self.numberEvents = numberEvents
+        self.numberLiveEvents = numberLiveEvents
     }
 }

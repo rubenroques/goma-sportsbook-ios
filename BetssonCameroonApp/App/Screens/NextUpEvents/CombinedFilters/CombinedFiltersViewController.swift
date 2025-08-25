@@ -120,6 +120,11 @@ public class CombinedFiltersViewController: UIViewController {
     
     var viewModel: CombinedFiltersViewModelProtocol
     
+    // Filter state management
+    private var initialFilters: AppliedEventsFilters // Filters when modal opened
+    private var temporaryFilters: AppliedEventsFilters // Current selections (not applied yet)
+    private var isLoading: Bool = false // Track loading state locally
+    
     // Callbacks
     public var onReset: (() -> Void)?
     public var onClose: (() -> Void)?
@@ -131,12 +136,18 @@ public class CombinedFiltersViewController: UIViewController {
     init(currentFilters: AppliedEventsFilters,
          filterConfiguration: FilterConfiguration,
          servicesProvider: ServicesProvider.Client,
+         isLiveMode: Bool = false,
          onApply: @escaping (AppliedEventsFilters) -> Void) {
+        
+        // Store initial filters and create a copy for temporary edits
+        self.initialFilters = currentFilters
+        self.temporaryFilters = currentFilters
         
         self.viewModel = CombinedFiltersViewModel(
             filterConfiguration: filterConfiguration,
             currentFilters: currentFilters,
-            servicesProvider: servicesProvider
+            servicesProvider: servicesProvider,
+            isLiveMode: isLiveMode
         )
         
         self.onApply = onApply
@@ -161,6 +172,9 @@ public class CombinedFiltersViewController: UIViewController {
         setupConstraints()
         
         bind(toViewModel: viewModel)
+        
+        // Update button states based on initial state
+        updateButtonStates()
     }
     
     // MARK: - Setup
@@ -263,15 +277,33 @@ public class CombinedFiltersViewController: UIViewController {
         
         viewModel.isLoadingPublisher
             .sink(receiveValue: { [weak self] isLoading in
-                self?.loadingView.isHidden = !isLoading
+                guard let self = self else { return }
+                self.loadingView.isHidden = !isLoading
+                self.isLoading = isLoading
+                // Update all button states when loading changes
+                self.updateButtonStates()
             })
             .store(in: &cancellables)
+    }
+    
+    // MARK: - Button State Management
+    private func updateButtonStates() {
+        // Apply button: enabled only if filters changed from initial and not loading
+        let hasChanges = temporaryFilters != initialFilters
+        applyButton.isEnabled = hasChanges && !isLoading
+        applyButton.alpha = (hasChanges && !isLoading) ? 1.0 : 0.5
+        
+        // Reset button: enabled only if not at defaults
+        let isAtDefaults = temporaryFilters == AppliedEventsFilters.defaultFilters
+        resetButton.isEnabled = !isAtDefaults
+        resetButton.alpha = isAtDefaults ? 0.5 : 1.0
     }
     
     // MARK: Functions
     private func resetFilters() {
         let defaultFilters = AppliedEventsFilters.defaultFilters
-        viewModel.appliedFilters = defaultFilters
+        temporaryFilters = defaultFilters
+        // Don't update viewModel.appliedFilters here - only update temporary state
         
         // Reset sports filter
         if let sportViewModel = viewModel.dynamicViewModels["sportsFilter"] as? SportGamesFilterViewModelProtocol {
@@ -282,7 +314,7 @@ public class CombinedFiltersViewController: UIViewController {
         if let timeViewModel = viewModel.dynamicViewModels["timeFilter"] as? TimeSliderViewModelProtocol {
             let selectedIndex: Float
             
-            if let index = timeViewModel.timeOptions.firstIndex(where: { $0.value == defaultFilters.timeValue }) {
+            if let index = timeViewModel.timeOptions.firstIndex(where: { $0.value == defaultFilters.timeFilter.rawValue }) {
                 selectedIndex = Float(index)
             } else {
                 selectedIndex = 0.0
@@ -293,7 +325,7 @@ public class CombinedFiltersViewController: UIViewController {
         
         // Reset sort filter
         if let sortViewModel = viewModel.dynamicViewModels["sortByFilter"] as? SortFilterViewModelProtocol {
-            sortViewModel.selectedOptionId.send(defaultFilters.sortTypeId)
+            sortViewModel.selectedOptionId.send(defaultFilters.sortType.rawValue)
         }
         
         // Reset leagues filter
@@ -315,10 +347,14 @@ public class CombinedFiltersViewController: UIViewController {
     // MARK: - Actions
     @objc private func resetButtonTapped() {
         self.resetFilters()
-        onReset?()
+        updateButtonStates()
+        // Don't call onReset here - reset only affects temporary state
     }
     
     @objc private func closeButtonTapped() {
+        // Restore initial filters to temporary (in case they want to reopen)
+        temporaryFilters = initialFilters
+        
         if let navigationController = self.navigationController {
             navigationController.popViewController(animated: true)
         }
@@ -330,9 +366,24 @@ public class CombinedFiltersViewController: UIViewController {
     }
 
     @objc private func applyButtonTapped() {
-        print("APPLIED FILTERS: \(self.viewModel.appliedFilters)")
-        onApply?(self.viewModel.appliedFilters)
-        self.closeButtonTapped()
+        // Update viewModel with temporary filters
+        viewModel.appliedFilters = temporaryFilters
+        
+        // Save to UserDefaults for persistence using the Codable extension
+        UserDefaults.standard.set(codable: temporaryFilters, forKey: "AppliedEventsFilters")
+        
+        print("APPLIED FILTERS: \(temporaryFilters)")
+        onApply?(temporaryFilters)
+        
+        // Update initial filters to the applied ones
+        initialFilters = temporaryFilters
+        
+        // Close the modal
+        if let navigationController = self.navigationController {
+            navigationController.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
     }
     
 }
@@ -512,8 +563,21 @@ extension CombinedFiltersViewController {
         // Sports Filter
         if let sportView = dynamicFilterViews["sportsFilter"] as? SportGamesFilterView {
             sportView.onSportSelected = { [weak self] selectedId in
-                self?.viewModel.appliedFilters.sportId = selectedId
-                self?.viewModel.getAllLeagues(sportId: selectedId)
+                guard let self = self else { return }
+                
+                // Update temporary filters
+                self.temporaryFilters.sportId = selectedId
+                
+                // Reset league to "all" when sport changes
+                if self.temporaryFilters.sportId != self.viewModel.appliedFilters.sportId {
+                    self.temporaryFilters.leagueId = "all"
+                    // Update all league view models
+                    self.resetLeagueSelections()
+                }
+                
+                // Fetch leagues for new sport
+                self.viewModel.getAllLeagues(sportId: selectedId)
+                self.updateButtonStates()
             }
         }
         
@@ -527,7 +591,11 @@ extension CombinedFiltersViewController {
                     if arrayIndex >= 0 && arrayIndex < timeViewModel.timeOptions.count {
                         let actualTimeValue = timeViewModel.timeOptions[arrayIndex].value
                         print("Time filter selected: \(actualTimeValue)")
-                        self.viewModel.appliedFilters.timeValue = actualTimeValue
+                        // Convert Float value to TimeFilter enum
+                        if let timeFilter = AppliedEventsFilters.TimeFilter(rawValue: actualTimeValue) {
+                            self.temporaryFilters.timeFilter = timeFilter
+                        }
+                        self.updateButtonStates()
                     }
                 }
             }
@@ -536,31 +604,38 @@ extension CombinedFiltersViewController {
         // Sort Filter
         if let sortView = dynamicFilterViews["sortByFilter"] as? SortFilterView {
             sortView.onSortFilterSelected = { [weak self] selectedId in
-                self?.viewModel.appliedFilters.sortTypeId = selectedId
+                // Convert String ID to SortType enum
+                if let sortType = AppliedEventsFilters.SortType(rawValue: selectedId) {
+                    self?.temporaryFilters.sortType = sortType
+                }
+                self?.updateButtonStates()
             }
         }
         
         // Leagues Filter with cross-synchronization
         if let leaguesView = dynamicFilterViews["leaguesFilter"] as? SortFilterView {
             leaguesView.onSortFilterSelected = { [weak self] selectedId in
-                self?.viewModel.appliedFilters.leagueId = selectedId
+                self?.temporaryFilters.leagueId = selectedId
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "leaguesFilter")
+                self?.updateButtonStates()
             }
         }
         
         // Popular Countries Filter
         if let popularCountriesView = dynamicFilterViews["popularCountryLeaguesFilter"] as? CountryLeaguesFilterView {
             popularCountriesView.onLeagueFilterSelected = { [weak self] selectedId in
-                self?.viewModel.appliedFilters.leagueId = selectedId
+                self?.temporaryFilters.leagueId = selectedId
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "popularCountryLeaguesFilter")
+                self?.updateButtonStates()
             }
         }
         
         // Other Countries Filter
         if let otherCountriesView = dynamicFilterViews["otherCountryLeaguesFilter"] as? CountryLeaguesFilterView {
             otherCountriesView.onLeagueFilterSelected = { [weak self] selectedId in
-                self?.viewModel.appliedFilters.leagueId = selectedId
+                self?.temporaryFilters.leagueId = selectedId
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "otherCountryLeaguesFilter")
+                self?.updateButtonStates()
             }
         }
     }
@@ -572,7 +647,6 @@ extension CombinedFiltersViewController {
            let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol,
            leaguesViewModel.selectedOptionId.value != selectedId {
             leaguesViewModel.selectedOptionId.send(selectedId)
-            viewModel.appliedFilters.leagueId = selectedId
         }
         
         // Synchronize with popular countries
@@ -587,6 +661,21 @@ extension CombinedFiltersViewController {
            let otherViewModel = viewModel.dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol,
            otherViewModel.selectedOptionId.value != selectedId {
             otherViewModel.selectedOptionId.send(selectedId)
+        }
+    }
+    
+    private func resetLeagueSelections() {
+        // Reset all league selections to "all"
+        if let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol {
+            leaguesViewModel.selectedOptionId.send("all")
+        }
+        
+        if let popularViewModel = viewModel.dynamicViewModels["popularCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
+            popularViewModel.selectedOptionId.send("all")
+        }
+        
+        if let otherViewModel = viewModel.dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
+            otherViewModel.selectedOptionId.send("all")
         }
     }
 }
@@ -665,9 +754,9 @@ extension CombinedFiltersViewModel {
             ]
         }
         
-        // Find the index of the time option that matches the current timeValue
+        // Find the index of the time option that matches the current timeFilter
         let selectedIndex: Float
-        if let index = timeOptions.firstIndex(where: { $0.value == appliedFilters.timeValue }) {
+        if let index = timeOptions.firstIndex(where: { $0.value == appliedFilters.timeFilter.rawValue }) {
             selectedIndex = Float(index)
         } else {
             selectedIndex = 0.0
@@ -707,7 +796,7 @@ extension CombinedFiltersViewModel {
                     )
                 }
             }
-            selectedId = appliedFilters.sortTypeId
+            selectedId = appliedFilters.sortType.rawValue
         } else if widget.id == "leaguesFilter" {
             sortOptions = popularLeagues
             sortFilterType = .league

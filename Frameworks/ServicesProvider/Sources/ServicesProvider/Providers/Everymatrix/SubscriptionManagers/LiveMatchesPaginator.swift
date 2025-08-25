@@ -65,16 +65,32 @@ class LiveMatchesPaginator: UnsubscriptionController {
         store.clear()
         eventInfoStore.clear()
 
-        // Create the WAMP router using the existing popularMatchesPublisher case
-        // I am using this live version to better test the changes in the matches/market/outcomes
-        let router = WAMPRouter.liveMatchesPublisher(
-            operatorId: "4093",
-            language: "en",
-            sportId: sportId,
-            matchesCount: numberOfEvents // 1
-        )
-
+        let router: WAMPRouter
         
+        // Use custom aggregator if filters are provided
+        if let filters = filters {
+            router = WAMPRouter.customMatchesAggregatorPublisher(
+                operatorId: "4093",
+                language: "en",
+                sportId: sportId,
+                locationId: filters.location.serverRawValue,    // "all" or specific ID
+                tournamentId: filters.tournament.serverRawValue, // "all" or specific ID
+                hoursInterval: filters.timeRange.serverRawValue, // "all", "0-1", "0-24", etc.
+                sortEventsBy: filters.sortBy.serverRawValue,     // "POPULAR", "UPCOMING", "FAVORITES"
+                liveStatus: "LIVE",                           // Live matches only
+                eventLimit: numberOfEvents,
+                mainMarketsLimit: numberOfMarkets,
+                optionalUserId: filters.optionalUserId
+            )
+        } else {
+            // Fallback to simple live matches endpoint
+            router = WAMPRouter.liveMatchesPublisher(
+                operatorId: "4093",
+                language: "en",
+                sportId: sportId,
+                matchesCount: numberOfEvents
+            )
+        }
 
         // Subscribe to the websocket topic
         return connector.subscribe(router)

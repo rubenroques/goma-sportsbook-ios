@@ -72,12 +72,32 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
         // Clear the store for fresh subscription
         store.clear()
 
-        let router = WAMPRouter.popularMatchesPublisher(
-            operatorId: "4093",
-            language: "en",
-            sportId: sportId,
-            matchesCount: numberOfEvents
-        )
+        let router: WAMPRouter
+        
+        // Use custom aggregator if filters are provided
+        if let filters = filters {
+            router = WAMPRouter.customMatchesAggregatorPublisher(
+                operatorId: "4093",
+                language: "en",
+                sportId: sportId,
+                locationId: filters.location.serverRawValue,    // "all" or specific ID
+                tournamentId: filters.tournament.serverRawValue, // "all" or specific ID
+                hoursInterval: filters.timeRange.serverRawValue, // "all", "0-1", "0-24", etc.
+                sortEventsBy: filters.sortBy.serverRawValue,     // "POPULAR", "UPCOMING", "FAVORITES"
+                liveStatus: "NOT_LIVE",                       // Pre-live matches only
+                eventLimit: numberOfEvents,
+                mainMarketsLimit: numberOfMarkets,
+                optionalUserId: filters.optionalUserId
+            )
+        } else {
+            // Fallback to simple popular matches endpoint
+            router = WAMPRouter.popularMatchesPublisher(
+                operatorId: "4093",
+                language: "en",
+                sportId: sportId,
+                matchesCount: numberOfEvents
+            )
+        }
 
         // Subscribe to the websocket topic
         return connector.subscribe(router)
