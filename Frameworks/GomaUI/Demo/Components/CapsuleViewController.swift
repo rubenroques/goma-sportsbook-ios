@@ -2,7 +2,7 @@
 //  CapsuleViewController.swift
 //  Demo
 //
-//  Created by Claude Code on 08/07/2025.
+//  Created by Ruben Roques Code on 08/07/2025.
 //
 
 import Foundation

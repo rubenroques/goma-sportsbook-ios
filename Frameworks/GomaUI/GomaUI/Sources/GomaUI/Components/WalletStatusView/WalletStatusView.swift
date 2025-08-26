@@ -1,9 +1,3 @@
-//
-//  WalletStatusView.swift
-//  GomaUI
-//
-//  Created by Claude on 04/07/2025.
-//
 
 import UIKit
 import Combine

@@ -2,7 +2,7 @@
 //  CasinoCategoryDTO.swift
 //  ServicesProvider
 //
-//  Created by Claude on 29/01/2025.
+//  Created by Ruben Roques on 29/01/2025.
 //
 
 import Foundation

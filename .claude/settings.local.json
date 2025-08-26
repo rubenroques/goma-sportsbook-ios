@@ -40,5 +40,6 @@
   "enabledMcpjsonServers": [
     "ios-simulator-mcp",
     "swiftlens"
-  ]
+  ],
+  "enableAllProjectMcpServers": true
 }

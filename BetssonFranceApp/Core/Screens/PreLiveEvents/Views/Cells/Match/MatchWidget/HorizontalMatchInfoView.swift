@@ -2,7 +2,7 @@
 //  HorizontalMatchInfoView.swift
 //  Sportsbook
 //
-//  Created by Claude on 2024-07-01.
+//  Created by Ruben Roques on 2024-07-01.
 //
 
 import UIKit

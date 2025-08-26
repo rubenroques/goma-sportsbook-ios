@@ -2,7 +2,7 @@
 //  WalletStatusViewController.swift
 //  GomaUIDemo
 //
-//  Created by Claude on 04/07/2025.
+//  Created by Ruben Roques on 04/07/2025.
 //
 
 import UIKit

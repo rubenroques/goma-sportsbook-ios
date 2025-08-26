@@ -2,7 +2,7 @@
 //  PillSelectorBarViewController.swift
 //  TestCase
 //
-//  Created by Claude Code on 14/06/2025.
+//  Created by Ruben Roques Code on 14/06/2025.
 //
 
 import UIKit

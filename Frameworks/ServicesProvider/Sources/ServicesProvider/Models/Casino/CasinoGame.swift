@@ -1,9 +1,3 @@
-//
-//  CasinoGame.swift
-//  ServicesProvider
-//
-//  Created by Claude on 29/01/2025.
-//
 
 import Foundation
 

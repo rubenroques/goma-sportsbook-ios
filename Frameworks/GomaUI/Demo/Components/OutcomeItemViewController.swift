@@ -157,7 +157,7 @@ class OutcomeItemViewController: UIViewController {
     }
 
     private func setupOutcomeViewCallbacks(_ outcomeView: OutcomeItemView) {
-        outcomeView.onTap = {
+        outcomeView.onTap = { _ in
             print("✅ Outcome tapped")
         }
 

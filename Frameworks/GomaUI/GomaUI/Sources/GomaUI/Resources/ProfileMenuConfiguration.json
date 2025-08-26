@@ -1,0 +1,54 @@
+{
+  "menuItems": [
+    {
+      "id": "notifications",
+      "icon": "bell",
+      "title": "Notifications",
+      "type": "navigation",
+      "action": "notifications"
+    },
+    {
+      "id": "transaction_history",
+      "icon": "clock",
+      "title": "Transaction History",
+      "type": "navigation",
+      "action": "transactionHistory"
+    },
+    {
+      "id": "change_language",
+      "icon": "globe",
+      "title": "Change Language",
+      "type": "selection",
+      "value": "English",
+      "action": "changeLanguage"
+    },
+    {
+      "id": "responsible_gaming",
+      "icon": "shield.checkered",
+      "title": "Responsible Gaming",
+      "type": "navigation",
+      "action": "responsibleGaming"
+    },
+    {
+      "id": "help_center",
+      "icon": "questionmark.circle",
+      "title": "Help Center",
+      "type": "navigation",
+      "action": "helpCenter"
+    },
+    {
+      "id": "change_password",
+      "icon": "lock",
+      "title": "Change Password",
+      "type": "navigation",
+      "action": "changePassword"
+    },
+    {
+      "id": "logout",
+      "icon": "rectangle.portrait.and.arrow.right",
+      "title": "Logout",
+      "type": "action",
+      "action": "logout"
+    }
+  ]
+}

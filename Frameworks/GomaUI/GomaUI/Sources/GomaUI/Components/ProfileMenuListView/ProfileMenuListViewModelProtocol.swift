@@ -1,0 +1,40 @@
+//
+//  ProfileMenuListViewModelProtocol.swift
+//  GomaUI
+//
+//  Created by Ruben Roques Code on 25/08/2025.
+//
+
+import Foundation
+import Combine
+
+/// Protocol defining the interface for ProfileMenuListView view model
+public protocol ProfileMenuListViewModelProtocol {
+    
+    /// Publisher that emits the list of menu items
+    var menuItemsPublisher: AnyPublisher<[ProfileMenuItem], Never> { get }
+    
+    /// Publisher that emits the current language for the language selection item
+    var currentLanguagePublisher: AnyPublisher<String, Never> { get }
+    
+    /// Called when a menu item is selected
+    /// - Parameter item: The selected menu item
+    func didSelectItem(_ item: ProfileMenuItem)
+    
+    /// Loads menu configuration from a JSON file
+    /// - Parameter jsonFileName: Name of the JSON file (without extension), nil for default
+    func loadConfiguration(from jsonFileName: String?)
+    
+    /// Updates the current language display value
+    /// - Parameter language: The new language name to display
+    func updateCurrentLanguage(_ language: String)
+}
+
+/// Configuration structure for loading menu items from JSON
+public struct ProfileMenuConfiguration: Codable {
+    public let menuItems: [ProfileMenuItem]
+    
+    public init(menuItems: [ProfileMenuItem]) {
+        self.menuItems = menuItems
+    }
+}

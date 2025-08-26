@@ -2,7 +2,7 @@
 //  SeeMoreButtonViewController.swift
 //  TestCase
 //
-//  Created by Claude on 01/08/2025.
+//  Created by Ruben Roques on 01/08/2025.
 //
 
 import UIKit
@@ -104,16 +104,16 @@ class SeeMoreButtonViewController: UIViewController {
         stackView.addArrangedSubview(interactiveButton)
         
         // Setup button callbacks for demo
-        defaultButton.onButtonTapped = { _ in
+        defaultButton.onButtonTapped = {
             print("Default button tapped!")
         }
         
-        withCountButton.onButtonTapped = { _ in
+        withCountButton.onButtonTapped = {
             print("Count button tapped!")
         }
         
-        interactiveButton.onButtonTapped = { buttonId in
-            print("Interactive button tapped: \(buttonId)")
+        interactiveButton.onButtonTapped = {
+            print("Interactive button tapped")
         }
     }
     

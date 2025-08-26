@@ -2,7 +2,7 @@
 //  WalletWidgetViewController.swift
 //  TestCase
 //
-//  Created by Claude on 30/08/2023.
+//  Created by Ruben Roques on 30/08/2023.
 //
 
 import UIKit

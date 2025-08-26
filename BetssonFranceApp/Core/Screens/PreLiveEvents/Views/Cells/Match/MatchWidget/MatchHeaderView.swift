@@ -2,7 +2,7 @@
 //  MatchHeaderView.swift
 //  Sportsbook
 //
-//  Created by Claude on 2024-07-02.
+//  Created by Ruben Roques on 2024-07-02.
 //
 
 import UIKit

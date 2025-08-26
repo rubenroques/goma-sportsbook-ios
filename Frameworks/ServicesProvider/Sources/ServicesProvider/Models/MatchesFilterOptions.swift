@@ -1,9 +1,3 @@
-//
-//  MatchesFilterOptions.swift
-//  ServicesProvider
-//
-//  Created by Claude Code on 19/07/2025.
-//
 
 import Foundation
 

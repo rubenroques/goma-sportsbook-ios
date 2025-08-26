@@ -759,6 +759,43 @@ class ComponentsTableViewController: UITableViewController {
                 return selectorView
             }
         ),
+        UIComponent(
+            title: "Wallet Detail View",
+            description: "Comprehensive wallet detail component with balance information, orange theme design, and integrated action buttons for deposits and withdrawals",
+            viewController: WalletDetailViewController.self,
+            previewFactory: {
+                let viewModel = MockWalletDetailViewModel.defaultMock
+                let walletDetailView = WalletDetailView(viewModel: viewModel)
+                return walletDetailView
+            }
+        ),
+        UIComponent(
+            title: "Profile Menu List",
+            description: "Interactive profile menu with multiple item types: navigation actions, selections with values, and immediate actions. Configurable via JSON with reactive language updates",
+            viewController: ProfileMenuListViewController.self,
+            previewFactory: {
+                let viewModel = MockProfileMenuListViewModel.defaultMock
+                return ProfileMenuListView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Theme Switcher",
+            description: "Super simple theme switcher with Light, System, and Dark options. Orange indicator shows selected theme with smooth animations",
+            viewController: ThemeSwitcherViewController.self,
+            previewFactory: {
+                let viewModel = MockThemeSwitcherViewModel.defaultMock
+                return ThemeSwitcherView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Language Selector",
+            description: "Single-selection language picker with radio buttons and flag icons. Supports emoji flags, customizable language lists, and reactive selection updates",
+            viewController: LanguageSelectorViewController.self,
+            previewFactory: {
+                let viewModel = MockLanguageSelectorViewModel.twoLanguagesMock
+                return LanguageSelectorView(viewModel: viewModel)
+            }
+        ),
     ]
 
     // MARK: - View Lifecycle

@@ -214,11 +214,11 @@ class MarketOutcomesLineViewController: UIViewController {
     }
     
     private func setupMarketEventHandlers(_ marketView: MarketOutcomesLineView, name: String) {
-        marketView.onOutcomeSelected = { [weak self] outcomeType in
+        marketView.onOutcomeSelected = { [weak self] _, outcomeType in
             self?.updateSelectionEvent("✅ Selected \(outcomeType) in \(name)")
         }
         
-        marketView.onOutcomeDeselected = { [weak self] outcomeType in
+        marketView.onOutcomeDeselected = { [weak self] _, outcomeType in
             self?.updateSelectionEvent("❌ Deselected \(outcomeType) in \(name)")
         }
         

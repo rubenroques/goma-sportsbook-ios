@@ -8,6 +8,7 @@ import Combine
 import SwiftUI
 
 final public class WalletWidgetView: UIView {
+    
     // MARK: - Private Properties
     private let stackView = UIStackView()
     private let balanceContainer = UIView()

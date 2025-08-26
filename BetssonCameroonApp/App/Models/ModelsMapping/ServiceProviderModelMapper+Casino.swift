@@ -2,7 +2,7 @@
 //  ServiceProviderModelMapper+Casino.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on 01/08/2025.
+//  Created by Ruben Roques on 01/08/2025.
 //
 
 import Foundation
