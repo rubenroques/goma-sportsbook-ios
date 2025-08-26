@@ -65,6 +65,14 @@ public struct NotificationData: Equatable, Hashable, Identifiable {
     }
 }
 
+// MARK: - Card Position
+public enum CardPosition {
+    case single     // Only card - all corners rounded
+    case first      // First card - top corners rounded
+    case middle     // Middle card - no corners rounded
+    case last       // Last card - bottom corners rounded
+}
+
 // MARK: - Notification List State
 public enum NotificationListState {
     case loading

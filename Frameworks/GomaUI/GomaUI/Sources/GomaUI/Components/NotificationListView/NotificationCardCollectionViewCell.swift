@@ -48,12 +48,12 @@ final public class NotificationCardCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Configuration
-    public func configure(with notification: NotificationData, onActionTapped: @escaping (NotificationData) -> Void) {
+    public func configure(with notification: NotificationData, position: CardPosition, onActionTapped: @escaping (NotificationData) -> Void) {
         // Clear existing bindings
         cancellables.removeAll()
         
         // Configure the wrapped notification card view
-        notificationCardView.configure(with: notification, onActionTapped: onActionTapped)
+        notificationCardView.configure(with: notification, position: position, onActionTapped: onActionTapped)
     }
     
     // MARK: - Reuse

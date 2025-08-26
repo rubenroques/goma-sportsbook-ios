@@ -94,14 +94,14 @@ final public class NotificationListView: UIView {
     
     private func applyStyles() {
         backgroundColor = .clear
-        containerView.backgroundColor = StyleProvider.Color.backgroundPrimary
+        containerView.backgroundColor = .clear
         emptyStateLabel.textColor = StyleProvider.Color.textSecondary
         loadingIndicator.color = StyleProvider.Color.highlightPrimary
     }
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        containerView.layer.cornerRadius = 16
+        // Container no longer needs corner radius - individual cards handle their own
     }
     
     // MARK: - UI Updates
@@ -189,11 +189,25 @@ extension NotificationListView: UICollectionViewDataSource {
         }
         
         let notification = notifications[indexPath.item]
-        cell.configure(with: notification) { [weak self] notification in
+        let position = calculateCardPosition(for: indexPath.item, totalCount: notifications.count)
+        
+        cell.configure(with: notification, position: position) { [weak self] notification in
             self?.viewModel.performAction(for: notification)
         }
         
         return cell
+    }
+    
+    private func calculateCardPosition(for index: Int, totalCount: Int) -> CardPosition {
+        if totalCount == 1 {
+            return .single
+        } else if index == 0 {
+            return .first
+        } else if index == totalCount - 1 {
+            return .last
+        } else {
+            return .middle
+        }
     }
 }
 
@@ -233,7 +247,7 @@ extension NotificationListView: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         minimumLineSpacingForSectionAt section: Int
     ) -> CGFloat {
-        return 8 // Space between cards as per Figma
+        return 0 // No space between cards - they should touch each other
     }
     
     public func collectionView(

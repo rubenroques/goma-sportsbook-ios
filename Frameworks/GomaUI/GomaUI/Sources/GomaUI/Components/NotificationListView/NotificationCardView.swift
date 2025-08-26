@@ -7,6 +7,7 @@ import SwiftUI
 final class NotificationCardView: UIView {
     
     // MARK: - Private Properties
+    private lazy var backgroundContainerView: UIView = Self.createBackgroundContainerView()
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var mainStackView: UIStackView = Self.createMainStackView()
     private lazy var headerContainerView: UIView = Self.createHeaderContainerView()
@@ -18,6 +19,7 @@ final class NotificationCardView: UIView {
     
     private var cancellables = Set<AnyCancellable>()
     private var currentNotification: NotificationData?
+    private var currentPosition: CardPosition = .middle
     
     // MARK: - Public Properties
     public var onActionTapped: ((NotificationData) -> Void)?
@@ -41,7 +43,8 @@ final class NotificationCardView: UIView {
     }
     
     private func setupSubviews() {
-        addSubview(containerView)
+        addSubview(backgroundContainerView)
+        backgroundContainerView.addSubview(containerView)
         containerView.addSubview(mainStackView)
         
         // Setup header container
@@ -64,11 +67,17 @@ final class NotificationCardView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Container View
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerView.topAnchor.constraint(equalTo: topAnchor),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            // Background Container View
+            backgroundContainerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundContainerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            backgroundContainerView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundContainerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            // Container View (with padding inside background)
+            containerView.leadingAnchor.constraint(equalTo: backgroundContainerView.leadingAnchor, constant: 8),
+            containerView.trailingAnchor.constraint(equalTo: backgroundContainerView.trailingAnchor, constant: -8),
+            containerView.topAnchor.constraint(equalTo: backgroundContainerView.topAnchor, constant: 8),
+            containerView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor, constant: -8),
             
             // Main Stack View
             mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
@@ -101,7 +110,8 @@ final class NotificationCardView: UIView {
         backgroundColor = .clear
         
         // Apply StyleProvider colors
-        containerView.backgroundColor = StyleProvider.Color.backgroundSecondary
+        backgroundContainerView.backgroundColor = StyleProvider.Color.backgroundPrimary // Dark gray background
+        containerView.backgroundColor = StyleProvider.Color.backgroundSecondary // White/light background
         timestampLabel.textColor = StyleProvider.Color.textPrimary
         titleLabel.textColor = StyleProvider.Color.textPrimary
         descriptionLabel.textColor = StyleProvider.Color.textPrimary
@@ -110,7 +120,11 @@ final class NotificationCardView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        applyCornerRadius(for: currentPosition)
+        
+        // Container view always has all 4 corners rounded (like before)
         containerView.layer.cornerRadius = 8
+        
         unreadIndicatorView.layer.cornerRadius = 4
         actionButton.layer.cornerRadius = 4
     }
@@ -122,12 +136,48 @@ final class NotificationCardView: UIView {
     }
     
     // MARK: - Configuration
-    public func configure(with notification: NotificationData, onActionTapped: @escaping (NotificationData) -> Void) {
+    public func configure(with notification: NotificationData, position: CardPosition, onActionTapped: @escaping (NotificationData) -> Void) {
         self.currentNotification = notification
+        self.currentPosition = position
         self.onActionTapped = onActionTapped
         
         updateContent(notification)
         updateVisualState(notification)
+        applyCornerRadius(for: position)
+    }
+    
+    private func applyCornerRadius(for position: CardPosition) {
+        let cornerRadius: CGFloat = 16
+        
+        // Apply position-based corners to backgroundContainerView
+        switch position {
+        case .single:
+            // All corners rounded
+            backgroundContainerView.layer.cornerRadius = cornerRadius
+            backgroundContainerView.layer.maskedCorners = [
+                .layerMinXMinYCorner, .layerMaxXMinYCorner,
+                .layerMinXMaxYCorner, .layerMaxXMaxYCorner
+            ]
+        case .first:
+            // Only top corners rounded
+            backgroundContainerView.layer.cornerRadius = cornerRadius
+            backgroundContainerView.layer.maskedCorners = [
+                .layerMinXMinYCorner, .layerMaxXMinYCorner
+            ]
+        case .middle:
+            // No corners rounded
+            backgroundContainerView.layer.cornerRadius = 0
+            backgroundContainerView.layer.maskedCorners = []
+        case .last:
+            // Only bottom corners rounded
+            backgroundContainerView.layer.cornerRadius = cornerRadius
+            backgroundContainerView.layer.maskedCorners = [
+                .layerMinXMaxYCorner, .layerMaxXMaxYCorner
+            ]
+        }
+        
+        // Ensure backgroundContainerView clips to bounds for corner radius
+        backgroundContainerView.layer.masksToBounds = true
     }
     
     private func updateContent(_ notification: NotificationData) {
@@ -192,6 +242,13 @@ final class NotificationCardView: UIView {
 
 // MARK: - Static Factory Methods
 extension NotificationCardView {
+    
+    private static func createBackgroundContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
+        return view
+    }
     
     private static func createContainerView() -> UIView {
         let view = UIView()
@@ -270,7 +327,7 @@ extension NotificationCardView {
         )
         
         let cardView = NotificationCardView()
-        cardView.configure(with: notification) { _ in
+        cardView.configure(with: notification, position: .single) { _ in
             print("Action tapped!")
         }
         
@@ -284,7 +341,7 @@ extension NotificationCardView {
             cardView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .white
         return vc
     }
 }
@@ -303,7 +360,7 @@ extension NotificationCardView {
         )
         
         let cardView = NotificationCardView()
-        cardView.configure(with: notification) { _ in
+        cardView.configure(with: notification, position: .first) { _ in
             print("Claim bonus tapped!")
         }
         
@@ -317,7 +374,7 @@ extension NotificationCardView {
             cardView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .white
         return vc
     }
 }
@@ -335,7 +392,7 @@ extension NotificationCardView {
         )
         
         let cardView = NotificationCardView()
-        cardView.configure(with: notification) { _ in
+        cardView.configure(with: notification, position: .middle) { _ in
             print("Action tapped!")
         }
         
@@ -349,7 +406,7 @@ extension NotificationCardView {
             cardView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .white
         return vc
     }
 }
@@ -368,7 +425,7 @@ extension NotificationCardView {
         )
         
         let cardView = NotificationCardView()
-        cardView.configure(with: notification) { _ in
+        cardView.configure(with: notification, position: .last) { _ in
             print("Confirm payment tapped!")
         }
         
@@ -382,7 +439,7 @@ extension NotificationCardView {
             cardView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .white
         return vc
     }
 }
@@ -401,7 +458,7 @@ extension NotificationCardView {
         )
         
         let cardView = NotificationCardView()
-        cardView.configure(with: notification) { _ in
+        cardView.configure(with: notification, position: .single) { _ in
             print("Learn more tapped!")
         }
         
@@ -415,7 +472,7 @@ extension NotificationCardView {
             cardView.heightAnchor.constraint(greaterThanOrEqualToConstant: 150)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .white
         return vc
     }
 }
@@ -433,7 +490,7 @@ extension NotificationCardView {
         )
         
         let cardView = NotificationCardView()
-        cardView.configure(with: notification) { _ in
+        cardView.configure(with: notification, position: .first) { _ in
             print("Action tapped!")
         }
         
@@ -447,7 +504,7 @@ extension NotificationCardView {
             cardView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .white
         return vc
     }
 }
@@ -475,9 +532,20 @@ extension NotificationCardView {
             NotificationData(id: "4", timestamp: Calendar.current.date(byAdding: .day, value: -2, to: Date()) ?? Date(), title: "Read with Secondary Action", description: "This has a secondary style action", state: .read, action: NotificationAction(id: "secondary", title: "Learn More", style: .secondary))
         ]
         
-        for notification in notifications {
+        for (index, notification) in notifications.enumerated() {
             let cardView = NotificationCardView()
-            cardView.configure(with: notification) { notification in
+            let position: CardPosition = {
+                if notifications.count == 1 {
+                    return .single
+                } else if index == 0 {
+                    return .first
+                } else if index == notifications.count - 1 {
+                    return .last
+                } else {
+                    return .middle
+                }
+            }()
+            cardView.configure(with: notification, position: position) { notification in
                 print("Action tapped for: \(notification.title)")
             }
             stackView.addArrangedSubview(cardView)
@@ -499,7 +567,7 @@ extension NotificationCardView {
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .white
         return vc
     }
 }
