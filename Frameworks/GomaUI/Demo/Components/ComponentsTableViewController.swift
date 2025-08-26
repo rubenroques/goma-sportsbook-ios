@@ -781,6 +781,15 @@ class ComponentsTableViewController: UITableViewController {
             }
         ),
         UIComponent(
+            title: "Notification List",
+            description: "Scrollable notification feed with card-based items, supporting read/unread states, action buttons, timestamp formatting, and empty states",
+            viewController: NotificationListViewController.self,
+            previewFactory: {
+                let viewModel = MockNotificationListViewModel.defaultMock
+                return NotificationListView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
             title: "Language Selector",
             description: "Single-selection language picker with radio buttons and flag icons. Supports emoji flags, customizable language lists, and reactive selection updates",
             viewController: LanguageSelectorViewController.self,
