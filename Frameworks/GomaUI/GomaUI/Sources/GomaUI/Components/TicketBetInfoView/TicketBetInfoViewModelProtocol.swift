@@ -1,0 +1,56 @@
+import Foundation
+import Combine
+
+/// Data model for ticket bet information
+public struct TicketBetInfoData: Equatable {
+    public let id: String
+    public let title: String
+    public let betDetails: String
+    public let tickets: [TicketSelectionData]
+    public let totalOdds: String
+    public let betAmount: String
+    public let possibleWinnings: String
+    public let partialCashoutValue: String?
+    public let cashoutTotalAmount: String?
+    
+    public init(
+        id: String,
+        title: String,
+        betDetails: String,
+        tickets: [TicketSelectionData],
+        totalOdds: String,
+        betAmount: String,
+        possibleWinnings: String,
+        partialCashoutValue: String? = nil,
+        cashoutTotalAmount: String? = nil
+    ) {
+        self.id = id
+        self.title = title
+        self.betDetails = betDetails
+        self.tickets = tickets
+        self.totalOdds = totalOdds
+        self.betAmount = betAmount
+        self.possibleWinnings = possibleWinnings
+        self.partialCashoutValue = partialCashoutValue
+        self.cashoutTotalAmount = cashoutTotalAmount
+    }
+}
+
+/// Protocol defining the interface for TicketBetInfoView ViewModels
+public protocol TicketBetInfoViewModelProtocol {
+    /// Publisher for the bet info data
+    var betInfoPublisher: AnyPublisher<TicketBetInfoData, Never> { get }
+    
+    /// Button view models
+    var rebetButtonViewModel: ButtonIconViewModelProtocol { get }
+    var cashoutButtonViewModel: ButtonIconViewModelProtocol { get }
+    
+    /// Handle navigation button tap
+    func handleNavigationTap()
+    
+    /// Handle rebet button tap
+    func handleRebetTap()
+    
+    /// Handle cashout button tap
+    func handleCashoutTap()
+} 

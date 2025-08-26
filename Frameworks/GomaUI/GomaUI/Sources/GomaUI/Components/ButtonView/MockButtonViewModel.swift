@@ -41,6 +41,8 @@ final public class MockButtonViewModel: ButtonViewModelProtocol {
             id: currentData.id,
             title: currentData.title,
             style: currentData.style,
+            backgroundColor: currentData.backgroundColor,
+            disabledBackgroundColor: currentData.disabledBackgroundColor,
             isEnabled: isEnabled
         )
         buttonDataSubject.send(updatedData)
@@ -52,6 +54,8 @@ final public class MockButtonViewModel: ButtonViewModelProtocol {
             id: currentData.id,
             title: title,
             style: currentData.style,
+            backgroundColor: currentData.backgroundColor,
+            disabledBackgroundColor: currentData.disabledBackgroundColor,
             isEnabled: currentData.isEnabled
         )
         buttonDataSubject.send(updatedData)

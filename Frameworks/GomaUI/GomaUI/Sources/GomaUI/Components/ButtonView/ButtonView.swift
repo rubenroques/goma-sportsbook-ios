@@ -13,7 +13,7 @@ import SwiftUI
 final public class ButtonView: UIView {
     // MARK: - Private Properties
     private let button: UIButton = {
-        let btn = UIButton(type: .system)
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.layer.cornerRadius = 8
         btn.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 16)
@@ -97,10 +97,20 @@ final public class ButtonView: UIView {
     
     private func applySolidBackgroundStyle(isEnabled: Bool) {
         if isEnabled {
-            button.backgroundColor = StyleProvider.Color.buttonBackgroundPrimary
+            if let customBackgroundColor = currentButtonData?.backgroundColor {
+                button.backgroundColor = customBackgroundColor
+            }
+            else {
+                button.backgroundColor = StyleProvider.Color.buttonBackgroundPrimary
+            }
             button.setTitleColor(StyleProvider.Color.buttonTextPrimary, for: .normal)
         } else {
-            button.backgroundColor = StyleProvider.Color.buttonDisablePrimary
+            if let customDisabledBackgroundColor = currentButtonData?.disabledBackgroundColor {
+                button.backgroundColor = customDisabledBackgroundColor
+            }
+            else {
+                button.backgroundColor = StyleProvider.Color.buttonDisablePrimary
+            }
             button.setTitleColor(StyleProvider.Color.buttonTextDisablePrimary, for: .normal)
         }
         
@@ -171,6 +181,10 @@ final public class ButtonView: UIView {
     
     public func setCustomFontSize(_ size: CGFloat) {
         button.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: size)
+    }
+    
+    public func setCustomBackgroundColor(_ color: UIColor) {
+        button.backgroundColor = color
     }
 }
 

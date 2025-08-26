@@ -21,12 +21,16 @@ public struct ButtonData: Equatable, Hashable {
     public let id: String
     public let title: String
     public let style: ButtonStyle
+    public let backgroundColor: UIColor?
+    public let disabledBackgroundColor: UIColor?
     public let isEnabled: Bool
     
-    public init(id: String, title: String, style: ButtonStyle, isEnabled: Bool = true) {
+    public init(id: String, title: String, style: ButtonStyle, backgroundColor: UIColor? = nil, disabledBackgroundColor: UIColor? = nil,isEnabled: Bool = true) {
         self.id = id
         self.title = title
         self.style = style
+        self.backgroundColor = backgroundColor
+        self.disabledBackgroundColor = disabledBackgroundColor
         self.isEnabled = isEnabled
     }
 }
@@ -47,4 +51,5 @@ public protocol ButtonViewModelProtocol {
     
     /// Callback closure for button tap
     var onButtonTapped: (() -> Void)? { get set }
+    
 }
