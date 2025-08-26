@@ -1,10 +1,3 @@
-//
-//  WalletDetailViewController.swift
-//  GomaUIDemo
-//
-//  Created by Ruben Roques on 25/08/2025.
-//
-
 import UIKit
 import GomaUI
 

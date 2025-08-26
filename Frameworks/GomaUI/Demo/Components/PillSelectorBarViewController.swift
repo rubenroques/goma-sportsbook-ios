@@ -1,10 +1,3 @@
-//
-//  PillSelectorBarViewController.swift
-//  TestCase
-//
-//  Created by Ruben Roques Code on 14/06/2025.
-//
-
 import UIKit
 import GomaUI
 

@@ -1,10 +1,3 @@
-//
-//  FilterModels.swift
-//  TestCase
-//
-//  Created by André Lascas on 30/05/2025.
-//
-
 import Foundation
 
 // MARK: - Filter Configuration Models

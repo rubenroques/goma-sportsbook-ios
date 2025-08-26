@@ -1,10 +1,3 @@
-//
-//  MockLanguageSelectorViewModel.swift
-//  GomaUI
-//
-//  Created by Claude Code on 26/08/2025.
-//
-
 import Foundation
 import Combine
 
@@ -199,7 +192,7 @@ extension MockLanguageSelectorViewModel {
             languages: [
                 LanguageModel.english.withSelection(true),
                 LanguageModel.french,
-                LanguageModel.spanish,
+                LanguageModel.portuguese,
                 LanguageModel.german,
                 LanguageModel.italian
             ],

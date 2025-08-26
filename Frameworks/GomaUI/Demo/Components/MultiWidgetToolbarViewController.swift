@@ -1,10 +1,3 @@
-//
-//  MultiWidgetToolbarViewController.swift
-//  TestCase
-//
-//  Created by Ruben Roques on 29/08/2023.
-//
-
 import UIKit
 import GomaUI
 

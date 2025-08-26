@@ -1,10 +1,3 @@
-//
-//  StatusInfoViewModelProtocol.swift
-//  GomaUI
-//
-//  Created by André Lascas on 30/06/2025.
-//
-
 import Foundation
 
 public struct StatusInfo {

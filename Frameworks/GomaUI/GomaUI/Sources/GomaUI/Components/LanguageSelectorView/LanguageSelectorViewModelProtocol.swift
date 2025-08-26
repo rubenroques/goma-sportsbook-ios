@@ -1,10 +1,3 @@
-//
-//  LanguageSelectorViewModelProtocol.swift
-//  GomaUI
-//
-//  Created by Claude Code on 26/08/2025.
-//
-
 import Foundation
 import Combine
 

@@ -1,10 +1,3 @@
-//
-//  TestCaseTests.swift
-//  TestCaseTests
-//
-//  Created by Ruben Roques on 19/05/2025.
-//
-
 import XCTest
 @testable import TestCase
 

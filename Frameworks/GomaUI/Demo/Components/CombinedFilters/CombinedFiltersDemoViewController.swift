@@ -1,10 +1,3 @@
-//
-//  CombinedFiltersDemoViewController.swift
-//  TestCase
-//
-//  Created by André Lascas on 29/05/2025.
-//
-
 import UIKit
 import Combine
 import GomaUI

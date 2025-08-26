@@ -1,10 +1,3 @@
-//
-//  TestCaseUITestsLaunchTests.swift
-//  TestCaseUITests
-//
-//  Created by Ruben Roques on 19/05/2025.
-//
-
 import XCTest
 
 final class TestCaseUITestsLaunchTests: XCTestCase {

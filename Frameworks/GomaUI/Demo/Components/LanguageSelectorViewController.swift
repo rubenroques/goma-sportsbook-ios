@@ -1,10 +1,3 @@
-//
-//  LanguageSelectorViewController.swift
-//  GomaUIDemo
-//
-//  Created by Claude Code on 26/08/2025.
-//
-
 import UIKit
 import GomaUI
 import Combine

@@ -1,10 +1,3 @@
-//
-//  MockQuickLinksTabBarViewModel.swift
-//  GomaUI
-//
-//  Created by Ruben Roques on 19/05/2025.
-//
-
 import Combine
 import UIKit
 

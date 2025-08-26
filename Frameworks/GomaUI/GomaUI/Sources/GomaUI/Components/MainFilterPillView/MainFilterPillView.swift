@@ -1,10 +1,3 @@
-//
-//  MainFilterView.swift
-//  GomaUI
-//
-//  Created by André Lascas on 22/05/2025.
-//
-
 import UIKit
 import Combine
 import SwiftUI

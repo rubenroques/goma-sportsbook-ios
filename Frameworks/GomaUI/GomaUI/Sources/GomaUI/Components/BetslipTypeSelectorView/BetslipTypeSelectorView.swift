@@ -1,10 +1,3 @@
-//
-//  BetslipTypeSelectorView.swift
-//  GomaUI
-//
-//  Created by André Lascas on 14/08/2025.
-//
-
 import UIKit
 import Combine
 import SwiftUI

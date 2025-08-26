@@ -1,9 +1,3 @@
-//
-//  FadingView.swift
-//  GomaUI
-//
-//  Created by Ruben Roques on 04/06/2025.
-//
 import UIKit
 
 class FadingView: UIView {

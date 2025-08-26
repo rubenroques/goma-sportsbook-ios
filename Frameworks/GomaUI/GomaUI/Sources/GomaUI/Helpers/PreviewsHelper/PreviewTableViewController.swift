@@ -1,10 +1,3 @@
-//
-//  PreviewTableViewController.swift
-//  Sportsbook
-//
-//  Created by
-//
-
 import UIKit
 import SwiftUI
 

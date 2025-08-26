@@ -1,10 +1,3 @@
-//
-//  PreviewCollectionViewController.swift
-//  Sportsbook
-//
-//  Created by Ruben Roques on 07/03/2025.
-//
-
 import UIKit
 import SwiftUI
 

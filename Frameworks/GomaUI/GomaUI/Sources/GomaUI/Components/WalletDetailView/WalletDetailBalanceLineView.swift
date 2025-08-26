@@ -1,10 +1,3 @@
-//
-//  WalletDetailBalanceLineView.swift
-//  GomaUI
-//
-//  Created by Claude on 26/08/2025.
-//
-
 import UIKit
 import SwiftUI
 

@@ -1,10 +1,3 @@
-//
-//  PreviewUIView.swift
-//  Sportsbook
-//
-//  Created by Ruben Roques on 06/03/2025.
-//
-
 import SwiftUI
 import UIKit
 

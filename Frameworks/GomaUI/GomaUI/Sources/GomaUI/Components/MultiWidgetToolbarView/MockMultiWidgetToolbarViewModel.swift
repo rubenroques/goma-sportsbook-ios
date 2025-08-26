@@ -1,10 +1,3 @@
-//
-//  MockMultiWidgetToolbarViewModel.swift
-//  GomaUI
-//
-//  Created by Ruben Roques on 29/08/2023.
-//
-
 import Combine
 import UIKit
 

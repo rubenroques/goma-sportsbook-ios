@@ -1,10 +1,3 @@
-//
-//  CapsuleViewController.swift
-//  Demo
-//
-//  Created by Ruben Roques Code on 08/07/2025.
-//
-
 import Foundation
 import UIKit
 import GomaUI

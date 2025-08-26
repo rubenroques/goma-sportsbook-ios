@@ -1,10 +1,3 @@
-//
-//  MockGamesViewModel.swift
-//  GomaUI
-//
-//  Created by André Lascas on 23/05/2025.
-//
-
 import Foundation
 import Combine
 

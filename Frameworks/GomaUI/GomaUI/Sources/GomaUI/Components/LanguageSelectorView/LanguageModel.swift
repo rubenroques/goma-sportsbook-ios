@@ -1,10 +1,3 @@
-//
-//  LanguageModel.swift
-//  GomaUI
-//
-//  Created by Claude Code on 26/08/2025.
-//
-
 import Foundation
 
 /// Data model representing a selectable language option

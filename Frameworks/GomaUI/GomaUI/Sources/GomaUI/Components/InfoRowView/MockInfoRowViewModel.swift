@@ -1,10 +1,3 @@
-//
-//  MockInfoRowViewModel.swift
-//  GomaUI
-//
-//  Created by André Lascas on 11/06/2025.
-//
-
 import Foundation
 import UIKit
 import Combine

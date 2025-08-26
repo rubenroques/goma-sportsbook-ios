@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  TestCase
-//
-//  Created by Ruben Roques on 19/05/2025.
-//
-
 import UIKit
 import GomaUI
 

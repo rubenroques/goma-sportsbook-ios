@@ -1,10 +1,3 @@
-//
-//  LeagueOptionSelectionRowView.swift
-//  GomaUI
-//
-//  Created by André Lascas on 27/05/2025.
-//
-
 import Foundation
 import UIKit
 

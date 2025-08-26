@@ -1,10 +1,3 @@
-//
-//  MockDepositBonusInfoViewModel.swift
-//  GomaUI
-//
-//  Created by André Lascas on 06/06/2025.
-//
-
 import Foundation
 
 import Combine

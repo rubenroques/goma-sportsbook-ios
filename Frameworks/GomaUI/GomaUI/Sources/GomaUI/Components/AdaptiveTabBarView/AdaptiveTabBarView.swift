@@ -1,13 +1,5 @@
 //
 //  AdaptiveTabBarView.swift
-//  GomaUI
-//
-//  Created by Ruben Roques on 19/05/2025.
-//
-
-
-//
-//  AdaptiveTabBarView.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 16/05/2025.

@@ -1,10 +1,3 @@
-//
-//  TermsAcceptanceViewController.swift
-//  Demo
-//
-//  Created by André Lascas on 24/06/2025.
-//
-
 import Foundation
 import UIKit
 import GomaUI

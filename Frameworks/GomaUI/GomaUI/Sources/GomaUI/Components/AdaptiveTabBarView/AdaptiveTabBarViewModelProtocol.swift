@@ -1,13 +1,5 @@
 //
 //  AdaptiveTabBarViewModelProtocol.swift
-//  GomaUI
-//
-//  Created by Ruben Roques on 19/05/2025.
-//
-
-
-//
-//  AdaptiveTabBarViewModelProtocol.swift
 //  WidgetAdaptiveKit
 //
 //  Created by Ruben Roques on 19/05/2025.

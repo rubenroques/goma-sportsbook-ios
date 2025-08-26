@@ -1,10 +1,3 @@
-//
-//  ThemeSwitcherViewController.swift
-//  GomaUIDemo
-//
-//  Created by Ruben Roques Code on 25/08/2025.
-//
-
 import UIKit
 import Combine
 import GomaUI

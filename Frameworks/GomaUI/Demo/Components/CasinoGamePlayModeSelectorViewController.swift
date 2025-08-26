@@ -1,10 +1,3 @@
-//
-//  CasinoGamePlayModeSelectorViewController.swift
-//  TestCase
-//
-//  Created by Ruben Roques on 01/08/2025.
-//
-
 import UIKit
 import Combine
 import GomaUI

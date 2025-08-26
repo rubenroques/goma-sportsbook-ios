@@ -1,10 +1,3 @@
-//
-//  CountryLeaguesModels.swift
-//  GomaUI
-//
-//  Created by André Lascas on 28/05/2025.
-//
-
 import UIKit
 
 public struct CountryLeagueOptions: Equatable {

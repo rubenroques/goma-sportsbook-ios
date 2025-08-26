@@ -1,10 +1,3 @@
-//
-//  MockGeneralFilterBarViewModel.swift
-//  GomaUI
-//
-//  Created by André Lascas on 13/06/2025.
-//
-
 import Foundation
 import Combine
 
