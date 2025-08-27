@@ -494,6 +494,15 @@ struct ComponentRegistry {
                 navView.layer.cornerRadius = 8
                 return navView
             }
+        ),
+        UIComponent(
+            title: "Navigation Action",
+            description: "Interactive navigation action button with icons, titles, enabled/disabled states, and tap handling for various navigation flows",
+            viewController: NavigationActionViewController.self,
+            previewFactory: {
+                let viewModel = MockNavigationActionViewModel.openBetslipDetailsMock()
+                return NavigationActionView(viewModel: viewModel)
+            }
         )
     ]
     
@@ -782,6 +791,24 @@ struct ComponentRegistry {
                 ])
                 
                 return containerView
+            }
+        ),
+        UIComponent(
+            title: "Empty State Action",
+            description: "Empty state component with customizable icon, title, message, and action button for handling no-data scenarios with user guidance",
+            viewController: EmptyStateActionViewController.self,
+            previewFactory: {
+                let viewModel = MockEmptyStateActionViewModel.loggedOutMock()
+                return EmptyStateActionView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Progress Info Check",
+            description: "Progress indicator with check states, step counting, customizable content, and completion tracking for multi-step flows",
+            viewController: ProgressInfoCheckViewController.self,
+            previewFactory: {
+                let viewModel = MockProgressInfoCheckViewModel.winBoostMock()
+                return ProgressInfoCheckView(viewModel: viewModel)
             }
         )
     ]

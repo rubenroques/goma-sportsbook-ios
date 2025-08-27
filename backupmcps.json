@@ -7,6 +7,14 @@
     "swiftlens": {
       "command": "/Users/rroques/.local/bin/uvx",
       "args": ["--python", "python3.13", "swiftlens"]
+    },
+    "figma-dev-mode-mcp-server": {
+      "type": "sse",
+      "url": "http://127.0.0.1:3845/sse"
+    },
+    "atlassian": {
+      "type": "sse",
+      "url": "https://mcp.atlassian.com/v1/sse"
     }
   }
 }
