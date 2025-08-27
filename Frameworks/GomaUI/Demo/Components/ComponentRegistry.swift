@@ -528,6 +528,24 @@ struct ComponentRegistry {
                 let viewModel = MockCustomSliderViewModel.midPositionMock
                 return CustomSliderView(viewModel: viewModel)
             }
+        ),
+        UIComponent(
+            title: "Code Clipboard",
+            description: "Code display component with clipboard functionality, copy actions, success states, and interactive feedback",
+            viewController: CodeClipboardViewController.self,
+            previewFactory: {
+                let viewModel = MockCodeClipboardViewModel.defaultMock()
+                return CodeClipboardView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Code Input",
+            description: "Code entry component with text input, submit button, error handling, loading states, and validation patterns",
+            viewController: CodeInputViewController.self,
+            previewFactory: {
+                let viewModel = MockCodeInputViewModel.withCodeMock()
+                return CodeInputView(viewModel: viewModel)
+            }
         )
     ]
     
