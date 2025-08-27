@@ -13,7 +13,24 @@ struct UIComponent {
 class ComponentsTableViewController: UITableViewController {
 
     // MARK: - Properties
-    private let components: [UIComponent] = [
+    private let category: ComponentCategory?
+    private let components: [UIComponent]
+    
+    // MARK: - Initializers
+    init(category: ComponentCategory? = nil, style: UITableView.Style = .insetGrouped) {
+        self.category = category
+        self.components = ComponentRegistry.components(for: category)
+        super.init(style: style)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.category = nil
+        self.components = ComponentRegistry.allComponents
+        super.init(coder: coder)
+    }
+
+    // MARK: - Legacy Property (for backwards compatibility)
+    private let _legacyComponents: [UIComponent] = [
         UIComponent(
             title: "Casino Category Section",
             description: "MVVM-compliant component combining CasinoCategoryBarView with horizontal collection of CasinoGameCardViews, featuring child ViewModel management and reactive updates",
@@ -804,7 +821,7 @@ class ComponentsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "GomaUI Components"
+        title = category?.rawValue ?? "GomaUI Components"
         setupTableView()
     }
 

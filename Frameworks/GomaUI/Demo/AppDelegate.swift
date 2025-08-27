@@ -15,9 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // let navigationController = UINavigationController(rootViewController: preListMatchCardViewController)
         
         //
-        // Prod lane - Component list (comment out when testing single components)
-        let componentsTableVC = ComponentsTableViewController(style: .insetGrouped)
-        let navigationController = UINavigationController(rootViewController: componentsTableVC)
+        // Prod lane - Categories list (comment out when testing single components)
+        let categoriesVC = CategoriesTableViewController(style: .insetGrouped)
+        let navigationController = UINavigationController(rootViewController: categoriesVC)
         //
         //
         
