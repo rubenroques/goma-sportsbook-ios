@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum AuthHeaderType {
+    case sessionId
+    case userId
+}
+
 protocol Endpoint {
     var url: String { get }
     var endpoint: String { get }
@@ -18,13 +23,20 @@ protocol Endpoint {
     var timeout: TimeInterval { get }
     var requireSessionKey: Bool { get }
     var comment: String? { get }
+    
+    func authHeaderKey(for type: AuthHeaderType) -> String?
 }
 
 extension Endpoint {
+    // Default implementation - endpoints can override for specific auth headers
+    func authHeaderKey(for type: AuthHeaderType) -> String? {
+        return nil
+    }
+    
     func request(aditionalQueryItems: [URLQueryItem] = [],
                  aditionalHeaders: HTTP.Headers? = nil) -> URLRequest? {
 
-        guard var urlComponents = URLComponents(string: url) else { return nil }
+        guard var urlComponents = URLComponents(string: self.url) else { return nil }
         urlComponents.path = self.endpoint
         
         var fullQuery = self.query ?? []

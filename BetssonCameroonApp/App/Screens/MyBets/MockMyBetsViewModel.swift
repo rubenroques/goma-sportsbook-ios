@@ -13,6 +13,12 @@ class MockMyBetsViewModel: MyBetsViewModelProtocol {
     
     @Published var selectedStatusType: MyBetStatusType = .open
     
+    // MARK: - Data State
+    
+    private let betsStateSubject = CurrentValueSubject<MyBetsState, Never>(.loaded([]))
+    private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+    private let errorMessageSubject = CurrentValueSubject<String?, Never>(nil)
+    
     lazy var marketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol = {
         let mock = MockMarketGroupSelectorTabViewModel(tabData: MarketGroupSelectorTabData(id: "myBets", marketGroups: []))
         
@@ -93,6 +99,20 @@ class MockMyBetsViewModel: MyBetsViewModelProtocol {
         $selectedStatusType.eraseToAnyPublisher()
     }
     
+    // MARK: - Data Publishers
+    
+    var betsStatePublisher: AnyPublisher<MyBetsState, Never> {
+        betsStateSubject.eraseToAnyPublisher()
+    }
+    
+    var isLoadingPublisher: AnyPublisher<Bool, Never> {
+        isLoadingSubject.eraseToAnyPublisher()
+    }
+    
+    var errorMessagePublisher: AnyPublisher<String?, Never> {
+        errorMessageSubject.eraseToAnyPublisher()
+    }
+    
     // MARK: - Initialization
     
     init() {
@@ -109,5 +129,17 @@ class MockMyBetsViewModel: MyBetsViewModelProtocol {
     func selectStatus(_ statusType: MyBetStatusType) {
         selectedStatusType = statusType
         print("🎯 MockMyBetsViewModel: Selected status: \(statusType.title)")
+    }
+    
+    func loadBets(forced: Bool) {
+        print("🎯 MockMyBetsViewModel: loadBets called (forced: \(forced))")
+    }
+    
+    func loadMoreBets() {
+        print("🎯 MockMyBetsViewModel: loadMoreBets called")
+    }
+    
+    func refreshBets() {
+        print("🎯 MockMyBetsViewModel: refreshBets called")
     }
 }

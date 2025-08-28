@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ServicesProvider
 
 class MyBetsCoordinator: Coordinator {
     
@@ -39,7 +40,9 @@ class MyBetsCoordinator: Coordinator {
     // MARK: - Coordinator Protocol
     
     func start() {
-        let viewModel: MyBetsViewModelProtocol = MockMyBetsViewModel()
+        // Create real ViewModel with ServicesProvider
+        let servicesProvider = environment.servicesProvider
+        let viewModel: MyBetsViewModelProtocol = MyBetsViewModel(servicesProvider: servicesProvider)
         let viewController = MyBetsViewController(viewModel: viewModel)
         
         // Setup authentication navigation
@@ -49,7 +52,7 @@ class MyBetsCoordinator: Coordinator {
         
         self.myBetsViewController = viewController
         
-        print("🎯 MyBetsCoordinator: Started MyBets screen")
+        print("🎯 MyBetsCoordinator: Started MyBets screen with real ViewModel")
     }
     
     func finish() {

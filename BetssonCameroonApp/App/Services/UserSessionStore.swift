@@ -91,12 +91,19 @@ class UserSessionStore {
     }
 
     func startUserSession() {
+        print("[AUTH_DEBUG] 🏁 UserSessionStore: startUserSession() called")
         self.startUserSessionIfNeeded()
     }
 
     func isUserLogged() -> Bool {
-        // return UserDefaults.standard.userSession != nil
-        return self.userProfilePublisher.value != nil
+        let isLogged = self.userProfilePublisher.value != nil
+        print("[AUTH_DEBUG] 🔍 UserSessionStore: isUserLogged() = \(isLogged)")
+        if let profile = self.userProfilePublisher.value {
+            print("[AUTH_DEBUG] 🔍 UserSessionStore: User profile exists - username: \(profile.username)")
+        } else {
+            print("[AUTH_DEBUG] 🔍 UserSessionStore: No user profile found")
+        }
+        return isLogged
     }
 
     func saveUserSession(_ userSession: UserSession) {
@@ -151,6 +158,7 @@ class UserSessionStore {
     }
 
     func login(withUsername username: String, password: String) -> AnyPublisher<Void, UserSessionError> {
+        print("[AUTH_DEBUG] 🔐 UserSessionStore: login() called with username: \(username)")
 
         let publisher = Env.servicesProvider.loginUser(withUsername: username, andPassword: password)
             .mapError { (error: ServiceProviderError) -> UserSessionError in
@@ -183,6 +191,10 @@ class UserSessionStore {
                 return (session, userProfile)
             }
             .handleEvents(receiveOutput: { [weak self] session, profile in
+                print("[AUTH_DEBUG] ✅ UserSessionStore: Login successful!")
+                print("[AUTH_DEBUG] 📝 UserSessionStore: Session userId: \(session.userId)")
+                print("[AUTH_DEBUG] 👤 UserSessionStore: Profile username: \(profile.username)")
+                
                 self?.shouldAuthenticateUser = false
                 
                 self?.userSessionPublisher.send(session)
@@ -361,6 +373,7 @@ extension UserSessionStore {
 extension UserSessionStore {
 
     func startUserSessionIfNeeded() {
+        print("[AUTH_DEBUG] 🚀 UserSessionStore: startUserSessionIfNeeded() called")
 
         self.isLoadingUserSessionPublisher.send(true)
 
@@ -368,35 +381,42 @@ extension UserSessionStore {
             let user = self.storedUserSession,
             let userPassword = self.storedUserPassword
         else {
-            print("UserSessionStore - User Session not found - login not needed")
+            print("[AUTH_DEBUG] ❌ UserSessionStore: No stored user session found - user is anonymous")
             self.isLoadingUserSessionPublisher.send(false)
             return
         }
 
-        print("UserSessionStore - User Session found - login needed")
+        print("[AUTH_DEBUG] 💾 UserSessionStore: Stored user session found for username: \(user.username)")
+        print("[AUTH_DEBUG] 🔄 UserSessionStore: Attempting auto-login with stored credentials")
 
         // Trigger internal login
         self.login(withUsername: user.username, password: userPassword)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
+                    print("[AUTH_DEBUG] ❌ UserSessionStore: Auto-login failed with error: \(error)")
                     switch error {
                     case .invalidEmailPassword:
+                        print("[AUTH_DEBUG] 🚫 UserSessionStore: Invalid credentials - logging out")
                         self?.logout()
                     case .quickSignUpIncomplete:
+                        print("[AUTH_DEBUG] 🚫 UserSessionStore: Incomplete signup - logging out")
                         self?.logout()
                     case .restrictedCountry:
+                        print("[AUTH_DEBUG] 🌍 UserSessionStore: Restricted country")
                         break
                     case .serverError:
+                        print("[AUTH_DEBUG] 🔴 UserSessionStore: Server error")
                         break
-                    case .errorMessage:
+                    case .errorMessage(let msg):
+                        print("[AUTH_DEBUG] 💬 UserSessionStore: Error message: \(msg)")
                         break
                     case .failedTempLock:
+                        print("[AUTH_DEBUG] 🔒 UserSessionStore: Account temporarily locked")
                         break
                     }
-                    print("UserSessionStore - login failed, error: \(error)")
                 case .finished:
-                    ()
+                    print("[AUTH_DEBUG] ✅ UserSessionStore: Auto-login completed successfully")
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
                 Env.userSessionStore.loginFlowSuccess.send(true)
