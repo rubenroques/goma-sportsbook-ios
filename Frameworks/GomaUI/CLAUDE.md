@@ -210,12 +210,23 @@ Common composite patterns:
 
 ## Build Commands
 
+**Prerequisites**: Get device ID from existing simulators:
 ```bash
-# Build demo app (for testing components)
-cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
-xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUIDemo -destination 'platform=iOS Simulator,name=iPhone 16' build 2>&1 | xcbeautify --quieter
+# Check existing simulators first
+xcrun simctl list devices
+# Look for iPhone simulators with iOS 18.2+ and copy the device ID
 
-# Build framework only
+# Only create if no suitable simulator exists:
+# xcrun simctl create "iPhone 16 Pro iOS 18.2" "iPhone 16 Pro" "com.apple.CoreSimulator.SimRuntime.iOS-18-2"
+```
+
+**Build Commands**:
+```bash
+# Build demo app (for testing components) - replace YOUR_DEVICE_ID with actual ID
+cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
+xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUIDemo -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
+
+# Build framework only (no destination needed)
 xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUI build 2>&1 | xcbeautify --quieter
 
 # Available schemes

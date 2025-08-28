@@ -112,29 +112,55 @@ API Request → Internal Models → Model Mappers → Domain Models → UI Compo
 **Working Directory**: Always `/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios`
 **Workspace**: `Sportsbook.xcworkspace` (contains all projects and packages)
 
+### Simulator Setup
+
+**IMPORTANT**: xcodebuild requires specific simulator device IDs, not simulator names.
+
+**Setup Process**:
+1. **Check existing simulators first**:
+   ```bash
+   # List all available simulators
+   xcrun simctl list devices
+   # Look for iPhone simulators with iOS 18.2+ (required for project deployment target)
+   ```
+
+2. **If suitable simulator exists**: Use its device ID in build commands
+   - Look for iPhone 15/16 Pro with iOS 18.2, 18.5, or higher
+   - Copy the device ID (e.g., `229F70D9-99F6-411E-870A-23C4B153C01E`)
+
+3. **If no suitable simulator exists**:
+   ```bash
+   # Install iOS 18.2 runtime in Xcode first (Xcode → Settings → Platforms)
+   # Then create simulator
+   xcrun simctl create "iPhone 16 Pro iOS 18.2" "iPhone 16 Pro" "com.apple.CoreSimulator.SimRuntime.iOS-18-2"
+   # Command returns the device ID to use
+   ```
+
 ### Build Commands Reference
+
+**Prerequisites**: Get device ID from `xcrun simctl list devices` (see Simulator Setup above)
 
 **GomaUI Component Testing**:
 ```bash
 cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
-xcodebuild -workspace Sportsbook.xcworkspace -scheme DemoGomaUI -destination 'platform=iOS Simulator,name=iPhone 16' build 2>&1 | xcbeautify --quieter
+xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUIDemo -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
 ```
 
 **BetssonCameroonApp (Modern Architecture)**:
 ```bash
 cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
-xcodebuild -workspace Sportsbook.xcworkspace -scheme BetssonCameroonApp -destination 'platform=iOS Simulator,name=iPhone 16' build 2>&1 | xcbeautify --quieter
+xcodebuild -workspace Sportsbook.xcworkspace -scheme BetssonCameroonApp -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
 ```
 
 **BetssonFranceApp (Legacy Multi-Target)**:
 ```bash
 cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
 # Development schemes
-xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson UAT" -destination 'platform=iOS Simulator,name=iPhone 16' build 2>&1 | xcbeautify --quieter
-xcodebuild -workspace Sportsbook.xcworkspace -scheme "Demo" -destination 'platform=iOS Simulator,name=iPhone 16' build 2>&1 | xcbeautify --quieter
+xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson UAT" -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
+xcodebuild -workspace Sportsbook.xcworkspace -scheme "Demo" -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
 
 # Production schemes  
-xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination 'platform=iOS Simulator,name=iPhone 16' build 2>&1 | xcbeautify --quieter
+xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
 ```
 
 ### Available Schemes by Project
@@ -160,8 +186,9 @@ xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination
 
 **Mandatory Requirements**:
 - Always use `xcbeautify --quieter` for LLM-readable output
-- Standard destination: `platform=iOS Simulator,name=iPhone 16`
+- Standard destination: `platform=iOS Simulator,id=YOUR_DEVICE_ID` (use device ID, not simulator name)
 - Working directory: `/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios`
+- **Prerequisites**: iOS 18.2 runtime must be installed in Xcode
 
 ## Development Guidance
 

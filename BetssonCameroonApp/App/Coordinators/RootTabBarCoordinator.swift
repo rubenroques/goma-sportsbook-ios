@@ -39,6 +39,7 @@ class RootTabBarCoordinator: Coordinator {
     
     private var nextUpEventsCoordinator: NextUpEventsCoordinator?
     private var inPlayEventsCoordinator: InPlayEventsCoordinator?
+    private var myBetsCoordinator: MyBetsCoordinator?
     private var casinoCoordinator: CasinoCoordinator?
     private var betslipCoordinator: BetslipCoordinator?
     // MARK: - Initialization
@@ -86,6 +87,7 @@ class RootTabBarCoordinator: Coordinator {
         // Clean up lazy coordinators
         nextUpEventsCoordinator = nil
         inPlayEventsCoordinator = nil
+        myBetsCoordinator = nil
         casinoCoordinator = nil
         rootTabBarViewController = nil
         betslipCoordinator = nil
@@ -464,8 +466,30 @@ class RootTabBarCoordinator: Coordinator {
     // MARK: - Placeholder methods for other screens (using dummy controllers for now)
     
     private func showMyBetsScreen() {
-        let dummyViewController = DummyViewController(displayText: "My Bets")
-        rootTabBarViewController?.showMyBetsScreen(with: dummyViewController)
+        // Lazy loading: only create coordinator when needed
+        if myBetsCoordinator == nil {
+            let coordinator = MyBetsCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment
+            )
+            
+            // Set up navigation closures
+            coordinator.onShowLogin = { [weak self] in
+                self?.showLogin()
+            }
+            
+            myBetsCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+        
+        // Show the screen through RootTabBarViewController
+        if let viewController = myBetsCoordinator?.viewController {
+            rootTabBarViewController?.showMyBetsScreen(with: viewController)
+        }
+        
+        // Refresh if needed
+        myBetsCoordinator?.refresh()
     }
     
     private func showSearchScreen() {
