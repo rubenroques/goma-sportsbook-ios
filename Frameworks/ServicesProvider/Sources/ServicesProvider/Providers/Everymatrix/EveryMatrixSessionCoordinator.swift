@@ -28,12 +28,10 @@ struct EveryMatrixCredentials {
 struct EveryMatrixSessionResponse {
     let sessionId: String
     let userId: String
-    let expiresAt: Date?
     
-    init(sessionId: String, userId: String, expiresAt: Date? = nil) {
+    init(sessionId: String, userId: String) {
         self.sessionId = sessionId
         self.userId = userId
-        self.expiresAt = expiresAt
     }
 }
 

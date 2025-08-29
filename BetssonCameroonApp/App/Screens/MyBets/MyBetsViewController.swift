@@ -28,27 +28,30 @@ class MyBetsViewController: UIViewController {
         return view
     }()
     
-    private lazy var collectionView: UICollectionView = {
-        let layout = Self.createCollectionViewLayout()
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.backgroundColor = UIColor.App.backgroundPrimary
+        tableView.separatorStyle = .none
         
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.backgroundColor = UIColor.App.backgroundPrimary
+        // ⭐ KEY: Automatic dynamic height - no complex sizing needed!
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 320
         
         // Register cell
-        collectionView.register(
-            TicketBetInfoCollectionViewCell.self,
-            forCellWithReuseIdentifier: TicketBetInfoCollectionViewCell.identifier
+        tableView.register(
+            TicketBetInfoTableViewCell.self,
+            forCellReuseIdentifier: TicketBetInfoTableViewCell.identifier
         )
         
         // Add pull-to-refresh
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-        collectionView.refreshControl = refreshControl
+        tableView.refreshControl = refreshControl
         
-        return collectionView
+        return tableView
     }()
     
     private lazy var loadingView: UIView = {
@@ -173,28 +176,6 @@ class MyBetsViewController: UIViewController {
     
     // MARK: - Private Methods
     
-    private static func createCollectionViewLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { sectionIndex, _ in
-            // Dynamic height for ticket bet info cards
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(320) // Estimated height - Auto Layout will determine actual size
-            )
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(320) // Estimated height - Auto Layout will determine actual size
-            )
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 1.5 // Match NextUpEvents spacing pattern
-            section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
-            return section
-        }
-    }
-    
     @objc private func handleRefresh() {
         viewModel.refreshBets()
     }
@@ -208,7 +189,7 @@ class MyBetsViewController: UIViewController {
         
         view.addSubview(marketGroupSelectorTabView)
         view.addSubview(pillSelectorBarView)
-        view.addSubview(collectionView)
+        view.addSubview(tableView)
         view.addSubview(loadingView)
         view.addSubview(errorView)
         view.addSubview(emptyView)
@@ -224,10 +205,10 @@ class MyBetsViewController: UIViewController {
             pillSelectorBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             pillSelectorBarView.heightAnchor.constraint(equalToConstant: 60),
             
-            collectionView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 8),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 8),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             loadingView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor),
             loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -263,7 +244,7 @@ class MyBetsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 if !isLoading {
-                    self?.collectionView.refreshControl?.endRefreshing()
+                    self?.tableView.refreshControl?.endRefreshing()
                 }
             }
             .store(in: &cancellables)
@@ -273,7 +254,7 @@ class MyBetsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] viewModels in
                 self?.ticketViewModels = viewModels
-                self?.updateCollectionViewWithProperInvalidation()
+                self?.updateTableView()
                 print("🎯 MyBetsViewController: Updated with \(viewModels.count) ticket view models")
             }
             .store(in: &cancellables)
@@ -303,7 +284,7 @@ class MyBetsViewController: UIViewController {
             if bets.isEmpty {
                 showEmptyState()
             } else {
-                showCollectionViewState()
+                showTableViewState()
             }
         case .error(let message):
             showErrorState(message: message)
@@ -311,14 +292,14 @@ class MyBetsViewController: UIViewController {
     }
     
     private func showLoadingState() {
-        collectionView.isHidden = true
+        tableView.isHidden = true
         loadingView.isHidden = false
         errorView.isHidden = true
         emptyView.isHidden = true
     }
     
-    private func showCollectionViewState() {
-        collectionView.isHidden = false
+    private func showTableViewState() {
+        tableView.isHidden = false
         loadingView.isHidden = true
         errorView.isHidden = true
         emptyView.isHidden = true
@@ -328,54 +309,43 @@ class MyBetsViewController: UIViewController {
         if let errorLabel = errorView.subviews.compactMap({ $0 as? UILabel }).first {
             errorLabel.text = message
         }
-        collectionView.isHidden = true
+        tableView.isHidden = true
         loadingView.isHidden = true
         errorView.isHidden = false
         emptyView.isHidden = true
     }
     
     private func showEmptyState() {
-        collectionView.isHidden = true
+        tableView.isHidden = true
         loadingView.isHidden = true
         errorView.isHidden = true
         emptyView.isHidden = false
     }
     
-    private func updateCollectionViewWithProperInvalidation() {
-        // Reload data
-        collectionView.reloadData()
-        
-        // ⭐ KEY: Force layout recalculation like NextUpEvents
-        DispatchQueue.main.async { [weak self] in
-            self?.collectionView.layoutIfNeeded()
-            self?.collectionView.collectionViewLayout.invalidateLayout()
-            
-            // Additional safety: Force collection view to recalculate visible cell sizes
-            if let visibleIndexPaths = self?.collectionView.indexPathsForVisibleItems {
-                self?.collectionView.reconfigureItems(at: visibleIndexPaths)
-            }
-        }
+    private func updateTableView() {
+        // ⭐ SIMPLE: UITableView handles dynamic sizing automatically!
+        tableView.reloadData()
     }
 }
 
-// MARK: - UICollectionViewDataSource
+// MARK: - UITableViewDataSource
 
-extension MyBetsViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension MyBetsViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return ticketViewModels.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: TicketBetInfoCollectionViewCell.identifier,
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: TicketBetInfoTableViewCell.identifier,
             for: indexPath
-        ) as! TicketBetInfoCollectionViewCell
+        ) as! TicketBetInfoTableViewCell
         
-        let viewModel = ticketViewModels[indexPath.item]
+        let viewModel = ticketViewModels[indexPath.row]
         
         // Configure cell position for corner radius
-        let isFirst = indexPath.item == 0
-        let isLast = indexPath.item == ticketViewModels.count - 1
+        let isFirst = indexPath.row == 0
+        let isLast = indexPath.row == ticketViewModels.count - 1
         let isOnlyCell = ticketViewModels.count == 1
         
         cell.configure(with: viewModel)
@@ -385,12 +355,12 @@ extension MyBetsViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: - UICollectionViewDelegate
+// MARK: - UITableViewDelegate
 
-extension MyBetsViewController: UICollectionViewDelegate {    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+extension MyBetsViewController: UITableViewDelegate {    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // Load more data when approaching the end
-        if indexPath.item == ticketViewModels.count - 3 {
+        if indexPath.row == ticketViewModels.count - 3 {
             self.viewModel.loadMoreBets()
         }
     }

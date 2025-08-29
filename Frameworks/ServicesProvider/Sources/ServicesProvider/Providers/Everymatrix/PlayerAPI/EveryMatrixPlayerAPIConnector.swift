@@ -24,22 +24,22 @@ class EveryMatrixPlayerAPIConnector: EveryMatrixBaseConnector {
     // Request method is inherited from EveryMatrixBaseConnector
     // which provides automatic token refresh on 401/403 errors
     
-    func updateSessionToken(sessionId: String, id: String) {
+    func updateSessionToken(sessionId: String, userId: String) {
         // Update the session coordinator's session
         let session = EveryMatrixSessionResponse(
             sessionId: sessionId,
-            userId: id
+            userId: userId
         )
         sessionCoordinator.updateSession(session)
     }
 }
 
-public struct EveryMatrixSessionToken {
-    public let sessionId: String
-    public let id: String
-    
-    public init(sessionId: String, id: String) {
-        self.sessionId = sessionId
-        self.id = id
-    }
-}
+//public struct EveryMatrixSessionToken {
+//    public let sessionId: String
+//    public let userId: String
+//    
+//    public init(sessionId: String, userId: String) {
+//        self.sessionId = sessionId
+//        self.userId = userId
+//    }
+//}

@@ -74,7 +74,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                 self.sessionCoordinator.updateSession(session)
                 
                 // Store the session token in the connector (for backward compatibility)
-                self.connector.updateSessionToken(sessionId: phoneLoginResponse.sessionId, id: phoneLoginResponse.id)
+                self.connector.updateSessionToken(sessionId: phoneLoginResponse.sessionId, userId: phoneLoginResponse.userId)
                 
                 // Save the session token to the session coordinator for other APIs to access
                 self.sessionCoordinator.saveToken(phoneLoginResponse.sessionId, withKey: .playerSessionToken)

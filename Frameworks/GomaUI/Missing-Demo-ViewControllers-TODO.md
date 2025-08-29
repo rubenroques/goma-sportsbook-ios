@@ -21,8 +21,8 @@ This is a checklist of the 37 GomaUI components that don't have demo ViewControl
 - [ ] **CashoutSubmissionInfoView** - Cashout submission info
 - [ ] **OddsAcceptanceView** - Odds acceptance component
 - [ ] **QuickAddButtonView** - Quick add betting button
-- [ ] **TicketBetInfoView** - Ticket bet information
-- [ ] **TicketSelectionView** - Ticket selection component
+- [x] **TicketBetInfoView** - Ticket bet information ✅
+- [x] **TicketSelectionView** - Ticket selection component ✅
 
 ## Casino Components (1 missing)
 - [ ] **RecentlyPlayedGamesView** - Recently played games (has CasinoCategory* demos but missing standalone)
@@ -62,10 +62,10 @@ This is a checklist of the 37 GomaUI components that don't have demo ViewControl
 
 ## Summary
 - **Total Components**: 91
-- **With Demo VCs**: 59 ✅
-- **Missing Demo VCs**: 32 ⬇️
+- **With Demo VCs**: 61 ✅
+- **Missing Demo VCs**: 30 ⬇️
 - **Categories Most Needing Attention**: 
-  1. Betting & Sports (19 missing)
+  1. Betting & Sports (17 missing)
   2. UI Elements (6 missing)
   3. ~~Forms & Input~~ ✅ COMPLETED!
   4. ~~Navigation & Layout~~ ✅ COMPLETED!

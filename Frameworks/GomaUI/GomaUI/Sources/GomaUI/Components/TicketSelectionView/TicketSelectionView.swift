@@ -102,6 +102,8 @@ public final class TicketSelectionView: UIView {
         label.textColor = StyleProvider.Color.textPrimary
         label.numberOfLines = 1
         label.lineBreakMode = .byTruncatingTail
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return label
     }()
     private let awayTeamLabel: UILabel = {
@@ -111,6 +113,8 @@ public final class TicketSelectionView: UIView {
         label.textColor = StyleProvider.Color.textPrimary
         label.numberOfLines = 1
         label.lineBreakMode = .byTruncatingTail
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return label
     }()
     private let homeScoreLabel: UILabel = {
@@ -119,6 +123,8 @@ public final class TicketSelectionView: UIView {
         label.font = StyleProvider.fontWith(type: .semibold, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .right
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
     private let awayScoreLabel: UILabel = {
@@ -163,6 +169,8 @@ public final class TicketSelectionView: UIView {
         label.text = "Selection"
         label.textAlignment = .right
         label.numberOfLines = 1
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return label
     }()
     private let oddsLabel: UILabel = {
@@ -182,6 +190,8 @@ public final class TicketSelectionView: UIView {
         label.text = "0.00"
         label.textAlignment = .right
         label.numberOfLines = 1
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return label
     }()
     
@@ -311,6 +321,7 @@ public final class TicketSelectionView: UIView {
             matchContentView.topAnchor.constraint(equalTo: leftContentView.bottomAnchor, constant: 4),
             matchContentView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             matchContentView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            matchContentView.heightAnchor.constraint(equalToConstant: 40),
             
             // Home team and score constraints
             homeTeamLabel.leadingAnchor.constraint(equalTo: matchContentView.leadingAnchor),
@@ -319,7 +330,7 @@ public final class TicketSelectionView: UIView {
             
             homeScoreLabel.trailingAnchor.constraint(equalTo: matchContentView.trailingAnchor),
             homeScoreLabel.centerYAnchor.constraint(equalTo: homeTeamLabel.centerYAnchor),
-            homeScoreLabel.widthAnchor.constraint(equalToConstant: 30),
+            homeScoreLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 30),
             
             // Away team and score constraints
             awayTeamLabel.leadingAnchor.constraint(equalTo: matchContentView.leadingAnchor),
@@ -328,7 +339,7 @@ public final class TicketSelectionView: UIView {
             
             awayScoreLabel.trailingAnchor.constraint(equalTo: matchContentView.trailingAnchor),
             awayScoreLabel.centerYAnchor.constraint(equalTo: awayTeamLabel.centerYAnchor),
-            awayScoreLabel.widthAnchor.constraint(equalToConstant: 30),
+            awayScoreLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 30),
             
             // Separator constraints
             separatorView.topAnchor.constraint(equalTo: matchContentView.bottomAnchor, constant: 8),
@@ -344,6 +355,7 @@ public final class TicketSelectionView: UIView {
             
             marketLabel.leadingAnchor.constraint(equalTo: bottomSectionView.leadingAnchor),
             marketLabel.topAnchor.constraint(equalTo: bottomSectionView.topAnchor),
+            marketLabel.trailingAnchor.constraint(lessThanOrEqualTo: selectionLabel.leadingAnchor, constant: -8),
             
             selectionLabel.trailingAnchor.constraint(equalTo: bottomSectionView.trailingAnchor),
             selectionLabel.topAnchor.constraint(equalTo: bottomSectionView.topAnchor),
@@ -351,6 +363,7 @@ public final class TicketSelectionView: UIView {
             oddsLabel.leadingAnchor.constraint(equalTo: bottomSectionView.leadingAnchor),
             oddsLabel.topAnchor.constraint(equalTo: marketLabel.bottomAnchor, constant: 4),
             oddsLabel.bottomAnchor.constraint(equalTo: bottomSectionView.bottomAnchor),
+            oddsLabel.trailingAnchor.constraint(lessThanOrEqualTo: oddsValueLabel.leadingAnchor, constant: -8),
             
             oddsValueLabel.trailingAnchor.constraint(equalTo: bottomSectionView.trailingAnchor),
             oddsValueLabel.topAnchor.constraint(equalTo: selectionLabel.bottomAnchor, constant: 4),
@@ -453,59 +466,111 @@ public final class TicketSelectionView: UIView {
 }
 
 // MARK: - SwiftUI Preview
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
+#if DEBUG
 
-@available(iOS 13.0, *)
-struct TicketSelectionPreviewView: UIViewRepresentable {
-    private let viewModel: TicketSelectionViewModelProtocol
-    
-    init(viewModel: TicketSelectionViewModelProtocol) {
-        self.viewModel = viewModel
-    }
-    
-    func makeUIView(context: Context) -> TicketSelectionView {
-        let view = TicketSelectionView(viewModel: viewModel)
-        return view
-    }
-    
-    func updateUIView(_ uiView: TicketSelectionView, context: Context) {
-        // Updates handled by Combine binding
+@available(iOS 17.0, *)
+#Preview("PreLive State") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketSelectionViewModel.preLiveMock
+        let ticketView = TicketSelectionView(viewModel: mockViewModel)
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = UIColor.systemGray2
+        vc.view.addSubview(ticketView)
+        
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
     }
 }
 
-@available(iOS 13.0, *)
-struct TicketSelectionPreviewView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            // PreLive State
-            TicketSelectionPreviewView(viewModel: MockTicketSelectionViewModel.preLiveMock)
-                .previewDisplayName("PreLive State")
-                .frame(height: 130)
-            
-            // Live State
-            TicketSelectionPreviewView(viewModel: MockTicketSelectionViewModel.liveMock)
-                .previewDisplayName("Live State")
-                .frame(height: 130)
-            
-            // Live Draw
-            TicketSelectionPreviewView(viewModel: MockTicketSelectionViewModel.liveDrawMock)
-                .previewDisplayName("Live Draw")
-                .frame(height: 130)
-            
-            // Long Team Names
-            TicketSelectionPreviewView(viewModel: MockTicketSelectionViewModel.longTeamNamesMock)
-                .previewDisplayName("Long Team Names")
-                .frame(height: 140)
-            
-            // No Icons
-            TicketSelectionPreviewView(viewModel: MockTicketSelectionViewModel.noIconsMock)
-                .previewDisplayName("No Icons")
-                .frame(height: 140)
-        }
-        .previewLayout(.sizeThatFits)
-        .padding()
-        .background(Color(.systemBackground))
+@available(iOS 17.0, *)
+#Preview("Live State") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketSelectionViewModel.liveMock
+        let ticketView = TicketSelectionView(viewModel: mockViewModel)
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = UIColor.systemGray2
+        vc.view.addSubview(ticketView)
+        
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
     }
 }
+
+@available(iOS 17.0, *)
+#Preview("Live Draw") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketSelectionViewModel.liveDrawMock
+        let ticketView = TicketSelectionView(viewModel: mockViewModel)
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = UIColor.systemGray2
+        vc.view.addSubview(ticketView)
+        
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Long Team Names") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketSelectionViewModel.longTeamNamesMock
+        let ticketView = TicketSelectionView(viewModel: mockViewModel)
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = UIColor.systemGray2
+        vc.view.addSubview(ticketView)
+        
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("No Icons") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketSelectionViewModel.noIconsMock
+        let ticketView = TicketSelectionView(viewModel: mockViewModel)
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = UIColor.systemGray2
+        vc.view.addSubview(ticketView)
+        
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
 #endif 

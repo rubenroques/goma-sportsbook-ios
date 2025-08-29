@@ -130,6 +130,30 @@ struct ComponentRegistry {
                 mainFilterView.layer.cornerRadius = 4.5
                 return mainFilterView
             }
+        ),
+        UIComponent(
+            title: "Ticket Selection View",
+            description: "Sports betting ticket component showing match information with dual states: PreLive (date/time) and Live (scores + live indicator)",
+            viewController: TicketSelectionViewController.self,
+            previewFactory: {
+                let viewModel = MockTicketSelectionViewModel.preLiveMock
+                let ticketView = TicketSelectionView(viewModel: viewModel)
+                ticketView.backgroundColor = StyleProvider.Color.backgroundSecondary
+                ticketView.layer.cornerRadius = 8
+                return ticketView
+            }
+        ),
+        UIComponent(
+            title: "Ticket Bet Info View",
+            description: "Comprehensive betting ticket information component with configurable corner radius styles, cashout components, and interactive rebet/cashout actions",
+            viewController: TicketBetInfoViewController.self,
+            previewFactory: {
+                let viewModel = MockTicketBetInfoViewModel.pendingMock()
+                let ticketBetInfoView = TicketBetInfoView(viewModel: viewModel, cornerRadiusStyle: .all(radius: 8))
+                ticketBetInfoView.backgroundColor = StyleProvider.Color.backgroundSecondary
+                ticketBetInfoView.layer.cornerRadius = 8
+                return ticketBetInfoView
+            }
         )
     ]
     

@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import SwiftUI
 
 public enum CornerRadiusStyle {
     case all(radius: CGFloat)
@@ -422,11 +423,9 @@ public class TicketBetInfoView: UIView {
             ticketsStackView.addArrangedSubview(ticketView)
         }
         
-        // Notify collection view of size change when tickets change
+        // ⭐ SIMPLIFIED: UITableView handles dynamic sizing automatically
+        // Only keep intrinsic size invalidation for good practice
         invalidateIntrinsicContentSize()
-        
-        // Also invalidate superview (collection cell) if it exists
-        superview?.invalidateIntrinsicContentSize()
     }
     
     private func updateBottomComponents(with betInfo: TicketBetInfoData) {
@@ -472,11 +471,9 @@ public class TicketBetInfoView: UIView {
             financialSummaryBottomConstraint?.isActive = true
         }
         
-        // Notify collection view of size change when bottom components change
+        // ⭐ SIMPLIFIED: UITableView handles dynamic sizing automatically  
+        // Only keep intrinsic size invalidation for good practice
         invalidateIntrinsicContentSize()
-        
-        // Also invalidate superview (collection cell) if it exists
-        superview?.invalidateIntrinsicContentSize()
     }
     
     // MARK: - Actions
@@ -494,93 +491,132 @@ public class TicketBetInfoView: UIView {
 }
 
 // MARK: - SwiftUI Preview
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
+#if DEBUG
 
-@available(iOS 13.0, *)
-struct TicketBetInfoPreviewView: UIViewRepresentable {
-    private let viewModel: TicketBetInfoViewModelProtocol
-    private let cornerRadiusStyle: CornerRadiusStyle
-    
-    init(viewModel: TicketBetInfoViewModelProtocol, cornerRadiusStyle: CornerRadiusStyle = .all(radius: 8)) {
-        self.viewModel = viewModel
-        self.cornerRadiusStyle = cornerRadiusStyle
-    }
-    
-    func makeUIView(context: Context) -> TicketBetInfoView {
-        let view = TicketBetInfoView(viewModel: viewModel, cornerRadiusStyle: cornerRadiusStyle)
-        return view
-    }
-    
-    func updateUIView(_ uiView: TicketBetInfoView, context: Context) {
-        // Updates handled by Combine binding
+@available(iOS 17.0, *)
+#Preview("With Cashout Amount") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketBetInfoViewModel.pendingMockWithCashout()
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all(radius: 8))
+        ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(ticketBetInfoView)
+        
+        NSLayoutConstraint.activate([
+            ticketBetInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketBetInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketBetInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
     }
 }
 
-@available(iOS 13.0, *)
-struct TicketBetInfoView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            // All corners rounded - with CashoutAmountView example
-            TicketBetInfoPreviewView(
-                viewModel: MockTicketBetInfoViewModel.pendingMockWithCashout(),
-                cornerRadiusStyle: .all(radius: 8)
-            )
-            .frame(height: 340)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("With Cashout Amount")
-            
-            // All corners rounded - with CashoutSliderView example
-            TicketBetInfoPreviewView(
-                viewModel: MockTicketBetInfoViewModel.pendingMockWithSlider(),
-                cornerRadiusStyle: .all(radius: 8)
-            )
-            .frame(height: 440)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("With Cashout Slider")
-            
-            // All corners rounded - with both components
-            TicketBetInfoPreviewView(
-                viewModel: MockTicketBetInfoViewModel.pendingMockWithBoth(),
-                cornerRadiusStyle: .all(radius: 8)
-            )
-            .frame(height: 480)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("With Both Components")
-            
-            // All corners rounded - default empty
-            TicketBetInfoPreviewView(
-                viewModel: MockTicketBetInfoViewModel.pendingMock(),
-                cornerRadiusStyle: .all(radius: 8)
-            )
-            .frame(height: 300)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("Default Empty")
-            
-            // Top corners only
-            TicketBetInfoPreviewView(
-                viewModel: MockTicketBetInfoViewModel.pendingMock(),
-                cornerRadiusStyle: .topOnly(radius: 12)
-            )
-            .frame(height: 400)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("Top Corners Only")
-            
-            // Bottom corners only
-            TicketBetInfoPreviewView(
-                viewModel: MockTicketBetInfoViewModel.pendingMock(),
-                cornerRadiusStyle: .bottomOnly(radius: 16)
-            )
-            .frame(height: 400)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("Bottom Corners Only")
-        }
+@available(iOS 17.0, *)
+#Preview("With Cashout Slider") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketBetInfoViewModel.pendingMockWithSlider()
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all(radius: 8))
+        ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(ticketBetInfoView)
+        
+        NSLayoutConstraint.activate([
+            ticketBetInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketBetInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketBetInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
     }
 }
+
+@available(iOS 17.0, *)
+#Preview("With Both Components") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketBetInfoViewModel.pendingMockWithBoth()
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all(radius: 8))
+        ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(ticketBetInfoView)
+        
+        NSLayoutConstraint.activate([
+            ticketBetInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketBetInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketBetInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Default Empty") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketBetInfoViewModel.pendingMock()
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all(radius: 8))
+        ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(ticketBetInfoView)
+        
+        NSLayoutConstraint.activate([
+            ticketBetInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketBetInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketBetInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Top Corners Only") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketBetInfoViewModel.pendingMock()
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .topOnly(radius: 12))
+        ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(ticketBetInfoView)
+        
+        NSLayoutConstraint.activate([
+            ticketBetInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketBetInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketBetInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Bottom Corners Only") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketBetInfoViewModel.pendingMock()
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .bottomOnly(radius: 16))
+        ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(ticketBetInfoView)
+        
+        NSLayoutConstraint.activate([
+            ticketBetInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketBetInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketBetInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
 #endif 

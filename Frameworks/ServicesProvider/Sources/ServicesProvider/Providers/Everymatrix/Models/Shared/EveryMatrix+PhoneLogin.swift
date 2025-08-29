@@ -12,10 +12,27 @@ extension EveryMatrix {
     struct PhoneLoginResponse: Codable {
         let sessionId: String
         let id: String
-        let userId: Int
+        let userId: String
         let sessionBlockers: [String]
         let hasToAcceptTC: Bool
         let hasToSetPass: Bool
+        
+        init(from decoder: any Decoder) throws {
+            let container: KeyedDecodingContainer<EveryMatrix.PhoneLoginResponse.CodingKeys> = try decoder.container(keyedBy: EveryMatrix.PhoneLoginResponse.CodingKeys.self)
+            self.sessionId = try container.decode(String.self, forKey: EveryMatrix.PhoneLoginResponse.CodingKeys.sessionId)
+            self.id = try container.decode(String.self, forKey: EveryMatrix.PhoneLoginResponse.CodingKeys.id)
+            
+            if let userIdInt: Int = try? container.decode(Int.self, forKey: EveryMatrix.PhoneLoginResponse.CodingKeys.userId) {
+                self.userId = "\(userIdInt)"
+            }
+            else {
+                self.userId = try container.decode(String.self, forKey: EveryMatrix.PhoneLoginResponse.CodingKeys.userId)
+            }
+            
+            self.sessionBlockers = try container.decode([String].self, forKey: EveryMatrix.PhoneLoginResponse.CodingKeys.sessionBlockers)
+            self.hasToAcceptTC = try container.decode(Bool.self, forKey: EveryMatrix.PhoneLoginResponse.CodingKeys.hasToAcceptTC)
+            self.hasToSetPass = try container.decode(Bool.self, forKey: EveryMatrix.PhoneLoginResponse.CodingKeys.hasToSetPass)
+        }
     }
     
     struct PlayerProfile: Codable {
