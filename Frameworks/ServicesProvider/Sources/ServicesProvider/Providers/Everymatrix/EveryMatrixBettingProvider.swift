@@ -19,9 +19,15 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     }
     private var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
 
-    init(sessionCoordinator: EveryMatrixSessionCoordinator, connector: EveryMatrixOddsMatrixAPIConnector = EveryMatrixOddsMatrixAPIConnector()) {
+    init(sessionCoordinator: EveryMatrixSessionCoordinator, connector: EveryMatrixOddsMatrixAPIConnector? = nil) {
         self.sessionCoordinator = sessionCoordinator
-        self.connector = connector
+        
+        // Create connector with session coordinator if not provided
+        if let providedConnector = connector {
+            self.connector = providedConnector
+        } else {
+            self.connector = EveryMatrixOddsMatrixAPIConnector(sessionCoordinator: sessionCoordinator)
+        }
         
         // Update connection state
         self.connectionStateSubject.send(.connected)
@@ -70,28 +76,11 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let endpoint = EveryMatrixOddsMatrixAPI.getOpenBets(limit: limit, placedBefore: placedBefore)
         
         return connector.request(endpoint)
-            .handleEvents(
-                receiveSubscription: { _ in
-                    print("[AUTH_DEBUG]  Starting open bets request")
-                },
-                receiveOutput: { (bets: [EveryMatrix.Bet]) in
-                    print("[AUTH_DEBUG] EveryMatrixBettingProvider: Received \(bets.count) bets from API")
-                    print("[AUTH_DEBUG] EveryMatrixBettingProvider: Raw bets: \(bets)")
-                },
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        print("[AUTH_DEBUG] ✅ EveryMatrixBettingProvider: Request completed successfully")
-                    case .failure(let error):
-                        print("[AUTH_DEBUG] ❌ EveryMatrixBettingProvider: Error details: \(error.localizedDescription)")
-                    }
-                }
-            )
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
                 print("🔄 EveryMatrixBettingProvider: Mapping \(bets.count) EveryMatrix bets to internal format")
-                let mappedBets = bets.compactMap { self.mapEveryMatrixBetToBet($0) }
-                print("✅ EveryMatrixBettingProvider: Successfully mapped to \(mappedBets.count) internal bets")
-                return BettingHistory(bets: mappedBets)
+                let bettingHistory = EveryMatrixModelMapper.bettingHistory(fromBets: bets)
+                print("✅ EveryMatrixBettingProvider: Successfully mapped to \(bettingHistory.bets.count) internal bets")
+                return bettingHistory
             }
             .mapError { error in
                 print("❌ EveryMatrixBettingProvider: Converting error to ServiceProviderError: \(error)")
@@ -108,8 +97,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         return connector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
-                let mappedBets = bets.compactMap { self.mapEveryMatrixBetToBet($0) }
-                return BettingHistory(bets: mappedBets)
+                return EveryMatrixModelMapper.bettingHistory(fromBets: bets)
             }
             .mapError { error in
                 ServiceProviderError.errorMessage(message: error.localizedDescription)
@@ -125,8 +113,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         return connector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
-                let mappedBets = bets.compactMap { self.mapEveryMatrixBetToBet($0) }
-                return BettingHistory(bets: mappedBets)
+                return EveryMatrixModelMapper.bettingHistory(fromBets: bets)
             }
             .mapError { error in
                 ServiceProviderError.errorMessage(message: error.localizedDescription)
@@ -336,115 +323,6 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         formatter.timeZone = TimeZone(secondsFromGMT: 0) // Use UTC
         
         return formatter.string(from: sixMonthsFromNow)
-    }
-    
-    private func mapEveryMatrixBetToBet(_ everyMatrixBet: EveryMatrix.Bet) -> Bet? {
-        // Convert EveryMatrix bet model to internal Bet model
-        // This is a basic mapping - you may need to adjust based on actual API response structure
-        guard let betId = everyMatrixBet.id,
-              let status = everyMatrixBet.status,
-              let amount = everyMatrixBet.amount,
-              let dateString = everyMatrixBet.placedDate else {
-            return nil
-        }
-        
-        let formatter = ISO8601DateFormatter()
-        let date = formatter.date(from: dateString) ?? Date()
-        
-        // Map EveryMatrix status to BetState and BetResult
-        let betState = mapEveryMatrixStatusToBetState(status)
-        let betResult = mapEveryMatrixStatusToBetResult(status)
-        
-        // Map selections if available
-        let selections = everyMatrixBet.selections?.compactMap { selection in
-            mapEveryMatrixSelectionToBetSelection(selection)
-        } ?? []
-        
-        return Bet(
-            identifier: betId,
-            type: everyMatrixBet.type ?? "SINGLE",
-            state: betState,
-            result: betResult,
-            globalState: betState,
-            stake: amount,
-            totalOdd: everyMatrixBet.odds ?? 1.0,
-            selections: selections,
-            potentialReturn: everyMatrixBet.potentialWinnings,
-            totalReturn: everyMatrixBet.payout,
-            date: date,
-            freebet: false,
-            partialCashoutReturn: everyMatrixBet.partialCashoutValue,
-            partialCashoutStake: everyMatrixBet.partialCashoutStake
-        )
-    }
-    
-    private func mapEveryMatrixStatusToBetState(_ status: String) -> BetState {
-        switch status.uppercased() {
-        case "PENDING", "IN_PROGRESS":
-            return .opened
-        case "WON":
-            return .won
-        case "LOST":
-            return .lost
-        case "CASHED_OUT":
-            return .cashedOut
-        case "VOID":
-            return .void
-        case "CANCELLED":
-            return .cancelled
-        case "SETTLED":
-            return .settled
-        default:
-            return .undefined
-        }
-    }
-    
-    private func mapEveryMatrixStatusToBetResult(_ status: String) -> BetResult {
-        switch status.uppercased() {
-        case "PENDING", "IN_PROGRESS":
-            return .open
-        case "WON":
-            return .won
-        case "LOST":
-            return .lost
-        case "VOID":
-            return .void
-        default:
-            return .notSpecified
-        }
-    }
-    
-    private func mapEveryMatrixSelectionToBetSelection(_ selection: EveryMatrix.BetSelection) -> BetSelection? {
-        // Map EveryMatrix selection to BetSelection
-        // This is a basic mapping - adjust based on actual API response structure
-        guard let selectionId = selection.id,
-              let eventName = selection.matchName,
-              let marketName = selection.marketType,
-              let outcomeName = selection.selection else {
-            return nil
-        }
-        
-        return BetSelection(
-            identifier: selectionId,
-            state: mapEveryMatrixStatusToBetState(selection.status ?? "PENDING"),
-            result: mapEveryMatrixStatusToBetResult(selection.status ?? "PENDING"),
-            globalState: mapEveryMatrixStatusToBetState(selection.status ?? "PENDING"),
-            eventName: eventName,
-            homeTeamName: selection.homeTeam,
-            awayTeamName: selection.awayTeam,
-            marketName: marketName,
-            outcomeName: outcomeName,
-            odd: .decimal(odd: selection.odds ?? 1.0),
-            homeResult: selection.homeScore,
-            awayResult: selection.awayScore,
-            eventId: selection.eventId ?? selectionId,
-            eventDate: nil, // Parse from selection if available
-            country: nil, // Parse from selection if available
-            sportType: SportType.defaultFootball, // Default - parse from selection if available
-            tournamentName: selection.competition ?? "",
-            marketId: selection.marketId,
-            outcomeId: selection.outcomeId
-        )
     }
 }
 

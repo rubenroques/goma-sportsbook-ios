@@ -88,7 +88,7 @@ public class Client {
             self.eventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector)
             
             // Player API for privilegedAccessManager
-            let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector()
+            let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector(sessionCoordinator: sessionCoordinator)
             
             let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(
                 connector: everyMatrixPlayerAPIConnector,
@@ -98,7 +98,7 @@ public class Client {
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
             
             // Casino API
-            let everyMatrixCasinoConnector = EveryMatrixCasinoConnector()
+            let everyMatrixCasinoConnector = EveryMatrixCasinoConnector(sessionCoordinator: sessionCoordinator)
             self.casinoProvider = EveryMatrixCasinoProvider(connector: everyMatrixCasinoConnector)
             
             // Betting API

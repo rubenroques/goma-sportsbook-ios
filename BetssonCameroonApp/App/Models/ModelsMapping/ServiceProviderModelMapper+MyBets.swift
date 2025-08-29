@@ -13,7 +13,9 @@ extension ServiceProviderModelMapper {
     // MARK: - MyBettingHistory Mapping
     
     static func myBettingHistory(_ servicesProviderHistory: ServicesProvider.BettingHistory) -> MyBettingHistory {
+        print("[MAPPER_DEBUG] 🔄 ServiceProviderModelMapper: Converting \(servicesProviderHistory.bets.count) ServicesProvider bets")
         let mappedBets = servicesProviderHistory.bets.map { myBet($0) }
+        print("[MAPPER_DEBUG] ✅ ServiceProviderModelMapper: Converted to \(mappedBets.count) MyBet objects")
         return MyBettingHistory(bets: mappedBets)
     }
     

@@ -25,6 +25,7 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
     private let betsStateSubject = CurrentValueSubject<MyBetsState, Never>(.loading)
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
     private let errorMessageSubject = CurrentValueSubject<String?, Never>(nil)
+    private let ticketViewModelsSubject = CurrentValueSubject<[TicketBetInfoViewModelProtocol], Never>([])
     
     // MARK: - Pagination State
     
@@ -130,6 +131,10 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
         $selectedStatusType.eraseToAnyPublisher()
     }
     
+    var ticketBetInfoViewModelsPublisher: AnyPublisher<[TicketBetInfoViewModelProtocol], Never> {
+        ticketViewModelsSubject.eraseToAnyPublisher()
+    }
+    
     // MARK: - Initialization
     
     init(servicesProvider: ServicesProvider.Client) {
@@ -202,7 +207,7 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
         betsStateSubject.send(.loading)
         errorMessageSubject.send(nil)
         
-        print("[AUTH_DEBUG] 🚀 MyBetsViewModel: Loading bets for tab=\(selectedTabType.title) status=\(selectedStatusType.title) - API CALL WILL BE MADE")
+        print("[AUTH_LOGS] 🚀 MyBetsViewModel: Loading bets for tab=\(selectedTabType.title) status=\(selectedStatusType.title) - API CALL WILL BE MADE")
         
         // Handle virtual sports - not implemented yet
         if selectedTabType == .virtuals {
@@ -323,6 +328,9 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
             currentPage: 0
         )
         
+        // Create ticket view models from bets
+        createTicketViewModels(from: bets)
+        
         // Update state
         betsStateSubject.send(.loaded(bets))
         isLoadingSubject.send(false)
@@ -344,8 +352,58 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
             currentPage: currentData.currentPage + 1
         )
         
+        // Create ticket view models from combined bets
+        createTicketViewModels(from: combinedBets)
+        
         // Update state
         betsStateSubject.send(.loaded(combinedBets))
         isLoadingSubject.send(false)
+    }
+    
+    // MARK: - Ticket View Models Creation
+    
+    private func createTicketViewModels(from bets: [MyBet]) {
+        let viewModels = bets.map { bet in
+            let viewModel = TicketBetInfoViewModel(myBet: bet, servicesProvider: servicesProvider)
+            
+            // Wire up actions
+            viewModel.onNavigationTap = { [weak self] bet in
+                self?.handleNavigationTap(bet)
+            }
+            
+            viewModel.onRebetTap = { [weak self] bet in
+                self?.handleRebetTap(bet)
+            }
+            
+            viewModel.onCashoutTap = { [weak self] bet in
+                self?.handleCashoutTap(bet)
+            }
+            
+            return viewModel as TicketBetInfoViewModelProtocol
+        }
+        
+        ticketViewModelsSubject.send(viewModels)
+        print("✅ MyBetsViewModel: Created \(viewModels.count) ticket view models")
+    }
+    
+    // MARK: - Action Handlers
+    
+    private func handleNavigationTap(_ bet: MyBet) {
+        print("🎯 MyBetsViewModel: Navigation tapped for bet: \(bet.identifier)")
+        // TODO: Navigate to bet details screen
+    }
+    
+    private func handleRebetTap(_ bet: MyBet) {
+        print("🔄 MyBetsViewModel: Rebet tapped for bet: \(bet.identifier)")
+        // TODO: Create new bet ticket from selections
+        // This would involve converting MyBetSelections back to BetTicketSelections
+        // and adding them to the betslip
+    }
+    
+    private func handleCashoutTap(_ bet: MyBet) {
+        print("💰 MyBetsViewModel: Cashout tapped for bet: \(bet.identifier)")
+        // TODO: Handle cashout flow
+        // This would typically refresh the bet list to reflect the cashed out state
+        refreshBets()
     }
 }

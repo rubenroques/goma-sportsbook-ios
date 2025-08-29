@@ -61,7 +61,19 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                 guard let self = self else {
                     return Fail(error: .unknown).eraseToAnyPublisher()
                 }
-                // Store the session token in the connector
+                
+                // Store credentials in session coordinator for automatic token refresh
+                let credentials = EveryMatrixCredentials(username: username, password: password)
+                self.sessionCoordinator.updateCredentials(credentials)
+                
+                // Update session in session coordinator
+                let session = EveryMatrixSessionResponse(
+                    sessionId: phoneLoginResponse.sessionId,
+                    userId: String(phoneLoginResponse.userId)
+                )
+                self.sessionCoordinator.updateSession(session)
+                
+                // Store the session token in the connector (for backward compatibility)
                 self.connector.updateSessionToken(sessionId: phoneLoginResponse.sessionId, id: phoneLoginResponse.id)
                 
                 // Save the session token to the session coordinator for other APIs to access

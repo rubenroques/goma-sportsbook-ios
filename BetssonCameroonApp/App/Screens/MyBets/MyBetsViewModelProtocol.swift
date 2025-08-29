@@ -37,6 +37,10 @@ protocol MyBetsViewModelProtocol {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var errorMessagePublisher: AnyPublisher<String?, Never> { get }
     
+    // MARK: - Ticket View Models Publisher
+    
+    var ticketBetInfoViewModelsPublisher: AnyPublisher<[TicketBetInfoViewModelProtocol], Never> { get }
+    
     // MARK: - Navigation Publishers
     
     var selectedTabTypePublisher: AnyPublisher<MyBetsTabType, Never> { get }

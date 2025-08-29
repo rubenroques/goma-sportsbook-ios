@@ -28,23 +28,27 @@ class MyBetsViewController: UIViewController {
         return view
     }()
     
-    private lazy var tableView: UITableView = {
-        let table = UITableView()
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.delegate = self
-        table.dataSource = self
-        table.backgroundColor = .systemBackground
-        table.separatorStyle = .singleLine
-        table.rowHeight = UITableView.automaticDimension
-        table.estimatedRowHeight = 120
-        table.register(BasicBetTableViewCell.self, forCellReuseIdentifier: "BasicBetCell")
+    private lazy var collectionView: UICollectionView = {
+        let layout = Self.createCollectionViewLayout()
         
-        // Add refresh control
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.backgroundColor = UIColor.App.backgroundPrimary
+        
+        // Register cell
+        collectionView.register(
+            TicketBetInfoCollectionViewCell.self,
+            forCellWithReuseIdentifier: TicketBetInfoCollectionViewCell.identifier
+        )
+        
+        // Add pull-to-refresh
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-        table.refreshControl = refreshControl
+        collectionView.refreshControl = refreshControl
         
-        return table
+        return collectionView
     }()
     
     private lazy var loadingView: UIView = {
@@ -134,6 +138,10 @@ class MyBetsViewController: UIViewController {
         return view
     }()
     
+    // MARK: - Data Source
+    
+    private var ticketViewModels: [TicketBetInfoViewModelProtocol] = []
+    
     // MARK: - Navigation Closures
     
     var onLoginRequested: (() -> Void)?
@@ -165,6 +173,28 @@ class MyBetsViewController: UIViewController {
     
     // MARK: - Private Methods
     
+    private static func createCollectionViewLayout() -> UICollectionViewLayout {
+        return UICollectionViewCompositionalLayout { sectionIndex, _ in
+            // Dynamic height for ticket bet info cards
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(320) // Estimated height - Auto Layout will determine actual size
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(320) // Estimated height - Auto Layout will determine actual size
+            )
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 1.5 // Match NextUpEvents spacing pattern
+            section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+            return section
+        }
+    }
+    
     @objc private func handleRefresh() {
         viewModel.refreshBets()
     }
@@ -178,7 +208,7 @@ class MyBetsViewController: UIViewController {
         
         view.addSubview(marketGroupSelectorTabView)
         view.addSubview(pillSelectorBarView)
-        view.addSubview(tableView)
+        view.addSubview(collectionView)
         view.addSubview(loadingView)
         view.addSubview(errorView)
         view.addSubview(emptyView)
@@ -194,10 +224,10 @@ class MyBetsViewController: UIViewController {
             pillSelectorBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             pillSelectorBarView.heightAnchor.constraint(equalToConstant: 60),
             
-            tableView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 8),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 8),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             loadingView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor),
             loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -233,8 +263,18 @@ class MyBetsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 if !isLoading {
-                    self?.tableView.refreshControl?.endRefreshing()
+                    self?.collectionView.refreshControl?.endRefreshing()
                 }
+            }
+            .store(in: &cancellables)
+        
+        // Listen to ticket view models changes
+        viewModel.ticketBetInfoViewModelsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] viewModels in
+                self?.ticketViewModels = viewModels
+                self?.updateCollectionViewWithProperInvalidation()
+                print("🎯 MyBetsViewController: Updated with \(viewModels.count) ticket view models")
             }
             .store(in: &cancellables)
         
@@ -260,12 +300,10 @@ class MyBetsViewController: UIViewController {
         case .loading:
             showLoadingState()
         case .loaded(let bets):
-            currentBets = bets
             if bets.isEmpty {
                 showEmptyState()
             } else {
-                showTableViewState()
-                tableView.reloadData()
+                showCollectionViewState()
             }
         case .error(let message):
             showErrorState(message: message)
@@ -273,14 +311,14 @@ class MyBetsViewController: UIViewController {
     }
     
     private func showLoadingState() {
-        tableView.isHidden = true
+        collectionView.isHidden = true
         loadingView.isHidden = false
         errorView.isHidden = true
         emptyView.isHidden = true
     }
     
-    private func showTableViewState() {
-        tableView.isHidden = false
+    private func showCollectionViewState() {
+        collectionView.isHidden = false
         loadingView.isHidden = true
         errorView.isHidden = true
         emptyView.isHidden = true
@@ -290,179 +328,70 @@ class MyBetsViewController: UIViewController {
         if let errorLabel = errorView.subviews.compactMap({ $0 as? UILabel }).first {
             errorLabel.text = message
         }
-        tableView.isHidden = true
+        collectionView.isHidden = true
         loadingView.isHidden = true
         errorView.isHidden = false
         emptyView.isHidden = true
     }
     
     private func showEmptyState() {
-        tableView.isHidden = true
+        collectionView.isHidden = true
         loadingView.isHidden = true
         errorView.isHidden = true
         emptyView.isHidden = false
     }
+    
+    private func updateCollectionViewWithProperInvalidation() {
+        // Reload data
+        collectionView.reloadData()
+        
+        // ⭐ KEY: Force layout recalculation like NextUpEvents
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.layoutIfNeeded()
+            self?.collectionView.collectionViewLayout.invalidateLayout()
+            
+            // Additional safety: Force collection view to recalculate visible cell sizes
+            if let visibleIndexPaths = self?.collectionView.indexPathsForVisibleItems {
+                self?.collectionView.reconfigureItems(at: visibleIndexPaths)
+            }
+        }
+    }
 }
 
-// MARK: - UITableViewDataSource
+// MARK: - UICollectionViewDataSource
 
-extension MyBetsViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentBets.count
+extension MyBetsViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return ticketViewModels.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "BasicBetCell", for: indexPath) as! BasicBetTableViewCell
-        let bet = currentBets[indexPath.row]
-        cell.configure(with: bet)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TicketBetInfoCollectionViewCell.identifier,
+            for: indexPath
+        ) as! TicketBetInfoCollectionViewCell
+        
+        let viewModel = ticketViewModels[indexPath.item]
+        
+        // Configure cell position for corner radius
+        let isFirst = indexPath.item == 0
+        let isLast = indexPath.item == ticketViewModels.count - 1
+        let isOnlyCell = ticketViewModels.count == 1
+        
+        cell.configure(with: viewModel)
+        cell.configureCellPosition(isFirst: isFirst, isLast: isLast, isOnlyCell: isOnlyCell)
+        
         return cell
     }
 }
 
-// MARK: - UITableViewDelegate
+// MARK: - UICollectionViewDelegate
 
-extension MyBetsViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+extension MyBetsViewController: UICollectionViewDelegate {    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // Load more data when approaching the end
-        if indexPath.row == currentBets.count - 3 {
-            viewModel.loadMoreBets()
-        }
-    }
-}
-
-// MARK: - Basic Bet Table View Cell
-
-class BasicBetTableViewCell: UITableViewCell {
-    
-    private let betIdLabel = UILabel()
-    private let statusLabel = UILabel()
-    private let stakeLabel = UILabel()
-    private let potentialWinLabel = UILabel()
-    private let dateLabel = UILabel()
-    private let selectionLabel = UILabel()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupUI() {
-        selectionStyle = .none
-        
-        [betIdLabel, statusLabel, stakeLabel, potentialWinLabel, dateLabel, selectionLabel].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview($0)
-        }
-        
-        // Configure labels
-        betIdLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-        betIdLabel.textColor = .label
-        
-        statusLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        statusLabel.textAlignment = .right
-        statusLabel.layer.cornerRadius = 4
-        statusLabel.layer.masksToBounds = true
-        statusLabel.textAlignment = .center
-        
-        stakeLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        stakeLabel.textColor = .label
-        
-        potentialWinLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        potentialWinLabel.textColor = .systemGreen
-        
-        dateLabel.font = UIFont.systemFont(ofSize: 12)
-        dateLabel.textColor = .secondaryLabel
-        
-        selectionLabel.font = UIFont.systemFont(ofSize: 13)
-        selectionLabel.textColor = .secondaryLabel
-        selectionLabel.numberOfLines = 0
-        
-        NSLayoutConstraint.activate([
-            betIdLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            betIdLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            
-            statusLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            statusLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            statusLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
-            statusLabel.heightAnchor.constraint(equalToConstant: 24),
-            
-            stakeLabel.topAnchor.constraint(equalTo: betIdLabel.bottomAnchor, constant: 8),
-            stakeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            
-            potentialWinLabel.topAnchor.constraint(equalTo: betIdLabel.bottomAnchor, constant: 8),
-            potentialWinLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            dateLabel.topAnchor.constraint(equalTo: stakeLabel.bottomAnchor, constant: 4),
-            dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            
-            selectionLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 8),
-            selectionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            selectionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            selectionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
-        ])
-    }
-    
-    func configure(with bet: MyBet) {
-        betIdLabel.text = "Bet #\(bet.identifier)"
-        
-        // Configure status badge
-        statusLabel.text = bet.state.displayName.uppercased()
-        
-        let statusColor = colorFor(betState: bet.state)
-        statusLabel.backgroundColor = statusColor.withAlphaComponent(0.1)
-        statusLabel.textColor = statusColor
-        
-        // Configure amounts using helper classes
-        let currencyFormatter = NumberFormatter()
-        currencyFormatter.numberStyle = .currency
-        currencyFormatter.currencyCode = bet.currency
-        
-        let formattedStake = currencyFormatter.string(from: NSNumber(value: bet.stake)) ?? "\(bet.stake) \(bet.currency)"
-        stakeLabel.text = "Stake: \(formattedStake)"
-        
-        if let potentialReturn = bet.potentialReturn {
-            let formattedReturn = currencyFormatter.string(from: NSNumber(value: potentialReturn)) ?? "\(potentialReturn) \(bet.currency)"
-            potentialWinLabel.text = "Win: \(formattedReturn)"
-        } else {
-            potentialWinLabel.text = ""
-        }
-        
-        // Configure date
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        dateLabel.text = "Placed: \(formatter.string(from: bet.date))"
-        
-        // Configure selections using MyBet's convenience property
-        selectionLabel.text = bet.selectionsDescription
-    }
-    
-    private func colorFor(betState: MyBetState) -> UIColor {
-        switch betState {
-        case .opened:
-            return .systemBlue
-        case .won:
-            return .systemGreen
-        case .lost:
-            return .systemRed
-        case .cancelled:
-            return .systemOrange
-        case .cashedOut:
-            return .systemTeal
-        case .settled:
-            return .systemGreen
-        case .closed:
-            return .systemGray
-        case .attempted:
-            return .systemYellow
-        case .void:
-            return .systemOrange
-        case .undefined:
-            return .systemGray
+        if indexPath.item == ticketViewModels.count - 3 {
+            self.viewModel.loadMoreBets()
         }
     }
 }

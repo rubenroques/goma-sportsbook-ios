@@ -10,7 +10,7 @@ public enum CornerRadiusStyle {
 public class TicketBetInfoView: UIView {
     
     // MARK: - Properties
-    private let viewModel: TicketBetInfoViewModelProtocol
+    private var viewModel: TicketBetInfoViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     private let cornerRadiusStyle: CornerRadiusStyle
     
@@ -195,7 +195,9 @@ public class TicketBetInfoView: UIView {
     public init(viewModel: TicketBetInfoViewModelProtocol, cornerRadiusStyle: CornerRadiusStyle = .all(radius: 8)) {
         self.viewModel = viewModel
         self.cornerRadiusStyle = cornerRadiusStyle
+        
         super.init(frame: .zero)
+        
         setupView()
         setupConstraints()
         setupCornerRadius()
@@ -204,6 +206,38 @@ public class TicketBetInfoView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Reconfiguration
+    /// Configures the view with a new view model for efficient reuse
+    public func configure(with newViewModel: TicketBetInfoViewModelProtocol) {
+        // Clear previous bindings
+        prepareForReuse()
+        
+        // Update view model reference
+        self.viewModel = newViewModel
+        
+        // Re-establish bindings with new view model
+        bindViewModel()
+    }
+    
+    /// Prepares the view for reuse by clearing reactive bindings and resetting state
+    public func prepareForReuse() {
+        // Cancel all active publishers
+        cancellables.removeAll()
+        
+        // Clear ticket selections
+        ticketsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // Clear bottom components
+        bottomComponentsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // Reset labels to empty state
+        titleLabel.text = ""
+        betDetailsLabel.text = ""
+        totalOddsValueLabel.text = ""
+        betAmountValueLabel.text = ""
+        possibleWinningsValueLabel.text = ""
     }
     
     // MARK: - Setup
@@ -387,6 +421,12 @@ public class TicketBetInfoView: UIView {
             let ticketView = TicketSelectionView(viewModel: mockViewModel)
             ticketsStackView.addArrangedSubview(ticketView)
         }
+        
+        // Notify collection view of size change when tickets change
+        invalidateIntrinsicContentSize()
+        
+        // Also invalidate superview (collection cell) if it exists
+        superview?.invalidateIntrinsicContentSize()
     }
     
     private func updateBottomComponents(with betInfo: TicketBetInfoData) {
@@ -431,6 +471,12 @@ public class TicketBetInfoView: UIView {
         } else {
             financialSummaryBottomConstraint?.isActive = true
         }
+        
+        // Notify collection view of size change when bottom components change
+        invalidateIntrinsicContentSize()
+        
+        // Also invalidate superview (collection cell) if it exists
+        superview?.invalidateIntrinsicContentSize()
     }
     
     // MARK: - Actions

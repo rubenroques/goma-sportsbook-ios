@@ -1,21 +1,5 @@
-//
-//  UserProfile.swift
-//  BetssonCameroonApp
-//
-//  Created by Ruben Roques on 22/07/2025.
-//
 
 import Foundation
-
-struct Country: Codable, Hashable {
-    var name: String
-    var capital: String?
-    var region: String
-    var iso2Code: String
-    var iso3Code: String
-    var numericCode: String
-    var phonePrefix: String
-}
 
 struct UserProfile: Codable, Hashable {
 

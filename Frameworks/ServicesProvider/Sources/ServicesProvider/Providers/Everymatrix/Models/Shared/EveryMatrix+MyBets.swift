@@ -29,77 +29,217 @@ extension EveryMatrix {
     
     struct Bet: Codable {
         let id: String?
-        let betId: String?
-        let status: String?
-        let odds: Double?
-        let amount: Double?
-        let stake: Double?
-        let afterTaxAmount: Double?
-        let potentialWinnings: Double?
-        let currentPossibleWinning: Double?
-        let wht: Double?
-        let payout: Double?
-        let currency: String?
-        let placedDate: String?
-        let type: String?
-        let result: String?
-        let partialCashoutValue: Double?
-        let partialCashoutStake: Double?
         let selections: [BetSelection]?
+        let type: String?
+        let systemBetType: String?
+        let amount: Double?
+        let totalBetAmount: Double?
+        let freeBetAmount: Double?
+        let currency: String?
+        let maxWinning: Double?
+        let possibleProfit: Double?
+        let stakeBackOptions: String?
+        let betStakeBack: String?
+        let totalPriceValue: Double?
+        let numberOfSelections: Int?
+        let status: String?
+        let statusLabel: String?
+        let placedDate: String?
+        let settledDate: String?
+        let placementStatusConfirmedDate: String?
+        let freeBet: Bool?
+        let oddsBoost: Bool?
+        let betBuilder: Bool?
+        let mbaBet: Bool?
+        let eachWay: Bool?
+        let currentPossibleWinning: Double?
+        let totalBalanceImpact: Double?
+        let terminalType: String?
+        let totalBetAmountTax: Double?
+        let totalBetAmountEurTax: Double?
+        let totalBetAmountNetto: Double?
+        let maxWinningTax: Double?
+        let maxWinningNetto: Double?
+        let betPayoutTax: Double?
+        let totalPayoutTax: Double?
+        let betStakeNet: Double?
+        let betStakeNetEur: Double?
+        let partialCashOuts: [String]? // Array type may need adjustment based on actual structure
+        let betRemainingStake: Double?
+        let overallBetReturns: Double?
+        let overallCashoutAmount: Double?
+        let cashOutDate: String?
+        let totalPriceValueByBetStatus: Double?
+        let betNetReturns: Double?
+        let potentialNetReturns: Double?
+        let potentialWinTax: Double?
+        let taxEnabled: Bool?
+        let pendingCashOutStatus: String?
+        let betPlacementStatus: String?
+        let betSettlementStatus: String?
+        let paymentTime: String?
+        let ticketCode: String?
+        let paymentStatus: String?
+        
         
         enum CodingKeys: String, CodingKey {
             case id
-            case betId
-            case status
-            case odds
-            case amount
-            case stake
-            case afterTaxAmount
-            case potentialWinnings
-            case currentPossibleWinning
-            case wht
-            case payout
-            case currency
-            case placedDate
-            case type = "betType"
-            case result
-            case partialCashoutValue
-            case partialCashoutStake
             case selections
+            case type
+            case systemBetType
+            case amount
+            case totalBetAmount
+            case freeBetAmount
+            case currency
+            case maxWinning
+            case possibleProfit
+            case stakeBackOptions
+            case betStakeBack
+            case totalPriceValue
+            case numberOfSelections
+            case status
+            case statusLabel
+            case placedDate
+            case settledDate
+            case placementStatusConfirmedDate
+            case freeBet
+            case oddsBoost
+            case betBuilder
+            case mbaBet
+            case eachWay
+            case currentPossibleWinning
+            case totalBalanceImpact
+            case terminalType
+            case totalBetAmountTax
+            case totalBetAmountEurTax
+            case totalBetAmountNetto
+            case maxWinningTax
+            case maxWinningNetto
+            case betPayoutTax
+            case totalPayoutTax
+            case betStakeNet
+            case betStakeNetEur
+            case partialCashOuts
+            case betRemainingStake
+            case overallBetReturns
+            case overallCashoutAmount
+            case cashOutDate
+            case totalPriceValueByBetStatus
+            case betNetReturns
+            case potentialNetReturns
+            case potentialWinTax
+            case taxEnabled
+            case pendingCashOutStatus
+            case betPlacementStatus
+            case betSettlementStatus
+            case paymentTime
+            case ticketCode
+            case paymentStatus
         }
     }
     
     struct BetSelection: Codable {
         let id: String?
-        let matchName: String?
-        let marketType: String?
-        let selection: String?
-        let odds: Double?
-        let status: String?
-        let homeTeam: String?
-        let awayTeam: String?
-        let homeScore: String?
-        let awayScore: String?
-        let eventId: String?
-        let marketId: String?
         let outcomeId: String?
-        let competition: String?
+        let status: String?
+        let initialPriceValue: Double?
+        let priceValue: Double?
+        let betBuilderOdds: Double?
+        let initialBetBuilderOdds: Double?
+        let sportId: String?
+        let sportName: String?
+        let sportParentId: String?
+        let sportParentName: String?
+        let tournamentId: String?
+        let tournamentName: String?
+        let eventId: String?
+        let eventTypeId: String?
+        let eventName: String?
+        let eventIsLiveTournament: Bool?
+        let eventScoreAtPlaceBet: String?
+        let homeParticipantId: String?
+        let awayParticipantId: String?
+        let homeParticipantName: String?
+        let awayParticipantName: String?
+        let homeParticipantLogoUrl: String?
+        let awayParticipantLogoUrl: String?
+        let eventDate: String?
+        let bettingTypeId: String?
+        let bettingTypeName: String?
+        let marketName: String?
+        let isLive: Bool?
+        let eventStatusId: String?
+        let actualBetBuilderGroupSettlementStatus: String?
+        let exchangeRateTimestamp: String?
+        let banker: Bool?
+        let cashOutDate: String?
+        let cashOutOdds: Double?
+        let cashOutBetBuilderOdds: Double?
+        let priceValueByStatus: Double?
+        let eachWay: String?
+        let earlySettlement: String?
+        let earlySettlementDate: String?
+        let earlySettlementOption: String?
+        let eventTemplateName: String?
+        let boreDrawOption: String?
+        let venueId: String?
+        let venueName: String?
+        let bettingTypeEventPartId: String?
+        let bettingTypeEventPartName: String?
+        let betName: String?
+        let shortBetName: String?
+        
         
         enum CodingKeys: String, CodingKey {
             case id
-            case matchName
-            case marketType
-            case selection
-            case odds
-            case status
-            case homeTeam
-            case awayTeam
-            case homeScore
-            case awayScore
-            case eventId
-            case marketId
             case outcomeId
-            case competition
+            case status
+            case initialPriceValue
+            case priceValue
+            case betBuilderOdds
+            case initialBetBuilderOdds
+            case sportId
+            case sportName
+            case sportParentId
+            case sportParentName
+            case tournamentId
+            case tournamentName
+            case eventId
+            case eventTypeId
+            case eventName
+            case eventIsLiveTournament
+            case eventScoreAtPlaceBet
+            case homeParticipantId
+            case awayParticipantId
+            case homeParticipantName
+            case awayParticipantName
+            case homeParticipantLogoUrl
+            case awayParticipantLogoUrl
+            case eventDate
+            case bettingTypeId
+            case bettingTypeName
+            case marketName
+            case isLive
+            case eventStatusId
+            case actualBetBuilderGroupSettlementStatus
+            case exchangeRateTimestamp
+            case banker
+            case cashOutDate
+            case cashOutOdds
+            case cashOutBetBuilderOdds
+            case priceValueByStatus
+            case eachWay
+            case earlySettlement
+            case earlySettlementDate
+            case earlySettlementOption
+            case eventTemplateName
+            case boreDrawOption
+            case venueId
+            case venueName
+            case bettingTypeEventPartId
+            case bettingTypeEventPartName
+            case betName
+            case shortBetName
         }
     }
     
