@@ -69,12 +69,22 @@ final public class ButtonView: UIView {
         // Set title
         button.setTitle(buttonData.title, for: .normal)
         
+        // Apply custom font if provided
+        applyFont(buttonData.fontSize, fontType: buttonData.fontType)
+        
         // Apply style based on button type and state
         applyStyle(buttonData.style, isEnabled: buttonData.isEnabled)
         
         // Update enabled state
         button.isEnabled = buttonData.isEnabled
 //        alpha = buttonData.isEnabled ? 1.0 : 0.6
+    }
+    
+    private func applyFont(_ fontSize: CGFloat?, fontType: StyleProvider.FontType?) {
+        let finalFontSize = fontSize ?? 16.0 // Default to current size
+        let finalFontType = fontType ?? .bold // Default to current type
+        
+        button.titleLabel?.font = StyleProvider.fontWith(type: finalFontType, size: finalFontSize)
     }
     
     private func applyStyle(_ style: ButtonStyle, isEnabled: Bool) {
@@ -96,7 +106,12 @@ final public class ButtonView: UIView {
             else {
                 button.backgroundColor = StyleProvider.Color.buttonBackgroundPrimary
             }
-            button.setTitleColor(StyleProvider.Color.buttonTextPrimary, for: .normal)
+            
+            if let customTextColor = currentButtonData?.textColor {
+                button.setTitleColor(customTextColor, for: .normal)
+            } else {
+                button.setTitleColor(StyleProvider.Color.buttonTextPrimary, for: .normal)
+            }
         } else {
             if let customDisabledBackgroundColor = currentButtonData?.disabledBackgroundColor {
                 button.backgroundColor = customDisabledBackgroundColor
@@ -116,8 +131,21 @@ final public class ButtonView: UIView {
         
         if isEnabled {
             button.layer.borderWidth = 2
-            button.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
-            button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
+            
+            if let customBorderColor = currentButtonData?.borderColor {
+                button.layer.borderColor = customBorderColor.cgColor
+            } else {
+                button.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
+            }
+            
+            if let customTextColor = currentButtonData?.textColor {
+                button.setTitleColor(customTextColor, for: .normal)
+            } else if let customBorderColor = currentButtonData?.borderColor {
+                // Use border color as text color if no explicit text color is provided
+                button.setTitleColor(customBorderColor, for: .normal)
+            } else {
+                button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
+            }
         } else {
             button.layer.borderWidth = 2
             button.layer.borderColor = StyleProvider.Color.buttonDisablePrimary.cgColor
@@ -131,13 +159,14 @@ final public class ButtonView: UIView {
         button.layer.borderColor = UIColor.clear.cgColor
         
         if isEnabled {
-            button.setTitleColor(StyleProvider.Color.buttonTextPrimary, for: .normal)
+            let textColor = currentButtonData?.textColor ?? StyleProvider.Color.buttonTextPrimary
+            button.setTitleColor(textColor, for: .normal)
             
             // Add underline for transparent buttons
             let attributes: [NSAttributedString.Key: Any] = [
                 .underlineStyle: NSUnderlineStyle.single.rawValue,
                 .font: StyleProvider.fontWith(type: .bold, size: 16),
-                .foregroundColor: StyleProvider.Color.buttonTextPrimary
+                .foregroundColor: textColor
             ]
             let attributedTitle = NSAttributedString(string: button.currentTitle ?? "", attributes: attributes)
             button.setAttributedTitle(attributedTitle, for: .normal)
@@ -219,6 +248,144 @@ final public class ButtonView: UIView {
         .frame(height: 50)
         .background(Color.cyan)
 
+    }
+    .padding()
+}
+
+@available(iOS 17.0, *)
+#Preview("Custom Color Examples") {
+    VStack(spacing: 20) {
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.solidBackgroundCustomColorMock)
+        }
+        .frame(height: 50)
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.borderedCustomColorMock)
+        }
+        .frame(height: 50)
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.transparentCustomColorMock)
+        }
+        .frame(height: 50)
+        .background(Color.gray.opacity(0.2))
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.redThemeMock)
+        }
+        .frame(height: 50)
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.blueThemeMock)
+        }
+        .frame(height: 50)
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.greenThemeMock)
+        }
+        .frame(height: 50)
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.orangeThemeMock)
+        }
+        .frame(height: 50)
+    }
+    .padding()
+}
+
+@available(iOS 17.0, *)
+#Preview("Color Themes Comparison") {
+    HStack(spacing: 15) {
+        VStack(spacing: 10) {
+            PreviewUIView {
+                ButtonView(viewModel: MockButtonViewModel.redThemeMock)
+            }
+            .frame(height: 50)
+            
+            PreviewUIView {
+                ButtonView(viewModel: MockButtonViewModel.greenThemeMock)
+            }
+            .frame(height: 50)
+        }
+        
+        VStack(spacing: 10) {
+            PreviewUIView {
+                ButtonView(viewModel: MockButtonViewModel.blueThemeMock)
+            }
+            .frame(height: 50)
+            
+            PreviewUIView {
+                ButtonView(viewModel: MockButtonViewModel.orangeThemeMock)
+            }
+            .frame(height: 50)
+        }
+    }
+    .padding()
+}
+
+@available(iOS 17.0, *)
+#Preview("Font Customization Examples") {
+    VStack(spacing: 15) {
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.largeFontMock)
+        }
+        .frame(height: 60) // Taller for large font
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.smallFontMock)
+        }
+        .frame(height: 40) // Shorter for small font
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.lightFontMock)
+        }
+        .frame(height: 50)
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.heavyFontMock)
+        }
+        .frame(height: 50)
+        
+        PreviewUIView {
+            ButtonView(viewModel: MockButtonViewModel.customFontStyleMock)
+        }
+        .frame(height: 50)
+        .background(Color.gray.opacity(0.1))
+    }
+    .padding()
+}
+
+@available(iOS 17.0, *)
+#Preview("Font Weight Comparison") {
+    VStack(spacing: 12) {
+        Text("Font Weight Showcase")
+            .font(.headline)
+            .padding(.bottom, 5)
+        
+        HStack(spacing: 10) {
+            PreviewUIView {
+                ButtonView(viewModel: MockButtonViewModel.lightFontMock)
+            }
+            .frame(height: 50)
+            
+            PreviewUIView {
+                ButtonView(viewModel: MockButtonViewModel.customFontStyleMock)
+            }
+            .frame(height: 50)
+        }
+        
+        HStack(spacing: 10) {
+            PreviewUIView {
+                ButtonView(viewModel: MockButtonViewModel.largeFontMock)
+            }
+            .frame(height: 50)
+            
+            PreviewUIView {
+                ButtonView(viewModel: MockButtonViewModel.heavyFontMock)
+            }
+            .frame(height: 50)
+        }
     }
     .padding()
 }

@@ -48,9 +48,6 @@ final public class WalletDetailView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         self.containerView.layer.cornerRadius = 8
-        
-        // Apply button styling after layout is complete to ensure buttons are fully initialized
-        self.setupButtonStyling()
     }
     
     func setupWithTheme() {
@@ -58,40 +55,7 @@ final public class WalletDetailView: UIView {
         self.containerView.backgroundColor = StyleProvider.Color.highlightPrimary
     }
     
-    private func setupButtonStyling() {
-        // Style withdraw button: white border + white text on transparent background
-        if let withdrawButton = self.withdrawButton {
-            self.styleButtonForWhiteTheme(withdrawButton, style: .bordered)
-        }
-        
-        // Style deposit button: white background + dark text
-        if let depositButton = self.depositButton {
-            self.styleButtonForWhiteTheme(depositButton, style: .solidBackground)
-        }
-    }
-    
-    private func styleButtonForWhiteTheme(_ buttonView: ButtonView, style: ButtonStyle) {
-        // Access the internal UIButton through the view hierarchy
-        if let button = buttonView.subviews.first(where: { $0 is UIButton }) as? UIButton {
-            switch style {
-            case .bordered:
-                // White border + white text on transparent
-                button.backgroundColor = UIColor.clear
-                button.layer.borderWidth = 2
-                button.layer.borderColor = StyleProvider.Color.allWhite.cgColor
-                button.setTitleColor(StyleProvider.Color.allWhite, for: .normal)
-            case .solidBackground:
-                // White background + orange text
-                button.backgroundColor = StyleProvider.Color.allWhite
-                button.layer.borderWidth = 0
-                button.layer.borderColor = UIColor.clear.cgColor
-                button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
-            case .transparent:
-                // Not used in this context
-                break
-            }
-        }
-    }
+    // Manual button styling removed - now handled by ButtonView's native color customization
     
     // MARK: Functions
     private func setupBindings() {

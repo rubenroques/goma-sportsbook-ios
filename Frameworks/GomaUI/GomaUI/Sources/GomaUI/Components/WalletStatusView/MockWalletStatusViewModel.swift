@@ -64,6 +64,8 @@ final public class MockWalletStatusViewModel: WalletStatusViewModelProtocol {
             id: "deposit",
             title: "Deposit",
             style: .solidBackground,
+            fontSize: 12,
+            fontType: .bold,
             isEnabled: true
         )
         self._depositButtonViewModel = MockButtonViewModel(buttonData: depositButtonData)
@@ -72,6 +74,8 @@ final public class MockWalletStatusViewModel: WalletStatusViewModelProtocol {
             id: "withdraw",
             title: "Withdraw",
             style: .bordered,
+            fontSize: 12,
+            fontType: .bold,
             isEnabled: true
         )
         self._withdrawButtonViewModel = MockButtonViewModel(buttonData: withdrawButtonData)

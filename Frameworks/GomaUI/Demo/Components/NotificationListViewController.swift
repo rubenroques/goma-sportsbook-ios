@@ -36,12 +36,13 @@ class NotificationListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        applyStyles()
+        // Styles now applied in setupView
     }
     
     // MARK: - Setup
     private func setupView() {
         title = "Notification List"
+        applyStyles() // Move styles to setupView instead of viewWillAppear
         setupSubviews()
     }
     
@@ -63,6 +64,19 @@ class NotificationListViewController: UIViewController {
         
         contentView.addSubview(sectionLabels[3])
         contentView.addSubview(unreadOnlyNotificationListView)
+        
+        // Add debug backgrounds to make components visible
+        defaultNotificationListView.backgroundColor = StyleProvider.Color.backgroundCards
+        mixedNotificationListView.backgroundColor = StyleProvider.Color.backgroundCards
+        emptyNotificationListView.backgroundColor = StyleProvider.Color.backgroundCards
+        unreadOnlyNotificationListView.backgroundColor = StyleProvider.Color.backgroundCards
+        
+        // Add debug borders
+        [defaultNotificationListView, mixedNotificationListView, emptyNotificationListView, unreadOnlyNotificationListView].forEach { notificationView in
+            notificationView.layer.borderWidth = 1.0
+            notificationView.layer.borderColor = StyleProvider.Color.separatorLine.cgColor
+            notificationView.layer.cornerRadius = 8
+        }
         
         setupConstraints()
     }
@@ -131,6 +145,13 @@ class NotificationListViewController: UIViewController {
     }
     
     private func setupViewModel() {
+        // Debug: Print mock data to verify it's loading
+        print("🔍 Debug: Setting up NotificationList ViewModels")
+        print("🔍 Default notifications count: \(defaultNotificationListView.viewModel.notifications.count)")
+        print("🔍 Mixed notifications count: \(mixedNotificationListView.viewModel.notifications.count)")
+        print("🔍 Empty notifications count: \(emptyNotificationListView.viewModel.notifications.count)")
+        print("🔍 Unread notifications count: \(unreadOnlyNotificationListView.viewModel.notifications.count)")
+        
         // Setup callbacks for demonstration
         if let defaultMock = defaultNotificationListView.viewModel as? MockNotificationListViewModel {
             defaultMock.onActionPerformed = { notification in
@@ -157,10 +178,16 @@ class NotificationListViewController: UIViewController {
     private func applyStyles() {
         view.backgroundColor = StyleProvider.Color.backgroundSecondary
         
+        // Add debug background to contentView to see if layout is working
+        contentView.backgroundColor = StyleProvider.Color.backgroundPrimary
+        scrollView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        
         headerLabel.textColor = StyleProvider.Color.textPrimary
         sectionLabels.forEach { label in
             label.textColor = StyleProvider.Color.textPrimary
         }
+        
+        print("🔍 Debug: Styles applied - view background set")
     }
     
     // MARK: - Demo Actions

@@ -19,6 +19,12 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
     // MARK: - Properties
     private var onItemSelectedCallback: ((ProfileMenuItem) -> Void)?
     
+    /// Callback for menu item selection - can be set after initialization
+    public var onItemSelected: ((ProfileMenuItem) -> Void)? {
+        get { onItemSelectedCallback }
+        set { onItemSelectedCallback = newValue }
+    }
+    
     // MARK: - Initialization
     public init(onItemSelected: ((ProfileMenuItem) -> Void)? = nil) {
         self.onItemSelectedCallback = onItemSelected
@@ -60,9 +66,6 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
     public func updateCurrentLanguage(_ language: String) {
         currentLanguage = language
         print("🌐 Mock: Language updated to \(language)")
-        
-        // Update the language menu item
-        updateLanguageMenuItem(with: language)
     }
     
     // MARK: - Private Methods
@@ -86,7 +89,7 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
                 id: "change_language",
                 icon: "globe",
                 title: "Change Language",
-                type: .selection(currentLanguage),
+                type: .navigation,
                 action: .changeLanguage
             ),
             ProfileMenuItem(
@@ -131,19 +134,7 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
             let data = try Data(contentsOf: URL(fileURLWithPath: path))
             let configuration = try JSONDecoder().decode(ProfileMenuConfiguration.self, from: data)
             
-            // Update language selection item with current language
-            menuItems = configuration.menuItems.map { item in
-                if item.action == .changeLanguage {
-                    return ProfileMenuItem(
-                        id: item.id,
-                        icon: item.icon,
-                        title: item.title,
-                        type: .selection(currentLanguage),
-                        action: item.action
-                    )
-                }
-                return item
-            }
+            menuItems = configuration.menuItems
             
             print("✅ Mock: Loaded \(menuItems.count) menu items from \(fileName).json")
         } catch {
@@ -152,20 +143,6 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
         }
     }
     
-    private func updateLanguageMenuItem(with language: String) {
-        menuItems = menuItems.map { item in
-            if item.action == .changeLanguage {
-                return ProfileMenuItem(
-                    id: item.id,
-                    icon: item.icon,
-                    title: item.title,
-                    type: .selection(language),
-                    action: item.action
-                )
-            }
-            return item
-        }
-    }
 }
 
 // MARK: - Static Factory Methods

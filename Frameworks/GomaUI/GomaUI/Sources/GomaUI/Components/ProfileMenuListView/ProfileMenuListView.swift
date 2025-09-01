@@ -75,14 +75,14 @@ public final class ProfileMenuListView: UIView {
             
             // Create updated item with current language if needed
             var updatedItem = menuItem
-            if menuItem.action == .changeLanguage,
-               case .selection = menuItem.type {
+            if menuItem.action == .changeLanguage {
                 // Use actual current language from viewModel binding
                 updatedItem = ProfileMenuItem(
                     id: menuItem.id,
                     icon: menuItem.icon,
                     title: menuItem.title,
-                    type: .selection(currentLanguage),
+                    subtitle: currentLanguage,
+                    type: menuItem.type,
                     action: menuItem.action
                 )
             }
@@ -109,7 +109,8 @@ public final class ProfileMenuListView: UIView {
                     id: menuItem.id,
                     icon: menuItem.icon,
                     title: menuItem.title,
-                    type: .selection(language),
+                    subtitle: language,
+                    type: menuItem.type,
                     action: menuItem.action
                 )
                 

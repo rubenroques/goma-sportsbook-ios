@@ -81,6 +81,10 @@ class RootTabBarViewController: UIViewController {
     var onLoginRequested: (() -> Void)?
     var onRegistrationRequested: (() -> Void)?
     
+    // MARK: - Profile Navigation Closure
+    // Closure called when profile is requested - handled by coordinator
+    var onProfileRequested: (() -> Void)?
+    
     // MARK: - Betslip Navigation Closure
     // Closure called when betslip is requested - handled by coordinator
     var onBetslipRequested: (() -> Void)?
@@ -282,7 +286,6 @@ class RootTabBarViewController: UIViewController {
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
         // Tab bar background is handled by setupCombinedTabBarBlur()
-
         self.mainContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
         //
@@ -302,7 +305,7 @@ class RootTabBarViewController: UIViewController {
         self.bottomSafeAreaView.backgroundColor = .clear
         
         // Remove existing blur if any
-        combinedTabBarBlurView?.removeFromSuperview()
+        self.combinedTabBarBlurView?.removeFromSuperview()
         
         // Create blur effect - using thin material for subtle effect
         let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
@@ -310,8 +313,8 @@ class RootTabBarViewController: UIViewController {
         blurEffectView.translatesAutoresizingMaskIntoConstraints = false
         
         // Store reference and add to container view
-        combinedTabBarBlurView = blurEffectView
-        containerView.insertSubview(blurEffectView, belowSubview: tabBarView)
+        self.combinedTabBarBlurView = blurEffectView
+        self.containerView.insertSubview(blurEffectView, belowSubview: tabBarView)
         
         // Constrain blur view to span from tab bar top to bottom safe area bottom
         NSLayoutConstraint.activate([
@@ -339,10 +342,7 @@ class RootTabBarViewController: UIViewController {
                 self?.onRegistrationRequested?()
             }
             else if widgetId == "avatar" {
-                self?.viewModel.logoutUser()
-                
-                // TODO: BetssonCM - this should be done via the viewmodel
-                self?.widgetToolBarView.setLoggedInState(false)
+                self?.onProfileRequested?()
             }
             
         }
@@ -1127,6 +1127,8 @@ extension RootTabBarViewController {
 
 }
 
-// MARK: - Authentication Navigation Removed
-// Authentication navigation is now handled by RootTabBarCoordinator via closures
-// onLoginRequested and onRegistrationRequested are called instead
+// MARK: - Navigation Integration
+// Navigation is handled by coordinators via closures:
+// - onLoginRequested and onRegistrationRequested for authentication
+// - onProfileRequested for profile navigation
+// - onBetslipRequested for betslip presentation

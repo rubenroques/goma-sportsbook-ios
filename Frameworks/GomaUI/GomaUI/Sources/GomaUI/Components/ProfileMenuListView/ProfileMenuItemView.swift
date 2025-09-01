@@ -59,6 +59,15 @@ public final class ProfileMenuItemView: UIView {
         
         titleLabel.text = item.title
         
+        // Configure subtitle
+        if let subtitle = item.subtitle, !subtitle.isEmpty {
+            valueLabel.text = subtitle
+            valueLabel.isHidden = false
+        } else {
+            valueLabel.text = nil
+            valueLabel.isHidden = true
+        }
+        
         // Configure icon
         if let systemImage = UIImage(systemName: item.icon) {
             iconImageView.image = systemImage
@@ -69,17 +78,10 @@ public final class ProfileMenuItemView: UIView {
         // Configure based on item type
         switch item.type {
         case .navigation:
-            valueLabel.isHidden = true
             chevronImageView.isHidden = false
             
         case .action:
-            valueLabel.isHidden = true
             chevronImageView.isHidden = true
-            
-        case .selection(let value):
-            valueLabel.text = value
-            valueLabel.isHidden = false
-            chevronImageView.isHidden = false
         }
         
         // Update interaction state
@@ -242,47 +244,9 @@ extension ProfileMenuItemView {
 }
 
 // MARK: - Data Models
-public enum ProfileMenuItemType: Codable, Equatable {
+public enum ProfileMenuItemType: String, Codable, Equatable {
     case navigation
     case action
-    case selection(String)
-    
-    // Custom coding for enum with associated value
-    private enum CodingKeys: String, CodingKey {
-        case type
-        case value
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try container.decode(String.self, forKey: .type)
-        
-        switch type {
-        case "navigation":
-            self = .navigation
-        case "action":
-            self = .action
-        case "selection":
-            let value = try container.decode(String.self, forKey: .value)
-            self = .selection(value)
-        default:
-            throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown type")
-        }
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        
-        switch self {
-        case .navigation:
-            try container.encode("navigation", forKey: .type)
-        case .action:
-            try container.encode("action", forKey: .type)
-        case .selection(let value):
-            try container.encode("selection", forKey: .type)
-            try container.encode(value, forKey: .value)
-        }
-    }
 }
 
 public enum ProfileMenuAction: String, Codable {
@@ -299,13 +263,15 @@ public struct ProfileMenuItem: Codable, Identifiable {
     public let id: String
     public let icon: String
     public let title: String
+    public let subtitle: String?
     public let type: ProfileMenuItemType
     public let action: ProfileMenuAction
     
-    public init(id: String, icon: String, title: String, type: ProfileMenuItemType, action: ProfileMenuAction) {
+    public init(id: String, icon: String, title: String, subtitle: String? = nil, type: ProfileMenuItemType, action: ProfileMenuAction) {
         self.id = id
         self.icon = icon
         self.title = title
+        self.subtitle = subtitle
         self.type = type
         self.action = action
     }
@@ -352,7 +318,7 @@ public struct ProfileMenuItem: Codable, Identifiable {
             id: "language",
             icon: "globe",
             title: "Change Language",
-            type: .selection("English"),
+            type: .navigation,
             action: .changeLanguage
         )
         let menuItemView = ProfileMenuItemView()

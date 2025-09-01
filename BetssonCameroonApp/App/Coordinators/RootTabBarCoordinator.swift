@@ -74,6 +74,11 @@ class RootTabBarCoordinator: Coordinator {
             self?.showBetslip()
         }
         
+        // Setup profile navigation
+        rootTabBarViewController.onProfileRequested = { [weak self] in
+            self?.showProfile()
+        }
+        
         self.rootTabBarViewController = rootTabBarViewController
         navigationController.setViewControllers([rootTabBarViewController], animated: false)
         
@@ -301,6 +306,35 @@ class RootTabBarCoordinator: Coordinator {
         print("🚀 RootTabBarCoordinator: Registration requested")
     }
     
+    private func showProfile() {
+
+        // Create and present ProfileWalletCoordinator with closure-based pattern
+        let profileCoordinator = ProfileWalletCoordinator(
+            navigationController: navigationController,
+            servicesProvider: environment.servicesProvider,
+            userSessionStore: environment.userSessionStore
+        )
+        
+        // Setup closure-based callbacks
+        profileCoordinator.onProfileDismiss = { [weak self] in
+            self?.removeChildCoordinator(profileCoordinator)
+            print("🚀 RootTabBarCoordinator: Profile coordinator finished")
+        }
+        
+        profileCoordinator.onDepositRequested = { [weak self] in
+            print("🚀 RootTabBarCoordinator: Profile requested deposit")
+            // TODO: Handle deposit navigation when implemented
+        }
+        
+        profileCoordinator.onWithdrawRequested = { [weak self] in
+            print("🚀 RootTabBarCoordinator: Profile requested withdraw") 
+            // TODO: Handle withdraw navigation when implemented
+        }
+        
+        addChildCoordinator(profileCoordinator)
+        profileCoordinator.start()
+    }
+    
     private func showBetslip() {
         if betslipCoordinator == nil {
             let coordinator = BetslipCoordinator(
@@ -462,9 +496,7 @@ class RootTabBarCoordinator: Coordinator {
         nextUpEventsCoordinator?.updateFilters(filterSelection)
         inPlayEventsCoordinator?.updateFilters(filterSelection)
     }
-    
-    // MARK: - Placeholder methods for other screens (using dummy controllers for now)
-    
+        
     private func showMyBetsScreen() {
         // Lazy loading: only create coordinator when needed
         if myBetsCoordinator == nil {

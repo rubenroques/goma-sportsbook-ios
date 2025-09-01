@@ -16,14 +16,22 @@ public struct ButtonData: Equatable, Hashable {
     public let style: ButtonStyle
     public let backgroundColor: UIColor?
     public let disabledBackgroundColor: UIColor?
+    public let borderColor: UIColor?
+    public let textColor: UIColor?
+    public let fontSize: CGFloat?
+    public let fontType: StyleProvider.FontType?
     public let isEnabled: Bool
     
-    public init(id: String, title: String, style: ButtonStyle, backgroundColor: UIColor? = nil, disabledBackgroundColor: UIColor? = nil,isEnabled: Bool = true) {
+    public init(id: String, title: String, style: ButtonStyle, backgroundColor: UIColor? = nil, disabledBackgroundColor: UIColor? = nil, borderColor: UIColor? = nil, textColor: UIColor? = nil, fontSize: CGFloat? = nil, fontType: StyleProvider.FontType? = nil, isEnabled: Bool = true) {
         self.id = id
         self.title = title
         self.style = style
         self.backgroundColor = backgroundColor
         self.disabledBackgroundColor = disabledBackgroundColor
+        self.borderColor = borderColor
+        self.textColor = textColor
+        self.fontSize = fontSize
+        self.fontType = fontType
         self.isEnabled = isEnabled
     }
 }

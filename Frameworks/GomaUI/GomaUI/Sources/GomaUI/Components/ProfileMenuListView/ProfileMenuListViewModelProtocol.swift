@@ -10,6 +10,9 @@ public protocol ProfileMenuListViewModelProtocol {
     /// Publisher that emits the current language for the language selection item
     var currentLanguagePublisher: AnyPublisher<String, Never> { get }
     
+    /// Callback for menu item selection - can be set after initialization
+    var onItemSelected: ((ProfileMenuItem) -> Void)? { get set }
+    
     /// Called when a menu item is selected
     /// - Parameter item: The selected menu item
     func didSelectItem(_ item: ProfileMenuItem)

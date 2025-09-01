@@ -37,6 +37,9 @@ struct CurrencyFormater {
             else if currencyWalletType == "GBP" {
                 currencyType = CurrencyType.gbp.rawValue
             }
+            else if currencyWalletType == "XAF" {
+                currencyType = CurrencyType.xaf.rawValue
+            }
             filtered = "\(currencyType) \(filtered)"
             return filtered
         }
@@ -56,7 +59,8 @@ struct CurrencyFormater {
             if let number = Double(filtered) {
                 let numberFormatter = NumberFormatter()
                 numberFormatter.numberStyle = .decimal
-                numberFormatter.minimumFractionDigits = 0
+                numberFormatter.minimumFractionDigits = 2
+                numberFormatter.maximumFractionDigits = 2
                 numberFormatter.groupingSeparator = " "
 
                 if let formattedNumber = numberFormatter.string(from: NSNumber(value: number)) {
@@ -81,11 +85,25 @@ struct CurrencyFormater {
             else if currencyWalletType == "GBP" {
                 currencyType = CurrencyType.gbp.rawValue
             }
+            else if currencyWalletType == "XAF" {
+                currencyType = CurrencyType.xaf.rawValue
+            }
             filtered = "\(currencyType) \(filtered)"
             return filtered
         }
 
         return ""
+    }
+    
+    // MARK: - Wallet Formatting Helper
+    
+    /// Formats a wallet amount using proper currency formatting with 2 decimal places
+    /// - Parameter amount: The amount to format
+    /// - Returns: Formatted string like "€ 1,234.56" or "1,234.56 XAF"
+    static func formatWalletAmount(_ amount: Double) -> String {
+        let formatter = CurrencyFormater()
+        let amountString = String(amount)
+        return formatter.currencyTypeWithSeparatorFormatting(string: amountString)
     }
 
 }
@@ -94,6 +112,7 @@ enum CurrencyType: String {
     case eur = "€"
     case usd = "$"
     case gbp = "£"
+    case xaf = "XAF"
     
     init?(rawValue: String) {
         switch rawValue {
@@ -103,6 +122,8 @@ enum CurrencyType: String {
             self = .usd
         case "£":
             self = .gbp
+        case "XAF":
+            self = .xaf
         default:
             self = .eur
         }
@@ -116,6 +137,8 @@ enum CurrencyType: String {
             return "USD"
         case .gbp:
             return "GBP"
+        case .xaf:
+            return "XAF"
         }
     }
 }

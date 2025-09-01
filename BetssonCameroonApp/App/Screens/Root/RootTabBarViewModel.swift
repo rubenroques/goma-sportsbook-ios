@@ -179,11 +179,11 @@ class RootTabBarViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] wallet in
                 
-                self?.walletStatusViewModel.setTotalBalance(amount: "\(wallet?.total ?? 0.0)")
-                self?.walletStatusViewModel.setBonusBalance(amount: "\(wallet?.bonus ?? 0.0)")
-                self?.walletStatusViewModel.setCurrentBalance(amount: "\(wallet?.total ?? 0.0)")
-                self?.walletStatusViewModel.setWithdrawableBalance(amount: "\(wallet?.totalWithdrawable ?? 0.0)")
-                self?.walletStatusViewModel.setCashbackBalance(amount: "\(0.0)")
+                self?.walletStatusViewModel.setTotalBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
+                self?.walletStatusViewModel.setBonusBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.bonus ?? 0.0))
+                self?.walletStatusViewModel.setCurrentBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
+                self?.walletStatusViewModel.setWithdrawableBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.totalWithdrawable ?? 0.0))
+                self?.walletStatusViewModel.setCashbackBalance(amount: CurrencyFormater.formatWalletAmount(0.0))
 
             })
             .store(in: &cancellables)

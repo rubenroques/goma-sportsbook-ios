@@ -4,12 +4,29 @@ import GomaUI
 
 class ButtonViewController: UIViewController {
     private let buttonViewModels: [(title: String, viewModel: ButtonViewModelProtocol)] = [
+        // Basic Styles
         ("Solid Background", MockButtonViewModel.solidBackgroundMock),
         ("Solid Background Disabled", MockButtonViewModel.solidBackgroundDisabledMock),
         ("Bordered", MockButtonViewModel.borderedMock),
         ("Bordered Disabled", MockButtonViewModel.borderedDisabledMock),
         ("Transparent", MockButtonViewModel.transparentMock),
-        ("Transparent Disabled", MockButtonViewModel.transparentDisabledMock)
+        ("Transparent Disabled", MockButtonViewModel.transparentDisabledMock),
+        
+        // Color Customization
+        ("Custom Solid Color", MockButtonViewModel.solidBackgroundCustomColorMock),
+        ("Custom Border Color", MockButtonViewModel.borderedCustomColorMock),
+        ("Custom Transparent Color", MockButtonViewModel.transparentCustomColorMock),
+        ("Red Theme", MockButtonViewModel.redThemeMock),
+        ("Blue Theme", MockButtonViewModel.blueThemeMock),
+        ("Green Theme", MockButtonViewModel.greenThemeMock),
+        ("Orange Theme", MockButtonViewModel.orangeThemeMock),
+        
+        // Font Customization
+        ("Large Font (24pt Bold)", MockButtonViewModel.largeFontMock),
+        ("Small Font (12pt Medium)", MockButtonViewModel.smallFontMock),
+        ("Light Font (18pt Light)", MockButtonViewModel.lightFontMock),
+        ("Heavy Font (20pt Heavy)", MockButtonViewModel.heavyFontMock),
+        ("Custom Font Style (16pt Semibold)", MockButtonViewModel.customFontStyleMock)
     ]
     private var buttonViews: [ButtonView] = []
 
@@ -20,6 +37,13 @@ class ButtonViewController: UIViewController {
     }
 
     private func setupButtonViews() {
+        // Create scroll view
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.alwaysBounceVertical = true
+        
+        // Create content stack view
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 24
@@ -49,11 +73,25 @@ class ButtonViewController: UIViewController {
             stackView.addArrangedSubview(container)
         }
 
-        view.addSubview(stackView)
+        // Add scroll view to main view
+        view.addSubview(scrollView)
+        scrollView.addSubview(stackView)
+        
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32)
+            // Scroll view constraints
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            // Stack view constraints within scroll view
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 40),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 32),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -32),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -40),
+            
+            // Stack view width constraint to scroll view for proper horizontal sizing
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -64)
         ])
     }
 }
