@@ -282,6 +282,11 @@ public class TicketBetInfoView: UIView {
         // Add tap gesture to navigation button
         navigationButton.addTarget(self, action: #selector(navigationButtonTapped), for: .primaryActionTriggered)
         
+        // Add tap gesture to entire view
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        tapGesture.cancelsTouchesInView = false // Allow subviews to receive touches
+        addGestureRecognizer(tapGesture)
+        
     }
     
     private func setupConstraints() {
@@ -478,6 +483,10 @@ public class TicketBetInfoView: UIView {
     
     // MARK: - Actions
     @objc private func navigationButtonTapped() {
+        viewModel.handleNavigationTap()
+    }
+    
+    @objc private func viewTapped() {
         viewModel.handleNavigationTap()
     }
     

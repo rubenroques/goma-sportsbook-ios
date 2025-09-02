@@ -77,7 +77,6 @@ final public class ButtonView: UIView {
         
         // Update enabled state
         button.isEnabled = buttonData.isEnabled
-//        alpha = buttonData.isEnabled ? 1.0 : 0.6
     }
     
     private func applyFont(_ fontSize: CGFloat?, fontType: StyleProvider.FontType?) {

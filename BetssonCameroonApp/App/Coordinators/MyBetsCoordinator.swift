@@ -23,6 +23,7 @@ class MyBetsCoordinator: Coordinator {
     // MARK: - Navigation Closures
     
     var onShowLogin: (() -> Void)?
+    var onNavigateToBetDetail: ((MyBet) -> Void)?
     
     // MARK: - Public Properties
     
@@ -48,6 +49,13 @@ class MyBetsCoordinator: Coordinator {
         // Setup authentication navigation
         viewController.onLoginRequested = { [weak self] in
             self?.onShowLogin?()
+        }
+        
+        // Setup bet detail navigation
+        if let concreteViewModel = viewModel as? MyBetsViewModel {
+            concreteViewModel.onNavigateToBetDetail = { [weak self] bet in
+                self?.onNavigateToBetDetail?(bet)
+            }
         }
         
         self.myBetsViewController = viewController

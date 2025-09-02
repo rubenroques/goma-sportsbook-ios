@@ -386,11 +386,15 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
         print("✅ MyBetsViewModel: Created \(viewModels.count) ticket view models")
     }
     
+    // MARK: - Navigation Closures
+    
+    var onNavigateToBetDetail: ((MyBet) -> Void)?
+    
     // MARK: - Action Handlers
     
     private func handleNavigationTap(_ bet: MyBet) {
         print("🎯 MyBetsViewModel: Navigation tapped for bet: \(bet.identifier)")
-        // TODO: Navigate to bet details screen
+        onNavigateToBetDetail?(bet)
     }
     
     private func handleRebetTap(_ bet: MyBet) {

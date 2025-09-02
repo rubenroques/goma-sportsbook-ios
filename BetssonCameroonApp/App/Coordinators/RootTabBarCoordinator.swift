@@ -242,6 +242,38 @@ class RootTabBarCoordinator: Coordinator {
         navigationController.pushViewController(matchDetailsViewController, animated: true)
         print("🚀 MainCoordinator: Navigated to match detail for match: \(match.id)")
     }
+    
+    private func showBetDetail(for bet: MyBet) {
+        let betDetailViewModel = MyBetDetailViewModel(
+            bet: bet,
+            servicesProvider: environment.servicesProvider,
+            userSessionStore: environment.userSessionStore
+        )
+        
+        // Setup back navigation
+        betDetailViewModel.onNavigateBack = { [weak self] in
+            self?.navigationController.popViewController(animated: true)
+        }
+        
+        let betDetailViewController = MyBetDetailViewController(viewModel: betDetailViewModel)
+        
+        // Setup authentication navigation
+        betDetailViewController.onLoginRequested = { [weak self] in
+            self?.showLogin()
+        }
+        
+        betDetailViewController.onRegistrationRequested = { [weak self] in
+            self?.showRegistration()
+        }
+        
+        betDetailViewController.onProfileRequested = { [weak self] in
+            self?.showProfile()
+        }
+        
+        // Push onto navigation stack
+        navigationController.pushViewController(betDetailViewController, animated: true)
+        print("🎯 RootTabBarCoordinator: Navigated to bet detail for bet: \(bet.identifier)")
+    }
    
     private func showSportsSelector() {
         // Create fresh SportSelectorViewModel on-demand
@@ -508,6 +540,10 @@ class RootTabBarCoordinator: Coordinator {
             // Set up navigation closures
             coordinator.onShowLogin = { [weak self] in
                 self?.showLogin()
+            }
+            
+            coordinator.onNavigateToBetDetail = { [weak self] bet in
+                self?.showBetDetail(for: bet)
             }
             
             myBetsCoordinator = coordinator
