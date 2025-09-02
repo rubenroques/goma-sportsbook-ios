@@ -35,6 +35,10 @@ class SharedTicketCardView: UIView {
     private lazy var cashbackUsedTitleLabel: UILabel = Self.createCashbackUsedTitleLabel()
     private lazy var bottomContainerStackView: UIStackView = Self.createBottomContainerStackView()
     private lazy var winBoostInfoView: WinBoostInfoView = Self.createWinBoostInfoView()
+    
+    // Container
+    private lazy var subtitleLabelTopToTitleConstraint: NSLayoutConstraint = Self.createSubtitleLabelTopToTitleConstraint()
+    private lazy var subtitleLabelTopToUsedCashbackConstraint: NSLayoutConstraint = Self.createSubtitleLabelTopToUsedCashbackConstraint()
 
     private var betHistoryEntry: BetHistoryEntry?
 
@@ -52,6 +56,8 @@ class SharedTicketCardView: UIView {
     var usedCashback: Bool = false {
         didSet {
             self.cashbackUsedBaseView.isHidden = !usedCashback
+            self.subtitleLabelTopToTitleConstraint.isActive = !usedCashback
+            self.subtitleLabelTopToUsedCashbackConstraint.isActive = usedCashback
         }
     }
 
@@ -457,6 +463,16 @@ extension SharedTicketCardView {
         view.isHidden = true
         return view
     }
+    
+    private static func createSubtitleLabelTopToTitleConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createSubtitleLabelTopToUsedCashbackConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
 
     private func setupSubviews() {
         self.addSubview(self.baseView)
@@ -517,9 +533,16 @@ extension SharedTicketCardView {
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 14),
+            
+            self.cashbackUsedBaseView.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
+            self.cashbackUsedBaseView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3),
+
+            self.cashbackUsedTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackUsedBaseView.leadingAnchor, constant: 8),
+            self.cashbackUsedTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackUsedBaseView.trailingAnchor, constant: -8),
+            self.cashbackUsedTitleLabel.topAnchor.constraint(equalTo: cashbackUsedBaseView.topAnchor, constant: 3),
+            self.cashbackUsedTitleLabel.bottomAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: -3),
 
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
-            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3),
             self.subtitleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
 
             self.shareButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12),
@@ -570,14 +593,6 @@ extension SharedTicketCardView {
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
             self.cashbackIconImageView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 10),
             self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
-
-            self.cashbackUsedBaseView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 10),
-            self.cashbackUsedBaseView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
-
-            self.cashbackUsedTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackUsedBaseView.leadingAnchor, constant: 8),
-            self.cashbackUsedTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackUsedBaseView.trailingAnchor, constant: -8),
-            self.cashbackUsedTitleLabel.topAnchor.constraint(equalTo: cashbackUsedBaseView.topAnchor, constant: 3),
-            self.cashbackUsedTitleLabel.bottomAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: -3),
             
             self.winBoostInfoView.leadingAnchor.constraint(equalTo: self.bottomContainerStackView.leadingAnchor, constant: 16),
             self.winBoostInfoView.trailingAnchor.constraint(equalTo: self.bottomContainerStackView.trailingAnchor, constant: -16)
@@ -592,5 +607,12 @@ extension SharedTicketCardView {
             self.learnMoreBaseView.widthAnchor.constraint(equalToConstant: 220)
         ])
 
+        self.subtitleLabelTopToTitleConstraint = self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3)
+
+        self.subtitleLabelTopToTitleConstraint.isActive = true
+        
+        self.subtitleLabelTopToUsedCashbackConstraint = self.subtitleLabel.topAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: 3)
+
+        self.subtitleLabelTopToUsedCashbackConstraint.isActive = false
     }
 }

@@ -57,7 +57,6 @@ class MyTicketCardView: NibView {
     //
     @IBOutlet private weak var winBoostBaseView: UIView!
     
-    
     @IBOutlet private weak var cashoutBaseView: UIView!
     @IBOutlet private weak var cashoutButton: UIButton!
     
@@ -68,22 +67,18 @@ class MyTicketCardView: NibView {
     @IBOutlet private weak var minimumCashoutValueLabel: UILabel!
     @IBOutlet private weak var maximumCashoutValueLabel: UILabel!
     
-    
     @IBOutlet private weak var freebetBaseView: UIView!
     @IBOutlet private weak var freebetLabel: UILabel!
     
-    
     @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    @IBOutlet private weak var cashbackUsedContainerView: UIView!
     @IBOutlet private weak var cashbackUsedBaseView: UIView!
     @IBOutlet private weak var cashbackUsedTitleLabel: UILabel!
 
-
-    
     @IBOutlet private weak var multisliderZeroHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var multisliderNormalHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var partialCashoutButtonTopSliderConstraint: NSLayoutConstraint!
     @IBOutlet private weak var partialCashoutButtonTopViewConstraint: NSLayoutConstraint!
-    
     
     @IBOutlet private weak var loadingView: UIView!
     @IBOutlet private weak var loadingActivityIndicator: UIActivityIndicatorView!
@@ -159,7 +154,7 @@ class MyTicketCardView: NibView {
     
     var usedCashback: Bool = false {
         didSet {
-            self.cashbackUsedBaseView.isHidden = !usedCashback
+            self.cashbackUsedContainerView.isHidden = !usedCashback
         }
     }
     
@@ -332,7 +327,7 @@ class MyTicketCardView: NibView {
         // we added a new button in the header, need redraw
         self.headerBaseView.setNeedsLayout()
         self.headerBaseView.layoutIfNeeded()
-        
+                
         self.setupWithTheme()
     }
     
@@ -340,6 +335,13 @@ class MyTicketCardView: NibView {
         super.traitCollectionDidChange(previousTraitCollection)
         
         self.setupWithTheme()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.cashbackUsedBaseView.layer.cornerRadius = self.cashbackUsedBaseView.frame.height / 2
+
     }
     
     func setupWithTheme() {
@@ -419,6 +421,8 @@ class MyTicketCardView: NibView {
         
         self.cashbackValueLabel.textColor = UIColor.App.textPrimary
         
+        self.cashbackUsedContainerView.backgroundColor = .clear
+        
         self.cashbackUsedBaseView.backgroundColor = UIColor.App.highlightSecondary
         
         self.cashbackUsedTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -435,6 +439,8 @@ class MyTicketCardView: NibView {
         
         // Create and configure custom share button
         let customShareButton = CustomShareButton()
+        customShareButton.setContentHuggingPriority(.required, for: .horizontal)
+        customShareButton.setContentCompressionResistancePriority(.required, for: .horizontal)
         customShareButton.onTap = { [weak self] in
             self?.didTapShareButton()
         }

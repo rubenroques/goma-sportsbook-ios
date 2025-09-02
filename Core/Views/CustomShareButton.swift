@@ -113,7 +113,7 @@ class CustomShareButton: UIView {
             shareIcon.heightAnchor.constraint(equalToConstant: 16),
             
             // Ensure proper spacing between label and icon
-            label.trailingAnchor.constraint(lessThanOrEqualTo: shareIcon.leadingAnchor, constant: -4),
+            label.trailingAnchor.constraint(equalTo: shareIcon.leadingAnchor, constant: -4),
             
             // Minimum height for the container
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 32)
