@@ -187,17 +187,17 @@ final class MyBetDetailViewController: UIViewController {
             mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             mainStackView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             
-            // Loading View
-            loadingView.topAnchor.constraint(equalTo: view.topAnchor),
+            // Loading View (only cover content area, keep toolbar/navigation visible)
+            loadingView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
             loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            // Error View  
-            errorView.topAnchor.constraint(equalTo: view.topAnchor),
+            // Error View (only cover content area, keep toolbar/navigation visible)
+            errorView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
             errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            errorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             // Wallet Status Overlay (covers entire screen)
             walletStatusOverlayView.topAnchor.constraint(equalTo: view.topAnchor),

@@ -1,14 +1,14 @@
+import Foundation
 import Combine
-import UIKit
+import GomaUI
 
-/// Mock implementation of `MultiWidgetToolbarViewModelProtocol` for testing and previews.
-final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
+final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
     
     // MARK: - Properties
     
     private let displayStateSubject: CurrentValueSubject<MultiWidgetToolbarDisplayState, Never>
-    public var displayStatePublisher: AnyPublisher<MultiWidgetToolbarDisplayState, Never> {
-        return displayStateSubject.eraseToAnyPublisher()
+    var displayStatePublisher: AnyPublisher<MultiWidgetToolbarDisplayState, Never> {
+        displayStateSubject.eraseToAnyPublisher()
     }
     
     // Configuration and state
@@ -16,38 +16,63 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
     private var currentState: LayoutState
     
     // Widget view models
-    public var walletViewModel: MockWalletWidgetViewModel?
+    // This is required by the protocol and used by MultiWidgetToolbarView
+    // to update the wallet balance
+    var walletViewModel: MockWalletWidgetViewModel? {
+        didSet {
+            // Apply pending balance update if any
+            if let pendingBalance = pendingWalletBalance {
+                walletViewModel?.updateBalance(CurrencyFormater.formatWalletAmount(pendingBalance))
+                pendingWalletBalance = nil
+                print("💰 MultiWidgetToolbarViewModel: Applied pending wallet balance: \(pendingBalance)")
+            }
+        }
+    }
+    
+    // Store pending balance update if wallet view model not yet assigned
+    private var pendingWalletBalance: Double?
     
     // MARK: - Initialization
     
-    public init(config: MultiWidgetToolbarConfig, initialState: LayoutState = .loggedOut) {
-        self.config = config
+    init(config: MultiWidgetToolbarConfig? = nil, initialState: LayoutState = .loggedOut) {
+        // Use provided config or create default config
+        self.config = config ?? Self.createDefaultConfig()
         self.currentState = initialState
         
         // Create initial display state
-        let initialDisplayState = Self.createDisplayState(from: config, for: initialState)
+        let initialDisplayState = Self.createDisplayState(from: self.config, for: initialState)
         self.displayStateSubject = CurrentValueSubject(initialDisplayState)
     }
     
     // MARK: - MultiWidgetToolbarViewModelProtocol
     
-    public func selectWidget(id: String) {
-        // In a real implementation, this might trigger side effects
-        print("Widget selected: \(id)")
-
+    func selectWidget(id: String) {
+        print("🔧 MultiWidgetToolbarViewModel: Widget selected: \(id)")
+        // Handle widget selection - this could trigger navigation or other actions
+        // In a real implementation, this might use delegates or closures
     }
     
-    public func setLayoutState(_ state: LayoutState) {
+    func setLayoutState(_ state: LayoutState) {
         guard state != currentState else { return }
         
         currentState = state
         let newDisplayState = Self.createDisplayState(from: config, for: state)
         displayStateSubject.send(newDisplayState)
+        
+        print("🔧 MultiWidgetToolbarViewModel: Layout state changed to: \(state)")
     }
     
-    public func setWalletBalance(balance: Double) {
-        
-        walletViewModel?.updateBalance("\(balance)")
+    func setWalletBalance(balance: Double) {
+        if let walletViewModel = walletViewModel {
+            // Update the wallet view model if it exists
+            walletViewModel.updateBalance(CurrencyFormater.formatWalletAmount(balance))
+            print("💰 MultiWidgetToolbarViewModel: Wallet balance updated to: \(balance)")
+            pendingWalletBalance = nil
+        } else {
+            // Store the balance to apply when wallet view model is assigned
+            pendingWalletBalance = balance
+            print("💰 MultiWidgetToolbarViewModel: Wallet balance stored for later update: \(balance)")
+        }
     }
     
     // MARK: - Helper Methods
@@ -75,20 +100,17 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
         
         return MultiWidgetToolbarDisplayState(lines: lines, currentState: state)
     }
-}
-
-// MARK: - Mock Factory
-
-extension MockMultiWidgetToolbarViewModel {
     
-    public static var defaultMock: MockMultiWidgetToolbarViewModel {
+    // MARK: - Default Configuration
+    
+    private static func createDefaultConfig() -> MultiWidgetToolbarConfig {
         // Define widgets
         let widgets: [Widget] = [
             // Logo
             Widget(
                 id: "logo",
                 type: .image,
-                src: "https://www.example.com/images/logo.png",
+                src: "default_brand_horizontal",
                 alt: "Betsson"
             ),
             
@@ -97,8 +119,8 @@ extension MockMultiWidgetToolbarViewModel {
                 id: "wallet",
                 type: .wallet,
                 details: [
-                    WidgetDetail(isButton: true, container: "balanceContainer", route: "/balance", icon: "https://www.example.com/images/plus.png"),
-                    WidgetDetail(isButton: true, container: "depositContainer", label: "Deposit", route: "/deposit")
+                    WidgetDetail(isButton: true, container: "balanceContainer", route: "/balance"),
+                    WidgetDetail(isButton: true, container: "depositContainer", label: "DEPOSIT", route: "/deposit")
                 ]
             ),
             
@@ -107,8 +129,7 @@ extension MockMultiWidgetToolbarViewModel {
                 id: "avatar",
                 type: .avatar,
                 route: "/user",
-                container: "avatarContainer",
-                icon: "https://www.example.com/images/avatar.png"
+                container: "avatarContainer"
             ),
             
             // Support
@@ -132,7 +153,7 @@ extension MockMultiWidgetToolbarViewModel {
                 label: "LOGIN"
             ),
             
-            // Join Now Button (renamed from registerButton)
+            // Join Now Button
             Widget(
                 id: "joinButton",
                 type: .signUpButton,
@@ -167,63 +188,10 @@ extension MockMultiWidgetToolbarViewModel {
         ]
         
         // Create config
-        let config = MultiWidgetToolbarConfig(
+        return MultiWidgetToolbarConfig(
             name: "topbar",
             widgets: widgets,
             layouts: layouts
         )
-        
-        return MockMultiWidgetToolbarViewModel(config: config)
     }
-    
-    public static var complexMock: MockMultiWidgetToolbarViewModel {
-        // Define more widgets for a complex version
-        var widgets = defaultMock.config.widgets
-        
-        // Add additional widgets
-        let additionalWidgets: [Widget] = [
-            // Search
-            Widget(
-                id: "search",
-                type: .button,
-                label: "Search",
-                icon: "https://www.example.com/images/search.png"
-            ),
-            
-            // Notifications
-            Widget(
-                id: "notifications",
-                type: .button,
-                route: "/notifications",
-                label: "Notifications",
-                icon: "https://www.example.com/images/bell.png"
-            )
-        ]
-        
-        widgets.append(contentsOf: additionalWidgets)
-        
-        // Define complex layouts
-        let layouts: [String: LayoutConfig] = [
-            LayoutState.loggedIn.rawValue: LayoutConfig(
-                lines: [
-                    LineConfig(mode: .flex, widgets: ["logo", "search", "flexSpace", "notifications", "wallet", "avatar"])
-                ]
-            ),
-            LayoutState.loggedOut.rawValue: LayoutConfig(
-                lines: [
-                    LineConfig(mode: .flex, widgets: ["logo", "search", "flexSpace", "support", "language"]),
-                    LineConfig(mode: .split, widgets: ["loginButton", "registerButton"])
-                ]
-            )
-        ]
-        
-        // Create complex config
-        let config = MultiWidgetToolbarConfig(
-            name: "complex-topbar",
-            widgets: widgets,
-            layouts: layouts
-        )
-        
-        return MockMultiWidgetToolbarViewModel(config: config)
-    }
-} 
+}

@@ -13,7 +13,7 @@ import GomaUI
 
 class RootTabBarViewModel: ObservableObject {
 
-    var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
+    var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel
     var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
     var floatingOverlayViewModel: FloatingOverlayViewModelProtocol
     var betslipFloatingViewModel: BetslipFloatingViewModelProtocol
@@ -46,13 +46,14 @@ class RootTabBarViewModel: ObservableObject {
     }
 
     init(userSessionStore: UserSessionStore,
-         multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol = MockMultiWidgetToolbarViewModel.defaultMock,
+         multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel? = nil,
          adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
          floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel(),
          betslipFloatingViewModel: BetslipFloatingViewModelProtocol = MockBetslipFloatingViewModel(state: .noTickets))
     {
         self.userSessionStore = userSessionStore
-        self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel
+        // Use provided view model or create new instance
+        self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel ?? MultiWidgetToolbarViewModel()
         self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
         self.floatingOverlayViewModel = floatingOverlayViewModel
         self.betslipFloatingViewModel = betslipFloatingViewModel

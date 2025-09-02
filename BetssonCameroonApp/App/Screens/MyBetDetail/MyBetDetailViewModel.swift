@@ -16,16 +16,20 @@ enum MyBetDetailDisplayState {
     case error(String)
 }
 
-final class MyBetDetailViewModel {
+final class MyBetDetailViewModel: ObservableObject {
     
     // MARK: - Core Properties
     
     let bet: MyBet
     @Published var displayState: MyBetDetailDisplayState = .loading
     
+    // MARK: - Authentication State (Clean MVVM Pattern)
+    
+    @Published var isAuthenticated: Bool = false
+    
     // MARK: - Child ViewModels
     
-    let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
+    let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel
     let walletStatusViewModel: WalletStatusViewModelProtocol
     
     // MARK: - Navigation Closure (following MatchDetailsTextualViewModel pattern)
@@ -44,11 +48,11 @@ final class MyBetDetailViewModel {
         self.bet = bet
         self.servicesProvider = servicesProvider
         self.userSessionStore = userSessionStore
-        self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
+        self.multiWidgetToolbarViewModel = MultiWidgetToolbarViewModel()
         self.walletStatusViewModel = MockWalletStatusViewModel.emptyBalanceMock
         
-        setupAuthenticationBinding()
-        setupWalletBinding()
+        setupReactiveWalletChain()
+        setupMultiWidgetToolbarBinding()
         
         print("🎯 MyBetDetailViewModel: Initialized with bet ID: \(bet.identifier)")
     }
@@ -162,35 +166,63 @@ extension MyBetDetailViewModel {
 
 extension MyBetDetailViewModel {
     
-    private func setupAuthenticationBinding() {
+    private func setupReactiveWalletChain() {
+        // Step 1: Set up base authentication state
         userSessionStore.userProfilePublisher
+            .map { $0 != nil }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userProfile in
-                let isLoggedIn = userProfile != nil
-                let layoutState: LayoutState = isLoggedIn ? .loggedIn : .loggedOut
-                self?.multiWidgetToolbarViewModel.setLayoutState(layoutState)
-                print("🔐 MyBetDetailViewModel: Authentication state changed - logged in: \(isLoggedIn)")
+            .assign(to: &$isAuthenticated)
+        
+        // Step 2: Reactive chain - Authentication state drives wallet UI updates
+        $isAuthenticated
+            .combineLatest(userSessionStore.userWalletPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isAuthenticated, wallet in
+                guard let self = self else { return }
+                
+                if isAuthenticated {
+                    // User is logged in - show logged in state and wallet data
+                    let layoutState: LayoutState = .loggedIn
+                    self.multiWidgetToolbarViewModel.setLayoutState(layoutState)
+                    
+                    // Update wallet balance if available
+                    if let walletBalance = wallet?.total {
+                        self.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
+                        print("💰 MyBetDetailViewModel: Wallet balance updated - total: \(walletBalance)")
+                    }
+                    
+                    // Update wallet status view model with all wallet data
+                    self.updateWalletStatusViewModel(wallet: wallet)
+                    
+                    print("🔐 MyBetDetailViewModel: User authenticated with wallet data")
+                } else {
+                    // User is logged out - show logged out state
+                    let layoutState: LayoutState = .loggedOut
+                    self.multiWidgetToolbarViewModel.setLayoutState(layoutState)
+                    
+                    print("🔐 MyBetDetailViewModel: User logged out")
+                }
             }
             .store(in: &cancellables)
     }
     
-    private func setupWalletBinding() {
+    private func updateWalletStatusViewModel(wallet: UserWallet?) {
+        walletStatusViewModel.setTotalBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
+        walletStatusViewModel.setBonusBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.bonus ?? 0.0))
+        walletStatusViewModel.setCurrentBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
+        walletStatusViewModel.setWithdrawableBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.totalWithdrawable ?? 0.0))
+        walletStatusViewModel.setCashbackBalance(amount: CurrencyFormater.formatWalletAmount(0.0))
+    }
+    
+    private func setupMultiWidgetToolbarBinding() {
+        // Subscribe to wallet updates to keep the toolbar wallet widget in sync
         userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] wallet in
-                // Update toolbar wallet balance
                 if let walletBalance = wallet?.total {
                     self?.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
+                    print("💰 MyBetDetailViewModel: Toolbar wallet balance updated - total: \(walletBalance)")
                 }
-                
-                // Update wallet status view model
-                self?.walletStatusViewModel.setTotalBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
-                self?.walletStatusViewModel.setBonusBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.bonus ?? 0.0))
-                self?.walletStatusViewModel.setCurrentBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
-                self?.walletStatusViewModel.setWithdrawableBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.totalWithdrawable ?? 0.0))
-                self?.walletStatusViewModel.setCashbackBalance(amount: CurrencyFormater.formatWalletAmount(0.0))
-                
-                print("💰 MyBetDetailViewModel: Wallet updated - total: \(wallet?.total ?? 0.0)")
             }
             .store(in: &cancellables)
     }
