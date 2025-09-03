@@ -17,7 +17,7 @@ class RootTabBarViewModel: ObservableObject {
     var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
     var floatingOverlayViewModel: FloatingOverlayViewModelProtocol
     var betslipFloatingViewModel: BetslipFloatingViewModelProtocol
-    var walletStatusViewModel: WalletStatusViewModelProtocol
+    var walletStatusViewModel: WalletStatusViewModel
 
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
@@ -46,23 +46,22 @@ class RootTabBarViewModel: ObservableObject {
     }
 
     init(userSessionStore: UserSessionStore,
-         multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel? = nil,
+         multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel = MultiWidgetToolbarViewModel(),
          adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
          floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel(),
          betslipFloatingViewModel: BetslipFloatingViewModelProtocol = MockBetslipFloatingViewModel(state: .noTickets))
     {
         self.userSessionStore = userSessionStore
-        // Use provided view model or create new instance
-        self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel ?? MultiWidgetToolbarViewModel()
+        
+        self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel
         self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
         self.floatingOverlayViewModel = floatingOverlayViewModel
         self.betslipFloatingViewModel = betslipFloatingViewModel
-        self.walletStatusViewModel = MockWalletStatusViewModel.emptyBalanceMock
+        self.walletStatusViewModel = WalletStatusViewModel(userSessionStore: userSessionStore)
         
         setupTabBarBinding()
         setupBetslipBinding()
         setupMultiWidgetToolbarBinding()
-        setupWalletStatusBinding()
     }
     
     func logoutUser() {
@@ -174,20 +173,5 @@ class RootTabBarViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func setupWalletStatusBinding() {
-        
-        userSessionStore.userWalletPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] wallet in
-                
-                self?.walletStatusViewModel.setTotalBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
-                self?.walletStatusViewModel.setBonusBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.bonus ?? 0.0))
-                self?.walletStatusViewModel.setCurrentBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
-                self?.walletStatusViewModel.setWithdrawableBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.totalWithdrawable ?? 0.0))
-                self?.walletStatusViewModel.setCashbackBalance(amount: CurrencyFormater.formatWalletAmount(0.0))
-
-            })
-            .store(in: &cancellables)
-    }
 
 }

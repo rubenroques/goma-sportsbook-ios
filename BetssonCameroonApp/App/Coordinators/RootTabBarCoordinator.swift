@@ -218,7 +218,8 @@ class RootTabBarCoordinator: Coordinator {
     private func showMatchDetail(match: Match) {
         let matchDetailsViewModel = MatchDetailsTextualViewModel(
             match: match,
-            servicesProvider: environment.servicesProvider
+            servicesProvider: environment.servicesProvider,
+            userSessionStore: environment.userSessionStore  // Pass UserSessionStore for wallet functionality
         )
         
         // Setup navigation closures
@@ -236,6 +237,11 @@ class RootTabBarCoordinator: Coordinator {
         
         matchDetailsViewController.onRegistrationRequested = { [weak self] in
             self?.showRegistration()
+        }
+        
+        // Add profile navigation closure
+        matchDetailsViewController.onProfileRequested = { [weak self] in
+            self?.showProfile()
         }
         
         // Present the controller using navigation stack

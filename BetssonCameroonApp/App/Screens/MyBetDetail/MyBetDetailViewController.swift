@@ -176,7 +176,7 @@ final class MyBetDetailViewController: UIViewController {
             betDetailsTitleLabel.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
             
             // Back Button (Left side)
-            backButton.leadingAnchor.constraint(equalTo: customNavigationView.leadingAnchor, constant: 16),
+            backButton.leadingAnchor.constraint(equalTo: customNavigationView.leadingAnchor),
             backButton.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
             backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
             backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),

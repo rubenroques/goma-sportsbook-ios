@@ -30,7 +30,7 @@ final class MyBetDetailViewModel: ObservableObject {
     // MARK: - Child ViewModels
     
     let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel
-    let walletStatusViewModel: WalletStatusViewModelProtocol
+    let walletStatusViewModel: WalletStatusViewModel
     
     // MARK: - Navigation Closure (following MatchDetailsTextualViewModel pattern)
     
@@ -49,7 +49,7 @@ final class MyBetDetailViewModel: ObservableObject {
         self.servicesProvider = servicesProvider
         self.userSessionStore = userSessionStore
         self.multiWidgetToolbarViewModel = MultiWidgetToolbarViewModel()
-        self.walletStatusViewModel = MockWalletStatusViewModel.emptyBalanceMock
+        self.walletStatusViewModel = WalletStatusViewModel(userSessionStore: userSessionStore)
         
         setupReactiveWalletChain()
         setupMultiWidgetToolbarBinding()
@@ -191,8 +191,7 @@ extension MyBetDetailViewModel {
                         print("💰 MyBetDetailViewModel: Wallet balance updated - total: \(walletBalance)")
                     }
                     
-                    // Update wallet status view model with all wallet data
-                    self.updateWalletStatusViewModel(wallet: wallet)
+                    // Wallet status view model will update automatically via its own binding
                     
                     print("🔐 MyBetDetailViewModel: User authenticated with wallet data")
                 } else {
@@ -206,13 +205,6 @@ extension MyBetDetailViewModel {
             .store(in: &cancellables)
     }
     
-    private func updateWalletStatusViewModel(wallet: UserWallet?) {
-        walletStatusViewModel.setTotalBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
-        walletStatusViewModel.setBonusBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.bonus ?? 0.0))
-        walletStatusViewModel.setCurrentBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.total ?? 0.0))
-        walletStatusViewModel.setWithdrawableBalance(amount: CurrencyFormater.formatWalletAmount(wallet?.totalWithdrawable ?? 0.0))
-        walletStatusViewModel.setCashbackBalance(amount: CurrencyFormater.formatWalletAmount(0.0))
-    }
     
     private func setupMultiWidgetToolbarBinding() {
         // Subscribe to wallet updates to keep the toolbar wallet widget in sync

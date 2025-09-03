@@ -10,7 +10,7 @@ import Combine
 import GomaUI
 import ServicesProvider
 
-class MatchDetailsTextualViewModel {
+class MatchDetailsTextualViewModel: ObservableObject {
     
     // MARK: - Navigation Closures for RootTabBarCoordinator
     var onNavigateBack: (() -> Void) = { }
@@ -24,7 +24,12 @@ class MatchDetailsTextualViewModel {
     private let marketGroupSelectorTabViewModelSubject = CurrentValueSubject<MarketGroupSelectorTabViewModelProtocol?, Never>(nil)
     
     private let servicesProvider: ServicesProvider.Client
+    private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Authentication State (Clean MVVM Pattern)
+    
+    @Published var isAuthenticated: Bool = false
     
     // WebSocket subscription management
     private var eventDetailsSubscription: AnyCancellable?
@@ -39,7 +44,9 @@ class MatchDetailsTextualViewModel {
     private var marketGroupsSubscription: AnyCancellable?
     
     // MARK: - Child ViewModels (Vertical Pattern)
-    let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol
+    let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel
+    
+    let walletStatusViewModel: WalletStatusViewModel
     
     let matchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol
     
@@ -54,12 +61,17 @@ class MatchDetailsTextualViewModel {
     // MARK: - Initialization
     
     /// Initialize with a Match object (preferred for navigation from match lists)
-    init(match: Match, servicesProvider: ServicesProvider.Client) {
+    init(match: Match, servicesProvider: ServicesProvider.Client, userSessionStore: UserSessionStore) {
         self.servicesProvider = servicesProvider
+        self.userSessionStore = userSessionStore
         self.currentMatch = match
         self.currentMatchId = match.id
         
-        self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
+        // Use production ViewModels instead of mocks
+        self.multiWidgetToolbarViewModel = MultiWidgetToolbarViewModel()
+        self.walletStatusViewModel = WalletStatusViewModel(userSessionStore: userSessionStore)
+        
+        // Keep existing ViewModels as they are
         self.matchDateNavigationBarViewModel = MatchDateNavigationBarViewModel(match: match)
         self.matchHeaderCompactViewModel = MatchHeaderCompactViewModel(match: match)
         self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
@@ -67,6 +79,8 @@ class MatchDetailsTextualViewModel {
         self.betslipFloatingViewModel = MockBetslipFloatingViewModel.noTicketsMock()
         
         commonInit()
+        setupReactiveWalletChain()
+        setupMultiWidgetToolbarBinding()
     }
     
     
@@ -271,5 +285,59 @@ class MatchDetailsTextualViewModel {
     deinit {
         eventDetailsSubscription?.cancel()
         marketGroupsSubscription?.cancel()
+    }
+    
+    // MARK: - Wallet and Authentication Management
+    
+    private func setupReactiveWalletChain() {
+        // Step 1: Set up base authentication state
+        userSessionStore.userProfilePublisher
+            .map { $0 != nil }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isAuthenticated)
+        
+        // Step 2: Reactive chain - Authentication state drives wallet UI updates
+        $isAuthenticated
+            .combineLatest(userSessionStore.userWalletPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isAuthenticated, wallet in
+                guard let self = self else { return }
+                
+                if isAuthenticated {
+                    // User is logged in - show logged in state and wallet data
+                    let layoutState: LayoutState = .loggedIn
+                    self.multiWidgetToolbarViewModel.setLayoutState(layoutState)
+                    
+                    // Update wallet balance if available
+                    if let walletBalance = wallet?.total {
+                        self.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
+                        print("💰 MatchDetailsTextual: Wallet balance updated - total: \(walletBalance)")
+                    }
+                    
+                    // Wallet status view model will update automatically via its own binding
+                    
+                    print("🔐 MatchDetailsTextual: User authenticated with wallet data")
+                } else {
+                    // User is logged out - show logged out state
+                    let layoutState: LayoutState = .loggedOut
+                    self.multiWidgetToolbarViewModel.setLayoutState(layoutState)
+                    
+                    print("🔐 MatchDetailsTextual: User logged out")
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func setupMultiWidgetToolbarBinding() {
+        // Subscribe to wallet updates to keep the toolbar wallet widget in sync
+        userSessionStore.userWalletPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] wallet in
+                if let walletBalance = wallet?.total {
+                    self?.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
+                    print("💰 MatchDetailsTextual: Toolbar wallet balance updated - total: \(walletBalance)")
+                }
+            }
+            .store(in: &cancellables)
     }
 }
