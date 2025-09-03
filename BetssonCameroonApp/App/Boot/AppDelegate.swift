@@ -7,7 +7,7 @@
 
 import UIKit
 import Firebase
-import FirebaseMessaging
+import XPush
 import SwiftUI
 import ServicesProvider
 import IQKeyboardManagerSwift
@@ -15,7 +15,7 @@ import PhraseSDK
 import FirebaseCore
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var bootstrap: Bootstrap!
@@ -82,9 +82,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             let uid = user.uid
             print("FirebaseCore Auth UID \(uid) [isAnonymous: \(isAnonymous)]")
         }
-
-        // FCM
-        Messaging.messaging().delegate = self
+        
+        // XtremePush Configuration
+        // TODO: Replace with actual app key from client
+        XPush.setAppKey("REPLACE_WITH_CLIENT_APP_KEY")
+        
+        // Enable debug logs for development builds
+        #if DEBUG
+        XPush.setShouldShowDebugLogs(true)
+        XPush.setSandboxModeEnabled(true)
+        #endif
+        
+        // Initialize XtremePush
+        XPush.applicationDidFinishLaunching(options: launchOptions)
 
         UNUserNotificationCenter.current().delegate = self
 
@@ -112,10 +122,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         }
     }
 
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("FCM token: \(fcmToken ?? "[Token Error]")")
-        Env.deviceFirebaseCloudMessagingToken = fcmToken ?? ""
-    }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
 
@@ -198,7 +204,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         let token = tokenParts.joined()
         print("Device Token: \(token)")
 
-        Messaging.messaging().apnsToken = deviceToken
+        // Send device token to XtremePush
+        XPush.applicationDidRegisterForRemoteNotifications(withDeviceToken: deviceToken)
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register for remote notifications: \(error)")
+        XPush.applicationDidFailToRegisterForRemoteNotificationsWithError(error as NSError)
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

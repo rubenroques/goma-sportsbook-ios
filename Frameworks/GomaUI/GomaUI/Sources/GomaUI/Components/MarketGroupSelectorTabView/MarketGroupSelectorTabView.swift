@@ -1,18 +1,15 @@
 import UIKit
 import Combine
 
-public enum MarketGroupSelectorBackgroundStyle {
-    case light
-    case dark
-}
-
 public class MarketGroupSelectorTabView: UIView {
 
     // MARK: - Private Properties
     private var viewModel: MarketGroupSelectorTabViewModelProtocol
     private let imageResolver: MarketGroupTabImageResolver
-    private let backgroundStyle: MarketGroupSelectorBackgroundStyle
+    private let layoutMode: MarketGroupSelectorTabLayoutMode
+
     private var cancellables = Set<AnyCancellable>()
+
     private var tabItemViews: [String: MarketGroupTabItemView] = [:]
     private var tabItemViewModels: [String: MockMarketGroupTabItemViewModel] = [:]
 
@@ -30,16 +27,15 @@ public class MarketGroupSelectorTabView: UIView {
         static let cornerRadius: CGFloat = 8.0
         static let animationDuration: TimeInterval = 0.3
         static let minimumHeight: CGFloat = 42.0
-        static let darkBackgroundHex = "#03061b"
     }
 
     // MARK: - Initialization
     public init(viewModel: MarketGroupSelectorTabViewModelProtocol,
-                imageResolver: MarketGroupTabImageResolver = DefaultMarketGroupTabImageResolver(),
-                backgroundStyle: MarketGroupSelectorBackgroundStyle = .light) {
+                layoutMode: MarketGroupSelectorTabLayoutMode = .automatic,
+                imageResolver: MarketGroupTabImageResolver = DefaultMarketGroupTabImageResolver()) {
         self.viewModel = viewModel
+        self.layoutMode = layoutMode
         self.imageResolver = imageResolver
-        self.backgroundStyle = backgroundStyle
         super.init(frame: .zero)
         setupSubviews()
         setupConstraints()
@@ -60,8 +56,7 @@ public class MarketGroupSelectorTabView: UIView {
         scrollView.addSubview(stackView)
 
         // Scroll view setup
-        let backgroundColor = backgroundColorForStyle()
-        scrollView.backgroundColor = backgroundColor
+        scrollView.backgroundColor = StyleProvider.Color.backgroundPrimary
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
@@ -72,7 +67,14 @@ public class MarketGroupSelectorTabView: UIView {
         stackView.axis = .horizontal
         stackView.spacing = Constants.tabItemSpacing
         stackView.alignment = .center
-        stackView.distribution = .fill
+        
+        // Set distribution based on layout mode
+        switch layoutMode {
+        case .automatic:
+            stackView.distribution = .fill
+        case .stretch:
+            stackView.distribution = .fillEqually
+        }
 
         // Loading indicator setup
         loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -126,6 +128,14 @@ public class MarketGroupSelectorTabView: UIView {
             emptyStateLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: Constants.horizontalPadding),
             emptyStateLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -Constants.horizontalPadding)
         ])
+        
+        // Add additional constraints for stretch mode
+        if layoutMode == .stretch {
+            NSLayoutConstraint.activate([
+                // Pin stack view width to scroll view width for stretch mode
+                stackView.widthAnchor.constraint(greaterThanOrEqualTo: scrollView.widthAnchor)
+            ])
+        }
     }
 
     private func setupBindings() {
@@ -229,16 +239,6 @@ public class MarketGroupSelectorTabView: UIView {
             .store(in: &cancellables)
     }
     
-    // MARK: - Background Style Helpers
-    private func backgroundColorForStyle() -> UIColor {
-        switch backgroundStyle {
-        case .light:
-            return StyleProvider.Color.backgroundPrimary
-        case .dark:
-            return UIColor(hexString: Constants.darkBackgroundHex) ?? UIColor.black
-        }
-    }
-
     private func clearTabItems() {
         // Remove all arranged subviews
         stackView.arrangedSubviews.forEach { view in
@@ -448,8 +448,7 @@ import SwiftUI
     PreviewUIViewController {
         let vc = UIViewController()
         let tabsView = MarketGroupSelectorTabView(
-            viewModel: MockMarketGroupSelectorTabViewModel.marketCategoryTabs,
-            backgroundStyle: .light
+            viewModel: MockMarketGroupSelectorTabViewModel.marketCategoryTabs
         )
         tabsView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(tabsView)
@@ -466,12 +465,12 @@ import SwiftUI
 }
 
 @available(iOS 17.0, *)
-#Preview("Market Category Tabs - Dark") {
+#Preview("Limited Markets - Stretch Mode") {
     PreviewUIViewController {
         let vc = UIViewController()
         let tabsView = MarketGroupSelectorTabView(
-            viewModel: MockMarketGroupSelectorTabViewModel.marketCategoryTabs,
-            backgroundStyle: .dark
+            viewModel: MockMarketGroupSelectorTabViewModel.limitedMarkets,
+            layoutMode: .stretch
         )
         tabsView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(tabsView)
@@ -482,7 +481,7 @@ import SwiftUI
             tabsView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
         ])
         
-        vc.view.backgroundColor = UIColor.black
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
         return vc
     }
 }

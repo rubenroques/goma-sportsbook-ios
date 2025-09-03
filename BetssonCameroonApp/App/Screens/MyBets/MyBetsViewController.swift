@@ -7,22 +7,27 @@ class MyBetsViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: MyBetsViewModelProtocol
+    private let viewModel: MyBetsViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var currentBets: [MyBet] = []
     
     // MARK: - UI Components
+    private lazy var contentView: UIView = {
+        let contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.backgroundColor = .clear
+        return contentView
+    }()
     
     private lazy var pillSelectorBarView: PillSelectorBarView = {
-        let view = PillSelectorBarView(viewModel: viewModel.pillSelectorBarViewModel)
+        let view = PillSelectorBarView(viewModel: viewModel.myBetsStatusBarViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private lazy var marketGroupSelectorTabView: MarketGroupSelectorTabView = {
         let view = MarketGroupSelectorTabView(
-            viewModel: viewModel.marketGroupSelectorTabViewModel,
-            backgroundStyle: .light
+            viewModel: viewModel.myBetsTabBarViewModel,
+            layoutMode: .stretch  // Use stretch mode for Sports/Virtuals tabs
         )
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -36,7 +41,6 @@ class MyBetsViewController: UIViewController {
         tableView.backgroundColor = UIColor.App.backgroundPrimary
         tableView.separatorStyle = .none
         
-        // ⭐ KEY: Automatic dynamic height - no complex sizing needed!
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 320
         
@@ -143,7 +147,7 @@ class MyBetsViewController: UIViewController {
     
     // MARK: - Data Source
     
-    private var ticketViewModels: [TicketBetInfoViewModelProtocol] = []
+    private var ticketViewModels: [TicketBetInfoViewModel] = []
     
     // MARK: - Navigation Closures
     
@@ -151,7 +155,7 @@ class MyBetsViewController: UIViewController {
     
     // MARK: - Initialization
     
-    init(viewModel: MyBetsViewModelProtocol) {
+    init(viewModel: MyBetsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -171,7 +175,7 @@ class MyBetsViewController: UIViewController {
     // MARK: - Public Methods
     
     func refreshData() {
-        // Reserved for future implementation
+        self.handleRefresh()
     }
     
     // MARK: - Private Methods
@@ -186,44 +190,50 @@ class MyBetsViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
+        view.addSubview(contentView)
         
-        view.addSubview(marketGroupSelectorTabView)
-        view.addSubview(pillSelectorBarView)
-        view.addSubview(tableView)
-        view.addSubview(loadingView)
-        view.addSubview(errorView)
-        view.addSubview(emptyView)
+        contentView.addSubview(marketGroupSelectorTabView)
+        contentView.addSubview(pillSelectorBarView)
+        contentView.addSubview(tableView)
+        contentView.addSubview(loadingView)
+        contentView.addSubview(errorView)
+        contentView.addSubview(emptyView)
         
         NSLayoutConstraint.activate([
-            marketGroupSelectorTabView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            marketGroupSelectorTabView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            marketGroupSelectorTabView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            marketGroupSelectorTabView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+            marketGroupSelectorTabView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            marketGroupSelectorTabView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             marketGroupSelectorTabView.heightAnchor.constraint(equalToConstant: 42),
             
             pillSelectorBarView.topAnchor.constraint(equalTo: marketGroupSelectorTabView.bottomAnchor),
-            pillSelectorBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            pillSelectorBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pillSelectorBarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            pillSelectorBarView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             pillSelectorBarView.heightAnchor.constraint(equalToConstant: 60),
             
-            tableView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 8),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             loadingView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor),
-            loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             errorView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor),
-            errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            errorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            errorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            errorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             emptyView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor),
-            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            emptyView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         
         // Initially show loading
@@ -231,31 +241,11 @@ class MyBetsViewController: UIViewController {
     }
     
     private func setupBindings() {
-        // Listen to data state changes
+        // Listen to data state changes - this now handles everything
         viewModel.betsStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 self?.handleBetsStateChange(state)
-            }
-            .store(in: &cancellables)
-        
-        // Listen to loading changes
-        viewModel.isLoadingPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                if !isLoading {
-                    self?.tableView.refreshControl?.endRefreshing()
-                }
-            }
-            .store(in: &cancellables)
-        
-        // Listen to ticket view models changes
-        viewModel.ticketBetInfoViewModelsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] viewModels in
-                self?.ticketViewModels = viewModels
-                self?.updateTableView()
-                print("🎯 MyBetsViewController: Updated with \(viewModels.count) ticket view models")
             }
             .store(in: &cancellables)
         
@@ -277,15 +267,27 @@ class MyBetsViewController: UIViewController {
     }
     
     private func handleBetsStateChange(_ state: MyBetsState) {
+        // End refresh control for all non-loading states
+        if case .loading = state {
+            // Keep refresh control spinning for loading
+        } else {
+            tableView.refreshControl?.endRefreshing()
+        }
+        
         switch state {
         case .loading:
             showLoadingState()
-        case .loaded(let bets):
-            if bets.isEmpty {
+        case .loaded(let viewModels):
+            // Update the data source and UI
+            self.ticketViewModels = viewModels
+            updateTableView()
+            
+            if viewModels.isEmpty {
                 showEmptyState()
             } else {
                 showTableViewState()
             }
+            print("🎯 MyBetsViewController: Updated with \(viewModels.count) ticket view models")
         case .error(let message):
             showErrorState(message: message)
         }
@@ -323,8 +325,13 @@ class MyBetsViewController: UIViewController {
     }
     
     private func updateTableView() {
-        // ⭐ SIMPLE: UITableView handles dynamic sizing automatically!
-        tableView.reloadData()
+        
+        UIView.performWithoutAnimation {
+            tableView.reloadData()
+            tableView.layoutIfNeeded()
+            tableView.setContentOffset(.zero, animated: false)
+        }
+
     }
 }
 
@@ -352,6 +359,10 @@ extension MyBetsViewController: UITableViewDataSource {
         cell.configureCellPosition(isFirst: isFirst, isLast: isLast, isOnlyCell: isOnlyCell)
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
 

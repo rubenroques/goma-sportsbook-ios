@@ -42,10 +42,7 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
         // Clear all subscriptions
         cancellables.removeAll()
     }
-    
-    // ⭐ NOTE: No preferredLayoutAttributesFitting needed!
-    // UITableView handles dynamic sizing automatically with automaticDimension
-    
+
     // MARK: - Setup
     
     private func setupCell() {
@@ -56,7 +53,7 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
     
     // MARK: - Configuration
     
-    func configure(with viewModel: TicketBetInfoViewModelProtocol) {
+    func configure(with viewModel: TicketBetInfoViewModel) {
         if let existingView = ticketBetInfoView {
             // Reuse existing view - more efficient for scrolling
             reconfigureExistingView(existingView, with: viewModel)
@@ -64,28 +61,26 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
             // Create new view only if one doesn't exist
             createAndSetupTicketView(with: viewModel)
         }
-        
-        setupViewActions(with: viewModel)
     }
     
     // Configure cell position for proper corner radius styling
     func configureCellPosition(isFirst: Bool, isLast: Bool, isOnlyCell: Bool = false) {
-        guard let ticketView = ticketBetInfoView else { return }
+        guard ticketBetInfoView != nil else { return }
         
         let cornerRadiusStyle: CornerRadiusStyle
         
         if isOnlyCell {
             // Single cell in list - all corners rounded
-            cornerRadiusStyle = .all(radius: 8)
+            cornerRadiusStyle = .all
         } else if isFirst {
             // First cell - top corners only
-            cornerRadiusStyle = .topOnly(radius: 8)
+            cornerRadiusStyle = .topOnly
         } else if isLast {
             // Last cell - bottom corners only
-            cornerRadiusStyle = .bottomOnly(radius: 8)
+            cornerRadiusStyle = .bottomOnly
         } else {
             // Middle cells - no rounded corners
-            cornerRadiusStyle = .all(radius: 0)
+            cornerRadiusStyle = .all
         }
         
         // Apply corner radius style at cell level
@@ -94,17 +89,16 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
     
     // MARK: - Private Setup Methods
     
-    private func createAndSetupTicketView(with viewModel: TicketBetInfoViewModelProtocol) {
+    private func createAndSetupTicketView(with viewModel: TicketBetInfoViewModel) {
         let ticketView = TicketBetInfoView(
             viewModel: viewModel,
-            cornerRadiusStyle: .all(radius: 8)
+            cornerRadiusStyle: .all
         )
         ticketView.translatesAutoresizingMaskIntoConstraints = false
         
         // Add to content view
         contentView.addSubview(ticketView)
         
-        // ⭐ KEY: Edge constraints enable automatic sizing in UITableView
         NSLayoutConstraint.activate([
             ticketView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.verticalInset),
             ticketView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.horizontalInset),
@@ -116,7 +110,7 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
         self.ticketBetInfoView = ticketView
     }
     
-    private func reconfigureExistingView(_ ticketView: TicketBetInfoView, with viewModel: TicketBetInfoViewModelProtocol) {
+    private func reconfigureExistingView(_ ticketView: TicketBetInfoView, with viewModel: TicketBetInfoViewModel) {
         // Clear existing subscriptions
         cancellables.removeAll()
         
@@ -124,26 +118,10 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
         ticketView.configure(with: viewModel)
     }
     
-    private func setupViewActions(with viewModel: TicketBetInfoViewModelProtocol) {
-        guard let ticketView = ticketBetInfoView else { return }
-        
-        // Note: TicketBetInfoView handles actions internally through its viewModel
-        // The actions are already wired up in TicketBetInfoViewModel
-        // No additional action setup needed here
-        
-        // Optional: Subscribe to viewModel changes if needed
-        viewModel.betInfoPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] betInfo in
-                // Handle any UI updates if necessary
-                // The TicketBetInfoView will update itself through its bindings
-            }
-            .store(in: &cancellables)
-    }
-    
     private func applyCornerRadiusToContentView(_ cornerRadiusStyle: CornerRadiusStyle) {
+        let radius: CGFloat = 8.0
         switch cornerRadiusStyle {
-        case .all(let radius):
+        case .all:
             contentView.layer.cornerRadius = radius
             contentView.layer.maskedCorners = [
                 .layerMinXMinYCorner,
@@ -152,14 +130,14 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
                 .layerMaxXMaxYCorner
             ]
             
-        case .topOnly(let radius):
+        case .topOnly:
             contentView.layer.cornerRadius = radius
             contentView.layer.maskedCorners = [
                 .layerMinXMinYCorner,
                 .layerMaxXMinYCorner
             ]
             
-        case .bottomOnly(let radius):
+        case .bottomOnly:
             contentView.layer.cornerRadius = radius
             contentView.layer.maskedCorners = [
                 .layerMinXMaxYCorner,
@@ -168,28 +146,5 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
         }
         
         contentView.layer.masksToBounds = true
-    }
-}
-
-// MARK: - Alternative Configuration Method
-
-extension TicketBetInfoTableViewCell {
-    
-    /// Configure with action handlers
-    func configure(
-        with viewModel: TicketBetInfoViewModelProtocol,
-        onNavigationTap: @escaping () -> Void = {},
-        onRebetTap: @escaping () -> Void = {},
-        onCashoutTap: @escaping () -> Void = {}
-    ) {
-        // First configure with the view model
-        configure(with: viewModel)
-        
-        // Then set up action handlers if the viewModel is our custom implementation
-        if let ticketBetInfoViewModel = viewModel as? TicketBetInfoViewModel {
-            ticketBetInfoViewModel.onNavigationTap = { _ in onNavigationTap() }
-            ticketBetInfoViewModel.onRebetTap = { _ in onRebetTap() }
-            ticketBetInfoViewModel.onCashoutTap = { _ in onCashoutTap() }
-        }
     }
 }

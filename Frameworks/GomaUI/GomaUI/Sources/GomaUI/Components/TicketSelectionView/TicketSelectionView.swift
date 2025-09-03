@@ -206,6 +206,7 @@ public final class TicketSelectionView: UIView {
     public init(viewModel: TicketSelectionViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        
         setupView()
         setupConstraints()
         bindViewModel()

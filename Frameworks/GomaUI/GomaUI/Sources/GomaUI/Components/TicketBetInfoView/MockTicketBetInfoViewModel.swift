@@ -6,6 +6,10 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     // MARK: - Properties
     private let betInfoSubject = CurrentValueSubject<TicketBetInfoData, Never>(TicketBetInfoData.empty)
     
+    public var currentBetInfo: TicketBetInfoData {
+        betInfoSubject.value
+    }
+    
     public var betInfoPublisher: AnyPublisher<TicketBetInfoData, Never> {
         betInfoSubject.eraseToAnyPublisher()
     }

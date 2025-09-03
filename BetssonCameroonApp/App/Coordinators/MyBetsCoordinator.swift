@@ -43,7 +43,7 @@ class MyBetsCoordinator: Coordinator {
     func start() {
         // Create real ViewModel with ServicesProvider
         let servicesProvider = environment.servicesProvider
-        let viewModel: MyBetsViewModelProtocol = MyBetsViewModel(servicesProvider: servicesProvider)
+        let viewModel = MyBetsViewModel(servicesProvider: servicesProvider)
         let viewController = MyBetsViewController(viewModel: viewModel)
         
         // Setup authentication navigation
@@ -52,10 +52,8 @@ class MyBetsCoordinator: Coordinator {
         }
         
         // Setup bet detail navigation
-        if let concreteViewModel = viewModel as? MyBetsViewModel {
-            concreteViewModel.onNavigateToBetDetail = { [weak self] bet in
-                self?.onNavigateToBetDetail?(bet)
-            }
+        viewModel.onNavigateToBetDetail = { [weak self] bet in
+            self?.onNavigateToBetDetail?(bet)
         }
         
         self.myBetsViewController = viewController
@@ -72,6 +70,6 @@ class MyBetsCoordinator: Coordinator {
     
     func refresh() {
         myBetsViewController?.refreshData()
-        print("🎯 MyBetsCoordinator: Refreshed MyBets data")
     }
+    
 }

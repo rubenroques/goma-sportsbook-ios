@@ -96,8 +96,7 @@ class MatchDetailsTextualViewController: UIViewController {
     private lazy var marketGroupSelectorTabView: MarketGroupSelectorTabView = {
         let view = MarketGroupSelectorTabView(
             viewModel: viewModel.marketGroupSelectorTabViewModel,
-            imageResolver: AppMarketGroupTabImageResolver(),
-            backgroundStyle: .light
+            imageResolver: AppMarketGroupTabImageResolver()
         )
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

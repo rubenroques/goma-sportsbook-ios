@@ -32,7 +32,6 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         marketId: String,
         initialDisplayState: MarketOutcomesLineDisplayState
     ) {
-        print("[MarketOutcomesLineViewModel] 🟢 INIT create new market outcome line \(marketId)")
         self.marketId = marketId
         self.marketStateSubject = CurrentValueSubject(initialDisplayState)
         self.oddsChangeEventSubject = PassthroughSubject()
@@ -91,7 +90,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     }
     
     public func setDisplayMode(_ mode: MarketDisplayMode) {
-        var currentState = marketStateSubject.value
+        let currentState = marketStateSubject.value
         let newState = MarketOutcomesLineDisplayState(
             displayMode: mode,
             leftOutcome: currentState.leftOutcome,
@@ -217,7 +216,6 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
             if outcomeViewModels[outcomeType] == nil {
                 // Create new outcome view model
                 if let matchingOutcome = market.outcomes.first(where: { $0.id == outcomeData.id }) {
-                    print("[MarketOutcomesLineViewModel] 🆕 Creating new OutcomeItemViewModel for outcomeType: \(outcomeType), outcomeId: \(matchingOutcome.id)")
                     let newOutcomeVM = OutcomeItemViewModel.create(from: matchingOutcome)
                     outcomeViewModels[outcomeType] = newOutcomeVM
                     
@@ -225,7 +223,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
                     subscribeToOutcomeEvents(outcomeVM: newOutcomeVM, outcomeType: outcomeType)
                 }
             } else {
-                print("[MarketOutcomesLineViewModel] ♻️ Reusing existing OutcomeItemViewModel for outcomeType: \(outcomeType)")
+                
             }
             // Note: Individual outcome updates are handled by the OutcomeItemViewModel's own subscription
         }
@@ -302,8 +300,6 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     
     // MARK: - Cleanup
     deinit {
-        print("[MarketOutcomesLineViewModel] 🔴 DEINIT - marketId: \(marketId)")
-        
         cancellables.removeAll()
         outcomeViewModels.removeAll()
     }

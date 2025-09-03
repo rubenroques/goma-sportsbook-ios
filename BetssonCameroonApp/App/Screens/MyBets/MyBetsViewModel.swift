@@ -10,7 +10,21 @@ import Combine
 import GomaUI
 import ServicesProvider
 
-final class MyBetsViewModel: MyBetsViewModelProtocol {
+enum MyBetsState {
+    case loading
+    case loaded([TicketBetInfoViewModel])
+    case error(String)
+}
+
+struct BetListData {
+    let viewModels: [TicketBetInfoViewModel]
+    let hasMore: Bool
+    let currentPage: Int
+    
+    static let empty = BetListData(viewModels: [], hasMore: false, currentPage: 0)
+}
+
+final class MyBetsViewModel {
     
     // MARK: - Tab Management
     
@@ -23,9 +37,6 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
     // MARK: - Data State
     
     private let betsStateSubject = CurrentValueSubject<MyBetsState, Never>(.loading)
-    private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
-    private let errorMessageSubject = CurrentValueSubject<String?, Never>(nil)
-    private let ticketViewModelsSubject = CurrentValueSubject<[TicketBetInfoViewModelProtocol], Never>([])
     
     // MARK: - Pagination State
     
@@ -34,30 +45,11 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
     
     // MARK: - Child ViewModels
     
-    lazy var marketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol = {
-        let mock = MockMarketGroupSelectorTabViewModel(tabData: MarketGroupSelectorTabData(id: "myBets", marketGroups: []))
-        
-        // Configure tabs for Sports and Virtuals
-        let tabs = [
-            MarketGroupTabItemData(
-                id: MyBetsTabType.sports.rawValue,
-                title: MyBetsTabType.sports.title,
-                visualState: .selected,
-                iconTypeName: MyBetsTabType.sports.iconTypeName
-            ),
-            MarketGroupTabItemData(
-                id: MyBetsTabType.virtuals.rawValue,
-                title: MyBetsTabType.virtuals.title,
-                visualState: .idle,
-                iconTypeName: MyBetsTabType.virtuals.iconTypeName
-            )
-        ]
-        
-        mock.updateMarketGroups(tabs)
-        mock.selectMarketGroup(id: MyBetsTabType.sports.rawValue)
+    lazy var myBetsTabBarViewModel: MyBetsTabBarViewModel = {
+        let tabViewModel = MyBetsTabBarViewModel(selectedTabType: selectedTabType)
         
         // Handle tab selection
-        mock.selectionEventPublisher
+        tabViewModel.selectionEventPublisher
             .sink { [weak self] event in
                 if let tabType = MyBetsTabType(rawValue: event.selectedId) {
                     self?.selectTab(tabType)
@@ -65,31 +57,14 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
             }
             .store(in: &cancellables)
         
-        return mock
+        return tabViewModel
     }()
     
-    lazy var pillSelectorBarViewModel: PillSelectorBarViewModelProtocol = {
-        // Configure pills for bet statuses
-        let pills = MyBetStatusType.allCases.map { statusType in
-            PillData(
-                id: statusType.pillId,
-                title: statusType.title,
-                leftIconName: nil,
-                showExpandIcon: false,
-                isSelected: statusType == .open
-            )
-        }
-        
-        let barData = PillSelectorBarData(
-            id: "betStatus",
-            pills: pills,
-            selectedPillId: MyBetStatusType.open.pillId
-        )
-        
-        let mock = MockPillSelectorBarViewModel(barData: barData)
+    lazy var myBetsStatusBarViewModel: MyBetsStatusBarViewModel = {
+        let statusViewModel = MyBetsStatusBarViewModel(selectedStatusType: selectedStatusType)
         
         // Handle pill selection
-        mock.selectionEventPublisher
+        statusViewModel.selectionEventPublisher
             .sink { [weak self] event in
                 if let statusType = MyBetStatusType(rawValue: event.selectedId) {
                     self?.selectStatus(statusType)
@@ -97,7 +72,7 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
             }
             .store(in: &cancellables)
         
-        return mock
+        return statusViewModel
     }()
     
     // MARK: - Dependencies
@@ -115,24 +90,12 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
         betsStateSubject.eraseToAnyPublisher()
     }
     
-    var isLoadingPublisher: AnyPublisher<Bool, Never> {
-        isLoadingSubject.eraseToAnyPublisher()
-    }
-    
-    var errorMessagePublisher: AnyPublisher<String?, Never> {
-        errorMessageSubject.eraseToAnyPublisher()
-    }
-    
     var selectedTabTypePublisher: AnyPublisher<MyBetsTabType, Never> {
         $selectedTabType.eraseToAnyPublisher()
     }
     
     var selectedStatusTypePublisher: AnyPublisher<MyBetStatusType, Never> {
         $selectedStatusType.eraseToAnyPublisher()
-    }
-    
-    var ticketBetInfoViewModelsPublisher: AnyPublisher<[TicketBetInfoViewModelProtocol], Never> {
-        ticketViewModelsSubject.eraseToAnyPublisher()
     }
     
     // MARK: - Initialization
@@ -177,25 +140,20 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
     // MARK: - Actions
     
     func selectTab(_ tabType: MyBetsTabType) {
-        print("🎯 MyBetsViewModel: selectTab() called with: \(tabType.title) (caller: \(Thread.callStackSymbols[1]))")
         selectedTabType = tabType
     }
     
     func selectStatus(_ statusType: MyBetStatusType) {
-        print("🎯 MyBetsViewModel: selectStatus() called with: \(statusType.title) (caller: \(Thread.callStackSymbols[1]))")
         selectedStatusType = statusType
     }
     
     func loadBets(forced: Bool = false) {
-        print("🔍 MyBetsViewModel: loadBets() called (forced=\(forced)) - STACK TRACE:")
-        Thread.callStackSymbols.prefix(5).forEach { print("   \($0)") }
-        
         let cacheKey = "\(selectedTabType.rawValue)_\(selectedStatusType.rawValue)"
         
         // Check cache first if not forced
-        if !forced, let cachedData = betListDataCache[cacheKey], !cachedData.bets.isEmpty {
+        if !forced, let cachedData = betListDataCache[cacheKey], !cachedData.viewModels.isEmpty {
             print("📦 MyBetsViewModel: Using cached data for \(cacheKey)")
-            betsStateSubject.send(.loaded(cachedData.bets))
+            betsStateSubject.send(.loaded(cachedData.viewModels))
             return
         }
         
@@ -203,17 +161,14 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
         currentBetsRequest?.cancel()
         
         // Set loading state
-        isLoadingSubject.send(true)
         betsStateSubject.send(.loading)
-        errorMessageSubject.send(nil)
         
         print("[AUTH_LOGS] 🚀 MyBetsViewModel: Loading bets for tab=\(selectedTabType.title) status=\(selectedStatusType.title) - API CALL WILL BE MADE")
         
         // Handle virtual sports - not implemented yet
         if selectedTabType == .virtuals {
-            isLoadingSubject.send(false)
             betsStateSubject.send(.loaded([]))
-            betListDataCache[cacheKey] = BetListData(bets: [], hasMore: false, currentPage: 0)
+            betListDataCache[cacheKey] = BetListData(viewModels: [], hasMore: false, currentPage: 0)
             print("⚠️ MyBetsViewModel: Virtual sports not implemented")
             return
         }
@@ -225,13 +180,10 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
-                    self?.isLoadingSubject.send(false)
-                    
                     if case .failure(let error) = completion {
                         let errorMessage = "Failed to load bets: \(error.localizedDescription)"
                         print("❌ MyBetsViewModel: \(errorMessage)")
                         self?.betsStateSubject.send(.error(errorMessage))
-                        self?.errorMessageSubject.send(errorMessage)
                     }
                 },
                 receiveValue: { [weak self] bettingHistory in
@@ -249,8 +201,8 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
         
         print("📄 MyBetsViewModel: Loading more bets (page \(currentData.currentPage + 1))")
         
-        // Set loading for additional content
-        isLoadingSubject.send(true)
+        // Note: For load more, we keep the current state and append to it
+        // The loading indicator will be handled by the table view's pull-to-refresh
         
         let publisher = getPublisherForCurrentStatus(pageIndex: currentData.currentPage + 1)
         
@@ -258,12 +210,10 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
-                    self?.isLoadingSubject.send(false)
-                    
                     if case .failure(let error) = completion {
                         let errorMessage = "Failed to load more bets: \(error.localizedDescription)"
                         print("❌ MyBetsViewModel: \(errorMessage)")
-                        self?.errorMessageSubject.send(errorMessage)
+                        // For load more errors, we just log them and keep current state
                     }
                 },
                 receiveValue: { [weak self] bettingHistory in
@@ -321,48 +271,44 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
         
         print("✅ MyBetsViewModel: Loaded \(bets.count) bets")
         
+        // Create ticket view models from bets
+        let viewModels = createTicketViewModels(from: bets)
+        
         // Cache the data
         betListDataCache[cacheKey] = BetListData(
-            bets: bets,
+            viewModels: viewModels,
             hasMore: hasMore,
             currentPage: 0
         )
         
-        // Create ticket view models from bets
-        createTicketViewModels(from: bets)
-        
         // Update state
-        betsStateSubject.send(.loaded(bets))
-        isLoadingSubject.send(false)
+        betsStateSubject.send(.loaded(viewModels))
     }
     
     private func handleLoadMoreResponse(_ bettingHistory: MyBettingHistory, cacheKey: String) {
         guard let currentData = betListDataCache[cacheKey] else { return }
         
         let newBets = bettingHistory.bets
-        let combinedBets = currentData.bets + newBets
+        let newViewModels = createTicketViewModels(from: newBets)
+        let combinedViewModels = currentData.viewModels + newViewModels
         let hasMore = newBets.count >= itemsPerPage
         
-        print("✅ MyBetsViewModel: Loaded \(newBets.count) more bets (total: \(combinedBets.count))")
+        print("✅ MyBetsViewModel: Loaded \(newBets.count) more bets (total: \(combinedViewModels.count))")
         
         // Update cache
         betListDataCache[cacheKey] = BetListData(
-            bets: combinedBets,
+            viewModels: combinedViewModels,
             hasMore: hasMore,
             currentPage: currentData.currentPage + 1
         )
         
-        // Create ticket view models from combined bets
-        createTicketViewModels(from: combinedBets)
-        
         // Update state
-        betsStateSubject.send(.loaded(combinedBets))
-        isLoadingSubject.send(false)
+        betsStateSubject.send(.loaded(combinedViewModels))
     }
     
     // MARK: - Ticket View Models Creation
     
-    private func createTicketViewModels(from bets: [MyBet]) {
+    private func createTicketViewModels(from bets: [MyBet]) -> [TicketBetInfoViewModel] {
         let viewModels = bets.map { bet in
             let viewModel = TicketBetInfoViewModel(myBet: bet, servicesProvider: servicesProvider)
             
@@ -379,11 +325,11 @@ final class MyBetsViewModel: MyBetsViewModelProtocol {
                 self?.handleCashoutTap(bet)
             }
             
-            return viewModel as TicketBetInfoViewModelProtocol
+            return viewModel
         }
         
-        ticketViewModelsSubject.send(viewModels)
         print("✅ MyBetsViewModel: Created \(viewModels.count) ticket view models")
+        return viewModels
     }
     
     // MARK: - Navigation Closures

@@ -19,12 +19,12 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     
     // MARK: - Publishers
     
-    var betInfoPublisher: AnyPublisher<TicketBetInfoData, Never> {
-        betInfoSubject.eraseToAnyPublisher()
-    }
-    
     var currentBetInfo: TicketBetInfoData {
         betInfoSubject.value
+    }
+    
+    var betInfoPublisher: AnyPublisher<TicketBetInfoData, Never> {
+        betInfoSubject.eraseToAnyPublisher()
     }
     
     // MARK: - Callbacks

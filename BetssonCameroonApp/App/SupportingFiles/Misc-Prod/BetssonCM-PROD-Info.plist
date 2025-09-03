@@ -63,6 +63,8 @@
 	<string>Let us take a photo</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This information will be used to deliver personalized ads to you.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Using Bluetooth</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AnekBangla-Bold.ttf</string>

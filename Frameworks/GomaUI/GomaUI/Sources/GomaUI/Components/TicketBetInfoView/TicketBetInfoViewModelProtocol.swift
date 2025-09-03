@@ -38,7 +38,10 @@ public struct TicketBetInfoData: Equatable {
 
 /// Protocol defining the interface for TicketBetInfoView ViewModels
 public protocol TicketBetInfoViewModelProtocol {
-    /// Publisher for the bet info data
+    /// Current bet info data for immediate access (required for table view sizing)
+    var currentBetInfo: TicketBetInfoData { get }
+    
+    /// Publisher for dynamic bet info updates (optional for real-time changes)
     var betInfoPublisher: AnyPublisher<TicketBetInfoData, Never> { get }
     
     /// Button view models

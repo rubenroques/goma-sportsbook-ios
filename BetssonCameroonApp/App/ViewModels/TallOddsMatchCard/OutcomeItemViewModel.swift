@@ -62,7 +62,6 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         self.oddsChangeEventSubject = PassthroughSubject()
         self.displayStateSubject = CurrentValueSubject(initialOutcomeData.displayState)
         
-        print("[OutcomeItemViewModel] 🟢 INIT - outcomeId: \(outcomeId), title: \(initialOutcomeData.title)")
         setupOutcomeSubscription()
     }
     
@@ -173,11 +172,9 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
     
     private func processOutcomeUpdate(_ serviceProviderOutcome: ServicesProvider.Outcome?) {
-        print("[OutcomeItemViewModel] 📡 Outcome update received for outcomeId: \(outcomeId)")
         
         guard let serviceProviderOutcome = serviceProviderOutcome else {
             // Outcome was removed - mark as disabled/suspended
-            print("[OutcomeItemViewModel] ⚠️ Outcome removed, suspending outcomeId: \(outcomeId)")
             updateSuspensionState(isSuspended: true)
             return
         }
@@ -197,17 +194,14 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         
         // Update individual properties as needed
         if currentValue != formattedOdds {
-            print("[OutcomeItemViewModel] Odds changed for outcomeId: \(newTitle) - from: \(currentValue) to: \(formattedOdds)")
             updateOddsValue(formattedOdds)
         }
         
         if currentTitle != newTitle {
-            print("[OutcomeItemViewModel] Title changed for outcomeId: \(newTitle) - from: \(currentValue) to: \(formattedOdds)")
             titleSubject.send(newTitle)
         }
         
         if currentIsDisabled != newIsDisabled {
-            print("[OutcomeItemViewModel] isDisabled changed for outcomeId: \(newTitle) - from: \(currentValue) to: \(formattedOdds)")
             isDisabledSubject.send(newIsDisabled)
         }
     }
@@ -230,7 +224,6 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     
     // MARK: - Cleanup
     deinit {
-        print("[OutcomeItemViewModel] 🔴 DEINIT - outcomeId: \(outcomeId)")
         cancellables.removeAll()
     }
 }

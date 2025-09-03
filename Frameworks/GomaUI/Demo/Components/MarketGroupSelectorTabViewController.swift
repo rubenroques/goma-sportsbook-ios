@@ -98,21 +98,25 @@ class MarketGroupSelectorTabViewController: UIViewController {
     
     private func setupComponents() {
         // Create demo configurations
-        let demoConfigurations: [(String, MockMarketGroupSelectorTabViewModel)] = [
-            ("Standard Sports Markets", MockMarketGroupSelectorTabViewModel.standardSportsMarkets),
-            ("Limited Markets", MockMarketGroupSelectorTabViewModel.limitedMarkets),
-            ("Mixed State Markets", MockMarketGroupSelectorTabViewModel.mixedStateMarkets),
-            ("Empty Markets", MockMarketGroupSelectorTabViewModel.emptyMarkets),
-            ("Loading Markets", MockMarketGroupSelectorTabViewModel.loadingMarkets),
-            ("Disabled Markets", MockMarketGroupSelectorTabViewModel.disabledMarkets)
+        let demoConfigurations: [(String, MockMarketGroupSelectorTabViewModel, MarketGroupSelectorTabLayoutMode?)] = [
+            ("Standard Sports Markets", MockMarketGroupSelectorTabViewModel.standardSportsMarkets, nil),
+            ("Limited Markets", MockMarketGroupSelectorTabViewModel.limitedMarkets, nil),
+            ("Limited Markets - STRETCH MODE", MockMarketGroupSelectorTabViewModel.limitedMarkets, .stretch),
+            ("Mixed State Markets", MockMarketGroupSelectorTabViewModel.mixedStateMarkets, nil),
+            ("Empty Markets", MockMarketGroupSelectorTabViewModel.emptyMarkets, nil),
+            ("Loading Markets", MockMarketGroupSelectorTabViewModel.loadingMarkets, nil),
+            ("Disabled Markets", MockMarketGroupSelectorTabViewModel.disabledMarkets, nil)
         ]
         
-        for (title, viewModel) in demoConfigurations {
-            addDemoSection(title: title, viewModel: viewModel)
+        for (title, viewModel, layoutMode) in demoConfigurations {
+            addDemoSection(title: title, viewModel: viewModel, layoutMode: layoutMode)
         }
+        
+        // Add a custom 2-tab example to show stretch vs automatic
+        addStretchComparisonSection()
     }
     
-    private func addDemoSection(title: String, viewModel: MockMarketGroupSelectorTabViewModel) {
+    private func addDemoSection(title: String, viewModel: MockMarketGroupSelectorTabViewModel, layoutMode: MarketGroupSelectorTabLayoutMode? = nil) {
         // Section title
         let titleLabel = UILabel()
         titleLabel.text = title
@@ -120,8 +124,14 @@ class MarketGroupSelectorTabViewController: UIViewController {
         titleLabel.textColor = .label
         stackView.addArrangedSubview(titleLabel)
         
-        // Create tab view
-        let tabView = MarketGroupSelectorTabView(viewModel: viewModel)
+        // Create tab view with layout mode
+        let tabView: MarketGroupSelectorTabView
+        if let layoutMode = layoutMode {
+            tabView = MarketGroupSelectorTabView(viewModel: viewModel, layoutMode: layoutMode)
+        } else {
+            tabView = MarketGroupSelectorTabView(viewModel: viewModel)
+        }
+        
         tabView.backgroundColor = .systemBackground
         tabView.layer.borderColor = UIColor.separator.cgColor
         tabView.layer.borderWidth = 1
@@ -273,5 +283,84 @@ class MarketGroupSelectorTabViewController: UIViewController {
     
     private func handleSelectionEvent(_ event: MarketGroupSelectionEvent, from componentIndex: Int) {
         
+    }
+    
+    // MARK: - Stretch Mode Demo
+    private func addStretchComparisonSection() {
+        // Add title for comparison section
+        let comparisonTitleLabel = UILabel()
+        comparisonTitleLabel.text = "Sports/Virtuals Tabs - Stretch vs Automatic Comparison"
+        comparisonTitleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        comparisonTitleLabel.textColor = .label
+        comparisonTitleLabel.numberOfLines = 0
+        stackView.addArrangedSubview(comparisonTitleLabel)
+        
+        // Create Sports/Virtuals tabs like MyBets screen
+        let sportsVirtualsViewModel = createSportsVirtualsViewModel()
+        
+        // Automatic mode example
+        let automaticTitleLabel = UILabel()
+        automaticTitleLabel.text = "Automatic Mode (default - takes minimum space)"
+        automaticTitleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        automaticTitleLabel.textColor = .secondaryLabel
+        stackView.addArrangedSubview(automaticTitleLabel)
+        
+        let automaticTabView = MarketGroupSelectorTabView(viewModel: sportsVirtualsViewModel, layoutMode: .automatic)
+        automaticTabView.backgroundColor = .systemBackground
+        automaticTabView.layer.borderColor = UIColor.systemBlue.cgColor
+        automaticTabView.layer.borderWidth = 2
+        automaticTabView.layer.cornerRadius = 8
+        automaticTabView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        stackView.addArrangedSubview(automaticTabView)
+        
+        // Stretch mode example
+        let stretchTitleLabel = UILabel()
+        stretchTitleLabel.text = "Stretch Mode (fills entire width - used in MyBets)"
+        stretchTitleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        stretchTitleLabel.textColor = .secondaryLabel
+        stackView.addArrangedSubview(stretchTitleLabel)
+        
+        let stretchTabView = MarketGroupSelectorTabView(viewModel: createSportsVirtualsViewModel(), layoutMode: .stretch)
+        stretchTabView.backgroundColor = .systemBackground
+        stretchTabView.layer.borderColor = UIColor.systemGreen.cgColor
+        stretchTabView.layer.borderWidth = 2
+        stretchTabView.layer.cornerRadius = 8
+        stretchTabView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        stackView.addArrangedSubview(stretchTabView)
+        
+        // Store references
+        viewModels.append(sportsVirtualsViewModel)
+        viewModels.append(createSportsVirtualsViewModel()) // Need separate instance for stretch
+        tabViews.append(automaticTabView)
+        tabViews.append(stretchTabView)
+        
+        // Add final separator
+        let separator = UIView()
+        separator.backgroundColor = .separator
+        separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        stackView.addArrangedSubview(separator)
+    }
+    
+    private func createSportsVirtualsViewModel() -> MockMarketGroupSelectorTabViewModel {
+        let tabs = [
+            MarketGroupTabItemData(
+                id: "sports",
+                title: "Sports",
+                visualState: .selected,
+                iconTypeName: "sports"
+            ),
+            MarketGroupTabItemData(
+                id: "virtuals", 
+                title: "Virtuals",
+                visualState: .idle,
+                iconTypeName: "virtual"
+            )
+        ]
+        
+        return MockMarketGroupSelectorTabViewModel.customMarkets(
+            id: "sportsVirtuals",
+            marketGroups: tabs,
+            selectedMarketGroupId: "sports"
+        )
     }
 } 

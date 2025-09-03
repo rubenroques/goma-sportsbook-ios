@@ -3,9 +3,9 @@ import Combine
 import SwiftUI
 
 public enum CornerRadiusStyle {
-    case all(radius: CGFloat)
-    case topOnly(radius: CGFloat)
-    case bottomOnly(radius: CGFloat)
+    case all
+    case topOnly
+    case bottomOnly
 }
 
 public class TicketBetInfoView: UIView {
@@ -193,7 +193,8 @@ public class TicketBetInfoView: UIView {
     }()
     
     // MARK: - Initialization
-    public init(viewModel: TicketBetInfoViewModelProtocol, cornerRadiusStyle: CornerRadiusStyle = .all(radius: 8)) {
+    public init(viewModel: TicketBetInfoViewModelProtocol,
+                cornerRadiusStyle: CornerRadiusStyle = .all) {
         self.viewModel = viewModel
         self.cornerRadiusStyle = cornerRadiusStyle
         
@@ -202,7 +203,8 @@ public class TicketBetInfoView: UIView {
         setupView()
         setupConstraints()
         setupCornerRadius()
-        bindViewModel()
+        
+        configure(with: viewModel)
     }
     
     required init?(coder: NSCoder) {
@@ -213,12 +215,13 @@ public class TicketBetInfoView: UIView {
     /// Configures the view with a new view model for efficient reuse
     public func configure(with newViewModel: TicketBetInfoViewModelProtocol) {
         // Clear previous bindings
-        prepareForReuse()
+        cancellables.removeAll()
         
         // Update view model reference
         self.viewModel = newViewModel
+
+        updateUI(with: newViewModel.currentBetInfo)
         
-        // Re-establish bindings with new view model
         bindViewModel()
     }
     
@@ -374,22 +377,23 @@ public class TicketBetInfoView: UIView {
     
     private func setupCornerRadius() {
         switch cornerRadiusStyle {
-        case .all(let radius):
-            wrapperView.layer.cornerRadius = radius
+        case .all:
+            wrapperView.layer.cornerRadius = 8
             wrapperView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             
-        case .topOnly(let radius):
-            wrapperView.layer.cornerRadius = radius
+        case .topOnly:
+            wrapperView.layer.cornerRadius = 8
             wrapperView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
             
-        case .bottomOnly(let radius):
-            wrapperView.layer.cornerRadius = radius
+        case .bottomOnly:
+            wrapperView.layer.cornerRadius = 8
             wrapperView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         }
     }
     
     private func bindViewModel() {
         viewModel.betInfoPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] betInfo in
                 self?.updateUI(with: betInfo)
@@ -399,19 +403,14 @@ public class TicketBetInfoView: UIView {
     
     // MARK: - UI Updates
     private func updateUI(with betInfo: TicketBetInfoData) {
-        // Update header
         titleLabel.text = betInfo.title
         betDetailsLabel.text = betInfo.betDetails
         
-        // Update tickets
-        updateTickets(with: betInfo.tickets)
-        
-        // Update financial summary
         totalOddsValueLabel.text = betInfo.totalOdds
         betAmountValueLabel.text = betInfo.betAmount
         possibleWinningsValueLabel.text = betInfo.possibleWinnings
         
-        // Update bottom components
+        updateTickets(with: betInfo.tickets)
         updateBottomComponents(with: betInfo)
     }
     
@@ -428,9 +427,10 @@ public class TicketBetInfoView: UIView {
             ticketsStackView.addArrangedSubview(ticketView)
         }
         
-        // ⭐ SIMPLIFIED: UITableView handles dynamic sizing automatically
-        // Only keep intrinsic size invalidation for good practice
-        invalidateIntrinsicContentSize()
+        UIView.performWithoutAnimation {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
     }
     
     private func updateBottomComponents(with betInfo: TicketBetInfoData) {
@@ -458,7 +458,7 @@ public class TicketBetInfoView: UIView {
         // Add CashoutSliderView if cashoutTotalAmount is provided
         if let cashoutTotalAmount = betInfo.cashoutTotalAmount {
             let cashoutSliderViewModel = MockCashoutSliderViewModel.customMock(
-                title: "Choose a cash out amount",
+                title: "Cash out amount",
                 minimumValue: 0.1,
                 maximumValue: Float(cashoutTotalAmount) ?? 200.0,
                 currentValue: Float(cashoutTotalAmount) ?? 200.0,
@@ -475,10 +475,6 @@ public class TicketBetInfoView: UIView {
         } else {
             financialSummaryBottomConstraint?.isActive = true
         }
-        
-        // ⭐ SIMPLIFIED: UITableView handles dynamic sizing automatically  
-        // Only keep intrinsic size invalidation for good practice
-        invalidateIntrinsicContentSize()
     }
     
     // MARK: - Actions
@@ -507,7 +503,7 @@ public class TicketBetInfoView: UIView {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockTicketBetInfoViewModel.pendingMockWithCashout()
-        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all(radius: 8))
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all)
         ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
@@ -528,7 +524,7 @@ public class TicketBetInfoView: UIView {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockTicketBetInfoViewModel.pendingMockWithSlider()
-        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all(radius: 8))
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all)
         ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
@@ -549,7 +545,7 @@ public class TicketBetInfoView: UIView {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockTicketBetInfoViewModel.pendingMockWithBoth()
-        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all(radius: 8))
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all)
         ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
@@ -570,7 +566,7 @@ public class TicketBetInfoView: UIView {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockTicketBetInfoViewModel.pendingMock()
-        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all(radius: 8))
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all)
         ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
@@ -591,7 +587,7 @@ public class TicketBetInfoView: UIView {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockTicketBetInfoViewModel.pendingMock()
-        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .topOnly(radius: 12))
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .topOnly)
         ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
@@ -612,7 +608,7 @@ public class TicketBetInfoView: UIView {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockTicketBetInfoViewModel.pendingMock()
-        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .bottomOnly(radius: 16))
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .bottomOnly)
         ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
