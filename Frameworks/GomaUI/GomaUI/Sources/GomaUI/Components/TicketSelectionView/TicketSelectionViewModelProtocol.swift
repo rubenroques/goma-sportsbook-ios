@@ -51,7 +51,10 @@ public struct TicketSelectionData: Equatable {
 
 // MARK: - TicketSelectionViewModelProtocol
 public protocol TicketSelectionViewModelProtocol: AnyObject {
-    // Data
+    // Current data for immediate access (required for table view sizing)
+    var currentTicketData: TicketSelectionData { get }
+    
+    // Publisher for dynamic updates (optional for real-time changes)
     var ticketDataPublisher: AnyPublisher<TicketSelectionData, Never> { get }
     
     // Actions

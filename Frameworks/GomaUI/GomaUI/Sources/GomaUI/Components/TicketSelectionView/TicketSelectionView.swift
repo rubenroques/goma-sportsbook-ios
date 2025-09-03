@@ -209,6 +209,10 @@ public final class TicketSelectionView: UIView {
         
         setupView()
         setupConstraints()
+        
+        // Immediate UI update with current data for proper table view sizing
+        updateUI(with: viewModel.currentTicketData)
+        
         bindViewModel()
     }
     
@@ -383,6 +387,7 @@ public final class TicketSelectionView: UIView {
     
     private func bindViewModel() {
         viewModel.ticketDataPublisher
+            .dropFirst() // Skip initial value since we already used currentTicketData
             .receive(on: DispatchQueue.main)
             .sink { [weak self] ticketData in
                 self?.updateUI(with: ticketData)

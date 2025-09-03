@@ -10,6 +10,10 @@ final class TicketSelectionViewModel: TicketSelectionViewModelProtocol {
     
     // MARK: - Publishers
     
+    var currentTicketData: TicketSelectionData {
+        ticketDataSubject.value
+    }
+    
     var ticketDataPublisher: AnyPublisher<TicketSelectionData, Never> {
         ticketDataSubject.eraseToAnyPublisher()
     }

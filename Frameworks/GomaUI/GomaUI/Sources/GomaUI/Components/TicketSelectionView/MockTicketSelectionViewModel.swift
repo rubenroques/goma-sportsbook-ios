@@ -7,6 +7,11 @@ final public class MockTicketSelectionViewModel: TicketSelectionViewModelProtoco
     
     // MARK: - Properties
     private let ticketDataSubject: CurrentValueSubject<TicketSelectionData, Never>
+    
+    public var currentTicketData: TicketSelectionData {
+        return ticketDataSubject.value
+    }
+    
     public var ticketDataPublisher: AnyPublisher<TicketSelectionData, Never> {
         return ticketDataSubject.eraseToAnyPublisher()
     }
