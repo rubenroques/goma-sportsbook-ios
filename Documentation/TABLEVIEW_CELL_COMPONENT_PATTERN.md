@@ -9,23 +9,12 @@ UITableView automatic dimension calculation requires synchronous data during cel
 2. Publisher fires later → Content loads → Too late for sizing
 3. Result: Truncated or incorrectly sized cells
 
-## The Solution: Configure Method Pattern
-
-### Protocol Design
-```swift
-public protocol TableViewCompatibleViewModelProtocol {
-    // Direct, immediate data access - NO publishers here
-    var currentData: ComponentData { get }
-    
-    // Optional: Separate publisher for real-time updates AFTER initial configuration
-    var updatesPublisher: AnyPublisher<ComponentData, Never>? { get }
-}
-```
+## Configure Method Pattern
 
 ### View Implementation
 ```swift
 public class ComponentView: UIView {
-    private var viewModel: TableViewCompatibleViewModelProtocol
+    private var viewModel: ComponentViewModel
     private var cancellables = Set<AnyCancellable>()
     
     public init(viewModel: TableViewCompatibleViewModelProtocol) {
@@ -64,8 +53,9 @@ public class ComponentView: UIView {
 
 ### 1. No Async During Configuration
 - ❌ NEVER: Wait for publishers during init or configure
-- ❌ NEVER: Use `DispatchQueue.main.async` in initial setup
+- ❌ NEVER: Use `.receive(on: DispatchQueue.main)` in initial setup
 - ✅ ALWAYS: Have data immediately available
+
 
 ### 2. Default State Handling
 - Components must handle empty/nil data gracefully
