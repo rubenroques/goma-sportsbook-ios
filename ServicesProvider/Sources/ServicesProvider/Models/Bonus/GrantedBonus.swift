@@ -16,6 +16,7 @@ public struct GrantedBonus: Codable {
     public var expiryDate: Date?
     public var wagerRequirement: String?
     public var amountWagered: String?
+    public var freeBetBonus: FreeBetBonus?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -26,6 +27,7 @@ public struct GrantedBonus: Codable {
         case expiryDate = "expiryDate"
         case wagerRequirement = "wagerRequirement"
         case amountWagered = "amountWagered"
+        case freeBetBonus = "externalFreeBet"
     }
     
     init(id: Int,
@@ -35,7 +37,8 @@ public struct GrantedBonus: Codable {
          triggerDate: Date?,
          expiryDate: Date?,
          wagerRequirement: String? = nil,
-         amountWagered: String? = nil) {
+         amountWagered: String? = nil,
+         freeBetBonus: FreeBetBonus? = nil) {
         self.id = id
         self.name = name
         self.status = status
@@ -44,6 +47,17 @@ public struct GrantedBonus: Codable {
         self.expiryDate = expiryDate
         self.wagerRequirement = wagerRequirement
         self.amountWagered = amountWagered
+        self.freeBetBonus = freeBetBonus
+    }
+}
+
+public struct FreeBetBonus: Codable {
+    var productCode: String
+    var amount: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case productCode = "productCode"
+        case amount = "amount"
     }
 }
 

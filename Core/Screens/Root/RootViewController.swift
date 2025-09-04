@@ -1365,6 +1365,20 @@ class RootViewController: UIViewController {
             .store(in: &cancellables)
 
     }
+    
+    func openJonumFeature() {
+        if let appScheme = Env.businessSettingsSocket.clientSettings.jonum?.appSchema,
+           let appURL = URL(string: appScheme), UIApplication.shared.canOpenURL(appURL) {
+            
+            UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+            
+        }
+        else {
+            if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url {
+                self.openPromotions(customUrl: jonumUrlString)
+            }
+        }
+    }
 
     //
     // Obrigatory Limits
@@ -1483,9 +1497,7 @@ extension RootViewController {
             }
             
             self.homeViewController.didTapJonumBannerAction = { [weak self] in
-                if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url {
-                    self?.openPromotions(customUrl: jonumUrlString)
-                }
+                self?.openJonumFeature()
             }
             
             homeViewControllerLoaded = true
@@ -1889,15 +1901,8 @@ extension RootViewController {
     }
     
     @objc private func didTapJonumTabItem() {
-        let appScheme = "jonum://"
-        if let appURL = URL(string: appScheme), UIApplication.shared.canOpenURL(appURL) {
-            UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-        }
-        else {
-            if let jonumUrlString = Env.businessSettingsSocket.clientSettings.jonum?.url {
-                self.openPromotions(customUrl: jonumUrlString)
-            }
-        }
+        
+        self.openJonumFeature()
         
     }
     

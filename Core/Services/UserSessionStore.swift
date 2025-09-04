@@ -89,6 +89,7 @@ class UserSessionStore {
 
     var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
     var userCashbackBalance = CurrentValueSubject<Double?, Never>(nil)
+    var userFreeBetBalance = CurrentValueSubject<Double?, Never>(nil)
     var acceptedTrackingPublisher = CurrentValueSubject<UserTrackingStatus, Never>(.unkown)
 
     var shouldAcceptTermsUpdatePublisher = CurrentValueSubject<Bool?, Never>(nil)
@@ -226,6 +227,7 @@ class UserSessionStore {
         self.userSessionPublisher.send(nil)
         self.userWalletPublisher.send(nil)
         self.userCashbackBalance.send(nil)
+        self.userFreeBetBalance.send(nil)
         self.kycExpire = nil
 
         Optimove.shared.signOutUser()
@@ -562,6 +564,13 @@ extension UserSessionStore {
                                         bonus: userWallet.bonus,
                                         totalWithdrawable: userWallet.withdrawable,
                                         currency: currency)
+                
+                let freeBetBalance = userWallet.externalFreeBetBalances?.reduce(0.0) { sum, freeBet in
+                    sum + (Double(freeBet.balance) ?? 0.0)
+                } ?? 0.0
+                
+                self?.userFreeBetBalance.send(freeBetBalance)
+                
                 self?.userWalletPublisher.send(wallet)
             })
             .store(in: &self.cancellables)

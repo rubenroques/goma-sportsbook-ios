@@ -85,6 +85,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var cashbackBaseView: UIView!
     @IBOutlet private weak var cashbackInnerBaseView: UIView!
     @IBOutlet private weak var cashbackTitleLabel: UILabel!
+    @IBOutlet private weak var cashbackInfoTriggerView: UIImageView!
     @IBOutlet private weak var cashbackValueLabel: UILabel!
     @IBOutlet private weak var cashbackSwitch: UISwitch!
     @IBOutlet private weak var cashbackSeparatorView: UIView!
@@ -190,6 +191,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         label.text = Env.userSessionStore.userProfilePublisher.value?.currency
         label.font = AppFont.with(type: .bold, size: 14)
         return label
+    }()
+    
+    lazy var cashbackInfoDialogView: InfoDialogView = {
+        let view = InfoDialogView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("betsson_credits_dialog_info"))
+        return view
     }()
 
     @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
@@ -484,6 +492,25 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.betBuilderWarningView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             self.betBuilderWarningView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.safeAreaLayoutGuide.topAnchor, constant: -10)
         ])
+        
+        self.cashbackInfoTriggerView.image = UIImage(named: "info_small_icon")?.withRenderingMode(.alwaysTemplate)
+        self.cashbackInfoTriggerView.setTintColor(color: UIColor.App.iconPrimary)
+        self.cashbackInfoTriggerView.isUserInteractionEnabled = true
+        
+        let cashbackInfoTriggerTap = UITapGestureRecognizer(target: self, action: #selector(didTapCashbackInfoTriggerView))
+
+        self.cashbackInfoTriggerView.addGestureRecognizer(cashbackInfoTriggerTap)
+        
+        self.view.addSubview(self.cashbackInfoDialogView)
+
+        NSLayoutConstraint.activate([
+
+            self.cashbackInfoDialogView.bottomAnchor.constraint(equalTo: self.cashbackBaseView.topAnchor, constant: -10),
+            self.cashbackInfoDialogView.trailingAnchor.constraint(equalTo: self.cashbackInfoTriggerView.trailingAnchor, constant: 10),
+            self.cashbackInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 186)
+        ])
+
+        self.cashbackInfoDialogView.alpha = 0
         //
         self.setupFonts()
 
@@ -1707,7 +1734,8 @@ class PreSubmissionBetslipViewController: UIViewController {
     private func setupCashback() {
         self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
 
-        self.cashbackTitleLabel.text = localized("cashback")
+//        self.cashbackTitleLabel.text = localized("cashback")
+        self.cashbackTitleLabel.text = localized("betsson_credits_mise_max")
         self.cashbackSwitch.setOn(false, animated: false)
         self.isCashbackToggleOn.send(false)
 
@@ -1715,8 +1743,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         //
 
-        Publishers.CombineLatest(Env.userSessionStore.userCashbackBalance, self.listTypePublisher)
-            .filter({ _, listTypePublisher -> Bool in
+        Publishers.CombineLatest3(Env.userSessionStore.userCashbackBalance, Env.userSessionStore.userFreeBetBalance, self.listTypePublisher)
+            .filter({ _, _, listTypePublisher -> Bool in
                 switch listTypePublisher {
                 case .simple, .multiple, .system:
                     return true
@@ -1724,26 +1752,58 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return false
                 }
             })
-            .map({ userCashbackBalance, _ in
-                return userCashbackBalance
+            .map({ userCashbackBalance, freeBetBalance, _ in
+                return (userCashbackBalance, freeBetBalance)
             })
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("userSessionStore userCashbackBalance completion: \(completion)")
-            } receiveValue: { [weak self] value in
+            } receiveValue: { [weak self] cashbackValue, freeBetValue in
 
-                if let cashbackValue = value,
-                   let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) {
+//                if let cashbackValue = cashbackValue,
+//                   let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) {
+//
+//                    self?.cashbackValueLabel.text = formattedCashbackString
+//                    if cashbackValue <= 0 {
+//                        self?.cashbackBaseView.isHidden = true
+//                    }
+//                    else {
+//                        self?.cashbackBaseView.isHidden = false
+//                    }
+//                }
+//                else {
+//                    self?.cashbackValueLabel.text = "-.--€"
+//                    self?.cashbackBaseView.isHidden = true
+//                }
+                
+                var displayValue: Double?
+                
+                if let cashbackValue = cashbackValue,
+                   let freeBetValue = freeBetValue {
+                    // Both values exist - use the higher one
+                    displayValue = max(cashbackValue, freeBetValue)
+                } else if let cashbackValue = cashbackValue {
+                    // Only cashback value exists
+                    displayValue = cashbackValue
+                } else if let freeBetValue = freeBetValue {
+                    // Only free bet balance exists
+                    displayValue = freeBetValue
+                }
 
-                    self?.cashbackValueLabel.text = formattedCashbackString
-                    if cashbackValue <= 0 {
+                if let displayValue = displayValue,
+                   let formattedString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: displayValue)) {
+                    
+                    self?.cashbackValueLabel.text = formattedString
+                                        
+                    self?.cashbackInfoDialogView.configure(title: localized("betsson_credits_dialog_info").replacingFirstOccurrence(of: "{amount}", with: formattedString),
+                                                           highlightText: formattedString)
+                    
+                    if displayValue <= 0 {
                         self?.cashbackBaseView.isHidden = true
-                    }
-                    else {
+                    } else {
                         self?.cashbackBaseView.isHidden = false
                     }
-                }
-                else {
+                } else {
                     self?.cashbackValueLabel.text = "-.--€"
                     self?.cashbackBaseView.isHidden = true
                 }
@@ -2475,6 +2535,21 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @objc private func onFreebetSwitchValueChanged(_ freeBetSwitch: UISwitch) {
         self.isFreebetEnabled.send(freeBetSwitch.isOn)
+    }
+    
+    @objc private func didTapCashbackInfoTriggerView() {
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            self.cashbackInfoDialogView.alpha = 1
+        }) { (completed) in
+            if completed {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    UIView.animate(withDuration: 0.5) {
+                        self.cashbackInfoDialogView.alpha = 0
+                    }
+                }
+            }
+        }
     }
 
     @objc private func cashbackSwitchValueChanged(_ cashbackSwitch: UISwitch) {

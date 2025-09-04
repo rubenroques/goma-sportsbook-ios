@@ -155,13 +155,35 @@ class TopBarView: UIView {
         let replayTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapReplayBaseView))
         self.cashbackBaseView.addGestureRecognizer(replayTapGesture)
         
-        // Cashback
-        Env.userSessionStore.userCashbackBalance
+        // Cashback & Freebet
+        Publishers.CombineLatest(Env.userSessionStore.userCashbackBalance, Env.userSessionStore.userFreeBetBalance)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] cashbackBalance in
-                if let cashbackBalance = cashbackBalance,
-                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
-                    self?.cashbackLabel.text = formattedTotalString
+            .sink { [weak self] cashbackBalance, freeBetBalance in
+                
+                if let cashbackBalance = cashbackBalance {
+                    
+                    if let freeBetBalance = freeBetBalance {
+                        if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance+freeBetBalance)) {
+                            self?.cashbackLabel.text = formattedTotalString
+                        }
+                    }
+                    else {
+                        if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
+                            self?.cashbackLabel.text = formattedTotalString
+                        }
+                    }
+                }
+                else if let freeBetBalance = freeBetBalance {
+                    if let cashbackBalance = cashbackBalance {
+                        if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetBalance+cashbackBalance)) {
+                            self?.cashbackLabel.text = formattedTotalString
+                        }
+                    }
+                    else {
+                        if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetBalance)) {
+                            self?.cashbackLabel.text = formattedTotalString
+                        }
+                    }
                 }
                 else {
                     self?.cashbackLabel.text = "-.--€"

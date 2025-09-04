@@ -44,15 +44,27 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var currentBalanceView: UIView!
     @IBOutlet private weak var currentBalanceTitleLabel: UILabel!
     @IBOutlet private weak var currentBalanceLabel: UILabel!
-
+    @IBOutlet private weak var currentBalanceDottetLineView: CircularDottedLineView!
+    
     @IBOutlet private weak var bonusBalanceBaseView: UIView!
     @IBOutlet private weak var bonusBalanceTitleLabel: UILabel!
     @IBOutlet private weak var bonusBalanceLabel: UILabel!
-
+    @IBOutlet private weak var bonusBalanceDottedLineView: CircularDottedLineView!
+    
+    @IBOutlet private weak var creditsBalanceBaseView: UIView!
+    @IBOutlet private weak var creditsBalanceTitleLabel: UILabel!
+    @IBOutlet private weak var creditsBalanceLabel: UILabel!
+    
+    @IBOutlet private weak var freeBetsBalanceBaseView: UIView!
+    @IBOutlet private weak var freeBetsBalanceTitleLabel: UILabel!
+    @IBOutlet private weak var freeBetsBalanceLabel: UILabel!
+    @IBOutlet private weak var freeBetsBalanceDottedLineView: CircularDottedLineView!
+    
     @IBOutlet private weak var replayBalanceBaseView: UIView!
     @IBOutlet private weak var replayBalanceTitleLabel: UILabel!
     @IBOutlet private weak var replayBalanceLabel: UILabel!
-
+    @IBOutlet private weak var replayBalanceDottedLineView: CircularDottedLineView!
+    
     @IBOutlet private weak var depositButton: UIButton!
     @IBOutlet private weak var withdrawButton: UIButton!
 
@@ -212,14 +224,17 @@ class ProfileViewController: UIViewController {
 
                         if bonusValue <= 0 {
                             self?.bonusBalanceBaseView.isHidden = true
+                            self?.currentBalanceView.isHidden = true
                         }
                         else {
                             self?.bonusBalanceBaseView.isHidden = false
+                            self?.currentBalanceView.isHidden = false
                         }
                     }
                     else {
                         self?.bonusBalanceLabel.text = "-.--€"
                         self?.bonusBalanceBaseView.isHidden = true
+                        self?.currentBalanceView.isHidden = true
                     }
                 }
                 else {
@@ -230,21 +245,63 @@ class ProfileViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.userSessionStore.userCashbackBalance
+        Publishers.CombineLatest(Env.userSessionStore.userCashbackBalance, Env.userSessionStore.userFreeBetBalance)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] cashbackBalance in
+            .sink { [weak self] cashbackBalance, freeBetBalance in
+                
+//                self?.freeBetsBalanceLabel.text = "-.--€"
+//                self?.replayBalanceLabel.text = "-.--€"
+//
+//                if let cashbackBalance = cashbackBalance,
+//                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
+//                    self?.replayBalanceLabel.text = formattedTotalString
+//
+//                    if cashbackBalance <= 0 {
+//                        self?.replayBalanceBaseView.isHidden = true
+//                    }
+//                    else {
+//                        self?.replayBalanceBaseView.isHidden = false
+//                    }
+//                }
+                
+                self?.freeBetsBalanceLabel.text = "-.--€"
                 self?.replayBalanceLabel.text = "-.--€"
-
+                self?.creditsBalanceLabel.text = "-.--€"
+                
+                // Handle cashback balance (replay balance)
                 if let cashbackBalance = cashbackBalance,
-                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
-                    self?.replayBalanceLabel.text = formattedTotalString
-
-                    if cashbackBalance <= 0 {
-                        self?.replayBalanceBaseView.isHidden = true
-                    }
-                    else {
-                        self?.replayBalanceBaseView.isHidden = false
-                    }
+                   let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
+                    self?.replayBalanceLabel.text = formattedCashbackString
+                    
+//                    if cashbackBalance <= 0 {
+//                        self?.replayBalanceBaseView.isHidden = true
+//                    } else {
+//                        self?.replayBalanceBaseView.isHidden = false
+//                    }
+                }
+                
+                // Handle free bet balance
+                if let freeBetBalance = freeBetBalance,
+                   let formattedFreeBetString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetBalance)) {
+                    self?.freeBetsBalanceLabel.text = formattedFreeBetString
+                    
+//                    if freeBetBalance <= 0 {
+//                        self?.freeBetsBalanceBaseView.isHidden = true
+//                    } else {
+//                        self?.freeBetsBalanceBaseView.isHidden = false
+//                    }
+                }
+                
+                // Calculate and display total credits (cashback + free bet)
+                let totalCredits = (cashbackBalance ?? 0.0) + (freeBetBalance ?? 0.0)
+                if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalCredits)) {
+                    self?.creditsBalanceLabel.text = formattedTotalString
+                    
+//                    if totalCredits <= 0 {
+//                        self?.creditsBalanceBaseView.isHidden = true
+//                    } else {
+//                        self?.creditsBalanceBaseView.isHidden = false
+//                    }
                 }
             }
             .store(in: &cancellables)
@@ -323,10 +380,6 @@ class ProfileViewController: UIViewController {
         self.usernameLabel.font = AppFont.with(type: .heavy, size: 22)
         self.userIdLabel.font = AppFont.with(type: .bold, size: 11)
         self.infoLabel.font = AppFont.with(type: .medium, size: 12)
-        self.totalBalanceTitleLabel.font = AppFont.with(type: .heavy, size: 18)
-        self.totalBalanceLabel.font = AppFont.with(type: .heavy, size: 24)
-        self.currentBalanceTitleLabel.font = AppFont.with(type: .heavy, size: 18)
-        self.currentBalanceLabel.font = AppFont.with(type: .heavy, size: 24)
         
         self.footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -354,11 +407,11 @@ class ProfileViewController: UIViewController {
         bonusBalanceBaseView.layer.cornerRadius = CornerRadius.view
 
         totalBalanceTitleLabel.text = localized("total_balance")
-        totalBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
-        totalBalanceLabel.font = AppFont.with(type: .bold, size: 16)
+        totalBalanceTitleLabel.font = AppFont.with(type: .bold, size: 21)
+        totalBalanceLabel.font = AppFont.with(type: .bold, size: 21)
 
         totalBalanceInfoImageView.image = UIImage(named: "info_small_icon")
-        totalBalanceInfoImageView.setImageColor(color: UIColor.App.textPrimary)
+        totalBalanceInfoImageView.setImageColor(color: UIColor.App.iconSecondary)
         
         let totalBalanceInfoTap = UITapGestureRecognizer(target: self, action: #selector(self.tapTotalBalanceInfo))
         totalBalanceView.addGestureRecognizer(totalBalanceInfoTap)
@@ -375,17 +428,41 @@ class ProfileViewController: UIViewController {
         self.totalBalanceInfoDialogView.alpha = 0
 
         currentBalanceTitleLabel.text = localized("current_balance")
-        currentBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
-        currentBalanceLabel.font = AppFont.with(type: .bold, size: 16)
+        currentBalanceTitleLabel.font = AppFont.with(type: .regular, size: 16)
+        currentBalanceLabel.font = AppFont.with(type: .regular, size: 16)
+        
+        currentBalanceTitleLabel.setContentHuggingPriority(.required, for: .horizontal)
+        currentBalanceLabel.setContentHuggingPriority(.required, for: .horizontal)
+        currentBalanceDottetLineView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
         bonusBalanceTitleLabel.text = localized("bonus")
-        bonusBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
-        bonusBalanceLabel.font = AppFont.with(type: .bold, size: 16)
+        bonusBalanceTitleLabel.font = AppFont.with(type: .regular, size: 16)
+        bonusBalanceLabel.font = AppFont.with(type: .regular, size: 16)
+        
+        bonusBalanceTitleLabel.setContentHuggingPriority(.required, for: .horizontal)
+        bonusBalanceLabel.setContentHuggingPriority(.required, for: .horizontal)
+        bonusBalanceDottedLineView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
+        creditsBalanceTitleLabel.text = localized("credits_betsson")
+        creditsBalanceTitleLabel.font = AppFont.with(type: .bold, size: 21)
+        creditsBalanceLabel.font = AppFont.with(type: .bold, size: 21)
+        
+        freeBetsBalanceTitleLabel.text = localized("freebet")
+        freeBetsBalanceTitleLabel.font = AppFont.with(type: .regular, size: 16)
+        freeBetsBalanceLabel.font = AppFont.with(type: .regular, size: 16)
+        
+        freeBetsBalanceTitleLabel.setContentHuggingPriority(.required, for: .horizontal)
+        freeBetsBalanceLabel.setContentHuggingPriority(.required, for: .horizontal)
+        freeBetsBalanceDottedLineView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        
         replayBalanceTitleLabel.text = localized("cashback_balance")
-        replayBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
-        replayBalanceLabel.font = AppFont.with(type: .bold, size: 16)
+        replayBalanceTitleLabel.font = AppFont.with(type: .regular, size: 16)
+        replayBalanceLabel.font = AppFont.with(type: .regular, size: 16)
 
+        replayBalanceTitleLabel.setContentHuggingPriority(.required, for: .horizontal)
+        replayBalanceLabel.setContentHuggingPriority(.required, for: .horizontal)
+        replayBalanceDottedLineView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        
         depositButton.layer.cornerRadius = CornerRadius.button
         withdrawButton.layer.cornerRadius = CornerRadius.button
 
@@ -565,16 +642,24 @@ class ProfileViewController: UIViewController {
         totalBalanceLabel.textColor =  UIColor.App.textPrimary
 
         currentBalanceView.backgroundColor = UIColor.App.backgroundPrimary
-        currentBalanceTitleLabel.textColor =  UIColor.App.textPrimary
-        currentBalanceLabel.textColor =  UIColor.App.textPrimary
+        currentBalanceTitleLabel.textColor =  UIColor.App.textSecondary
+        currentBalanceLabel.textColor =  UIColor.App.textSecondary
 
         bonusBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        bonusBalanceTitleLabel.textColor = UIColor.App.textPrimary
-        bonusBalanceLabel.textColor = UIColor.App.textPrimary
+        bonusBalanceTitleLabel.textColor = UIColor.App.textSecondary
+        bonusBalanceLabel.textColor = UIColor.App.textSecondary
 
+        creditsBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        creditsBalanceTitleLabel.textColor =  UIColor.App.textPrimary
+        creditsBalanceLabel.textColor =  UIColor.App.textPrimary
+        
+        freeBetsBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        freeBetsBalanceTitleLabel.textColor = UIColor.App.textSecondary
+        freeBetsBalanceLabel.textColor = UIColor.App.textSecondary
+        
         replayBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        replayBalanceTitleLabel.textColor = UIColor.App.textPrimary
-        replayBalanceLabel.textColor = UIColor.App.textPrimary
+        replayBalanceTitleLabel.textColor = UIColor.App.textSecondary
+        replayBalanceLabel.textColor = UIColor.App.textSecondary
         //
         
         //
@@ -828,7 +913,6 @@ class ProfileViewController: UIViewController {
     }
 
     @objc private func tapTotalBalanceInfo() {
-        print("TAPPED TOTAL BALANCE INFO!")
 
         UIView.animate(withDuration: 0.5, animations: {
             self.totalBalanceInfoDialogView.alpha = 1

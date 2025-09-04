@@ -18,6 +18,7 @@ public struct AvailableBonus: Codable {
     public var expiryDate: Date?
     public var wagerRequirement: Double?
     public var imageUrl: String?
+    public var additionalAwards: [AdditionalAward]?
 
     enum CodingKeys: String, CodingKey {
         case id = "optInId"
@@ -30,5 +31,17 @@ public struct AvailableBonus: Codable {
         case expiryDate = "endDate"
         case wagerRequirement = "wagerReq"
         case imageUrl = "imageUrl"
+    }
+}
+
+public struct AdditionalAward: Codable {
+    public var type: String
+    public var product: String
+    public var amount: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case type = "type"
+        case product = "product"
+        case amount = "amount"
     }
 }

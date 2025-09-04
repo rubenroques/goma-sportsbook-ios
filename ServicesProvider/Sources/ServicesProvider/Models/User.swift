@@ -406,6 +406,8 @@ public struct UserWallet {
     public var totalEscrowString: String?
     public var totalEscrow: Double?
     
+    public var externalFreeBetBalances: [ExternalFreeBetBalance]?
+    
     enum CodingKeys: String, CodingKey {
         case totalString = "totalBalance"
         case total = "totalBalanceNumber"
@@ -430,9 +432,18 @@ public struct UserWallet {
         case currency = "currency"
         case loyaltyPoint = "loyaltyPoint"
         case vipStatus = "vipStatus"
+        case externalFreeBetBalances = "externalFreeBetBalances"
     }
+}
+
+public struct ExternalFreeBetBalance {
+    public var productCode: String
+    public var balance: String
     
-    
+    enum CodingKeys: String, CodingKey {
+        case productCode = "productCode"
+        case balacen = "balance"
+    }
 }
 
 public struct UsernameValidation {

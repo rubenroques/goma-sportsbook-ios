@@ -421,6 +421,12 @@ extension SportRadarModels {
         let withdrawRestrictionAmountNumber: Double?
         let totalEscrowBalance: String?
         let totalEscrowBalanceNumber: Double?
+        let externalFreeBetBalances: [ExternalFreeBetBalance]?
+    }
+    
+    struct ExternalFreeBetBalance: Codable {
+        let productCode: String
+        let balance: String
     }
 
 }

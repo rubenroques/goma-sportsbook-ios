@@ -73,8 +73,25 @@ class InfoDialogView: UIView {
 
     }
 
-    func configure(title: String) {
+    func configure(title: String, highlightText: String? = nil) {
         self.titleLabel.text = title
+        
+        if let highlightText = highlightText {
+            let attributedString = NSMutableAttributedString(string: title)
+            
+            let range = (title as NSString).range(of: highlightText, options: .caseInsensitive)
+            
+            if range.location != NSNotFound {
+                attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
+                
+                let fullRange = NSRange(location: 0, length: title.count)
+                attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 10), range: fullRange)
+                
+                self.titleLabel.attributedText = attributedString
+            } else {
+                self.titleLabel.text = title
+            }
+        }
     }
 }
 

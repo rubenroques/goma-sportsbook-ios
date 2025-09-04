@@ -601,7 +601,10 @@ extension OmegaAPIClient: Endpoint {
             ]
             
         case .getBalance:
-            return nil
+            return [
+                URLQueryItem(name: "includeExternalFreeBetBalances", value: "true")
+            ]
+//            return nil
         case .getCashbackBalance:
             return nil
             

@@ -20,6 +20,7 @@ extension SportRadarModels {
         var expiryDate: String
         var wagerRequirement: Double?
         var imageUrl: String?
+        var additionalAwards: [AdditionalAward]?
 
         enum CodingKeys: String, CodingKey {
             case id = "optInId"
@@ -32,7 +33,19 @@ extension SportRadarModels {
             case expiryDate = "endDate"
             case wagerRequirement = "wagerReq"
             case imageUrl = "imageUrl"
+            case additionalAwards = "additionalAwards"
         }
     }
 
+    struct AdditionalAward: Codable {
+        var type: String
+        var product: String
+        var amount: Double
+        
+        enum CodingKeys: String, CodingKey {
+            case type = "type"
+            case product = "product"
+            case amount = "amount"
+        }
+    }
 }
