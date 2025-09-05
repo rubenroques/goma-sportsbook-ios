@@ -52,8 +52,8 @@ public struct GrantedBonus: Codable {
 }
 
 public struct FreeBetBonus: Codable {
-    var productCode: String
-    var amount: Double
+    public var productCode: String
+    public var amount: Double
     
     enum CodingKeys: String, CodingKey {
         case productCode = "productCode"

@@ -22,6 +22,7 @@ struct GrantedBonus: Codable {
     let grantedDate: Date?
     let initialWagerRequirementAmount: Double?
     let remainingWagerRequirementAmount: Double?
+    let freeBetBonus: FreeBetBonus?
 
     init(id: String,
          name: String,
@@ -36,7 +37,8 @@ struct GrantedBonus: Codable {
          expiryDate: Date? = nil,
          grantedDate: Date? = nil,
          initialWagerRequirementAmount: Double? = nil,
-         remainingWagerRequirementAmount: Double? = nil) 
+         remainingWagerRequirementAmount: Double? = nil,
+         freeBetBonus: FreeBetBonus? = nil)
     {
         self.id = id
         self.name = name
@@ -52,5 +54,16 @@ struct GrantedBonus: Codable {
         self.grantedDate = grantedDate
         self.initialWagerRequirementAmount = initialWagerRequirementAmount
         self.remainingWagerRequirementAmount = remainingWagerRequirementAmount
+        self.freeBetBonus = freeBetBonus
+    }
+}
+
+struct FreeBetBonus: Codable {
+    var productCode: String
+    var amount: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case productCode = "productCode"
+        case amount = "amount"
     }
 }

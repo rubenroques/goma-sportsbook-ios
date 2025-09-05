@@ -259,7 +259,7 @@ class MyTicketCardView: NibView {
         
         self.returnedAmountValueLabel.text = "\(localized("returned")) "
         
-        self.cashbackUsedTitleLabel.text = localized("used_cashback").uppercased()
+        self.cashbackUsedTitleLabel.text = localized("betsson_credits_used").uppercased()
         self.cashbackUsedTitleLabel.font = AppFont.with(type: .bold, size: 9)
         
         self.hasPartialCashoutReturned = false

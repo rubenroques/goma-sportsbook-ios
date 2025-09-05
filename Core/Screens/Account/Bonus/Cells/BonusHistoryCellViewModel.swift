@@ -37,7 +37,13 @@ class BonusHistoryCellViewModel: NSObject {
         let expiryDate: Date = bonus.expiryDate ?? Date()
         self.endDateStringPublisher.value = self.getDateFormatted(date: expiryDate)
 
-        self.bonusValuePublisher.value = "\(bonus.amount ?? 0.0)"
+        if let freeBetAmount = bonus.freeBetBonus?.amount,
+           freeBetAmount > 0 {
+            self.bonusValuePublisher.value = "\(freeBetAmount)"
+        }
+        else {
+            self.bonusValuePublisher.value = "\(bonus.amount ?? 0.0)"
+        }
 
         self.bonusType = BonusTypeMapper.init(bonusType: bonus.status)
 

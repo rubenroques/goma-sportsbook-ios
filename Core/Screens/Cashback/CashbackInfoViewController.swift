@@ -438,7 +438,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 13)
-        label.text = localized("used_cashback").uppercased()
+        label.text = localized("betsson_credits_used").uppercased()
         label.textAlignment = .left
         return label
     }

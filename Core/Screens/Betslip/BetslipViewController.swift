@@ -24,10 +24,21 @@ class BetslipViewController: UIViewController {
     @IBOutlet private weak var accountValuePlusView: UIView!
     @IBOutlet private weak var accountValueLabel: UILabel!
     @IBOutlet private weak var accountPlusImageView: UIImageView!
-
+    
+    @IBOutlet private weak var freeBetInfoBaseView: UIView!
+    @IBOutlet private weak var freeBetIconBaseView: UIView!
+    @IBOutlet private weak var freeBetIconImageView: UIImageView!
+    @IBOutlet private weak var freeBetValueBaseView: UIView!
+    @IBOutlet private weak var freeBetValueLabel: UILabel!
+    
+    @IBOutlet private weak var cashbackInfoBaseView: UIView!
+    @IBOutlet private weak var cashbackIconBaseView: UIView!
+    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    @IBOutlet private weak var cashbackValueBaseView: UIView!
+    @IBOutlet private weak var cashbackValueLabel: UILabel!
+    
     @IBOutlet private weak var closeButton: UIButton!
     @IBOutlet private weak var tabsBaseView: UIView!
-    @IBOutlet private weak var betsLabel: UILabel!
     
     private var tabViewController: TabularViewController
     private var viewControllerTabDataSource: TitleTabularDataSource
@@ -120,10 +131,9 @@ class BetslipViewController: UIViewController {
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
         self.tabViewController.setBarDistribution(.parent)
 
-        self.betsLabel.text = localized("bets")
-
-        self.accountValueLabel.font = AppFont.with(type: .bold, size: 14)
-        self.betsLabel.font = AppFont.with(type: .heavy, size: 20)
+        self.accountValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.freeBetValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.cashbackValueLabel.font = AppFont.with(type: .bold, size: 12)
 
         //
         //
@@ -146,6 +156,38 @@ class BetslipViewController: UIViewController {
 
         let tapAccountValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapAccountValue(_:)))
         self.accountInfoBaseView.addGestureRecognizer(tapAccountValue)
+        
+        // Freebet wallet
+        self.freeBetInfoBaseView.isHidden = true
+        self.freeBetValueLabel.text = localized("loading")
+
+        self.freeBetInfoBaseView.clipsToBounds = true
+        self.freeBetIconBaseView.clipsToBounds = true
+        self.freeBetInfoBaseView.layer.cornerRadius = CornerRadius.view
+        self.freeBetInfoBaseView.layer.masksToBounds = true
+        self.freeBetInfoBaseView.isUserInteractionEnabled = true
+
+        self.freeBetIconBaseView.layer.cornerRadius = CornerRadius.squareView
+        self.freeBetIconBaseView.layer.masksToBounds = true
+
+//        let tapFreeBetValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapFreeBetValue(_:)))
+//        self.freeBetInfoBaseView.addGestureRecognizer(tapFreeBetValue)
+        
+        // Cashback wallet
+        self.cashbackInfoBaseView.isHidden = true
+        self.cashbackValueLabel.text = localized("loading")
+
+        self.cashbackInfoBaseView.clipsToBounds = true
+        self.cashbackIconBaseView.clipsToBounds = true
+        self.cashbackInfoBaseView.layer.cornerRadius = CornerRadius.view
+        self.cashbackInfoBaseView.layer.masksToBounds = true
+        self.cashbackInfoBaseView.isUserInteractionEnabled = true
+
+        self.cashbackIconBaseView.layer.cornerRadius = CornerRadius.squareView
+        self.cashbackIconBaseView.layer.masksToBounds = true
+
+//        let tapCashbackValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapCashbackValue(_:)))
+//        self.cashbackInfoBaseView.addGestureRecognizer(tapCashbackValue)
 
         //
         //
@@ -158,9 +200,13 @@ class BetslipViewController: UIViewController {
             .sink { [weak self] userProfile in
                 if userProfile != nil {
                     self?.accountInfoBaseView.isHidden = false
+                    self?.freeBetInfoBaseView.isHidden = false
+                    self?.cashbackInfoBaseView.isHidden = false
                 }
                 else {
                     self?.accountInfoBaseView.isHidden = true
+                    self?.freeBetInfoBaseView.isHidden = true
+                    self?.cashbackInfoBaseView.isHidden = true
                 }
             }
             .store(in: &cancellables)
@@ -174,6 +220,32 @@ class BetslipViewController: UIViewController {
                 }
                 else {
                     self?.accountValueLabel.text = "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+        
+        Env.userSessionStore.userFreeBetBalance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] freeBetBalance in
+                if let freeBetBalance,
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetBalance)) {
+                    self?.freeBetValueLabel.text = formattedTotalString
+                }
+                else {
+                    self?.freeBetValueLabel.text = "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+        
+        Env.userSessionStore.userCashbackBalance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] cashbackBalance in
+                if let cashbackBalance,
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
+                    self?.cashbackValueLabel.text = formattedTotalString
+                }
+                else {
+                    self?.cashbackValueLabel.text = "-.--€"
                 }
             }
             .store(in: &cancellables)
@@ -210,6 +282,14 @@ class BetslipViewController: UIViewController {
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         
+        self.freeBetInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.freeBetValueBaseView.backgroundColor = .clear
+        self.freeBetValueLabel.textColor = UIColor.App.textPrimary
+        
+        self.cashbackInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.cashbackValueBaseView.backgroundColor = .clear
+        self.cashbackValueLabel.textColor = UIColor.App.textPrimary
+
         self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
         self.tabViewController.textColor = UIColor.App.textPrimary
@@ -217,7 +297,6 @@ class BetslipViewController: UIViewController {
 
         self.closeButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
-        self.betsLabel.textColor = UIColor.App.textPrimary
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
 

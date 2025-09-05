@@ -362,7 +362,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     private var cashbackResultValuePublisher: CurrentValueSubject<Double?, Never> = .init(nil)
 
-
     private var isKeyboardShowingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     private var isLoading = false {
@@ -996,14 +995,26 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                     self?.betBuilderWarningView.isHidden = true
 
+//                    if let cashbackEnabled = self?.isCashbackEnabled,
+//                       cashbackEnabled,
+//                       let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+//
+//                        if cashbackValue > 0 {
+//                            self?.cashbackBaseView.isHidden = false
+//                        }
+//                        else {
+//                            self?.cashbackBaseView.isHidden = true
+//                        }
+//                    }
                     if let cashbackEnabled = self?.isCashbackEnabled,
-                       cashbackEnabled,
-                       let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-
-                        if cashbackValue > 0 {
+                       cashbackEnabled {
+                        
+                        let cashbackValue = Env.userSessionStore.userCashbackBalance.value ?? 0.0
+                        let freeBetValue = Env.userSessionStore.userFreeBetBalance.value ?? 0.0
+                        
+                        if cashbackValue > 0 || freeBetValue > 0 {
                             self?.cashbackBaseView.isHidden = false
-                        }
-                        else {
+                        } else {
                             self?.cashbackBaseView.isHidden = true
                         }
                     }
@@ -1017,16 +1028,18 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betBuilderWarningView.isHidden = true
 
                     if let cashbackEnabled = self?.isCashbackEnabled,
-                       cashbackEnabled,
-                       let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-
-                        if cashbackValue > 0 {
+                       cashbackEnabled {
+                        
+                        let cashbackValue = Env.userSessionStore.userCashbackBalance.value ?? 0.0
+                        let freeBetValue = Env.userSessionStore.userFreeBetBalance.value ?? 0.0
+                        
+                        if cashbackValue > 0 || freeBetValue > 0 {
                             self?.cashbackBaseView.isHidden = false
-                        }
-                        else {
+                        } else {
                             self?.cashbackBaseView.isHidden = true
                         }
                     }
+                    
                 case .system:
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = true
@@ -1036,13 +1049,14 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betBuilderWarningView.isHidden = true
 
                     if let cashbackEnabled = self?.isCashbackEnabled,
-                       cashbackEnabled,
-                       let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-
-                        if cashbackValue > 0 {
+                       cashbackEnabled {
+                        
+                        let cashbackValue = Env.userSessionStore.userCashbackBalance.value ?? 0.0
+                        let freeBetValue = Env.userSessionStore.userFreeBetBalance.value ?? 0.0
+                        
+                        if cashbackValue > 0 || freeBetValue > 0 {
                             self?.cashbackBaseView.isHidden = false
-                        }
-                        else {
+                        } else {
                             self?.cashbackBaseView.isHidden = true
                         }
                     }
@@ -1759,22 +1773,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink { completion in
                 print("userSessionStore userCashbackBalance completion: \(completion)")
             } receiveValue: { [weak self] cashbackValue, freeBetValue in
-
-//                if let cashbackValue = cashbackValue,
-//                   let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) {
-//
-//                    self?.cashbackValueLabel.text = formattedCashbackString
-//                    if cashbackValue <= 0 {
-//                        self?.cashbackBaseView.isHidden = true
-//                    }
-//                    else {
-//                        self?.cashbackBaseView.isHidden = false
-//                    }
-//                }
-//                else {
-//                    self?.cashbackValueLabel.text = "-.--€"
-//                    self?.cashbackBaseView.isHidden = true
-//                }
                 
                 var displayValue: Double?
                 
@@ -2305,10 +2303,26 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 let totalValue = singleBetTicketStakes.values.reduce(0.0, +)
 
-                if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-                    if totalValue > cashbackValue {
-                        let errorMessage = localized("betslip_cashback_error")
-                        self.showErrorView(errorMessage: errorMessage)
+//                if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+//                    if totalValue > cashbackValue {
+//                        let errorMessage = localized("betslip_cashback_error")
+//                        self.showErrorView(errorMessage: errorMessage)
+//                        self.isLoading = false
+//                        return
+//                    }
+//                }
+                
+                if self.isCashbackToggleOn.value {
+                    let cashbackValue = Env.userSessionStore.userCashbackBalance.value ?? 0.0
+                    let freeBetValue = Env.userSessionStore.userFreeBetBalance.value ?? 0.0
+                    let maxAvailableBalance = max(cashbackValue, freeBetValue)
+                    
+                    if totalValue > maxAvailableBalance {
+                        let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxAvailableBalance))
+                        
+                        let errorMessage = localized("betslip_credits_error").replacingFirstOccurrence(of: "{amount}", with: amount ?? "")
+                        
+                        self.showErrorView(errorMessage: errorMessage, isAlertLayout: true)
                         self.isLoading = false
                         return
                     }
@@ -2355,10 +2369,26 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             else if self.listTypePublisher.value == .multiple {
 
-                if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-                    if self.betValueSubject.value > cashbackValue {
-                        let errorMessage = localized("betslip_cashback_error")
-                        self.showErrorView(errorMessage: errorMessage)
+//                if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+//                    if self.betValueSubject.value > cashbackValue {
+//                        let errorMessage = localized("betslip_cashback_error")
+//                        self.showErrorView(errorMessage: errorMessage)
+//                        self.isLoading = false
+//                        return
+//                    }
+//                }
+                
+                if self.isCashbackToggleOn.value {
+                    let cashbackValue = Env.userSessionStore.userCashbackBalance.value ?? 0.0
+                    let freeBetValue = Env.userSessionStore.userFreeBetBalance.value ?? 0.0
+                    let maxAvailableBalance = max(cashbackValue, freeBetValue)
+                    
+                    if self.betValueSubject.value > maxAvailableBalance {
+                        let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxAvailableBalance))
+                        
+                        let errorMessage = localized("betslip_credits_error").replacingFirstOccurrence(of: "{amount}", with: amount ?? "")
+                        
+                        self.showErrorView(errorMessage: errorMessage, isAlertLayout: true)
                         self.isLoading = false
                         return
                     }
@@ -2411,10 +2441,17 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             else if self.listTypePublisher.value == .system, let selectedSystemBetType = self.selectedSystemBetType {
 
-                if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-                    if self.betValueSubject.value > cashbackValue {
-                        let errorMessage = localized("betslip_cashback_error")
-                        self.showErrorView(errorMessage: errorMessage)
+                if self.isCashbackToggleOn.value {
+                    let cashbackValue = Env.userSessionStore.userCashbackBalance.value ?? 0.0
+                    let freeBetValue = Env.userSessionStore.userFreeBetBalance.value ?? 0.0
+                    let maxAvailableBalance = max(cashbackValue, freeBetValue)
+                    
+                    if self.betValueSubject.value > maxAvailableBalance {
+                        let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxAvailableBalance))
+                        
+                        let errorMessage = localized("betslip_credits_error").replacingFirstOccurrence(of: "{amount}", with: amount ?? "")
+                        
+                        self.showErrorView(errorMessage: errorMessage, isAlertLayout: true)
                         self.isLoading = false
                         return
                     }

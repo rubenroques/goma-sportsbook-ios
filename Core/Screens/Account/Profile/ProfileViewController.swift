@@ -443,7 +443,7 @@ class ProfileViewController: UIViewController {
         bonusBalanceLabel.setContentHuggingPriority(.required, for: .horizontal)
         bonusBalanceDottedLineView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-        creditsBalanceTitleLabel.text = localized("credits_betsson")
+        creditsBalanceTitleLabel.text = localized("betsson_credits")
         creditsBalanceTitleLabel.font = AppFont.with(type: .bold, size: 21)
         creditsBalanceLabel.font = AppFont.with(type: .bold, size: 21)
         

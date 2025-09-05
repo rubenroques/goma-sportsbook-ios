@@ -2125,4 +2125,6 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 
 "betsson_credits_mise_max" = "Crédits Betsson (mise max)";
 "betsson_credits_dialog_info" = "Vous ne pouvez placer un pari que jusqu’au montant disponible dans un seul portefeuille. Montant max possible: {amount}";
-"credits_betsson" = "Crédits Betsson";
+"betsson_credits" = "Crédits Betsson";
+"betsson_credits_used" = "Solde Crédits Betsson Utilisé";
+"betslip_credits_error" = "Solde Crédits dépassé. Max: {amount}";

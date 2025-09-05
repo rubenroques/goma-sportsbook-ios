@@ -70,7 +70,7 @@ class BetslipErrorView: NibView {
     func setAlertMode() {
         self.mode = .alertError
         
-        self.logoImageView.image = UIImage(named: "info_alert_icon")
+        self.logoImageView.image = UIImage(named: "error_cross_icon")
         self.logoImageView.setTintColor(color: UIColor.App.alertError)
         
         self.containerView.layer.borderColor = UIColor.App.alertError.cgColor

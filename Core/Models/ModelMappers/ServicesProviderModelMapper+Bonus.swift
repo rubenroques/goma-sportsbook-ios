@@ -15,6 +15,13 @@ extension ServiceProviderModelMapper {
            let remainingWager = grantedBonus.amountWagered,
            let initialWagerAmount = Double(initialWager),
            let remainingWagerAmount = Double(remainingWager) {
+            
+            var mappedFreeBetBonus: FreeBetBonus? = nil
+            
+            if let freeBetBonus = grantedBonus.freeBetBonus {
+                
+                mappedFreeBetBonus = self.freeBetBonus(fromInternalFreeBetBonus: freeBetBonus)
+            }
 
             return GrantedBonus(id: "\(grantedBonus.id)",
                                 name: grantedBonus.name,
@@ -24,7 +31,8 @@ extension ServiceProviderModelMapper {
                                 expiryDate: grantedBonus.expiryDate ,
                                 grantedDate: grantedBonus.triggerDate,
                                 initialWagerRequirementAmount: initialWagerAmount,
-                                remainingWagerRequirementAmount: remainingWagerAmount)
+                                remainingWagerRequirementAmount: remainingWagerAmount,
+                                freeBetBonus: mappedFreeBetBonus)
         }
 
         return GrantedBonus(id: "\(grantedBonus.id)",
@@ -34,6 +42,11 @@ extension ServiceProviderModelMapper {
                             remainingAmount: Double(grantedBonus.amount),
                             expiryDate: grantedBonus.expiryDate ,
                             grantedDate: grantedBonus.triggerDate)
+    }
+    
+    static func freeBetBonus(fromInternalFreeBetBonus freeBetBonus: ServicesProvider.FreeBetBonus) -> FreeBetBonus {
+        
+        return FreeBetBonus(productCode: freeBetBonus.productCode, amount: freeBetBonus.amount)
     }
 
     static func applicableBonus(fromServiceProviderAvailableBonus availableBonus: ServicesProvider.AvailableBonus) -> ApplicableBonus {

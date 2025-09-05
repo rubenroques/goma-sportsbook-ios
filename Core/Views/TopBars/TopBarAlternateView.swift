@@ -160,32 +160,12 @@ class TopBarView: UIView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] cashbackBalance, freeBetBalance in
                 
-                if let cashbackBalance = cashbackBalance {
-                    
-                    if let freeBetBalance = freeBetBalance {
-                        if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance+freeBetBalance)) {
-                            self?.cashbackLabel.text = formattedTotalString
-                        }
-                    }
-                    else {
-                        if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
-                            self?.cashbackLabel.text = formattedTotalString
-                        }
-                    }
-                }
-                else if let freeBetBalance = freeBetBalance {
-                    if let cashbackBalance = cashbackBalance {
-                        if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetBalance+cashbackBalance)) {
-                            self?.cashbackLabel.text = formattedTotalString
-                        }
-                    }
-                    else {
-                        if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetBalance)) {
-                            self?.cashbackLabel.text = formattedTotalString
-                        }
-                    }
-                }
-                else {
+                let totalBalance = (cashbackBalance ?? 0.0) + (freeBetBalance ?? 0.0)
+
+                if totalBalance > 0,
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBalance)) {
+                    self?.cashbackLabel.text = formattedTotalString
+                } else {
                     self?.cashbackLabel.text = "-.--€"
                 }
             }
