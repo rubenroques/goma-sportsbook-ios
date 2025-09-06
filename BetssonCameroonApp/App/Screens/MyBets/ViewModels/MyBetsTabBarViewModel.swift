@@ -28,13 +28,13 @@ final class MyBetsTabBarViewModel: MarketGroupSelectorTabViewModelProtocol {
                 id: MyBetsTabType.sports.rawValue,
                 title: MyBetsTabType.sports.title,
                 visualState: selectedTabType == .sports ? .selected : .idle,
-                iconTypeName: MyBetsTabType.sports.iconTypeName
+                prefixIconTypeName: MyBetsTabType.sports.iconTypeName
             ),
             MarketGroupTabItemData(
                 id: MyBetsTabType.virtuals.rawValue,
                 title: MyBetsTabType.virtuals.title,
                 visualState: selectedTabType == .virtuals ? .selected : .idle,
-                iconTypeName: MyBetsTabType.virtuals.iconTypeName
+                prefixIconTypeName: MyBetsTabType.virtuals.iconTypeName
             )
         ]
         
@@ -93,7 +93,7 @@ final class MyBetsTabBarViewModel: MarketGroupSelectorTabViewModelProtocol {
                 id: tab.id,
                 title: tab.title,
                 visualState: tab.id == id ? .selected : .idle,
-                iconTypeName: tab.iconTypeName,
+                suffixIconTypeName: tab.suffixIconTypeName,
                 badgeCount: tab.badgeCount
             )
         }
@@ -145,7 +145,7 @@ final class MyBetsTabBarViewModel: MarketGroupSelectorTabViewModelProtocol {
                 id: tab.id,
                 title: tab.title,
                 visualState: .idle,
-                iconTypeName: tab.iconTypeName,
+                suffixIconTypeName: tab.suffixIconTypeName,
                 badgeCount: tab.badgeCount
             )
         }

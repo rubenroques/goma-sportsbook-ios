@@ -42,6 +42,15 @@ final class MyBetDetailViewController: UIViewController {
     private lazy var betDetailsTitleLabel: UILabel = Self.createBetDetailsTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
     
+    // Content scroll view and stack view
+    private lazy var contentScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.alwaysBounceVertical = true
+        return scrollView
+    }()
+    
     private lazy var mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -52,8 +61,34 @@ final class MyBetDetailViewController: UIViewController {
         return stackView
     }()
     
-    private lazy var loadingView: UIView = Self.createLoadingView()
-    private lazy var errorView: UIView = Self.createErrorView()
+    // GomaUI Components
+    private lazy var betDetailValuesSummaryView: BetDetailValuesSummaryView = {
+        let view = BetDetailValuesSummaryView(viewModel: viewModel.betDetailValuesSummaryViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var selectionsLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .medium, size: 16)
+        label.textColor = StyleProvider.Color.textSecondary
+        label.text = viewModel.selectionsLabel
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private lazy var selectionsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        return stackView
+    }()
+    
+    // Removed loading/error views - data is immediately available
     
     // Wallet Status UI Components
     private lazy var walletStatusView: WalletStatusView = {
@@ -100,8 +135,7 @@ final class MyBetDetailViewController: UIViewController {
         setupActions()
         setupMultiWidgetToolbarView()
         
-        // Load initial data
-        viewModel.loadBetDetails()
+        // No loading needed - all data is immediately available
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -134,9 +168,18 @@ final class MyBetDetailViewController: UIViewController {
         
         // Rest of the hierarchy
         view.addSubview(customNavigationView)
-        view.addSubview(mainStackView)
-        view.addSubview(loadingView)
-        view.addSubview(errorView)
+        view.addSubview(contentScrollView)
+        
+        // Content hierarchy inside scroll view
+        contentScrollView.addSubview(mainStackView)
+        
+        // Add GomaUI components to main stack view
+        mainStackView.addArrangedSubview(betDetailValuesSummaryView)
+        mainStackView.addArrangedSubview(selectionsLabel)
+        mainStackView.addArrangedSubview(selectionsStackView)
+        
+        // Populate selections stack view with result summary views
+        setupSelectionsStackView()
         
         // Add wallet overlay on top of everything
         view.addSubview(walletStatusOverlayView)
@@ -144,6 +187,18 @@ final class MyBetDetailViewController: UIViewController {
         
         customNavigationView.addSubview(betDetailsTitleLabel)
         customNavigationView.addSubview(backButton)
+    }
+    
+    private func setupSelectionsStackView() {
+        // Clear existing views
+        selectionsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // Add BetDetailResultSummaryView for each selection
+        for selectionViewModel in viewModel.betDetailResultSummaryViewModels {
+            let resultSummaryView = BetDetailResultSummaryView(viewModel: selectionViewModel)
+            resultSummaryView.translatesAutoresizingMaskIntoConstraints = false
+            selectionsStackView.addArrangedSubview(resultSummaryView)
+        }
     }
     
     private func setupConstraints() {
@@ -181,23 +236,20 @@ final class MyBetDetailViewController: UIViewController {
             backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
             backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
             
-            // Main Stack View (Content area)
-            mainStackView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor, constant: 16),
-            mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            mainStackView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            // Content Scroll View
+            contentScrollView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
+            contentScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            // Loading View (only cover content area, keep toolbar/navigation visible)
-            loadingView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
-            loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            loadingView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            // Main Stack View (inside scroll view)
+            mainStackView.topAnchor.constraint(equalTo: contentScrollView.topAnchor, constant: 16),
+            mainStackView.leadingAnchor.constraint(equalTo: contentScrollView.leadingAnchor, constant: 16),
+            mainStackView.trailingAnchor.constraint(equalTo: contentScrollView.trailingAnchor, constant: -16),
+            mainStackView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor, constant: -16),
             
-            // Error View (only cover content area, keep toolbar/navigation visible)
-            errorView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
-            errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            // Important: Set the width constraint for scroll view content
+            mainStackView.widthAnchor.constraint(equalTo: contentScrollView.widthAnchor, constant: -32), // Account for 16pt margins on each side
             
             // Wallet Status Overlay (covers entire screen)
             walletStatusOverlayView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -213,13 +265,8 @@ final class MyBetDetailViewController: UIViewController {
     }
     
     private func setupBindings() {
-        // Display state binding
-        viewModel.$displayState
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] displayState in
-                self?.render(displayState: displayState)
-            }
-            .store(in: &cancellables)
+        // No binding needed - content is immediately available
+        // Content is already visible since we removed loading states
     }
     
     private func setupActions() {
@@ -238,42 +285,7 @@ final class MyBetDetailViewController: UIViewController {
     
     // MARK: - Rendering
     
-    private func render(displayState: MyBetDetailDisplayState) {
-        switch displayState {
-        case .loading:
-            showLoadingState()
-        case .loaded:
-            showContentState()
-        case .error(let message):
-            showErrorState(message: message)
-        }
-    }
-    
-    private func showLoadingState() {
-        loadingView.isHidden = false
-        errorView.isHidden = true
-        mainStackView.isHidden = true
-        customNavigationView.isHidden = false
-    }
-    
-    private func showContentState() {
-        loadingView.isHidden = true
-        errorView.isHidden = true
-        mainStackView.isHidden = false
-        customNavigationView.isHidden = false
-    }
-    
-    private func showErrorState(message: String) {
-        loadingView.isHidden = true
-        errorView.isHidden = false
-        mainStackView.isHidden = true
-        customNavigationView.isHidden = false
-        
-        // Update error message
-        if let label = errorView.subviews.first(where: { $0 is UILabel }) as? UILabel {
-            label.text = message
-        }
-    }
+    // No state management needed - content is immediately visible
     
     // MARK: - Actions
     
@@ -281,9 +293,7 @@ final class MyBetDetailViewController: UIViewController {
         viewModel.handleBackTap()
     }
     
-    @objc private func didTapRetry() {
-        viewModel.refreshBetDetails()
-    }
+    // No retry needed - data is immediately available
     
     private func handleWidgetSelection(_ widgetID: String) {
         switch widgetID {
@@ -382,74 +392,5 @@ extension MyBetDetailViewController {
         return button
     }
     
-    private static func createLoadingView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundPrimary
-        view.isHidden = true
-        
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.startAnimating()
-        spinner.color = StyleProvider.Color.textSecondary
-        
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading bet details..."
-        label.textAlignment = .center
-        label.font = StyleProvider.fontWith(type: .medium, size: 16)
-        label.textColor = StyleProvider.Color.textSecondary
-        
-        view.addSubview(spinner)
-        view.addSubview(label)
-        
-        NSLayoutConstraint.activate([
-            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
-            
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.topAnchor.constraint(equalTo: spinner.bottomAnchor, constant: 16)
-        ])
-        
-        return view
-    }
-    
-    private static func createErrorView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundPrimary
-        view.isHidden = true
-        
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Failed to load bet details"
-        label.textAlignment = .center
-        label.font = StyleProvider.fontWith(type: .medium, size: 16)
-        label.textColor = StyleProvider.Color.textPrimary
-        label.numberOfLines = 0
-        
-        let retryButton = UIButton(type: .system)
-        retryButton.translatesAutoresizingMaskIntoConstraints = false
-        retryButton.setTitle("Try Again", for: .normal)
-        retryButton.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
-        retryButton.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 16)
-        retryButton.backgroundColor = StyleProvider.Color.buttonBackgroundSecondary
-        retryButton.layer.cornerRadius = 8
-        retryButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
-        
-        view.addSubview(label)
-        view.addSubview(retryButton)
-        
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
-            label.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 32),
-            label.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -32),
-            
-            retryButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            retryButton.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 24)
-        ])
-        
-        return view
-    }
+    // Removed loading and error view factories - not needed since data is immediately available
 }

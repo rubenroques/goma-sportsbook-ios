@@ -3,10 +3,18 @@ import Combine
 
 /// Data model for bet detail values summary
 public struct BetDetailValuesSummaryData: Equatable {
-    public let rows: [BetDetailRowData]
+    public let headerRow: BetDetailRowData?     // Optional header (date)
+    public let contentRows: [BetDetailRowData]  // Main value rows
+    public let footerRow: BetDetailRowData?     // Optional footer (result)
     
-    public init(rows: [BetDetailRowData]) {
-        self.rows = rows
+    public init(
+        headerRow: BetDetailRowData? = nil,
+        contentRows: [BetDetailRowData],
+        footerRow: BetDetailRowData? = nil
+    ) {
+        self.headerRow = headerRow
+        self.contentRows = contentRows
+        self.footerRow = footerRow
     }
 }
 

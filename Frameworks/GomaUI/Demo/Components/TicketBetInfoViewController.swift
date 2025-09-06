@@ -9,12 +9,12 @@ class TicketBetInfoViewController: UIViewController {
     
     // Mock data representing different ticket states and corner styles
     private let ticketViewModels: [(title: String, viewModel: MockTicketBetInfoViewModel, cornerStyle: CornerRadiusStyle)] = [
-        ("Basic Ticket", MockTicketBetInfoViewModel.pendingMock(), .all(radius: 8)),
-        ("With Cashout Amount", MockTicketBetInfoViewModel.pendingMockWithCashout(), .all(radius: 8)),
-        ("With Cashout Slider", MockTicketBetInfoViewModel.pendingMockWithSlider(), .all(radius: 8)),
-        ("With Both Components", MockTicketBetInfoViewModel.pendingMockWithBoth(), .all(radius: 8)),
-        ("Multiple Tickets", MockTicketBetInfoViewModel.multipleTicketsMock(), .topOnly(radius: 12)),
-        ("Long Competition Names", MockTicketBetInfoViewModel.longCompetitionNamesMock(), .bottomOnly(radius: 16))
+        ("Basic Ticket", MockTicketBetInfoViewModel.pendingMock(), .all),
+        ("With Cashout Amount", MockTicketBetInfoViewModel.pendingMockWithCashout(), .all),
+        ("With Cashout Slider", MockTicketBetInfoViewModel.pendingMockWithSlider(), .all),
+        ("With Both Components", MockTicketBetInfoViewModel.pendingMockWithBoth(), .all),
+        ("Multiple Tickets", MockTicketBetInfoViewModel.multipleTicketsMock(), .topOnly),
+        ("Long Competition Names", MockTicketBetInfoViewModel.longCompetitionNamesMock(), .bottomOnly)
     ]
     
     // MARK: - UI Components
@@ -357,7 +357,7 @@ class TicketBetInfoTableViewCell: UITableViewCell {
     }
     
     // MARK: - Configuration
-    func configure(with viewModel: TicketBetInfoViewModelProtocol, cornerStyle: CornerRadiusStyle = .all(radius: 8)) {
+    func configure(with viewModel: TicketBetInfoViewModelProtocol, cornerStyle: CornerRadiusStyle = .all) {
         // Remove existing ticket bet info view if any
         ticketBetInfoView?.removeFromSuperview()
         

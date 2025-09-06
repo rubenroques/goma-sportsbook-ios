@@ -9,11 +9,11 @@ import UIKit
 import Combine
 import GomaUI
 
-public class MarketsTabSimpleViewController: UIViewController {
+class MarketsTabSimpleViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: MarketsTabSimpleViewModelProtocol
+    private let viewModel: MarketsTabSimpleViewModel
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Computed Properties
@@ -39,7 +39,7 @@ public class MarketsTabSimpleViewController: UIViewController {
     
     // MARK: - Initialization
     
-    public init(viewModel: MarketsTabSimpleViewModelProtocol) {
+    init(viewModel: MarketsTabSimpleViewModel) {
         
         self.viewModel = viewModel
         
@@ -64,7 +64,7 @@ public class MarketsTabSimpleViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()

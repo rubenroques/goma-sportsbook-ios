@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import SwiftUI
 
 public class BetDetailRowView: UIView {
     
@@ -37,7 +38,9 @@ public class BetDetailRowView: UIView {
     public init(viewModel: BetDetailRowViewModelProtocol, cornerStyle: BetDetailRowCornerStyle = .none) {
         self.viewModel = viewModel
         self.cornerStyle = cornerStyle
+        
         super.init(frame: .zero)
+        
         setupView()
         setupConstraints()
         setupCornerRadius()
@@ -87,6 +90,9 @@ public class BetDetailRowView: UIView {
         case .bottomOnly(let radius):
             containerView.layer.cornerRadius = radius
             containerView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            
+        case .all(let radius):
+            containerView.layer.cornerRadius = radius
         }
     }
     
@@ -103,67 +109,124 @@ public class BetDetailRowView: UIView {
     private func updateUI(with data: BetDetailRowData) {
         labelLabel.text = data.label
         valueLabel.text = data.value
+        
+        // Apply style-specific updates
+        switch data.style {
+        case .standard:
+            setupStandardStyle()
+        case .header:
+            setupHeaderStyle()
+        }
+    }
+    
+    private func setupStandardStyle() {
+        containerView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        labelLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
+        labelLabel.textColor = StyleProvider.Color.textSecondary
+        labelLabel.textAlignment = .left
+        
+        valueLabel.font = StyleProvider.fontWith(type: .bold, size: 14)
+        valueLabel.textColor = StyleProvider.Color.textPrimary
+        valueLabel.textAlignment = .right
+        valueLabel.isHidden = false
+    }
+    
+    private func setupHeaderStyle() {
+        containerView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        labelLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
+        labelLabel.textColor = StyleProvider.Color.textPrimary
+        labelLabel.textAlignment = .center
+        
+        // Hide value label for header style
+        valueLabel.isHidden = true
     }
 }
 
 // MARK: - SwiftUI Preview
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
+#if DEBUG
 
-@available(iOS 13.0, *)
-struct BetDetailRowPreviewView: UIViewRepresentable {
-    private let viewModel: BetDetailRowViewModelProtocol
-    private let cornerStyle: BetDetailRowCornerStyle
-    
-    init(viewModel: BetDetailRowViewModelProtocol, cornerStyle: BetDetailRowCornerStyle = .none) {
-        self.viewModel = viewModel
-        self.cornerStyle = cornerStyle
-    }
-    
-    func makeUIView(context: Context) -> BetDetailRowView {
-        let view = BetDetailRowView(viewModel: viewModel, cornerStyle: cornerStyle)
-        return view
-    }
-    
-    func updateUIView(_ uiView: BetDetailRowView, context: Context) {
-        // Updates handled by Combine binding
+@available(iOS 17.0, *)
+#Preview("Bet Detail Row - Standard") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let rowView = BetDetailRowView(viewModel: MockBetDetailRowViewModel.defaultMock(), cornerStyle: .none)
+        rowView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(rowView)
+        
+        NSLayoutConstraint.activate([
+            rowView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            rowView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            rowView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            rowView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
     }
 }
 
-@available(iOS 13.0, *)
-struct BetDetailRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            // No corners
-            BetDetailRowPreviewView(
-                viewModel: MockBetDetailRowViewModel.defaultMock(),
-                cornerStyle: .none
-            )
-            .frame(height: 48)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("No Corners")
-            
-            // Top corners only
-            BetDetailRowPreviewView(
-                viewModel: MockBetDetailRowViewModel.defaultMock(),
-                cornerStyle: .topOnly(radius: 8)
-            )
-            .frame(height: 48)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("Top Corners Only")
-            
-            // Bottom corners only
-            BetDetailRowPreviewView(
-                viewModel: MockBetDetailRowViewModel.defaultMock(),
-                cornerStyle: .bottomOnly(radius: 8)
-            )
-            .frame(height: 48)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("Bottom Corners Only")
-        }
+@available(iOS 17.0, *)
+#Preview("Bet Detail Row - Top Corners") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let rowView = BetDetailRowView(viewModel: MockBetDetailRowViewModel.defaultMock(), cornerStyle: .topOnly(radius: 8))
+        rowView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(rowView)
+        
+        NSLayoutConstraint.activate([
+            rowView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            rowView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            rowView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            rowView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
     }
 }
+
+@available(iOS 17.0, *)
+#Preview("Bet Detail Row - Bottom Corners") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let rowView = BetDetailRowView(viewModel: MockBetDetailRowViewModel.defaultMock(), cornerStyle: .bottomOnly(radius: 8))
+        rowView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(rowView)
+        
+        NSLayoutConstraint.activate([
+            rowView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            rowView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            rowView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            rowView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Bet Detail Row - Header Style") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let rowView = BetDetailRowView(viewModel: MockBetDetailRowViewModel.headerMock(), cornerStyle: .none)
+        rowView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(rowView)
+        
+        NSLayoutConstraint.activate([
+            rowView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            rowView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            rowView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            rowView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
+    }
+}
+
 #endif

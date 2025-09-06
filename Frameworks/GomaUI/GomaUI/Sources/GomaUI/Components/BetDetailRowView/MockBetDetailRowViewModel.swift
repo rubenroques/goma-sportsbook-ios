@@ -23,7 +23,19 @@ public class MockBetDetailRowViewModel: BetDetailRowViewModelProtocol {
         let viewModel = MockBetDetailRowViewModel()
         let data = BetDetailRowData(
             label: "Amount",
-            value: "XAF 100.75"
+            value: "XAF 100.75",
+            style: .standard
+        )
+        viewModel.updateData(data)
+        return viewModel
+    }
+    
+    public static func headerMock() -> MockBetDetailRowViewModel {
+        let viewModel = MockBetDetailRowViewModel()
+        let data = BetDetailRowData(
+            label: "Bet Placed on Sun 01/01 - 18:59",
+            value: "",
+            style: .header
         )
         viewModel.updateData(data)
         return viewModel
@@ -32,12 +44,13 @@ public class MockBetDetailRowViewModel: BetDetailRowViewModelProtocol {
     public static func customMock(
         label: String,
         value: String,
-        showSeparator: Bool = true
+        style: BetDetailRowStyle = .standard
     ) -> MockBetDetailRowViewModel {
         let viewModel = MockBetDetailRowViewModel()
         let data = BetDetailRowData(
             label: label,
-            value: value
+            value: value,
+            style: style
         )
         viewModel.updateData(data)
         return viewModel
@@ -49,7 +62,8 @@ extension BetDetailRowData {
     static var empty: BetDetailRowData {
         BetDetailRowData(
             label: "",
-            value: ""
+            value: "",
+            style: .standard
         )
     }
 }

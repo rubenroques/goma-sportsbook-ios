@@ -10,18 +10,11 @@ import Combine
 import ServicesProvider
 import GomaUI
 
-enum MyBetDetailDisplayState {
-    case loading
-    case loaded
-    case error(String)
-}
-
 final class MyBetDetailViewModel: ObservableObject {
     
     // MARK: - Core Properties
     
     let bet: MyBet
-    @Published var displayState: MyBetDetailDisplayState = .loading
     
     // MARK: - Authentication State (Clean MVVM Pattern)
     
@@ -31,6 +24,10 @@ final class MyBetDetailViewModel: ObservableObject {
     
     let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel
     let walletStatusViewModel: WalletStatusViewModel
+    
+    // GomaUI Component ViewModels
+    private(set) var betDetailValuesSummaryViewModel: BetDetailValuesSummaryViewModel
+    private(set) var betDetailResultSummaryViewModels: [BetDetailResultSummaryViewModel]
     
     // MARK: - Navigation Closure (following MatchDetailsTextualViewModel pattern)
     
@@ -51,6 +48,12 @@ final class MyBetDetailViewModel: ObservableObject {
         self.multiWidgetToolbarViewModel = MultiWidgetToolbarViewModel()
         self.walletStatusViewModel = WalletStatusViewModel(userSessionStore: userSessionStore)
         
+        // Initialize GomaUI Component ViewModels
+        self.betDetailValuesSummaryViewModel = BetDetailValuesSummaryViewModel.create(from: bet)
+        self.betDetailResultSummaryViewModels = bet.selections.map { selection in
+            BetDetailResultSummaryViewModel.create(from: selection)
+        }
+        
         setupReactiveWalletChain()
         setupMultiWidgetToolbarBinding()
         
@@ -59,26 +62,7 @@ final class MyBetDetailViewModel: ObservableObject {
     
     // MARK: - Public Methods
     
-    func loadBetDetails() {
-        print("🔍 MyBetDetailViewModel: Loading bet details for bet: \(bet.identifier)")
-        
-        displayState = .loading
-        
-        // Simulate loading with a delay for now
-        // In the future, this could fetch fresh bet data from the API
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            guard let self = self else { return }
-            
-            // For now, just show loaded state since we already have the bet data
-            self.displayState = .loaded
-            print("✅ MyBetDetailViewModel: Bet details loaded successfully")
-        }
-    }
-    
-    func refreshBetDetails() {
-        print("🔄 MyBetDetailViewModel: Refreshing bet details")
-        loadBetDetails()
-    }
+    // No loading methods needed - all data is immediately available from the bet object
     
     func handleBackTap() {
         print("🔙 MyBetDetailViewModel: Back button tapped")
@@ -159,6 +143,15 @@ extension MyBetDetailViewModel {
         guard let profitLoss = bet.profitLoss else { return nil }
         let prefix = profitLoss >= 0 ? "+" : ""
         return "\(prefix)\(bet.currency) \(String(format: "%.2f", profitLoss))"
+    }
+    
+    /// Returns a label for the bet selections section
+    var selectionsLabel: String {
+        if bet.selections.count > 1 {
+            return "Multiple bet results"
+        } else {
+            return "Bet result"
+        }
     }
 }
 

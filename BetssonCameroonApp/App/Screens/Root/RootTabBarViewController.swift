@@ -741,11 +741,6 @@ extension RootTabBarViewController {
 
     private static func createMainContainerView() -> UIView {
         let view = UIView()
-
-        #if DEBUG
-        view.backgroundColor = .systemBlue
-        #endif
-
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
@@ -1011,7 +1006,7 @@ extension RootTabBarViewController {
             self.mainContainerView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.mainContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.mainContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.mainContainerView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+            self.mainContainerView.bottomAnchor.constraint(equalTo: self.tabBarView.topAnchor),
 
             // Next Up Events Base View
             self.nextUpEventsBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),

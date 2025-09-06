@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import SwiftUI
 
 public class BetDetailResultSummaryView: UIView {
     
@@ -27,25 +28,7 @@ public class BetDetailResultSummaryView: UIView {
         return stackView
     }()
     
-    // Top card - Bet placement info
-    private let betPlacedCardView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        view.layer.cornerRadius = 8
-        return view
-    }()
-    
-    private let betPlacedLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.textColor = StyleProvider.Color.textPrimary
-        label.textAlignment = .center
-        return label
-    }()
-    
-    // Middle card - Match details
+    // Top card - Match details
     private let matchDetailsCardView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -125,18 +108,14 @@ public class BetDetailResultSummaryView: UIView {
         containerView.addSubview(stackView)
         
         // Add cards to stack view
-        stackView.addArrangedSubview(betPlacedCardView)
         stackView.addArrangedSubview(matchDetailsCardView)
         stackView.addArrangedSubview(resultCardView)
         
-        // Setup top card
-        betPlacedCardView.addSubview(betPlacedLabel)
-        
-        // Setup middle card
+        // Setup top card - match details
         matchDetailsCardView.addSubview(matchDetailsLabel)
         matchDetailsCardView.addSubview(betTypeLabel)
         
-        // Setup bottom card
+        // Setup bottom card - result
         resultCardView.addSubview(resultLabel)
         resultCardView.addSubview(resultPillView)
         resultPillView.addSubview(resultPillLabel)
@@ -156,13 +135,7 @@ public class BetDetailResultSummaryView: UIView {
             stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
             
-            // Top card constraints
-            betPlacedCardView.heightAnchor.constraint(equalToConstant: 48),
-            betPlacedLabel.leadingAnchor.constraint(equalTo: betPlacedCardView.leadingAnchor, constant: 16),
-            betPlacedLabel.trailingAnchor.constraint(equalTo: betPlacedCardView.trailingAnchor, constant: -16),
-            betPlacedLabel.centerYAnchor.constraint(equalTo: betPlacedCardView.centerYAnchor),
-            
-            // Middle card constraints
+            // Top card constraints - match details
             matchDetailsCardView.heightAnchor.constraint(greaterThanOrEqualToConstant: 48),
             matchDetailsLabel.leadingAnchor.constraint(equalTo: matchDetailsCardView.leadingAnchor, constant: 16),
             matchDetailsLabel.trailingAnchor.constraint(equalTo: matchDetailsCardView.trailingAnchor, constant: -16),
@@ -173,7 +146,7 @@ public class BetDetailResultSummaryView: UIView {
             betTypeLabel.topAnchor.constraint(equalTo: matchDetailsLabel.bottomAnchor, constant: 4),
             betTypeLabel.bottomAnchor.constraint(equalTo: matchDetailsCardView.bottomAnchor, constant: -12),
             
-            // Bottom card constraints
+            // Bottom card constraints - result
             resultCardView.heightAnchor.constraint(equalToConstant: 48),
             resultLabel.leadingAnchor.constraint(equalTo: resultCardView.leadingAnchor, constant: 16),
             resultLabel.centerYAnchor.constraint(equalTo: resultCardView.centerYAnchor),
@@ -201,10 +174,7 @@ public class BetDetailResultSummaryView: UIView {
     
     // MARK: - UI Updates
     private func updateUI(with data: BetDetailResultSummaryData) {
-        // Update top card
-        betPlacedLabel.text = data.betPlacedDate
-        
-        // Update middle card
+        // Update top card - match details
         matchDetailsLabel.text = data.matchDetails
         betTypeLabel.text = data.betType
         
@@ -224,63 +194,79 @@ public class BetDetailResultSummaryView: UIView {
             resultPillView.backgroundColor = StyleProvider.Color.alertWarning
             resultPillLabel.textColor = StyleProvider.Color.allWhite
             resultPillLabel.text = "Draw"
+            
+        case .open:
+            resultPillView.backgroundColor = StyleProvider.Color.backgroundSecondary
+            resultPillLabel.textColor = StyleProvider.Color.textSecondary
+            resultPillLabel.text = "Pending"
         }
     }
 }
 
 // MARK: - SwiftUI Preview
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
+#if DEBUG
 
-@available(iOS 13.0, *)
-struct BetDetailResultSummaryPreviewView: UIViewRepresentable {
-    private let viewModel: BetDetailResultSummaryViewModelProtocol
-    
-    init(viewModel: BetDetailResultSummaryViewModelProtocol) {
-        self.viewModel = viewModel
-    }
-    
-    func makeUIView(context: Context) -> BetDetailResultSummaryView {
-        let view = BetDetailResultSummaryView(viewModel: viewModel)
-        return view
-    }
-    
-    func updateUIView(_ uiView: BetDetailResultSummaryView, context: Context) {
-        // Updates handled by Combine binding
+@available(iOS 17.0, *)
+#Preview("Bet Result Summary - Lost State") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let resultSummaryView = BetDetailResultSummaryView(viewModel: MockBetDetailResultSummaryViewModel.lostMock())
+        resultSummaryView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(resultSummaryView)
+        
+        NSLayoutConstraint.activate([
+            resultSummaryView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            resultSummaryView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            resultSummaryView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            resultSummaryView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
     }
 }
 
-@available(iOS 13.0, *)
-struct BetDetailResultSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            // Lost state (matching the image)
-            BetDetailResultSummaryPreviewView(
-                viewModel: MockBetDetailResultSummaryViewModel.lostMock()
-            )
-            .frame(height: 200)
-            .padding()
-            .background(Color.white.opacity(0.1))
-            .previewDisplayName("Lost State")
-            
-            // Won state
-            BetDetailResultSummaryPreviewView(
-                viewModel: MockBetDetailResultSummaryViewModel.wonMock()
-            )
-            .frame(height: 200)
-            .padding()
-            .background(Color.white.opacity(0.1))
-            .previewDisplayName("Won State")
-            
-            // Draw state
-            BetDetailResultSummaryPreviewView(
-                viewModel: MockBetDetailResultSummaryViewModel.drawMock()
-            )
-            .frame(height: 200)
-            .padding()
-            .background(Color.white.opacity(0.1))
-            .previewDisplayName("Draw State")
-        }
+@available(iOS 17.0, *)
+#Preview("Bet Result Summary - Won State") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let resultSummaryView = BetDetailResultSummaryView(viewModel: MockBetDetailResultSummaryViewModel.wonMock())
+        resultSummaryView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(resultSummaryView)
+        
+        NSLayoutConstraint.activate([
+            resultSummaryView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            resultSummaryView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            resultSummaryView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            resultSummaryView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
     }
 }
+
+@available(iOS 17.0, *)
+#Preview("Bet Result Summary - Draw State") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let resultSummaryView = BetDetailResultSummaryView(viewModel: MockBetDetailResultSummaryViewModel.drawMock())
+        resultSummaryView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(resultSummaryView)
+        
+        NSLayoutConstraint.activate([
+            resultSummaryView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            resultSummaryView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            resultSummaryView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            resultSummaryView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
+    }
+}
+
 #endif

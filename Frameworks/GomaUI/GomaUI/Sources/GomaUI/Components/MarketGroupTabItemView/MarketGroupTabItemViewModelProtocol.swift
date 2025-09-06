@@ -29,7 +29,7 @@ public struct DefaultMarketGroupTabImageResolver: MarketGroupTabImageResolver {
         case "players":
             return UIImage(systemName: "person.2")
         default:
-            return nil
+            return UIImage(systemName: tabType)
         }
     }
 }
@@ -39,20 +39,23 @@ public struct MarketGroupTabItemData: Equatable, Hashable {
     public let id: String
     public let title: String
     public let visualState: MarketGroupTabItemVisualState
-    public let iconTypeName: String?
+    public let prefixIconTypeName: String?
+    public let suffixIconTypeName: String?
     public let badgeCount: Int?
     
     public init(
         id: String,
         title: String,
         visualState: MarketGroupTabItemVisualState = .idle,
-        iconTypeName: String? = nil,
+        prefixIconTypeName: String? = nil,
+        suffixIconTypeName: String? = nil,
         badgeCount: Int? = nil
     ) {
         self.id = id
         self.title = title
         self.visualState = visualState
-        self.iconTypeName = iconTypeName
+        self.prefixIconTypeName = prefixIconTypeName
+        self.suffixIconTypeName = suffixIconTypeName
         self.badgeCount = badgeCount
     }
 }
@@ -74,7 +77,8 @@ public protocol MarketGroupTabItemViewModelProtocol {
     // Content publishers
     var titlePublisher: AnyPublisher<String, Never> { get }
     var idPublisher: AnyPublisher<String, Never> { get }
-    var iconTypePublisher: AnyPublisher<String?, Never> { get }
+    var prefixIconTypePublisher: AnyPublisher<String?, Never> { get }
+    var suffixIconTypePublisher: AnyPublisher<String?, Never> { get }
     var badgeCountPublisher: AnyPublisher<Int?, Never> { get }
     
     // Unified visual state publisher and current state access
@@ -84,7 +88,8 @@ public protocol MarketGroupTabItemViewModelProtocol {
     // Actions
     func setVisualState(_ state: MarketGroupTabItemVisualState)
     func updateTitle(_ title: String)
-    func updateIconType(_ iconType: String?)
+    func updatePrefixIconType(_ iconType: String?)
+    func updateSuffixIconType(_ iconType: String?)
     func updateBadgeCount(_ count: Int?)
     func updateTabItemData(_ tabItemData: MarketGroupTabItemData)
     

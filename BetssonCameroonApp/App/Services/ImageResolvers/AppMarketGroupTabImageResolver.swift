@@ -8,14 +8,16 @@ struct AppMarketGroupTabImageResolver: MarketGroupTabImageResolver {
         switch tabType {
         case "betbuilder":
             // Try to load custom asset first, fallback to system icon
-            return UIImage(named: "bet_builder_info") ?? UIImage(systemName: "square.stack.3d.up")
+            return UIImage(named: "bet_builder_info") ?? UIImage(systemName: "exclamationmark.circle")
         case "popular":
-            // Try to load custom asset first, fallback to system icon
-            return UIImage(named: "most_popular_info") ?? UIImage(systemName: "flame")
+            return UIImage(named: "most_popular_info") ?? UIImage(systemName: "exclamationmark.circle")
         case "fast":
-            // Try to load custom asset first, fallback to system icon
-            return UIImage(named: "most_popular_info") ?? UIImage(systemName: "flame")
-
+            return UIImage(named: "most_popular_info") ?? UIImage(systemName: "exclamationmark.circle")
+        case "virtuals_tab_icon":
+            return UIImage(named: "virtuals_tab_icon") ?? UIImage(systemName: "exclamationmark.circle")
+        case "sports_tab_icon":
+            return UIImage(named: "sports_tab_icon") ?? UIImage(systemName: "exclamationmark.circle")
+            
         default:
             return nil
         }

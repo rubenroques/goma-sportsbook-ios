@@ -10,7 +10,21 @@ import Combine
 import ServicesProvider
 import GomaUI
 
-class MarketsTabSimpleViewModel: MarketsTabSimpleViewModelProtocol {
+
+/// Wrapper to include icons with MarketGroupData
+struct MarketGroupWithIcons: Equatable, Hashable {
+    public let marketGroup: MarketGroupData
+    public let icons: [MarketInfoIcon]
+    public let groupName: String
+    
+    public init(marketGroup: MarketGroupData, icons: [MarketInfoIcon], groupName: String) {
+        self.marketGroup = marketGroup
+        self.icons = icons
+        self.groupName = groupName
+    }
+}
+
+class MarketsTabSimpleViewModel {
     
     // MARK: - Properties
     

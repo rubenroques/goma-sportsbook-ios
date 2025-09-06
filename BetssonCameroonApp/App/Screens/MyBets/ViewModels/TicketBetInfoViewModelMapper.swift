@@ -48,11 +48,9 @@ struct TicketBetInfoViewModelMapper {
     }
     
     private static func formatBetDetails(_ myBet: MyBet) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
-        let dateString = dateFormatter.string(from: myBet.date)
-        
-        return "\(dateString) | Bet ID: \(myBet.identifier)"
+        // Date is now handled by BetDetailValuesSummaryView as header row
+        // Just return bet ID for ticket display
+        return "Bet ID: \(myBet.identifier)"
     }
     
     private static func formatOdds(_ oddFormat: OddFormat) -> String {

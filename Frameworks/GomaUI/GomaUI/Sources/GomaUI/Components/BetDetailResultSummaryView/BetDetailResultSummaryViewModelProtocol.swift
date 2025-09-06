@@ -6,22 +6,20 @@ public enum BetDetailResultState: Equatable {
     case won
     case lost
     case draw
+    case open
 }
 
 /// Data model for bet detail result summary
 public struct BetDetailResultSummaryData: Equatable {
-    public let betPlacedDate: String
     public let matchDetails: String
     public let betType: String
     public let resultState: BetDetailResultState
     
     public init(
-        betPlacedDate: String,
         matchDetails: String,
         betType: String,
         resultState: BetDetailResultState
     ) {
-        self.betPlacedDate = betPlacedDate
         self.matchDetails = matchDetails
         self.betType = betType
         self.resultState = resultState

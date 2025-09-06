@@ -22,7 +22,6 @@ public class MockBetDetailResultSummaryViewModel: BetDetailResultSummaryViewMode
     public static func wonMock() -> MockBetDetailResultSummaryViewModel {
         let viewModel = MockBetDetailResultSummaryViewModel()
         let data = BetDetailResultSummaryData(
-            betPlacedDate: "Bet Placed on Sun 01/01 - 18:59",
             matchDetails: "Ceara SC CE x CR Vasco da Gama RJ",
             betType: "Double chance - Ceara SC CE",
             resultState: .won
@@ -34,7 +33,6 @@ public class MockBetDetailResultSummaryViewModel: BetDetailResultSummaryViewMode
     public static func lostMock() -> MockBetDetailResultSummaryViewModel {
         let viewModel = MockBetDetailResultSummaryViewModel()
         let data = BetDetailResultSummaryData(
-            betPlacedDate: "Bet Placed on Sun 01/01 - 18:59",
             matchDetails: "Ceara SC CE x CR Vasco da Gama RJ",
             betType: "Double chance - Ceara SC CE",
             resultState: .lost
@@ -46,7 +44,6 @@ public class MockBetDetailResultSummaryViewModel: BetDetailResultSummaryViewMode
     public static func drawMock() -> MockBetDetailResultSummaryViewModel {
         let viewModel = MockBetDetailResultSummaryViewModel()
         let data = BetDetailResultSummaryData(
-            betPlacedDate: "Bet Placed on Sun 01/01 - 18:59",
             matchDetails: "Ceara SC CE x CR Vasco da Gama RJ",
             betType: "Double chance - Ceara SC CE",
             resultState: .draw
@@ -56,14 +53,12 @@ public class MockBetDetailResultSummaryViewModel: BetDetailResultSummaryViewMode
     }
     
     public static func customMock(
-        betPlacedDate: String,
         matchDetails: String,
         betType: String,
         resultState: BetDetailResultState
     ) -> MockBetDetailResultSummaryViewModel {
         let viewModel = MockBetDetailResultSummaryViewModel()
         let data = BetDetailResultSummaryData(
-            betPlacedDate: betPlacedDate,
             matchDetails: matchDetails,
             betType: betType,
             resultState: resultState
@@ -77,7 +72,6 @@ public class MockBetDetailResultSummaryViewModel: BetDetailResultSummaryViewMode
 extension BetDetailResultSummaryData {
     static var empty: BetDetailResultSummaryData {
         BetDetailResultSummaryData(
-            betPlacedDate: "",
             matchDetails: "",
             betType: "",
             resultState: .won

@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import SwiftUI
 
 public class BetDetailValuesSummaryView: UIView {
     
@@ -8,24 +9,62 @@ public class BetDetailValuesSummaryView: UIView {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    private let containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundPrimary
-        view.layer.cornerRadius = 8
-        return view
-    }()
-    
-    private let rowsStackView: UIStackView = {
+    private let mainStackView: UIStackView = {
         let stackView = UIStackView()
+        stackView.backgroundColor = .green
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 1
-        stackView.distribution = .equalSpacing
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        
         stackView.layer.cornerRadius = 8
         stackView.clipsToBounds = true
         return stackView
     }()
+    
+    // Header container
+    private let headerContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.layer.cornerRadius = 0
+        view.isHidden = true
+        return view
+    }()
+    
+    private var headerRowView: BetDetailRowView?
+    
+    // Content container
+    private let contentContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.layer.cornerRadius = 0
+        return view
+    }()
+    
+    private let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 1
+        stackView.distribution = .fill
+        stackView.layer.cornerRadius = 0
+        stackView.clipsToBounds = true
+        return stackView
+    }()
+    
+    // Footer container
+    private let footerContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        view.layer.cornerRadius = 0
+        view.isHidden = true
+        return view
+    }()
+    
+    private var footerRowView: BetDetailRowView?
     
     // MARK: - Initialization
     public init(viewModel: BetDetailValuesSummaryViewModelProtocol) {
@@ -42,23 +81,30 @@ public class BetDetailValuesSummaryView: UIView {
     
     // MARK: - Setup
     private func setupView() {
-        addSubview(containerView)
-        containerView.addSubview(rowsStackView)
+        addSubview(mainStackView)
+        
+        // Add containers to main stack
+        mainStackView.addArrangedSubview(headerContainerView)
+        mainStackView.addArrangedSubview(contentContainerView)
+        mainStackView.addArrangedSubview(footerContainerView)
+        
+        // Setup content container
+        contentContainerView.addSubview(contentStackView)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Container constraints
-            containerView.topAnchor.constraint(equalTo: topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            // Main stack view constraints
+            mainStackView.topAnchor.constraint(equalTo: topAnchor),
+            mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            // Rows stack view constraints
-            rowsStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
-            rowsStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-            rowsStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-            rowsStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8)
+            // Content stack view constraints (inside content container)
+            contentStackView.topAnchor.constraint(equalTo: contentContainerView.topAnchor, constant: 8),
+            contentStackView.leadingAnchor.constraint(equalTo: contentContainerView.leadingAnchor, constant: 8),
+            contentStackView.trailingAnchor.constraint(equalTo: contentContainerView.trailingAnchor, constant: -8),
+            contentStackView.bottomAnchor.constraint(equalTo: contentContainerView.bottomAnchor, constant: -8)
         ])
     }
     
@@ -73,68 +119,146 @@ public class BetDetailValuesSummaryView: UIView {
     
     // MARK: - UI Updates
     private func updateUI(with data: BetDetailValuesSummaryData) {
-        // Remove existing row views
-        rowsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        // Clear existing content
+        clearAllContent()
         
-        // Add new row views
-        for (index, rowData) in data.rows.enumerated() {
+        // Setup header section
+        setupHeaderSection(with: data.headerRow)
+        
+        // Setup content section
+        setupContentSection(with: data.contentRows)
+        
+        // Setup footer section
+        setupFooterSection(with: data.footerRow)
+    }
+    
+    private func clearAllContent() {
+        // Remove existing header row
+        headerRowView?.removeFromSuperview()
+        headerRowView = nil
+        
+        // Remove existing content rows
+        contentStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // Remove existing footer row
+        footerRowView?.removeFromSuperview()
+        footerRowView = nil
+    }
+    
+    private func setupHeaderSection(with headerRowData: BetDetailRowData?) {
+        guard let headerRowData = headerRowData else {
+            headerContainerView.isHidden = true
+            return
+        }
+        
+        let headerViewModel = MockBetDetailRowViewModel()
+        headerViewModel.updateData(headerRowData)
+        
+        let headerView = BetDetailRowView(viewModel: headerViewModel, cornerStyle: .all(radius: 8))
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        headerContainerView.addSubview(headerView)
+        
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: headerContainerView.topAnchor, constant: 8),
+            headerView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 8),
+            headerView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -8),
+            headerView.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -4)
+        ])
+        
+        headerRowView = headerView
+        headerContainerView.isHidden = false
+    }
+    
+    private func setupContentSection(with contentRowsData: [BetDetailRowData]) {
+        for (index, rowData) in contentRowsData.enumerated() {
             let rowViewModel = MockBetDetailRowViewModel()
             rowViewModel.updateData(rowData)
             
-            // Determine corner style based on position
+            // Determine corner style for content rows
             let cornerStyle: BetDetailRowCornerStyle
-            cornerStyle = .none
+            if contentRowsData.count == 1 {
+                cornerStyle = .none // Container handles corners
+            } else if index == 0 {
+                cornerStyle = .topOnly(radius: 8)
+            } else if index == contentRowsData.count - 1 {
+                cornerStyle = .bottomOnly(radius: 8)
+            } else {
+                cornerStyle = .none
+            }
             
             let rowView = BetDetailRowView(viewModel: rowViewModel, cornerStyle: cornerStyle)
-            rowsStackView.addArrangedSubview(rowView)
+            contentStackView.addArrangedSubview(rowView)
         }
+    }
+    
+    private func setupFooterSection(with footerRowData: BetDetailRowData?) {
+        guard let footerRowData = footerRowData else {
+            footerContainerView.isHidden = true
+            return
+        }
+        
+        let footerViewModel = MockBetDetailRowViewModel()
+        footerViewModel.updateData(footerRowData)
+        
+        let footerView = BetDetailRowView(viewModel: footerViewModel, cornerStyle: .all(radius: 8))
+        footerView.translatesAutoresizingMaskIntoConstraints = false
+        footerContainerView.addSubview(footerView)
+        
+        NSLayoutConstraint.activate([
+            footerView.topAnchor.constraint(equalTo: footerContainerView.topAnchor, constant: 4),
+            footerView.leadingAnchor.constraint(equalTo: footerContainerView.leadingAnchor, constant: 8),
+            footerView.trailingAnchor.constraint(equalTo: footerContainerView.trailingAnchor, constant: -8),
+            footerView.bottomAnchor.constraint(equalTo: footerContainerView.bottomAnchor, constant: -8)
+        ])
+        
+        footerRowView = footerView
+        footerContainerView.isHidden = false
     }
 }
 
 // MARK: - SwiftUI Preview
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
+#if DEBUG
 
-@available(iOS 13.0, *)
-struct BetDetailValuesSummaryPreviewView: UIViewRepresentable {
-    private let viewModel: BetDetailValuesSummaryViewModelProtocol
-    
-    init(viewModel: BetDetailValuesSummaryViewModelProtocol) {
-        self.viewModel = viewModel
-    }
-    
-    func makeUIView(context: Context) -> BetDetailValuesSummaryView {
-        let view = BetDetailValuesSummaryView(viewModel: viewModel)
-        return view
-    }
-    
-    func updateUIView(_ uiView: BetDetailValuesSummaryView, context: Context) {
-        // Updates handled by Combine binding
+@available(iOS 17.0, *)
+#Preview("Bet Values Summary - Full Details") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .red
+        
+        let valuesSummaryView = BetDetailValuesSummaryView(viewModel: MockBetDetailValuesSummaryViewModel.defaultMock())
+        valuesSummaryView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(valuesSummaryView)
+        
+        NSLayoutConstraint.activate([
+            valuesSummaryView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            valuesSummaryView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            valuesSummaryView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            valuesSummaryView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
     }
 }
 
-@available(iOS 13.0, *)
-struct BetDetailValuesSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            // Default state with multiple rows
-            BetDetailValuesSummaryPreviewView(
-                viewModel: MockBetDetailValuesSummaryViewModel.defaultMock()
-            )
-            .frame(height: 330)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("Default State")
-            
-            // Single row
-            BetDetailValuesSummaryPreviewView(
-                viewModel: MockBetDetailValuesSummaryViewModel.singleRowMock()
-            )
-            .frame(height: 66)
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .previewDisplayName("Single Row")
-        }
+@available(iOS 17.0, *)
+#Preview("Bet Values Summary - Single Row") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .red
+        
+        let valuesSummaryView = BetDetailValuesSummaryView(viewModel: MockBetDetailValuesSummaryViewModel.singleRowMock())
+        valuesSummaryView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(valuesSummaryView)
+        
+        NSLayoutConstraint.activate([
+            valuesSummaryView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            valuesSummaryView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            valuesSummaryView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            valuesSummaryView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+        
+        return vc
     }
 }
+
 #endif

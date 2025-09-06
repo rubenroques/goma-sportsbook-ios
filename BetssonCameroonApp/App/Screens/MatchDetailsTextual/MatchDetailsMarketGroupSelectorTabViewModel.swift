@@ -234,7 +234,7 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
                 id: marketGroup.groupKey ?? marketGroup.type,
                 title: marketGroup.translatedName ?? marketGroup.type,
                 visualState: .idle,
-                iconTypeName: iconType,
+                suffixIconTypeName: iconType,
                 badgeCount: badgeCount
             )
         }
@@ -255,7 +255,7 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
             id: "all_markets_fallback",
             title: "All Markets",
             visualState: .idle,
-            iconTypeName: nil,
+            suffixIconTypeName: nil,
             badgeCount: nil // No badge for fallback group since it represents empty state
         )
         

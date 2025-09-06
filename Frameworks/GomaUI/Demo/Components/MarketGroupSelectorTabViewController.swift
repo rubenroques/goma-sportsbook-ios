@@ -347,13 +347,13 @@ class MarketGroupSelectorTabViewController: UIViewController {
                 id: "sports",
                 title: "Sports",
                 visualState: .selected,
-                iconTypeName: "sports"
+                suffixIconTypeName: "sports"
             ),
             MarketGroupTabItemData(
                 id: "virtuals", 
                 title: "Virtuals",
                 visualState: .idle,
-                iconTypeName: "virtual"
+                suffixIconTypeName: "virtual"
             )
         ]
         

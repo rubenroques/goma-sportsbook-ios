@@ -28,9 +28,16 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
             .eraseToAnyPublisher()
     }
     
-    public var iconTypePublisher: AnyPublisher<String?, Never> {
+    public var prefixIconTypePublisher: AnyPublisher<String?, Never> {
         tabItemDataSubject
-            .map(\.iconTypeName)
+            .map(\.prefixIconTypeName)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
+    public var suffixIconTypePublisher: AnyPublisher<String?, Never> {
+        tabItemDataSubject
+            .map(\.suffixIconTypeName)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
@@ -70,7 +77,8 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
             id: currentData.id,
             title: currentData.title,
             visualState: state,
-            iconTypeName: currentData.iconTypeName,
+            prefixIconTypeName: currentData.prefixIconTypeName,
+            suffixIconTypeName: currentData.suffixIconTypeName,
             badgeCount: currentData.badgeCount
         )
         tabItemDataSubject.send(updatedData)
@@ -82,19 +90,34 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
             id: currentData.id,
             title: title,
             visualState: currentData.visualState,
-            iconTypeName: currentData.iconTypeName,
+            prefixIconTypeName: currentData.prefixIconTypeName,
+            suffixIconTypeName: currentData.suffixIconTypeName,
             badgeCount: currentData.badgeCount
         )
         tabItemDataSubject.send(updatedData)
     }
     
-    public func updateIconType(_ iconTypeName: String?) {
+    public func updatePrefixIconType(_ iconTypeName: String?) {
         let currentData = tabItemDataSubject.value
         let updatedData = MarketGroupTabItemData(
             id: currentData.id,
             title: currentData.title,
             visualState: currentData.visualState,
-            iconTypeName: iconTypeName,
+            prefixIconTypeName: iconTypeName,
+            suffixIconTypeName: currentData.suffixIconTypeName,
+            badgeCount: currentData.badgeCount
+        )
+        tabItemDataSubject.send(updatedData)
+    }
+    
+    public func updateSuffixIconType(_ iconTypeName: String?) {
+        let currentData = tabItemDataSubject.value
+        let updatedData = MarketGroupTabItemData(
+            id: currentData.id,
+            title: currentData.title,
+            visualState: currentData.visualState,
+            prefixIconTypeName: currentData.prefixIconTypeName,
+            suffixIconTypeName: iconTypeName,
             badgeCount: currentData.badgeCount
         )
         tabItemDataSubject.send(updatedData)
@@ -106,7 +129,8 @@ public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtoco
             id: currentData.id,
             title: currentData.title,
             visualState: currentData.visualState,
-            iconTypeName: currentData.iconTypeName,
+            prefixIconTypeName: currentData.prefixIconTypeName,
+            suffixIconTypeName: currentData.suffixIconTypeName,
             badgeCount: count
         )
         tabItemDataSubject.send(updatedData)
@@ -187,7 +211,8 @@ extension MockMarketGroupTabItemViewModel {
         id: String,
         title: String,
         selected: Bool = false,
-        iconTypeName: String? = nil,
+        prefixIconTypeName: String? = nil,
+        suffixIconTypeName: String? = nil,
         badgeCount: Int? = nil
     )
     -> MockMarketGroupTabItemViewModel
@@ -197,7 +222,8 @@ extension MockMarketGroupTabItemViewModel {
                 id: id,
                 title: title,
                 visualState: selected ? .selected : .idle,
-                iconTypeName: iconTypeName,
+                prefixIconTypeName: prefixIconTypeName,
+                suffixIconTypeName: suffixIconTypeName,
                 badgeCount: badgeCount
             )
         )
@@ -214,41 +240,77 @@ extension MockMarketGroupTabItemViewModel {
         )
     }
     
-    public static func betBuilderTab(count: Int = 16) -> MockMarketGroupTabItemViewModel {
+    public static var betBuilderTab: MockMarketGroupTabItemViewModel {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: "betbuilder",
                 title: "BetBuilder",
-                visualState: .idle,
-                iconTypeName: "betbuilder",
-                badgeCount: count
+                visualState: .selected,
+                suffixIconTypeName: "betbuilder",
+                badgeCount: 14
             )
         )
     }
     
-    public static func popularTab(count: Int = 16) -> MockMarketGroupTabItemViewModel {
+    public static var popularTab: MockMarketGroupTabItemViewModel {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: "popular",
                 title: "Popular",
                 visualState: .idle,
-                iconTypeName: "popular",
-                badgeCount: count
+                suffixIconTypeName: "popular",
+                badgeCount: 12
             )
         )
     }
     
-    public static func setsTab(count: Int = 16) -> MockMarketGroupTabItemViewModel {
+    public static var setsTab: MockMarketGroupTabItemViewModel {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: "sets",
                 title: "Sets",
                 visualState: .idle,
-                badgeCount: count
+                badgeCount: 16
             )
         )
     }
     
+    // MARK: - Icon Demonstration Tabs
+    public static var prefixOnlyTab: MockMarketGroupTabItemViewModel {
+        return MockMarketGroupTabItemViewModel(
+            tabItemData: MarketGroupTabItemData(
+                id: "prefix_only",
+                title: "Live",
+                visualState: .selected,
+                prefixIconTypeName: "flame"
+            )
+        )
+    }
+    
+    public static var suffixOnlyTab: MockMarketGroupTabItemViewModel {
+        return MockMarketGroupTabItemViewModel(
+            tabItemData: MarketGroupTabItemData(
+                id: "suffix_only",
+                title: "Popular",
+                visualState: .idle,
+                suffixIconTypeName: "gamecontroller"
+            )
+        )
+    }
+    
+    public static var bothIconsTab: MockMarketGroupTabItemViewModel {
+        return MockMarketGroupTabItemViewModel(
+            tabItemData: MarketGroupTabItemData(
+                id: "both_icons",
+                title: "VIP",
+                visualState: .idle,
+                prefixIconTypeName: "person.2",
+                suffixIconTypeName: "square.stack.3d.up",
+                badgeCount: 5
+            )
+        )
+    }
+
     // MARK: - Collection Factory Methods
     public static var standardMarketTabs: [MockMarketGroupTabItemViewModel] {
         return [
@@ -272,9 +334,9 @@ extension MockMarketGroupTabItemViewModel {
     public static var marketCategoryTabs: [MockMarketGroupTabItemViewModel] {
         return [
             allTab,
-            betBuilderTab(),
-            popularTab(),
-            setsTab()
+            betBuilderTab,
+            popularTab,
+            setsTab
         ]
     }
 } 

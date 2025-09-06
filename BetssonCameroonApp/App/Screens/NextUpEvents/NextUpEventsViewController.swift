@@ -63,6 +63,7 @@ class NextUpEventsViewController: UIViewController {
         
         setupViews()
         setupBindings()
+        
         loadData()
     }
 
@@ -90,7 +91,7 @@ class NextUpEventsViewController: UIViewController {
 
     // MARK: - Setup
     private func setupViews() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor.App.backgroundPrimary
 
         setupHeaderContainer()
         setupQuickLinksTabBar()
@@ -98,13 +99,14 @@ class NextUpEventsViewController: UIViewController {
         setupMarketGroupSelectorTabView()
         setupPageViewController()
         setupLoadingIndicator()
+        
         setupConstraints()
     }
     
     private func setupHeaderContainer() {
         headerContainerView = UIView()
         headerContainerView.translatesAutoresizingMaskIntoConstraints = false
-        headerContainerView.backgroundColor = .systemBackground
+        headerContainerView.backgroundColor = UIColor.App.backgroundPrimary
         view.addSubview(headerContainerView)
     }
 

@@ -27,7 +27,8 @@ class MyBetsViewController: UIViewController {
     private lazy var marketGroupSelectorTabView: MarketGroupSelectorTabView = {
         let view = MarketGroupSelectorTabView(
             viewModel: viewModel.myBetsTabBarViewModel,
-            layoutMode: .stretch  // Use stretch mode for Sports/Virtuals tabs
+            layoutMode: .stretch,
+            imageResolver: MyBetsTabsImageResolver()
         )
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -168,7 +169,9 @@ class MyBetsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
+        setupTheme()
         setupBindings()
     }
     
@@ -188,8 +191,13 @@ class MyBetsViewController: UIViewController {
         viewModel.refreshBets()
     }
     
+    private func setupTheme() {
+        
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+    }
+    
     private func setupUI() {
-        view.backgroundColor = .systemBackground
         view.addSubview(contentView)
         
         contentView.addSubview(marketGroupSelectorTabView)

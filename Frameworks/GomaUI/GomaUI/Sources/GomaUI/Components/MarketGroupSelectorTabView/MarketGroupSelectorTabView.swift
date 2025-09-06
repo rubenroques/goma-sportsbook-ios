@@ -7,6 +7,8 @@ public class MarketGroupSelectorTabView: UIView {
     private var viewModel: MarketGroupSelectorTabViewModelProtocol
     private let imageResolver: MarketGroupTabImageResolver
     private let layoutMode: MarketGroupSelectorTabLayoutMode
+    private let itemIdleBackgroundColor: UIColor
+    private let itemSelectedBackgroundColor: UIColor
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -29,17 +31,34 @@ public class MarketGroupSelectorTabView: UIView {
         static let minimumHeight: CGFloat = 42.0
     }
 
+    // MARK: - Background Color Override
+    public override var backgroundColor: UIColor? {
+        didSet {
+            scrollView.backgroundColor = backgroundColor
+        }
+    }
+
     // MARK: - Initialization
     public init(viewModel: MarketGroupSelectorTabViewModelProtocol,
                 layoutMode: MarketGroupSelectorTabLayoutMode = .automatic,
-                imageResolver: MarketGroupTabImageResolver = DefaultMarketGroupTabImageResolver()) {
+                imageResolver: MarketGroupTabImageResolver = DefaultMarketGroupTabImageResolver(),
+                barBackgroundColor: UIColor = StyleProvider.Color.backgroundPrimary,
+                itemIdleBackgroundColor: UIColor = StyleProvider.Color.backgroundPrimary,
+                itemSelectedBackgroundColor: UIColor = StyleProvider.Color.backgroundPrimary) {
         self.viewModel = viewModel
         self.layoutMode = layoutMode
         self.imageResolver = imageResolver
+        self.itemIdleBackgroundColor = itemIdleBackgroundColor
+        self.itemSelectedBackgroundColor = itemSelectedBackgroundColor
         super.init(frame: .zero)
+        
+        // Apply the background color
+        self.backgroundColor = barBackgroundColor
+        
         setupSubviews()
         setupConstraints()
         setupBindings()
+        
     }
 
     required init?(coder: NSCoder) {
@@ -56,7 +75,6 @@ public class MarketGroupSelectorTabView: UIView {
         scrollView.addSubview(stackView)
 
         // Scroll view setup
-        scrollView.backgroundColor = StyleProvider.Color.backgroundPrimary
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
@@ -89,9 +107,6 @@ public class MarketGroupSelectorTabView: UIView {
         emptyStateLabel.textAlignment = .center
         emptyStateLabel.isHidden = true
 
-        // View styling
-        self.backgroundColor = backgroundColor
-        
         //
         scrollView.isHidden = false
         loadingIndicator.stopAnimating()
@@ -218,11 +233,17 @@ public class MarketGroupSelectorTabView: UIView {
             id: marketGroup.id,
             title: marketGroup.title,
             visualState: .idle,  // Always start with idle, updateSelectionState will set correct state
-            iconTypeName: marketGroup.iconTypeName,
+            prefixIconTypeName: marketGroup.prefixIconTypeName,
+            suffixIconTypeName: marketGroup.suffixIconTypeName,
             badgeCount: marketGroup.badgeCount
         )
         let tabViewModel = MockMarketGroupTabItemViewModel(tabItemData: tabItemData)
-        let tabView = MarketGroupTabItemView(viewModel: tabViewModel, imageResolver: imageResolver)
+        let tabView = MarketGroupTabItemView(
+            viewModel: tabViewModel, 
+            imageResolver: imageResolver,
+            idleBackgroundColor: itemIdleBackgroundColor,
+            selectedBackgroundColor: itemSelectedBackgroundColor
+        )
 
         // Store references
         tabItemViews[marketGroup.id] = tabView
@@ -334,6 +355,116 @@ import SwiftUI
     PreviewUIViewController {
         let vc = UIViewController()
         let tabsView = MarketGroupSelectorTabView(viewModel: MockMarketGroupSelectorTabViewModel.standardSportsMarkets)
+        tabsView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabsView)
+        
+        NSLayoutConstraint.activate([
+            tabsView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabsView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            tabsView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
+}
+
+
+@available(iOS 17.0, *)
+#Preview("Icon Tinting Test - With Icons") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        // Create tabs with prefix and suffix icons to test tinting
+        let tabs = [
+            MarketGroupTabItemData(
+                id: "live",
+                title: "Live",
+                visualState: .selected,
+                prefixIconTypeName: "flame",
+                suffixIconTypeName: nil,
+                badgeCount: 3
+            ),
+            MarketGroupTabItemData(
+                id: "popular",
+                title: "Popular",
+                visualState: .idle,
+                prefixIconTypeName: "star",
+                suffixIconTypeName: "arrow.up.arrow.down",
+                badgeCount: 12
+            ),
+            MarketGroupTabItemData(
+                id: "games",
+                title: "Games",
+                visualState: .idle,
+                prefixIconTypeName: nil,
+                suffixIconTypeName: "gamecontroller",
+                badgeCount: nil
+            )
+        ]
+        
+        let viewModel = MockMarketGroupSelectorTabViewModel.customMarkets(
+            id: "iconTintTest",
+            marketGroups: tabs,
+            selectedMarketGroupId: "live"
+        )
+        
+        let tabsView = MarketGroupSelectorTabView(
+            viewModel: viewModel,
+            layoutMode: .automatic
+        )
+        tabsView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabsView)
+        
+        NSLayoutConstraint.activate([
+            tabsView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabsView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            tabsView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Stretch Layout Test - Centered Content") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        
+        // Create tabs with icons to test centering in stretch mode
+        let tabs = [
+            MarketGroupTabItemData(
+                id: "tab1",
+                title: "1x2",
+                visualState: .selected,
+                prefixIconTypeName: "sportscourt",
+                suffixIconTypeName: nil,
+                badgeCount: nil
+            ),
+            MarketGroupTabItemData(
+                id: "tab2",
+                title: "Over/Under",
+                visualState: .idle,
+                prefixIconTypeName: nil,
+                suffixIconTypeName: "arrow.up.arrow.down",
+                badgeCount: 5
+            )
+        ]
+        
+        let viewModel = MockMarketGroupSelectorTabViewModel.customMarkets(
+            id: "stretchTest",
+            marketGroups: tabs,
+            selectedMarketGroupId: "tab1"
+        )
+        
+        let tabsView = MarketGroupSelectorTabView(
+            viewModel: viewModel,
+            // layoutMode: .stretch,
+            barBackgroundColor: .systemGray6,
+            itemIdleBackgroundColor: .systemGray5,
+            itemSelectedBackgroundColor: .systemBlue.withAlphaComponent(0.2)
+        )
         tabsView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(tabsView)
         
@@ -486,4 +617,123 @@ import SwiftUI
     }
 }
 
+@available(iOS 17.0, *)
+#Preview("Item Colors - Blue Bar, Gray Items") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabsView = MarketGroupSelectorTabView(
+            viewModel: MockMarketGroupSelectorTabViewModel.standardSportsMarkets,
+            barBackgroundColor: .systemBlue,
+            itemIdleBackgroundColor: .systemGray5,
+            itemSelectedBackgroundColor: .systemGray5
+        )
+        tabsView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabsView)
+        
+        NSLayoutConstraint.activate([
+            tabsView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabsView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            tabsView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Item Colors - Different Selected State") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabsView = MarketGroupSelectorTabView(
+            viewModel: MockMarketGroupSelectorTabViewModel.marketCategoryTabs,
+            layoutMode: .stretch,
+            barBackgroundColor: .clear,
+            itemIdleBackgroundColor: .systemGray6,
+            itemSelectedBackgroundColor: .systemBlue
+        )
+        tabsView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabsView)
+        
+        NSLayoutConstraint.activate([
+            tabsView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabsView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            tabsView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Custom Background - System Blue") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabsView = MarketGroupSelectorTabView(
+            viewModel: MockMarketGroupSelectorTabViewModel.standardSportsMarkets,
+            barBackgroundColor: .systemBlue
+        )
+        tabsView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabsView)
+        
+        NSLayoutConstraint.activate([
+            tabsView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabsView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            tabsView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
+}
+
+
+@available(iOS 17.0, *)
+#Preview("Custom Items - System Green") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabsView = MarketGroupSelectorTabView(
+            viewModel: MockMarketGroupSelectorTabViewModel.marketCategoryTabs,
+            itemIdleBackgroundColor: StyleProvider.Color.backgroundTertiary,
+            itemSelectedBackgroundColor: StyleProvider.Color.backgroundTertiary
+        )
+        tabsView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabsView)
+        
+        NSLayoutConstraint.activate([
+            tabsView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabsView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            tabsView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Custom Background - System Green") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let tabsView = MarketGroupSelectorTabView(
+            viewModel: MockMarketGroupSelectorTabViewModel.marketCategoryTabs,
+            barBackgroundColor: .systemGreen
+        )
+        tabsView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabsView)
+        
+        NSLayoutConstraint.activate([
+            tabsView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            tabsView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            tabsView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        return vc
+    }
+}
+
+
 #endif
+

@@ -19,7 +19,7 @@ enum MyBetsTabType: String, CaseIterable {
         case .sports:
             return "sports"
         case .virtuals:
-            return "virtual"
+            return "virtuals"
         }
     }
 }

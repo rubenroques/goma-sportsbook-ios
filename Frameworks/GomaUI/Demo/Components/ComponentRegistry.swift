@@ -149,7 +149,7 @@ struct ComponentRegistry {
             viewController: TicketBetInfoViewController.self,
             previewFactory: {
                 let viewModel = MockTicketBetInfoViewModel.pendingMock()
-                let ticketBetInfoView = TicketBetInfoView(viewModel: viewModel, cornerRadiusStyle: .all(radius: 8))
+                let ticketBetInfoView = TicketBetInfoView(viewModel: viewModel, cornerRadiusStyle: .all)
                 ticketBetInfoView.backgroundColor = StyleProvider.Color.backgroundSecondary
                 ticketBetInfoView.layer.cornerRadius = 8
                 return ticketBetInfoView

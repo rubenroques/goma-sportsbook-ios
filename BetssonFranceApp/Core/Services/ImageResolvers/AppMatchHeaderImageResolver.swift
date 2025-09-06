@@ -1,6 +1,7 @@
 import UIKit
 import GomaUI
 
+/*
 /// Production image resolver for MatchHeaderView that uses the app's existing image loading logic
 struct AppMatchHeaderImageResolver: MatchHeaderImageResolver {
     
@@ -24,3 +25,4 @@ struct AppMatchHeaderImageResolver: MatchHeaderImageResolver {
         return UIImage(systemName: "play.fill")?.withRenderingMode(.alwaysTemplate)
     }
 }
+*/

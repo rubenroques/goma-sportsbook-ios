@@ -253,14 +253,14 @@ extension MockMarketGroupSelectorTabViewModel {
                 id: "betbuilder",
                 title: "BetBuilder",
                 visualState: .idle,
-                iconTypeName: "betbuilder",
+                suffixIconTypeName: "betbuilder",
                 badgeCount: 16
             ),
             MarketGroupTabItemData(
                 id: "popular",
                 title: "Popular",
                 visualState: .idle,
-                iconTypeName: "popular",
+                suffixIconTypeName: "popular",
                 badgeCount: 16
             ),
             MarketGroupTabItemData(
