@@ -8,12 +8,16 @@ public class BetTicketStatusView: UIView {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    private let containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 8
-        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        return view
+    private let containerStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.spacing = 12
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        return stackView
     }()
     
     private let iconImageView: UIImageView = {
@@ -49,27 +53,19 @@ public class BetTicketStatusView: UIView {
     
     // MARK: - Setup
     private func setupView() {
-        addSubview(containerView)
-        containerView.addSubview(iconImageView)
-        containerView.addSubview(statusLabel)
+        addSubview(containerStackView)
+        containerStackView.addArrangedSubview(iconImageView)
+        containerStackView.addArrangedSubview(statusLabel)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Container constraints
-            containerView.topAnchor.constraint(equalTo: topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 48),
-            
-            // Icon constraints
-            iconImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            iconImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            
-            // Status label constraints
-            statusLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
-            statusLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+            // Stack view constraints
+            containerStackView.topAnchor.constraint(equalTo: topAnchor),
+            containerStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            containerStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            containerStackView.heightAnchor.constraint(equalToConstant: 48)
         ])
     }
     
@@ -84,13 +80,11 @@ public class BetTicketStatusView: UIView {
     
     // MARK: - UI Updates
     private func updateUI(with data: BetTicketStatusData) {
-        // Update visibility
-        isHidden = !data.isVisible
-        
+
         // Update appearance based on status
         switch data.status {
         case .won:
-            containerView.backgroundColor = StyleProvider.Color.highlightSecondary
+            containerStackView.backgroundColor = StyleProvider.Color.highlightSecondary
             if let customImage = UIImage(named: "success_circle_icon") {
                 iconImageView.image = customImage
             }
@@ -98,10 +92,13 @@ public class BetTicketStatusView: UIView {
                 iconImageView.image = UIImage(systemName: "checkmark.circle.fill")
             }
             iconImageView.tintColor = StyleProvider.Color.allWhite
+            
+            iconImageView.isHidden = false
+            
             statusLabel.text = "Won"
             
         case .lost:
-            containerView.backgroundColor = StyleProvider.Color.backgroundGradient2
+            containerStackView.backgroundColor = StyleProvider.Color.backgroundGradient2
             if let customImage = UIImage(named: "error_icon") {
                 iconImageView.image = customImage
             }
@@ -109,11 +106,14 @@ public class BetTicketStatusView: UIView {
                 iconImageView.image = UIImage(systemName: "xmark")
             }
             iconImageView.tintColor = StyleProvider.Color.alertError
+            
+            iconImageView.isHidden = true
+            
             statusLabel.text = "Lost"
             statusLabel.textColor = StyleProvider.Color.alertError
 
         case .draw:
-            containerView.backgroundColor = StyleProvider.Color.alertWarning
+            containerStackView.backgroundColor = StyleProvider.Color.alertWarning
             if let customImage = UIImage(named: "alert_icon") {
                 iconImageView.image = customImage
             }
@@ -121,6 +121,9 @@ public class BetTicketStatusView: UIView {
                 iconImageView.image = UIImage(systemName: "minus")
             }
             iconImageView.tintColor = StyleProvider.Color.allWhite
+            
+            iconImageView.isHidden = true
+            
             statusLabel.text = "Draw"
         }
     }

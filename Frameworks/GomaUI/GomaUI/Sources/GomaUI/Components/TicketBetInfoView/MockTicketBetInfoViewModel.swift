@@ -95,7 +95,9 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             betAmount: "XAF 10.00",
             possibleWinnings: "XAF 78.85",
             partialCashoutValue: nil,
-            cashoutTotalAmount: nil
+            cashoutTotalAmount: nil,
+            betStatus: nil,
+            isSettled: false
         )
         viewModel.updateBetInfo(betInfo)
         return viewModel
@@ -141,7 +143,11 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             ],
             totalOdds: "4.63",
             betAmount: "XAF 25.00",
-            possibleWinnings: "XAF 115.75"
+            possibleWinnings: "XAF 115.75",
+            partialCashoutValue: nil,
+            cashoutTotalAmount: nil,
+            betStatus: nil,
+            isSettled: false
         )
         viewModel.updateBetInfo(betInfo)
         return viewModel
@@ -172,7 +178,11 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             ],
             totalOdds: "3.25",
             betAmount: "XAF 50.00",
-            possibleWinnings: "XAF 162.50"
+            possibleWinnings: "XAF 162.50",
+            partialCashoutValue: nil,
+            cashoutTotalAmount: nil,
+            betStatus: nil,
+            isSettled: false
         )
         viewModel.updateBetInfo(betInfo)
         return viewModel
@@ -205,7 +215,9 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             betAmount: "XAF 10.00",
             possibleWinnings: "XAF 78.85",
             partialCashoutValue: "32.00",
-            cashoutTotalAmount: nil
+            cashoutTotalAmount: nil,
+            betStatus: nil,
+            isSettled: false
         )
         viewModel.updateBetInfo(betInfo)
         return viewModel
@@ -238,7 +250,9 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             betAmount: "XAF 10.00",
             possibleWinnings: "XAF 78.85",
             partialCashoutValue: nil,
-            cashoutTotalAmount: "200.0"
+            cashoutTotalAmount: "200.0",
+            betStatus: nil,
+            isSettled: false
         )
         viewModel.updateBetInfo(betInfo)
         return viewModel
@@ -271,7 +285,116 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             betAmount: "XAF 10.00",
             possibleWinnings: "XAF 78.85",
             partialCashoutValue: "32.00",
-            cashoutTotalAmount: "200.0"
+            cashoutTotalAmount: "200.0",
+            betStatus: nil,
+            isSettled: false
+        )
+        viewModel.updateBetInfo(betInfo)
+        return viewModel
+    }
+    
+    // MARK: - Settled Bet Mocks
+    
+    public static func wonBetMock() -> MockTicketBetInfoViewModel {
+        let viewModel = MockTicketBetInfoViewModel()
+        let betInfo = TicketBetInfoData(
+            id: "BET_WON_001",
+            title: "Single Bet - Won",
+            betDetails: "20/08/2024 15:52 | Bet ID: 2159",
+            tickets: [
+                TicketSelectionData(
+                    id: "TICKET_WON_001",
+                    competitionName: "Brasileirão Série A",
+                    homeTeamName: "Ceara SC CE",
+                    awayTeamName: "CR Vasco da Gama RJ",
+                    homeScore: 3,
+                    awayScore: 0,
+                    matchDate: "20/08/2024 15:30",
+                    isLive: false,
+                    sportIcon: "soccerball",
+                    countryFlag: "🇧🇷",
+                    marketName: "Double Chance",
+                    selectionName: "Ceara SC CE",
+                    oddsValue: "1.64"
+                )
+            ],
+            totalOdds: "7.84",
+            betAmount: "XAF 10.00",
+            possibleWinnings: "XAF 78.85",
+            partialCashoutValue: nil,
+            cashoutTotalAmount: nil,
+            betStatus: BetTicketStatusData(status: .won),
+            isSettled: true
+        )
+        viewModel.updateBetInfo(betInfo)
+        return viewModel
+    }
+    
+    public static func lostBetMock() -> MockTicketBetInfoViewModel {
+        let viewModel = MockTicketBetInfoViewModel()
+        let betInfo = TicketBetInfoData(
+            id: "BET_LOST_001",
+            title: "Single Bet - Lost",
+            betDetails: "20/08/2024 15:52 | Bet ID: 2160",
+            tickets: [
+                TicketSelectionData(
+                    id: "TICKET_LOST_001",
+                    competitionName: "Brasileirão Série A",
+                    homeTeamName: "Ceara SC CE",
+                    awayTeamName: "CR Vasco da Gama RJ",
+                    homeScore: 0,
+                    awayScore: 3,
+                    matchDate: "20/08/2024 15:30",
+                    isLive: false,
+                    sportIcon: "soccerball",
+                    countryFlag: "🇧🇷",
+                    marketName: "Double Chance",
+                    selectionName: "Ceara SC CE",
+                    oddsValue: "1.64"
+                )
+            ],
+            totalOdds: "7.84",
+            betAmount: "XAF 10.00",
+            possibleWinnings: "XAF 78.85",
+            partialCashoutValue: nil,
+            cashoutTotalAmount: nil,
+            betStatus: BetTicketStatusData(status: .lost),
+            isSettled: true
+        )
+        viewModel.updateBetInfo(betInfo)
+        return viewModel
+    }
+    
+    public static func drawBetMock() -> MockTicketBetInfoViewModel {
+        let viewModel = MockTicketBetInfoViewModel()
+        let betInfo = TicketBetInfoData(
+            id: "BET_DRAW_001",
+            title: "Single Bet - Draw",
+            betDetails: "20/08/2024 15:52 | Bet ID: 2161",
+            tickets: [
+                TicketSelectionData(
+                    id: "TICKET_DRAW_001",
+                    competitionName: "Brasileirão Série A",
+                    homeTeamName: "Ceara SC CE",
+                    awayTeamName: "CR Vasco da Gama RJ",
+                    homeScore: 1,
+                    awayScore: 1,
+                    matchDate: "20/08/2024 15:30",
+                    isLive: false,
+                    sportIcon: "soccerball",
+                    countryFlag: "🇧🇷",
+                    marketName: "Match Winner",
+                    selectionName: "Draw",
+                    oddsValue: "3.20"
+                )
+            ],
+            totalOdds: "3.20",
+            betAmount: "XAF 15.00",
+            possibleWinnings: "XAF 48.00",
+            partialCashoutValue: nil,
+            cashoutTotalAmount: nil,
+            betStatus: BetTicketStatusData(status: .draw),
+            isSettled: true
         )
         viewModel.updateBetInfo(betInfo)
         return viewModel
@@ -290,7 +413,9 @@ extension TicketBetInfoData {
             betAmount: "",
             possibleWinnings: "",
             partialCashoutValue: nil,
-            cashoutTotalAmount: nil
+            cashoutTotalAmount: nil,
+            betStatus: nil,
+            isSettled: false
         )
     }
 } 

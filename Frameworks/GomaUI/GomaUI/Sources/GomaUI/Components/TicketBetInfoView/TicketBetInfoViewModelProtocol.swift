@@ -12,6 +12,8 @@ public struct TicketBetInfoData: Equatable {
     public let possibleWinnings: String
     public let partialCashoutValue: String?
     public let cashoutTotalAmount: String?
+    public let betStatus: BetTicketStatusData?
+    public let isSettled: Bool
     
     public init(
         id: String,
@@ -22,7 +24,9 @@ public struct TicketBetInfoData: Equatable {
         betAmount: String,
         possibleWinnings: String,
         partialCashoutValue: String? = nil,
-        cashoutTotalAmount: String? = nil
+        cashoutTotalAmount: String? = nil,
+        betStatus: BetTicketStatusData? = nil,
+        isSettled: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -33,6 +37,8 @@ public struct TicketBetInfoData: Equatable {
         self.possibleWinnings = possibleWinnings
         self.partialCashoutValue = partialCashoutValue
         self.cashoutTotalAmount = cashoutTotalAmount
+        self.betStatus = betStatus
+        self.isSettled = isSettled
     }
 }
 

@@ -27,13 +27,36 @@ public class TicketBetInfoView: UIView {
         return view
     }()
     
+    // Main stack view containing containerView and betTicketStatusView
+    private let mainStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        stackView.layer.cornerRadius = 8
+        stackView.clipsToBounds = true 
+        return stackView
+    }()
+    
     private let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        view.layer.cornerRadius = 8
+        // view.layer.cornerRadius = 8
         return view
     }()
+    
+    // Dedicated bet status view (sibling of containerView)
+    private var betTicketStatusView: BetTicketStatusView!
+    
+    private func createBetStatusView() -> BetTicketStatusView {
+        let statusViewModel = MockBetTicketStatusViewModel.customMock(status: .won)
+        let statusView = BetTicketStatusView(viewModel: statusViewModel)
+        statusView.translatesAutoresizingMaskIntoConstraints = false
+        statusView.isHidden = true
+        return statusView
+    }
     
     // Header section
     private let headerView: UIView = {
@@ -246,9 +269,16 @@ public class TicketBetInfoView: UIView {
     
     // MARK: - Setup
     private func setupView() {
+        // Initialize bet status view
+        betTicketStatusView = createBetStatusView()
+        
         // Wrapper setup (outer container with corner radius)
         addSubview(wrapperView)
-        wrapperView.addSubview(containerView)
+        wrapperView.addSubview(mainStackView)
+        
+        // Main stack setup - contains containerView and betTicketStatusView
+        mainStackView.addArrangedSubview(containerView)
+        mainStackView.addArrangedSubview(betTicketStatusView)
         
         // Header setup
         containerView.addSubview(headerView)
@@ -304,11 +334,11 @@ public class TicketBetInfoView: UIView {
             wrapperView.trailingAnchor.constraint(equalTo: trailingAnchor),
             wrapperView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            // Container view constraints (8px padding from wrapper)
-            containerView.topAnchor.constraint(equalTo: wrapperView.topAnchor, constant: 8),
-            containerView.leadingAnchor.constraint(equalTo: wrapperView.leadingAnchor, constant: 8),
-            containerView.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor, constant: -8),
-            containerView.bottomAnchor.constraint(equalTo: wrapperView.bottomAnchor, constant: -8),
+            // Main stack view constraints (8px padding from wrapper)
+            mainStackView.topAnchor.constraint(equalTo: wrapperView.topAnchor, constant: 8),
+            mainStackView.leadingAnchor.constraint(equalTo: wrapperView.leadingAnchor, constant: 8),
+            mainStackView.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor, constant: -8),
+            mainStackView.bottomAnchor.constraint(equalTo: wrapperView.bottomAnchor, constant: -8),
             
             // Header constraints
             headerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
@@ -412,6 +442,7 @@ public class TicketBetInfoView: UIView {
         
         updateTickets(with: betInfo.tickets)
         updateBottomComponents(with: betInfo)
+        updateBetStatus(with: betInfo)
     }
     
     private func updateTickets(with tickets: [TicketSelectionData]) {
@@ -443,30 +474,33 @@ public class TicketBetInfoView: UIView {
         
         var hasComponents = false
         
-        // Add CashoutAmountView if partialCashoutValue is provided
-        if let partialCashoutValue = betInfo.partialCashoutValue {
-            let cashoutAmountViewModel = MockCashoutAmountViewModel.customMock(
-                title: "Partial Cashout",
-                currency: "XAF",
-                amount: partialCashoutValue
-            )
-            let cashoutAmountView = CashoutAmountView(viewModel: cashoutAmountViewModel)
-            bottomComponentsStackView.addArrangedSubview(cashoutAmountView)
-            hasComponents = true
-        }
-        
-        // Add CashoutSliderView if cashoutTotalAmount is provided
-        if let cashoutTotalAmount = betInfo.cashoutTotalAmount {
-            let cashoutSliderViewModel = MockCashoutSliderViewModel.customMock(
-                title: "Cash out amount",
-                minimumValue: 0.1,
-                maximumValue: Float(cashoutTotalAmount) ?? 200.0,
-                currentValue: Float(cashoutTotalAmount) ?? 200.0,
-                currency: "XAF"
-            )
-            let cashoutSliderView = CashoutSliderView(viewModel: cashoutSliderViewModel)
-            bottomComponentsStackView.addArrangedSubview(cashoutSliderView)
-            hasComponents = true
+        // Handle cashout components for open bets only (not settled bets)
+        if !betInfo.isSettled {
+            // Add CashoutAmountView if partialCashoutValue is provided
+            if let partialCashoutValue = betInfo.partialCashoutValue {
+                let cashoutAmountViewModel = MockCashoutAmountViewModel.customMock(
+                    title: "Partial Cashout",
+                    currency: "XAF",
+                    amount: partialCashoutValue
+                )
+                let cashoutAmountView = CashoutAmountView(viewModel: cashoutAmountViewModel)
+                bottomComponentsStackView.addArrangedSubview(cashoutAmountView)
+                hasComponents = true
+            }
+            
+            // Add CashoutSliderView if cashoutTotalAmount is provided
+            if let cashoutTotalAmount = betInfo.cashoutTotalAmount {
+                let cashoutSliderViewModel = MockCashoutSliderViewModel.customMock(
+                    title: "Cash out amount",
+                    minimumValue: 0.1,
+                    maximumValue: Float(cashoutTotalAmount) ?? 200.0,
+                    currentValue: Float(cashoutTotalAmount) ?? 200.0,
+                    currency: "XAF"
+                )
+                let cashoutSliderView = CashoutSliderView(viewModel: cashoutSliderViewModel)
+                bottomComponentsStackView.addArrangedSubview(cashoutSliderView)
+                hasComponents = true
+            }
         }
         
         // Activate appropriate constraints based on whether components are present
@@ -474,6 +508,28 @@ public class TicketBetInfoView: UIView {
             bottomComponentsTopConstraint?.isActive = true
         } else {
             financialSummaryBottomConstraint?.isActive = true
+        }
+    }
+    
+    private func updateBetStatus(with betInfo: TicketBetInfoData) {
+        // Show/hide bet status view based on settled state and status data
+        if betInfo.isSettled, let betStatus = betInfo.betStatus {
+            // Remove and recreate bet status view with new data
+            mainStackView.removeArrangedSubview(betTicketStatusView)
+            betTicketStatusView.removeFromSuperview()
+            
+            // Create new status view with correct data
+            let betTicketStatusData = BetTicketStatusData(status: betStatus.status)
+            let viewModel = MockBetTicketStatusViewModel(betTicketStatusData: betTicketStatusData)
+            
+            betTicketStatusView = BetTicketStatusView(viewModel: viewModel)
+            betTicketStatusView.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Add back to stack view
+            mainStackView.addArrangedSubview(betTicketStatusView)
+            betTicketStatusView.isHidden = false
+        } else {
+            betTicketStatusView.isHidden = true
         }
     }
     
@@ -624,4 +680,25 @@ public class TicketBetInfoView: UIView {
     }
 }
 
-#endif 
+@available(iOS 17.0, *)
+#Preview("Lost bet") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketBetInfoViewModel.lostBetMock()
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all)
+        ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(ticketBetInfoView)
+        
+        NSLayoutConstraint.activate([
+            ticketBetInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketBetInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketBetInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
+#endif

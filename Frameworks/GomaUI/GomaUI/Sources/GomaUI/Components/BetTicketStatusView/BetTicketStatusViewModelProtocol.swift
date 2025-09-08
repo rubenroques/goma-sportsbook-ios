@@ -11,14 +11,9 @@ public enum BetTicketStatus: Equatable {
 /// Data model for bet ticket status information
 public struct BetTicketStatusData: Equatable {
     public let status: BetTicketStatus
-    public let isVisible: Bool
     
-    public init(
-        status: BetTicketStatus,
-        isVisible: Bool = true
-    ) {
+    public init(status: BetTicketStatus) {
         self.status = status
-        self.isVisible = isVisible
     }
 }
 
@@ -26,7 +21,5 @@ public struct BetTicketStatusData: Equatable {
 public protocol BetTicketStatusViewModelProtocol {
     /// Publisher for the bet ticket status data
     var dataPublisher: AnyPublisher<BetTicketStatusData, Never> { get }
-    
-    /// Set visibility state
-    func setVisible(_ isVisible: Bool)
+
 }

@@ -17,7 +17,9 @@ struct TicketBetInfoViewModelMapper {
             betAmount: formatCurrency(myBet.stake, currency: myBet.currency),
             possibleWinnings: formatPossibleWinnings(myBet),
             partialCashoutValue: formatPartialCashoutValue(myBet),
-            cashoutTotalAmount: formatCashoutTotalAmount(myBet)
+            cashoutTotalAmount: formatCashoutTotalAmount(myBet),
+            betStatus: mapBetStatus(myBet),
+            isSettled: myBet.isSettled
         )
     }
     
@@ -92,6 +94,26 @@ struct TicketBetInfoViewModelMapper {
     private static func formatCashoutTotalAmount(_ myBet: MyBet) -> String? {
         // Hardcoded to never show cashout components
         return nil
+    }
+    
+    private static func mapBetStatus(_ myBet: MyBet) -> BetTicketStatusData? {
+        // Only provide status data if bet is settled
+        guard myBet.isSettled else { return nil }
+        
+        let ticketStatus: BetTicketStatus
+        switch myBet.result {
+        case .won:
+            ticketStatus = .won
+        case .lost:
+            ticketStatus = .lost
+        case .drawn:
+            ticketStatus = .draw
+        default:
+            // For other states like void, pending, etc., don't show status
+            return nil
+        }
+        
+        return BetTicketStatusData(status: ticketStatus)
     }
     
     // MARK: - Selection Helper Methods
