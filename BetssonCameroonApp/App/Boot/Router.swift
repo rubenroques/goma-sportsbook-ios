@@ -5,6 +5,17 @@
 //  Created by Ruben Roques on 03/08/2021.
 //
 
+/*
+ 1. Router is NOT actively used - The app uses AppCoordinator instead
+ 2. Bootstrap creates an AppCoordinator (not Router) in line 26
+ 3. AppCoordinator is where the theme is actually applied to the window (line 48)
+
+ The Router class exists in the codebase but its makeKeyAndVisible() method is never called. The changes I made to Router.swift won't have any effect because:
+ - The Router is not instantiated anywhere
+ - Bootstrap uses AppCoordinator instead
+ - The theme logic in Router's makeKeyAndVisible() is never executed
+ */
+
 import UIKit
 import Combine
 import SwiftUI
@@ -34,111 +45,9 @@ class Router {
 
     init(window: UIWindow) {
         self.rootWindow = window
-
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
     }
 
     func makeKeyAndVisible() {
-        
-        // MIGRATED
-        // self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-        
-//        #if DEBUG
-//        // manual theme override
-//        self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-//        //
-//        #else
-//        if TargetVariables.supportedThemes == AppearanceMode.allCases {
-//            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
-//        }
-//        else if TargetVariables.supportedThemes == [AppearanceMode.dark] {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
-//        }
-//        else if TargetVariables.supportedThemes == [AppearanceMode.light] {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-//        }
-//        else {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
-//        }
-//        #endif
-
-//
-//        let splashInformativeViewController = SplashInformativeViewController(loadingCompleted: {
-//            self.showPostLoadingFlow()
-//        })
-//        self.rootWindow.rootViewController = splashInformativeViewController
-//        self.rootWindow.makeKeyAndVisible()
-    }
-
-    @objc func applicationDidBecomeActive(notification: NSNotification) {
-
-    }
-
-    func showPostLoadingFlow() {
-        // MIGRATED
-//        var bootRootViewController: UIViewController
-//        
-//        let viewModel = RootAdaptiveScreenViewModel()
-//        let rootViewController = RootAdaptiveViewController(viewModel: viewModel)
-//        self.rootActionable = rootViewController
-//        bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
-//
-//        //
-//        self.subscribeToUserActionBlockers()
-//        
-//        self.subscribeToURLRedirects()
-//        
-//        self.subscribeToNotificationsOpened()
-//        
-//        self.rootWindow.rootViewController = bootRootViewController
-    }
-
-    func subscribeToUserActionBlockers() {
-        // MIGRATED
-//        Env.businessSettingsSocket.maintenanceModePublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink { maintenanceMode in
-//
-//                switch maintenanceMode {
-//                case .enabled(let message):
-//                    self.showUnderMaintenanceScreen(withReason: message)
-//                case .disabled:
-//                    self.hideUnderMaintenanceScreen()
-//                case .unknown:
-//                    break
-//                }
-//            }
-//            .store(in: &self.cancellables)
-//
-//        Env.businessSettingsSocket.requiredVersionPublisher
-//            .receive(on: DispatchQueue.main)
-//            .delay(for: 3, scheduler: DispatchQueue.main)
-//            .sink { serverVersion in
-//
-//                guard
-//                    let currentVersion = Bundle.main.versionNumber,
-//                    let serverRequiredVersion = serverVersion.required,
-//                    let serverCurrentVersion = serverVersion.current
-//                else {
-//                    return
-//                }
-//
-//                if currentVersion.compare(serverRequiredVersion, options: .numeric) == .orderedAscending {
-//                    self.showRequiredUpdateScreen()
-//                }
-//                else if currentVersion.compare(serverCurrentVersion, options: .numeric) == .orderedAscending {
-//                    self.showAvailableUpdateScreen()
-//                }
-//                else {
-//                    self.hideRequiredUpdateScreen()
-//                }
-//            }
-//            .store(in: &cancellables)
 
     }
 

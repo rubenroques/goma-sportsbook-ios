@@ -58,7 +58,7 @@ final class ProfileWalletViewModel: ObservableObject {
         let walletDetailVM = WalletDetailViewModel(userSessionStore: userSessionStore)
         self.walletDetailViewModel = walletDetailVM
         self.profileMenuListViewModel = ProfileMenuListViewModel()
-        self.themeSwitcherViewModel = MockThemeSwitcherViewModel.defaultMock
+        self.themeSwitcherViewModel = ThemeSwitcherViewModel()
         
         setupChildViewModelBindings()
         setupWalletDetailCallbacks(walletDetailVM)
@@ -117,27 +117,14 @@ final class ProfileWalletViewModel: ObservableObject {
     }
     
     private func setupThemeSwitcherCallbacks() {
-        // Monitor theme changes
+        // The ThemeSwitcherViewModel handles theme application directly
+        // We can monitor theme changes here if needed for analytics or other purposes
         themeSwitcherViewModel.selectedThemePublisher
             .dropFirst() // Skip initial value
-            .sink { [weak self] theme in
-                self?.applyTheme(theme)
+            .sink { theme in
+                print("ProfileWalletViewModel: Theme changed to \(theme.rawValue)")
+                // Add any additional handling here if needed (e.g., analytics)
             }
             .store(in: &cancellables)
-    }
-    
-    private func applyTheme(_ theme: ThemeMode) {
-        // Apply theme to app-wide theme system
-        switch theme {
-        case .light:
-            // Apply light theme
-            print("ProfileWalletViewModel: Applying light theme")
-        case .dark:
-            // Apply dark theme
-            print("ProfileWalletViewModel: Applying dark theme")
-        case .system:
-            // Follow system theme
-            print("ProfileWalletViewModel: Following system theme")
-        }
     }
 }

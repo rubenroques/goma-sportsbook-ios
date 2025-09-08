@@ -42,28 +42,25 @@ class AppCoordinator: Coordinator {
         navigationController.interactivePopGestureRecognizer?.delegate = nil
         navigationController.interactivePopGestureRecognizer?.isEnabled = true
         
-#if DEBUG
-        // Random theme selection for testing
-        let themes: [UIUserInterfaceStyle] = [.light, .dark]
-        let randomTheme = themes.randomElement() ?? .unspecified
-        self.window.overrideUserInterfaceStyle = randomTheme
+        // Apply saved theme preference or use default
+        if TargetVariables.supportedThemes == AppearanceMode.allCases {
+            // Use user's saved preference
+            self.window.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
+        }
+        else if TargetVariables.supportedThemes == [AppearanceMode.dark] {
+            // Force dark mode if only dark is supported
+            self.window.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
+        }
+        else if TargetVariables.supportedThemes == [AppearanceMode.light] {
+            // Force light mode if only light is supported
+            self.window.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
+        }
+        else {
+            // Default to system preference
+            self.window.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
+        }
         
-        print("🎨 DEBUG: Random theme selected: \(randomTheme.rawValue)")
-#else
-        self.window.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-        // if TargetVariables.supportedThemes == AppearanceMode.allCases {
-        //     self.window.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
-        // }
-        // else if TargetVariables.supportedThemes == [AppearanceMode.dark] {
-        //     self.window.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
-        // }
-        // else if TargetVariables.supportedThemes == [AppearanceMode.light] {
-        //     self.window.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-        // }
-        // else {
-        //     self.window.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
-        // }
-#endif
+        print("🎨 Theme applied: \(UserDefaults.standard.appearanceMode) -> \(self.window.overrideUserInterfaceStyle.rawValue)")
         
         
         setupStateObservation()
