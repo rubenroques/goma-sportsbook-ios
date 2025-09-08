@@ -21,7 +21,7 @@ extension ServiceProviderModelMapper {
             gameURL: casinoGame.launchUrl,
             imageURL: bestImageURL(from: casinoGame),
             rating: bestRating(from: casinoGame),
-            provider: casinoGame.vendor.displayName,
+            provider: casinoGame.vendor?.displayName,
             minStake: "-" // As specified: set to "-" when not available
         )
     }
@@ -66,7 +66,7 @@ extension ServiceProviderModelMapper {
         return RecentlyPlayedGameData(
             id: cardData.id,
             name: cardData.name,
-            provider: cardData.provider,
+            provider: cardData.provider,  // Now optional, passes through
             imageURL: cardData.imageURL,
             gameURL: cardData.gameURL
         )

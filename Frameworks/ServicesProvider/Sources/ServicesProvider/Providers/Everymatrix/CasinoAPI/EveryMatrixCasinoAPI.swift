@@ -1,8 +1,8 @@
 import Foundation
 
 enum EveryMatrixCasinoAPI {
-    case getCategories(language: String, platform: String)
-    case getGamesByCategory(categoryId: String, language: String, platform: String, offset: Int, limit: Int)
+    case getCategories(datasource: String, language: String, platform: String)
+    case getGamesByCategory(datasource: String, categoryId: String, language: String, platform: String, offset: Int, limit: Int)
     case getGameDetails(gameId: String, language: String, platform: String)
     case getRecentlyPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
 }
@@ -14,10 +14,10 @@ extension EveryMatrixCasinoAPI: Endpoint {
     
     var endpoint: String {
         switch self {
-        case .getCategories:
-            return "/v1/casino/categories"
-        case .getGamesByCategory:
-            return "/v1/casino/games"
+        case .getCategories(let datasource, _, _):
+            return "/v2/casino/groups/\(datasource)"
+        case .getGamesByCategory(let datasource, let categoryId, _, _, _, _):
+            return "/v2/casino/groups/\(datasource)/\(categoryId)"
         case .getGameDetails:
             return "/v1/casino/games"
         case .getRecentlyPlayedGames(let playerId, _, _, _, _):
@@ -27,21 +27,21 @@ extension EveryMatrixCasinoAPI: Endpoint {
     
     var query: [URLQueryItem]? {
         switch self {
-        case .getCategories(let language, let platform):
+        case .getCategories(_, let language, let platform):
             return [
                 URLQueryItem(name: "language", value: language),
                 URLQueryItem(name: "platform", value: platform),
                 URLQueryItem(name: "pagination", value: "offset=0,games(offset=0,limit=0)"),
-                URLQueryItem(name: "fields", value: "id,name,href,games")
+                URLQueryItem(name: "fields", value: "id,name,games")
             ]
             
-        case .getGamesByCategory(let categoryId, let language, let platform, let offset, let limit):
+        case .getGamesByCategory(_, _, let language, let platform, let offset, let limit):
             return [
                 URLQueryItem(name: "language", value: language),
                 URLQueryItem(name: "platform", value: platform),
                 URLQueryItem(name: "pagination", value: "offset=\(offset),limit=\(limit)"),
-                URLQueryItem(name: "expand", value: "vendor"),
-                URLQueryItem(name: "filter", value: "categories(id=\(categoryId))"),
+                URLQueryItem(name: "expand", value: "games"),
+                URLQueryItem(name: "fields", value: "id,name,games"),
                 URLQueryItem(name: "sortedField", value: "popularity")
             ]
             

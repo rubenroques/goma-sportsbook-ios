@@ -11,7 +11,6 @@ extension EveryMatrix {
     
     /// DTO for casino category API response
     struct CasinoCategoryDTO: Codable {
-        let href: String
         let id: String
         let name: String
         let games: CasinoCategoryGamesDTO
@@ -39,5 +38,20 @@ extension EveryMatrix {
         let next: String?
         let previous: String?
         let last: String?
+    }
+    
+    /// DTO for casino group response (v2 games endpoint)
+    struct CasinoGroupResponseDTO: Codable {
+        let id: String
+        let name: String
+        let games: CasinoGamesNestedDTO
+    }
+    
+    /// DTO for nested games structure in v2 response
+    struct CasinoGamesNestedDTO: Codable {
+        let count: Int
+        let total: Int
+        let items: [FailableDecodable<CasinoGameDTO>]
+        let pages: CasinoPagesDTO?
     }
 }

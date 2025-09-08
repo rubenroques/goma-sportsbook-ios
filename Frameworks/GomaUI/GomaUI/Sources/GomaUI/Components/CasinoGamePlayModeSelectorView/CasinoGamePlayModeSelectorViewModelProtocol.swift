@@ -8,7 +8,7 @@ public struct CasinoGamePlayModeSelectorGameData: Equatable, Hashable {
     public let id: String
     public let name: String
     public let imageURL: String?
-    public let provider: String
+    public let provider: String?  // Optional - not displayed if nil
     public let volatility: String?
     public let minStake: String
     public let description: String?
@@ -17,7 +17,7 @@ public struct CasinoGamePlayModeSelectorGameData: Equatable, Hashable {
         id: String,
         name: String,
         imageURL: String? = nil,
-        provider: String,
+        provider: String? = nil,
         volatility: String? = nil,
         minStake: String,
         description: String? = nil

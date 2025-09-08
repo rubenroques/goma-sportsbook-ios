@@ -49,6 +49,7 @@ final public class RecentlyPlayedGamesCellView: UIView {
         if let gameData = gameData {
             gameTitleLabel.text = gameData.name
             providerLabel.text = gameData.provider
+            providerLabel.isHidden = gameData.provider == nil || gameData.provider?.isEmpty == true
             loadGameImage(from: gameData.imageURL)
         } else {
             renderPlaceholderState()

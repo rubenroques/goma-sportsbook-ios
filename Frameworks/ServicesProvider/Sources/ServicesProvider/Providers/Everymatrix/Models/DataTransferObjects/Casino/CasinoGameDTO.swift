@@ -33,7 +33,7 @@ extension EveryMatrix {
         let theoreticalPayOut: Double?
         let platform: [FailableDecodable<String>]?
         let maxBetRestriction: CasinoGameBetRestrictionDTO?
-        let vendor: CasinoGameVendorDTO?
+        let vendor: CasinoGameVendorDTO?  // Optional - v2 only has href, not displayed in UI
         let tags: CasinoGameTagsDTO?
         let categories: CasinoGameCategoriesDTO?
         let jackpots: CasinoGameJackpotsDTO?
@@ -58,6 +58,10 @@ extension EveryMatrix {
         let bonusContribution: Double?
         let icons: [String: String]?
         let volatility: String?
+        let position: String?
+        let groups: CasinoGameGroupsDTO?
+        let groupInfos: CasinoGameGroupInfosDTO?
+        let lobby: [FailableDecodable<String>]?
     }
     
     /// DTO for casino games response
@@ -68,15 +72,9 @@ extension EveryMatrix {
         let pages: CasinoPagesDTO?
     }
     
-    /// DTO for game vendor information
+    /// DTO for game vendor information (v2 only has href)
     struct CasinoGameVendorDTO: Codable {
-        let href: String?
-        let id: String
-        let name: String
-        let displayName: String?
-        let image: String?
-        let logo: String?
-        let isTopVendor: Bool?
+        let href: String
     }
     
     /// DTO for game tags
@@ -135,5 +133,23 @@ extension EveryMatrix {
     /// DTO for exclusive settings
     struct CasinoGameExclusiveDTO: Codable {
         let effective: Bool
+    }
+    
+    /// DTO for game groups
+    struct CasinoGameGroupsDTO: Codable {
+        let count: Int
+        let items: [FailableDecodable<String>]
+    }
+    
+    /// DTO for group infos
+    struct CasinoGameGroupInfosDTO: Codable {
+        let count: Int
+        let items: [String: FailableDecodable<CasinoGameGroupInfoItemDTO>]
+    }
+    
+    /// DTO for individual group info item
+    struct CasinoGameGroupInfoItemDTO: Codable {
+        let position: String?
+        let thumbnail: String?
     }
 }

@@ -244,7 +244,7 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
             id: gameCardData.id,
             name: gameCardData.name,
             imageURL: gameCardData.imageURL,
-            provider: gameCardData.provider,
+            provider: gameCardData.provider,  // Now optional, passes through
             volatility: mapRatingToVolatility(gameCardData.rating),
             minStake: gameCardData.minStake,
             description: game.description

@@ -252,6 +252,7 @@ final public class CasinoGameCardView: UIView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] provider in
                 self?.providerLabel.text = provider
+                self?.providerLabel.isHidden = provider == nil || provider?.isEmpty == true
             }
             .store(in: &cancellables)
         

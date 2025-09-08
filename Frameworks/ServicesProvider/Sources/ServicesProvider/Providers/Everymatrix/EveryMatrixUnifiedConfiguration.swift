@@ -75,6 +75,16 @@ public final class EveryMatrixUnifiedConfiguration {
         }
     }
     
+    /// Casino datasource for v2 API endpoints
+    public var casinoDataSource: String {
+        switch environment {
+        case .production:
+            return "Lobby1" // TODO: Verify production datasource
+        case .staging, .development:
+            return "Lobby1"
+        }
+    }
+    
     // MARK: - Shared Configuration
     
     /// Domain ID for all APIs

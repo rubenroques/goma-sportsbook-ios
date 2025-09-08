@@ -19,8 +19,10 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     func getCasinoCategories(language: String?, platform: String?) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
         let finalLanguage = language ?? getDefaultLanguage()
         let finalPlatform = platform ?? getDefaultPlatform()
+        let datasource = EveryMatrixUnifiedConfiguration.shared.casinoDataSource
         
         let endpoint = EveryMatrixCasinoAPI.getCategories(
+            datasource: datasource,
             language: finalLanguage,
             platform: finalPlatform
         )
@@ -38,26 +40,35 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     func getGamesByCategory(categoryId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         let finalLanguage = language ?? getDefaultLanguage()
         let finalPlatform = platform ?? getDefaultPlatform()
+        let datasource = EveryMatrixUnifiedConfiguration.shared.casinoDataSource
+        
+        // Category ID might already include datasource prefix, or we might need to add it
+        let fullCategoryId = categoryId.contains("$") ? categoryId : "\(datasource)$\(categoryId)"
         
         let endpoint = EveryMatrixCasinoAPI.getGamesByCategory(
-            categoryId: categoryId,
+            datasource: datasource,
+            categoryId: fullCategoryId,
             language: finalLanguage,
             platform: finalPlatform,
             offset: pagination.offset,
             limit: pagination.limit
         )
         
-        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoGroupResponseDTO, ServiceProviderError> = connector.request(endpoint)
         
         return publisher
             .map { response in
-                let games = response.items.compactMap(\.content).map { EveryMatrixModelMapper.casinoGame(from: $0)
+                // Note: games are now under response.games.items
+                let games = response.games.items.compactMap(\.content).map { 
+                    EveryMatrixModelMapper.casinoGame(from: $0)
                 }
                 return CasinoGamesResponse(
                     count: games.count,
-                    total: response.total,
+                    total: response.games.total,
                     games: games,
-                    pagination: response.pages.map { EveryMatrixModelMapper.casinoPaginationInfo(from: $0) }
+                    pagination: response.games.pages.map { 
+                        EveryMatrixModelMapper.casinoPaginationInfo(from: $0) 
+                    }
                 )
             }
             .eraseToAnyPublisher()

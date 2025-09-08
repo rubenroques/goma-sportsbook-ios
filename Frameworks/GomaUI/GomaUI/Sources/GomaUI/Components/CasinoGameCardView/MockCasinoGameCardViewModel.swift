@@ -9,7 +9,7 @@ public class MockCasinoGameCardViewModel: CasinoGameCardViewModelProtocol {
     // MARK: - Publishers
     @Published private var displayState: CasinoGameCardDisplayState
     @Published private var gameName: String
-    @Published private var providerName: String
+    @Published private var providerName: String?
     @Published private var minStake: String
     @Published private var imageURL: String?
     @Published private var rating: Double
@@ -22,7 +22,7 @@ public class MockCasinoGameCardViewModel: CasinoGameCardViewModelProtocol {
         $gameName.eraseToAnyPublisher()
     }
     
-    public var providerNamePublisher: AnyPublisher<String, Never> {
+    public var providerNamePublisher: AnyPublisher<String?, Never> {
         $providerName.eraseToAnyPublisher()
     }
     

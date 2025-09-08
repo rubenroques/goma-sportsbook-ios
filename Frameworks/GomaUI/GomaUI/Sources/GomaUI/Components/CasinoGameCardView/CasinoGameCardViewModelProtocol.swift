@@ -8,7 +8,7 @@ public struct CasinoGameCardData: Equatable, Hashable, Identifiable {
     public let gameURL: String      // for game launch
     public let imageURL: String?    // game image
     public let rating: Double       // 0.0 to 5.0
-    public let provider: String     // game provider name
+    public let provider: String?     // game provider name
     public let minStake: String     // minimum stake amount
     
     public init(
@@ -17,7 +17,7 @@ public struct CasinoGameCardData: Equatable, Hashable, Identifiable {
         gameURL: String,
         imageURL: String? = nil,
         rating: Double,
-        provider: String,
+        provider: String? = nil,
         minStake: String
     ) {
         self.id = id
@@ -55,7 +55,7 @@ public protocol CasinoGameCardViewModelProtocol: AnyObject {
     
     // Individual property publishers for fine-grained updates
     var gameNamePublisher: AnyPublisher<String, Never> { get }
-    var providerNamePublisher: AnyPublisher<String, Never> { get }
+    var providerNamePublisher: AnyPublisher<String?, Never> { get }
     var minStakePublisher: AnyPublisher<String, Never> { get }
     var imageURLPublisher: AnyPublisher<String?, Never> { get }
     var ratingPublisher: AnyPublisher<Double, Never> { get }

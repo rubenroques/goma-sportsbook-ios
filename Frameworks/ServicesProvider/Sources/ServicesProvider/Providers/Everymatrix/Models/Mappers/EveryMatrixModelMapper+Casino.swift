@@ -30,7 +30,7 @@ extension EveryMatrixModelMapper {
         return CasinoCategory(
             id: dto.id,
             name: dto.name,
-            href: dto.href,
+            href: "", // v2 API doesn't provide href anymore
             gamesTotal: dto.games.total
         )
     }
@@ -59,18 +59,8 @@ extension EveryMatrixModelMapper {
     
     /// Maps EveryMatrix casino game DTO to public model
     static func casinoGame(from dto: EveryMatrix.CasinoGameDTO) -> CasinoGame {
-        // Map vendor information
-        let vendor: CasinoGameVendor
-        if let vendorDTO = dto.vendor {
-            vendor = casinoGameVendor(from: vendorDTO)
-        } else {
-            // Fallback vendor if not provided
-            vendor = CasinoGameVendor(
-                id: "unknown",
-                name: "Unknown",
-                displayName: "Unknown Provider"
-            )
-        }
+        // Vendor is not displayed in UI anymore, set to nil
+        let vendor: CasinoGameVendor? = nil
         
         // Extract tags from complex tags structure
         let tags = dto.tags?.items.compactMap { failableTagItem in
@@ -122,17 +112,7 @@ extension EveryMatrixModelMapper {
     }
     
     /// Maps EveryMatrix casino game vendor DTO to public model
-    static func casinoGameVendor(from dto: EveryMatrix.CasinoGameVendorDTO) -> CasinoGameVendor {
-        return CasinoGameVendor(
-            id: dto.id,
-            name: dto.name,
-            displayName: dto.displayName ?? dto.name,
-            image: dto.image,
-            logo: dto.logo,
-            isTopVendor: dto.isTopVendor ?? false,
-            href: dto.href
-        )
-    }
+    // Vendor mapping removed - not needed since vendor is not displayed in UI
     
     // MARK: - Recently Played Mapping
     

@@ -19,8 +19,8 @@ public struct CasinoGame: Codable, Hashable, Identifiable {
     /// Background image URL for the game
     public let backgroundImageUrl: String
     
-    /// Game vendor/provider information
-    public let vendor: CasinoGameVendor
+    /// Game vendor/provider information (optional - not displayed in UI)
+    public let vendor: CasinoGameVendor?
     
     /// Game description
     public let description: String
@@ -68,7 +68,7 @@ public struct CasinoGame: Codable, Hashable, Identifiable {
         launchUrl: String,
         thumbnail: String,
         backgroundImageUrl: String,
-        vendor: CasinoGameVendor,
+        vendor: CasinoGameVendor? = nil,
         description: String,
         slug: String,
         hasFunMode: Bool,
