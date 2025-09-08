@@ -20,7 +20,7 @@ extension EveryMatrixPlayerAPI: Endpoint {
     var url: String {
         switch self {
         default:
-            return EveryMatrixConfiguration.default.environment.baseURL
+            return EveryMatrixUnifiedConfiguration.shared.playerAPIBaseURL
         }
     }
     
@@ -56,14 +56,14 @@ extension EveryMatrixPlayerAPI: Endpoint {
             ]
             return headers
         default:
-            let headers = EveryMatrixConfiguration.default.defaultHeaders
+            let headers = EveryMatrixUnifiedConfiguration.shared.defaultHeaders
             return headers
         }
         
     }
     
     var cachePolicy: URLRequest.CachePolicy {
-        return EveryMatrixConfiguration.default.defaultCachePolicy
+        return EveryMatrixUnifiedConfiguration.shared.defaultCachePolicy
     }
     
     var method: HTTP.Method {
@@ -129,7 +129,7 @@ extension EveryMatrixPlayerAPI: Endpoint {
     }
     
     var timeout: TimeInterval {
-        return EveryMatrixConfiguration.default.defaultTimeout
+        return EveryMatrixUnifiedConfiguration.shared.defaultTimeout
 
     }
     

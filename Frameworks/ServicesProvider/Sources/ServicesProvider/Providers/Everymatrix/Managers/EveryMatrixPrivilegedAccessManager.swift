@@ -12,7 +12,6 @@ import SharedModels
 class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     
     var connector: EveryMatrixPlayerAPIConnector
-    let configuration: EveryMatrixConfiguration
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
     // Publishers
@@ -29,10 +28,9 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     // Internal state
     private var cancellables: Set<AnyCancellable> = []
 
-    init(connector: EveryMatrixPlayerAPIConnector, sessionCoordinator: EveryMatrixSessionCoordinator, configuration: EveryMatrixConfiguration = .default) {
+    init(connector: EveryMatrixPlayerAPIConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
         self.connector = connector
         self.sessionCoordinator = sessionCoordinator
-        self.configuration = configuration
     }
     
     // New methods

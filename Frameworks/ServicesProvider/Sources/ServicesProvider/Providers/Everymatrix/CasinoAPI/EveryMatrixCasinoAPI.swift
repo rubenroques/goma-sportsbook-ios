@@ -9,7 +9,7 @@ enum EveryMatrixCasinoAPI {
 
 extension EveryMatrixCasinoAPI: Endpoint {
     var url: String {
-        return EveryMatrixCasinoAPIEnvironment.staging.baseURL
+        return EveryMatrixUnifiedConfiguration.shared.casinoAPIBaseURL
     }
     
     var endpoint: String {
@@ -67,16 +67,13 @@ extension EveryMatrixCasinoAPI: Endpoint {
     }
     
     var headers: HTTP.Headers? {
-        return [
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "User-Agent": "GOMA/native-app/iOS",
-            "X-Session-Type": "others"
-        ]
+        var headers = EveryMatrixUnifiedConfiguration.shared.defaultHeaders
+        headers["X-Session-Type"] = "others"
+        return headers
     }
     
     var cachePolicy: URLRequest.CachePolicy {
-        return .reloadIgnoringLocalCacheData
+        return EveryMatrixUnifiedConfiguration.shared.defaultCachePolicy
     }
     
     var method: HTTP.Method {
@@ -88,7 +85,7 @@ extension EveryMatrixCasinoAPI: Endpoint {
     }
     
     var timeout: TimeInterval {
-        return 30
+        return EveryMatrixUnifiedConfiguration.shared.defaultTimeout
     }
     
     var requireSessionKey: Bool {

@@ -60,15 +60,10 @@ public class EveryMatrixSessionCoordinator {
     
     /// URLSession for making authentication requests
     private let session: URLSession
-    
-    /// Configuration for API endpoints
-    private let configuration: EveryMatrixConfiguration
 
-    public init(configuration: EveryMatrixConfiguration = .default,
-                session: URLSession = .shared) {
+    public init(session: URLSession = .shared) {
         self.accessTokensPublishers = [:]
         self.accessTokensUpdaters = [:]
-        self.configuration = configuration
         self.session = session
     }
     

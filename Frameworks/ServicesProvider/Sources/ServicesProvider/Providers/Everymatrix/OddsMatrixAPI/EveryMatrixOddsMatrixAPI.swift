@@ -19,11 +19,11 @@ enum EveryMatrixOddsMatrixAPI {
 
 extension EveryMatrixOddsMatrixAPI: Endpoint {
     var url: String {
-        return EveryMatrixOddsMatrixConfiguration.default.environment.baseURL
+        return EveryMatrixUnifiedConfiguration.shared.oddsMatrixBaseURL
     }
     
     var endpoint: String {
-        let domainId = EveryMatrixOddsMatrixConfiguration.default.environment.domainId
+        let domainId = EveryMatrixUnifiedConfiguration.shared.domainId
         switch self {
         case .placeBet:
             return "/place-bet/\(domainId)/v2/bets"
@@ -66,7 +66,7 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
     }
     
     var headers: HTTP.Headers? {
-        let domainId = EveryMatrixOddsMatrixConfiguration.default.environment.domainId
+        let domainId = EveryMatrixUnifiedConfiguration.shared.domainId
         switch self {
         case .placeBet:
             let headers = [
@@ -88,7 +88,7 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
     }
     
     var cachePolicy: URLRequest.CachePolicy {
-        return EveryMatrixOddsMatrixConfiguration.default.defaultCachePolicy
+        return EveryMatrixUnifiedConfiguration.shared.defaultCachePolicy
     }
     
     var method: HTTP.Method {
@@ -118,7 +118,7 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
     }
     
     var timeout: TimeInterval {
-        return EveryMatrixOddsMatrixConfiguration.default.defaultTimeout
+        return EveryMatrixUnifiedConfiguration.shared.defaultTimeout
     }
     
     var requireSessionKey: Bool {

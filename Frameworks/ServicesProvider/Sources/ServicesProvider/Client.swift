@@ -40,10 +40,13 @@ public class Client {
             switch self.configuration.environment {
             case .production:
                 SportRadarConfiguration.shared.environment = .production
+                EveryMatrixUnifiedConfiguration.shared.environment = .production
             case .staging:
                 SportRadarConfiguration.shared.environment = .staging
+                EveryMatrixUnifiedConfiguration.shared.environment = .staging
             case .development:
                 SportRadarConfiguration.shared.environment = .development
+                EveryMatrixUnifiedConfiguration.shared.environment = .development
             }
 
         }
@@ -58,10 +61,13 @@ public class Client {
         switch configuration.environment {
         case .production:
             SportRadarConfiguration.shared.environment = .production
+            EveryMatrixUnifiedConfiguration.shared.environment = .production
         case .staging:
             SportRadarConfiguration.shared.environment = .staging
+            EveryMatrixUnifiedConfiguration.shared.environment = .staging
         case .development:
             SportRadarConfiguration.shared.environment = .development
+            EveryMatrixUnifiedConfiguration.shared.environment = .development
         }
 
     }

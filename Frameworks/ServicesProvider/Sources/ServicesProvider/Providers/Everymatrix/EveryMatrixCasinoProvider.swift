@@ -4,7 +4,6 @@ import Combine
 class EveryMatrixCasinoProvider: CasinoProvider {
     
     private let connector: EveryMatrixCasinoConnector
-    private let environment: EveryMatrixCasinoAPIEnvironment
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Connector Protocol
@@ -13,9 +12,8 @@ class EveryMatrixCasinoProvider: CasinoProvider {
         return connector.connectionStatePublisher
     }
     
-    init(connector: EveryMatrixCasinoConnector, environment: EveryMatrixCasinoAPIEnvironment = .staging) {
+    init(connector: EveryMatrixCasinoConnector) {
         self.connector = connector
-        self.environment = environment
     }
     
     func getCasinoCategories(language: String?, platform: String?) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
@@ -129,19 +127,13 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     
     func buildGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String?, language: String?) -> String? {
 
-        let gameLaunchBaseURL: String
-        switch environment {
-        case .staging:
-            gameLaunchBaseURL = "https://gamelaunch-stage.everymatrix.com"
-        case .production:
-            gameLaunchBaseURL = "https://gamelaunch.everymatrix.com"
-        }
+        let gameLaunchBaseURL = EveryMatrixUnifiedConfiguration.shared.gameLaunchBaseURL
         
-        var urlString = "\(gameLaunchBaseURL)/Loader/Start/\(environment.domainId)/\(game.slug)"
+        var urlString = "\(gameLaunchBaseURL)/Loader/Start/\(EveryMatrixUnifiedConfiguration.shared.domainId)/\(game.slug)"
         
         var queryParams: [String] = []
         
-        let finalLanguage = language ?? environment.defaultLanguage
+        let finalLanguage = language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage
         queryParams.append("language=\(finalLanguage)")
         
         switch mode {
@@ -174,10 +166,10 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     }
     
     func getDefaultPlatform() -> String {
-        return environment.defaultPlatform
+        return EveryMatrixUnifiedConfiguration.shared.defaultPlatform
     }
     
     func getDefaultLanguage() -> String {
-        return environment.defaultLanguage
+        return EveryMatrixUnifiedConfiguration.shared.defaultLanguage
     }
 }

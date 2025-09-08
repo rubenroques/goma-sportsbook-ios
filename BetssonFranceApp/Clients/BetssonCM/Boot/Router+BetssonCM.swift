@@ -68,27 +68,19 @@ class Router {
     }
 
     func makeKeyAndVisible() {
-        
-        self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-        
-//        #if DEBUG
-//        // manual theme override
-//        self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-//        //
-//        #else
-//        if TargetVariables.supportedThemes == AppearanceMode.allCases {
-//            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
-//        }
-//        else if TargetVariables.supportedThemes == [AppearanceMode.dark] {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
-//        }
-//        else if TargetVariables.supportedThemes == [AppearanceMode.light] {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-//        }
-//        else {
-//            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
-//        }
-//        #endif
+
+        if TargetVariables.supportedThemes == AppearanceMode.allCases {
+            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.appearanceMode.userInterfaceStyle
+        }
+        else if TargetVariables.supportedThemes == [AppearanceMode.dark] {
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
+        }
+        else if TargetVariables.supportedThemes == [AppearanceMode.light] {
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
+        }
+        else {
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
+        }
         
         let splashInformativeViewController = SplashInformativeViewController(loadingCompleted: {
             self.showPostLoadingFlow()
