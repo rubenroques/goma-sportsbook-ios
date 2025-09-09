@@ -39,8 +39,8 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         self.myBet = myBet
         self.servicesProvider = servicesProvider
         
-        // Create initial ticket bet info data
-        let initialBetInfo = TicketBetInfoViewModelMapper.mapMyBetToTicketBetInfoData(myBet)
+        // Create initial ticket bet info data using proper patterns
+        let initialBetInfo = Self.createTicketBetInfoData(from: myBet)
         self.betInfoSubject = CurrentValueSubject(initialBetInfo)
         
         // Create button view models
@@ -74,7 +74,7 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     // MARK: - Public Methods
     
     func updateBetInfo(_ updatedBet: MyBet) {
-        let updatedBetInfo = TicketBetInfoViewModelMapper.mapMyBetToTicketBetInfoData(updatedBet)
+        let updatedBetInfo = Self.createTicketBetInfoData(from: updatedBet)
         betInfoSubject.send(updatedBetInfo)
         
         // Update button states - cast to concrete types to access setEnabled
@@ -184,6 +184,171 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         // For now, we'll just notify the parent
         onRebetTap?(myBet)
     }
+    
+    // MARK: - Data Creation (Following Established Patterns)
+    
+    private static func createTicketBetInfoData(from myBet: MyBet) -> TicketBetInfoData {
+        let ticketSelections = myBet.selections.map { createTicketSelectionData(from: $0) }
+        
+        return TicketBetInfoData(
+            id: myBet.identifier,
+            title: formatBetTitle(myBet),
+            betDetails: formatBetDetails(myBet),
+            tickets: ticketSelections,
+            totalOdds: formatOdds(myBet.totalOdd),
+            betAmount: formatCurrency(myBet.stake, currency: myBet.currency),
+            possibleWinnings: formatPossibleWinnings(myBet),
+            partialCashoutValue: formatPartialCashoutValue(myBet),
+            cashoutTotalAmount: formatCashoutTotalAmount(myBet),
+            betStatus: createBetStatus(from: myBet),
+            isSettled: myBet.isSettled
+        )
+    }
+    
+    private static func createTicketSelectionData(from selection: MyBetSelection) -> TicketSelectionData {
+        return TicketSelectionData(
+            id: selection.identifier,
+            competitionName: selection.tournamentName,
+            homeTeamName: selection.homeTeamName ?? "",
+            awayTeamName: selection.awayTeamName ?? "",
+            homeScore: parseScore(selection.homeResult),
+            awayScore: parseScore(selection.awayResult),
+            matchDate: formatEventDate(selection.eventDate),
+            isLive: isLiveMatch(selection),
+            sportIcon: extractSportIcon(from: selection),
+            countryFlag: extractCountryFlag(from: selection),
+            marketName: selection.marketName,
+            selectionName: selection.outcomeName,
+            oddsValue: formatOdds(selection.odd)
+        )
+    }
+    
+    // MARK: - Formatting Helper Methods
+    
+    private static func formatBetTitle(_ myBet: MyBet) -> String {
+        return myBet.typeDescription
+    }
+    
+    private static func formatBetDetails(_ myBet: MyBet) -> String {
+        return "Bet ID: \(myBet.identifier)"
+    }
+    
+    private static func formatOdds(_ oddFormat: OddFormat) -> String {
+        return OddConverter.stringForValue(oddFormat.decimalValue, format: .europe)
+    }
+    
+    private static func formatOdds(_ odds: Double) -> String {
+        return OddConverter.stringForValue(odds, format: .europe)
+    }
+    
+    private static func formatCurrency(_ amount: Double, currency: String) -> String {
+        // Use existing CurrencyFormater from the project
+        let formatter = CurrencyFormater.defaultFormat
+        formatter.currencyCode = currency
+        
+        if let formattedString = formatter.string(from: NSNumber(value: amount)) {
+            return formattedString
+        }
+        
+        // Fallback using existing CurrencyFormater.formatWalletAmount
+        return CurrencyFormater.formatWalletAmount(amount)
+    }
+    
+    private static func formatPossibleWinnings(_ myBet: MyBet) -> String {
+        guard let potentialReturn = myBet.potentialReturn else {
+            return formatCurrency(0.0, currency: myBet.currency)
+        }
+        return formatCurrency(potentialReturn, currency: myBet.currency)
+    }
+    
+    private static func formatPartialCashoutValue(_ myBet: MyBet) -> String? {
+        // Check if partial cashout is available
+        guard let partialCashoutReturn = myBet.partialCashoutReturn,
+              partialCashoutReturn > 0 else {
+            return nil
+        }
+        return formatCurrency(partialCashoutReturn, currency: myBet.currency)
+    }
+    
+    private static func formatCashoutTotalAmount(_ myBet: MyBet) -> String? {
+        // Check if total cashout is available
+        guard let totalReturn = myBet.totalReturn,
+              totalReturn > 0,
+              myBet.result == .open || myBet.state == .opened else {
+            return nil
+        }
+        return formatCurrency(totalReturn, currency: myBet.currency)
+    }
+    
+    private static func createBetStatus(from myBet: MyBet) -> BetTicketStatusData? {
+        // Only provide status data if bet is settled
+        guard myBet.isSettled else { return nil }
+        
+        let ticketStatus: BetTicketStatus
+        switch myBet.result {
+        case .won:
+            ticketStatus = .won
+        case .lost:
+            ticketStatus = .lost
+        case .drawn:
+            ticketStatus = .draw
+        default:
+            // For other states like void, pending, etc., don't show status
+            return nil
+        }
+        
+        return BetTicketStatusData(status: ticketStatus)
+    }
+    
+    // MARK: - Selection Helper Methods
+    
+    private static func parseScore(_ scoreString: String?) -> Int {
+        guard let scoreString = scoreString else { return 0 }
+        return Int(scoreString) ?? 0
+    }
+    
+    private static func formatEventDate(_ eventDate: Date?) -> String {
+        guard let eventDate = eventDate else {
+            return "TBD"
+        }
+        
+        let calendar = Calendar.current
+        
+        if calendar.isDateInToday(eventDate) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            return "Today \(formatter.string(from: eventDate))"
+        } else if calendar.isDateInTomorrow(eventDate) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            return "Tomorrow \(formatter.string(from: eventDate))"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM HH:mm"
+            return formatter.string(from: eventDate)
+        }
+    }
+    
+    private static func isLiveMatch(_ selection: MyBetSelection) -> Bool {
+        return selection.state == .opened && 
+               selection.homeResult != nil && 
+               selection.awayResult != nil
+    }
+    
+    // MARK: - Image Resolution (Using Existing Systems)
+    
+    private static func extractSportIcon(from selection: MyBetSelection) -> String? {
+        // Use the sport's alphaId or numeric ID, following existing pattern
+        guard let sport = selection.sport else { return nil }
+        return sport.alphaId ?? sport.numericId ?? "1"
+    }
+    
+    private static func extractCountryFlag(from selection: MyBetSelection) -> String? {
+        // Use the country's ISO code, following existing pattern
+        guard let country = selection.country else { return nil }
+        return country.iso2Code
+    }
+    
 }
 
 // MARK: - Factory Methods
