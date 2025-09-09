@@ -785,7 +785,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
-
     func iconName(forSection section: Int) -> String? {
         guard let contentType = contentType(forSection: section) else {
             return nil

@@ -2128,3 +2128,6 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "betsson_credits" = "Crédits Betsson";
 "betsson_credits_used" = "Solde Crédits Betsson Utilisé";
 "betslip_credits_error" = "Solde Crédits dépassé. Max: {amount}";
+
+"account_protection_rules_title" = "Protégez votre compte, respectez les règles du jeu :";
+"account_protection_rules_description" = "Chez Betsson, votre compte, c’est perso : ne partagez jamais votre mot de passe. Protéger votre espace de jeu, c’est essentiel pour votre sécurité.\nLes jeux, c’est pour les grands ! Les moins de 18 ans ne peuvent pas rejoindre la partie. Jouez responsable, aidez-nous à garder le terrain de jeu sûr pour tous.";

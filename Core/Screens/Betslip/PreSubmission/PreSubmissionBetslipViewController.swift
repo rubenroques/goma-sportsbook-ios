@@ -1907,26 +1907,31 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &self.cancellables)
 
-        Publishers.CombineLatest(self.isCashbackToggleOn, Env.userSessionStore.userCashbackBalance)
+        Publishers.CombineLatest3(self.isCashbackToggleOn, Env.userSessionStore.userCashbackBalance, Env.userSessionStore.userFreeBetBalance)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isCashbackToggleOn, userCashbackBalance in
+            .sink { [weak self] isCashbackToggleOn, userCashbackBalance, userFreeBetBalance in
                 guard let self = self else { return }
 
-                if isCashbackToggleOn, let cashbackBalance = userCashbackBalance {
-                    self.betValueSubject.send(cashbackBalance)
-                    self.amountTextfield.text = String(format: "%.2f", cashbackBalance) // CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance))
-                    self.secondaryAmountTextfield.text = String(format: "%.2f", cashbackBalance) // CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance))
+                if isCashbackToggleOn {
+                    let cashbackBalance = userCashbackBalance ?? 0
+                    let freeBetBalance = userFreeBetBalance ?? 0
+                    let higherBalance = max(cashbackBalance, freeBetBalance)
+                    
+                    if self.listTypePublisher.value != .system {
+                        self.betValueSubject.send(higherBalance)
+                        self.amountTextfield.text = String(format: "%.2f", higherBalance) // CurrencyFormater.defaultFormat.string(from: NSNumber(value: higherBalance))
+                        self.secondaryAmountTextfield.text = String(format: "%.2f", higherBalance)
+                    }
 
                     if self.singleBettingTicketDataSource.bettingTickets.count == 1,
-                       let firstBetTicket = self.singleBettingTicketDataSource.bettingTickets.first,
-                       let cashbackBalance = userCashbackBalance {
-                        self.simpleBetsBettingValues.send([firstBetTicket.id: cashbackBalance])
+                       let firstBetTicket = self.singleBettingTicketDataSource.bettingTickets.first {
+                        self.simpleBetsBettingValues.send([firstBetTicket.id: higherBalance])
                     }
                 }
                 else {
                     self.betValueSubject.send(0)
-                    self.amountTextfield.text = "" // CurrencyFormater.defaultFormat.string(from: NSNumber(value: self.betValueSubject.value))
-                    self.secondaryAmountTextfield.text = "" // CurrencyFormater.defaultFormat.string(from: NSNumber(value: self.betValueSubject.value))
+                    self.amountTextfield.text = ""
+                    self.secondaryAmountTextfield.text = ""
 
                     if self.singleBettingTicketDataSource.bettingTickets.count == 1 {
                         self.simpleBetsBettingValues.send([:])

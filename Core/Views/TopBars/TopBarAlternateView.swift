@@ -253,6 +253,11 @@ class TopBarView: UIView {
             self.cashbackBaseView.isHidden = false
 
             self.loginBaseView.isHidden = true
+            
+            self.profileBaseViewTrailingConstraint.isActive = true
+            self.legalAgeImageViewLeadingConstraint.isActive = false
+            self.legalAgeImageView.isHidden = true
+            
         case .anonymous:
             self.profilePictureBaseView.isHidden = true
             self.anonymousUserMenuBaseView.isHidden = false
@@ -261,25 +266,19 @@ class TopBarView: UIView {
             self.cashbackBaseView.isHidden = true
 
             self.loginBaseView.isHidden = false
+            
+            if TargetVariables.features.contains(.legalAgeWarning) {
+                self.profileBaseViewTrailingConstraint.isActive = false
+                self.legalAgeImageViewLeadingConstraint.isActive = true
+                self.legalAgeImageView.isHidden = false
+            }
+            else {
+                self.profileBaseViewTrailingConstraint.isActive = true
+                self.legalAgeImageViewLeadingConstraint.isActive = false
+                self.legalAgeImageView.isHidden = true
+            }
         }
-//        if isLogged {
-//            self.profilePictureBaseView.isHidden = false
-//            self.anonymousUserMenuBaseView.isHidden = true
-//
-//            self.accountValueBaseView.isHidden = false
-//            self.cashbackBaseView.isHidden = false
-//
-//            self.loginBaseView.isHidden = true
-//        }
-//        else {
-//            self.profilePictureBaseView.isHidden = true
-//            self.anonymousUserMenuBaseView.isHidden = false
-//
-//            self.accountValueBaseView.isHidden = true
-//            self.cashbackBaseView.isHidden = true
-//
-//            self.loginBaseView.isHidden = false
-//        }
+
     }
 
     // MARK: Action
@@ -618,14 +617,13 @@ extension TopBarView {
             self.loginButton.heightAnchor.constraint(equalToConstant: 30),
             self.loginButton.centerYAnchor.constraint(equalTo: self.loginBaseView.centerYAnchor),
             
-            self.legalAgeImageView.trailingAnchor.constraint(equalTo: self.topBarView.trailingAnchor, constant: -6),
+            self.legalAgeImageView.trailingAnchor.constraint(equalTo: self.topBarView.trailingAnchor, constant: -15),
             self.legalAgeImageView.centerYAnchor.constraint(equalTo: self.topBarView.centerYAnchor),
-            self.legalAgeImageView.heightAnchor.constraint(equalToConstant: /*UIScreen.main.bounds.height * 0.07*/ 60),
+            self.legalAgeImageView.heightAnchor.constraint(equalToConstant: 35),
             self.legalAgeImageView.widthAnchor.constraint(equalTo: self.legalAgeImageView.heightAnchor)
 
         ])
 
-        
         // Constraints
         self.profileBaseViewTrailingConstraint = NSLayoutConstraint(item: self.profileBaseView,
                                                                     attribute: .trailing,
@@ -633,7 +631,7 @@ extension TopBarView {
                                                                     toItem: self.topBarView,
                                                                     attribute: .trailing,
                                                                     multiplier: 1,
-                                                                    constant: -15)
+                                                                    constant: -10)
         self.profileBaseViewTrailingConstraint.isActive = true
         
         self.legalAgeImageViewLeadingConstraint = NSLayoutConstraint(item: self.legalAgeImageView,

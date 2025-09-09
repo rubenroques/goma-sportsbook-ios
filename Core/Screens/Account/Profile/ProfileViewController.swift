@@ -191,6 +191,9 @@ class ProfileViewController: UIViewController {
                 if userProfile == nil {
                     self?.dismiss(animated: false, completion: nil)
                 }
+                else {
+                    self?.legalAgeWarningImageView.isHidden = true
+                }
             }
             .store(in: &cancellables)
 

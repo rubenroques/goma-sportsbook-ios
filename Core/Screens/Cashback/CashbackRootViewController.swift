@@ -120,7 +120,7 @@ class CashbackRootViewController: UIViewController {
 
         self.videoPlayerView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
         
-        self.cashbackBalanceExampleView.setupValueLabel(value: "50,00€")
+        self.cashbackBalanceExampleView.setupValueLabel(value: "15,00€")
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapVideo))
         self.controlsView.addGestureRecognizer(tapGesture)

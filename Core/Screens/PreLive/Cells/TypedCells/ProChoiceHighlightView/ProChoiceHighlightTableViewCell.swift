@@ -1101,7 +1101,7 @@ extension ProChoiceHighlightCollectionViewCell {
 
             self.eventDateLabel.centerYAnchor.constraint(equalTo: self.marketNameLabel.centerYAnchor),
             self.eventDateLabel.trailingAnchor.constraint(equalTo: self.eventInfoContainerView.trailingAnchor, constant: -16),
-
+            self.eventDateLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.marketNameLabel.trailingAnchor, constant: 5),
             self.eventTimeLabel.topAnchor.constraint(equalTo: self.teamPillContainerView.topAnchor),
             self.eventTimeLabel.trailingAnchor.constraint(equalTo: self.eventInfoContainerView.trailingAnchor, constant: -16),
 
@@ -1330,7 +1330,8 @@ extension ProChoiceHighlightCollectionViewCell {
         label.font = AppFont.with(type: .bold, size: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "createEventDateLabel"
-
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }
     
@@ -1349,6 +1350,8 @@ extension ProChoiceHighlightCollectionViewCell {
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         label.text = "Market Name Label"
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }
     

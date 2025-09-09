@@ -44,6 +44,10 @@ class FooterResponsibleGamingView: UIView {
     private lazy var youtubeSocialButton: UIButton = Self.createSocialButton()
     private lazy var instagramSocialButton: UIButton = Self.createSocialButton()
     private lazy var twitterSocialButton: UIButton = Self.createSocialButton()
+    
+    private lazy var accountProtectionBaseView: UIView = Self.createAccountProtectionBaseView()
+    private lazy var accountProtectionTitleLabel: UILabel = Self.createAccountProtectionTitleLabel()
+    private lazy var accountProtectionDetailsLabel: UILabel = Self.createAccountProtectionDetailsLabel()
 
     private lazy var interdictionBaseView: UIView = Self.createInterdictionBaseView()
     private lazy var interdictionTitleLabel: UILabel = Self.createInterdictionTitleLabel()
@@ -469,6 +473,35 @@ extension FooterResponsibleGamingView {
         return imageView
     }
     
+    private static func createAccountProtectionBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }
+
+    private static func createAccountProtectionTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.textAlignment = .left
+        label.text = localized("account_protection_rules_title")
+        label.font = AppFont.with(type: .semibold, size: 8)
+        label.textColor = UIColor.App.highlightPrimary
+        return label
+    }
+
+    private static func createAccountProtectionDetailsLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = localized("account_protection_rules_description")
+        label.font = AppFont.with(type: .semibold, size: 8)
+        label.textColor = UIColor.App.textPrimary
+        return label
+    }
+    
     private static func createInterdictionBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -587,6 +620,11 @@ extension FooterResponsibleGamingView {
         self.baseStackView.addArrangedSubview(self.socialBaseView)
 
         self.baseStackView.addArrangedSubview(self.socialBaseView)
+        
+        self.accountProtectionBaseView.addSubview(self.accountProtectionTitleLabel)
+        self.accountProtectionBaseView.addSubview(self.accountProtectionDetailsLabel)
+        
+        self.baseStackView.addArrangedSubview(self.accountProtectionBaseView)
 
         self.interdictionBaseView.addSubview(self.interdictionTitleLabel)
         self.interdictionBaseView.addSubview(self.interdictionDetailsLabel)
@@ -666,6 +704,16 @@ extension FooterResponsibleGamingView {
         ])
         
         NSLayoutConstraint.activate([
+            self.accountProtectionTitleLabel.topAnchor.constraint(equalTo: self.accountProtectionBaseView.topAnchor),
+            self.accountProtectionTitleLabel.leadingAnchor.constraint(equalTo: self.accountProtectionBaseView.leadingAnchor),
+            self.accountProtectionTitleLabel.trailingAnchor.constraint(equalTo: self.accountProtectionBaseView.trailingAnchor),
+            
+            self.accountProtectionDetailsLabel.topAnchor.constraint(equalTo: self.accountProtectionTitleLabel.bottomAnchor, constant: 4),
+            
+            self.accountProtectionDetailsLabel.leadingAnchor.constraint(equalTo: self.accountProtectionBaseView.leadingAnchor),
+            self.accountProtectionDetailsLabel.trailingAnchor.constraint(equalTo: self.accountProtectionBaseView.trailingAnchor),
+            self.accountProtectionDetailsLabel.bottomAnchor.constraint(equalTo: self.accountProtectionBaseView.bottomAnchor),
+            
             self.interdictionTitleLabel.topAnchor.constraint(equalTo: self.interdictionBaseView.topAnchor),
             self.interdictionTitleLabel.leadingAnchor.constraint(equalTo: self.interdictionBaseView.leadingAnchor),
             self.interdictionTitleLabel.trailingAnchor.constraint(equalTo: self.interdictionBaseView.trailingAnchor),

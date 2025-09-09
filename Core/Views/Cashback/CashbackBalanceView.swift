@@ -10,8 +10,8 @@ import UIKit
 class CashbackBalanceView: UIView {
 
     private lazy var containerView: UIView = Self.createContainerView()
-    private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var valueLabel: UILabel = Self.createValueLabel()
     private lazy var switchButton: UISwitch = Self.createSwitchButton()
     private lazy var closeButton: UIButton = Self.createCloseButton()
@@ -114,7 +114,7 @@ extension CashbackBalanceView {
     private static func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "cashback_icon")
+        imageView.image = UIImage(named: "info_small_icon")
         imageView.contentMode = .center
         return imageView
     }
@@ -122,7 +122,7 @@ extension CashbackBalanceView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("cashback_balance") + ":"
+        label.text = localized("betsson_credits_mise_max")
         label.font = AppFont.with(type: .semibold, size: 13)
         label.numberOfLines = 0
         return label
@@ -155,8 +155,8 @@ extension CashbackBalanceView {
     private func setupSubviews() {
         self.addSubview(self.containerView)
 
-        // self.containerView.addSubview(self.iconImageView)
         self.containerView.addSubview(self.titleLabel)
+        self.containerView.addSubview(self.iconImageView)
         self.containerView.addSubview(self.valueLabel)
         self.containerView.addSubview(self.switchButton)
         // self.containerView.addSubview(self.closeButton)
@@ -174,16 +174,15 @@ extension CashbackBalanceView {
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             self.containerView.heightAnchor.constraint(equalToConstant: 48),
 
-//            self.iconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 5),
-//            self.iconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
-//            self.iconImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -10),
-//            self.iconImageView.widthAnchor.constraint(equalToConstant: 25),
-//            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
-
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            
+            self.iconImageView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 4),
+            self.iconImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 10),
+            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
 
-            self.valueLabel.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 4),
+            self.valueLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 4),
             self.valueLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
             self.valueLabel.trailingAnchor.constraint(equalTo: self.switchButton.leadingAnchor, constant: -25),
 
