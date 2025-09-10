@@ -5335,16 +5335,16 @@
 		6561B61D2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
 		6561B61F2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
 		6561B6202C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
-		65721C032E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C042E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C052E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C062E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C072E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C082E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C092E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C0A2E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C0B2E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
-		65721C0C2E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */; };
+		65721C032E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C042E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C052E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C062E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C072E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C082E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C092E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C0A2E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C0B2E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
+		65721C0C2E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */; };
 		6584F8FE2BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
 		6584F8FF2BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
 		6584F9002BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
@@ -9922,7 +9922,7 @@
 		655E20122B29CB7E00C95337 /* TextSubsectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSubsectionView.swift; sourceTree = "<group>"; };
 		6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardTableViewCell.swift; sourceTree = "<group>"; };
 		6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardMarketCollectionViewCell.swift; sourceTree = "<group>"; };
-		65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularDottedLineView.swift; sourceTree = "<group>"; };
+		65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareDottedLineView.swift; sourceTree = "<group>"; };
 		6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyReferralView.swift; sourceTree = "<group>"; };
 		658A4CB52B9F6C4800F73772 /* Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referrals.swift; sourceTree = "<group>"; };
 		658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Referrals.swift"; sourceTree = "<group>"; };
@@ -12092,7 +12092,7 @@
 				653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */,
 				65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */,
 				65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */,
-				65721C022E69FE64008B2F3B /* CircularDottedLineView.swift */,
+				65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -16964,7 +16964,7 @@
 				450B785428F58574009229E3 /* BannerMatchCollectionViewCell.swift in Sources */,
 				450B785528F58574009229E3 /* FilterSliderCollapseView.swift in Sources */,
 				450B785628F58574009229E3 /* FirebaseClientSettings.swift in Sources */,
-				65721C032E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C032E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				4542DFE12C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				450B785728F58574009229E3 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200C2B28A14700C95337 /* TextSectionView.swift in Sources */,
@@ -17846,7 +17846,7 @@
 				45B6E239284151F8001B570C /* ActionButtonTableViewCell.swift in Sources */,
 				45C10F4A28772DA700037BBE /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
 				457CB9F6282D27D000ED0F00 /* CheckboxToggleView.swift in Sources */,
-				65721C0C2E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C0C2E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				457CB9F7282D27D000ED0F00 /* MatchDetailsViewController.swift in Sources */,
 				457CB9F8282D27D000ED0F00 /* HomeViewTemplateDatasource.swift in Sources */,
 				45ECD75B2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
@@ -18621,7 +18621,7 @@
 				457CBCA9282D2CD100ED0F00 /* MyTicketsViewController.swift in Sources */,
 				A9CB3E7D29CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */,
 				45372F6129D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
-				65721C0A2E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C0A2E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				457CBCAA282D2CD100ED0F00 /* SuggestedBetsListViewController.swift in Sources */,
 				457CBCAB282D2CD100ED0F00 /* PreLiveEventsViewModel.swift in Sources */,
 				45C10F3F28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */,
@@ -19348,7 +19348,7 @@
 				4589C781282024E400243547 /* BannerMatchCollectionViewCell.swift in Sources */,
 				4589C782282024E400243547 /* FilterSliderCollapseView.swift in Sources */,
 				4589C783282024E400243547 /* FirebaseClientSettings.swift in Sources */,
-				65721C052E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C052E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				4542DFE22C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				F4A62A97285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200D2B28A14700C95337 /* TextSectionView.swift in Sources */,
@@ -20100,7 +20100,7 @@
 				45A33064298976BA008181E9 /* BannerMatchCollectionViewCell.swift in Sources */,
 				45A33065298976BA008181E9 /* FilterSliderCollapseView.swift in Sources */,
 				45A33066298976BA008181E9 /* FirebaseClientSettings.swift in Sources */,
-				65721C062E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C062E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				4542DFDF2C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45A33067298976BA008181E9 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200A2B28A14700C95337 /* TextSectionView.swift in Sources */,
@@ -20852,7 +20852,7 @@
 				A9DF8E1D28E45BF00083BF56 /* UserProfileViewModel.swift in Sources */,
 				A925481E2A2A26A30056F832 /* DocumentStateView.swift in Sources */,
 				45A6BBCB28246A7400D9B416 /* SuggestedBetLineViewModel.swift in Sources */,
-				65721C0B2E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C0B2E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				A96FAEDB2981912100A0751F /* UploadDocuments.swift in Sources */,
 				45A6BBCC28246A7400D9B416 /* BannerMatchCollectionViewCell.swift in Sources */,
 				45CE4DD32B04DDB8005C2414 /* SecundaryMarketDetails.swift in Sources */,
@@ -21604,7 +21604,7 @@
 				45F6BAF22AB3732C00C81DE1 /* BannerMatchCollectionViewCell.swift in Sources */,
 				45F6BAF32AB3732C00C81DE1 /* FilterSliderCollapseView.swift in Sources */,
 				45F6BAF42AB3732C00C81DE1 /* FirebaseClientSettings.swift in Sources */,
-				65721C072E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C072E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				4542DFE02C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45F6BAF52AB3732C00C81DE1 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200B2B28A14700C95337 /* TextSectionView.swift in Sources */,
@@ -22387,7 +22387,7 @@
 				A9C340BB28F9A74A0055360B /* SuggestedBetSummary.swift in Sources */,
 				A9C340BC28F9A74A0055360B /* Bundle+Extensions.swift in Sources */,
 				A9C340BD28F9A74A0055360B /* SportStatisticView.swift in Sources */,
-				65721C082E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C082E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				A9C340BE28F9A74A0055360B /* FullRegisterDocumentsViewController.swift in Sources */,
 				A9C340BF28F9A74A0055360B /* ChatTicketSelectionView.swift in Sources */,
 				A9C340C028F9A74A0055360B /* VideoPreviewCollectionViewCell.swift in Sources */,
@@ -23114,7 +23114,7 @@
 				CE12A14C2D31347E0022BDF7 /* BannerMatchCollectionViewCell.swift in Sources */,
 				CE12A14D2D31347E0022BDF7 /* FilterSliderCollapseView.swift in Sources */,
 				CE12A14E2D31347E0022BDF7 /* FirebaseClientSettings.swift in Sources */,
-				65721C042E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C042E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				CE12A14F2D31347E0022BDF7 /* TabularScrollView.swift in Sources */,
 				CE12A1502D31347E0022BDF7 /* CasinoGameDetailViewModel.swift in Sources */,
 				CE12A1512D31347E0022BDF7 /* TextSectionView.swift in Sources */,
@@ -23866,7 +23866,7 @@
 				CEA566112D5A58D800696793 /* UserProfileViewModel.swift in Sources */,
 				CEA566122D5A58D800696793 /* DocumentStateView.swift in Sources */,
 				CEA566132D5A58D800696793 /* SuggestedBetLineViewModel.swift in Sources */,
-				65721C092E69FE64008B2F3B /* CircularDottedLineView.swift in Sources */,
+				65721C092E69FE64008B2F3B /* SquareDottedLineView.swift in Sources */,
 				CEA566142D5A58D800696793 /* UploadDocuments.swift in Sources */,
 				CEA566152D5A58D800696793 /* BannerMatchCollectionViewCell.swift in Sources */,
 				CEA566162D5A58D800696793 /* SecundaryMarketDetails.swift in Sources */,

@@ -205,10 +205,10 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="6"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="6QV-ge-SXI">
-                                                            <rect key="frame" x="23" y="2" width="367" height="2"/>
+                                                            <rect key="frame" x="24" y="2" width="366" height="2"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m3i-3F-Xfz">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="367" height="2"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="366" height="2"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="2" id="HBX-VT-yHy"/>
@@ -220,7 +220,7 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="6QV-ge-SXI" secondAttribute="trailing" constant="24" id="Gr8-uv-cw0"/>
-                                                        <constraint firstItem="6QV-ge-SXI" firstAttribute="leading" secondItem="rqG-mD-TYF" secondAttribute="leading" constant="23" id="RTO-KI-Zv7"/>
+                                                        <constraint firstItem="6QV-ge-SXI" firstAttribute="leading" secondItem="rqG-mD-TYF" secondAttribute="leading" constant="24" id="RTO-KI-Zv7"/>
                                                         <constraint firstItem="6QV-ge-SXI" firstAttribute="top" secondItem="rqG-mD-TYF" secondAttribute="top" constant="2" id="hev-8I-hvo"/>
                                                         <constraint firstAttribute="bottom" secondItem="6QV-ge-SXI" secondAttribute="bottom" constant="2" id="ufB-M6-UlV"/>
                                                     </constraints>
@@ -285,35 +285,35 @@ Sportsbook® All Rights Reserved</string>
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="542"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="r6R-XK-U3Z">
-                                            <rect key="frame" x="50" y="8" width="314" height="216"/>
+                                            <rect key="frame" x="36" y="8" width="342" height="216"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ads-y0-JZO">
-                                                    <rect key="frame" x="0.0" y="0.0" width="314" height="98"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="342" height="98"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4us-C6-c7y">
-                                                            <rect key="frame" x="0.0" y="0.0" width="314" height="30"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="342" height="30"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNA-lM-Y9t">
-                                                                    <rect key="frame" x="0.0" y="4.5" width="114" height="21.5"/>
+                                                                    <rect key="frame" x="0.0" y="4.5" width="131.5" height="21.5"/>
                                                                     <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="18"/>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="251" image="info_small_icon" translatesAutoresizingMaskIntoConstraints="NO" id="zQX-7w-xuI">
-                                                                    <rect key="frame" x="120" y="8" width="14" height="14"/>
+                                                                    <rect key="frame" x="137.5" y="8" width="14" height="14"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="14" id="XnD-d4-sR0"/>
                                                                         <constraint firstAttribute="width" constant="14" id="c4g-mQ-f4Y"/>
                                                                     </constraints>
                                                                 </imageView>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="49.875.655,59€" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F24-gl-VWS">
-                                                                    <rect key="frame" x="140" y="1" width="174" height="28.5"/>
+                                                                    <rect key="frame" x="157.5" y="1" width="184.5" height="28.5"/>
                                                                     <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="24"/>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ncB-V9-03V">
-                                                                    <rect key="frame" x="0.0" y="29" width="314" height="1"/>
+                                                                    <rect key="frame" x="0.0" y="29" width="342" height="1"/>
                                                                     <color key="backgroundColor" name="separatorLine"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="1" id="f2S-ne-L8c"/>
@@ -336,7 +336,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKL-xJ-gdA">
-                                                            <rect key="frame" x="0.0" y="34" width="314" height="30"/>
+                                                            <rect key="frame" x="0.0" y="34" width="342" height="30"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCK-AS-qFJ">
                                                                     <rect key="frame" x="0.0" y="5.5" width="113.5" height="19"/>
@@ -344,15 +344,15 @@ Sportsbook® All Rights Reserved</string>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZzD-V6-OSX" customClass="CircularDottedLineView" customModule="ATP" customModuleProvider="target">
-                                                                    <rect key="frame" x="113.5" y="12.5" width="90" height="5"/>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZzD-V6-OSX" customClass="SquareDottedLineView" customModule="ATP" customModuleProvider="target">
+                                                                    <rect key="frame" x="118.5" y="12.5" width="108" height="5"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="5" id="cYa-z4-xJG"/>
                                                                     </constraints>
                                                                 </view>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="49.875.655,59€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQR-iY-klN">
-                                                                    <rect key="frame" x="203.5" y="5.5" width="110.5" height="19"/>
+                                                                    <rect key="frame" x="231.5" y="5.5" width="110.5" height="19"/>
                                                                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -364,14 +364,14 @@ Sportsbook® All Rights Reserved</string>
                                                                 <constraint firstItem="bCK-AS-qFJ" firstAttribute="centerY" secondItem="YKL-xJ-gdA" secondAttribute="centerY" id="8U1-27-9Jl"/>
                                                                 <constraint firstItem="ZzD-V6-OSX" firstAttribute="centerY" secondItem="bCK-AS-qFJ" secondAttribute="centerY" id="8mj-OZ-DBk"/>
                                                                 <constraint firstAttribute="trailing" secondItem="qQR-iY-klN" secondAttribute="trailing" id="DjX-lo-ke0"/>
-                                                                <constraint firstItem="ZzD-V6-OSX" firstAttribute="leading" secondItem="bCK-AS-qFJ" secondAttribute="trailing" id="Iun-PE-aoZ"/>
+                                                                <constraint firstItem="ZzD-V6-OSX" firstAttribute="leading" secondItem="bCK-AS-qFJ" secondAttribute="trailing" constant="5" id="Iun-PE-aoZ"/>
                                                                 <constraint firstItem="qQR-iY-klN" firstAttribute="centerY" secondItem="YKL-xJ-gdA" secondAttribute="centerY" id="kI3-fr-jyW"/>
                                                                 <constraint firstItem="bCK-AS-qFJ" firstAttribute="leading" secondItem="YKL-xJ-gdA" secondAttribute="leading" id="kNi-QR-ipK"/>
-                                                                <constraint firstItem="ZzD-V6-OSX" firstAttribute="trailing" secondItem="qQR-iY-klN" secondAttribute="leading" id="zTZ-h1-tqb"/>
+                                                                <constraint firstItem="ZzD-V6-OSX" firstAttribute="trailing" secondItem="qQR-iY-klN" secondAttribute="leading" constant="-5" id="zTZ-h1-tqb"/>
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GcN-zo-c6s">
-                                                            <rect key="frame" x="0.0" y="68" width="314" height="30"/>
+                                                            <rect key="frame" x="0.0" y="68" width="342" height="30"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kcm-h8-Vxr">
                                                                     <rect key="frame" x="0.0" y="5.5" width="39.5" height="19.5"/>
@@ -379,15 +379,15 @@ Sportsbook® All Rights Reserved</string>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hd1-zG-iCb" customClass="CircularDottedLineView" customModule="ATP" customModuleProvider="target">
-                                                                    <rect key="frame" x="39.5" y="12.5" width="235" height="5"/>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hd1-zG-iCb" customClass="SquareDottedLineView" customModule="ATP" customModuleProvider="target">
+                                                                    <rect key="frame" x="44.5" y="12.5" width="253" height="5"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="5" id="qoj-Nf-yBN"/>
                                                                     </constraints>
                                                                 </view>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ax4-US-J4z">
-                                                                    <rect key="frame" x="274.5" y="5.5" width="39.5" height="19.5"/>
+                                                                    <rect key="frame" x="302.5" y="5.5" width="39.5" height="19.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -397,10 +397,10 @@ Sportsbook® All Rights Reserved</string>
                                                                 <constraint firstAttribute="trailing" secondItem="ax4-US-J4z" secondAttribute="trailing" id="HeY-ar-B8w"/>
                                                                 <constraint firstItem="kcm-h8-Vxr" firstAttribute="leading" secondItem="GcN-zo-c6s" secondAttribute="leading" id="OJd-EH-m0A"/>
                                                                 <constraint firstItem="ax4-US-J4z" firstAttribute="centerY" secondItem="GcN-zo-c6s" secondAttribute="centerY" id="kIR-1v-elN"/>
-                                                                <constraint firstItem="Hd1-zG-iCb" firstAttribute="leading" secondItem="kcm-h8-Vxr" secondAttribute="trailing" id="kJc-zB-NBE"/>
+                                                                <constraint firstItem="Hd1-zG-iCb" firstAttribute="leading" secondItem="kcm-h8-Vxr" secondAttribute="trailing" constant="5" id="kJc-zB-NBE"/>
                                                                 <constraint firstItem="kcm-h8-Vxr" firstAttribute="centerY" secondItem="GcN-zo-c6s" secondAttribute="centerY" id="m8C-Ks-MhY"/>
                                                                 <constraint firstItem="Hd1-zG-iCb" firstAttribute="centerY" secondItem="kcm-h8-Vxr" secondAttribute="centerY" id="mOr-ha-b28"/>
-                                                                <constraint firstItem="Hd1-zG-iCb" firstAttribute="trailing" secondItem="ax4-US-J4z" secondAttribute="leading" id="wiF-dg-M8L"/>
+                                                                <constraint firstItem="Hd1-zG-iCb" firstAttribute="trailing" secondItem="ax4-US-J4z" secondAttribute="leading" constant="-5" id="wiF-dg-M8L"/>
                                                                 <constraint firstAttribute="height" constant="30" id="zDQ-4i-uDF"/>
                                                             </constraints>
                                                         </view>
@@ -415,10 +415,10 @@ Sportsbook® All Rights Reserved</string>
                                                     </constraints>
                                                 </stackView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="0ya-56-h7z">
-                                                    <rect key="frame" x="0.0" y="118" width="314" height="98"/>
+                                                    <rect key="frame" x="0.0" y="118" width="342" height="98"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XUa-gT-K0S">
-                                                            <rect key="frame" x="0.0" y="0.0" width="314" height="30"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="342" height="30"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5fa-lu-HOz">
                                                                     <rect key="frame" x="0.0" y="4.5" width="131.5" height="21.5"/>
@@ -427,13 +427,13 @@ Sportsbook® All Rights Reserved</string>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="49.875.655,59€" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Guf-ch-ZmL">
-                                                                    <rect key="frame" x="137.5" y="1" width="176.5" height="28.5"/>
+                                                                    <rect key="frame" x="137.5" y="1" width="204.5" height="28.5"/>
                                                                     <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="24"/>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lnc-rg-nya">
-                                                                    <rect key="frame" x="0.0" y="29" width="314" height="1"/>
+                                                                    <rect key="frame" x="0.0" y="29" width="342" height="1"/>
                                                                     <color key="backgroundColor" name="separatorLine"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="1" id="vrL-nF-Q1t"/>
@@ -454,7 +454,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QhQ-hA-CGn">
-                                                            <rect key="frame" x="0.0" y="34" width="314" height="30"/>
+                                                            <rect key="frame" x="0.0" y="34" width="342" height="30"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SKe-wB-wzW">
                                                                     <rect key="frame" x="0.0" y="5" width="41.5" height="20.5"/>
@@ -462,15 +462,15 @@ Sportsbook® All Rights Reserved</string>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EDH-iN-6ba" customClass="CircularDottedLineView" customModule="ATP" customModuleProvider="target">
-                                                                    <rect key="frame" x="41.5" y="12.5" width="231" height="5"/>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EDH-iN-6ba" customClass="SquareDottedLineView" customModule="ATP" customModuleProvider="target">
+                                                                    <rect key="frame" x="51.5" y="14" width="239" height="2"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="5" id="TrT-vJ-IJY"/>
+                                                                        <constraint firstAttribute="height" constant="2" id="TrT-vJ-IJY"/>
                                                                     </constraints>
                                                                 </view>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DLr-sD-eMS">
-                                                                    <rect key="frame" x="272.5" y="5" width="41.5" height="20.5"/>
+                                                                    <rect key="frame" x="300.5" y="5" width="41.5" height="20.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -478,17 +478,17 @@ Sportsbook® All Rights Reserved</string>
                                                             </subviews>
                                                             <constraints>
                                                                 <constraint firstItem="SKe-wB-wzW" firstAttribute="centerY" secondItem="QhQ-hA-CGn" secondAttribute="centerY" id="0jc-b2-j1d"/>
-                                                                <constraint firstItem="EDH-iN-6ba" firstAttribute="leading" secondItem="SKe-wB-wzW" secondAttribute="trailing" id="AXC-Bs-Ts4"/>
+                                                                <constraint firstItem="EDH-iN-6ba" firstAttribute="leading" secondItem="SKe-wB-wzW" secondAttribute="trailing" constant="10" id="AXC-Bs-Ts4"/>
                                                                 <constraint firstAttribute="trailing" secondItem="DLr-sD-eMS" secondAttribute="trailing" id="Bmv-Lh-hsi"/>
                                                                 <constraint firstItem="SKe-wB-wzW" firstAttribute="leading" secondItem="QhQ-hA-CGn" secondAttribute="leading" id="Mlt-pw-MLi"/>
-                                                                <constraint firstItem="EDH-iN-6ba" firstAttribute="trailing" secondItem="DLr-sD-eMS" secondAttribute="leading" id="XEH-WF-BX2"/>
+                                                                <constraint firstItem="EDH-iN-6ba" firstAttribute="trailing" secondItem="DLr-sD-eMS" secondAttribute="leading" constant="-10" id="XEH-WF-BX2"/>
                                                                 <constraint firstAttribute="height" constant="30" id="bdc-0c-3fa"/>
                                                                 <constraint firstItem="EDH-iN-6ba" firstAttribute="centerY" secondItem="SKe-wB-wzW" secondAttribute="centerY" id="f0u-pg-Nhh"/>
                                                                 <constraint firstItem="DLr-sD-eMS" firstAttribute="centerY" secondItem="QhQ-hA-CGn" secondAttribute="centerY" id="yhw-71-ISy"/>
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RUq-wG-sUT">
-                                                            <rect key="frame" x="0.0" y="68" width="314" height="30"/>
+                                                            <rect key="frame" x="0.0" y="68" width="342" height="30"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QiQ-1T-OcN">
                                                                     <rect key="frame" x="0.0" y="5" width="41.5" height="20.5"/>
@@ -496,25 +496,25 @@ Sportsbook® All Rights Reserved</string>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="efQ-Cm-wLO" customClass="CircularDottedLineView" customModule="ATP" customModuleProvider="target">
-                                                                    <rect key="frame" x="41.5" y="12.5" width="231" height="5"/>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="efQ-Cm-wLO" customClass="SquareDottedLineView" customModule="ATP" customModuleProvider="target">
+                                                                    <rect key="frame" x="51.5" y="14" width="239" height="2"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="5" id="UAO-ZB-Fuc"/>
+                                                                        <constraint firstAttribute="height" constant="2" id="UAO-ZB-Fuc"/>
                                                                     </constraints>
                                                                 </view>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GHA-hn-kwh">
-                                                                    <rect key="frame" x="272.5" y="5" width="41.5" height="20.5"/>
+                                                                    <rect key="frame" x="300.5" y="5" width="41.5" height="20.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
                                                             <constraints>
-                                                                <constraint firstItem="efQ-Cm-wLO" firstAttribute="trailing" secondItem="GHA-hn-kwh" secondAttribute="leading" id="5Zk-4b-Nej"/>
+                                                                <constraint firstItem="efQ-Cm-wLO" firstAttribute="trailing" secondItem="GHA-hn-kwh" secondAttribute="leading" constant="-10" id="5Zk-4b-Nej"/>
                                                                 <constraint firstAttribute="height" constant="30" id="Aib-MF-0qP"/>
                                                                 <constraint firstItem="GHA-hn-kwh" firstAttribute="centerY" secondItem="RUq-wG-sUT" secondAttribute="centerY" id="Bb6-MC-gub"/>
-                                                                <constraint firstItem="efQ-Cm-wLO" firstAttribute="leading" secondItem="QiQ-1T-OcN" secondAttribute="trailing" id="E8t-Pw-bBp"/>
+                                                                <constraint firstItem="efQ-Cm-wLO" firstAttribute="leading" secondItem="QiQ-1T-OcN" secondAttribute="trailing" constant="10" id="E8t-Pw-bBp"/>
                                                                 <constraint firstItem="efQ-Cm-wLO" firstAttribute="centerY" secondItem="QiQ-1T-OcN" secondAttribute="centerY" id="Frj-Cj-Ugo"/>
                                                                 <constraint firstAttribute="trailing" secondItem="GHA-hn-kwh" secondAttribute="trailing" id="QTi-1y-g1R"/>
                                                                 <constraint firstItem="QiQ-1T-OcN" firstAttribute="leading" secondItem="RUq-wG-sUT" secondAttribute="leading" id="p1H-ya-eo1"/>
@@ -532,10 +532,10 @@ Sportsbook® All Rights Reserved</string>
                                             </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="JUz-Fz-k5E">
-                                            <rect key="frame" x="50" y="254" width="314" height="50"/>
+                                            <rect key="frame" x="28" y="254" width="358" height="50"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zt3-d0-Abf">
-                                                    <rect key="frame" x="0.0" y="0.0" width="141" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="163" height="50"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="RKR-Mk-Xy9"/>
@@ -548,7 +548,7 @@ Sportsbook® All Rights Reserved</string>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="55d-pC-VkS">
-                                                    <rect key="frame" x="173" y="0.0" width="141" height="50"/>
+                                                    <rect key="frame" x="195" y="0.0" width="163" height="50"/>
                                                     <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="16"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" title="Withdraw"/>
@@ -559,10 +559,10 @@ Sportsbook® All Rights Reserved</string>
                                             </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bn-gy-5Xw">
-                                            <rect key="frame" x="20" y="334" width="374" height="200"/>
+                                            <rect key="frame" x="24" y="334" width="366" height="200"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTo-pj-31Q" customClass="ActivationAlertScrollableView" customModule="ATP" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="200"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="366" height="200"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="200" id="AR1-5w-JbD"/>
                                                     </constraints>
@@ -575,13 +575,13 @@ Sportsbook® All Rights Reserved</string>
                                         <constraint firstItem="1bn-gy-5Xw" firstAttribute="top" secondItem="JUz-Fz-k5E" secondAttribute="bottom" constant="30" id="7rh-6G-EtX"/>
                                         <constraint firstItem="r6R-XK-U3Z" firstAttribute="top" secondItem="lFI-1X-kZb" secondAttribute="top" constant="8" id="8cz-uy-Xw2"/>
                                         <constraint firstItem="JUz-Fz-k5E" firstAttribute="top" secondItem="r6R-XK-U3Z" secondAttribute="bottom" constant="30" id="E5g-mI-37p"/>
-                                        <constraint firstAttribute="trailing" secondItem="1bn-gy-5Xw" secondAttribute="trailing" constant="20" id="Opd-Ek-bJx"/>
-                                        <constraint firstItem="1bn-gy-5Xw" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="20" id="RZ4-Rj-8bp"/>
-                                        <constraint firstAttribute="trailing" secondItem="r6R-XK-U3Z" secondAttribute="trailing" constant="50" id="WmZ-O1-0Z5"/>
-                                        <constraint firstAttribute="trailing" secondItem="JUz-Fz-k5E" secondAttribute="trailing" constant="50" id="ZMf-8C-tUV"/>
+                                        <constraint firstAttribute="trailing" secondItem="1bn-gy-5Xw" secondAttribute="trailing" constant="24" id="Opd-Ek-bJx"/>
+                                        <constraint firstItem="1bn-gy-5Xw" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="24" id="RZ4-Rj-8bp"/>
+                                        <constraint firstAttribute="trailing" secondItem="r6R-XK-U3Z" secondAttribute="trailing" constant="36" id="WmZ-O1-0Z5"/>
+                                        <constraint firstAttribute="trailing" secondItem="JUz-Fz-k5E" secondAttribute="trailing" constant="28" id="ZMf-8C-tUV"/>
                                         <constraint firstAttribute="bottom" secondItem="1bn-gy-5Xw" secondAttribute="bottom" constant="8" id="aed-gp-qgZ"/>
-                                        <constraint firstItem="r6R-XK-U3Z" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="50" id="hDW-6B-oT1"/>
-                                        <constraint firstItem="JUz-Fz-k5E" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="50" id="n1L-d4-gci"/>
+                                        <constraint firstItem="r6R-XK-U3Z" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="36" id="hDW-6B-oT1"/>
+                                        <constraint firstItem="JUz-Fz-k5E" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="28" id="n1L-d4-gci"/>
                                     </constraints>
                                 </view>
                             </subviews>
@@ -635,7 +635,7 @@ Sportsbook® All Rights Reserved</string>
         <image name="info_small_icon" width="11" height="11"/>
         <image name="logout_account_icon" width="18" height="19"/>
         <namedColor name="backgroundPrimary">
-            <color red="0.043137254901960784" green="0.043137254901960784" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="separatorLine">
             <color red="0.68235294117647061" green="0.71372549019607845" blue="0.75686274509803919" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

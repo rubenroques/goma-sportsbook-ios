@@ -44,12 +44,12 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var currentBalanceView: UIView!
     @IBOutlet private weak var currentBalanceTitleLabel: UILabel!
     @IBOutlet private weak var currentBalanceLabel: UILabel!
-    @IBOutlet private weak var currentBalanceDottetLineView: CircularDottedLineView!
+    @IBOutlet private weak var currentBalanceDottetLineView: SquareDottedLineView!
     
     @IBOutlet private weak var bonusBalanceBaseView: UIView!
     @IBOutlet private weak var bonusBalanceTitleLabel: UILabel!
     @IBOutlet private weak var bonusBalanceLabel: UILabel!
-    @IBOutlet private weak var bonusBalanceDottedLineView: CircularDottedLineView!
+    @IBOutlet private weak var bonusBalanceDottedLineView: SquareDottedLineView!
     
     @IBOutlet private weak var creditsBalanceBaseView: UIView!
     @IBOutlet private weak var creditsBalanceTitleLabel: UILabel!
@@ -58,12 +58,12 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var freeBetsBalanceBaseView: UIView!
     @IBOutlet private weak var freeBetsBalanceTitleLabel: UILabel!
     @IBOutlet private weak var freeBetsBalanceLabel: UILabel!
-    @IBOutlet private weak var freeBetsBalanceDottedLineView: CircularDottedLineView!
+    @IBOutlet private weak var freeBetsBalanceDottedLineView: SquareDottedLineView!
     
     @IBOutlet private weak var replayBalanceBaseView: UIView!
     @IBOutlet private weak var replayBalanceTitleLabel: UILabel!
     @IBOutlet private weak var replayBalanceLabel: UILabel!
-    @IBOutlet private weak var replayBalanceDottedLineView: CircularDottedLineView!
+    @IBOutlet private weak var replayBalanceDottedLineView: SquareDottedLineView!
     
     @IBOutlet private weak var depositButton: UIButton!
     @IBOutlet private weak var withdrawButton: UIButton!
@@ -352,29 +352,34 @@ class ProfileViewController: UIViewController {
 
     func commonInit() {
         
-        if TargetVariables.features.contains(.legalAgeWarning) {
-            self.profileBaseViewLeadingConstraint.isActive = false
-            self.profileBaseViewCenterXConstraint.isActive = true
-            self.topBarViewHeightConstraint.isActive = false
-            self.titleLabelTopConstraint.isActive = true
-            
-            self.topBarView.addSubview(self.legalAgeWarningImageView)
-            
-            NSLayoutConstraint.activate([
-                
-                self.legalAgeWarningImageView.leadingAnchor.constraint(equalTo: self.topBarView.leadingAnchor, constant: 16),
-                self.legalAgeWarningImageView.topAnchor.constraint(equalTo: self.topBarView.topAnchor, constant: 8),
-                self.legalAgeWarningImageView.widthAnchor.constraint(equalToConstant: 60),
-                self.legalAgeWarningImageView.heightAnchor.constraint(equalTo: self.legalAgeWarningImageView.widthAnchor)
-            ])
-            
-        }
-        else {
-            self.profileBaseViewLeadingConstraint.isActive = true
-            self.profileBaseViewCenterXConstraint.isActive = false
-            self.topBarViewHeightConstraint.isActive = true
-            self.titleLabelTopConstraint.isActive = false
-        }
+        self.profileBaseViewLeadingConstraint.isActive = true
+        self.profileBaseViewCenterXConstraint.isActive = false
+        self.topBarViewHeightConstraint.isActive = true
+        self.titleLabelTopConstraint.isActive = false
+        
+//        if TargetVariables.features.contains(.legalAgeWarning) {
+//            self.profileBaseViewLeadingConstraint.isActive = false
+//            self.profileBaseViewCenterXConstraint.isActive = true
+//            self.topBarViewHeightConstraint.isActive = false
+//            self.titleLabelTopConstraint.isActive = true
+//            
+//            self.topBarView.addSubview(self.legalAgeWarningImageView)
+//            
+//            NSLayoutConstraint.activate([
+//                
+//                self.legalAgeWarningImageView.leadingAnchor.constraint(equalTo: self.topBarView.leadingAnchor, constant: 16),
+//                self.legalAgeWarningImageView.topAnchor.constraint(equalTo: self.topBarView.topAnchor, constant: 8),
+//                self.legalAgeWarningImageView.widthAnchor.constraint(equalToConstant: 60),
+//                self.legalAgeWarningImageView.heightAnchor.constraint(equalTo: self.legalAgeWarningImageView.widthAnchor)
+//            ])
+//            
+//        }
+//        else {
+//            self.profileBaseViewLeadingConstraint.isActive = true
+//            self.profileBaseViewCenterXConstraint.isActive = false
+//            self.topBarViewHeightConstraint.isActive = true
+//            self.titleLabelTopConstraint.isActive = false
+//        }
 
         // Trigger layout update
         self.view.layoutIfNeeded()
