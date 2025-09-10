@@ -106,8 +106,10 @@ class EveryMatrixConnector: Connector {
 
     func subscribe<T: Codable>(_ router: WAMPRouter) -> AnyPublisher<WAMPSubscriptionContent<T>, ServiceProviderError> {
         return self.serialQueue.sync {
-            self.wampManager.registerOnEndpoint(router, decodingType: T.self)
+            print("🔌 EveryMatrixConnector: Starting subscription to \(router.procedure)")
+            return self.wampManager.registerOnEndpoint(router, decodingType: T.self)
                 .mapError { error -> ServiceProviderError in
+                    print("❌ EveryMatrixConnector: Subscription error: \(error)")
                     switch error {
                     case .notConnected:
                         return .onConnection
@@ -121,6 +123,18 @@ class EveryMatrixConnector: Connector {
                         return .unknown
                     }
                 }
+                .handleEvents(receiveOutput: { content in
+                    switch content {
+                    case .connect(_):
+                        print("🔗 EveryMatrixConnector: Subscription connected")
+                    case .initialContent(_):
+                        print("📥 EveryMatrixConnector: Received initial content")
+                    case .updatedContent(_):
+                        print("🔄 EveryMatrixConnector: Received content update")
+                    case .disconnect:
+                        print("🔌 EveryMatrixConnector: Subscription disconnected")
+                    }
+                })
                 .eraseToAnyPublisher()
         }
     }

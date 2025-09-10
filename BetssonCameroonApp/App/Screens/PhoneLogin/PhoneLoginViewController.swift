@@ -105,6 +105,8 @@ class PhoneLoginViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        setupDebugHelpers()
     }
 
     private func setupLayout() {
@@ -250,5 +252,61 @@ class PhoneLoginViewController: UIViewController {
         UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve << 16), animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
+    }
+    
+    // MARK: - Debug Helpers
+    
+    private func setupDebugHelpers() {
+        #if DEBUG
+        // Make navigation title label tappable for debug
+        navigationTitleLabel.isUserInteractionEnabled = true
+        let debugTitleTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+        debugTitleTap.numberOfTapsRequired = 3
+        navigationTitleLabel.addGestureRecognizer(debugTitleTap)
+        #endif
+    }
+    
+    @objc private func didTapDebugFormFill() {
+        #if DEBUG
+        // Get current phone text from viewModel
+        let currentPhone = viewModel.phoneFieldViewModel.textPublisher
+            .first()
+            .eraseToAnyPublisher()
+        
+        var phoneToSet = ""
+        var passwordToSet = ""
+        
+        // Use Combine to get the current text value
+        var cancellable: AnyCancellable?
+        cancellable = currentPhone
+            .sink { phone in
+                if phone.isEmpty {
+                    // First tap: Fill with the provided credentials
+                    phoneToSet = "+237666999005"
+                    passwordToSet = "4050"
+                }
+                else if phone == "+237666999005" {
+                    // Second tap: Alternative test account
+                    phoneToSet = "+237123456789"
+                    passwordToSet = "test123"
+                }
+                else if phone == "+237123456789" {
+                    // Third tap: Another test account
+                    phoneToSet = "+237987654321"
+                    passwordToSet = "debug123"
+                }
+                else {
+                    // Reset to first credentials
+                    phoneToSet = "+237666999005"
+                    passwordToSet = "4050"
+                }
+                
+                // Update the text fields through their view models
+                self.viewModel.phoneFieldViewModel.updateText(phoneToSet)
+                self.viewModel.passwordFieldViewModel.updateText(passwordToSet)
+                
+                cancellable?.cancel()
+            }
+        #endif
     }
 }

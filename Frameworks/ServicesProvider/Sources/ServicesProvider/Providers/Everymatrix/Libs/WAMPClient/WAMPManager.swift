@@ -450,33 +450,47 @@ final class WAMPManager {
         let subject = PassthroughSubject<WAMPSubscriptionContent<T>, EveryMatrix.APIError>()
         
         guard
-            let swampSession = self.swampSession,
-            swampSession.isConnected()
+            let swampSession = self.swampSession
         else {
+            print("❌ WAMPManager: No swampSession available for registerOnEndpoint")
             subject.send(completion: .failure(.notConnected))
             return subject.eraseToAnyPublisher()
         }
         
+        guard swampSession.isConnected() else {
+            print("❌ WAMPManager: SwampSession is not connected for registerOnEndpoint (state: \(swampSession.isConnected()))")
+            subject.send(completion: .failure(.notConnected))
+            return subject.eraseToAnyPublisher()
+        }
+        
+        print("✅ WAMPManager: SwampSession is connected, proceeding with endpoint registration")
+        
         let args: [String: Any] = endpoint.kwargs ?? [:]
         
-        print("WAMPManager.registerOnEndpoint - url:\(endpoint.procedure), args:\(args)")
+        print("🔗 WAMPManager: Registering on endpoint - url:\(endpoint.procedure), args:\(args)")
         
         swampSession.register(
             endpoint.procedure,
             options: args,
             onSuccess:
                 { (registration: WAMPRegistration) in
+                    print("✅ WAMPManager: Successfully registered endpoint (id: \(registration.identificationCode))")
                     
                     subject.send(WAMPSubscriptionContent.connect(publisherIdentifiable: registration))
                     
                     if let initialDumpEndpoint = endpoint.intiailDumpRequest {
+                        print("📥 WAMPManager: Requesting initial dump from \(initialDumpEndpoint.procedure)")
                         self.getModel(router: initialDumpEndpoint, initialDumpProcedure: endpoint.procedure, decodingType: decodingType)
                             .sink { completion in
                                 if case .failure(let error) = completion {
+                                    print("❌ WAMPManager: Initial dump failed: \(error)")
                                     subject.send(WAMPSubscriptionContent.disconnect)
                                     subject.send(completion: .failure(error))
+                                } else {
+                                    print("✅ WAMPManager: Initial dump completed successfully")
                                 }
                             } receiveValue: { decoded in
+                                print("📦 WAMPManager: Received initial dump data")
                                 subject.send(.initialContent(decoded))
                             }
                             .store(in: &self.globalCancellable)
@@ -484,19 +498,23 @@ final class WAMPManager {
                 },
             onError:
                 { (details: [String: Any], errorStr: String) in
+                    print("❌ WAMPManager: Registration failed - \(errorStr)")
                     subject.send(WAMPSubscriptionContent.disconnect)
                     subject.send(completion: .failure(.requestError(value: errorStr)))
                 },
             onEvent:
                 { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
+                    print("🔄 WAMPManager: Received event update")
                     do {
                         if kwResults != nil {
                             let decoder = DictionaryDecoder()
                             decoder.dateDecodingStrategy = .iso8601
                             let decoded = try decoder.decode(decodingType, from: kwResults!)
+                            print("📦 WAMPManager: Successfully decoded event update")
                             subject.send(.updatedContent(decoded))
                         }
                         else {
+                            print("❌ WAMPManager: Event received but no kwResults data")
                             subject.send(completion: .failure(.noResultsReceived))
                         }
                     }

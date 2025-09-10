@@ -14,6 +14,7 @@ enum EveryMatrixPlayerAPI {
     case register(registrationId: String)
     case getUserProfile(userId: String)
     case getUserBalance(userId: String)
+    case getBankingWebView(userId: String, parameters: CashierParameters)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -38,6 +39,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/\(userId)/details"
         case .getUserBalance(let userId):
             return "/v2/player/\(userId)/balance"
+        case .getBankingWebView(let userId, _):
+            return "/v1/player/\(userId)/payment/GetPaymentSession"
         }
     }
     
@@ -55,6 +58,11 @@ extension EveryMatrixPlayerAPI: Endpoint {
                 "X-Session-Type": "others",
             ]
             return headers
+        case .getBankingWebView:
+            return [
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            ]
         default:
             let headers = EveryMatrixUnifiedConfiguration.shared.defaultHeaders
             return headers
@@ -80,6 +88,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return .get
         case .getUserBalance:
             return .get
+        case .getBankingWebView:
+            return .post
         }
     }
     
@@ -123,6 +133,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             
             return data
+        case .getBankingWebView(_, let parameters):
+            return try? JSONEncoder().encode(parameters)
         default:
             return nil
         }
@@ -138,6 +150,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getUserProfile:
             return true
         case .getUserBalance:
+            return true
+        case .getBankingWebView:
             return true
         default:
             return false

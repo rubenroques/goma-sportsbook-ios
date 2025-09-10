@@ -80,6 +80,8 @@ protocol PrivilegedAccessManagerProvider {
     func addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError>
 
     func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionType]?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
+    
+    func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError>
 
     func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError>
     func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError>
@@ -245,6 +247,13 @@ protocol PaymentsProvider {
     func getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError>
     func addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError>
     func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionType]?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
+    
+    // MARK: - Banking WebView
+    
+    /// Get WebView URL for unified banking operations (deposit/withdraw)
+    /// - Parameter parameters: Banking parameters including transaction type and configuration
+    /// - Returns: Publisher with banking WebView response containing URL
+    func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError>
 }
 
 /// Protocol for managing bonuses and cashback

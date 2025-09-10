@@ -277,6 +277,12 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
+    func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
+        let currentUserId = sessionCoordinator.currentUserId ?? ""
+        let endpoint = EveryMatrixPlayerAPI.getBankingWebView(userId: currentUserId, parameters: parameters)
+        return connector.request(endpoint)
+    }
+    
     func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

@@ -91,6 +91,7 @@ class AppCoordinator: Coordinator {
     }
     
     private func handleStateChange(_ state: AppState) {
+        print("🔄 AppCoordinator: State changed to \(state)")
         switch state {
         case .initializing:
             // Do nothing, waiting for state manager to initialize

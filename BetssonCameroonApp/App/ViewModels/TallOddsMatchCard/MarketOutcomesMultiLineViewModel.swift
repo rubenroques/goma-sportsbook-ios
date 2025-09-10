@@ -84,7 +84,7 @@ extension MarketOutcomesMultiLineViewModel {
 
         return MarketOutcomesMultiLineViewModel(
             lineViewModels: lineViewModels,
-            emptyStateMessage: "No markets available for type"
+            emptyStateMessage: "-"
         )
     }
     

@@ -97,12 +97,12 @@ final class ProfileWalletCoordinator: Coordinator {
         
         // Deposit callback
         viewModel.onDepositRequested = { [weak self] in
-            self?.onDepositRequested?()
+            self?.presentDepositFlow()
         }
         
         // Withdraw callback
         viewModel.onWithdrawRequested = { [weak self] in
-            self?.onWithdrawRequested?()
+            self?.presentWithdrawFlow()
         }
         
         // Menu item selection callback
@@ -248,6 +248,130 @@ final class ProfileWalletCoordinator: Coordinator {
             completion?()
             self?.finish()
         }
+    }
+    
+    // MARK: - Banking Flow Methods
+    
+    private func presentDepositFlow() {
+        guard let presentingViewController = profileNavigationController else { return }
+        
+        let bankingCoordinator = BankingCoordinator.forDeposit(
+            presentingViewController: presentingViewController,
+            client: servicesProvider,
+            isFirstDeposit: checkIfFirstDeposit()
+        )
+        
+        // Set up banking coordinator closures
+        setupBankingCoordinatorCallbacks(bankingCoordinator)
+        
+        // Add as child coordinator
+        addChildCoordinator(bankingCoordinator)
+        
+        // Start the banking flow
+        bankingCoordinator.start()
+    }
+    
+    private func presentWithdrawFlow() {
+        guard let presentingViewController = profileNavigationController else { return }
+        
+        let bankingCoordinator = BankingCoordinator.forWithdraw(
+            presentingViewController: presentingViewController,
+            client: servicesProvider
+        )
+        
+        // Set up banking coordinator closures
+        setupBankingCoordinatorCallbacks(bankingCoordinator)
+        
+        // Add as child coordinator
+        addChildCoordinator(bankingCoordinator)
+        
+        // Start the banking flow
+        bankingCoordinator.start()
+    }
+    
+    private func checkIfFirstDeposit() -> Bool {
+        // TODO: In a real implementation, check user's transaction history
+        // For now, return false as a default
+        return false
+    }
+    
+    // MARK: - Banking Coordinator Setup
+    
+    private func setupBankingCoordinatorCallbacks(_ coordinator: BankingCoordinator) {
+        // Transaction completion callback
+        coordinator.onTransactionComplete = { [weak self] transactionType, amount in
+            guard let self = self else { return }
+            
+            // Transaction completed successfully
+            print("[ProfileWallet] Banking transaction completed: \(transactionType.displayName)")
+            
+            // Update wallet data to reflect the transaction
+            self.userSessionStore.refreshUserWallet()
+            
+            // Remove child coordinator
+            self.removeChildCoordinator(coordinator)
+            
+            // Optionally call external callback for further handling
+            if transactionType == .deposit {
+                self.onDepositRequested?()
+            } else {
+                self.onWithdrawRequested?()
+            }
+        }
+        
+        // Transaction cancellation callback
+        coordinator.onTransactionCancel = { [weak self] in
+            guard let self = self else { return }
+            
+            print("[ProfileWallet] Banking transaction cancelled")
+            self.removeChildCoordinator(coordinator)
+        }
+        
+        // Transaction error callback
+        coordinator.onTransactionError = { [weak self] error in
+            guard let self = self else { return }
+            
+            print("[ProfileWallet] Banking transaction failed: \(error)")
+            self.removeChildCoordinator(coordinator)
+            
+            // Show error to user
+            self.showTransactionErrorAlert(error: error)
+        }
+        
+        // Navigation action callback
+        coordinator.onNavigationAction = { [weak self] action in
+            guard let self = self else { return }
+            
+            // Handle navigation actions from banking flow
+            switch action {
+            case .goToSports:
+                // Dismiss profile and navigate to sports
+                self.dismissProfileWallet()
+                // Note: The parent coordinator should handle sports navigation
+                
+            case .goToCasino:
+                // Dismiss profile and navigate to casino
+                self.dismissProfileWallet()
+                // Note: The parent coordinator should handle casino navigation
+                
+            case .closeModal, .none:
+                // Just remove the banking coordinator
+                self.removeChildCoordinator(coordinator)
+            }
+        }
+    }
+    
+    private func showTransactionErrorAlert(error: String) {
+        guard let presentingViewController = profileNavigationController else { return }
+        
+        let alert = UIAlertController(
+            title: "Transaction Error",
+            message: error,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        presentingViewController.present(alert, animated: true)
     }
 }
 

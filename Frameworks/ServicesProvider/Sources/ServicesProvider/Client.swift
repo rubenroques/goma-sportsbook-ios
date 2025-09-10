@@ -1066,6 +1066,15 @@ extension Client {
         }
         return privilegedAccessManager.getRegistrationConfig()
     }
+
+    public func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getBankingWebView(parameters: parameters)
+    }
 }
 
 extension Client {

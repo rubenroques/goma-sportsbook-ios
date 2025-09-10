@@ -58,6 +58,7 @@ class SportTypeStore {
     }
 
     private func getSports() {
+        print("🏈 SportTypeStore: Starting sports subscription")
         self.activeSportsCurrentValueSubject.send(.loading)
 
         //self.activeSportsCurrentValueSubject.send(.loaded([self.defaultSport]))
@@ -70,22 +71,29 @@ class SportTypeStore {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
+                    print("🏈 SportTypeStore: Subscription finished")
                     break
                 case .failure(let error):
+                    print("❌ SportTypeStore: Subscription failed with error: \(error)")
                     self?.activeSportsCurrentValueSubject.send(completion: .failure(error))
                     self?.sportsSubscription = nil
                 }
         }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
             switch subscribableContent {
             case .connected(let subscription):
+                print("🔗 SportTypeStore: Connected to sports subscription (id: \(subscription.id))")
                 self?.sportsSubscription = subscription
             case .contentUpdate(let sportTypes):
+                print("📦 SportTypeStore: Received \(sportTypes.count) sport types from server")
                 let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
+                print("🏈 SportTypeStore: Mapped to \(sports.count) sports")
                 let filteredSports = sports.filter({
                     $0.eventsCount > 0 || $0.liveEventsCount > 0 || $0.outrightEventsCount > 0
                 })
+                print("✅ SportTypeStore: Filtered to \(filteredSports.count) sports with events")
                 self?.activeSportsCurrentValueSubject.send(.loaded(filteredSports))
             case .disconnected:
+                print("🔌 SportTypeStore: Disconnected from sports subscription")
                 break
             }
         })

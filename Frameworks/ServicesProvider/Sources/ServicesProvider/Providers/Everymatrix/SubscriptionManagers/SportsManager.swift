@@ -32,6 +32,7 @@ class SportsManager {
     // MARK: - Public Interface
 
     func subscribe() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        print("🔧 SportsManager: Starting subscription for operator \(operatorId)")
         // Clean up any existing subscription
         unsubscribe()
 
@@ -40,6 +41,7 @@ class SportsManager {
 
         // Create the router for sports subscription
         let router = WAMPRouter.sportsPublisher(operatorId: operatorId)
+        print("🔧 SportsManager: Created router for endpoint: \(router.procedure)")
 
         return connector.subscribe(router)
             .handleEvents(receiveOutput: { [weak self] content in
@@ -71,27 +73,33 @@ class SportsManager {
 
         switch content {
         case .connect(let publisherIdentifiable):
+            print("🔗 SportsManager: Connected to WAMP subscription (id: \(publisherIdentifiable.identificationCode))")
             // Return connection confirmation
             let subscription = Subscription(id: "\(publisherIdentifiable.identificationCode)")
             return SubscribableContent.connected(subscription: subscription)
 
         case .initialContent(let response):
+            print("📥 SportsManager: Received initial content with \(response.records.count) records")
             // Process initial dump of sports data (SPORT entities only)
             parseSportsData(from: response)
 
             // Build and return sports list
             let sports = buildSportTypes()
+            print("🏗️ SportsManager: Built \(sports.count) sport types from initial data")
             return .contentUpdate(content: sports)
 
         case .updatedContent(let response):
+            print("🔄 SportsManager: Received update with \(response.records.count) records")
             // Process real-time updates (SPORT entities only)
             parseSportsData(from: response)
 
             // Always rebuild sports list on updates since sports are typically few in number
             let sports = buildSportTypes()
+            print("🏗️ SportsManager: Built \(sports.count) sport types from update")
             return .contentUpdate(content: sports)
 
         case .disconnect:
+            print("🔌 SportsManager: Disconnected from WAMP subscription")
             // Handle disconnection
             return nil
         }
@@ -124,33 +132,49 @@ class SportsManager {
     
     /// Parse only SPORT entities from the aggregator response
     private func parseSportsData(from response: EveryMatrix.AggregatorResponse) {
+        var sportsCount = 0
+        var otherEntityCount = 0
+        
         for record in response.records {
             switch record {
             // INITIAL_DUMP records - only process SPORT entities
             case .sport(let dto):
                 store.store(dto)
+                sportsCount += 1
                 
             // UPDATE/DELETE/CREATE records - only process SPORT changes
             case .changeRecord(let changeRecord):
+                if changeRecord.entityType == EveryMatrix.SportDTO.rawType {
+                    sportsCount += 1
+                } else {
+                    otherEntityCount += 1
+                }
                 handleSportsChangeRecord(changeRecord)
                 
             // Ignore all other entity types for sports manager
             case .match, .market, .outcome, .bettingOffer, .location, .eventCategory:
+                otherEntityCount += 1
                 break // Ignore non-sport entities
             case .marketOutcomeRelation, .mainMarket, .marketInfo, .nextMatchesNumber, .tournament:
+                otherEntityCount += 1
                 break // Ignore non-sport entities
             case .eventInfo:
+                otherEntityCount += 1
                 break // Ignore non-sport entities
             case .marketGroup:
+                otherEntityCount += 1
                 break // Ignore non-sport entities
                 
             case .unknown(let type):
                 if type == "SPORT" {
                     print("Unknown SPORT entity type: \(type)")
                 }
+                otherEntityCount += 1
                 // Ignore unknown non-sport entities
             }
         }
+        
+        print("📊 SportsManager: Parsed \(sportsCount) sport entities, \(otherEntityCount) other entities")
     }
     
     /// Handle change records for SPORT entities only

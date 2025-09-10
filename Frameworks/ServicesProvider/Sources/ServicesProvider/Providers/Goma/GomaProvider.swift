@@ -660,6 +660,10 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
     func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
+
+    func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 }
 
 extension GomaProvider: EventsProvider {
