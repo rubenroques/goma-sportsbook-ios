@@ -65,7 +65,6 @@
                 <outlet property="scrollView" destination="Xvy-bu-gRF" id="XUT-aI-xje"/>
                 <outlet property="shadowView" destination="VDW-H2-PFU" id="z3V-DQ-qKE"/>
                 <outlet property="stackView" destination="6QV-ge-SXI" id="i6L-MC-BTC"/>
-                <outlet property="titleLabelTopConstraint" destination="1Yk-s4-0oC" id="Ezu-eh-Zgh"/>
                 <outlet property="topBarView" destination="upr-br-gCP" id="kBu-NP-iT4"/>
                 <outlet property="topBarViewHeightConstraint" destination="g4R-ms-IT6" id="xuT-fw-ydf"/>
                 <outlet property="totalBalanceInfoImageView" destination="zQX-7w-xuI" id="6BE-Dy-WIb"/>
@@ -120,13 +119,13 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y8Q-jn-Zp8">
-                            <rect key="frame" x="180" y="68" width="54.5" height="26"/>
+                            <rect key="frame" x="180" y="22" width="54.5" height="22"/>
                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="22"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="M40-Fh-HHv">
-                            <rect key="frame" x="157" y="100" width="100" height="20"/>
+                            <rect key="frame" x="157" y="50" width="100" height="20"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gg-my-EQA">
                                     <rect key="frame" x="0.0" y="0.0" width="76" height="20"/>
@@ -158,7 +157,7 @@
                             </constraints>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wIc-jL-CMS">
-                            <rect key="frame" x="349" y="17" width="57" height="35"/>
+                            <rect key="frame" x="349" y="15.5" width="57" height="35"/>
                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="16"/>
                             <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -171,7 +170,7 @@
                     <color key="backgroundColor" name="backgroundPrimary"/>
                     <constraints>
                         <constraint firstItem="M40-Fh-HHv" firstAttribute="top" secondItem="Y8Q-jn-Zp8" secondAttribute="bottom" constant="6" id="0Jh-Sb-YAD"/>
-                        <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="top" secondItem="Jbl-ih-uBZ" secondAttribute="bottom" constant="15" id="1Yk-s4-0oC"/>
+                        <constraint firstItem="wIc-jL-CMS" firstAttribute="centerY" secondItem="Y8Q-jn-Zp8" secondAttribute="centerY" id="1fV-sl-adc"/>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="77J-tn-z3X"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="CIQ-eA-hX1"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="leading" secondItem="upr-br-gCP" secondAttribute="leading" constant="16" id="TVP-3F-FE6"/>
@@ -180,7 +179,7 @@
                         <constraint firstItem="M40-Fh-HHv" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="YVj-tN-PFt"/>
                         <constraint firstAttribute="bottom" secondItem="M40-Fh-HHv" secondAttribute="bottom" id="ZDR-zl-FhS"/>
                         <constraint firstAttribute="height" constant="70" id="g4R-ms-IT6"/>
-                        <constraint firstItem="wIc-jL-CMS" firstAttribute="top" secondItem="upr-br-gCP" secondAttribute="top" constant="17" id="iK7-HN-OkL"/>
+                        <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerY" secondItem="Jbl-ih-uBZ" secondAttribute="centerY" id="udg-jb-cvx"/>
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xvy-bu-gRF">

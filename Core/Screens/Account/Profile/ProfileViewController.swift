@@ -104,9 +104,7 @@ class ProfileViewController: UIViewController {
     // Constraints
     @IBOutlet private weak var profileBaseViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var profileBaseViewCenterXConstraint: NSLayoutConstraint!
-    
-    @IBOutlet private weak var titleLabelTopConstraint: NSLayoutConstraint!
-    
+        
     @IBOutlet private weak var topBarViewHeightConstraint: NSLayoutConstraint!
     
     var depositOnRegisterViewController: DepositOnRegisterViewController?
@@ -355,31 +353,6 @@ class ProfileViewController: UIViewController {
         self.profileBaseViewLeadingConstraint.isActive = true
         self.profileBaseViewCenterXConstraint.isActive = false
         self.topBarViewHeightConstraint.isActive = true
-        self.titleLabelTopConstraint.isActive = false
-        
-//        if TargetVariables.features.contains(.legalAgeWarning) {
-//            self.profileBaseViewLeadingConstraint.isActive = false
-//            self.profileBaseViewCenterXConstraint.isActive = true
-//            self.topBarViewHeightConstraint.isActive = false
-//            self.titleLabelTopConstraint.isActive = true
-//            
-//            self.topBarView.addSubview(self.legalAgeWarningImageView)
-//            
-//            NSLayoutConstraint.activate([
-//                
-//                self.legalAgeWarningImageView.leadingAnchor.constraint(equalTo: self.topBarView.leadingAnchor, constant: 16),
-//                self.legalAgeWarningImageView.topAnchor.constraint(equalTo: self.topBarView.topAnchor, constant: 8),
-//                self.legalAgeWarningImageView.widthAnchor.constraint(equalToConstant: 60),
-//                self.legalAgeWarningImageView.heightAnchor.constraint(equalTo: self.legalAgeWarningImageView.widthAnchor)
-//            ])
-//            
-//        }
-//        else {
-//            self.profileBaseViewLeadingConstraint.isActive = true
-//            self.profileBaseViewCenterXConstraint.isActive = false
-//            self.topBarViewHeightConstraint.isActive = true
-//            self.titleLabelTopConstraint.isActive = false
-//        }
 
         // Trigger layout update
         self.view.layoutIfNeeded()
