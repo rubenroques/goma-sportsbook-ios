@@ -104,33 +104,7 @@ class Router {
 
     func showPostLoadingFlow() {
         let bootRootViewController: UIViewController
-
-        // FAST TEST CONFIGURATION
-        // ========================
-        // Set to true for development/testing, false for production
-        // This enables rapid development iterations: create → build → test
-        // Check Router+FastTest.swift file for definition and details
-        
-#if DEBUG
-        let useFastTestMode = false
-#else
-        let useFastTestMode = false 
-#endif
-
-        if useFastTestMode {
-#if DEBUG
-            // 🧪 FAST TEST MODE - Direct boot into test screens
-            // Configure which test screen to boot into when useFastTestMode = true
-            let fastTestTarget: FastTestTarget = .shareTestView // .betSubmissionSuccess(.singleFootball)
-            
-            bootRootViewController = createFastTestViewController(target: fastTestTarget)
-            Logger.log("🔧 FAST TEST MODE: Booting into \(fastTestTarget)")
-#endif
-        } else {
-            // 🏭 PRODUCTION MODE - Normal app flow
-            bootRootViewController = createProductionViewController()
-            Logger.log("📱 PRODUCTION MODE: Normal app startup")
-        }
+        bootRootViewController = createProductionViewController()
         
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()
