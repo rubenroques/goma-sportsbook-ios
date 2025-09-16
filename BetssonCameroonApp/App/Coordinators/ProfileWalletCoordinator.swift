@@ -8,6 +8,7 @@
 import UIKit
 import ServicesProvider
 import GomaUI
+import XPush
 
 // Removed ProfileWalletCoordinatorDelegate - using closure-based pattern for consistency with other coordinators
 
@@ -118,8 +119,14 @@ final class ProfileWalletCoordinator: Coordinator {
             // Handle logout with confirmation
             showLogoutConfirmation()
         case .notifications:
-            // Handle notifications internally - present from profile's modal context
-            showNotifications()
+            // Open iPhone Settings app directly to notification settings
+//            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+//                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+//            }
+            
+            // Open Extreme push inbox screen
+            XPush.forceOpenInbox()
+            
         case .transactionHistory:
             // TODO: Navigate to transaction history
             showPlaceholderAlert(title: "Transaction History", message: "Feature coming soon")
@@ -162,33 +169,37 @@ final class ProfileWalletCoordinator: Coordinator {
         // TODO:
     }
     
+    // COMMENTED OUT - Using XPush.openInbox() for now
+    // Will be used later for in-app notification settings
+    /*
     private func showNotifications() {
         guard let profileNavigationController = profileNavigationController else {
             print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
             return
         }
-        
+
         // Create NotificationsCoordinator using profile's NavigationController
         let notificationsCoordinator = NotificationsCoordinator(
             navigationController: profileNavigationController,
             servicesProvider: servicesProvider
         )
-        
+
         // Setup closure-based callbacks
         notificationsCoordinator.onDismiss = { [weak self] in
             self?.removeChildCoordinator(notificationsCoordinator)
         }
-        
+
         notificationsCoordinator.onNotificationAction = { notification, action in
             print("ProfileWalletCoordinator: Notification action - \(action.title) for '\(notification.title)'")
             // Handle notification actions that need additional navigation
         }
-        
+
         addChildCoordinator(notificationsCoordinator)
         notificationsCoordinator.start()
-        
+
         print("🚀 ProfileWalletCoordinator: Presented notifications from profile modal context")
     }
+    */
     
     private func showPlaceholderAlert(title: String, message: String) {
         guard let profileViewController = profileViewController else { return }

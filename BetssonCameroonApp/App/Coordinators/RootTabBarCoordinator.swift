@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 import ServicesProvider
 import GomaUI
 
@@ -244,37 +245,51 @@ class RootTabBarCoordinator: Coordinator {
             self?.navigationController.popViewController(animated: true)
         }
         
-        // Create and present the MatchDetailsTextualViewController
+        // Create the clean MatchDetailsTextualViewController (no top bar code)
         let matchDetailsViewController = MatchDetailsTextualViewController(viewModel: matchDetailsViewModel)
-        
-        // Setup authentication navigation for MatchDetailsTextualViewController
-        matchDetailsViewController.onLoginRequested = { [weak self] in
+
+        // Create TopBar ViewModel (handles all business logic)
+        let topBarViewModel = TopBarContainerViewModel(
+            userSessionStore: environment.userSessionStore
+        )
+
+        // Wrap in TopBarContainerController
+        let container = TopBarContainerController(
+            contentViewController: matchDetailsViewController,
+            viewModel: topBarViewModel
+        )
+
+        // Setup navigation callbacks on container
+        container.onLoginRequested = { [weak self] in
             self?.showLogin()
         }
-        
-        matchDetailsViewController.onRegistrationRequested = { [weak self] in
+
+        container.onRegistrationRequested = { [weak self] in
             self?.showRegistration()
         }
-        
-        // Add profile navigation closure
-        matchDetailsViewController.onProfileRequested = { [weak self] in
+
+        container.onProfileRequested = { [weak self] in
             self?.showProfile()
         }
-        
-        // Add wallet navigation closures
-        matchDetailsViewController.onDepositRequested = { [weak self] in
+
+        container.onDepositRequested = { [weak self] in
             self?.presentDepositFlow()
         }
-        
-        matchDetailsViewController.onWithdrawRequested = { [weak self] in
+
+        container.onWithdrawRequested = { [weak self] in
             self?.presentWithdrawFlow()
         }
-        
-        // Present the controller using navigation stack
-        navigationController.pushViewController(matchDetailsViewController, animated: true)
+
+        // Setup betslip callback
+        matchDetailsViewController.onBetslipRequested = { [weak self] in
+            self?.showBetslip()
+        }
+
+        // Present the container using navigation stack
+        navigationController.pushViewController(container, animated: true)
         print("🚀 MainCoordinator: Navigated to match detail for match: \(match.id)")
     }
-    
+
     private func showBetDetail(for bet: MyBet) {
         let betDetailViewModel = MyBetDetailViewModel(
             bet: bet,
@@ -287,32 +302,43 @@ class RootTabBarCoordinator: Coordinator {
             self?.navigationController.popViewController(animated: true)
         }
         
+        // Create the clean MyBetDetailViewController (no top bar code)
         let betDetailViewController = MyBetDetailViewController(viewModel: betDetailViewModel)
-        
-        // Setup authentication navigation
-        betDetailViewController.onLoginRequested = { [weak self] in
+
+        // Create TopBar ViewModel (handles all business logic)
+        let topBarViewModel = TopBarContainerViewModel(
+            userSessionStore: environment.userSessionStore
+        )
+
+        // Wrap in TopBarContainerController
+        let container = TopBarContainerController(
+            contentViewController: betDetailViewController,
+            viewModel: topBarViewModel
+        )
+
+        // Setup navigation callbacks on container
+        container.onLoginRequested = { [weak self] in
             self?.showLogin()
         }
-        
-        betDetailViewController.onRegistrationRequested = { [weak self] in
+
+        container.onRegistrationRequested = { [weak self] in
             self?.showRegistration()
         }
-        
-        betDetailViewController.onProfileRequested = { [weak self] in
+
+        container.onProfileRequested = { [weak self] in
             self?.showProfile()
         }
-        
-        // Add wallet navigation closures
-        betDetailViewController.onDepositRequested = { [weak self] in
+
+        container.onDepositRequested = { [weak self] in
             self?.presentDepositFlow()
         }
-        
-        betDetailViewController.onWithdrawRequested = { [weak self] in
+
+        container.onWithdrawRequested = { [weak self] in
             self?.presentWithdrawFlow()
         }
-        
-        // Push onto navigation stack
-        navigationController.pushViewController(betDetailViewController, animated: true)
+
+        // Push the container onto navigation stack
+        navigationController.pushViewController(container, animated: true)
         print("🎯 RootTabBarCoordinator: Navigated to bet detail for bet: \(bet.identifier)")
     }
    

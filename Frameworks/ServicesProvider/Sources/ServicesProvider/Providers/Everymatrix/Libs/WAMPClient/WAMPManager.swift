@@ -93,16 +93,16 @@ final class WAMPManager {
     func createSwampSession() -> SSWampSession {
         let wsEndPoint: String
         if let cachedCIDValue = UserDefaults.standard.string(forKey: EveryMatrixUnifiedConfiguration.cacheCIDKey) {
-            print("🔧 WAMPManager: cached CID found: \(cachedCIDValue)")
+            // print("🔧 WAMPManager: cached CID found: \(cachedCIDValue)")
             wsEndPoint = WAMPSocketParams.wsEndPoint + "?cid=" + cachedCIDValue
         }
         else {
-            print("🔧 WAMPManager: no CID found")
+            // print("🔧 WAMPManager: no CID found")
             wsEndPoint = WAMPSocketParams.wsEndPoint
         }
                 
-        print("🔧 WAMPManager: URL: \(wsEndPoint)")
-        print("🔧 WAMPManager: Origin: \(self.origin)")
+        // print("🔧 WAMPManager: URL: \(wsEndPoint)")
+        // print("🔧 WAMPManager: Origin: \(self.origin)")
         
         let swampSession = SSWampSession(
             realm: WAMPSocketParams.realm,
@@ -249,14 +249,14 @@ final class WAMPManager {
                 }
                 
                 if swampSession.isConnected() {
-                    print("🔄 WAMPManager: Making RPC call to \(router.procedure)")
-                    print("🔄 WAMPManager: Args: \(router.args ?? [])")
-                    print("🔄 WAMPManager: Kwargs: \(router.kwargs ?? [:])")
+                    // print("🔄 WAMPManager: Making RPC call to \(router.procedure)")
+                    // print("🔄 WAMPManager: Args: \(router.args ?? [])")
+                    // print("🔄 WAMPManager: Kwargs: \(router.kwargs ?? [:])")
                     
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in
-                        print("✅ WAMPManager: RPC call SUCCESS for \(router.procedure)")
-                        print("✅ WAMPManager: kwResults: \(kwResults ?? [:])")
-                        print("✅ WAMPManager: arrResults: \(arrResults ?? [:])")
+                        // print("✅ WAMPManager: RPC call SUCCESS for \(router.procedure)")
+                        // print("✅ WAMPManager: kwResults: \(kwResults ?? [:])")
+                        // print("✅ WAMPManager: arrResults: \(arrResults ?? [:])")
                         
                         do {
                             if kwResults != nil {
@@ -311,9 +311,9 @@ final class WAMPManager {
                             promise(.failure( .decodingError(value: error.localizedDescription) ))
                         }
                     }, onError: { _, error, _, kwargs in
-                        print("❌ WAMPManager: RPC call ERROR for \(router.procedure)")
-                        print("❌ WAMPManager: Error: \(error)")
-                        print("❌ WAMPManager: Error kwargs: \(kwargs ?? [:])")
+                        // print("❌ WAMPManager: RPC call ERROR for \(router.procedure)")
+                        // print("❌ WAMPManager: Error: \(error)")
+                        // print("❌ WAMPManager: Error kwargs: \(kwargs ?? [:])")
                         
                         var desc = ""
                         if kwargs?["desc"] != nil {
@@ -503,45 +503,45 @@ final class WAMPManager {
         guard
             let swampSession = self.swampSession
         else {
-            print("❌ WAMPManager: No swampSession available for registerOnEndpoint")
+            // print("❌ WAMPManager: No swampSession available for registerOnEndpoint")
             subject.send(completion: .failure(.notConnected))
             return subject.eraseToAnyPublisher()
         }
         
         guard swampSession.isConnected() else {
-            print("❌ WAMPManager: SwampSession is not connected for registerOnEndpoint (state: \(swampSession.isConnected()))")
+            // print("❌ WAMPManager: SwampSession is not connected for registerOnEndpoint (state: \(swampSession.isConnected()))")
             subject.send(completion: .failure(.notConnected))
             return subject.eraseToAnyPublisher()
         }
         
-        print("✅ WAMPManager: SwampSession is connected, proceeding with endpoint registration")
+        // print("✅ WAMPManager: SwampSession is connected, proceeding with endpoint registration")
         
         let args: [String: Any] = endpoint.kwargs ?? [:]
         
-        print("🔗 WAMPManager: Registering on endpoint - url:\(endpoint.procedure), args:\(args)")
+        // print("🔗 WAMPManager: Registering on endpoint - url:\(endpoint.procedure), args:\(args)")
         
         swampSession.register(
             endpoint.procedure,
             options: args,
             onSuccess:
                 { (registration: WAMPRegistration) in
-                    print("✅ WAMPManager: Successfully registered endpoint (id: \(registration.identificationCode))")
+                    // print("✅ WAMPManager: Successfully registered endpoint (id: \(registration.identificationCode))")
                     
                     subject.send(WAMPSubscriptionContent.connect(publisherIdentifiable: registration))
                     
                     if let initialDumpEndpoint = endpoint.intiailDumpRequest {
-                        print("📥 WAMPManager: Requesting initial dump from \(initialDumpEndpoint.procedure)")
+                        // print("📥 WAMPManager: Requesting initial dump from \(initialDumpEndpoint.procedure)")
                         self.getModel(router: initialDumpEndpoint, initialDumpProcedure: endpoint.procedure, decodingType: decodingType)
                             .sink { completion in
                                 if case .failure(let error) = completion {
-                                    print("❌ WAMPManager: Initial dump failed: \(error)")
+                                    // print("❌ WAMPManager: Initial dump failed: \(error)")
                                     subject.send(WAMPSubscriptionContent.disconnect)
                                     subject.send(completion: .failure(error))
                                 } else {
-                                    print("✅ WAMPManager: Initial dump completed successfully")
+                                    // print("✅ WAMPManager: Initial dump completed successfully")
                                 }
                             } receiveValue: { decoded in
-                                print("📦 WAMPManager: Received initial dump data")
+                                // print("📦 WAMPManager: Received initial dump data")
                                 subject.send(.initialContent(decoded))
                             }
                             .store(in: &self.globalCancellable)
@@ -549,23 +549,23 @@ final class WAMPManager {
                 },
             onError:
                 { (details: [String: Any], errorStr: String) in
-                    print("❌ WAMPManager: Registration failed - \(errorStr)")
+                    // print("❌ WAMPManager: Registration failed - \(errorStr)")
                     subject.send(WAMPSubscriptionContent.disconnect)
                     subject.send(completion: .failure(.requestError(value: errorStr)))
                 },
             onEvent:
                 { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
-                    print("🔄 WAMPManager: Received event update")
+                    // print("🔄 WAMPManager: Received event update")
                     do {
                         if kwResults != nil {
                             let decoder = DictionaryDecoder()
                             decoder.dateDecodingStrategy = .iso8601
                             let decoded = try decoder.decode(decodingType, from: kwResults!)
-                            print("📦 WAMPManager: Successfully decoded event update")
+                            // print("📦 WAMPManager: Successfully decoded event update")
                             subject.send(.updatedContent(decoded))
                         }
                         else {
-                            print("❌ WAMPManager: Event received but no kwResults data")
+                            // print("❌ WAMPManager: Event received but no kwResults data")
                             subject.send(completion: .failure(.noResultsReceived))
                         }
                     }
@@ -650,26 +650,26 @@ extension WAMPManager: SSWampSessionDelegate {
     }
     
     func ssWampSessionConnected(_ session: SSWampSession, sessionId: Int) {
-        print("🔌 WAMPManager: WebSocket connected, establishing WAMP session...")
+        // print("🔌 WAMPManager: WebSocket connected, establishing WAMP session...")
         
         NotificationCenter.default.post(name: .socketConnected, object: nil)
         
         sessionStateChanged()
             .sink(receiveCompletion: { completion in
-                print("🔌 WAMPManager: sessionStateChanged completion: \(completion)")
+                // print("🔌 WAMPManager: sessionStateChanged completion: \(completion)")
                 switch completion {
                 case .failure(let error):
-                    print("❌ WAMPManager: Failed to establish WAMP session: \(error)")
+                     print("❌ WAMPManager: Failed to establish WAMP session: \(error)")
                 case .finished:
                     break
                 }
             }, receiveValue: { [weak self] connected in
-                print("🔌 WAMPManager: sessionStateChanged result: \(connected)")
+                // print("🔌 WAMPManager: sessionStateChanged result: \(connected)")
                 if connected {
-                    print("✅ WAMPManager: WAMP session ready - emitting .connected state")
+                    // print("✅ WAMPManager: WAMP session ready - emitting .connected state")
                     self?.connectionStateSubject.send(.connected)
                 } else {
-                    print("❌ WAMPManager: WAMP session not ready")
+                    // print("❌ WAMPManager: WAMP session not ready")
                 }
             })
             .store(in: &globalCancellable)

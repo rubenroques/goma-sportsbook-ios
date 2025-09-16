@@ -18,26 +18,6 @@ final class MyBetDetailViewController: UIViewController {
     
     // MARK: - UI Components
     
-    private lazy var topSafeAreaView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.topBarGradient1
-        return view
-    }()
-    
-    private lazy var topBarContainerBaseView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundPrimary
-        return view
-    }()
-    
-    private lazy var multiWidgetToolbarView: MultiWidgetToolbarView = {
-        let view = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     private lazy var customNavigationView: UIView = Self.createCustomNavigationView()
     private lazy var betDetailsTitleLabel: UILabel = Self.createBetDetailsTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
@@ -90,35 +70,7 @@ final class MyBetDetailViewController: UIViewController {
     
     // Removed loading/error views - data is immediately available
     
-    // Wallet Status UI Components
-    private lazy var walletStatusView: WalletStatusView = {
-        let view = WalletStatusView(viewModel: viewModel.walletStatusViewModel)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
     
-    private lazy var walletStatusOverlayView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        view.isHidden = true
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideWalletStatusOverlay))
-        view.addGestureRecognizer(tapGesture)
-        
-        return view
-    }()
-    
-    // MARK: - Authentication Navigation Closures
-    
-    var onLoginRequested: (() -> Void)?
-    var onRegistrationRequested: (() -> Void)?
-    var onProfileRequested: (() -> Void)?
-    
-    // MARK: - Wallet Navigation Closures
-    
-    var onDepositRequested: (() -> Void)?
-    var onWithdrawRequested: (() -> Void)?
     
     // MARK: - Initialization
     
@@ -138,7 +90,6 @@ final class MyBetDetailViewController: UIViewController {
         setupUI()
         setupBindings()
         setupActions()
-        setupMultiWidgetToolbarView()
         
         // No loading needed - all data is immediately available
     }
@@ -164,14 +115,7 @@ final class MyBetDetailViewController: UIViewController {
     }
     
     private func setupViewHierarchy() {
-        // Add topSafeAreaView first (covers notch)
-        view.addSubview(topSafeAreaView)
-        
-        // Add topBarContainerBaseView (contains toolbar)
-        view.addSubview(topBarContainerBaseView)
-        topBarContainerBaseView.addSubview(multiWidgetToolbarView)
-        
-        // Rest of the hierarchy
+        // Add custom navigation view
         view.addSubview(customNavigationView)
         view.addSubview(contentScrollView)
         
@@ -185,10 +129,6 @@ final class MyBetDetailViewController: UIViewController {
         
         // Populate selections stack view with result summary views
         setupSelectionsStackView()
-        
-        // Add wallet overlay on top of everything
-        view.addSubview(walletStatusOverlayView)
-        walletStatusOverlayView.addSubview(walletStatusView)
         
         customNavigationView.addSubview(betDetailsTitleLabel)
         customNavigationView.addSubview(backButton)
@@ -208,25 +148,8 @@ final class MyBetDetailViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // TopSafeAreaView (covers notch area)
-            topSafeAreaView.topAnchor.constraint(equalTo: view.topAnchor),
-            topSafeAreaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topSafeAreaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topSafeAreaView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            
-            // TopBarContainerBaseView (contains toolbar)
-            topBarContainerBaseView.topAnchor.constraint(equalTo: topSafeAreaView.bottomAnchor),
-            topBarContainerBaseView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topBarContainerBaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            // MultiWidget Toolbar (inside container)
-            multiWidgetToolbarView.topAnchor.constraint(equalTo: topBarContainerBaseView.topAnchor),
-            multiWidgetToolbarView.leadingAnchor.constraint(equalTo: topBarContainerBaseView.leadingAnchor),
-            multiWidgetToolbarView.trailingAnchor.constraint(equalTo: topBarContainerBaseView.trailingAnchor),
-            multiWidgetToolbarView.bottomAnchor.constraint(equalTo: topBarContainerBaseView.bottomAnchor),
-            
-            // Custom Navigation View (below toolbar container)
-            customNavigationView.topAnchor.constraint(equalTo: topBarContainerBaseView.bottomAnchor),
+            // Custom Navigation View (at top)
+            customNavigationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             customNavigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             customNavigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             customNavigationView.heightAnchor.constraint(equalToConstant: 56),
@@ -241,7 +164,7 @@ final class MyBetDetailViewController: UIViewController {
             backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
             backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
             
-            // Content Scroll View
+            // Content Scroll View (below navigation)
             contentScrollView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             contentScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -254,18 +177,7 @@ final class MyBetDetailViewController: UIViewController {
             mainStackView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor, constant: -16),
             
             // Important: Set the width constraint for scroll view content
-            mainStackView.widthAnchor.constraint(equalTo: contentScrollView.widthAnchor, constant: -32), // Account for 16pt margins on each side
-            
-            // Wallet Status Overlay (covers entire screen)
-            walletStatusOverlayView.topAnchor.constraint(equalTo: view.topAnchor),
-            walletStatusOverlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            walletStatusOverlayView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            walletStatusOverlayView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            // Wallet Status View (EXACT RootTabBar positioning)
-            walletStatusView.leadingAnchor.constraint(equalTo: walletStatusOverlayView.leadingAnchor, constant: 50),
-            walletStatusView.trailingAnchor.constraint(equalTo: walletStatusOverlayView.trailingAnchor, constant: -32),
-            walletStatusView.topAnchor.constraint(equalTo: topBarContainerBaseView.bottomAnchor, constant: 16)
+            mainStackView.widthAnchor.constraint(equalTo: contentScrollView.widthAnchor, constant: -32) // Account for 16pt margins on each side
         ])
     }
     
@@ -273,36 +185,12 @@ final class MyBetDetailViewController: UIViewController {
         // No binding needed - content is immediately available
         // Content is already visible since we removed loading states
         
-        // Setup wallet navigation callbacks
-        viewModel.walletStatusViewModel.onDepositRequested = { [weak self] in
-            self?.onDepositRequested?()
-        }
-        
-        viewModel.walletStatusViewModel.onWithdrawRequested = { [weak self] in
-            self?.onWithdrawRequested?()
-        }
     }
     
     private func setupActions() {
         backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
     }
     
-    private func setupMultiWidgetToolbarView() {
-        multiWidgetToolbarView.onWidgetSelected = { [weak self] widgetID in
-            self?.handleWidgetSelection(widgetID)
-        }
-        
-        multiWidgetToolbarView.onBalanceTapped = { [weak self] widgetID in
-            self?.handleBalanceTapped(widgetID)
-        }
-        
-        multiWidgetToolbarView.onDepositTapped = { [weak self] widgetID in
-            if widgetID == "wallet" {
-                print("💳 MyBetDetail: Deposit button tapped")
-                self?.onDepositRequested?()
-            }
-        }
-    }
     
     // MARK: - Rendering
     
@@ -316,53 +204,6 @@ final class MyBetDetailViewController: UIViewController {
     
     // No retry needed - data is immediately available
     
-    private func handleWidgetSelection(_ widgetID: String) {
-        switch widgetID {
-        case "loginButton":
-            print("🔐 MyBetDetail: Login requested")
-            onLoginRequested?()
-        case "joinButton":
-            print("🔐 MyBetDetail: Registration requested")
-            onRegistrationRequested?()
-        case "avatar":
-            print("👤 MyBetDetail: Profile requested")
-            onProfileRequested?()
-        default:
-            print("🔧 MyBetDetail: Widget selected: \(widgetID)")
-        }
-    }
-    
-    private func handleBalanceTapped(_ widgetID: String) {
-        if widgetID == "wallet" {
-            print("💰 MyBetDetail: Wallet balance tapped")
-            
-            // Add haptic feedback
-            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-            impactFeedback.impactOccurred()
-            
-            showWalletStatusOverlay()
-        }
-    }
-    
-    private func showWalletStatusOverlay() {
-        walletStatusOverlayView.alpha = 0
-        walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        walletStatusOverlayView.isHidden = false
-        
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: .curveEaseOut) {
-            self.walletStatusOverlayView.alpha = 1.0
-            self.walletStatusView.transform = CGAffineTransform.identity
-        }
-    }
-    
-    @objc private func hideWalletStatusOverlay() {
-        UIView.animate(withDuration: 0.2, animations: {
-            self.walletStatusOverlayView.alpha = 0.0
-            self.walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { _ in
-            self.walletStatusOverlayView.isHidden = true
-        }
-    }
 }
 
 // MARK: - Factory Methods

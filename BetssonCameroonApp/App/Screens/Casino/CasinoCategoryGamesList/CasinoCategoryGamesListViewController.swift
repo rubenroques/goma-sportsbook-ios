@@ -12,13 +12,7 @@ import GomaUI
 class CasinoCategoryGamesListViewController: UIViewController {
     
     // MARK: - UI Components
-    private let topSafeAreaView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let multiWidgetToolbarView: MultiWidgetToolbarView
+    // Top bar components now managed by TopBarContainerController
     private let quickLinksTabBarView: QuickLinksTabBarView
     private let collectionView: UICollectionView
     
@@ -34,9 +28,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
-        
         label.isHidden = true
-        
         return label
     }()
     
@@ -85,7 +77,6 @@ class CasinoCategoryGamesListViewController: UIViewController {
     // MARK: - Lifecycle
     init(viewModel: CasinoCategoryGamesListViewModel) {
         self.viewModel = viewModel
-        self.multiWidgetToolbarView = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
         self.quickLinksTabBarView = QuickLinksTabBarView(viewModel: viewModel.quickLinksTabBarViewModel)
         
         // Create collection view layout
@@ -130,8 +121,6 @@ class CasinoCategoryGamesListViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = StyleProvider.Color.backgroundColor
         
-        setupTopSafeArea()
-        setupMultiWidgetToolbar()
         setupNavigationView()
         setupQuickLinksTabBar()
         setupCollectionView()
@@ -139,15 +128,6 @@ class CasinoCategoryGamesListViewController: UIViewController {
         setupConstraints()
     }
     
-    private func setupTopSafeArea() {
-        topSafeAreaView.backgroundColor = UIColor.App.topBarGradient1
-        view.addSubview(topSafeAreaView)
-    }
-    
-    private func setupMultiWidgetToolbar() {
-        multiWidgetToolbarView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(multiWidgetToolbarView)
-    }
     
     private func setupNavigationView() {
         view.addSubview(navigationView)
@@ -187,20 +167,8 @@ class CasinoCategoryGamesListViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Top Safe Area
-            topSafeAreaView.topAnchor.constraint(equalTo: view.topAnchor),
-            topSafeAreaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topSafeAreaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topSafeAreaView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            
-            // MultiWidget Toolbar
-            multiWidgetToolbarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            multiWidgetToolbarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            multiWidgetToolbarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            
-            // QuickLinks Tab Bar
-            quickLinksTabBarView.topAnchor.constraint(equalTo: multiWidgetToolbarView.bottomAnchor),
+            // QuickLinks Tab Bar (now at top of content)
+            quickLinksTabBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             quickLinksTabBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             quickLinksTabBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             

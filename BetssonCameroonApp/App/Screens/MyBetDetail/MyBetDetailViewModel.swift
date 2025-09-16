@@ -54,8 +54,7 @@ final class MyBetDetailViewModel: ObservableObject {
             BetDetailResultSummaryViewModel.create(from: selection)
         }
         
-        setupReactiveWalletChain()
-        setupMultiWidgetToolbarBinding()
+        setupAuthenticationState()
         
         print("🎯 MyBetDetailViewModel: Initialized with bet ID: \(bet.identifier)")
     }
@@ -159,56 +158,11 @@ extension MyBetDetailViewModel {
 
 extension MyBetDetailViewModel {
     
-    private func setupReactiveWalletChain() {
-        // Step 1: Set up base authentication state
+    private func setupAuthenticationState() {
+        // Set up authentication state tracking (used by bet details and other features)
         userSessionStore.userProfilePublisher
             .map { $0 != nil }
             .receive(on: DispatchQueue.main)
             .assign(to: &$isAuthenticated)
-        
-        // Step 2: Reactive chain - Authentication state drives wallet UI updates
-        $isAuthenticated
-            .combineLatest(userSessionStore.userWalletPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isAuthenticated, wallet in
-                guard let self = self else { return }
-                
-                if isAuthenticated {
-                    // User is logged in - show logged in state and wallet data
-                    let layoutState: LayoutState = .loggedIn
-                    self.multiWidgetToolbarViewModel.setLayoutState(layoutState)
-                    
-                    // Update wallet balance if available
-                    if let walletBalance = wallet?.total {
-                        self.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
-                        print("💰 MyBetDetailViewModel: Wallet balance updated - total: \(walletBalance)")
-                    }
-                    
-                    // Wallet status view model will update automatically via its own binding
-                    
-                    print("🔐 MyBetDetailViewModel: User authenticated with wallet data")
-                } else {
-                    // User is logged out - show logged out state
-                    let layoutState: LayoutState = .loggedOut
-                    self.multiWidgetToolbarViewModel.setLayoutState(layoutState)
-                    
-                    print("🔐 MyBetDetailViewModel: User logged out")
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
-    
-    private func setupMultiWidgetToolbarBinding() {
-        // Subscribe to wallet updates to keep the toolbar wallet widget in sync
-        userSessionStore.userWalletPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] wallet in
-                if let walletBalance = wallet?.total {
-                    self?.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
-                    print("💰 MyBetDetailViewModel: Toolbar wallet balance updated - total: \(walletBalance)")
-                }
-            }
-            .store(in: &cancellables)
     }
 }

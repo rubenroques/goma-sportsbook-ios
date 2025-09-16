@@ -130,7 +130,8 @@ class EveryMatrixConnector: Connector {
                     case .initialContent(_):
                         print("📥 EveryMatrixConnector: Received initial content")
                     case .updatedContent(_):
-                        print("🔄 EveryMatrixConnector: Received content update")
+                        break
+                        // print("🔄 EveryMatrixConnector: Received content update")
                     case .disconnect:
                         print("🔌 EveryMatrixConnector: Subscription disconnected")
                     }

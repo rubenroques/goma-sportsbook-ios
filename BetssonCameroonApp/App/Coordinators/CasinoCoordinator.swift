@@ -56,12 +56,26 @@ class CasinoCoordinator: Coordinator {
             self?.navigationController.popViewController(animated: true)
         }
         
-        // Create view controller
+        // Create the clean CasinoCategoryGamesListViewController (no top bar code)
         let categoryGamesViewController = CasinoCategoryGamesListViewController(viewModel: categoryGamesViewModel)
         self.casinoCategoryGamesListViewController = categoryGamesViewController
-        
+
+        // Create TopBar ViewModel
+        let topBarViewModel = TopBarContainerViewModel(
+            userSessionStore: environment.userSessionStore
+        )
+
+        // Wrap in TopBarContainerController
+        let container = TopBarContainerController(
+            contentViewController: categoryGamesViewController,
+            viewModel: topBarViewModel
+        )
+
+        // Casino screens typically don't need authentication callbacks
+        // (users can interact with casino content without being logged in)
+
         // Navigate using the existing navigation controller
-        self.navigationController.pushViewController(categoryGamesViewController, animated: true)
+        self.navigationController.pushViewController(container, animated: true)
     }
     
     private func showGamePrePlay(gameId: String) {

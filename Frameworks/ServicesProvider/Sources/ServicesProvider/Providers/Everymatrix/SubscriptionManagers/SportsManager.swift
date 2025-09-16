@@ -32,7 +32,7 @@ class SportsManager {
     // MARK: - Public Interface
 
     func subscribe() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        print("🔧 SportsManager: Starting subscription for operator \(operatorId)")
+        // print("SportsManager: Starting subscription for operator \(operatorId)")
         // Clean up any existing subscription
         unsubscribe()
 
@@ -41,7 +41,7 @@ class SportsManager {
 
         // Create the router for sports subscription
         let router = WAMPRouter.sportsPublisher(operatorId: operatorId)
-        print("🔧 SportsManager: Created router for endpoint: \(router.procedure)")
+        // print("SportsManager: Created router for endpoint: \(router.procedure)")
 
         return connector.subscribe(router)
             .handleEvents(receiveOutput: { [weak self] content in
@@ -73,33 +73,33 @@ class SportsManager {
 
         switch content {
         case .connect(let publisherIdentifiable):
-            print("🔗 SportsManager: Connected to WAMP subscription (id: \(publisherIdentifiable.identificationCode))")
+            // print("SportsManager: Connected to WAMP subscription (id: \(publisherIdentifiable.identificationCode))")
             // Return connection confirmation
             let subscription = Subscription(id: "\(publisherIdentifiable.identificationCode)")
             return SubscribableContent.connected(subscription: subscription)
 
         case .initialContent(let response):
-            print("📥 SportsManager: Received initial content with \(response.records.count) records")
+            // print("SportsManager: Received initial content with \(response.records.count) records")
             // Process initial dump of sports data (SPORT entities only)
             parseSportsData(from: response)
 
             // Build and return sports list
             let sports = buildSportTypes()
-            print("🏗️ SportsManager: Built \(sports.count) sport types from initial data")
+            // print("SportsManager: Built \(sports.count) sport types from initial data")
             return .contentUpdate(content: sports)
 
         case .updatedContent(let response):
-            print("🔄 SportsManager: Received update with \(response.records.count) records")
+            // print("SportsManager: Received update with \(response.records.count) records")
             // Process real-time updates (SPORT entities only)
             parseSportsData(from: response)
 
             // Always rebuild sports list on updates since sports are typically few in number
             let sports = buildSportTypes()
-            print("🏗️ SportsManager: Built \(sports.count) sport types from update")
+            // print("SportsManager: Built \(sports.count) sport types from update")
             return .contentUpdate(content: sports)
 
         case .disconnect:
-            print("🔌 SportsManager: Disconnected from WAMP subscription")
+            // print("SportsManager: Disconnected from WAMP subscription")
             // Handle disconnection
             return nil
         }
@@ -174,7 +174,7 @@ class SportsManager {
             }
         }
         
-        print("📊 SportsManager: Parsed \(sportsCount) sport entities, \(otherEntityCount) other entities")
+        // print("SportsManager: Parsed \(sportsCount) sport entities, \(otherEntityCount) other entities")
     }
     
     /// Handle change records for SPORT entities only

@@ -44,9 +44,7 @@ class MatchDetailsTextualViewModel: ObservableObject {
     private var marketGroupsSubscription: AnyCancellable?
     
     // MARK: - Child ViewModels (Vertical Pattern)
-    let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel
-    
-    let walletStatusViewModel: WalletStatusViewModel
+    // MultiWidget and Wallet ViewModels are now managed by TopBarContainerController
     
     let matchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol
     
@@ -67,9 +65,7 @@ class MatchDetailsTextualViewModel: ObservableObject {
         self.currentMatch = match
         self.currentMatchId = match.id
         
-        // Use production ViewModels instead of mocks
-        self.multiWidgetToolbarViewModel = MultiWidgetToolbarViewModel()
-        self.walletStatusViewModel = WalletStatusViewModel(userSessionStore: userSessionStore)
+        // MultiWidget and Wallet ViewModels are now managed by TopBarContainerController
         
         // Keep existing ViewModels as they are
         self.matchDateNavigationBarViewModel = MatchDateNavigationBarViewModel(match: match)
@@ -79,8 +75,7 @@ class MatchDetailsTextualViewModel: ObservableObject {
         self.betslipFloatingViewModel = MockBetslipFloatingViewModel.noTicketsMock()
         
         commonInit()
-        setupReactiveWalletChain()
-        setupMultiWidgetToolbarBinding()
+        setupAuthenticationState()
     }
     
     
@@ -287,57 +282,13 @@ class MatchDetailsTextualViewModel: ObservableObject {
         marketGroupsSubscription?.cancel()
     }
     
-    // MARK: - Wallet and Authentication Management
-    
-    private func setupReactiveWalletChain() {
-        // Step 1: Set up base authentication state
+    // MARK: - Authentication Management
+
+    private func setupAuthenticationState() {
+        // Set up authentication state tracking (used by betslip and other features)
         userSessionStore.userProfilePublisher
             .map { $0 != nil }
             .receive(on: DispatchQueue.main)
             .assign(to: &$isAuthenticated)
-        
-        // Step 2: Reactive chain - Authentication state drives wallet UI updates
-        $isAuthenticated
-            .combineLatest(userSessionStore.userWalletPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isAuthenticated, wallet in
-                guard let self = self else { return }
-                
-                if isAuthenticated {
-                    // User is logged in - show logged in state and wallet data
-                    let layoutState: LayoutState = .loggedIn
-                    self.multiWidgetToolbarViewModel.setLayoutState(layoutState)
-                    
-                    // Update wallet balance if available
-                    if let walletBalance = wallet?.total {
-                        self.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
-                        print("💰 MatchDetailsTextual: Wallet balance updated - total: \(walletBalance)")
-                    }
-                    
-                    // Wallet status view model will update automatically via its own binding
-                    
-                    print("🔐 MatchDetailsTextual: User authenticated with wallet data")
-                } else {
-                    // User is logged out - show logged out state
-                    let layoutState: LayoutState = .loggedOut
-                    self.multiWidgetToolbarViewModel.setLayoutState(layoutState)
-                    
-                    print("🔐 MatchDetailsTextual: User logged out")
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func setupMultiWidgetToolbarBinding() {
-        // Subscribe to wallet updates to keep the toolbar wallet widget in sync
-        userSessionStore.userWalletPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] wallet in
-                if let walletBalance = wallet?.total {
-                    self?.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
-                    print("💰 MatchDetailsTextual: Toolbar wallet balance updated - total: \(walletBalance)")
-                }
-            }
-            .store(in: &cancellables)
     }
 }
