@@ -15,7 +15,7 @@ class CasinoCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     
-    // MARK: - Navigation Closures for RootTabBarCoordinator
+    // MARK: - Navigation Closures for MainTabBarCoordinator
     var onShowGamePlay: ((String) -> Void) = { _ in }
     
     // MARK: - Properties
@@ -25,7 +25,7 @@ class CasinoCoordinator: Coordinator {
     private var casinoGamePrePlayViewController: CasinoGamePrePlayViewController?
     private var casinoGamePlayViewController: CasinoGamePlayViewController?
     
-    // Public accessor for RootTabBarCoordinator
+    // Public accessor for MainTabBarCoordinator
     var viewController: UIViewController? {
         return casinoCategoriesListViewController
     }
@@ -139,7 +139,7 @@ class CasinoCoordinator: Coordinator {
         // Navigate using the existing navigation controller
         self.navigationController.pushViewController(gamePlayViewController, animated: true)
         
-        // Notify RootTabBarCoordinator if needed
+        // Notify MainTabBarCoordinator if needed
         onShowGamePlay(gameId)
     }
     
@@ -164,7 +164,7 @@ class CasinoCoordinator: Coordinator {
         let viewController = CasinoCategoriesListViewController(viewModel: viewModel)
         self.casinoCategoriesListViewController = viewController
         
-        // RootTabBarCoordinator will handle embedding
+        // MainTabBarCoordinator will handle embedding
     }
     
     func finish() {
@@ -175,7 +175,7 @@ class CasinoCoordinator: Coordinator {
         casinoGamePlayViewController = nil
     }
     
-    // MARK: - Public Methods for RootTabBarCoordinator
+    // MARK: - Public Methods for MainTabBarCoordinator
     func refresh() {
         casinoCategoriesListViewController?.viewModel.reloadCategories()
     }

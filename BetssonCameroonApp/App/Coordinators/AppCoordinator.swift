@@ -26,7 +26,7 @@ class AppCoordinator: Coordinator {
     private var splashCoordinator: SplashCoordinator?
     private var maintenanceCoordinator: MaintenanceCoordinator?
     private var updateCoordinator: UpdateCoordinator?
-    private var rootTabBarCoordinator: RootTabBarCoordinator?
+    private var mainTabBarCoordinator: MainTabBarCoordinator?
     
     // MARK: - Initialization
     
@@ -196,18 +196,18 @@ class AppCoordinator: Coordinator {
         }
         
         // Create main coordinator (equivalent to Router.showPostLoadingFlow)
-        let rootTabBarCoordinator = RootTabBarCoordinator(
+        let mainTabBarCoordinator = MainTabBarCoordinator(
             navigationController: navigationController,
             environment: environment
         )
         
-        self.rootTabBarCoordinator = rootTabBarCoordinator
-        addChildCoordinator(rootTabBarCoordinator)
+        self.mainTabBarCoordinator = mainTabBarCoordinator
+        addChildCoordinator(mainTabBarCoordinator)
         
         // Set up main app root view controller
         window.rootViewController = navigationController
         
-        rootTabBarCoordinator.start()
+        mainTabBarCoordinator.start()
         
         // Start runtime monitoring after main app is shown
         // (equivalent to Router.subscribeToUserActionBlockers call in showPostLoadingFlow)
@@ -228,6 +228,6 @@ class AppCoordinator: Coordinator {
         splashCoordinator = nil
         maintenanceCoordinator = nil
         updateCoordinator = nil
-        rootTabBarCoordinator = nil
+        mainTabBarCoordinator = nil
     }
 }

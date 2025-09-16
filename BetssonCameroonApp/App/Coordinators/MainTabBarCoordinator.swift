@@ -10,7 +10,7 @@ import Combine
 import ServicesProvider
 import GomaUI
 
-class RootTabBarCoordinator: Coordinator {
+class MainTabBarCoordinator: Coordinator {
     
     // MARK: - Coordinator Protocol
     
@@ -19,7 +19,7 @@ class RootTabBarCoordinator: Coordinator {
     
     // MARK: - Properties
     private let environment: Environment
-    private var rootTabBarViewController: RootTabBarViewController?
+    private var mainTabBarViewController: MainTabBarViewController?
     
     // Filter State Management
     private var currentFilters: AppliedEventsFilters = {
@@ -54,43 +54,53 @@ class RootTabBarCoordinator: Coordinator {
     
     func start() {
         // Create the main screen structure (equivalent to Router.showPostLoadingFlow)
-        let viewModel = RootTabBarViewModel(userSessionStore: environment.userSessionStore)
-        let rootTabBarViewController = RootTabBarViewController(viewModel: viewModel)
+        let viewModel = MainTabBarViewModel(userSessionStore: environment.userSessionStore)
+        let mainTabBarViewController = MainTabBarViewController(viewModel: viewModel)
         
         
-        rootTabBarViewController.onTabSelected = { [weak self] tabItem in
+        // Create TopBar ViewModel
+        let topBarViewModel = TopBarContainerViewModel(
+            userSessionStore: environment.userSessionStore
+        )
+
+        // Wrap in TopBarContainerController
+        let container = TopBarContainerController(
+            contentViewController: mainTabBarViewController,
+            viewModel: topBarViewModel
+        )
+
+        // Setup tab selection (stays on mainTabBarViewController)
+        mainTabBarViewController.onTabSelected = { [weak self] tabItem in
             self?.handleTabSelection(tabItem)
         }
-        
-        // Setup authentication navigation
-        rootTabBarViewController.onLoginRequested = { [weak self] in
-            self?.showLogin()
-        }
-        
-        rootTabBarViewController.onRegistrationRequested = { [weak self] in
-            self?.showRegistration()
-        }
-        
-        rootTabBarViewController.onBetslipRequested = { [weak self] in
+
+        mainTabBarViewController.onBetslipRequested = { [weak self] in
             self?.showBetslip()
         }
-        
-        // Setup profile navigation
-        rootTabBarViewController.onProfileRequested = { [weak self] in
+
+        // Setup navigation callbacks on container
+        container.onLoginRequested = { [weak self] in
+            self?.showLogin()
+        }
+
+        container.onRegistrationRequested = { [weak self] in
+            self?.showRegistration()
+        }
+
+        container.onProfileRequested = { [weak self] in
             self?.showProfile()
         }
-        
-        // Setup wallet navigation
-        rootTabBarViewController.onDepositRequested = { [weak self] in
+
+        container.onDepositRequested = { [weak self] in
             self?.presentDepositFlow()
         }
-        
-        rootTabBarViewController.onWithdrawRequested = { [weak self] in
+
+        container.onWithdrawRequested = { [weak self] in
             self?.presentWithdrawFlow()
         }
-        
-        self.rootTabBarViewController = rootTabBarViewController
-        navigationController.setViewControllers([rootTabBarViewController], animated: false)
+
+        self.mainTabBarViewController = mainTabBarViewController
+        navigationController.setViewControllers([container], animated: false)
         
         // Show default screen on startup (NextUpEvents)
         self.showNextUpEventsScreen()
@@ -104,7 +114,7 @@ class RootTabBarCoordinator: Coordinator {
         inPlayEventsCoordinator = nil
         myBetsCoordinator = nil
         casinoCoordinator = nil
-        rootTabBarViewController = nil
+        mainTabBarViewController = nil
         betslipCoordinator = nil
     }
     
@@ -115,7 +125,7 @@ class RootTabBarCoordinator: Coordinator {
     
     private func handleTabSelection(_ tabItem: TabItem) {
         // Show the selected screen through coordinator
-        // RootTabBarViewController will handle hiding other screens internally
+        // MainTabBarViewController will handle hiding other screens internally
         switch tabItem.identifier {
         case .nextUpEvents:
             showNextUpEventsScreen()
@@ -179,9 +189,9 @@ class RootTabBarCoordinator: Coordinator {
             coordinator.updateFilters(currentFilters)
         }
         
-        // Show the screen through RootTabBarViewController
+        // Show the screen through MainTabBarViewController
         if let viewController = nextUpEventsCoordinator?.viewController {
-            rootTabBarViewController?.showNextUpEventsScreen(with: viewController)
+            mainTabBarViewController?.showNextUpEventsScreen(with: viewController)
         }
         
         // Refresh if needed
@@ -221,9 +231,9 @@ class RootTabBarCoordinator: Coordinator {
             coordinator.updateFilters(currentFilters)
         }
         
-        // Show the screen through RootTabBarViewController
+        // Show the screen through MainTabBarViewController
         if let viewController = inPlayEventsCoordinator?.viewController {
-            rootTabBarViewController?.showInPlayEventsScreen(with: viewController)
+            mainTabBarViewController?.showInPlayEventsScreen(with: viewController)
         }
         
         // Refresh if needed
@@ -617,9 +627,9 @@ class RootTabBarCoordinator: Coordinator {
             coordinator.start()
         }
         
-        // Show the screen through RootTabBarViewController
+        // Show the screen through MainTabBarViewController
         if let viewController = myBetsCoordinator?.viewController {
-            rootTabBarViewController?.showMyBetsScreen(with: viewController)
+            mainTabBarViewController?.showMyBetsScreen(with: viewController)
         }
         
         // Refresh if needed
@@ -628,7 +638,7 @@ class RootTabBarCoordinator: Coordinator {
     
     private func showSearchScreen() {
         let dummyViewController = DummyViewController(displayText: "Search")
-        rootTabBarViewController?.showSearchScreen(with: dummyViewController)
+        mainTabBarViewController?.showSearchScreen(with: dummyViewController)
     }
     
     private func showCasinoHomeScreen() {
@@ -650,9 +660,9 @@ class RootTabBarCoordinator: Coordinator {
             coordinator.start()
         }
         
-        // Show the screen through RootTabBarViewController
+        // Show the screen through MainTabBarViewController
         if let viewController = casinoCoordinator?.viewController {
-            rootTabBarViewController?.showCasinoHomeScreen(with: viewController)
+            mainTabBarViewController?.showCasinoHomeScreen(with: viewController)
         }
         
         // Refresh if needed
@@ -661,17 +671,17 @@ class RootTabBarCoordinator: Coordinator {
     
     private func showCasinoVirtualSportsScreen() {
         let dummyViewController = DummyViewController(displayText: "Virtual Sports")
-        rootTabBarViewController?.showCasinoVirtualSportsScreen(with: dummyViewController)
+        mainTabBarViewController?.showCasinoVirtualSportsScreen(with: dummyViewController)
     }
     
     private func showCasinoAviatorGameScreen() {
         let dummyViewController = DummyViewController(displayText: "Aviator")
-        rootTabBarViewController?.showCasinoAviatorGameScreen(with: dummyViewController)
+        mainTabBarViewController?.showCasinoAviatorGameScreen(with: dummyViewController)
     }
     
     private func showCasinoSearchScreen() {
         let dummyViewController = DummyViewController(displayText: "Casino Search")
-        rootTabBarViewController?.showCasinoSearchScreen(with: dummyViewController)
+        mainTabBarViewController?.showCasinoSearchScreen(with: dummyViewController)
     }
     
     // MARK: - Banking Flow Methods

@@ -12,7 +12,7 @@ import ServicesProvider
 
 class MatchDetailsTextualViewModel: ObservableObject {
     
-    // MARK: - Navigation Closures for RootTabBarCoordinator
+    // MARK: - Navigation Closures for MainTabBarCoordinator
     var onNavigateBack: (() -> Void) = { }
     
     // MARK: - Private Properties

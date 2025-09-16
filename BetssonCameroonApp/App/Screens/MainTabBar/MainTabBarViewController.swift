@@ -11,12 +11,9 @@ import LocalAuthentication
 import ServicesProvider
 import GomaUI
 
-class RootTabBarViewController: UIViewController {
+class MainTabBarViewController: UIViewController {
 
     // MARK: - Private Properties
-    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
-    private lazy var topBarContainerBaseView: UIView = Self.createTopBarContainerBaseView()
-    private var widgetToolBarView: MultiWidgetToolbarView!
     
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var mainContainerView: UIView = Self.createMainContainerView()
@@ -33,9 +30,6 @@ class RootTabBarViewController: UIViewController {
     // BetslipFloatingView
     private var betslipFloatingView: BetslipFloatingView!
 
-    // WalletStatus Overlay
-    private lazy var walletStatusOverlayView: UIView = Self.createWalletStatusOverlayView()
-    private var walletStatusView: WalletStatusView!
 
     // Authentication Views
     private lazy var localAuthenticationBaseView: UIView = Self.createLocalAuthenticationBaseView()
@@ -70,29 +64,15 @@ class RootTabBarViewController: UIViewController {
     //
 
     // Constraints
-    private var viewModel: RootTabBarViewModel
+    private var viewModel: MainTabBarViewModel
     
     // MARK: - Tab Switching Coordination
     // Closure called when tabs are selected to enable coordinator-based lazy loading
     var onTabSelected: ((TabItem) -> Void)?
     
-    // MARK: - Authentication Navigation Closures
-    // Closures called when authentication is requested - handled by coordinator
-    var onLoginRequested: (() -> Void)?
-    var onRegistrationRequested: (() -> Void)?
-    
-    // MARK: - Profile Navigation Closure
-    // Closure called when profile is requested - handled by coordinator
-    var onProfileRequested: (() -> Void)?
-    
     // MARK: - Betslip Navigation Closure
     // Closure called when betslip is requested - handled by coordinator
     var onBetslipRequested: (() -> Void)?
-    
-    // MARK: - Wallet Navigation Closures
-    // Closures called when wallet operations are requested - handled by coordinator
-    var onDepositRequested: (() -> Void)?
-    var onWithdrawRequested: (() -> Void)?
 
     // General properties
     var isLocalAuthenticationCoveringView: Bool = true {
@@ -112,19 +92,14 @@ class RootTabBarViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and cycle
-    init(viewModel: RootTabBarViewModel) {
+    init(viewModel: MainTabBarViewModel) {
         self.viewModel = viewModel
 
         self.adaptiveTabBarView = AdaptiveTabBarView(viewModel: viewModel.adaptiveTabBarViewModel)
         self.adaptiveTabBarView.backgroundMode = .transparent // Use transparent mode with combined blur
-        
-        self.widgetToolBarView = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
-        
+
         self.floatingOverlayView = FloatingOverlayView(viewModel: viewModel.floatingOverlayViewModel)
         self.floatingOverlayView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.walletStatusView = WalletStatusView(viewModel: viewModel.walletStatusViewModel)
-        self.walletStatusView.translatesAutoresizingMaskIntoConstraints = false
         
         // Initialize betslipFloatingView with view model from RootTabBarViewModel
         self.betslipFloatingView = BetslipFloatingView(viewModel: viewModel.betslipFloatingViewModel)
@@ -195,19 +170,6 @@ class RootTabBarViewController: UIViewController {
         //
         self.setupWithTheme()
 
-        // Detects a new login
-        viewModel.userProfilePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { userProfile in
-                if let userProfile = userProfile {
-                    // self.screenState = .logged(user: userProfile)
-                    self.widgetToolBarView.setLoggedInState(true)
-                }
-                else {
-                    self.widgetToolBarView.setLoggedInState(false)
-                }
-            }
-            .store(in: &cancellables)
 
         viewModel.isLoadingUserSessionPublisher
             .removeDuplicates()
@@ -284,10 +246,7 @@ class RootTabBarViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.topBarGradient1
         self.setupCombinedTabBarBlur()
-
-        self.topBarContainerBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
         // Tab bar background is handled by setupCombinedTabBarBlur()
@@ -339,47 +298,6 @@ class RootTabBarViewController: UIViewController {
             self?.handleTabSelection(tabItem)
         }
         
-        widgetToolBarView.onWidgetSelected = { [weak self] widgetId in
-            if widgetId == "loginButton" {
-                self?.onLoginRequested?()
-            }
-            else if widgetId == "joinButton" {
-                self?.onRegistrationRequested?()
-            }
-            else if widgetId == "avatar" {
-                self?.onProfileRequested?()
-            }
-        }
-        
-        widgetToolBarView.onBalanceTapped = { [weak self] widgetId in
-            if widgetId == "wallet" {
-                // Add haptic feedback for better UX
-                let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-                impactFeedback.impactOccurred()
-                
-                self?.showWalletStatusOverlay()
-            }
-        }
-        
-        widgetToolBarView.onDepositTapped = { [weak self] widgetId in
-            if widgetId == "wallet" {
-                self?.onDepositRequested?()
-            }
-        }
-        
-        // Set up wallet navigation callbacks
-        viewModel.walletStatusViewModel.onDepositRequested = { [weak self] in
-            self?.onDepositRequested?()
-        }
-        
-        viewModel.walletStatusViewModel.onWithdrawRequested = { [weak self] in
-            self?.onWithdrawRequested?()
-        }
-        
-        // Set up wallet widget deposit callback (from MultiWidgetToolbarView)
-        viewModel.multiWidgetToolbarViewModel.onDepositRequested = { [weak self] in
-            self?.onDepositRequested?()
-        }
         
     }
 
@@ -468,36 +386,6 @@ class RootTabBarViewController: UIViewController {
         UIApplication.shared.open(url)
     }
     
-    // MARK: - Wallet Status Overlay
-    private func showWalletStatusOverlay() {
-        walletStatusOverlayView.alpha = 0
-        walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        walletStatusOverlayView.isHidden = false
-        
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: .curveEaseOut) {
-            self.walletStatusOverlayView.alpha = 1.0
-            self.walletStatusView.transform = CGAffineTransform.identity
-        }
-    }
-    
-    private func hideWalletStatusOverlay() {
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseIn) {
-            self.walletStatusOverlayView.alpha = 0
-            self.walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        } completion: { _ in
-            self.walletStatusOverlayView.isHidden = true
-        }
-    }
-    
-    @objc private func overlayTapped(_ sender: UITapGestureRecognizer) {
-        let location = sender.location(in: walletStatusOverlayView)
-        let walletViewFrame = walletStatusView.frame
-        
-        // Only dismiss if tap is outside the wallet status view
-        if !walletViewFrame.contains(location) {
-            hideWalletStatusOverlay()
-        }
-    }
 
     // Reload data
     func reloadChildViewControllersData() {
@@ -639,7 +527,7 @@ class RootTabBarViewController: UIViewController {
 }
 
 // MARK: App States
-extension RootTabBarViewController {
+extension MainTabBarViewController {
 
     // App States
     func unlockAppWithUser() {
@@ -717,7 +605,7 @@ extension RootTabBarViewController {
 
 
 // MARK: - Shake Gesture Handling
-extension RootTabBarViewController {
+extension MainTabBarViewController {
 
     override var canBecomeFirstResponder: Bool {
         return true
@@ -737,18 +625,7 @@ extension RootTabBarViewController {
     }
 }
 
-extension RootTabBarViewController {
-    private static func createTopSafeAreaView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createTopBarContainerBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
+extension MainTabBarViewController {
 
     private static func createContainerView() -> UIView {
         let view = UIView()
@@ -756,12 +633,6 @@ extension RootTabBarViewController {
         return view
     }
     
-    private static func createWalletStatusOverlayView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        return view
-    }
 
     private static func createMainContainerView() -> UIView {
         let view = UIView()
@@ -948,11 +819,7 @@ extension RootTabBarViewController {
         //
         view.addSubview(containerView)
         
-        // Add main container views
-        view.addSubview(topSafeAreaView)
-        view.addSubview(topBarContainerBaseView)
-
-        topBarContainerBaseView.addSubview(widgetToolBarView)
+        // Main container views (top bar now handled by TopBarContainerController)
 
         //
         view.addSubview(bottomSafeAreaView)
@@ -980,7 +847,7 @@ extension RootTabBarViewController {
         localAuthenticationBaseView.addSubview(cancelUnlockAppButton)
         localAuthenticationBaseView.addSubview(isLoadingUserSessionView)
 
-        view.bringSubviewToFront(topBarContainerBaseView)
+        // Top bar is now managed by TopBarContainerController
 
         // Add floating overlay at the top of the view hierarchy
         view.addSubview(floatingOverlayView)
@@ -988,14 +855,7 @@ extension RootTabBarViewController {
         // Add betslip floating view
         view.addSubview(betslipFloatingView)
         
-        // Add wallet status overlay (initially hidden)
-        view.addSubview(walletStatusOverlayView)
-        walletStatusOverlayView.addSubview(walletStatusView)
-        walletStatusOverlayView.isHidden = true
-        
-        // Add tap gesture to dismiss overlay
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(overlayTapped(_:)))
-        walletStatusOverlayView.addGestureRecognizer(tapGesture)
+        // Wallet status overlay is now managed by TopBarContainerController
 
         initConstraints()
     }
@@ -1003,27 +863,12 @@ extension RootTabBarViewController {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            // Top Safe Area
-            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            // Top bar components now managed by TopBarContainerController
 
-            // Top Bar Container
-            self.topBarContainerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topBarContainerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topBarContainerBaseView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            // self.topBarContainerBaseView.heightAnchor.constraint(equalToConstant: 64),
-
-            self.widgetToolBarView.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
-            self.widgetToolBarView.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
-            self.widgetToolBarView.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
-            self.widgetToolBarView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
-
-            // Container View
+            // Container View (starts from safe area top since top bar is handled by TopBarContainerController)
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.containerView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor),
+            self.containerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             // Main Container View - extend behind tab bar for blur effect
@@ -1125,16 +970,6 @@ extension RootTabBarViewController {
             self.betslipFloatingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.betslipFloatingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -100),
             
-            // Wallet Status Overlay
-            self.walletStatusOverlayView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.walletStatusOverlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.walletStatusOverlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.walletStatusOverlayView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            
-            // Wallet Status View (anchored below top bar)
-            self.walletStatusView.leadingAnchor.constraint(equalTo: self.walletStatusOverlayView.leadingAnchor, constant: 50),
-            self.walletStatusView.trailingAnchor.constraint(equalTo: self.walletStatusOverlayView.trailingAnchor, constant: -32),
-            self.walletStatusView.topAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor, constant: 16),
         ])
 
     }

@@ -103,13 +103,13 @@ class TopBarContainerController: UIViewController {
     private func setupHierarchy() {
         view.backgroundColor = UIColor.App.backgroundPrimary
 
-        // Layer 1: Base views
+        // Layer 1: Content (so we can have the bars on top of it)
+        view.addSubview(contentContainerView)
+
+        // Layer 2: Base views
         view.addSubview(topSafeAreaView)
         view.addSubview(topBarContainerBaseView)
         topBarContainerBaseView.addSubview(multiWidgetToolbarView)
-
-        // Layer 2: Content
-        view.addSubview(contentContainerView)
 
         // Layer 3: Overlays (on top of everything)
         view.addSubview(overlayContainerView)
@@ -254,13 +254,19 @@ class TopBarContainerController: UIViewController {
         }
     }
 
-    @objc private func hideWalletStatusOverlay() {
-        UIView.animate(withDuration: 0.2, animations: {
-            self.walletStatusOverlayView.alpha = 0.0
-            self.walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { _ in
-            self.walletStatusOverlayView.isHidden = true
-            self.overlayContainerView.isUserInteractionEnabled = false
+    @objc private func hideWalletStatusOverlay(_ sender: UITapGestureRecognizer) {
+        let location = sender.location(in: walletStatusOverlayView)
+        let walletViewFrame = walletStatusView.frame
+
+        // Only dismiss if tap is outside the wallet status view
+        if !walletViewFrame.contains(location) {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.walletStatusOverlayView.alpha = 0.0
+                self.walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            }) { _ in
+                self.walletStatusOverlayView.isHidden = true
+                self.overlayContainerView.isUserInteractionEnabled = false
+            }
         }
     }
 

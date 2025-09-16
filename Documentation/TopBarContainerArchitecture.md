@@ -14,7 +14,7 @@ The **TopBarContainerController** is a container view controller pattern designe
 - **Maintenance burden** when updating top bar behavior
 
 ### Affected Files
-- `RootTabBarViewController.swift` - 1154 lines
+- `MainTabBarViewController.swift` - 1154 lines (formerly RootTabBarViewController)
 - `MatchDetailsTextualViewController.swift` - 748 lines
 - `MyBetDetailViewController.swift` - 418 lines
 - `CasinoCategoryGamesListViewController.swift` - 424 lines
@@ -320,5 +320,16 @@ The TopBarContainerController architecture provides a clean, maintainable soluti
 
 ---
 
+## Updates
+
+### September 17, 2025 - MainTabBar Rename
+- **Renamed** `RootTabBarViewController` → `MainTabBarViewController` for architectural clarity
+- **Renamed** `RootTabBarViewModel` → `MainTabBarViewModel`
+- **Renamed** `RootTabBarCoordinator` → `MainTabBarCoordinator`
+- **Moved** from `/Screens/Root/` to `/Screens/Main/` directory
+- **Rationale**: After TopBarContainerController became the actual root container, "MainTabBar" better reflects the component's role as the main tab navigation manager
+
+---
+
 *Architecture documented on September 16, 2025*
-*Next steps: Implement Phase 1 infrastructure setup*
+*Updated on September 17, 2025 - MainTabBar rename*
