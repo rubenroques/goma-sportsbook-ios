@@ -22,6 +22,9 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
     
+    // Action callback
+    var onDepositRequested: (() -> Void)?
+    
     // Internal state
     private var walletData: WalletWidgetData {
         didSet {
@@ -53,8 +56,7 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
     
     func deposit() {
         print("💳 WalletWidgetViewModel: Deposit button tapped")
-        // This would trigger navigation to deposit flow
-        // Could use a closure or delegate pattern
+        onDepositRequested?()
     }
     
     // MARK: - Private Methods

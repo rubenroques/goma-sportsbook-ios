@@ -50,7 +50,7 @@ final public class QuickLinksTabBarView: UIView {
             self.stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2),
 
             // Fixed height of 40 points
-            self.heightAnchor.constraint(equalToConstant: 40.0)
+            self.heightAnchor.constraint(equalToConstant: 48.0)
         ])
     }
 
@@ -88,28 +88,61 @@ import SwiftUI
 
 @available(iOS 17.0, *)
 #Preview("Gaming Quick Links") {
-    PreviewUIView {
-        let mockViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
-        return QuickLinksTabBarView(viewModel: mockViewModel)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let quickLinksView = QuickLinksTabBarView(viewModel: MockQuickLinksTabBarViewModel.gamingMockViewModel)
+        quickLinksView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(quickLinksView)
+        
+        NSLayoutConstraint.activate([
+            quickLinksView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            quickLinksView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            quickLinksView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        return vc
     }
-    .frame(height: 40)
 }
 
 @available(iOS 17.0, *)
 #Preview("Sports Quick Links") {
-    PreviewUIView {
-        let mockViewModel = MockQuickLinksTabBarViewModel.sportsMockViewModel
-        return QuickLinksTabBarView(viewModel: mockViewModel)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let quickLinksView = QuickLinksTabBarView(viewModel: MockQuickLinksTabBarViewModel.sportsMockViewModel)
+        quickLinksView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(quickLinksView)
+        
+        NSLayoutConstraint.activate([
+            quickLinksView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            quickLinksView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            quickLinksView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        return vc
     }
-    .frame(height: 40)
 }
 
 @available(iOS 17.0, *)
 #Preview("Account Quick Links") {
-    PreviewUIView {
-        let mockViewModel = MockQuickLinksTabBarViewModel.accountMockViewModel
-        return QuickLinksTabBarView(viewModel: mockViewModel)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let quickLinksView = QuickLinksTabBarView(viewModel: MockQuickLinksTabBarViewModel.accountMockViewModel)
+        quickLinksView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(quickLinksView)
+        
+        NSLayoutConstraint.activate([
+            quickLinksView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            quickLinksView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            quickLinksView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+        
+        return vc
     }
-    .frame(height: 40)
 }
 #endif

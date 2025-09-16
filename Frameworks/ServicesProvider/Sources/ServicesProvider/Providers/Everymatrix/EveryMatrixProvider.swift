@@ -16,6 +16,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     var connector: EveryMatrixConnector
+    private let sessionCoordinator: EveryMatrixSessionCoordinator
 
     // MARK: - Managers for different subscription types
     private var prelivePaginator: PreLiveMatchesPaginator?
@@ -31,8 +32,9 @@ class EveryMatrixEventsProvider: EventsProvider {
     // MARK: - Match Details Manager
     private var matchDetailsManager: MatchDetailsManager?
 
-    init(connector: EveryMatrixConnector) {
+    init(connector: EveryMatrixConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
         self.connector = connector
+        self.sessionCoordinator = sessionCoordinator
     }
 
     deinit {
@@ -209,10 +211,41 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Clean up any existing sports manager
         sportsManager?.unsubscribe()
 
-        // Create new sports manager
-        sportsManager = SportsManager(connector: connector)
+        // Create new sports manager with dynamic operator ID
+        let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()
+        sportsManager = SportsManager(connector: connector, operatorId: operatorId)
 
         return sportsManager!.subscribe()
+    }
+    
+    func checkServicesHealth() -> AnyPublisher<Bool, ServiceProviderError> {
+        // Back to operatorInfo but with enhanced logging
+        let router = WAMPRouter.getClientIdentity
+        
+        return connector.request(router)
+            .print("checkServicesHealth-operatorInfo")
+            .map { [weak self] (response: EveryMatrix.ClientIdentityResponse) -> Bool in
+                print("🏥 EveryMatrixProvider: OperatorInfo health check successful")
+                
+                // Extract and store UCS operator ID from response
+                // let operatorId = response.operatorIdString
+                // print("🏥 EveryMatrixProvider: Found UCS operator ID: \(operatorId)")
+                self?.sessionCoordinator.saveCID(response.CID) 
+                self?.sessionCoordinator.saveOperatorId("4093")
+
+                return true
+            }
+            .mapError { error -> ServiceProviderError in
+                print("❌ EveryMatrixProvider: Health check failed: \(error)")
+                // Check if this is a maintenance mode error
+                if case .errorDetailedMessage(_, let message) = error {
+                    if message.contains("maintenance") {
+                        return .maintenanceMode(message: message)
+                    }
+                }
+                return error
+            }
+            .eraseToAnyPublisher()
     }
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
@@ -260,12 +293,12 @@ class EveryMatrixEventsProvider: EventsProvider {
         }
         
         // Fallback to checking paginators
-        guard let paginator = prelivePaginator else {
+        guard let prelivePaginator = prelivePaginator else {
             return Fail(error: ServiceProviderError.errorMessage(message: "Paginator not active")).eraseToAnyPublisher()
         }
 
         // Check both paginators to find which one contains this market
-        if let prelivePaginator = prelivePaginator, prelivePaginator.marketExists(id: id) {
+        if prelivePaginator.marketExists(id: id) {
             // Delegate to pre-live paginator's outcome subscription method
             return prelivePaginator.subscribeToMarketUpdates(withId: id)
                 .handleEvents(receiveSubscription: { subscription in

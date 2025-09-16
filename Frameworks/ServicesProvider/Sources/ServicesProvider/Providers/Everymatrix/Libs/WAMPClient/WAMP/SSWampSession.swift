@@ -168,10 +168,17 @@ open class SSWampSession: SSWampTransportDelegate {
 
     open func call(_ proc: String, options: [String: Any]=[:], args: [Any]?=nil, kwargs: [String: Any]?=nil, onSuccess: @escaping CallCallback, onError: @escaping ErrorCallCallback) {
         let callRequestId = self.generateRequestId()
+        print("🟦 SSWampSession.call: Starting call to \(proc) with requestId=\(callRequestId)")
+        print("🟦 SSWampSession.call: args=\(args ?? []), kwargs=\(kwargs ?? [:])")
+        print("🟦 SSWampSession.call: sessionId=\(sessionId ?? -1), isConnected=\(isConnected())")
+        
         // Tell router to dispatch call
         self.sendMessage(CallSSWampMessage(requestId: callRequestId, options: options, proc: proc, args: args, kwargs: kwargs))
+        
         // Store request ID to handle result
+        print("🟦 SSWampSession.call: Storing callbacks for requestId=\(callRequestId)")
         self.callRequests[callRequestId] = (callback: onSuccess, errorCallback: onError )
+        print("🟦 SSWampSession.call: Total pending call requests: \(callRequests.count)")
     }
 
     // public func register(proc: String, options: [String: AnyObject]=[:], onSuccess: RegisterCallback, onError: ErrorRegisterCallback, onFire: SSWampProc) {
@@ -312,13 +319,20 @@ open class SSWampSession: SSWampTransportDelegate {
 
         case let message as ResultSSWampMessage:
             let requestId = message.requestId
+            print("🟩 SSWampSession.handleMessage: Received ResultSSWampMessage for requestId=\(requestId)")
+            print("🟩 SSWampSession.handleMessage: details=\(message.details)")
+            print("🟩 SSWampSession.handleMessage: kwResults=\(message.kwResults ?? [:])")
+            
             // TODO: Thread 13: EXC_BAD_ACCESS (code=1, address=0x18)
             if let (callback, _) = self.callRequests[requestId] {
+                print("🟩 SSWampSession.handleMessage: Found callback for requestId=\(requestId), calling success callback")
                 callback(message.details, message.results, message.kwResults, message.arrResults)
                 self.callRequests[requestId] = nil
+                print("🟩 SSWampSession.handleMessage: Removed requestId=\(requestId) from callRequests")
             }
             else {
-                // log this erroneous situation
+                print("🟩 SSWampSession.handleMessage: ERROR - No callback found for requestId=\(requestId)")
+                print("🟩 SSWampSession.handleMessage: Current callRequests count: \(callRequests.count)")
             }
 
         case let message as RegisteredSSWampMessage:
@@ -409,12 +423,19 @@ open class SSWampSession: SSWampTransportDelegate {
         case let message as ErrorSSWampMessage:
             switch message.requestType {
             case SSWampMessages.call:
+                print("🟥 SSWampSession.handleMessage: Received ErrorSSWampMessage for CALL requestId=\(message.requestId)")
+                print("🟥 SSWampSession.handleMessage: error=\(message.error)")
+                print("🟥 SSWampSession.handleMessage: details=\(message.details)")
+                print("🟥 SSWampSession.handleMessage: kwargs=\(message.kwargs ?? [:])")
+                
                 if let (_, errorCallback) = self.callRequests[message.requestId] {
+                    print("🟥 SSWampSession.handleMessage: Found error callback for requestId=\(message.requestId), calling error callback")
                     errorCallback(message.details, message.error, message.args, message.kwargs)
                     self.callRequests[message.requestId] = nil
+                    print("🟥 SSWampSession.handleMessage: Removed requestId=\(message.requestId) from callRequests")
                 }
                 else {
-                    // log this erroneous situation
+                    print("🟥 SSWampSession.handleMessage: ERROR - No error callback found for requestId=\(message.requestId)")
                 }
             case SSWampMessages.subscribe:
                 if let (_, errorCallback, _) = self.subscribeRequests[message.requestId] {
@@ -501,8 +522,15 @@ open class SSWampSession: SSWampTransportDelegate {
 
     fileprivate func sendMessage(_ message: SSWampMessage) {
         let marshalledMessage = message.marshal()
+        print("🟨 SSWampSession.sendMessage: Sending message type=\(type(of: message))")
+        print("🟨 SSWampSession.sendMessage: Marshalled=\(marshalledMessage)")
+        
         if let data = self.serializer?.pack(marshalledMessage as [Any]) {
+            print("🟨 SSWampSession.sendMessage: Packed data size=\(data.count) bytes")
             self.transport.sendData(data)
+            print("🟨 SSWampSession.sendMessage: Data sent to transport")
+        } else {
+            print("🟨 SSWampSession.sendMessage: ERROR - Failed to pack message data")
         }
     }
 

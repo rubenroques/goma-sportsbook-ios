@@ -42,12 +42,16 @@ final class WalletStatusViewModel: WalletStatusViewModelProtocol {
     }
     
     // Button view models
-    let depositButtonViewModel: ButtonViewModelProtocol
-    let withdrawButtonViewModel: ButtonViewModelProtocol
+    var depositButtonViewModel: ButtonViewModelProtocol
+    var withdrawButtonViewModel: ButtonViewModelProtocol
     
     // Dependencies
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
+    
+    // Action callbacks
+    var onDepositRequested: (() -> Void)?
+    var onWithdrawRequested: (() -> Void)?
     
     // MARK: - Initialization
     
@@ -58,6 +62,7 @@ final class WalletStatusViewModel: WalletStatusViewModelProtocol {
         self.withdrawButtonViewModel = ButtonViewModel.withdrawButton()
         
         setupWalletBinding()
+        setupButtonActions()
     }
     
     // MARK: - WalletStatusViewModelProtocol
@@ -94,6 +99,20 @@ final class WalletStatusViewModel: WalletStatusViewModelProtocol {
             .store(in: &cancellables)
         
         print("💰 WalletStatusViewModel: Wallet binding established")
+    }
+    
+    private func setupButtonActions() {
+        
+        depositButtonViewModel.onButtonTapped = { [weak self] in
+            print("💳 WalletStatusViewModel: Deposit button tapped")
+            self?.onDepositRequested?()
+        }
+        
+        withdrawButtonViewModel.onButtonTapped = { [weak self] in
+            print("💳 WalletStatusViewModel: Withdraw button tapped")
+            self?.onWithdrawRequested?()
+        }
+        
     }
     
     private func updateWalletDisplay(wallet: UserWallet?) {

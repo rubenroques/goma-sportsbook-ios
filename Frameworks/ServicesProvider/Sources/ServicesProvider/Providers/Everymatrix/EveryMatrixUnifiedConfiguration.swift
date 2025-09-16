@@ -11,6 +11,8 @@ import Foundation
 /// Unified configuration for all EveryMatrix APIs
 public final class EveryMatrixUnifiedConfiguration {
     
+    public static let cacheCIDKey: String = "wamp.session.cid"
+    
     /// Environment options matching Client.Configuration.Environment
     public enum Environment {
         case production

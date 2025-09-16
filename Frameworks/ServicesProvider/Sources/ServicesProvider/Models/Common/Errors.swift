@@ -68,4 +68,7 @@ public enum ServiceProviderError: Error, Equatable, Hashable {
     case notFound
     case rateLimitExceeded
     case noNetworkConnection
+    
+    // Maintenance mode error
+    case maintenanceMode(message: String)
 }

@@ -137,6 +137,13 @@ class NextUpEventsViewController: UIViewController {
     private func setupQuickLinksTabBar() {
         headerContainerView.addSubview(quickLinksTabBarView)
         quickLinksTabBarView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Setup QuickLinks navigation callback
+        quickLinksTabBarView.onQuickLinkSelected = { [weak self] quickLinkType in
+            print("🎯 NextUpEventsViewController: QuickLink tapped - \(quickLinkType.rawValue)")
+            // This callback is already handled by the production QuickLinksTabBarViewModel
+            // which will trigger the onCasinoQuickLinkSelected closure in the ViewModel
+        }
     }
     
     private func setupPillSelectorBarView() {
@@ -233,7 +240,6 @@ class NextUpEventsViewController: UIViewController {
             quickLinksTabBarView.topAnchor.constraint(equalTo: headerContainerView.topAnchor),
             quickLinksTabBarView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
             quickLinksTabBarView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
-            quickLinksTabBarView.heightAnchor.constraint(equalToConstant: 40),
 
             // Market Group Selector below Pills Container inside header container
             marketGroupSelectorTabView.topAnchor.constraint(equalTo: pillsContainerStackView.bottomAnchor),

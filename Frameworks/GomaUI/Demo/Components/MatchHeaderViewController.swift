@@ -14,6 +14,16 @@ class MatchHeaderViewController: UIViewController {
     private lazy var stateSegmentedControl = UISegmentedControl(items: ["Standard"])
     private lazy var favoriteToggleButton = UIButton(type: .system)
     private lazy var competitionNameTextField = UITextField()
+    
+    // Visibility controls
+    private lazy var countryFlagToggleButton = UIButton(type: .system)
+    private lazy var sportIconToggleButton = UIButton(type: .system)
+    private lazy var favoriteButtonToggleButton = UIButton(type: .system)
+    
+    // Track visibility state for first item
+    private var isCountryFlagVisible = true
+    private var isSportIconVisible = true
+    private var isFavoriteButtonVisible = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,11 +99,38 @@ class MatchHeaderViewController: UIViewController {
         competitionNameTextField.font = StyleProvider.fontWith(type: .regular, size: 14)
         competitionNameTextField.addTarget(self, action: #selector(nameChanged), for: .editingChanged)
 
+        // Visibility toggle buttons
+        countryFlagToggleButton.setTitle("Hide Country Flag (First Item)", for: .normal)
+        countryFlagToggleButton.backgroundColor = StyleProvider.Color.secondaryColor
+        countryFlagToggleButton.setTitleColor(.white, for: .normal)
+        countryFlagToggleButton.layer.cornerRadius = 8
+        countryFlagToggleButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+        countryFlagToggleButton.addTarget(self, action: #selector(toggleCountryFlag), for: .touchUpInside)
+
+        sportIconToggleButton.setTitle("Hide Sport Icon (First Item)", for: .normal)
+        sportIconToggleButton.backgroundColor = StyleProvider.Color.secondaryColor
+        sportIconToggleButton.setTitleColor(.white, for: .normal)
+        sportIconToggleButton.layer.cornerRadius = 8
+        sportIconToggleButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+        sportIconToggleButton.addTarget(self, action: #selector(toggleSportIcon), for: .touchUpInside)
+
+        favoriteButtonToggleButton.setTitle("Hide Favorite Button (First Item)", for: .normal)
+        favoriteButtonToggleButton.backgroundColor = StyleProvider.Color.secondaryColor
+        favoriteButtonToggleButton.setTitleColor(.white, for: .normal)
+        favoriteButtonToggleButton.layer.cornerRadius = 8
+        favoriteButtonToggleButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+        favoriteButtonToggleButton.addTarget(self, action: #selector(toggleFavoriteButton), for: .touchUpInside)
+
         controlsStackView.addArrangedSubview(stateLabel)
         controlsStackView.addArrangedSubview(stateSegmentedControl)
         controlsStackView.addArrangedSubview(favoriteToggleButton)
         controlsStackView.addArrangedSubview(nameLabel)
         controlsStackView.addArrangedSubview(competitionNameTextField)
+        
+        // Add visibility controls
+        controlsStackView.addArrangedSubview(countryFlagToggleButton)
+        controlsStackView.addArrangedSubview(sportIconToggleButton)
+        controlsStackView.addArrangedSubview(favoriteButtonToggleButton)
 
         NSLayoutConstraint.activate([
             controlsStackView.topAnchor.constraint(equalTo: controlsContainer.topAnchor, constant: 16),
@@ -115,7 +152,13 @@ class MatchHeaderViewController: UIViewController {
             ("Champions League (Minimal)", MockMatchHeaderViewModel.minimalModeHeader),
             ("ATP Tennis (Favorite Only)", MockMatchHeaderViewModel.favoriteOnlyHeader),
             ("Long Competition Name", MockMatchHeaderViewModel.longNameHeader),
-            ("Basic Header (No Icons)", MockMatchHeaderViewModel.basicHeader)
+            ("Basic Header (No Icons)", MockMatchHeaderViewModel.basicHeader),
+            
+            // New visibility examples
+            ("No Country Flag", MockMatchHeaderViewModel.noCountryFlagHeader),
+            ("No Sport Icon", MockMatchHeaderViewModel.noSportIconHeader),
+            ("No Favorite Button", MockMatchHeaderViewModel.noFavoriteButtonHeader),
+            ("Text Only (All Hidden)", MockMatchHeaderViewModel.minimalVisibilityHeader)
         ]
 
         for (title, viewModel) in demoComponents {
@@ -196,6 +239,36 @@ class MatchHeaderViewController: UIViewController {
         if let firstViewModel = viewModels.first,
            let newName = competitionNameTextField.text {
             firstViewModel.updateCompetitionName(newName)
+        }
+    }
+    
+    @objc private func toggleCountryFlag() {
+        // Toggle the first view model's country flag visibility
+        if let firstViewModel = viewModels.first {
+            isCountryFlagVisible.toggle()
+            firstViewModel.setCountryFlagVisible(isCountryFlagVisible)
+            let newTitle = isCountryFlagVisible ? "Hide Country Flag (First Item)" : "Show Country Flag (First Item)"
+            countryFlagToggleButton.setTitle(newTitle, for: .normal)
+        }
+    }
+    
+    @objc private func toggleSportIcon() {
+        // Toggle the first view model's sport icon visibility
+        if let firstViewModel = viewModels.first {
+            isSportIconVisible.toggle()
+            firstViewModel.setSportIconVisible(isSportIconVisible)
+            let newTitle = isSportIconVisible ? "Hide Sport Icon (First Item)" : "Show Sport Icon (First Item)"
+            sportIconToggleButton.setTitle(newTitle, for: .normal)
+        }
+    }
+    
+    @objc private func toggleFavoriteButton() {
+        // Toggle the first view model's favorite button visibility
+        if let firstViewModel = viewModels.first {
+            isFavoriteButtonVisible.toggle()
+            firstViewModel.setFavoriteButtonVisible(isFavoriteButtonVisible)
+            let newTitle = isFavoriteButtonVisible ? "Hide Favorite Button (First Item)" : "Show Favorite Button (First Item)"
+            favoriteButtonToggleButton.setTitle(newTitle, for: .normal)
         }
     }
 }

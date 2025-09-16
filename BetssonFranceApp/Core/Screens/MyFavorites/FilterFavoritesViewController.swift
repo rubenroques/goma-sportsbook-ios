@@ -197,7 +197,7 @@ extension FilterFavoritesViewController {
 
     private static func createTopLabel() -> UILabel {
         let label = UILabel()
-        label.text = localized("filter")
+        label.text = localized("Filter")
         label.font = AppFont.with(type: .bold, size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -206,7 +206,7 @@ extension FilterFavoritesViewController {
     private static func createResetButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("reset"), for: .normal)
+        button.setTitle(localized("Reset"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         return button
     }
@@ -214,7 +214,7 @@ extension FilterFavoritesViewController {
     private static func createCancelButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("cancel"), for: .normal)
+        button.setTitle(localized("Cancel"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         return button
     }
@@ -234,7 +234,7 @@ extension FilterFavoritesViewController {
     private static func createApplyButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("apply"), for: .normal)
+        button.setTitle(localized("Apply"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         return button
     }

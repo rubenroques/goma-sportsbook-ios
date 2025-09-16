@@ -24,7 +24,7 @@ class SportsManager {
 
     // MARK: - Initialization
 
-    init(connector: EveryMatrixConnector, operatorId: String = "4093") {
+    init(connector: EveryMatrixConnector, operatorId: String) {
         self.connector = connector
         self.operatorId = operatorId
     }

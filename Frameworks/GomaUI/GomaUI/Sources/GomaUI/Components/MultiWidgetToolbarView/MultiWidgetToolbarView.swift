@@ -26,6 +26,7 @@ final public class MultiWidgetToolbarView: UIView {
     // MARK: - Public Properties
     public var onWidgetSelected: ((String) -> Void) = { _ in }
     public var onBalanceTapped: ((String) -> Void) = { _ in }
+    public var onDepositTapped: ((String) -> Void) = { _ in }
 
     // MARK: - Initialization
     public init(viewModel: MultiWidgetToolbarViewModelProtocol) {
@@ -167,8 +168,7 @@ final public class MultiWidgetToolbarView: UIView {
         
         let walletView = WalletWidgetView(viewModel: viewModel)
         walletView.onDepositTapped = { [weak self] widgetID in
-            self?.viewModel.selectWidget(id: widgetID)
-            self?.onWidgetSelected(widgetID)
+            self?.onDepositTapped(widgetID)
         }
         walletView.onBalanceTapped = { [weak self] widgetID in
             self?.onBalanceTapped(widgetID)

@@ -31,11 +31,27 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
         request.addValue(origin, forHTTPHeaderField: "Origin")
         request.addValue("wamp.2.json", forHTTPHeaderField: "Sec-WebSocket-Protocol")
 
-        // request.addValue("Upgrade", forHTTPHeaderField: "WebSocket")
-        // request.addValue("Upgrade", forHTTPHeaderField: "Connection")
+        //request.addValue("Upgrade", forHTTPHeaderField: "websocket")
+        //request.addValue("Upgrade", forHTTPHeaderField: "Connection")
+        
+        //request.addValue("13", forHTTPHeaderField: "Sec-WebSocket-Version")
+        
+        // "Upgrade: websocket"
+        // "Origin: https://sportsbook-stage.gomagaming.com"
+        // "Cache-Control: no-cache"
+        // "Accept-Language: pt-PT,pt;q=0.9,en;q=0.8"
+        // "Pragma: no-cache"
+        // "Connection: Upgrade"
+        // "Sec-WebSocket-Key: O1PkxwXzKV4I17AOCQ++aA=="
+        // "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+        // "Sec-WebSocket-Version: 13"
+        // "Sec-WebSocket-Protocol: wamp.2.json, wamp.2.msgpack"
+        // "Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bit
+        
+        
         // request.addValue("13", forHTTPHeaderField: "Sec-WebSocket-Version")
-
         // wamp.2.json, wamp.2.msgpack, my.protocol
+        
 
         socket = WebSocket(request: request)
         socket?.callbackQueue = DispatchQueue(label: "com.goma.games.SSWampQueue")

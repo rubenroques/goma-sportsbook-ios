@@ -43,6 +43,9 @@ protocol EventsProvider: Connector {
 
     // sports list
     func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
+    
+    // health check
+    func checkServicesHealth() -> AnyPublisher<Bool, ServiceProviderError>
 
     //
     // Live Data extended info independent from the lists

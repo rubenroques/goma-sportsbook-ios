@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // XtremePush Configuration
         // TODO: Replace with actual app key from client
-        XPush.setAppKey("REPLACE_WITH_CLIENT_APP_KEY")
+        XPush.setAppKey("tymCbccp6pas_HwOgwuDRMJZ6Nn0m7Gr")
         
         // Enable debug logs for development builds
         #if DEBUG

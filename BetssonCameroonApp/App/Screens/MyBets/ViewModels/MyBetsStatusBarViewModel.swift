@@ -120,22 +120,18 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
     
     func updatePills(_ pills: [PillData]) {
         // Not needed for MyBets - fixed set of status pills
-        print("⚠️ MyBetsStatusBarViewModel: updatePills not supported - pills are fixed")
     }
     
     func addPill(_ pill: PillData) {
         // Not needed for MyBets - fixed set of status pills
-        print("⚠️ MyBetsStatusBarViewModel: addPill not supported - pills are fixed")
     }
     
     func removePill(id: String) {
         // Not needed for MyBets - fixed set of status pills
-        print("⚠️ MyBetsStatusBarViewModel: removePill not supported - pills are fixed")
     }
     
     func updatePill(_ pill: PillData) {
         // Not needed for MyBets - fixed set of status pills
-        print("⚠️ MyBetsStatusBarViewModel: updatePill not supported - pills are fixed")
     }
     
     func clearSelection() {

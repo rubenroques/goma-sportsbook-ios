@@ -88,6 +88,11 @@ class RootTabBarViewController: UIViewController {
     // MARK: - Betslip Navigation Closure
     // Closure called when betslip is requested - handled by coordinator
     var onBetslipRequested: (() -> Void)?
+    
+    // MARK: - Wallet Navigation Closures
+    // Closures called when wallet operations are requested - handled by coordinator
+    var onDepositRequested: (() -> Void)?
+    var onWithdrawRequested: (() -> Void)?
 
     // General properties
     var isLocalAuthenticationCoveringView: Bool = true {
@@ -344,7 +349,6 @@ class RootTabBarViewController: UIViewController {
             else if widgetId == "avatar" {
                 self?.onProfileRequested?()
             }
-            
         }
         
         widgetToolBarView.onBalanceTapped = { [weak self] widgetId in
@@ -355,6 +359,26 @@ class RootTabBarViewController: UIViewController {
                 
                 self?.showWalletStatusOverlay()
             }
+        }
+        
+        widgetToolBarView.onDepositTapped = { [weak self] widgetId in
+            if widgetId == "wallet" {
+                self?.onDepositRequested?()
+            }
+        }
+        
+        // Set up wallet navigation callbacks
+        viewModel.walletStatusViewModel.onDepositRequested = { [weak self] in
+            self?.onDepositRequested?()
+        }
+        
+        viewModel.walletStatusViewModel.onWithdrawRequested = { [weak self] in
+            self?.onWithdrawRequested?()
+        }
+        
+        // Set up wallet widget deposit callback (from MultiWidgetToolbarView)
+        viewModel.multiWidgetToolbarViewModel.onDepositRequested = { [weak self] in
+            self?.onDepositRequested?()
         }
         
     }

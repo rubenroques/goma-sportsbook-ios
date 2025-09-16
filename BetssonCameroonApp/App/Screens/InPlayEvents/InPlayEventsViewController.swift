@@ -232,7 +232,6 @@ class InPlayEventsViewController: UIViewController {
             quickLinksTabBarView.topAnchor.constraint(equalTo: headerContainerView.topAnchor),
             quickLinksTabBarView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
             quickLinksTabBarView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
-            quickLinksTabBarView.heightAnchor.constraint(equalToConstant: 40),
 
             // Market Group Selector below Pills Container inside header container
             marketGroupSelectorTabView.topAnchor.constraint(equalTo: pillsContainerStackView.bottomAnchor),

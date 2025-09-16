@@ -201,6 +201,8 @@ xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination
 
 *For a detailed explanation of the MVVM architecture, refer to [Documentation/MVVM.md](Documentation/MVVM.md).*
 
+*For adding new API endpoints with proper 3-layer architecture, refer to [Documentation/API_DEVELOPMENT_GUIDE.md](Documentation/API_DEVELOPMENT_GUIDE.md).*
+
 2.  **UI Development Guidelines**:
     *   **Always prefer GomaUI components** over custom UI implementations
     *   Use StyleProvider for all theming and customization
@@ -522,3 +524,4 @@ cwamp rpc -p "/sports#operatorInfo" --verbose --timestamp
 - **Resolution**: Fix at appropriate architectural layer (UI → GomaUI, Data → ServicesProvider, App → specific project)
 
 This workspace represents a sophisticated evolution from monolithic to modular architecture, enabling scalable multi-client development while maintaining code quality through established component libraries and backend abstractions.
+- this IS THE REAL implementation. Do not insert placeholder code or todo comments, this is production. If you didn't know something simply ask the project owner that is interacting with you

@@ -26,11 +26,22 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
                 pendingWalletBalance = nil
                 print("💰 MultiWidgetToolbarViewModel: Applied pending wallet balance: \(pendingBalance)")
             }
+            
+            // Set up deposit callback connection
+            if let walletVM = walletViewModel as? WalletWidgetViewModel {
+                walletVM.onDepositRequested = { [weak self] in
+                    self?.onDepositRequested?()
+                }
+                print("💳 MultiWidgetToolbarViewModel: Wallet deposit callback connected")
+            }
         }
     }
     
     // Store pending balance update if wallet view model not yet assigned
     private var pendingWalletBalance: Double?
+    
+    // Action callback for deposit requests from wallet widget
+    var onDepositRequested: (() -> Void)?
     
     // MARK: - Initialization
     

@@ -88,7 +88,7 @@ private extension QuickLinkTabBarItemView {
     static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .regular, size: 10.0)
+        label.font = StyleProvider.fontWith(type: .regular, size: 12.0)
         label.textAlignment = .center
         label.textColor = StyleProvider.Color.iconSecondary
         return label
@@ -104,8 +104,8 @@ private extension QuickLinkTabBarItemView {
             containerStackView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
             containerStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
 
-            iconImageView.widthAnchor.constraint(equalToConstant: 13),
-            iconImageView.heightAnchor.constraint(equalToConstant: 13),
+            iconImageView.widthAnchor.constraint(equalToConstant: 20),
+            iconImageView.heightAnchor.constraint(equalToConstant: 17),
 
             titleLabel.heightAnchor.constraint(equalToConstant: 16)
         ])
@@ -117,19 +117,29 @@ import SwiftUI
 
 @available(iOS 17.0, *)
 #Preview("Quick Link Item") {
-    let item = QuickLinkItem(
-        type: .aviator,
-        title: "Aviator",
-        icon: UIImage(systemName: "airplane")
-    )
-
-    return PreviewUIView {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        
+        let item = QuickLinkItem(
+            type: .aviator,
+            title: "Aviator",
+            icon: UIImage(systemName: "airplane")
+        )
+        
         let itemView = QuickLinkTabBarItemView()
         itemView.configure(with: item)
-        return itemView
+        itemView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(itemView)
+        
+        NSLayoutConstraint.activate([
+            itemView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            itemView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            itemView.widthAnchor.constraint(equalToConstant: 70),
+            itemView.heightAnchor.constraint(equalToConstant: 48)
+        ])
+        
+        return vc
     }
-    .frame(width: 70, height: 40)
-    .border(Color.gray)
-    .padding()
 }
 #endif

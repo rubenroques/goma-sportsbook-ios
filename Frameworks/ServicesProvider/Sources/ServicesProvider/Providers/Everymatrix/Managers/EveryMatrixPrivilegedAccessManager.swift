@@ -279,8 +279,19 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     
     func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
         let currentUserId = sessionCoordinator.currentUserId ?? ""
-        let endpoint = EveryMatrixPlayerAPI.getBankingWebView(userId: currentUserId, parameters: parameters)
-        return connector.request(endpoint)
+        
+        // Map domain model to EveryMatrix internal request model
+        let request = EveryMatrixModelMapper.getPaymentSessionRequest(from: parameters)
+        let endpoint = EveryMatrixPlayerAPI.getBankingWebView(userId: currentUserId, parameters: request)
+        
+        // Make request and map internal response to domain model
+        let publisher: AnyPublisher<EveryMatrix.GetPaymentSessionResponse, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { response in
+                EveryMatrixModelMapper.cashierWebViewResponse(from: response)
+            }
+            .eraseToAnyPublisher()
     }
     
     func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {

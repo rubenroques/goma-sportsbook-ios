@@ -1,18 +1,11 @@
-//
-//  File.swift
-//  
-//
-//  Created by Ruben Roques on 04/04/2023.
-//
 
 import Foundation
-
 
 public struct FreebetBalance: Codable {
 
     public var balance: Double
 
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case balance
     }
 

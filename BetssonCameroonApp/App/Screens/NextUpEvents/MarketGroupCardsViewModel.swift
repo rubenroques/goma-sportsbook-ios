@@ -20,6 +20,11 @@ struct MatchCardData: Hashable {
     let filteredData: FilteredMatchData
     let tallOddsViewModel: TallOddsMatchCardViewModelProtocol
     
+    init(filteredData: FilteredMatchData, tallOddsViewModel: TallOddsMatchCardViewModelProtocol) {
+        self.filteredData = filteredData
+        self.tallOddsViewModel = tallOddsViewModel
+    }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(filteredData)
     }
@@ -82,7 +87,7 @@ class MarketGroupCardsViewModel: ObservableObject {
     }
     
     // MARK: - Production Implementation
-    private func createTallOddsViewModel(from filteredData: FilteredMatchData) -> TallOddsMatchCardViewModelProtocol {
+    private func createTallOddsViewModel(from filteredData: FilteredMatchData) -> TallOddsMatchCardViewModel {
         // Use the factory method from TallOddsMatchCardViewModel
         return TallOddsMatchCardViewModel.create(
             from: filteredData.match,

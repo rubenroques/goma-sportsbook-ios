@@ -239,7 +239,7 @@ class AppStateManager {
         print("⚙️ AppStateManager: Starting configuration loading")
         environment.presentationConfigurationStore.loadConfiguration()
         
-        // Wait for events connection, then request sports data
+        // Wait for events connection, then perform health check before sports data
         print("📡 AppStateManager: Monitoring events connection state")
         environment.servicesProvider.eventsConnectionStatePublisher
             .removeDuplicates()
@@ -248,8 +248,10 @@ class AppStateManager {
                 return connectorState == .connected
             }
             .sink { [weak self] _ in
-                print("📊 AppStateManager: Events connected, requesting initial sports data")
+                print("🏥 AppStateManager: Events connected, performing health check")
+                // self?.performHealthCheckAndLoadSports()
                 self?.environment.sportsStore.requestInitialSportsData()
+
             }
             .store(in: &cancellables)
 
@@ -299,6 +301,33 @@ class AppStateManager {
         environment.servicesProvider.connect()
         print("🎯 AppStateManager: Starting betslip manager")
         environment.betslipManager.start()
+    }
+    
+    private func performHealthCheckAndLoadSports() {
+        environment.servicesProvider.checkServicesHealth()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print("❌ AppStateManager: Health check failed: \(error)")
+                    if case .maintenanceMode(let message) = error {
+                        self?.currentStateSubject.send(.maintenanceMode(message: message))
+                    } else {
+                        self?.currentStateSubject.send(.error(.serviceConnectionFailed))
+                    }
+                }
+            }, receiveValue: { [weak self] isHealthy in
+                if isHealthy {
+                    print("✅ AppStateManager: Health check passed, requesting sports data")
+                    self?.environment.sportsStore.requestInitialSportsData()
+                } else {
+                    print("❌ AppStateManager: Health check failed")
+                    self?.currentStateSubject.send(.error(.serviceConnectionFailed))
+                }
+            })
+            .store(in: &cancellables)
     }
     
     private func transitionToReady(sports: [Sport]) {

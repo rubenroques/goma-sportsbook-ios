@@ -115,6 +115,11 @@ final class MyBetDetailViewController: UIViewController {
     var onRegistrationRequested: (() -> Void)?
     var onProfileRequested: (() -> Void)?
     
+    // MARK: - Wallet Navigation Closures
+    
+    var onDepositRequested: (() -> Void)?
+    var onWithdrawRequested: (() -> Void)?
+    
     // MARK: - Initialization
     
     init(viewModel: MyBetDetailViewModel) {
@@ -267,6 +272,15 @@ final class MyBetDetailViewController: UIViewController {
     private func setupBindings() {
         // No binding needed - content is immediately available
         // Content is already visible since we removed loading states
+        
+        // Setup wallet navigation callbacks
+        viewModel.walletStatusViewModel.onDepositRequested = { [weak self] in
+            self?.onDepositRequested?()
+        }
+        
+        viewModel.walletStatusViewModel.onWithdrawRequested = { [weak self] in
+            self?.onWithdrawRequested?()
+        }
     }
     
     private func setupActions() {
@@ -280,6 +294,13 @@ final class MyBetDetailViewController: UIViewController {
         
         multiWidgetToolbarView.onBalanceTapped = { [weak self] widgetID in
             self?.handleBalanceTapped(widgetID)
+        }
+        
+        multiWidgetToolbarView.onDepositTapped = { [weak self] widgetID in
+            if widgetID == "wallet" {
+                print("💳 MyBetDetail: Deposit button tapped")
+                self?.onDepositRequested?()
+            }
         }
     }
     

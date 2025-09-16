@@ -7,6 +7,7 @@
 
 import UIKit
 import ServicesProvider
+import GomaUI
 
 class InPlayEventsCoordinator: Coordinator {
     
@@ -18,6 +19,7 @@ class InPlayEventsCoordinator: Coordinator {
     var onShowMatchDetail: ((Match) -> Void) = { _ in }
     var onShowSportsSelector: (() -> Void) = { }
     var onShowFilters: (() -> Void) = { }
+    var onShowCasinoTab: ((QuickLinkType) -> Void) = { _ in }
     
     // MARK: - Properties
     private let environment: Environment
@@ -48,6 +50,10 @@ class InPlayEventsCoordinator: Coordinator {
     private func showFilters() {
         onShowFilters()
     }
+    
+    private func showCasinoTab(for quickLinkType: QuickLinkType) {
+        onShowCasinoTab(quickLinkType)
+    }
 
     // MARK: - Coordinator Protocol
     func start() {
@@ -70,6 +76,10 @@ class InPlayEventsCoordinator: Coordinator {
         
         viewModel.onFiltersRequested = { [weak self] in
             self?.showFilters()
+        }
+        
+        viewModel.onCasinoQuickLinkSelected = { [weak self] quickLinkType in
+            self?.showCasinoTab(for: quickLinkType)
         }
         
         // Create view controller

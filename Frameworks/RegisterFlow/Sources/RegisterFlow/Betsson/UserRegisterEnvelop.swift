@@ -54,7 +54,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
     
     public var mobileVerificationRequestId: String?
     
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case gender
         case name
         case surname

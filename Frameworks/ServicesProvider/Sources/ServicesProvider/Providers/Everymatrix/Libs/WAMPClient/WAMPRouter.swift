@@ -15,6 +15,8 @@ enum WAMPRouter {
     // MARK: - RPC Endpoints
     // Operator & General Info
     case getOperatorInfo
+    
+    case getClientIdentity
 
     // Locations & Tournaments
     case getLocations(language: String, sortByPopularity: Bool = false)
@@ -108,6 +110,9 @@ enum WAMPRouter {
         // RPCs
         case .getOperatorInfo:
             return "/sports#operatorInfo"
+        case .getClientIdentity:
+            return "/connection#getClientIdentity"
+            
         case .getMatchDetails:
             return "/sports#matches"
         case .getLocations:
@@ -244,6 +249,12 @@ enum WAMPRouter {
     var kwargs: [String: Any]? {
         switch self {
 
+        case .getOperatorInfo:
+            return nil
+            
+        case .getClientIdentity:
+            return nil
+            
         case .getMatchDetails(let language, let matchId):
             return ["lang": language,
                     "matchId": matchId]

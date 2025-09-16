@@ -159,40 +159,7 @@ final class ProfileWalletCoordinator: Coordinator {
     }
     
     private func showLanguageSelection() {
-        guard let profileViewController = profileViewController else { return }
-        
-        let alert = UIAlertController(
-            title: "Select Language",
-            message: nil,
-            preferredStyle: .actionSheet
-        )
-        
-        // Add language options
-        let languages = ["English", "Français", "Español"]
-        
-        for language in languages {
-            let action = UIAlertAction(title: language, style: .default) { _ in
-                print("Selected language: \(language)")
-                // Update language preference
-            }
-            alert.addAction(action)
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        alert.addAction(cancelAction)
-        
-        // Configure for iPad
-        if let popover = alert.popoverPresentationController {
-            popover.sourceView = profileViewController.view
-            popover.sourceRect = CGRect(
-                x: profileViewController.view.bounds.midX,
-                y: profileViewController.view.bounds.midY,
-                width: 0,
-                height: 0
-            )
-        }
-        
-        profileViewController.present(alert, animated: true)
+        // TODO:
     }
     
     private func showNotifications() {
@@ -253,29 +220,10 @@ final class ProfileWalletCoordinator: Coordinator {
     // MARK: - Banking Flow Methods
     
     private func presentDepositFlow() {
-        guard let presentingViewController = profileNavigationController else { return }
+        guard let profileNavigationController = profileNavigationController else { return }
         
         let bankingCoordinator = BankingCoordinator.forDeposit(
-            presentingViewController: presentingViewController,
-            client: servicesProvider,
-            isFirstDeposit: checkIfFirstDeposit()
-        )
-        
-        // Set up banking coordinator closures
-        setupBankingCoordinatorCallbacks(bankingCoordinator)
-        
-        // Add as child coordinator
-        addChildCoordinator(bankingCoordinator)
-        
-        // Start the banking flow
-        bankingCoordinator.start()
-    }
-    
-    private func presentWithdrawFlow() {
-        guard let presentingViewController = profileNavigationController else { return }
-        
-        let bankingCoordinator = BankingCoordinator.forWithdraw(
-            presentingViewController: presentingViewController,
+            navigationController: profileNavigationController,
             client: servicesProvider
         )
         
@@ -289,34 +237,40 @@ final class ProfileWalletCoordinator: Coordinator {
         bankingCoordinator.start()
     }
     
-    private func checkIfFirstDeposit() -> Bool {
-        // TODO: In a real implementation, check user's transaction history
-        // For now, return false as a default
-        return false
+    private func presentWithdrawFlow() {
+        guard let profileNavigationController = profileNavigationController else { return }
+        
+        let bankingCoordinator = BankingCoordinator.forWithdraw(
+            navigationController: profileNavigationController,
+            client: servicesProvider
+        )
+        
+        // Set up banking coordinator closures
+        setupBankingCoordinatorCallbacks(bankingCoordinator)
+        
+        // Add as child coordinator
+        addChildCoordinator(bankingCoordinator)
+        
+        // Start the banking flow
+        bankingCoordinator.start()
     }
+    
     
     // MARK: - Banking Coordinator Setup
     
     private func setupBankingCoordinatorCallbacks(_ coordinator: BankingCoordinator) {
         // Transaction completion callback
-        coordinator.onTransactionComplete = { [weak self] transactionType, amount in
+        coordinator.onTransactionComplete = { [weak self] in
             guard let self = self else { return }
             
             // Transaction completed successfully
-            print("[ProfileWallet] Banking transaction completed: \(transactionType.displayName)")
+            print("[ProfileWallet] Banking transaction completed")
             
             // Update wallet data to reflect the transaction
             self.userSessionStore.refreshUserWallet()
             
             // Remove child coordinator
             self.removeChildCoordinator(coordinator)
-            
-            // Optionally call external callback for further handling
-            if transactionType == .deposit {
-                self.onDepositRequested?()
-            } else {
-                self.onWithdrawRequested?()
-            }
         }
         
         // Transaction cancellation callback
@@ -338,27 +292,6 @@ final class ProfileWalletCoordinator: Coordinator {
             self.showTransactionErrorAlert(error: error)
         }
         
-        // Navigation action callback
-        coordinator.onNavigationAction = { [weak self] action in
-            guard let self = self else { return }
-            
-            // Handle navigation actions from banking flow
-            switch action {
-            case .goToSports:
-                // Dismiss profile and navigate to sports
-                self.dismissProfileWallet()
-                // Note: The parent coordinator should handle sports navigation
-                
-            case .goToCasino:
-                // Dismiss profile and navigate to casino
-                self.dismissProfileWallet()
-                // Note: The parent coordinator should handle casino navigation
-                
-            case .closeModal, .none:
-                // Just remove the banking coordinator
-                self.removeChildCoordinator(coordinator)
-            }
-        }
     }
     
     private func showTransactionErrorAlert(error: String) {
@@ -372,26 +305,5 @@ final class ProfileWalletCoordinator: Coordinator {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         
         presentingViewController.present(alert, animated: true)
-    }
-}
-
-// MARK: - Factory Methods
-
-extension ProfileWalletCoordinator {
-    
-    /// Creates and presents a ProfileWalletCoordinator
-    static func present(
-        from navigationController: UINavigationController,
-        servicesProvider: ServicesProvider.Client,
-        userSessionStore: UserSessionStore
-    ) -> ProfileWalletCoordinator {
-        let coordinator = ProfileWalletCoordinator(
-            navigationController: navigationController,
-            servicesProvider: servicesProvider,
-            userSessionStore: userSessionStore
-        )
-        
-        coordinator.start()
-        return coordinator
     }
 }

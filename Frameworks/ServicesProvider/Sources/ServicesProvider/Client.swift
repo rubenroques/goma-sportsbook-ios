@@ -91,7 +91,7 @@ public class Client {
                 }).store(in: &self.cancellables)
             
             
-            self.eventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector)
+            self.eventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector, sessionCoordinator: sessionCoordinator)
             
             // Player API for privilegedAccessManager
             let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector(sessionCoordinator: sessionCoordinator)
@@ -503,6 +503,15 @@ extension Client {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.subscribeSportTypes()
+    }
+    
+    public func checkServicesHealth() -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.checkServicesHealth()
     }
 
     public func addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError> {

@@ -11,7 +11,6 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     private let matchTimeSubject: CurrentValueSubject<String?, Never>
     private let isLiveSubject: CurrentValueSubject<Bool, Never>
     
-    
     // MARK: - Published Properties
     public var competitionNamePublisher: AnyPublisher<String, Never> {
         return self.competitionNameSubject.eraseToAnyPublisher()
@@ -37,7 +36,18 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
         return self.isLiveSubject.eraseToAnyPublisher()
     }
     
+    // MARK: - Visibility Publishers
+    public var isCountryFlagVisiblePublisher: AnyPublisher<Bool, Never> {
+        return Just(false).eraseToAnyPublisher()
+    }
     
+    public var isSportIconVisiblePublisher: AnyPublisher<Bool, Never> {
+        return Just(false).eraseToAnyPublisher()
+    }
+    
+    public var isFavoriteButtonVisiblePublisher: AnyPublisher<Bool, Never> {
+        return Just(true).eraseToAnyPublisher()
+    }
     
     // MARK: - Initialization
     init(data: MatchHeaderData) {
@@ -78,7 +88,6 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     func updateIsLive(_ isLive: Bool) {
         isLiveSubject.send(isLive)
     }
-    
     
 }
 

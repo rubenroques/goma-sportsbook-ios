@@ -79,6 +79,9 @@ class InPlayEventsViewModel {
         print("Empty clojure")
     }
     
+    // Casino navigation closure for QuickLinks
+    var onCasinoQuickLinkSelected: ((QuickLinkType) -> Void)?
+    
     // MARK: - Private Properties
     var sport: Sport
     private var appliedFilters = AppliedEventsFilters.defaultFilters
@@ -98,7 +101,8 @@ class InPlayEventsViewModel {
     init(sport: Sport, servicesProvider: ServicesProvider.Client) {
         self.sport = sport
         self.servicesProvider = servicesProvider
-        self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
+        // Create production QuickLinks ViewModel
+        self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forSportsScreens()
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
         
@@ -197,6 +201,13 @@ class InPlayEventsViewModel {
 
     // MARK: - Setup
     private func setupBindings() {
+        // Setup QuickLinks navigation callback
+        if let quickLinksViewModel = quickLinksTabBarViewModel as? QuickLinksTabBarViewModel {
+            quickLinksViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
+                self?.onCasinoQuickLinkSelected?(quickLinkType)
+            }
+        }
+        
         // Listen to market group selection changes from selector ViewModel
         marketGroupSelectorViewModel.selectionEventPublisher
             .sink { [weak self] selectionEvent in

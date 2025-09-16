@@ -878,6 +878,20 @@ extension GomaProvider: EventsProvider {
         }).eraseToAnyPublisher()
     }
     
+    func checkServicesHealth() -> AnyPublisher<Bool, ServiceProviderError> {
+        // For Goma, we can check health by making the same getSports call
+        // If it succeeds, the service is healthy
+        let endpoint = GomaAPISchema.getSports
+        let publisher: AnyPublisher<GomaModels.Sports, ServiceProviderError> = self.connector.request(endpoint)
+        
+        return publisher
+            .map { _ in
+                print("🏥 GomaProvider: Health check successful")
+                return true
+            }
+            .eraseToAnyPublisher()
+    }
+    
     func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

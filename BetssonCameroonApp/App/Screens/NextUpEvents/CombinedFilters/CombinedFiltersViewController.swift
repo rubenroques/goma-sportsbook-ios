@@ -22,7 +22,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let resetButton: UIButton = {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("reset"), for: .normal)
+        button.setTitle(localized("Reset"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
         button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
         button.backgroundColor = .clear
@@ -32,7 +32,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let titleLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("filters")
+        label.text = localized("Filters")
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
@@ -42,7 +42,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let closeButton: UIButton = {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("close"), for: .normal)
+        button.setTitle(localized("Close"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
         button.setTitleColor(StyleProvider.Color.highlightTertiary, for: .normal)
         button.backgroundColor = .clear

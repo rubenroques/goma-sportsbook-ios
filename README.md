@@ -262,6 +262,20 @@ All projects use Swift Package Manager for internal dependencies, with clear sep
 - Automated formatting and validation
 - Protocol-oriented design enforcement
 
+## Documentation
+
+### Development Guides
+- **[API Development Guide](Documentation/API_DEVELOPMENT_GUIDE.md)** - Complete guide for adding new API endpoints with proper 3-layer architecture
+- **[MVVM Architecture](Documentation/MVVM.md)** - Detailed explanation of the MVVM pattern used throughout the project
+- **[UI Component Guide](Documentation/UI_COMPONENT_GUIDE.md)** - Instructions for creating new GomaUI components
+
+### Architecture Documentation
+- **[ServicesProvider Framework](Documentation/architecture/services_provider.md)** - Backend abstraction layer architecture
+- **[Data Flow Diagrams](Documentation/sportsbook-ios-data-flow-diagrams.md)** - Visual representation of data flow patterns
+
+### Development Journal
+- **[Development Journal](Documentation/DevelopmentJournal/)** - Session-by-session development logs and decision tracking
+
 ## Contributing
 
 ### Guidelines

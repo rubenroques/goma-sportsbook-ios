@@ -10,6 +10,11 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
     private let matchTimeSubject = CurrentValueSubject<String?, Never>(nil)
     private let isLiveSubject = CurrentValueSubject<Bool, Never>(false)
     
+    // MARK: - Private Visibility Publishers
+    private let isCountryFlagVisibleSubject = CurrentValueSubject<Bool, Never>(true)
+    private let isSportIconVisibleSubject = CurrentValueSubject<Bool, Never>(true)
+    private let isFavoriteButtonVisibleSubject = CurrentValueSubject<Bool, Never>(true)
+    
     
     // MARK: - Public Publishers
     public var competitionNamePublisher: AnyPublisher<String, Never> {
@@ -37,7 +42,18 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
         isLiveSubject.eraseToAnyPublisher()
     }
     
+    // MARK: - Visibility Publishers
+    public var isCountryFlagVisiblePublisher: AnyPublisher<Bool, Never> {
+        isCountryFlagVisibleSubject.eraseToAnyPublisher()
+    }
     
+    public var isSportIconVisiblePublisher: AnyPublisher<Bool, Never> {
+        isSportIconVisibleSubject.eraseToAnyPublisher()
+    }
+    
+    public var isFavoriteButtonVisiblePublisher: AnyPublisher<Bool, Never> {
+        isFavoriteButtonVisibleSubject.eraseToAnyPublisher()
+    }
     
     // MARK: - Action Callback
     public var favoriteToggleCallback: ((Bool) -> Void)?
@@ -80,6 +96,18 @@ public class MockMatchHeaderViewModel: MatchHeaderViewModelProtocol {
         isLiveSubject.send(isLive)
     }
     
+    // MARK: - Visibility Actions
+    public func setCountryFlagVisible(_ visible: Bool) {
+        isCountryFlagVisibleSubject.send(visible)
+    }
+    
+    public func setSportIconVisible(_ visible: Bool) {
+        isSportIconVisibleSubject.send(visible)
+    }
+    
+    public func setFavoriteButtonVisible(_ visible: Bool) {
+        isFavoriteButtonVisibleSubject.send(visible)
+    }
     
 }
 
@@ -223,5 +251,75 @@ extension MockMatchHeaderViewModel {
                 isLive: false
             )
         )
+    }
+    
+    /// Header with hidden country flag
+    public static var noCountryFlagHeader: MockMatchHeaderViewModel {
+        let viewModel = MockMatchHeaderViewModel(
+            matchHeaderData: MatchHeaderData(
+                id: "no_country_flag",
+                competitionName: "International League",
+                countryFlagImageName: "GB",
+                sportIconImageName: "1",
+                isFavorite: false,
+                matchTime: "15 May, 20:00",
+                isLive: false
+            )
+        )
+        viewModel.setCountryFlagVisible(false)
+        return viewModel
+    }
+    
+    /// Header with hidden sport icon
+    public static var noSportIconHeader: MockMatchHeaderViewModel {
+        let viewModel = MockMatchHeaderViewModel(
+            matchHeaderData: MatchHeaderData(
+                id: "no_sport_icon",
+                competitionName: "Mixed Sports League",
+                countryFlagImageName: "US",
+                sportIconImageName: "1",
+                isFavorite: true,
+                matchTime: "20 May, 14:30",
+                isLive: false
+            )
+        )
+        viewModel.setSportIconVisible(false)
+        return viewModel
+    }
+    
+    /// Header with hidden favorite button
+    public static var noFavoriteButtonHeader: MockMatchHeaderViewModel {
+        let viewModel = MockMatchHeaderViewModel(
+            matchHeaderData: MatchHeaderData(
+                id: "no_favorite",
+                competitionName: "Corporate League",
+                countryFlagImageName: "CA",
+                sportIconImageName: "1",
+                isFavorite: false,
+                matchTime: "25 May, 18:00",
+                isLive: false
+            )
+        )
+        viewModel.setFavoriteButtonVisible(false)
+        return viewModel
+    }
+    
+    /// Header with only competition name (all icons hidden)
+    public static var minimalVisibilityHeader: MockMatchHeaderViewModel {
+        let viewModel = MockMatchHeaderViewModel(
+            matchHeaderData: MatchHeaderData(
+                id: "minimal_visibility",
+                competitionName: "Text Only Championship",
+                countryFlagImageName: "FR",
+                sportIconImageName: "8",
+                isFavorite: true,
+                matchTime: "30 May, 21:45",
+                isLive: false
+            )
+        )
+        viewModel.setCountryFlagVisible(false)
+        viewModel.setSportIconVisible(false)
+        viewModel.setFavoriteButtonVisible(false)
+        return viewModel
     }
 } 

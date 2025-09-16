@@ -370,10 +370,10 @@ extension TallOddsMatchCardViewModel {
     
     private static func createMarketIcons(from markets: [Market], match: Match) -> [MarketInfoIcon] {
         var icons: [MarketInfoIcon] = []
-        icons.append(MarketInfoIcon(type: .expressPickShort, isVisible: true))
-        icons.append(MarketInfoIcon(type: .mostPopular, isVisible: true))
-        icons.append(MarketInfoIcon(type: .betBuilder, isVisible: true))
-        icons.append(MarketInfoIcon(type: .statistics, isVisible: true))
+        icons.append(MarketInfoIcon(type: .expressPickShort, isVisible: false))
+        icons.append(MarketInfoIcon(type: .mostPopular, isVisible: false))
+        icons.append(MarketInfoIcon(type: .betBuilder, isVisible: false))
+        icons.append(MarketInfoIcon(type: .statistics, isVisible: false))
         return icons
     }
     

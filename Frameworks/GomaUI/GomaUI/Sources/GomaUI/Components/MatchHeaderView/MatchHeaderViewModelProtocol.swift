@@ -72,6 +72,11 @@ public protocol MatchHeaderViewModelProtocol {
     var isFavoritePublisher: AnyPublisher<Bool, Never> { get }
     var matchTimePublisher: AnyPublisher<String?, Never> { get }
     var isLivePublisher: AnyPublisher<Bool, Never> { get }
+    
+    // Visibility publishers
+    var isCountryFlagVisiblePublisher: AnyPublisher<Bool, Never> { get }
+    var isSportIconVisiblePublisher: AnyPublisher<Bool, Never> { get }
+    var isFavoriteButtonVisiblePublisher: AnyPublisher<Bool, Never> { get }
 
     // Actions
     func toggleFavorite()
@@ -81,4 +86,5 @@ public protocol MatchHeaderViewModelProtocol {
     func updateSportIcon(_ imageName: String?)
     func updateMatchTime(_ time: String?)
     func updateIsLive(_ isLive: Bool)
-} 
+    
+}

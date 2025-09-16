@@ -7,6 +7,7 @@
 
 import UIKit
 import ServicesProvider
+import GomaUI
 
 class CasinoCoordinator: Coordinator {
     
@@ -163,5 +164,50 @@ class CasinoCoordinator: Coordinator {
     // MARK: - Public Methods for RootTabBarCoordinator
     func refresh() {
         casinoCategoriesListViewController?.viewModel.reloadCategories()
+    }
+    
+    // MARK: - QuickLinks Deep Navigation
+    
+    /// Navigate to specific casino category based on QuickLinkType
+    func navigateToGameCategory(type: QuickLinkType) {
+        print("🎰 CasinoCoordinator: Navigating to game category - \(type.rawValue)")
+        
+        // Map QuickLinkType to casino category IDs and actions
+        switch type {
+        case .aviator:
+            // Navigate directly to Aviator game
+            navigateToSpecificGame(gameId: "aviator", categoryId: "crash", categoryTitle: "Crash Games")
+            
+        case .virtual:
+            // Navigate to Virtual Sports category
+            showCategoryGamesList(categoryId: "virtual", categoryTitle: "Virtual Sports")
+            
+        case .slots:
+            // Navigate to Slots category
+            showCategoryGamesList(categoryId: "slots", categoryTitle: "Slots")
+            
+        case .crash:
+            // Navigate to Crash Games category
+            showCategoryGamesList(categoryId: "crash", categoryTitle: "Crash Games")
+            
+        case .promos:
+            // For promotions, we could show a promotions-filtered view
+            // For now, just show the main casino screen with a log
+            print("🎰 CasinoCoordinator: Promotions not implemented - showing main casino")
+            
+        default:
+            // For non-casino QuickLinks, just show main casino
+            print("🎰 CasinoCoordinator: Non-casino QuickLink - showing main casino")
+        }
+    }
+    
+    private func navigateToSpecificGame(gameId: String, categoryId: String, categoryTitle: String) {
+        // First navigate to category, then to specific game
+        showCategoryGamesList(categoryId: categoryId, categoryTitle: categoryTitle)
+        
+        // After a brief delay, navigate to the specific game
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.showGamePrePlay(gameId: gameId)
+        }
     }
 }

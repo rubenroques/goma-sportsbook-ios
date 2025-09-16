@@ -14,7 +14,7 @@ enum EveryMatrixPlayerAPI {
     case register(registrationId: String)
     case getUserProfile(userId: String)
     case getUserBalance(userId: String)
-    case getBankingWebView(userId: String, parameters: CashierParameters)
+    case getBankingWebView(userId: String, parameters: EveryMatrix.GetPaymentSessionRequest)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {

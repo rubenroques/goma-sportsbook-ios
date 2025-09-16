@@ -91,16 +91,56 @@ final class WAMPManager {
     }
 
     func createSwampSession() -> SSWampSession {
+        let wsEndPoint: String
+        if let cachedCIDValue = UserDefaults.standard.string(forKey: EveryMatrixUnifiedConfiguration.cacheCIDKey) {
+            print("🔧 WAMPManager: cached CID found: \(cachedCIDValue)")
+            wsEndPoint = WAMPSocketParams.wsEndPoint + "?cid=" + cachedCIDValue
+        }
+        else {
+            print("🔧 WAMPManager: no CID found")
+            wsEndPoint = WAMPSocketParams.wsEndPoint
+        }
+                
+        print("🔧 WAMPManager: URL: \(wsEndPoint)")
+        print("🔧 WAMPManager: Origin: \(self.origin)")
+        
         let swampSession = SSWampSession(
             realm: WAMPSocketParams.realm,
             transport: WebSocketSSWampTransport(
-                wsEndpoint: URL(string: WAMPSocketParams.wsEndPoint)!,
-                userAgent: "iOS/Native/URLSession 1.0 CFNetwork Darwin",
+                wsEndpoint: URL(string: wsEndPoint)!,
+                userAgent: self.buildUserAgent(),
                 origin: self.origin
             )
         )
         
         return swampSession
+    }
+    
+    func buildUserAgent() -> String {
+        let device = UIDevice.current
+        let bundle = Bundle.main
+        let appName = bundle.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "App"
+        let appVersion = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+        let buildNumber = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
+        
+        // Get iOS version
+        let osVersion = device.systemVersion.replacingOccurrences(of: ".", with: "_")
+        
+        // Get device model
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let modelCode = withUnsafePointer(to: &systemInfo.machine) {
+            $0.withMemoryRebound(to: CChar.self, capacity: 1) {
+                String(validatingUTF8: $0)
+            }
+        } ?? "Unknown"
+        
+        // Get Darwin/CFNetwork versions
+        let darwinVersion = ProcessInfo.processInfo.operatingSystemVersionString
+        
+        // Build User-Agent
+        let userAgent = "\(appName)/\(appVersion)(\(buildNumber)) - (\(modelCode); iOS \(osVersion)) CFNetwork Darwin \(darwinVersion)"
+        return userAgent
     }
     
     func destroySwampSession() {
@@ -209,7 +249,14 @@ final class WAMPManager {
                 }
                 
                 if swampSession.isConnected() {
+                    print("🔄 WAMPManager: Making RPC call to \(router.procedure)")
+                    print("🔄 WAMPManager: Args: \(router.args ?? [])")
+                    print("🔄 WAMPManager: Kwargs: \(router.kwargs ?? [:])")
+                    
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in
+                        print("✅ WAMPManager: RPC call SUCCESS for \(router.procedure)")
+                        print("✅ WAMPManager: kwResults: \(kwResults ?? [:])")
+                        print("✅ WAMPManager: arrResults: \(arrResults ?? [:])")
                         
                         do {
                             if kwResults != nil {
@@ -264,6 +311,10 @@ final class WAMPManager {
                             promise(.failure( .decodingError(value: error.localizedDescription) ))
                         }
                     }, onError: { _, error, _, kwargs in
+                        print("❌ WAMPManager: RPC call ERROR for \(router.procedure)")
+                        print("❌ WAMPManager: Error: \(error)")
+                        print("❌ WAMPManager: Error kwargs: \(kwargs ?? [:])")
+                        
                         var desc = ""
                         if kwargs?["desc"] != nil {
                             desc = kwargs?["desc"] as! String
@@ -599,16 +650,27 @@ extension WAMPManager: SSWampSessionDelegate {
     }
     
     func ssWampSessionConnected(_ session: SSWampSession, sessionId: Int) {
-        
-        self.connectionStateSubject.send(.connected)
+        print("🔌 WAMPManager: WebSocket connected, establishing WAMP session...")
         
         NotificationCenter.default.post(name: .socketConnected, object: nil)
         
         sessionStateChanged()
             .sink(receiveCompletion: { completion in
-                print("WAMPManager sessionStateChanged completion: \(completion)")
-            }, receiveValue: { connected in
-                print("WAMPManager sessionStateChanged \(connected)")
+                print("🔌 WAMPManager: sessionStateChanged completion: \(completion)")
+                switch completion {
+                case .failure(let error):
+                    print("❌ WAMPManager: Failed to establish WAMP session: \(error)")
+                case .finished:
+                    break
+                }
+            }, receiveValue: { [weak self] connected in
+                print("🔌 WAMPManager: sessionStateChanged result: \(connected)")
+                if connected {
+                    print("✅ WAMPManager: WAMP session ready - emitting .connected state")
+                    self?.connectionStateSubject.send(.connected)
+                } else {
+                    print("❌ WAMPManager: WAMP session not ready")
+                }
             })
             .store(in: &globalCancellable)
         

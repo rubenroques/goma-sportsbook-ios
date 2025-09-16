@@ -361,6 +361,19 @@ class SportRadarEventsProvider: EventsProvider {
         self.socketConnector.messageSubscriber = self
         return merger.sportsPublisher
     }
+    
+    func checkServicesHealth() -> AnyPublisher<Bool, ServiceProviderError> {
+        // For SportRadar, check if we have a valid session token
+        // This indicates the service is accessible
+        guard let sessionToken = self.socketConnector.token else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        
+        print("🏥 SportRadarEventsProvider: Health check successful (session token available)")
+        return Just(true)
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
 
     //
     //

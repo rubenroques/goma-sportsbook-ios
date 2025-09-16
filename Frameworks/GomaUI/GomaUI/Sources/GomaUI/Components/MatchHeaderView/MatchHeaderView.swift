@@ -189,6 +189,32 @@ extension MatchHeaderView {
             }
             .store(in: &cancellables)
 
+        // Bind visibility states
+        viewModel.isCountryFlagVisiblePublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isVisible in
+                self?.locationFlagImageView.isHidden = !isVisible
+            }
+            .store(in: &cancellables)
+
+        viewModel.isSportIconVisiblePublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isVisible in
+                self?.sportTypeImageView.isHidden = !isVisible
+            }
+            .store(in: &cancellables)
+
+        viewModel.isFavoriteButtonVisiblePublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isVisible in
+                self?.favoritesIconImageView.isHidden = !isVisible
+                self?.favoritesButton.isHidden = !isVisible
+            }
+            .store(in: &cancellables)
+
     }
 
 

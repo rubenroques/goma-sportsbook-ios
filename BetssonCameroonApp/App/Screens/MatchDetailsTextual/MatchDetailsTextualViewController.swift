@@ -25,6 +25,11 @@ class MatchDetailsTextualViewController: UIViewController {
     // Closure called when profile is requested - handled by coordinator
     var onProfileRequested: (() -> Void)?
     
+    // MARK: - Wallet Navigation Closures
+    // Closures called when wallet operations are requested - handled by coordinator
+    var onDepositRequested: (() -> Void)?
+    var onWithdrawRequested: (() -> Void)?
+    
     // MARK: Coordinators
     private var betslipCoordinator: BetslipCoordinator?
     
@@ -242,6 +247,14 @@ class MatchDetailsTextualViewController: UIViewController {
                 impactFeedback.impactOccurred()
                 
                 self?.showWalletStatusOverlay()
+            }
+        }
+        
+        // Add wallet deposit tap handling
+        multiWidgetToolbarView.onDepositTapped = { [weak self] widgetID in
+            if widgetID == "wallet" {
+                print("💳 MatchDetailsTextual: Deposit button tapped")
+                self?.onDepositRequested?()
             }
         }
     }
@@ -529,6 +542,15 @@ class MatchDetailsTextualViewController: UIViewController {
         // Setup betslip callback
         viewModel.betslipFloatingViewModel.onBetslipTapped = { [weak self] in
             self?.showBetslip()
+        }
+        
+        // Setup wallet navigation callbacks
+        viewModel.walletStatusViewModel.onDepositRequested = { [weak self] in
+            self?.onDepositRequested?()
+        }
+        
+        viewModel.walletStatusViewModel.onWithdrawRequested = { [weak self] in
+            self?.onWithdrawRequested?()
         }
         
         // Bind loading state

@@ -198,8 +198,8 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             totalOdds: formatOdds(myBet.totalOdd),
             betAmount: formatCurrency(myBet.stake, currency: myBet.currency),
             possibleWinnings: formatPossibleWinnings(myBet),
-            partialCashoutValue: formatPartialCashoutValue(myBet),
-            cashoutTotalAmount: formatCashoutTotalAmount(myBet),
+            partialCashoutValue: nil, // TODO: cashout
+            cashoutTotalAmount: nil, // TODO: cashout
             betStatus: createBetStatus(from: myBet),
             isSettled: myBet.isSettled
         )
@@ -259,25 +259,6 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             return formatCurrency(0.0, currency: myBet.currency)
         }
         return formatCurrency(potentialReturn, currency: myBet.currency)
-    }
-    
-    private static func formatPartialCashoutValue(_ myBet: MyBet) -> String? {
-        // Check if partial cashout is available
-        guard let partialCashoutReturn = myBet.partialCashoutReturn,
-              partialCashoutReturn > 0 else {
-            return nil
-        }
-        return formatCurrency(partialCashoutReturn, currency: myBet.currency)
-    }
-    
-    private static func formatCashoutTotalAmount(_ myBet: MyBet) -> String? {
-        // Check if total cashout is available
-        guard let totalReturn = myBet.totalReturn,
-              totalReturn > 0,
-              myBet.result == .open || myBet.state == .opened else {
-            return nil
-        }
-        return formatCurrency(totalReturn, currency: myBet.currency)
     }
     
     private static func createBetStatus(from myBet: MyBet) -> BetTicketStatusData? {

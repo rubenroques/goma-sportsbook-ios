@@ -246,7 +246,7 @@ extension ProfileWalletViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Profile"
-        label.font = StyleProvider.fontWith(type: .bold, size: 16)
+        label.font = AppFont.with(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
         return label
@@ -257,7 +257,7 @@ extension ProfileWalletViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Close", for: .normal)
         button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
-        button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
     }
     
@@ -302,7 +302,7 @@ extension ProfileWalletViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Loading profile..."
         label.textAlignment = .center
-        label.font = StyleProvider.fontWith(type: .medium, size: 16)
+        label.font = AppFont.with(type: .medium, size: 16)
         label.textColor = StyleProvider.Color.textSecondary
         
         view.addSubview(spinner)
@@ -329,7 +329,7 @@ extension ProfileWalletViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Failed to load profile"
         label.textAlignment = .center
-        label.font = StyleProvider.fontWith(type: .medium, size: 16)
+        label.font = AppFont.with(type: .medium, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.numberOfLines = 0
         
@@ -337,7 +337,7 @@ extension ProfileWalletViewController {
         retryButton.translatesAutoresizingMaskIntoConstraints = false
         retryButton.setTitle("Try Again", for: .normal)
         retryButton.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
-        retryButton.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 16)
+        retryButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
         retryButton.backgroundColor = StyleProvider.Color.buttonBackgroundSecondary
         retryButton.layer.cornerRadius = 8
         retryButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)

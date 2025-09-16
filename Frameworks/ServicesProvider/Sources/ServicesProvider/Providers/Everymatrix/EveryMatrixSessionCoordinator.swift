@@ -44,6 +44,12 @@ public class EveryMatrixSessionCoordinator {
     // User ID storage
     private var userIdPublisher: CurrentValueSubject<String?, Never> = .init(nil)
     
+    // Operator ID storage
+    private var operatorId: String?
+    
+    // Operator ID storage
+    private var cid: String? // aka socket client id or CID
+    
     // MARK: - New Properties (from Authenticator)
     
     /// Current session information
@@ -93,6 +99,8 @@ public class EveryMatrixSessionCoordinator {
             }
             // Clear user ID
             self.userIdPublisher.send(nil)
+            // Clear operator ID
+            self.operatorId = nil
             // Clear session data
             self.currentSession = nil
             self.credentials = nil
@@ -107,7 +115,39 @@ public class EveryMatrixSessionCoordinator {
     public func clearToken(withKey key: EveryMatrixSessionCoordinatorKey) {
         self.accessTokensPublishers[key.rawValue]?.send(nil)
     }
-
+    
+    // MARK: - Operator ID Management
+    public func saveOperatorId(_ operatorId: String) {
+        queue.sync {
+            self.operatorId = operatorId
+        }
+    }
+    
+    public func getCurrentOperatorId() -> String? {
+        return queue.sync {
+            return self.operatorId
+        }
+    }
+    
+    public func getOperatorIdOrDefault() -> String {
+        return getCurrentOperatorId() ?? "4093" // Fallback to default
+    }
+    
+    // MARK: - cid / CID / socket client ID - Management
+    public func saveCID(_ cid: String?) {
+        queue.sync {
+            self.cid = cid
+            
+            UserDefaults.standard.set(cid, forKey: EveryMatrixUnifiedConfiguration.cacheCIDKey)
+        }
+    }
+    
+    public func getCID() -> String? {
+        return queue.sync {
+            return self.cid
+        }
+    }
+    
     public func token(forKey key: EveryMatrixSessionCoordinatorKey) -> AnyPublisher<String?, Never> {
         if let publisher = self.accessTokensPublishers[key.rawValue] {
             return publisher.eraseToAnyPublisher()

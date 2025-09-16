@@ -79,6 +79,15 @@ class RootTabBarCoordinator: Coordinator {
             self?.showProfile()
         }
         
+        // Setup wallet navigation
+        rootTabBarViewController.onDepositRequested = { [weak self] in
+            self?.presentDepositFlow()
+        }
+        
+        rootTabBarViewController.onWithdrawRequested = { [weak self] in
+            self?.presentWithdrawFlow()
+        }
+        
         self.rootTabBarViewController = rootTabBarViewController
         navigationController.setViewControllers([rootTabBarViewController], animated: false)
         
@@ -157,6 +166,10 @@ class RootTabBarCoordinator: Coordinator {
                 self?.showBetslip()
             }
             
+            coordinator.onShowCasinoTab = { [weak self] quickLinkType in
+                self?.navigateToCasinoFromQuickLink(quickLinkType)
+            }
+            
             nextUpEventsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -193,6 +206,10 @@ class RootTabBarCoordinator: Coordinator {
             
             coordinator.onShowFilters = { [weak self] in
                 self?.showFilters(isLiveMode: true)
+            }
+            
+            coordinator.onShowCasinoTab = { [weak self] quickLinkType in
+                self?.navigateToCasinoFromQuickLink(quickLinkType)
             }
             
             inPlayEventsCoordinator = coordinator
@@ -244,6 +261,15 @@ class RootTabBarCoordinator: Coordinator {
             self?.showProfile()
         }
         
+        // Add wallet navigation closures
+        matchDetailsViewController.onDepositRequested = { [weak self] in
+            self?.presentDepositFlow()
+        }
+        
+        matchDetailsViewController.onWithdrawRequested = { [weak self] in
+            self?.presentWithdrawFlow()
+        }
+        
         // Present the controller using navigation stack
         navigationController.pushViewController(matchDetailsViewController, animated: true)
         print("🚀 MainCoordinator: Navigated to match detail for match: \(match.id)")
@@ -274,6 +300,15 @@ class RootTabBarCoordinator: Coordinator {
         
         betDetailViewController.onProfileRequested = { [weak self] in
             self?.showProfile()
+        }
+        
+        // Add wallet navigation closures
+        betDetailViewController.onDepositRequested = { [weak self] in
+            self?.presentDepositFlow()
+        }
+        
+        betDetailViewController.onWithdrawRequested = { [weak self] in
+            self?.presentWithdrawFlow()
         }
         
         // Push onto navigation stack
@@ -356,17 +391,16 @@ class RootTabBarCoordinator: Coordinator {
         // Setup closure-based callbacks
         profileCoordinator.onProfileDismiss = { [weak self] in
             self?.removeChildCoordinator(profileCoordinator)
-            print("🚀 RootTabBarCoordinator: Profile coordinator finished")
         }
         
         profileCoordinator.onDepositRequested = { [weak self] in
             print("🚀 RootTabBarCoordinator: Profile requested deposit")
-            // TODO: Handle deposit navigation when implemented
+            self?.presentDepositFlow()
         }
         
         profileCoordinator.onWithdrawRequested = { [weak self] in
             print("🚀 RootTabBarCoordinator: Profile requested withdraw") 
-            // TODO: Handle withdraw navigation when implemented
+            self?.presentWithdrawFlow()
         }
         
         addChildCoordinator(profileCoordinator)
@@ -612,5 +646,71 @@ class RootTabBarCoordinator: Coordinator {
     private func showCasinoSearchScreen() {
         let dummyViewController = DummyViewController(displayText: "Casino Search")
         rootTabBarViewController?.showCasinoSearchScreen(with: dummyViewController)
+    }
+    
+    // MARK: - Banking Flow Methods
+    
+    private func presentDepositFlow() {
+        let bankingCoordinator = BankingCoordinator.forDeposit(
+            navigationController: navigationController,
+            client: environment.servicesProvider
+        )
+        
+        setupBankingCoordinatorCallbacks(bankingCoordinator)
+        addChildCoordinator(bankingCoordinator)
+        bankingCoordinator.start()
+    }
+    
+    private func presentWithdrawFlow() {
+        let bankingCoordinator = BankingCoordinator.forWithdraw(
+            navigationController: navigationController,
+            client: environment.servicesProvider
+        )
+        
+        setupBankingCoordinatorCallbacks(bankingCoordinator)
+        addChildCoordinator(bankingCoordinator)
+        bankingCoordinator.start()
+    }
+    
+    private func setupBankingCoordinatorCallbacks(_ coordinator: BankingCoordinator) {
+        coordinator.onTransactionComplete = { [weak self] in
+            print("🏦 RootTabBarCoordinator: Banking transaction completed")
+            self?.environment.userSessionStore.refreshUserWallet()
+            self?.removeChildCoordinator(coordinator)
+        }
+        
+        coordinator.onTransactionCancel = { [weak self] in
+            print("🏦 RootTabBarCoordinator: Banking transaction cancelled")
+            self?.removeChildCoordinator(coordinator)
+        }
+        
+        coordinator.onTransactionError = { [weak self] error in
+            print("🏦 RootTabBarCoordinator: Banking transaction failed: \(error)")
+            self?.removeChildCoordinator(coordinator)
+        }
+    }
+    
+    // MARK: - QuickLinks Casino Navigation
+    
+    private func navigateToCasinoFromQuickLink(_ quickLinkType: QuickLinkType) {
+        print("🎰 RootTabBarCoordinator: Navigating to casino from QuickLink - \(quickLinkType.rawValue)")
+        
+        // First, ensure casino coordinator is loaded
+        
+        
+        switch quickLinkType {
+        case .aviator:
+            self.showCasinoAviatorGameScreen()
+        case .virtual:
+            self.showCasinoVirtualSportsScreen()
+        case .slots:
+            self.showCasinoHomeScreen()
+        case .crash:
+            self.showCasinoHomeScreen()
+        case .promos:
+            self.showCasinoHomeScreen()
+        default:
+            break
+        }
     }
 }
