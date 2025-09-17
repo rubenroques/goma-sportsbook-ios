@@ -42,4 +42,22 @@ extension EveryMatrix {
             self.records = try container.decode([EntityRecord].self, forKey: .records)
         }
     }
+    
+    struct RPCBasicResponse: Codable {
+        let records: [EntityRecord]
+        let includedData : [EntityRecord]?
+        
+        enum CodingKeys: String, CodingKey {
+            case records
+            case includedData
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            self.records = try container.decode([EntityRecord].self, forKey: .records)
+            
+            self.includedData = try container.decodeIfPresent([EntityRecord].self, forKey: .includedData)
+        }
+    }
 }

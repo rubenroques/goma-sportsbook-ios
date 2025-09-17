@@ -542,6 +542,15 @@ struct ComponentRegistry {
             }
         ),
         UIComponent(
+            title: "Search View",
+            description: "Lightweight search input with icon, placeholder, and clear button",
+            viewController: SearchViewController.self,
+            previewFactory: {
+                let viewModel = MockSearchViewModel.default
+                return SearchView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
             title: "Pin Digit Entry View",
             description: "A PIN digit entry component, using PinDigitEntryView.",
             viewController: PinDigitEntryViewController.self,

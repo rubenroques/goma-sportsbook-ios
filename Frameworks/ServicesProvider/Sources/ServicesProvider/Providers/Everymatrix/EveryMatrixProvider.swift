@@ -543,7 +543,20 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        let language = "en"
+        let bettingTypeIds = [69, 466, 112, 76, 9]
+        let includes = ["BETTING_OFFERS", "EVENT_INFO"]
+        let router = WAMPRouter.searchV2(language: language, limit: Int(resultLimit) ?? 20, query: query, eventStatuses: [1,2], include: includes, bettingTypeIds: bettingTypeIds, dataWithoutOdds: false)
+        
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCBasicResponse, ServiceProviderError> = connector.request(router)
+        return rpcResponsePublisher
+            .map { [weak self] rpcResponse in
+                let response = rpcResponse
+                let eventGroup = EventsGroup(events: [], marketGroupId: nil)
+                return eventGroup
+            }
+            .eraseToAnyPublisher()
+//        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
     func getEventSummary(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError> {

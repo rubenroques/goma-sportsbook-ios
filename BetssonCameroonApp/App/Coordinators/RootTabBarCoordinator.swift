@@ -40,6 +40,7 @@ class RootTabBarCoordinator: Coordinator {
     private var nextUpEventsCoordinator: NextUpEventsCoordinator?
     private var inPlayEventsCoordinator: InPlayEventsCoordinator?
     private var myBetsCoordinator: MyBetsCoordinator?
+    private var sportsSearchCoordinator: SportsSearchCoordinator?
     private var casinoCoordinator: CasinoCoordinator?
     private var betslipCoordinator: BetslipCoordinator?
     // MARK: - Initialization
@@ -102,6 +103,7 @@ class RootTabBarCoordinator: Coordinator {
         nextUpEventsCoordinator = nil
         inPlayEventsCoordinator = nil
         myBetsCoordinator = nil
+        sportsSearchCoordinator = nil
         casinoCoordinator = nil
         rootTabBarViewController = nil
         betslipCoordinator = nil
@@ -556,6 +558,7 @@ class RootTabBarCoordinator: Coordinator {
         // Update sport in both coordinators if they exist and are active
         nextUpEventsCoordinator?.updateSport(sport)
         inPlayEventsCoordinator?.updateSport(sport)
+        sportsSearchCoordinator?.updateSport(sport)
         print("🚀 MainCoordinator: Updated current sport to: \(sport.name) and filters")
     }
     
@@ -567,6 +570,7 @@ class RootTabBarCoordinator: Coordinator {
         // Update filters in child coordinators and refresh with new filters
         nextUpEventsCoordinator?.updateFilters(filterSelection)
         inPlayEventsCoordinator?.updateFilters(filterSelection)
+        sportsSearchCoordinator?.updateFilters(filterSelection)
     }
         
     private func showMyBetsScreen() {
@@ -601,8 +605,38 @@ class RootTabBarCoordinator: Coordinator {
     }
     
     private func showSearchScreen() {
-        let dummyViewController = DummyViewController(displayText: "Search")
-        rootTabBarViewController?.showSearchScreen(with: dummyViewController)
+        // Lazy loading: only create coordinator when needed
+        if sportsSearchCoordinator == nil {
+            let coordinator = SportsSearchCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment
+            )
+            
+            // Set up navigation closures
+            coordinator.onShowMatchDetail = { [weak self] match in
+                self?.showMatchDetail(match: match)
+            }
+            
+            coordinator.onShowSportsSelector = { [weak self] in
+                self?.showSportsSelector()
+            }
+            
+            coordinator.onShowFilters = { [weak self] in
+                self?.showFilters(isLiveMode: false)
+            }
+            
+            sportsSearchCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+        
+        // Show the screen through RootTabBarViewController
+        if let viewController = sportsSearchCoordinator?.viewController {
+            rootTabBarViewController?.showSearchScreen(with: viewController)
+        }
+        
+        // Refresh if needed
+        sportsSearchCoordinator?.refresh()
     }
     
     private func showCasinoHomeScreen() {
