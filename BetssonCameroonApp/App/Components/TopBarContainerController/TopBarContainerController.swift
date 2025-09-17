@@ -236,6 +236,9 @@ class TopBarContainerController: UIViewController {
         case "avatar":
             print("👤 TopBarContainer: Profile requested")
             onProfileRequested?()
+        case "language":
+            print("🌐 TopBarContainer: Language settings requested")
+            presentLanguageSettingsConfirmation()
         default:
             print("🔧 TopBarContainer: Widget selected: \(widgetId)")
         }
@@ -286,5 +289,36 @@ class TopBarContainerController: UIViewController {
         }
 
         present(viewController, animated: animated)
+    }
+}
+
+// MARK: - Settings Routing
+private extension TopBarContainerController {
+    func presentLanguageSettingsConfirmation() {
+        let title = "Set Your App Language"
+        let message = "Continue to Settings to choose your preferred language for Betsson."
+
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        let openAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+            DispatchQueue.main.async {
+                guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
+                      UIApplication.shared.canOpenURL(settingsURL) else {
+                    return
+                }
+                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+            }
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+        alertController.addAction(openAction)
+        alertController.addAction(cancelAction)
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let presenter = self.presentedViewController ?? self
+            presenter.present(alertController, animated: true)
+        }
     }
 }
