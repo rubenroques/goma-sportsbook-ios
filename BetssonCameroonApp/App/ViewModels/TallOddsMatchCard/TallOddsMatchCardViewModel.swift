@@ -39,10 +39,14 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     private var currentEventLiveData: EventLiveData?
     private var cancellables = Set<AnyCancellable>()
     
+    var matchCardContext: MatchCardContext
+    
     // MARK: - Initialization
-    init(matchData: TallOddsMatchData) {
+    init(matchData: TallOddsMatchData, matchCardContext: MatchCardContext = .lists) {
         print("[TallOddsMatchCardViewModel] Creating VM for match: \(matchData.homeParticipantName)-\(matchData.awayParticipantName)")
         self.matchData = matchData
+        
+        self.matchCardContext = matchCardContext
         
         // Create initial display state from match data
         let initialDisplayState = TallOddsMatchCardDisplayState(
@@ -55,7 +59,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         // Create child view models from match data
         let headerViewModel = Self.createMatchHeaderViewModel(from: matchData.leagueInfo)
         let marketInfoViewModel = Self.createMarketInfoLineViewModel(from: matchData.marketInfo)
-        let outcomesViewModel = Self.createMarketOutcomesViewModel(from: matchData.outcomes)
+        let outcomesViewModel = Self.createMarketOutcomesViewModel(from: matchData.outcomes, with: matchCardContext)
         let scoreViewModel = Self.createScoreViewModel(from: matchData.liveScoreData)
         
         // Initialize subjects
@@ -285,8 +289,8 @@ extension TallOddsMatchCardViewModel {
         return MarketInfoLineViewModel(marketInfoData: marketInfoData)
     }
     
-    private static func createMarketOutcomesViewModel(from marketGroupData: MarketGroupData) -> MarketOutcomesMultiLineViewModelProtocol {
-        return MarketOutcomesMultiLineViewModel(marketGroupData: marketGroupData)
+    private static func createMarketOutcomesViewModel(from marketGroupData: MarketGroupData, with matchCardContext: MatchCardContext) -> MarketOutcomesMultiLineViewModelProtocol {
+        return MarketOutcomesMultiLineViewModel(marketGroupData: marketGroupData, matchCardContext: matchCardContext)
     }
     
     private static func createScoreViewModel(from liveScoreData: LiveScoreData?) -> ScoreViewModelProtocol? {
@@ -294,10 +298,11 @@ extension TallOddsMatchCardViewModel {
         return MockScoreViewModel(scoreCells: liveScoreData.scoreCells, visualState: .display)
     }
     
-    private static func createMarketOutcomesViewModel(from markets: [Market], marketTypeId: String) -> MarketOutcomesMultiLineViewModelProtocol {
+    private static func createMarketOutcomesViewModel(from markets: [Market], marketTypeId: String, with matchCardContext: MatchCardContext) -> MarketOutcomesMultiLineViewModelProtocol {
         return MarketOutcomesMultiLineViewModel.createWithDirectLineViewModels(
             from: markets,
-            marketTypeId: marketTypeId
+            marketTypeId: marketTypeId,
+            with: matchCardContext
         )
     }
 }
@@ -306,7 +311,7 @@ extension TallOddsMatchCardViewModel {
 extension TallOddsMatchCardViewModel {
     
     /// Creates a TallOddsMatchCardViewModel from real Match and Market data
-    static func create(from match: Match, relevantMarkets: [Market], marketTypeId: String) -> TallOddsMatchCardViewModel {
+    static func create(from match: Match, relevantMarkets: [Market], marketTypeId: String, matchCardContext: MatchCardContext = .lists) -> TallOddsMatchCardViewModel {
         // 1. Create MatchHeaderData
         let matchHeaderData = MatchHeaderData(
             id: match.id,
@@ -326,7 +331,7 @@ extension TallOddsMatchCardViewModel {
             icons: createMarketIcons(from: relevantMarkets, match: match)
         )
         
-        let outcomesViewModel = createMarketOutcomesViewModel(from: relevantMarkets, marketTypeId: marketTypeId)
+        let outcomesViewModel = createMarketOutcomesViewModel(from: relevantMarkets, marketTypeId: marketTypeId, with: matchCardContext)
         
         // Create the view model directly with production child view models
         let tallOddsMatchData = TallOddsMatchData(
@@ -338,7 +343,7 @@ extension TallOddsMatchCardViewModel {
             outcomes: MarketGroupData(id: marketTypeId, marketLines: [])
         )
         
-        let viewModel = TallOddsMatchCardViewModel(matchData: tallOddsMatchData)
+        let viewModel = TallOddsMatchCardViewModel(matchData: tallOddsMatchData, matchCardContext: matchCardContext)
         
         viewModel.marketOutcomesViewModelSubject.send(outcomesViewModel)
         

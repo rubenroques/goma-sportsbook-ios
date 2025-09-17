@@ -13,16 +13,70 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     
     // MARK: - Properties
     
+    // Matches and Market Groups state (mirrors NextUpEventsViewModel)
+    private let allMatchesSubject = CurrentValueSubject<[Match], Never>([])
+    var allMatchesPublisher: AnyPublisher<[Match], Never> {
+        allMatchesSubject.eraseToAnyPublisher()
+    }
+    var allMatches: [Match] {
+        get { allMatchesSubject.value }
+        set { allMatchesSubject.send(newValue) }
+    }
+    
+    private let marketGroupsSubject = CurrentValueSubject<[MarketGroupTabItemData], Never>([])
+    var marketGroupsPublisher: AnyPublisher<[MarketGroupTabItemData], Never> {
+        marketGroupsSubject.eraseToAnyPublisher()
+    }
+    var marketGroups: [MarketGroupTabItemData] {
+        get { marketGroupsSubject.value }
+        set { marketGroupsSubject.send(newValue) }
+    }
+    
+    private let selectedMarketGroupIdSubject = CurrentValueSubject<String?, Never>(nil)
+    var selectedMarketGroupIdPublisher: AnyPublisher<String?, Never> {
+        selectedMarketGroupIdSubject.eraseToAnyPublisher()
+    }
+    var selectedMarketGroupId: String? {
+        get { selectedMarketGroupIdSubject.value }
+        set { selectedMarketGroupIdSubject.send(newValue) }
+    }
+    
+    private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+    var isLoadingPublisher: AnyPublisher<Bool, Never> {
+        isLoadingSubject.eraseToAnyPublisher()
+    }
+    
+    var isLoading: Bool {
+        get { isLoadingSubject.value }
+        set { isLoadingSubject.send(newValue) }
+    }
+    
+    // MARK: - Current State Properties
+    var currentSearchText: String {
+        return _currentSearchText
+    }
+    
+    private let mainMarketsSubject = CurrentValueSubject<[MainMarket]?, Never>(nil)
+    var mainMarketsPublisher: AnyPublisher<[MainMarket]?, Never> {
+        mainMarketsSubject.eraseToAnyPublisher()
+    }
+    var mainMarkets: [MainMarket]? {
+        get { mainMarketsSubject.value }
+        set { mainMarketsSubject.send(newValue) }
+    }
+
+    // Child view model for market group tabs
+    let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
+    
+    // Search header info view model
+    let searchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol
+
     // Publishers
     var searchTextPublisher: AnyPublisher<String, Never> {
         searchTextSubject.eraseToAnyPublisher()
     }
     
-    var isLoadingPublisher: AnyPublisher<Bool, Never> {
-        isLoadingSubject.eraseToAnyPublisher()
-    }
-    
-    var searchResultsPublisher: AnyPublisher<[SearchResult], Never> {
+    var searchResultsPublisher: AnyPublisher<Int, Never> {
         searchResultsSubject.eraseToAnyPublisher()
     }
     
@@ -37,8 +91,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     
     // Subjects
     private let searchTextSubject = CurrentValueSubject<String, Never>("")
-    private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
-    private let searchResultsSubject = CurrentValueSubject<[SearchResult], Never>([])
+    private let searchResultsSubject = CurrentValueSubject<Int, Never>(0)
     private let searchSubmittedSubject = PassthroughSubject<String, Never>()
     
     // Component View Models
@@ -49,38 +102,52 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     
     // Search state
-    private var currentSearchText: String = ""
+    private var _currentSearchText: String = ""
+    
+    // Store MarketGroupCards view models by market type id
+    private var marketGroupCardsViewModels: [String: MarketGroupCardsViewModel] = [:]
     
     // MARK: - Initialization
     
     init(userSessionStore: UserSessionStore) {
         self.userSessionStore = userSessionStore
+        self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
         
         // Create the SearchView's view model
         self.searchComponentViewModel = MockSearchViewModel.default
         
+        // Create the SearchHeaderInfoView's view model
+        self.searchHeaderInfoViewModel = MockSearchHeaderInfoViewModel()
+        
         setupSearchComponentBindings()
+        setupMarketGroupBindings()
     }
     
     // MARK: - SportsSearchViewModelProtocol
     
     func updateSearchText(_ text: String) {
-        currentSearchText = text
+        _currentSearchText = text
         searchTextSubject.send(text)
         performSearch(text)
     }
     
     func submitSearch() {
-        guard !currentSearchText.isEmpty else { return }
+        guard !_currentSearchText.isEmpty else { return }
         
-        searchSubmittedSubject.send(currentSearchText)
-        performSearch(currentSearchText)
+        searchSubmittedSubject.send(_currentSearchText)
+        performSearch(_currentSearchText)
     }
     
     func clearSearch() {
-        currentSearchText = ""
+        _currentSearchText = ""
         searchTextSubject.send("")
-        searchResultsSubject.send([])
+        searchResultsSubject.send(0)
+        allMatches = []
+        mainMarkets = nil
+        marketGroups = []
+        selectedMarketGroupId = nil
+        marketGroupCardsViewModels.removeAll()
+        self.marketGroupSelectorViewModel.updateWithMatches([], mainMarkets: [])
     }
     
     // MARK: - Private Methods
@@ -104,22 +171,33 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
             .store(in: &cancellables)
     }
     
+    private func setupMarketGroupBindings() {
+        // Listen to market group selection changes from selector ViewModel
+        marketGroupSelectorViewModel.selectionEventPublisher
+            .sink { [weak self] selectionEvent in
+                self?.selectedMarketGroupId = selectionEvent.selectedId
+            }
+            .store(in: &cancellables)
+        
+        // Listen to market groups updates from selector ViewModel
+        marketGroupSelectorViewModel.marketGroupsPublisher
+            .sink { [weak self] marketGroups in
+                self?.updateMarketGroupViewModels(marketGroups: marketGroups)
+            }
+            .store(in: &cancellables)
+    }
+    
     private func performSearch(_ searchText: String) {
         guard !searchText.isEmpty else {
-            searchResultsSubject.send([])
+            searchResultsSubject.send(0)
+            allMatches = []
+            mainMarkets = nil
+            marketGroups = []
             return
         }
         
         isLoadingSubject.send(true)
         
-        // Simulate search delay
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-//            self?.isLoadingSubject.send(false)
-//            
-//            // Mock search results for now
-//            let mockResults = self?.generateMockSearchResults(for: searchText) ?? []
-//            self?.searchResultsSubject.send(mockResults)
-//        }
         Env.servicesProvider.getSearchEvents(query: searchText, resultLimit: "20", page: "0")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -128,15 +206,69 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
                     ()
                 case .failure(let error):
                     print("SEARCH ERROR: \(error)")
-                    self?.searchResultsSubject.send([])
+                    self?.searchResultsSubject.send(0)
                 }
 
                 self?.isLoadingSubject.send(false)
             }, receiveValue: { [weak self] eventsGroup in
+                // Map eventsGroup to matches and mainMarkets using ServiceProviderModelMapper
+                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: [eventsGroup])
+                let mainMarkets = ServiceProviderModelMapper.mainMarkets(fromEventsGroups: [eventsGroup])
+                self?.allMatches = matches
+                self?.mainMarkets = mainMarkets
+                // Update market group selector
+                self?.marketGroupSelectorViewModel.updateWithMatches(matches, mainMarkets: mainMarkets)
+                
+                for (marketTypeName, viewModel) in self?.marketGroupCardsViewModels ?? [:] {
+                    print("Updating matches for \(marketTypeName)")
+                    viewModel.updateMatches(matches)
+                }
+                
+                self?.searchResultsSubject.send(matches.count)
 
-                print("SPORTS SEARCH: \(eventsGroup)")
             })
             .store(in: &cancellables)
+    }
+    
+    // MARK: - Market Group Helpers (mirroring NextUpEventsViewModel)
+    func selectMarketGroup(id: String) {
+        marketGroupSelectorViewModel.selectMarketGroup(id: id)
+    }
+    
+    func getMarketGroupCardsViewModel(for marketGroupId: String) -> MarketGroupCardsViewModel? {
+        return marketGroupCardsViewModels[marketGroupId]
+    }
+    
+    func getAllMarketGroupCardsViewModels() -> [String: MarketGroupCardsViewModel] {
+        return marketGroupCardsViewModels
+    }
+    
+    func getCurrentMarketGroups() -> [MarketGroupTabItemData] {
+        return marketGroupSelectorViewModel.currentMarketGroups
+    }
+    
+    func getCurrentSelectedMarketGroupId() -> String? {
+        return marketGroupSelectorViewModel.currentSelectedMarketGroupId
+    }
+    
+    private func updateMarketGroupViewModels(marketGroups: [MarketGroupTabItemData]) {
+        // Create ViewModels for new market groups
+        for marketGroup in marketGroups {
+            if marketGroupCardsViewModels[marketGroup.id] == nil {
+                let marketGroupCardsViewModel = MarketGroupCardsViewModel(marketTypeId: marketGroup.id, matchCardContext: .search)
+                marketGroupCardsViewModel.updateMatches(allMatches)
+                marketGroupCardsViewModels[marketGroup.id] = marketGroupCardsViewModel
+            }
+        }
+        
+        // Remove ViewModels for market groups that no longer exist
+        let currentMarketGroupIds = Set(marketGroups.map { $0.id })
+        let viewModelsToRemove = marketGroupCardsViewModels.keys.filter { !currentMarketGroupIds.contains($0) }
+        for idToRemove in viewModelsToRemove {
+            marketGroupCardsViewModels.removeValue(forKey: idToRemove)
+        }
+        
+        self.marketGroups = marketGroups
     }
     
     private func generateMockSearchResults(for searchText: String) -> [SearchResult] {

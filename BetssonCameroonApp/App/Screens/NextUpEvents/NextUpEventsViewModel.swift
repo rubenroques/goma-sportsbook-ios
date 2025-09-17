@@ -242,7 +242,7 @@ class NextUpEventsViewModel {
         preLiveMatchesCancellable = servicesProvider.subscribeToFilteredPreLiveMatches(filters: filterOptions)
         .receive(on: DispatchQueue.main)
         .sink { completion in
-            print("subscribeToFilteredPreLiveMatches \(completion)")
+            print("0 \(completion)")
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
             switch subscribableContent {
             case .connected(let subscription):

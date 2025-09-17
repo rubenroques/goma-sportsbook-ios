@@ -546,17 +546,65 @@ class EveryMatrixEventsProvider: EventsProvider {
         let language = "en"
         let bettingTypeIds = [69, 466, 112, 76, 9]
         let includes = ["BETTING_OFFERS", "EVENT_INFO"]
-        let router = WAMPRouter.searchV2(language: language, limit: Int(resultLimit) ?? 20, query: query, eventStatuses: [1,2], include: includes, bettingTypeIds: bettingTypeIds, dataWithoutOdds: false)
-        
+        let router = WAMPRouter.searchV2(
+            language: language,
+            limit: Int(resultLimit) ?? 20,
+            query: query,
+            eventStatuses: [1, 2],
+            include: includes,
+            bettingTypeIds: bettingTypeIds,
+            dataWithoutOdds: false
+        )
+
+        // Request the RPC search response
         let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCBasicResponse, ServiceProviderError> = connector.request(router)
+
+        // Map RPC response to EventsGroup by populating an EntityStore and building matches with markets/outcomes
         return rpcResponsePublisher
-            .map { [weak self] rpcResponse in
-                let response = rpcResponse
-                let eventGroup = EventsGroup(events: [], marketGroupId: nil)
-                return eventGroup
+            .map { rpcResponse in
+                // 1) Create a temporary store and ingest all entities from both records and includedData
+                let store = EveryMatrix.EntityStore()
+                store.storeRecords(rpcResponse.records)
+                if let includedData = rpcResponse.includedData {
+                    store.storeRecords(includedData)
+                }
+
+                // 2) Build matches from records (ignore tournaments for now)
+                //    We keep the original order using getAllInOrder
+                let matchDTOs = store.getAllInOrder(EveryMatrix.MatchDTO.self)
+                let matches = matchDTOs.compactMap { dto in
+                    EveryMatrix.MatchBuilder.build(from: dto, store: store)
+                }
+
+                // 3) Aggregate available markets across all matches to build the MainMarkets list
+                // Assume MAIN_MARKET DTOs are not available; synthesize from distinct betting type IDs.
+                let marketsAcrossMatches = matches.flatMap { $0.markets }
+                var marketsByBettingTypeId: [String: [EveryMatrix.Market]] = [:]
+                for market in marketsAcrossMatches {
+                    let bettingTypeId = market.bettingType?.id ?? ""
+                    guard !bettingTypeId.isEmpty else { continue }
+                    marketsByBettingTypeId[bettingTypeId, default: []].append(market)
+                }
+                let mainMarkets: [MainMarket] = marketsByBettingTypeId.compactMap { (bettingTypeId, group) in
+                    let bettingTypeName = group.first?.bettingType?.name ?? ""
+                    return MainMarket(
+                        id: bettingTypeId,
+                        bettingTypeId: bettingTypeId,
+                        eventPartId: "0",
+                        sportId: matches.first?.sport?.id ?? "",
+                        bettingTypeName: bettingTypeName,
+                        eventPartName: "",
+                        numberOfOutcomes: group.first?.outcomes.count,
+                        liveMarket: false,
+                        outright: false
+                    )
+                }
+
+                // 4) Convert internal matches to external Events and attach mainMarkets
+                let eventsGroup = EveryMatrixModelMapper.eventsGroup(fromInternalMatches: matches, mainMarkets: mainMarkets)
+                return eventsGroup
             }
             .eraseToAnyPublisher()
-//        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
     func getEventSummary(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError> {

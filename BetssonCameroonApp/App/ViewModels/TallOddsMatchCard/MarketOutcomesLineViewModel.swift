@@ -27,14 +27,19 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         oddsChangeEventSubject.eraseToAnyPublisher()
     }
     
+    var matchCardContext: MatchCardContext
+    
     // MARK: - Initialization
     init(
         marketId: String,
-        initialDisplayState: MarketOutcomesLineDisplayState
+        initialDisplayState: MarketOutcomesLineDisplayState,
+        matchCardContext: MatchCardContext = .lists
     ) {
         self.marketId = marketId
         self.marketStateSubject = CurrentValueSubject(initialDisplayState)
         self.oddsChangeEventSubject = PassthroughSubject()
+        
+        self.matchCardContext = matchCardContext
         
         // Create initial outcome view models
         createOutcomeViewModels(from: initialDisplayState)
@@ -102,21 +107,26 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     
     // MARK: - Private Methods
     private func setupMarketSubscription() {
-        servicesProvider.subscribeToEventOnListsMarketUpdates(withId: marketId)
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    if case .failure(let error) = completion {
-                        print("Market subscription failed for \(self?.marketId ?? "unknown"): \(error)")
-                        // Handle market suspension on connection failure
-                        self?.handleMarketSuspension(reason: "Connection Error")
+        if matchCardContext == .lists {
+            servicesProvider.subscribeToEventOnListsMarketUpdates(withId: marketId)
+                .receive(on: DispatchQueue.main)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        if case .failure(let error) = completion {
+                            print("Market subscription failed for \(self?.marketId ?? "unknown"): \(error)")
+                            // Handle market suspension on connection failure
+                            self?.handleMarketSuspension(reason: "Connection Error")
+                        }
+                    },
+                    receiveValue: { [weak self] serviceProviderMarket in
+                        self?.processMarketUpdate(serviceProviderMarket)
                     }
-                },
-                receiveValue: { [weak self] serviceProviderMarket in
-                    self?.processMarketUpdate(serviceProviderMarket)
-                }
-            )
-            .store(in: &cancellables)
+                )
+                .store(in: &cancellables)
+        }
+        else {
+            print("MATCH CARD FROM SEARCH")
+        }
     }
     
     private func processMarketUpdate(_ serviceProviderMarket: ServicesProvider.Market?) {
@@ -309,12 +319,13 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
 extension MarketOutcomesLineViewModel {
     
     /// Creates a MarketOutcomesLineViewModel from an internal app Market model
-    static func create(from market: Market) -> MarketOutcomesLineViewModel {
+    static func create(from market: Market, with matchCardContext: MatchCardContext) -> MarketOutcomesLineViewModel {
         let displayState = createDisplayState(from: market)
         
         return MarketOutcomesLineViewModel(
             marketId: market.id,
-            initialDisplayState: displayState
+            initialDisplayState: displayState,
+            matchCardContext: matchCardContext
         )
     }
     

@@ -21,6 +21,8 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
         displayStateSubject.eraseToAnyPublisher()
     }
     
+    var matchCardContext: MatchCardContext = .lists
+    
     // MARK: - Initialization
     init(groupTitle: String? = nil, lineViewModels: [MarketOutcomesLineViewModelProtocol] = [], emptyStateMessage: String? = nil) {
         self.lineViewModelsSubject = CurrentValueSubject(lineViewModels)
@@ -39,9 +41,9 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
     }
     
     /// Convenience initializer from MarketGroupData (maintains backward compatibility)
-    convenience init(marketGroupData: MarketGroupData) {
+    convenience init(marketGroupData: MarketGroupData, matchCardContext: MatchCardContext = .lists) {
         let lineViewModels = marketGroupData.marketLines.map { lineData in
-            Self.createLineViewModel(from: lineData)
+            Self.createLineViewModel(from: lineData, with: matchCardContext)
         }
         
         self.init(groupTitle: marketGroupData.groupTitle, lineViewModels: lineViewModels)
@@ -51,7 +53,7 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
 // MARK: - Helper Methods
 extension MarketOutcomesMultiLineViewModel {
     
-    private static func createLineViewModel(from lineData: MarketLineData) -> MarketOutcomesLineViewModelProtocol {
+    private static func createLineViewModel(from lineData: MarketLineData, with matchCardContext: MatchCardContext) -> MarketOutcomesLineViewModelProtocol {
         let lineDisplayState = MarketOutcomesLineDisplayState(
             displayMode: lineData.displayMode,
             leftOutcome: lineData.leftOutcome,
@@ -62,7 +64,8 @@ extension MarketOutcomesMultiLineViewModel {
         // Create production line view model with real-time connections
         return MarketOutcomesLineViewModel(
             marketId: lineData.id,
-            initialDisplayState: lineDisplayState
+            initialDisplayState: lineDisplayState,
+            matchCardContext: matchCardContext
         )
     }
 }
@@ -73,13 +76,14 @@ extension MarketOutcomesMultiLineViewModel {
     /// Creates line view models directly from market data (production pattern)
     static func createWithDirectLineViewModels(
         from markets: [Market],
-        marketTypeId: String
+        marketTypeId: String,
+        with matchCardContext: MatchCardContext
     ) -> MarketOutcomesMultiLineViewModel {
         let lineViewModels = markets.compactMap { market -> MarketOutcomesLineViewModelProtocol? in
             guard !market.outcomes.isEmpty else { return nil }
             
             // Create production line view model directly from Market
-            return MarketOutcomesLineViewModel.create(from: market)
+            return MarketOutcomesLineViewModel.create(from: market, with: matchCardContext)
         }
 
         return MarketOutcomesMultiLineViewModel(
