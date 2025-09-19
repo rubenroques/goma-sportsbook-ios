@@ -21,13 +21,15 @@ class SportsSearchViewController: UIViewController {
     private lazy var searchView: SearchView = Self.createSearchView(with: viewModel.searchViewModel)
     private lazy var searchHeaderInfoView: SearchHeaderInfoView = Self.createSearchHeaderInfoView(with: viewModel.searchHeaderInfoViewModel)
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
+    private lazy var recentSearchesScrollView: UIScrollView = Self.createRecentSearchesScrollView()
+    private lazy var recentSearchesStackView: UIStackView = Self.createRecentSearchesStackView()
     private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
     private var pageViewController: UIPageViewController!
     
     // Loading overlay
     private let loadingIndicatorView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        view.backgroundColor = StyleProvider.Color.backgroundSecondary
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true
 
@@ -80,13 +82,16 @@ class SportsSearchViewController: UIViewController {
         containerView.addSubview(searchView)
         containerView.addSubview(searchHeaderInfoView)
         containerView.addSubview(emptyStateView)
+        containerView.addSubview(recentSearchesScrollView)
+        recentSearchesScrollView.addSubview(recentSearchesStackView)
         setupMarketGroupSelectorTabView()
         setupPageViewController()
         setupLoadingIndicator()
         
-        // Initially hide search header and show empty state
+        // Initially hide search header and market groups, show empty state and recent searches
         searchHeaderInfoView.isHidden = true
         emptyStateView.isHidden = false
+        recentSearchesScrollView.isHidden = false
     }
     
     private func setupConstraints() {
@@ -107,6 +112,19 @@ class SportsSearchViewController: UIViewController {
             searchHeaderInfoView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             searchHeaderInfoView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
+            // Recent searches scroll view below search (when no search text)
+            recentSearchesScrollView.topAnchor.constraint(equalTo: searchView.bottomAnchor),
+            recentSearchesScrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            recentSearchesScrollView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            recentSearchesScrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            // Recent searches stack view inside scroll view
+            recentSearchesStackView.topAnchor.constraint(equalTo: recentSearchesScrollView.topAnchor),
+            recentSearchesStackView.leadingAnchor.constraint(equalTo: recentSearchesScrollView.leadingAnchor),
+            recentSearchesStackView.trailingAnchor.constraint(equalTo: recentSearchesScrollView.trailingAnchor),
+            recentSearchesStackView.bottomAnchor.constraint(equalTo: recentSearchesScrollView.bottomAnchor),
+            recentSearchesStackView.widthAnchor.constraint(equalTo: recentSearchesScrollView.widthAnchor),
+            
             // MarketGroup selector below search header
             marketGroupSelectorTabView.topAnchor.constraint(equalTo: searchHeaderInfoView.bottomAnchor),
             marketGroupSelectorTabView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -126,7 +144,7 @@ class SportsSearchViewController: UIViewController {
             emptyStateView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
             // Loading Indicator overlay
-            loadingIndicatorView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingIndicatorView.topAnchor.constraint(equalTo: searchHeaderInfoView.bottomAnchor),
             loadingIndicatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             loadingIndicatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             loadingIndicatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -146,11 +164,12 @@ class SportsSearchViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // Search submission
+        // Search submission (keyboard search button pressed)
         viewModel.onSearchSubmitted
             .sink { [weak self] searchText in
                 print("🔍 SportsSearchViewController: Search submitted: '\(searchText)'")
                 self?.updateSearchState(searchText: searchText)
+                
             }
             .store(in: &cancellables)
         
@@ -160,15 +179,29 @@ class SportsSearchViewController: UIViewController {
                 self?.setLoadingIndicatorVisible(isLoading)
             }
             .store(in: &cancellables)
-        
-        // Search results
+
         viewModel.searchResultsPublisher
             .sink { [weak self] results in
-                print("🔍 SportsSearchViewController: Search results count: \(results)")
-                self?.updateSearchResultsState(results: results)
+                guard let self = self else { return }
+                if results == 0 {
+                    if let pageViewController,
+                       let viewControllers = pageViewController.viewControllers {
+                        for viewController in viewControllers {
+                            pageViewController.removeChildViewController(viewController)
+                        }
+                    }
+                    self.marketGroupSelectorTabView.isHidden = true
+                }
             }
             .store(in: &cancellables)
-
+        
+        // Recent searches
+        viewModel.recentSearchesPublisher
+            .sink { [weak self] recentSearches in
+                self?.updateRecentSearches(recentSearches)
+            }
+            .store(in: &cancellables)
+        
         // Market group paging bindings
         bindMarketGroups()
     }
@@ -197,48 +230,47 @@ class SportsSearchViewController: UIViewController {
     
     private func updateSearchState(searchText: String) {
         if searchText.isEmpty {
-            // Show empty state, hide search header and market groups
+            // Show empty state and recent searches, hide search header and market groups
             emptyStateView.isHidden = false
+            recentSearchesScrollView.isHidden = false
             searchHeaderInfoView.isHidden = true
             marketGroupSelectorTabView.isHidden = true
             pageViewController.view.isHidden = true
         } else {
-            // Hide empty state, show search header and market groups
+            // Hide empty state and recent searches, show search header and market groups
             emptyStateView.isHidden = true
+            recentSearchesScrollView.isHidden = true
             searchHeaderInfoView.isHidden = false
             marketGroupSelectorTabView.isHidden = false
             pageViewController.view.isHidden = false
         }
     }
     
-    private func updateSearchResultsState(results: Int) {
-        guard !searchHeaderInfoView.isHidden else { return }
-        
-        // Get current search text from the view model
-        let searchText = viewModel.currentSearchText
-        
-        // Determine state based on loading status and results
-        let state: SearchState
-        if viewModel.isLoading {
-            state = .loading
-        } else if results == 0 {
-            state = .noResults
-        } else {
-            state = .results
+    private func updateRecentSearches(_ recentSearches: [String]) {
+        // Clear existing recent search views
+        recentSearchesStackView.arrangedSubviews.forEach { view in
+            recentSearchesStackView.removeArrangedSubview(view)
+            view.removeFromSuperview()
         }
         
-        let count = results > 0 ? results : nil
-        
-        // Update the view model with new data
-        viewModel.searchHeaderInfoViewModel.updateSearch(
-            term: searchText,
-            category: "Sports",
-            state: state,
-            count: count
-        )
-        
-        // Configure the view with the updated view model
-        searchHeaderInfoView.refreshConfiguration()
+        // Add new recent search views
+        for searchText in recentSearches {
+            let viewModel = MockRecentSearchViewModel(
+                searchText: searchText,
+                onTap: { [weak self] in
+                    // Handle tap - perform search with this term
+                    self?.viewModel.searchFromRecent(searchText)
+                },
+                onDelete: { [weak self] in
+                    // Handle delete - remove from recent searches
+                    self?.viewModel.removeRecentSearch(searchText)
+                }
+            )
+            
+            let recentSearchView = RecentSearchView(viewModel: viewModel)
+            recentSearchView.configure()
+            recentSearchesStackView.addArrangedSubview(recentSearchView)
+        }
     }
 }
 
@@ -267,52 +299,25 @@ private extension SportsSearchViewController {
         let emptyStateView = UIView()
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         emptyStateView.backgroundColor = StyleProvider.Color.backgroundSecondary
-        
-        // Create empty state content
+        return emptyStateView
+    }
+    
+    static func createRecentSearchesScrollView() -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }
+    
+    static func createRecentSearchesStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 16
-        stackView.alignment = .center
-        
-        let iconImageView = UIImageView()
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.image = UIImage(systemName: "magnifyingglass")
-        iconImageView.tintColor = StyleProvider.Color.textSecondary
-        iconImageView.contentMode = .scaleAspectFit
-        
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "Search Sports"
-        titleLabel.font = StyleProvider.fontWith(type: .semibold, size: 20)
-        titleLabel.textColor = StyleProvider.Color.textPrimary
-        titleLabel.textAlignment = .center
-        
-        let subtitleLabel = UILabel()
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.text = "Find matches, teams, leagues and more"
-        subtitleLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-        subtitleLabel.textColor = StyleProvider.Color.textSecondary
-        subtitleLabel.textAlignment = .center
-        subtitleLabel.numberOfLines = 0
-        
-        stackView.addArrangedSubview(iconImageView)
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(subtitleLabel)
-        
-        emptyStateView.addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: emptyStateView.centerYAnchor),
-            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: emptyStateView.leadingAnchor, constant: 32),
-            stackView.trailingAnchor.constraint(lessThanOrEqualTo: emptyStateView.trailingAnchor, constant: -32),
-            
-            iconImageView.widthAnchor.constraint(equalToConstant: 64),
-            iconImageView.heightAnchor.constraint(equalToConstant: 64)
-        ])
-        
-        return emptyStateView
+        stackView.spacing = 0
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        return stackView
     }
     
     private func setupMarketGroupSelectorTabView() {

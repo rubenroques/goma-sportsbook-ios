@@ -14,6 +14,8 @@ public protocol SearchHeaderInfoViewModelProtocol: AnyObject {
     var state: SearchState { get }
     var count: Int? { get }
     
+    var refreshData: (() -> Void)? { get set }
+    
     func updateSearch(term: String, category: String, state: SearchState, count: Int?)
 }
 

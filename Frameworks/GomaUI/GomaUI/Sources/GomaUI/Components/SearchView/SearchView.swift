@@ -19,7 +19,7 @@ public final class SearchView: UIView {
 
     // Layout
     private enum Layout {
-        static let height: CGFloat = 44
+        static let height: CGFloat = 40
         static let horizontalPadding: CGFloat = 12
         static let spacing: CGFloat = 8
         static let cornerRadius: CGFloat = 4
@@ -46,7 +46,7 @@ public final class SearchView: UIView {
 
     // MARK: - Theme
     private func setupWithTheme() {
-        self.outerContainerView.backgroundColor = StyleProvider.Color.backgroundPrimary
+        self.outerContainerView.backgroundColor = StyleProvider.Color.inputBackgroundSecondary
         self.containerView.backgroundColor = StyleProvider.Color.inputBackground
         self.containerView.layer.cornerRadius = Layout.cornerRadius
         self.containerView.layer.masksToBounds = true
@@ -74,13 +74,12 @@ public final class SearchView: UIView {
             self.containerView.trailingAnchor.constraint(equalTo: self.outerContainerView.trailingAnchor, constant: -Layout.spacing),
             self.containerView.topAnchor.constraint(equalTo: self.outerContainerView.topAnchor, constant: Layout.spacing),
             self.containerView.bottomAnchor.constraint(equalTo: self.outerContainerView.bottomAnchor, constant: -Layout.spacing),
+            self.containerView.heightAnchor.constraint(equalToConstant: Layout.height),
 
             self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: Layout.horizontalPadding),
             self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -Layout.horizontalPadding),
             self.stackView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
-
-            self.heightAnchor.constraint(equalToConstant: Layout.height),
 
             self.iconImageView.widthAnchor.constraint(equalToConstant: Layout.iconSize),
             self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
@@ -200,10 +199,12 @@ public final class SearchView: UIView {
 
     @objc private func editingDidBegin() {
         self.viewModel.setFocused(true)
+        print("STARTED SEARCH")
     }
 
     @objc private func editingDidEnd() {
         self.viewModel.setFocused(false)
+        print("FINISHED SEARCH")
     }
 
     @objc private func clearTapped() {

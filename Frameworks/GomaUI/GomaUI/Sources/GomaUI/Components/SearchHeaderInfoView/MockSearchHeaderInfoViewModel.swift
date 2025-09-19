@@ -14,6 +14,8 @@ public class MockSearchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol {
     public var state: SearchState
     public var count: Int?
     
+    public var refreshData: (() -> Void)?
+    
     public init(
         searchTerm: String = "",
         category: String = "",
@@ -31,5 +33,7 @@ public class MockSearchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol {
         self.category = category
         self.state = state
         self.count = count
+        
+        self.refreshData?()
     }
 }

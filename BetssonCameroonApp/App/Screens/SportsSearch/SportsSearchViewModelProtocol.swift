@@ -16,6 +16,7 @@ protocol SportsSearchViewModelProtocol: AnyObject {
     var searchTextPublisher: AnyPublisher<String, Never> { get }
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var searchResultsPublisher: AnyPublisher<Int, Never> { get }
+    var recentSearchesPublisher: AnyPublisher<[String], Never> { get }
 
     // Matches and Market Groups state
     var allMatchesPublisher: AnyPublisher<[Match], Never> { get }
@@ -46,6 +47,12 @@ protocol SportsSearchViewModelProtocol: AnyObject {
     func updateSearchText(_ text: String)
     func submitSearch()
     func clearSearch()
+    func searchFromRecent(_ text: String)
+    
+    // MARK: - Recent Searches Management
+    func addRecentSearch(_ search: String)
+    func removeRecentSearch(_ search: String)
+    func clearAllRecentSearches()
 }
 
 // MARK: - Search Result Model

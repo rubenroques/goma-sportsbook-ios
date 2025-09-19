@@ -17,6 +17,7 @@ public class SearchHeaderInfoView: UIView {
     
     // MARK: ViewModel
     private let viewModel: SearchHeaderInfoViewModelProtocol
+    private var ellipsisTimer: Timer?
     
     // MARK: - Lifetime and Cycle
     public init(viewModel: SearchHeaderInfoViewModelProtocol) {
@@ -37,6 +38,7 @@ public class SearchHeaderInfoView: UIView {
     func commonInit() {
         self.setupSubviews()
         self.configure()
+        self.setupBindings()
     }
     
     public override func layoutSubviews() {
@@ -59,16 +61,11 @@ public class SearchHeaderInfoView: UIView {
     
     // MARK: Functions
     public func configure() {
-        // Don't configure if search term is empty
-        guard !viewModel.searchTerm.isEmpty else {
-            self.isHidden = true
-            return
-        }
         
-        // Show the view and configure based on view model state
-        self.isHidden = false
         self.updateVisibility(for: viewModel.state)
         self.updateBackgroundColor(for: viewModel.state)
+        
+        print("SEARCH STATE: \(viewModel)")
         
         switch viewModel.state {
         case .loading:
@@ -109,8 +106,10 @@ public class SearchHeaderInfoView: UIView {
         }
     }
     
-    public func refreshConfiguration() {
-        configure()
+    private func setupBindings() {
+        self.viewModel.refreshData = { [weak self] in
+            self?.configure()
+        }
     }
     
     private func createAttributedText(prefix: String, searchTerm: String, suffix: String) -> NSAttributedString {
@@ -207,30 +206,34 @@ public class SearchHeaderInfoView: UIView {
     
     private func stopLoadingAnimation() {
         self.layer.removeAllAnimations()
+        self.ellipsisTimer?.invalidate()
+        self.ellipsisTimer = nil
     }
     
     private func animateEllipsis() {
-        guard let currentText = self.messageLabel.attributedText else { return }
-        
+        // Ensure only one timer is running
+        self.ellipsisTimer?.invalidate()
+        self.ellipsisTimer = nil
+
         let ellipsisValues = ["", ".", "..", "..."]
         var animationStep = 0
-        
-        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
+
+        // Start a new timer that rebuilds the attributed string each tick using the latest view model values
+        self.ellipsisTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
             guard let self = self else {
                 timer.invalidate()
                 return
             }
-            
+
             let ellipsis = ellipsisValues[animationStep % ellipsisValues.count]
-            let mutableText = NSMutableAttributedString(attributedString: currentText)
-            
-            // Replace the last part (which should be "...") with current ellipsis
-            let range = NSRange(location: mutableText.length - 3, length: 3)
-            if range.location >= 0 && range.location + range.length <= mutableText.length {
-                mutableText.replaceCharacters(in: range, with: ellipsis)
-            }
-            
-            self.messageLabel.attributedText = mutableText
+
+            // Build fresh attributed text from the current view model state
+            let attributed = self.createAttributedText(
+                prefix: "Searching for \"",
+                searchTerm: self.viewModel.searchTerm,
+                suffix: "\" in \(self.viewModel.category)\(ellipsis)"
+            )
+            self.messageLabel.attributedText = attributed
             animationStep += 1
         }
     }

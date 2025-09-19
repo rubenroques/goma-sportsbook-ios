@@ -64,13 +64,13 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         get { mainMarketsSubject.value }
         set { mainMarketsSubject.send(newValue) }
     }
-
+    
     // Child view model for market group tabs
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
     
     // Search header info view model
     let searchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol
-
+    
     // Publishers
     var searchTextPublisher: AnyPublisher<String, Never> {
         searchTextSubject.eraseToAnyPublisher()
@@ -84,6 +84,10 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         searchSubmittedSubject.eraseToAnyPublisher()
     }
     
+    var recentSearchesPublisher: AnyPublisher<[String], Never> {
+        recentSearchesSubject.eraseToAnyPublisher()
+    }
+    
     // Component View Models
     var searchViewModel: SearchViewModelProtocol {
         return searchComponentViewModel
@@ -93,6 +97,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     private let searchTextSubject = CurrentValueSubject<String, Never>("")
     private let searchResultsSubject = CurrentValueSubject<Int, Never>(0)
     private let searchSubmittedSubject = PassthroughSubject<String, Never>()
+    private let recentSearchesSubject = CurrentValueSubject<[String], Never>([])
     
     // Component View Models
     private let searchComponentViewModel: SearchViewModelProtocol
@@ -119,8 +124,10 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         // Create the SearchHeaderInfoView's view model
         self.searchHeaderInfoViewModel = MockSearchHeaderInfoViewModel()
         
+        setupBindings()
         setupSearchComponentBindings()
         setupMarketGroupBindings()
+        loadRecentSearches()
     }
     
     // MARK: - SportsSearchViewModelProtocol
@@ -150,7 +157,26 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         self.marketGroupSelectorViewModel.updateWithMatches([], mainMarkets: [])
     }
     
+    func searchFromRecent(_ text: String) {
+        self.searchComponentViewModel.updateText(text)
+        self.updateSearchText(text)
+    }
+    
     // MARK: - Private Methods
+    private func setupBindings() {
+        
+        // Search results
+        searchResultsPublisher
+            .sink { [weak self] results in
+                if results == 0 {
+                    self?.allMatches = []
+                    self?.mainMarkets = nil
+                    self?.marketGroups = []
+                    self?.marketGroupCardsViewModels.removeAll()
+                }
+            }
+            .store(in: &cancellables)
+    }
     
     private func setupSearchComponentBindings() {
         // Connect SearchView's text changes to our search logic with debouncing
@@ -190,13 +216,11 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     private func performSearch(_ searchText: String) {
         guard !searchText.isEmpty else {
             searchResultsSubject.send(0)
-            allMatches = []
-            mainMarkets = nil
-            marketGroups = []
             return
         }
         
         isLoadingSubject.send(true)
+        updateSearchResultsState(isLoading: true, results: 0)
         
         Env.servicesProvider.getSearchEvents(query: searchText, resultLimit: "20", page: "0")
             .receive(on: DispatchQueue.main)
@@ -207,8 +231,9 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
                 case .failure(let error):
                     print("SEARCH ERROR: \(error)")
                     self?.searchResultsSubject.send(0)
+                    self?.updateSearchResultsState(isLoading: false, results: 0)
                 }
-
+                
                 self?.isLoadingSubject.send(false)
             }, receiveValue: { [weak self] eventsGroup in
                 // Map eventsGroup to matches and mainMarkets using ServiceProviderModelMapper
@@ -225,9 +250,37 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
                 }
                 
                 self?.searchResultsSubject.send(matches.count)
-
+                self?.updateSearchResultsState(isLoading: false, results: matches.count)
+                self?.addRecentSearch(searchText)
             })
             .store(in: &cancellables)
+    }
+    
+    private func updateSearchResultsState(isLoading: Bool, results: Int) {
+        
+        // Get current search text from the view model
+        let searchText = currentSearchText
+        
+        // Determine state based on loading status and results
+        let state: SearchState
+        if isLoading {
+            state = .loading
+        } else if results == 0 {
+            state = .noResults
+        } else {
+            state = .results
+        }
+        
+        let count = results > 0 ? results : nil
+        
+        // Update the view model with new data
+        searchHeaderInfoViewModel.updateSearch(
+            term: searchText,
+            category: "Sports",
+            state: state,
+            count: count
+        )
+        
     }
     
     // MARK: - Market Group Helpers (mirroring NextUpEventsViewModel)
@@ -309,5 +362,52 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
             result.title.localizedCaseInsensitiveContains(searchText) ||
             result.subtitle?.localizedCaseInsensitiveContains(searchText) == true
         }
+    }
+    
+    // MARK: - Recent Searches Management
+    
+    private func loadRecentSearches() {
+        if let recentSearchesArray = UserDefaults.standard.array(forKey: "recentSearches") as? [String] {
+            recentSearchesSubject.send(recentSearchesArray)
+        }
+    }
+    
+    func addRecentSearch(_ search: String) {
+        guard !search.isEmpty else { return }
+        
+        var recentSearches = recentSearchesSubject.value
+        
+        // Remove if already exists to avoid duplicates
+        recentSearches.removeAll { $0 == search }
+        
+        // Add to beginning (most recent first)
+        recentSearches.insert(search, at: 0)
+        
+        // Limit to 20 recent searches
+        if recentSearches.count > 20 {
+            recentSearches = Array(recentSearches.prefix(20))
+        }
+        
+        // Save to UserDefaults
+        UserDefaults.standard.set(recentSearches, forKey: "recentSearches")
+        
+        // Update publisher
+        recentSearchesSubject.send(recentSearches)
+    }
+    
+    func removeRecentSearch(_ search: String) {
+        var recentSearches = recentSearchesSubject.value
+        recentSearches.removeAll { $0 == search }
+        
+        // Save to UserDefaults
+        UserDefaults.standard.set(recentSearches, forKey: "recentSearches")
+        
+        // Update publisher
+        recentSearchesSubject.send(recentSearches)
+    }
+    
+    func clearAllRecentSearches() {
+        UserDefaults.standard.removeObject(forKey: "recentSearches")
+        recentSearchesSubject.send([])
     }
 }

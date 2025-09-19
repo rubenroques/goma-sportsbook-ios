@@ -546,11 +546,13 @@ class EveryMatrixEventsProvider: EventsProvider {
         let language = "en"
         let bettingTypeIds = [69, 466, 112, 76, 9]
         let includes = ["BETTING_OFFERS", "EVENT_INFO"]
+        let eventTypes = ["MATCH"]
         let router = WAMPRouter.searchV2(
             language: language,
             limit: Int(resultLimit) ?? 20,
             query: query,
             eventStatuses: [1, 2],
+            eventTypes: eventTypes,
             include: includes,
             bettingTypeIds: bettingTypeIds,
             dataWithoutOdds: false

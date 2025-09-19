@@ -31,11 +31,9 @@ public final class MockSearchViewModel: SearchViewModelProtocol {
     }
 
     public func setFocused(_ isFocused: Bool) {
-        // No-op for mock, could simulate analytics or state if needed
     }
 
     public func submit() {
-        // No-op for mock
     }
 
     // Convenience presets
