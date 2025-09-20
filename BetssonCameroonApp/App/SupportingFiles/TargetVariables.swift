@@ -39,7 +39,11 @@ struct TargetVariables: SportsbookTarget {
     static var serviceProviderType: ServiceProviderType {
         return .everymatrix
     }
-    
+
+    static var cmsClientBusinessUnit: CMSClientBusinessUnit {
+        return .betssonCameroon
+    }
+
     // MARK: - URLEndpointProvider Implementation
     static var links: URLEndpoint.Links {
         URLEndpoint.Links(

@@ -7,6 +7,12 @@
 
 import Foundation
 
+enum CMSClientBusinessUnit {
+    case betssonFrance
+    case betssonCameroon
+    case gomaDemo
+}
+
 /// Protocol to be implemented by each client to provide their specific URLs
 protocol SportsbookClient {
 
@@ -29,8 +35,10 @@ protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
     static var serviceProviderEnvironment: EnvironmentType { get }
 
     static var supportedLanguages: [SportsbookSupportedLanguage] { get }
-    
+
     static var serviceProviderType: ServiceProviderType { get }
+
+    static var cmsClientBusinessUnit: CMSClientBusinessUnit { get }
 }
 
 extension SportsbookTarget {

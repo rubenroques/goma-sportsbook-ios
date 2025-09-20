@@ -24,7 +24,7 @@ public class Client {
     private var privilegedAccessManager: (any PrivilegedAccessManagerProvider)?
     private var bettingProvider: (any BettingProvider)?
     private var eventsProvider: (any EventsProvider)?
-    private var homeContentProvider: (any HomeContentProvider)? // TODO: SP Merge - Use login connectors
+    private var homeContentProvider: (any HomeContentProvider)?
 
     private var customerSupportProvider: (any CustomerSupportProvider)?
     private var promotionalCampaignsProvider: (any PromotionalCampaignsProvider)?
@@ -51,8 +51,6 @@ public class Client {
 
         }
     }
-
-    public var appBaseUrl: String = SportRadarConfiguration.shared.clientBaseUrl
 
     public init(providerType: ProviderType, configuration: Configuration) {
         self.providerType = providerType
@@ -105,19 +103,56 @@ public class Client {
             
             // Casino API
             let everyMatrixCasinoConnector = EveryMatrixCasinoConnector(sessionCoordinator: sessionCoordinator)
-            self.casinoProvider = EveryMatrixCasinoProvider(connector: everyMatrixCasinoConnector)
+            let everyMatrixCasinoProvider = EveryMatrixCasinoProvider(connector: everyMatrixCasinoConnector)
+            self.casinoProvider = everyMatrixCasinoProvider
             
             // Betting API
             let everyMatrixBettingProvider = EveryMatrixBettingProvider(sessionCoordinator: sessionCoordinator)
             self.bettingProvider = everyMatrixBettingProvider
 
-        // 
+            // CMS/HomeContent Provider - uses Goma CMS
+            // Set Goma CMS environment based on client business unit
+            if let businessUnit = self.configuration.clientBusinessUnit {
+                switch businessUnit {
+                case .betssonFrance:
+                    GomaAPIClientConfiguration.shared.environment = .betsson
+                case .betssonCameroon:
+                    GomaAPIClientConfiguration.shared.environment = .betssonCameroon
+                case .gomaDemo:
+                    GomaAPIClientConfiguration.shared.environment = .gomaDemo
+                }
+            } else {
+                // Default to gomaDemo for backward compatibility
+                GomaAPIClientConfiguration.shared.environment = .gomaDemo
+            }
+
+            let gomaAuthenticator = GomaAuthenticator(deviceIdentifier: self.configuration.deviceUUID ?? "")
+            let gomaHomeContentProvider = GomaHomeContentProvider(authenticator: gomaAuthenticator)
+            self.homeContentProvider = EveryMatrixManagedContentProvider(
+                gomaHomeContentProvider: gomaHomeContentProvider,
+                casinoProvider: everyMatrixCasinoProvider
+            )
+
+        //
         case .goma:
             guard let deviceUUID = self.configuration.deviceUUID else {
                 fatalError("GOMA API service provider required a deviceIdentifier")
             }
 
-            GomaAPIClientConfiguration.shared.environment = .gomaDemo
+            // Set GomaAPIClientConfiguration environment based on client business unit
+            if let businessUnit = self.configuration.clientBusinessUnit {
+                switch businessUnit {
+                case .betssonFrance:
+                    GomaAPIClientConfiguration.shared.environment = .betsson
+                case .betssonCameroon:
+                    GomaAPIClientConfiguration.shared.environment = .betssonCameroon
+                case .gomaDemo:
+                    GomaAPIClientConfiguration.shared.environment = .gomaDemo
+                }
+            } else {
+                // Default to gomaDemo for backward compatibility
+                GomaAPIClientConfiguration.shared.environment = .gomaDemo
+            }
             let authenticator = GomaAuthenticator(deviceIdentifier: deviceUUID)
             
             let gomaConnector = GomaConnector(authenticator: authenticator)
@@ -1770,6 +1805,25 @@ extension Client {
         return homeContentProvider.getCarouselEvents()
     }
 
+    public func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
+        guard
+            let homeContentProvider = self.homeContentProvider
+        else {
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return homeContentProvider.getCasinoCarouselPointers()
+    }
+
+    public func getCasinoCarouselGames() -> AnyPublisher<CasinoGameBanners, ServiceProviderError> {
+        guard
+            let homeContentProvider = self.homeContentProvider
+        else {
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return homeContentProvider.getCasinoCarouselGames()
+    }
 
     public func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
         guard

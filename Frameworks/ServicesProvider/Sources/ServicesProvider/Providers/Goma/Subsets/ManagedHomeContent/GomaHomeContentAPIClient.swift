@@ -125,6 +125,13 @@ class GomaHomeContentAPIClient {
         return self.connector.request(endpoint)
     }
 
+    /// Get casino carousel banners
+    /// - Returns: A publisher with the decoded response or error
+    func casinoCarouselPointers() -> AnyPublisher<GomaModels.CasinoCarouselPointers, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.casinoCarouselBanners
+        return self.connector.request(endpoint)
+    }
+
     /// Get boosted odds banners
     /// - Returns: A publisher with the decoded response or error
     func boostedOddsPointers() -> AnyPublisher<GomaModels.BoostedOddsPointers, ServiceProviderError> {

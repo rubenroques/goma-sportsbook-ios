@@ -1,9 +1,3 @@
-//
-//  SportRadarManagedContentProvider.swift
-//
-//
-//  Created on: May 15, 2024
-//
 
 import Foundation
 import Combine
@@ -11,7 +5,7 @@ import SharedModels
 
 /// Implementation of ManagedContentProvider for the Sportradar API
 class SportRadarManagedContentProvider: HomeContentProvider {
-    
+
     // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
@@ -501,6 +495,14 @@ class SportRadarManagedContentProvider: HomeContentProvider {
         return publisher.eraseToAnyPublisher()
     }
 
+    func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
+        fatalError("Casino Carousel not supported for this provider")
+    }
+
+    func getCasinoCarouselGames() -> AnyPublisher<CasinoGameBanners, ServiceProviderError> {
+        fatalError("Casino Carousel not supported for this provider")
+    }
+    
 }
 
 

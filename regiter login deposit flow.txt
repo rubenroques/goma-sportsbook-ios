@@ -1,0 +1,248 @@
+// Register + login flow
+
+// Step
+
+REQUEST:
+curl 'https://betsson-api.stage.norway.everymatrix.com/v1/player/legislation/registration/step' \
+  -H 'accept: application/json' \
+  -H 'accept-language: en' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  --data-raw '{"Step":"Step1","RegistrationId":"0d120ddd-0006-4347-8cd4-0ab962c6f785","RegisterUserDto":{"Mobile":"666444002","Password":"1234","TermsAndConditions":true,"MobilePrefix":"+237"}}'
+
+
+RESPONSE:
+{"registrationId":"0d120ddd-0006-4347-8cd4-0ab962c6f785"}
+
+
+// ---------------
+
+// Register
+
+REQUEST:
+  curl 'https://betsson-api.stage.norway.everymatrix.com/v1/player/legislation/register' \
+  -X 'PUT' \
+  -H 'accept: application/json' \
+  -H 'accept-language: en' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  --data-raw '{"registrationId":"0d120ddd-0006-4347-8cd4-0ab962c6f785"}'
+
+RESPONSE:
+{"userId":"7014240","success":true}
+
+// --------------------
+
+// Login
+
+REQUEST:
+curl 'https://betsson-api.stage.norway.everymatrix.com/v1/player/legislation/login' \
+  -H 'accept: application/json' \
+  -H 'accept-language: en' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  --data-raw '{"username":"+237666444002","password":"1234"}'
+
+RESPONSE:
+{"sessionId":"2db9d915-b966-4059-8345-e7327fe8e666","id":"9edbd0c6-6c1c-4067-9692-bc719e4551ca","userId":7014240,"sessionBlockers":[],"hasToAcceptTC":false,"hasToSetPass":false}
+
+
+
+// -----------------------
+
+// FULL USER PROFILE DETAILS  
+
+REQUEST:
+
+curl 'https://betsson-api.stage.norway.everymatrix.com/v1/player/7014240/details' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: pt-PT,pt;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  -H 'x-session-type: others' \
+  -H 'x-sessionid: 2db9d915-b966-4059-8345-e7327fe8e666'
+
+RESPONSE:
+{"id":7014240,"userName":"+237666444002","gender":"Unknown","countryName":"Germany","countryCode":"DE","userActiveStatus":"Active","mobilePrefixCountryName":"Cameroon","phonePrefixCountryName":"","type":"Ordinary","displayName":"","activeStatus":"Active","address3":"","zip":"","state":"","signupIP":"","isEmailVerified":true,"currency":"XAF","lastLogin":"2025-08-27T13:32:31.243","preferredCurrency":"","secondFactorType":"None","domainID":4093,"firstName":"","lastName":"","birthDate":"0001-01-01T00:00:00","email":"+237666444002@4093.tmp","title":"","address1":"-","address2":"","city":"","countryId":88,"stateId":0,"mobilePhonePrefix":"+237","mobilePhone":"666444002","phonePrefix":"","phone":"","affiliateMarker":"","securityQuestion":"DUMMY","securityAnswer":"DUMMY","language":"ENG","allowNewsEmail":false,"alias":"","companyName":"","companyRegNo":"","taxCode":"","allowSmsOffer":false,"personalId":"","nationality":"","birthName":", ","birthPlace":"","birthCountryId":44,"registrationTime":"2025-08-27T13:32:29.767","preLoginDate":"null","iban":""}
+
+// ----------------------
+
+// GET USER WALLET DETAILS
+
+REQUEST:
+
+curl 'https://betsson-api.stage.norway.everymatrix.com/v2/player/7014240/balance' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: pt-PT,pt;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  -H 'x-session-type: others' \
+  -H 'x-sessionid: 2db9d915-b966-4059-8345-e7327fe8e666'
+
+
+  RESPONSE:
+  {"totalAmount":{"XAF":0.0},"totalCashAmount":{"XAF":0.0},"totalWithdrawableAmount":{"XAF":0.0},"totalRealAmount":{"XAF":0.0},"totalBonusAmount":{"XAF":0.0},"items":[{"type":"Real","amount":0.0,"currency":"XAF","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"Bonus","amount":0.0,"currency":"XAF","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"RealLocked","amount":0.0,"currency":"XAF","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"RefundableAmount","amount":0.0,"currency":"XAF","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"RealNegativeRemainder","amount":0.0,"currency":"XAF","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"SessionWagering","amount":0.0,"currency":null,"productType":null,"sessionTimestamp":null,"walletAccountType":null,"sessionId":null,"creditLine":null}]}
+
+
+  // ------------
+
+// IFRAME TO DEPOSIT VIA TEST VENDER
+
+REQUEST:
+
+  curl 'https://betsson-api.stage.norway.everymatrix.com/v1/player/6976243/payment/GetPaymentSession' \
+  -H 'accept: application/json' \
+  -H 'accept-language: en' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  -H 'x-sessionid: cc34e7ce-e6a3-4aee-ac9c-6f1b13657086' \
+  --data-raw '{"Channel":"Desktop","Type":"Deposit","SuccessUrl":"https://sportsbook-stage.gomagaming.com/deposit/success","CancelUrl":"https://sportsbook-stage.gomagaming.com/deposit/cancel","FailUrl":"https://sportsbook-stage.gomagaming.com/deposit/fail","Language":"en","productType":"Sports","currency":"EUR","isShortCashier":false,"bonusCode":"","showBonusSelectionInput":true}'
+
+  RESPONSE:
+  {"CashierInfo":{"Url":"https://cashier-stage.moneymatrix.com/Cashier/Deposit?nonce=de9985f379fd434494431f2e1ac67ca0004093&signature=I0%2f70kuSH2pis3jvANSpETtYdVk%2b8dWi71njpQ5aAUbpuqwfLpo5sliZxjNCABOnRmKaKud%2fRGhGD9GBgpmdbMCkzSxjRlY1XTebT20bn5J7nwj42cNsqpx8xeV2%2bXwE90ILY2Q%2fN0FSNxp9wly7ioh34XsMgGP4womLlmPaEExNBavjLIPn7YhPwMGpQmrvwxSICnwdmHf51jzA97SJdCOTgE6EA%2fxySv%2bF7k1nrnVRaL9WiQ%2fz6p0LH%2b5jFOjULXsnV3%2fjsi6ydHFTBQyugUGJl%2fC1KOfGbYaAp5TOl7%2fF7Le49m23Ke5Yq8aD9xM%2bKqSJFNIsmBtexXOedK8YBg%3d%3d"},"ResponseCode":"Success","RequestId":"2424124f85484520ba40e976f84b7273"}
+
+
+  // ---------------------
+  // Place bet
+
+  REQUEST:  
+
+  curl 'https://sports-api-stage.everymatrix.com/place-bet/4093/v2/bets' \
+  -H 'accept: application/json' \
+  -H 'accept-language: en' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  -H 'x-operatorid: 4093' \
+  -H 'x-sessionid: 0c69a193-6cf4-4595-9be4-7765302fb9ce' \
+  --data-raw '{"ucsOperatorId":4093,"userId":"6976166","username":"+237666111023","currency":"EUR","type":"SINGLE","selections":[{"bettingOfferId":"278269982743212800","priceValue":1.6451613}],"amount":"10.00","oddsValidationType":"ACCEPT_ANY","terminalType":"DESKTOP","ubsWalletId":null,"freeBet":null}'
+
+  RESPONSE:
+
+  {"successful":true,"response":{"success":true,"errorCode":null,"errorMessage":null,"userName":"+237666111023","userId":6976166,"ucsOperatorId":4093,"providerId":3001033,"ucsOperatorName":"Betsson Cameroon","currency":"EUR","betId":"e7df0644-4013-4243-8542-3628671791c9","oddsValidationType":"ACCEPT_ANY","liveOddsValidationType":"ACCEPT_ANY","terminalType":"DESKTOP","terminalLocation":null,"type":"SINGLE","numberOfSelections":1,"selections":[{"bettingOfferId":"278269982743212800","outcomeId":"278269653731930624","eventId":"278269653630980096","bettingTypeId":69,"priceValue":1.6451613,"initialPriceValue":null,"betBuilderPriceValue":null,"initialBetBuilderPriceValue":null,"exchangeRateTimestamp":null,"exchangeRateSettlementTimestamp":null,"exchangeRateValue":null,"initialExchangeRateValue":null,"eachWay":null,"banker":false}],"freeBetAmount":null,"bonusBetAmount":null,"amount":10.0,"minStake":null,"maxStake":null,"systemBetType":null,"eachWay":null,"freeBet":false,"ubsWalletId":null,"maxWinning":16.45,"baseWinning":16.45,"bonusWinning":null,"possibleProfit":6.45,"basePossibleProfit":6.45,"totalPriceValue":1.645,"oddsBoost":null,"manualBetAmount":null,"oddsBoostPercentage":null,"stakeBackPercentage":null,"externalTicketCode":null,"oddsBoostCapAmount":null,"stakeBackOptions":null,"splitBetInfo":null,"totalStakeTax":0.0,"totalStakeNetto":10.0,"maxWinningTax":null,"maxWinningNetto":null,"rejectedSelections":[],"placedDate":"2025-08-28T19:30:01Z"}}
+
+
+// ---------------------
+// Get balance
+
+REQUEST:
+
+curl 'https://betsson-api.stage.norway.everymatrix.com/v2/player/6976166/balance' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: pt-PT,pt;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  -H 'x-session-type: others' \
+  -H 'x-sessionid: 0c69a193-6cf4-4595-9be4-7765302fb9ce'
+
+RESPONSE:
+
+{"totalAmount":{"EUR":269.18},"totalCashAmount":{"EUR":269.18},"totalWithdrawableAmount":{"EUR":269.18},"totalRealAmount":{"EUR":269.18},"totalBonusAmount":{"EUR":0.0},"items":[{"type":"Real","amount":269.18,"currency":"EUR","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"Bonus","amount":0.0,"currency":"EUR","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"RealLocked","amount":0.0,"currency":"EUR","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"RefundableAmount","amount":0.0,"currency":"EUR","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"RealNegativeRemainder","amount":0.0,"currency":"EUR","productType":null,"sessionTimestamp":null,"walletAccountType":"Ordinary","sessionId":null,"creditLine":null},{"type":"SessionWagering","amount":0.0,"currency":null,"productType":null,"sessionTimestamp":null,"walletAccountType":null,"sessionId":null,"creditLine":null}]}
+
+
+// --------------------------
+// my bets
+
+curl 'https://sports-api-stage.everymatrix.com/bets-api/v1/4093/open-bets?limit=20&placedBefore=2025-08-28T22:17:14' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: pt-PT,pt;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -H 'origin: https://sportsbook-stage.gomagaming.com' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://sportsbook-stage.gomagaming.com/' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36' \
+  -H 'x-language: en' \
+  -H 'x-operator-id: 4093' \
+  -H 'x-session-id: c93497fe-4c6d-4ffb-aea4-3ac60062e657' \
+  -H 'x-user-id: 6976166'

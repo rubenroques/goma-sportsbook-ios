@@ -18,6 +18,7 @@ enum GomaHomeContentAPISchema {
     case alertBanner
     case banners
     case sportBanners
+    case casinoCarouselBanners
     case boostedOdds
     case topImageCards
     case heroCards
@@ -47,6 +48,8 @@ extension GomaHomeContentAPISchema: Endpoint {
             return "/api/promotions/v1/banners"
         case .sportBanners:
             return "/api/promotions/v1/sport-banners"
+        case .casinoCarouselBanners:
+            return "/api/promotions/v1/casino-carousel-banners"
         case .boostedOdds:
             return "/api/promotions/v1/boosted-odds-banners"
         case .topImageCards:
@@ -136,6 +139,8 @@ extension GomaHomeContentAPISchema: Endpoint {
             return "Get promotional banners"
         case .sportBanners:
             return "Get sport banners"
+        case .casinoCarouselBanners:
+            return "Get casino carousel banners"
         case .boostedOdds:
             return "Get boosted odds banners"
         case .topImageCards:

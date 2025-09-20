@@ -487,7 +487,7 @@ class MainTabBarCoordinator: Coordinator {
     // TODO: Remove this once parent coordinator implements authentication closures
     private func presentAuthenticationDirectly(isLogin: Bool) {
         if isLogin {
-            var phoneLoginViewModel: PhoneLoginViewModelProtocol = MockPhoneLoginViewModel()
+            var phoneLoginViewModel = PhoneLoginViewModel()
             let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
             let authNavigationController = Router.navigationController(with: phoneLoginViewController)
             navigationController.present(authNavigationController, animated: true)

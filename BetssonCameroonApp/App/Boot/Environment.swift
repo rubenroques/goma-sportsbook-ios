@@ -27,20 +27,54 @@ class Environment {
         case .dev:
             serviceProviderEnvironment = .staging
         }
-
-        let servicesProviderConfiguration = ServicesProvider.Configuration(environment: serviceProviderEnvironment, deviceUUID: Env.deviceId)
-        let provider = TargetVariables.serviceProviderType
-        let client: ServicesProvider.Client
-        switch provider {
-        case .everymatrix:
-            client = ServicesProvider.Client(providerType: .everymatrix, configuration: servicesProviderConfiguration)
-        case .sportradar:
-            client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
-        case .goma:
-            client = ServicesProvider.Client(providerType: .goma, configuration: servicesProviderConfiguration)
+        
+        var cmsBusinessUnit: ServicesProvider.Configuration.ClientBusinessUnit
+        switch TargetVariables.cmsClientBusinessUnit {
+        case .betssonFrance:
+            cmsBusinessUnit = .betssonFrance
+        case .betssonCameroon:
+            cmsBusinessUnit = .betssonCameroon
+        case .gomaDemo:
+            cmsBusinessUnit = .gomaDemo
         }
 
-        return client
+        // Use builder pattern to configure client business unit for CMS
+        let configBuilder = ServicesProvider.Configuration.Builder()
+        do {
+            let servicesProviderConfiguration = try configBuilder
+                .withEnvironment(serviceProviderEnvironment)
+                .withDeviceUUID(Env.deviceId)
+                .withClientBusinessUnit(cmsBusinessUnit)
+                .build()
+
+            let provider = TargetVariables.serviceProviderType
+            let client: ServicesProvider.Client
+            switch provider {
+            case .everymatrix:
+                client = ServicesProvider.Client(providerType: .everymatrix, configuration: servicesProviderConfiguration)
+            case .sportradar:
+                client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
+            case .goma:
+                client = ServicesProvider.Client(providerType: .goma, configuration: servicesProviderConfiguration)
+            }
+
+            return client
+        } catch {
+            // Fallback to legacy configuration if builder fails
+            let servicesProviderConfiguration = ServicesProvider.Configuration(environment: serviceProviderEnvironment, deviceUUID: Env.deviceId)
+            let provider = TargetVariables.serviceProviderType
+            let client: ServicesProvider.Client
+            switch provider {
+            case .everymatrix:
+                client = ServicesProvider.Client(providerType: .everymatrix, configuration: servicesProviderConfiguration)
+            case .sportradar:
+                client = ServicesProvider.Client(providerType: .sportradar, configuration: servicesProviderConfiguration)
+            case .goma:
+                client = ServicesProvider.Client(providerType: .goma, configuration: servicesProviderConfiguration)
+            }
+
+            return client
+        }
     }()
 
     let betslipManager: BetslipManager = BetslipManager()

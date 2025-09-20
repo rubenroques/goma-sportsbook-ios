@@ -77,17 +77,19 @@ class PhoneLoginViewController: UIViewController {
         return constraint
     }()
 
-    private var viewModel: PhoneLoginViewModelProtocol
+    private var viewModel: PhoneLoginViewModel
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(viewModel: PhoneLoginViewModelProtocol) {
+    init(viewModel: PhoneLoginViewModel) {
         self.viewModel = viewModel
+        
         self.headerView = PromotionalHeaderView(viewModel: viewModel.headerViewModel)
         self.highlightedTextView = HighlightedTextView(viewModel: viewModel.highlightedTextViewModel)
         self.phoneField = BorderedTextFieldView(viewModel: viewModel.phoneFieldViewModel)
         self.passwordField = BorderedTextFieldView(viewModel: viewModel.passwordFieldViewModel)
         self.loginButton = ButtonView(viewModel: viewModel.buttonViewModel)
+        
         super.init(nibName: nil, bundle: nil)
     }
 
