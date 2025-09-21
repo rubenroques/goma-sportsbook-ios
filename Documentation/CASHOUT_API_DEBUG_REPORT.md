@@ -170,4 +170,4 @@ curl 'https://sports-api-stage.everymatrix.com/cashout/v1/cashout' \
 
 ---
 
-❌ **Failing**: Cashout execution with error code 103 "Current odds not found"
+**Failing**: Cashout execution with error code 103 "Current odds not found"
