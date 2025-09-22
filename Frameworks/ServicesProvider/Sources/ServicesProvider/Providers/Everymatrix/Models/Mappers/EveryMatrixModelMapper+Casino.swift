@@ -94,6 +94,7 @@ extension EveryMatrixModelMapper {
             thumbnail: dto.thumbnail ?? dto.defaultThumbnail ?? "",
             backgroundImageUrl: dto.backgroundImageUrl ?? "",
             vendor: vendor,
+            subVendor: dto.subVendor,
             description: dto.description ?? "",
             slug: dto.slug ?? "",
             hasFunMode: dto.hasFunMode ?? false,

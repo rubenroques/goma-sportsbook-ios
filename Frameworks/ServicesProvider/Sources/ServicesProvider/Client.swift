@@ -2180,6 +2180,22 @@ extension Client {
         return casinoProvider.getRecentlyPlayedGames(playerId: playerId, language: language, platform: platform, pagination: pagination)
     }
     
+    public func searchGames(language: String? = nil, platform: String? = nil, name: String) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.searchGames(language: language, platform: platform, name: name)
+    }
+    
+    public func getRecommendedGames(language: String? = nil, platform: String? = nil) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getRecommendedGames(language: language, platform: platform)
+    }
+    
     public func buildCasinoGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String? = nil, language: String? = nil) -> String? {
         guard let casinoProvider = self.casinoProvider else {
             return nil

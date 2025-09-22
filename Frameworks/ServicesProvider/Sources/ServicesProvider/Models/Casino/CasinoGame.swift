@@ -22,6 +22,9 @@ public struct CasinoGame: Codable, Hashable, Identifiable {
     /// Game vendor/provider information (optional - not displayed in UI)
     public let vendor: CasinoGameVendor?
     
+    /// Game sub-vendor
+    public let subVendor: String?
+    
     /// Game description
     public let description: String
     
@@ -69,6 +72,7 @@ public struct CasinoGame: Codable, Hashable, Identifiable {
         thumbnail: String,
         backgroundImageUrl: String,
         vendor: CasinoGameVendor? = nil,
+        subVendor: String? = nil,
         description: String,
         slug: String,
         hasFunMode: Bool,
@@ -90,6 +94,7 @@ public struct CasinoGame: Codable, Hashable, Identifiable {
         self.thumbnail = thumbnail
         self.backgroundImageUrl = backgroundImageUrl
         self.vendor = vendor
+        self.subVendor = subVendor
         self.description = description
         self.slug = slug
         self.hasFunMode = hasFunMode

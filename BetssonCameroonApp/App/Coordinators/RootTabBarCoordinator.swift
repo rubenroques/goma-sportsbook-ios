@@ -42,6 +42,7 @@ class RootTabBarCoordinator: Coordinator {
     private var myBetsCoordinator: MyBetsCoordinator?
     private var sportsSearchCoordinator: SportsSearchCoordinator?
     private var casinoCoordinator: CasinoCoordinator?
+    private var casinoSearchCoordinator: CasinoSearchCoordinator?
     private var betslipCoordinator: BetslipCoordinator?
     // MARK: - Initialization
     
@@ -678,8 +679,22 @@ class RootTabBarCoordinator: Coordinator {
     }
     
     private func showCasinoSearchScreen() {
-        let dummyViewController = DummyViewController(displayText: "Casino Search")
-        rootTabBarViewController?.showCasinoSearchScreen(with: dummyViewController)
+        // Lazy loading: only create coordinator when needed
+        if casinoSearchCoordinator == nil {
+            let coordinator = CasinoSearchCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment
+            )
+            casinoSearchCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+        
+        if let viewController = casinoSearchCoordinator?.viewController {
+            rootTabBarViewController?.showCasinoSearchScreen(with: viewController)
+        }
+        
+        casinoSearchCoordinator?.refresh()
     }
     
     // MARK: - Banking Flow Methods
