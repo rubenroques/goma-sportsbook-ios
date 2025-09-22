@@ -10,7 +10,7 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
     private let contentContainer = UIView()
 
     private var cancellables = Set<AnyCancellable>()
-    private let viewModel: SingleButtonBannerViewModelProtocol
+    private var viewModel: SingleButtonBannerViewModelProtocol
 
     // MARK: - Public Properties
     public var onButtonTapped: (() -> Void) = { }
@@ -156,6 +156,20 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
     }
 
     // MARK: - Public Methods
+    public func configure(with viewModel: SingleButtonBannerViewModelProtocol) {
+        // Clear existing subscriptions
+        cancellables.removeAll()
+
+        // Update the view model reference
+        self.viewModel = viewModel
+
+        // Get current state and render immediately (synchronous)
+        render(state: viewModel.currentDisplayState)
+
+        // Setup new bindings for future updates
+        setupBindings()
+    }
+
     public func updateButtonEnabled(_ enabled: Bool) {
         actionButton.isEnabled = enabled
     }

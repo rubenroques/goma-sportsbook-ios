@@ -678,6 +678,19 @@ struct ComponentRegistry {
             }
         ),
         UIComponent(
+            title: "Match Banner",
+            description: "Match banner component for displaying live and prelive matches with team info, scores, and betting outcomes in TopBannerSliderView",
+            viewController: MatchBannerViewController.self,
+            previewFactory: {
+                let viewModel = MockMatchBannerViewModel.liveMatch
+                let bannerView = MatchBannerView()
+                bannerView.configure(with: viewModel)
+                bannerView.layer.cornerRadius = 8
+                bannerView.clipsToBounds = true
+                return bannerView
+            }
+        ),
+        UIComponent(
             title: "Top Banner Slider",
             description: "Horizontal collection view container for TopBannerProtocol items with page indicators, auto-scroll, and smooth transitions",
             viewController: TopBannerSliderViewController.self,

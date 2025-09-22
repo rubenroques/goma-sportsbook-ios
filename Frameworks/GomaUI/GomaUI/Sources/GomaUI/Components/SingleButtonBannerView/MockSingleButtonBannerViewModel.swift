@@ -6,6 +6,11 @@ final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelP
 
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<SingleButtonBannerDisplayState, Never>
+
+    public var currentDisplayState: SingleButtonBannerDisplayState {
+        return displayStateSubject.value
+    }
+
     public var displayStatePublisher: AnyPublisher<SingleButtonBannerDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
     }
@@ -55,7 +60,20 @@ final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelP
 
 // MARK: - Mock Factory
 extension MockSingleButtonBannerViewModel {
-    
+
+    /// Empty state for cell reuse and initial state
+    public static var emptyState: MockSingleButtonBannerViewModel {
+        let bannerData = SingleButtonBannerData(
+            type: "empty_banner",
+            isVisible: false,
+            backgroundImage: nil,
+            messageText: "",
+            buttonConfig: nil
+        )
+
+        return MockSingleButtonBannerViewModel(bannerData: bannerData, isButtonEnabled: false)
+    }
+
     /// Default mock with gradient background and button
     public static var defaultMock: MockSingleButtonBannerViewModel {
         let buttonConfig = ButtonConfig(

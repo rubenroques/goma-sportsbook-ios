@@ -79,9 +79,12 @@ public struct SingleButtonBannerDisplayState: Equatable {
 
 // MARK: - View Model Protocol
 public protocol SingleButtonBannerViewModelProtocol {
+    /// Current display state for immediate access
+    var currentDisplayState: SingleButtonBannerDisplayState { get }
+
     /// Publisher for reactive updates
     var displayStatePublisher: AnyPublisher<SingleButtonBannerDisplayState, Never> { get }
-    
+
     /// Called when the button is tapped
     func buttonTapped()
 } 
