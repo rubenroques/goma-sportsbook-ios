@@ -30,6 +30,8 @@ final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelP
             isButtonEnabled: isButtonEnabled
         )
         self.displayStateSubject = CurrentValueSubject(initialState)
+
+        print("[BANNER_DEBUG] 🟢 ViewModel.init - bannerData.type: '\(bannerData.type)', button: '\(bannerData.buttonConfig?.title ?? "nil")'")
     }
 
     // MARK: - SingleButtonBannerViewModelProtocol
@@ -66,7 +68,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "empty_banner",
             isVisible: false,
-            backgroundImage: nil,
+            backgroundImageURL: nil,
             messageText: "",
             buttonConfig: nil
         )
@@ -86,10 +88,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "welcome_banner",
             isVisible: true,
-            backgroundImage: createGradientImage(
-                colors: [UIColor.systemPurple, UIColor.systemBlue],
-                size: CGSize(width: 400, height: 200)
-            ),
+            backgroundImageURL: "https://picsum.photos/400/200?random=1",
             messageText: "Get 2X the action,\ndouble your first\ndeposit!",
             buttonConfig: buttonConfig
         )
@@ -102,10 +101,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "info_banner",
             isVisible: true,
-            backgroundImage: createGradientImage(
-                colors: [UIColor.systemOrange, UIColor.systemRed],
-                size: CGSize(width: 400, height: 200)
-            ),
+            backgroundImageURL: "https://picsum.photos/400/200?random=2",
             messageText: "Welcome to our platform!\nEnjoy your experience.",
             buttonConfig: nil
         )
@@ -125,10 +121,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "promo_banner",
             isVisible: true,
-            backgroundImage: createGradientImage(
-                colors: [UIColor.systemTeal, UIColor.systemCyan],
-                size: CGSize(width: 400, height: 200)
-            ),
+            backgroundImageURL: "https://picsum.photos/400/200?random=3",
             messageText: "Special Offer!\nSign up today for exclusive benefits.",
             buttonConfig: buttonConfig
         )
@@ -147,10 +140,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "disabled_banner",
             isVisible: true,
-            backgroundImage: createGradientImage(
-                colors: [UIColor.systemGray, UIColor.systemGray2],
-                size: CGSize(width: 400, height: 200)
-            ),
+            backgroundImageURL: "https://picsum.photos/400/200?random=4",
             messageText: "New features coming soon!",
             buttonConfig: buttonConfig
         )
@@ -163,7 +153,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "hidden_banner",
             isVisible: false,
-            backgroundImage: nil,
+            backgroundImageURL: nil,
             messageText: "This banner is hidden",
             buttonConfig: nil
         )

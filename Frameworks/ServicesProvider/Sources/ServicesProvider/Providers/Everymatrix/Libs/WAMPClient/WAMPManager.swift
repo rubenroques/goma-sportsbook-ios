@@ -254,6 +254,7 @@ final class WAMPManager {
                     // print("🔄 WAMPManager: Kwargs: \(router.kwargs ?? [:])")
                     
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in
+                        
                         // print("✅ WAMPManager: RPC call SUCCESS for \(router.procedure)")
                         // print("✅ WAMPManager: kwResults: \(kwResults ?? [:])")
                         // print("✅ WAMPManager: arrResults: \(arrResults ?? [:])")

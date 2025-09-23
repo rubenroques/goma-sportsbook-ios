@@ -38,13 +38,15 @@ final class SingleButtonBannerViewCell: UICollectionViewCell {
     // MARK: - Configuration
     /// Configure the cell with a view model (synchronous)
     func configure(with viewModel: SingleButtonBannerViewModelProtocol) {
+        print("[BANNER_DEBUG] 🟣 Cell.configure - with viewModel")
         bannerView.configure(with: viewModel)
     }
 
     // MARK: - Cell Reuse
     override func prepareForReuse() {
         super.prepareForReuse()
-        // Reset to empty state for proper reuse
-        bannerView.configure(with: MockSingleButtonBannerViewModel.emptyState)
+        print("[BANNER_DEBUG] ⚪ Cell.prepareForReuse - clearing content")
+        // Clear content without using mock data
+        bannerView.clearContent()
     }
 }

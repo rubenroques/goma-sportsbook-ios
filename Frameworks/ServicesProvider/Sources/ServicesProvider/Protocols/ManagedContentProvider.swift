@@ -43,8 +43,8 @@ protocol HomeContentProvider: Connector {
     func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError>
 
     /// Retrieves sport-specific promotional banners
-    /// - Returns: Publisher that emits an array of sport banners
-    func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError>
+    /// - Returns: Publisher that emits an array of sport banners wrapped with image metadata
+    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError>
 
     // MARK: - Casino Carousel Banners
 

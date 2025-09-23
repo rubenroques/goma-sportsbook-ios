@@ -89,9 +89,18 @@ class GomaHomeContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
     
-    func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
+    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
         return self.apiClient.carouselEvents()
             .map(GomaModelMapper.events(fromInternalHeroCardEvents:))
+            .map { events -> ImageHighlightedContents<Event> in
+                events.map { event in
+                    ImageHighlightedContent(
+                        content: event,
+                        promotedChildCount: 1,
+                        imageURL: event.promoImageURL
+                    )
+                }
+            }
             .eraseToAnyPublisher()
     }
 

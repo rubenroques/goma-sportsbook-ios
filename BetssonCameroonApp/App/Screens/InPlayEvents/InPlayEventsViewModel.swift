@@ -61,6 +61,7 @@ class InPlayEventsViewModel {
 
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
+    let topBannerSliderViewModel: TopBannerSliderViewModelProtocol
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
 
@@ -81,6 +82,9 @@ class InPlayEventsViewModel {
     
     // Casino navigation closure for QuickLinks
     var onCasinoQuickLinkSelected: ((QuickLinkType) -> Void)?
+
+    // Sport banner navigation closure
+    var onSportBannerAction: ((SportBannerAction) -> Void)?
     
     // MARK: - Private Properties
     var sport: Sport
@@ -103,6 +107,10 @@ class InPlayEventsViewModel {
         self.servicesProvider = servicesProvider
         // Create production QuickLinks ViewModel
         self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forSportsScreens()
+
+        // Create TopBannerSlider ViewModel for sports banners
+        self.topBannerSliderViewModel = SportTopBannerSliderViewModel(servicesProvider: servicesProvider)
+
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
         
@@ -205,6 +213,13 @@ class InPlayEventsViewModel {
         if let quickLinksViewModel = quickLinksTabBarViewModel as? QuickLinksTabBarViewModel {
             quickLinksViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
                 self?.onCasinoQuickLinkSelected?(quickLinkType)
+            }
+        }
+
+        // Setup TopBannerSlider navigation callback
+        if let sportBannerViewModel = topBannerSliderViewModel as? SportTopBannerSliderViewModel {
+            sportBannerViewModel.onBannerAction = { [weak self] bannerAction in
+                self?.onSportBannerAction?(bannerAction)
             }
         }
         

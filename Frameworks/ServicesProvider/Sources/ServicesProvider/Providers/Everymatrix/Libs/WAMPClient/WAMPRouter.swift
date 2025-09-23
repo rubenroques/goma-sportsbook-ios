@@ -27,6 +27,7 @@ enum WAMPRouter {
     // Matches & Odds
     case getMatchDetails(language: String, matchId: String)
     case getMatchOdds(language: String, matchId: String, bettingTypeId: String)
+    case matchWithMainMarkets(operatorId: String, language: String, matchId: String, mainMarketsCount: Int = 1)
 
     // Shared Bets
     case getSharedBetTokens(betId: String)
@@ -115,6 +116,8 @@ enum WAMPRouter {
             
         case .getMatchDetails:
             return "/sports#matches"
+        case .matchWithMainMarkets:
+            return "/sports#initialDump"
         case .getLocations:
             return "/sports#locations"
         case .getCustomTournaments:
@@ -258,6 +261,9 @@ enum WAMPRouter {
         case .getMatchDetails(let language, let matchId):
             return ["lang": language,
                     "matchId": matchId]
+        case .matchWithMainMarkets(let operatorId, let language, let matchId, let mainMarketsCount):
+            let topic = "/sports/\(operatorId)/\(language)/match-aggregator/\(matchId)/\(mainMarketsCount)"
+            return ["topic": topic]
         case .getLocations(let language, let sortByPopularity):
             let sortByPopularityString = String(sortByPopularity)
             return ["lang": language,

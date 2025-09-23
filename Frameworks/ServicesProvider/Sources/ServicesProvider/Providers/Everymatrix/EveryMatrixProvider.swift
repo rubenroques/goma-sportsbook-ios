@@ -579,7 +579,55 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+//        let language = "en" // Could be made configurable
+//        let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()
+//        let router = WAMPRouter.oddsMatch(operatorId: operatorId,
+//                                          language: language,
+//                                          matchId: eventId)
+//
+//        return connector.request(router)
+//            .tryMap { (response: EveryMatrix.RPCResponse) -> Event in
+//                guard let event = self.buildEvent(from: response, expectedMatchId: eventId) else {
+//                    throw ServiceProviderError.decodingError(message: "Failed to build event for \(eventId)")
+//                }
+//                return event
+//            }
+//            .mapError { error -> ServiceProviderError in
+//                if let serviceError = error as? ServiceProviderError {
+//                    return serviceError
+//                }
+//                return ServiceProviderError.decodingError(message: error.localizedDescription)
+//            }
+//            .eraseToAnyPublisher()
+        
+        return self.getEventWithMainMarkets(eventId: eventId, mainMarketsCount: 1)
+    }
+
+    private func getEventWithMainMarkets(eventId: String, mainMarketsCount: Int = 1) -> AnyPublisher<Event, ServiceProviderError> {
+        let language = "en" // Could be made configurable
+        let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()
+
+        let router = WAMPRouter.matchWithMainMarkets(
+            operatorId: operatorId,
+            language: language,
+            matchId: eventId,
+            mainMarketsCount: mainMarketsCount
+        )
+
+        return connector.request(router)
+            .tryMap { (response: EveryMatrix.AggregatorResponse) -> Event in
+                guard let event = self.buildEvent(from: response, expectedMatchId: eventId) else {
+                    throw ServiceProviderError.decodingError(message: "Failed to build event with main markets for \(eventId)")
+                }
+                return event
+            }
+            .mapError { error -> ServiceProviderError in
+                if let serviceError = error as? ServiceProviderError {
+                    return serviceError
+                }
+                return ServiceProviderError.decodingError(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
     }
 
     func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
@@ -652,6 +700,48 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    // MARK: - Private Helper Methods
+
+    private func buildEvent(from response: EveryMatrix.RPCResponse, expectedMatchId: String?) -> Event? {
+        let tempStore = EveryMatrix.EntityStore()
+        tempStore.storeRecords(response.records)
+
+        let matchDTO: EveryMatrix.MatchDTO?
+        if let expectedMatchId,
+           let dto = tempStore.get(EveryMatrix.MatchDTO.self, id: expectedMatchId) {
+            matchDTO = dto
+        } else {
+            matchDTO = tempStore.getAllInOrder(EveryMatrix.MatchDTO.self).first
+        }
+
+        guard let matchDTO,
+              let internalMatch = EveryMatrix.MatchBuilder.build(from: matchDTO, store: tempStore) else {
+            return nil
+        }
+
+        return EveryMatrixModelMapper.event(fromInternalMatch: internalMatch)
+    }
+
+    private func buildEvent(from response: EveryMatrix.AggregatorResponse, expectedMatchId: String?) -> Event? {
+        let tempStore = EveryMatrix.EntityStore()
+        tempStore.storeRecords(response.records)
+
+        let matchDTO: EveryMatrix.MatchDTO?
+        if let expectedMatchId,
+           let dto = tempStore.get(EveryMatrix.MatchDTO.self, id: expectedMatchId) {
+            matchDTO = dto
+        } else {
+            matchDTO = tempStore.getAllInOrder(EveryMatrix.MatchDTO.self).first
+        }
+
+        guard let matchDTO,
+              let internalMatch = EveryMatrix.MatchBuilder.build(from: matchDTO, store: tempStore) else {
+            return nil
+        }
+
+        return EveryMatrixModelMapper.event(fromInternalMatch: internalMatch)
     }
 
 }

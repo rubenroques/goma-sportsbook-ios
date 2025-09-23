@@ -3,8 +3,9 @@ import Combine
 import SwiftUI
 
 final public class TopBannerSliderView: UIView {
+    
     // MARK: - Constants
-    public static let bannerHeight: CGFloat = 200
+    public static let bannerHeight: CGFloat = 136
 
     // MARK: - Private Properties
     private let collectionView: UICollectionView
@@ -100,6 +101,7 @@ final public class TopBannerSliderView: UIView {
 
         // Subscribe to future updates
         viewModel.displayStatePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
                 self?.render(state: displayState)
@@ -115,6 +117,9 @@ final public class TopBannerSliderView: UIView {
         isHidden = !state.isVisible
         isUserInteractionEnabled = state.isUserInteractionEnabled
 
+        // Check if banners actually changed (avoid unnecessary reloads)
+        let bannersChanged = banners != sliderData.banners
+
         // Update banners array
         banners = sliderData.banners
 
@@ -123,11 +128,16 @@ final public class TopBannerSliderView: UIView {
         pageControl.currentPage = min(sliderData.currentPageIndex, banners.count - 1)
         pageControl.isHidden = !sliderData.showPageIndicators || banners.count <= 1
 
-        // Reload collection view
-        collectionView.reloadData()
+        // Only reload collection view if banners actually changed
+        if bannersChanged {
+            print("   🔄 TopBannerSlider.render - banners changed, reloading collection view")
+            collectionView.reloadData()
+        } else {
+            print("   📍 TopBannerSlider.render - only page index changed, no reload needed")
+        }
 
-        // Scroll to current page if needed
-        if !banners.isEmpty {
+        // Scroll to current page if needed (and if we didn't just reload, since reload handles positioning)
+        if !banners.isEmpty && !bannersChanged {
             let targetPage = min(sliderData.currentPageIndex, banners.count - 1)
             let indexPath = IndexPath(item: targetPage, section: 0)
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
@@ -157,6 +167,26 @@ final public class TopBannerSliderView: UIView {
 
         // Setup new bindings with immediate rendering
         setupBindings()
+    }
+
+    public func clearContent() {
+        // Clear existing subscriptions
+        cancellables.removeAll()
+
+        // Clear banners and hide view
+        banners = []
+        isHidden = true
+
+        // Hide page control
+        pageControl.numberOfPages = 0
+        pageControl.isHidden = true
+
+        // Reload collection view to show empty state
+        collectionView.reloadData()
+
+        // Clear callbacks
+        onBannerTapped = { _ in }
+        onPageChanged = { _ in }
     }
 
     public func scrollToPage(_ pageIndex: Int, animated: Bool = true) {

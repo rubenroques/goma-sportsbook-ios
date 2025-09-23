@@ -51,38 +51,24 @@ final public class TopBannerSliderCollectionViewCell: UICollectionViewCell {
     public func configure(with viewModel: TopBannerSliderViewModelProtocol?) {
         // Clear existing bindings
         cancellables.removeAll()
-        
+
         if let viewModel = viewModel {
-            // Create new banner slider view with actual viewModel
-            let newBannerSliderView = TopBannerSliderView(viewModel: viewModel)
-            
-            // Remove old view
-            bannerSliderView.removeFromSuperview()
-            
-            // Add new view with proper constraints
-            newBannerSliderView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview(newBannerSliderView)
-            
-            NSLayoutConstraint.activate([
-                newBannerSliderView.topAnchor.constraint(equalTo: contentView.topAnchor),
-                newBannerSliderView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-                newBannerSliderView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-                newBannerSliderView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-            ])
+            // Configure the existing view with new viewModel (synchronous)
+            bannerSliderView.configure(with: viewModel)
         }
-        // If viewModel is nil, keep the placeholder mock viewModel
+        // If viewModel is nil, keep the current viewModel
     }
     
     // MARK: - Reuse
     override public func prepareForReuse() {
         super.prepareForReuse()
-        
+
         // Clear bindings and reset callbacks
         cancellables.removeAll()
         onBannerTapped = { _ in }
         onPageChanged = { _ in }
-        
-        // Reset to placeholder state if needed
-        configure(with: MockTopBannerSliderViewModel.defaultMock)
+
+        // Clear content without using mock data
+        bannerSliderView.clearContent()
     }
 }

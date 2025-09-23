@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 import SwiftUI
+import Kingfisher
 
 /// Banner view for displaying match information with betting outcomes
 public final class MatchBannerView: UIView, TopBannerViewProtocol {
@@ -162,6 +163,7 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
 
         // Subscribe to match data updates
         viewModel.matchDataPublisher
+            .dropFirst() // Skip initial emission since configure() already renders synchronously
             .receive(on: DispatchQueue.main)
             .sink { [weak self] matchData in
                 self?.updateUI(with: matchData)
@@ -170,6 +172,7 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
 
         // Subscribe to match live status changes
         viewModel.matchLiveStatusChangedPublisher
+            .dropFirst() // Skip initial emission since configure() already handles initial state
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLive in
                 self?.updateScoreVisibility(isLive: isLive)
@@ -186,11 +189,12 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
         awayTeamLabel.text = matchData.awayTeam
 
         // Update background image
-        if let imageURL = matchData.backgroundImageURL, !imageURL.isEmpty {
-            // In a real implementation, you would load the image asynchronously
-            // For now, we'll set a placeholder or solid color
-            backgroundImageView.backgroundColor = StyleProvider.Color.backgroundGradientDark
+        if let imageURLString = matchData.backgroundImageURL,
+           !imageURLString.isEmpty,
+           let imageURL = URL(string: imageURLString) {
+            backgroundImageView.kf.setImage(with: imageURL)
         } else {
+            backgroundImageView.image = nil
             backgroundImageView.backgroundColor = StyleProvider.Color.backgroundGradientDark
         }
 

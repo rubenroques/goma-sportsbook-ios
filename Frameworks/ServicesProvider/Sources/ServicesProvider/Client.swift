@@ -89,7 +89,8 @@ public class Client {
                 }).store(in: &self.cancellables)
             
             
-            self.eventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector, sessionCoordinator: sessionCoordinator)
+            let everyMatrixEventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector, sessionCoordinator: sessionCoordinator)
+            self.eventsProvider = everyMatrixEventsProvider
             
             // Player API for privilegedAccessManager
             let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector(sessionCoordinator: sessionCoordinator)
@@ -130,7 +131,8 @@ public class Client {
             let gomaHomeContentProvider = GomaHomeContentProvider(authenticator: gomaAuthenticator)
             self.homeContentProvider = EveryMatrixManagedContentProvider(
                 gomaHomeContentProvider: gomaHomeContentProvider,
-                casinoProvider: everyMatrixCasinoProvider
+                casinoProvider: everyMatrixCasinoProvider,
+                eventsProvider: everyMatrixEventsProvider
             )
 
         //
@@ -1795,7 +1797,7 @@ extension Client {
         return homeContentProvider.getCarouselEventPointers()
     }
 
-    public func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
+    public func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
         guard
             let homeContentProvider = self.homeContentProvider
         else {

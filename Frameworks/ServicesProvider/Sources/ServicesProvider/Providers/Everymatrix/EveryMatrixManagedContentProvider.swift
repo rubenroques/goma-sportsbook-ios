@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SharedModels
 
 /// Implementation of ManagedContentProvider for the EveryMatrix API
 /// Combines EveryMatrix casino provider with Goma CMS for promotional content
@@ -20,13 +21,17 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
 
     private let gomaHomeContentProvider: GomaHomeContentProvider
     private let casinoProvider: EveryMatrixCasinoProvider
+    private let eventsProvider: EveryMatrixEventsProvider
 
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
-    init(gomaHomeContentProvider: GomaHomeContentProvider, casinoProvider: EveryMatrixCasinoProvider) {
+    init(gomaHomeContentProvider: GomaHomeContentProvider,
+         casinoProvider: EveryMatrixCasinoProvider,
+         eventsProvider: EveryMatrixEventsProvider) {
         self.gomaHomeContentProvider = gomaHomeContentProvider
         self.casinoProvider = casinoProvider
+        self.eventsProvider = eventsProvider
     }
 
     // MARK: - HomeContentProvider Implementation
@@ -52,8 +57,69 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
         return gomaHomeContentProvider.getCarouselEventPointers()
     }
 
-    func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
-        return gomaHomeContentProvider.getCarouselEvents()
+    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
+        let requestPublisher = gomaHomeContentProvider.getCarouselEventPointers()
+        return requestPublisher
+            .flatMap({ carouselEventPointers -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> in
+
+                // Extract event IDs from pointers
+                let eventIds: [String] = carouselEventPointers.map { $0.eventId }
+
+                // Handle empty list case
+                guard !eventIds.isEmpty else {
+                    return Just([]).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+
+                // Create a dictionary to map event IDs to their banner metadata
+                var bannerMetadataMap: [String: CarouselEventPointer] = [:]
+                carouselEventPointers.forEach { pointer in
+                    bannerMetadataMap[pointer.eventId] = pointer
+                }
+
+                // Fetch event details using RPC calls (not subscriptions)
+                let publishers: [AnyPublisher<Event?, Never>] = eventIds.map { eventId in
+                    return self.eventsProvider.getEventDetails(eventId: eventId)
+                        .map { Optional.some($0) }
+                        .catch { error -> AnyPublisher<Event?, Never> in
+                            print("Failed to fetch event details for \(eventId): \(error)")
+                            return Just(nil).eraseToAnyPublisher()
+                        }
+                        .eraseToAnyPublisher()
+                }
+
+                let finalPublisher = Publishers.MergeMany(publishers)
+                    .collect()
+                    .map({ (events: [Event?]) -> ImageHighlightedContents<Event> in
+                        // Filter out nil events and preserve order based on original pointers
+                        let validEvents = events.compactMap { $0 }
+
+                        // Create a dictionary for efficient event lookup by ID
+                        var eventDict: [String: Event] = [:]
+                        validEvents.forEach { event in
+                            eventDict[event.id] = event
+                        }
+
+                        // Create ImageHighlightedContent array in the same order as pointers
+                        let highlightedEvents: ImageHighlightedContents<Event> = carouselEventPointers.compactMap { pointer in
+                            guard let event = eventDict[pointer.eventId] else { return nil }
+
+                            // Create ImageHighlightedContent with image URL from CMS
+                            return ImageHighlightedContent(
+                                content: event,
+                                promotedChildCount: 1,
+                                imageURL: pointer.imageUrl
+                            )
+                        }
+
+                        return highlightedEvents
+                    })
+                    .eraseToAnyPublisher()
+
+                return finalPublisher
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
     }
 
     func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {

@@ -8,6 +8,7 @@ class InPlayEventsViewController: UIViewController {
     // MARK: - UI Components
     private var headerContainerView: UIView!
     private let quickLinksTabBarView: QuickLinksTabBarView
+    private var topBannerSliderView: TopBannerSliderView!
     private var pillSelectorBarView: PillSelectorBarView!
     private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
     
@@ -95,6 +96,7 @@ class InPlayEventsViewController: UIViewController {
 
         setupHeaderContainer()
         setupQuickLinksTabBar()
+        setupTopBannerSliderView()
         setupPillSelectorBarView()
         setupMarketGroupSelectorTabView()
         setupPageViewController()
@@ -137,7 +139,19 @@ class InPlayEventsViewController: UIViewController {
         headerContainerView.addSubview(quickLinksTabBarView)
         quickLinksTabBarView.translatesAutoresizingMaskIntoConstraints = false
     }
-    
+
+    private func setupTopBannerSliderView() {
+        topBannerSliderView = TopBannerSliderView(viewModel: viewModel.topBannerSliderViewModel)
+        topBannerSliderView.translatesAutoresizingMaskIntoConstraints = false
+        headerContainerView.addSubview(topBannerSliderView)
+
+        // Setup banner tap callback
+        topBannerSliderView.onBannerTapped = { [weak self] bannerIndex in
+            print("🎯 InPlayEventsViewController: Sports Banner tapped at index - \(bannerIndex)")
+            // Banner action handling is done through the ViewModel callbacks
+        }
+    }
+
     private func setupPillSelectorBarView() {
         pillSelectorBarView = PillSelectorBarView(viewModel: viewModel.pillSelectorBarViewModel)
         pillSelectorBarView.translatesAutoresizingMaskIntoConstraints = false
@@ -185,8 +199,8 @@ class InPlayEventsViewController: UIViewController {
         
         // Setup constraints
         NSLayoutConstraint.activate([
-            // Stack view constraints
-            pillsContainerStackView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
+            // Stack view constraints (now positioned after topBannerSliderView)
+            pillsContainerStackView.topAnchor.constraint(equalTo: topBannerSliderView.bottomAnchor),
             pillsContainerStackView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
             pillsContainerStackView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
             
@@ -232,6 +246,12 @@ class InPlayEventsViewController: UIViewController {
             quickLinksTabBarView.topAnchor.constraint(equalTo: headerContainerView.topAnchor),
             quickLinksTabBarView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
             quickLinksTabBarView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
+
+            // Top Banner Slider below Quick Links Tab Bar
+            topBannerSliderView.heightAnchor.constraint(equalToConstant: TopBannerSliderView.bannerHeight),
+            topBannerSliderView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
+            topBannerSliderView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
+            topBannerSliderView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
 
             // Market Group Selector below Pills Container inside header container
             marketGroupSelectorTabView.topAnchor.constraint(equalTo: pillsContainerStackView.bottomAnchor),

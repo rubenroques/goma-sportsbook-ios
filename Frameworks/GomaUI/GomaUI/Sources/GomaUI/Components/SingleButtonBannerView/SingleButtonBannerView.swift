@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 import SwiftUI
+import Kingfisher
 
 final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
     // MARK: - Private Properties
@@ -27,7 +28,8 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupSubviews()
-        setupBindings()
+    
+        self.configure(with: viewModel)
     }
 
     required init?(coder: NSCoder) {
@@ -100,19 +102,16 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
 
     private func setupBindings() {
         viewModel.displayStatePublisher
+            .dropFirst() // Skip initial emission since configure() already renders synchronously
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
+                print("[BANNER_DEBUG] 🟠 View.binding - displayState received")
                 self?.render(state: displayState)
             }
             .store(in: &cancellables)
-        
-        viewModel.displayStatePublisher
-            .map(\.bannerData.isVisible)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isVisible in
-                self?.isVisible = isVisible
-            }
-            .store(in: &self.cancellables)
+
+        // Removed redundant subscription - render() already handles visibility via isHidden
     }
 
     // MARK: - Rendering
@@ -120,7 +119,12 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
         let bannerData = state.bannerData
 
         // Update background image
-        backgroundImageView.image = bannerData.backgroundImage
+        if let imageURLString = bannerData.backgroundImageURL,
+           let imageURL = URL(string: imageURLString) {
+            backgroundImageView.kf.setImage(with: imageURL)
+        } else {
+            backgroundImageView.image = nil
+        }
 
         // Update message label
         messageLabel.text = bannerData.messageText
@@ -128,6 +132,8 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
         // Update button
         if let buttonConfig = bannerData.buttonConfig {
             actionButton.isHidden = false
+            let currentTitle = actionButton.title(for: .normal) ?? ""
+            print("[BANNER_DEBUG] 🔴 View.setButtonTitle - from '\(currentTitle)' to '\(buttonConfig.title)'")
             actionButton.setTitle(buttonConfig.title, for: .normal)
             actionButton.isEnabled = state.isButtonEnabled
 
@@ -157,6 +163,12 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
 
     // MARK: - Public Methods
     public func configure(with viewModel: SingleButtonBannerViewModelProtocol) {
+        print("[BANNER_DEBUG] 🔵 View.configure - start")
+
+        // Add simplified call stack trace to find caller
+        let caller = Thread.callStackSymbols.count > 1 ? Thread.callStackSymbols[1] : "unknown"
+        print("[BANNER_DEBUG] 📍 Called from: \(caller)")
+
         // Clear existing subscriptions
         cancellables.removeAll()
 
@@ -168,6 +180,27 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
 
         // Setup new bindings for future updates
         setupBindings()
+    }
+
+    public func clearContent() {
+        // Log current state before clearing
+        let currentTitle = actionButton.title(for: .normal) ?? "nil"
+        print("[BANNER_DEBUG] 🧹 View.clearContent - clearing button from '\(currentTitle)'")
+
+        // Clear existing subscriptions
+        cancellables.removeAll()
+
+        // Hide the entire view
+        isHidden = true
+
+        // Clear content
+        backgroundImageView.image = nil
+        messageLabel.text = ""
+        actionButton.setTitle("", for: .normal)
+        actionButton.isHidden = true
+
+        // Clear callbacks
+        onButtonTapped = { }
     }
 
     public func updateButtonEnabled(_ enabled: Bool) {

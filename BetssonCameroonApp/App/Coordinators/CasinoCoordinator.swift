@@ -142,7 +142,24 @@ class CasinoCoordinator: Coordinator {
         // Notify MainTabBarCoordinator if needed
         onShowGamePlay(gameId)
     }
-    
+
+    private func openExternalURL(url: String) {
+        guard let url = URL(string: url) else {
+            print("CasinoCoordinator: Invalid URL: \(url)")
+            return
+        }
+
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url) { success in
+                if !success {
+                    print("CasinoCoordinator: Failed to open URL: \(url)")
+                }
+            }
+        } else {
+            print("CasinoCoordinator: Cannot open URL: \(url)")
+        }
+    }
+
     // MARK: - Coordinator Protocol
     
     func start() {
@@ -155,9 +172,18 @@ class CasinoCoordinator: Coordinator {
         viewModel.onCategorySelected = { [weak self] categoryId, categoryTitle in
             self?.showCategoryGamesList(categoryId: categoryId, categoryTitle: categoryTitle)
         }
-        
+
         viewModel.onGameSelected = { [weak self] gameId in
             self?.showGamePrePlay(gameId: gameId)
+        }
+
+        // Banner navigation closures
+        viewModel.onBannerGameSelected = { [weak self] gameId in
+            self?.showGamePrePlay(gameId: gameId)
+        }
+
+        viewModel.onBannerURLSelected = { [weak self] url in
+            self?.openExternalURL(url: url)
         }
         
         // Create view controller
