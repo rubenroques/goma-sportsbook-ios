@@ -94,51 +94,9 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             .eraseToAnyPublisher()
     }
     
-    func getRecentlyPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
-        
-        guard connector.sessionToken != nil else {
-            return Just(CasinoGamesResponse(
-                count: 0,
-                total: 0,
-                games: [],
-                pagination: nil
-            ))
-            .setFailureType(to: ServiceProviderError.self)
-            .eraseToAnyPublisher()
-        }
-        
-        let finalLanguage = language ?? getDefaultLanguage()
-        let finalPlatform = platform ?? getDefaultPlatform()
-        
-        let endpoint = EveryMatrixCasinoAPI.getRecentlyPlayedGames(
-            playerId: playerId,
-            language: finalLanguage,
-            platform: finalPlatform,
-            offset: pagination.offset,
-            limit: pagination.limit
-        )
-        
-        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)
-        
-        return publisher
-            .map { response in
-                let games = response.items.compactMap(\.content).compactMap { item in
-                    item.gameModel?.content.map { EveryMatrixModelMapper.casinoGame(from: $0) }
-                }
-                
-                return CasinoGamesResponse(
-                    count: games.count,
-                    total: response.total,
-                    games: games,
-                    pagination: response.pages.map { EveryMatrixModelMapper.casinoPaginationInfo(from: $0) }
-                )
-            }
-            .eraseToAnyPublisher()
-    }
-    
     func searchGames(language: String?, platform: String?, name: String) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         let finalLanguage = language ?? getDefaultLanguage()
-        let finalPlatform = platform ?? getDefaultPlatform()
+        let finalPlatform = platform ?? getDefaultCasinoPlatform()
         
         let endpoint = EveryMatrixCasinoAPI.searchGames(
             language: finalLanguage,
@@ -197,7 +155,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
                 
                 return CasinoGamesResponse(
                     count: games.count,
-                    total: response.total,
+                    total: response.total ?? 0,
                     games: games,
                     pagination: response.pages.map { EveryMatrixModelMapper.casinoPaginationInfo(from: $0) }
                 )
@@ -251,5 +209,9 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     
     func getDefaultLanguage() -> String {
         return EveryMatrixUnifiedConfiguration.shared.defaultLanguage
+    }
+    
+    func getDefaultCasinoPlatform() -> String {
+        return EveryMatrixUnifiedConfiguration.shared.defaultCasinoPlatform
     }
 }

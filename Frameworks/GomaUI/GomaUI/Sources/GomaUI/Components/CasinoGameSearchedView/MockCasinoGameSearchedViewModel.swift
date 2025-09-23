@@ -1,19 +1,37 @@
+//
+//  MockCasinoGameSearchedViewModel.swift
+//  GomaUI
+//
+//  Created to provide a mock implementation for CasinoGameSearchedView
+//
+
 import Foundation
 import Combine
 
 public final class MockCasinoGameSearchedViewModel: CasinoGameSearchedViewModelProtocol {
     
+    // MARK: - Publishers
     private let dataSubject: CurrentValueSubject<CasinoGameSearchedData, Never>
-    private let stateSubject: CurrentValueSubject<CasinoGameSearchedDisplayState, Never>
-    private let selectedSubject: PassthroughSubject<String, Never> = .init()
-    public var onSelected: AnyPublisher<String, Never> { selectedSubject.eraseToAnyPublisher() }
+    private let displayStateSubject: CurrentValueSubject<CasinoGameSearchedDisplayState, Never>
+    private let selectedSubject = PassthroughSubject<String, Never>()
     
-    public var dataPublisher: AnyPublisher<CasinoGameSearchedData, Never> { dataSubject.eraseToAnyPublisher() }
-    public var displayStatePublisher: AnyPublisher<CasinoGameSearchedDisplayState, Never> { stateSubject.eraseToAnyPublisher() }
+    public var dataPublisher: AnyPublisher<CasinoGameSearchedData, Never> {
+        return dataSubject.eraseToAnyPublisher()
+    }
     
-    public init(data: CasinoGameSearchedData, state: CasinoGameSearchedDisplayState = .normal) {
-        self.dataSubject = .init(data)
-        self.stateSubject = .init(state)
+    public var displayStatePublisher: AnyPublisher<CasinoGameSearchedDisplayState, Never> {
+        return displayStateSubject.eraseToAnyPublisher()
+    }
+    
+    public var onSelected: AnyPublisher<String, Never> {
+        return selectedSubject.eraseToAnyPublisher()
+    }
+    
+    // MARK: - Init
+    public init(data: CasinoGameSearchedData,
+                state: CasinoGameSearchedDisplayState = .normal) {
+        self.dataSubject = CurrentValueSubject<CasinoGameSearchedData, Never>(data)
+        self.displayStateSubject = CurrentValueSubject<CasinoGameSearchedDisplayState, Never>(state)
     }
     
     // MARK: - Inputs
@@ -22,34 +40,43 @@ public final class MockCasinoGameSearchedViewModel: CasinoGameSearchedViewModelP
     }
     
     public func imageLoadingSucceeded() {
-        stateSubject.send(.normal)
+        displayStateSubject.send(.normal)
     }
     
     public func imageLoadingFailed() {
-        stateSubject.send(.imageError)
+        displayStateSubject.send(.imageError)
     }
 }
 
-// MARK: - Convenience Mocks
+// MARK: - Mock Presets
 public extension MockCasinoGameSearchedViewModel {
-    static let gonzo = MockCasinoGameSearchedViewModel(
-        data: CasinoGameSearchedData(
-            id: "gonzos-quest",
-            title: "Gonzo’s Quest",
-            provider: "Netent",
+    static var loading: MockCasinoGameSearchedViewModel {
+        let data = CasinoGameSearchedData(
+            id: "demo-id",
+            title: "Demo Game",
+            provider: "Demo Provider",
             imageURL: nil
-        ),
-        state: .imageError
-    )
-    
-    static let aviator = MockCasinoGameSearchedViewModel(
-        data: CasinoGameSearchedData(
-            id: "aviator",
-            title: "Aviator",
-            provider: "Spribe",
-            imageURL: "https://picsum.photos/seed/aviator/256/256"
         )
-    )
+        return MockCasinoGameSearchedViewModel(data: data, state: .loading)
+    }
+    
+    static var normal: MockCasinoGameSearchedViewModel {
+        let data = CasinoGameSearchedData(
+            id: "demo-id",
+            title: "Demo Game",
+            provider: "Demo Provider",
+            imageURL: "https://example.com/demo.png"
+        )
+        return MockCasinoGameSearchedViewModel(data: data, state: .normal)
+    }
+    
+    static var imageError: MockCasinoGameSearchedViewModel {
+        let data = CasinoGameSearchedData(
+            id: "demo-id",
+            title: "Demo Game",
+            provider: "Demo Provider",
+            imageURL: "https://example.com/broken.png"
+        )
+        return MockCasinoGameSearchedViewModel(data: data, state: .imageError)
+    }
 }
-
-

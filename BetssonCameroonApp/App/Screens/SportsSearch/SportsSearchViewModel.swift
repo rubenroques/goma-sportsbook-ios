@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import GomaUI
+import ServicesProvider
 
 final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     
@@ -112,6 +113,9 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     // Store MarketGroupCards view models by market type id
     private var marketGroupCardsViewModels: [String: MarketGroupCardsViewModel] = [:]
     
+    // Recommended events storage (from RecSys)
+    private var recommendedEvents: [Event] = []
+    
     // MARK: - Initialization
     
     init(userSessionStore: UserSessionStore) {
@@ -213,16 +217,35 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
             .store(in: &cancellables)
     }
     
+    private func testing() {
+        // Safely parse user id for API
+        let userId = userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
+        
+        Env.servicesProvider.getRecommendedMatch(domainId: 4093, userId: userId, isLive: false, terminalType: 1, apiKey: "AIzaSyBE-HDs6eqAkiNXtfN1sZGHRaGppjLfCho")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    print("RECOMMENDED ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] events in
+                self?.recommendedEvents = events
+                print("RECOMMENDED EVENTS STORED: \(events.map { $0.id })")
+            })
+            .store(in: &cancellables)
+    }
+    
     private func performSearch(_ searchText: String) {
         guard !searchText.isEmpty else {
             searchResultsSubject.send(0)
             return
         }
         
+        testing()
+        
         isLoadingSubject.send(true)
         updateSearchResultsState(isLoading: true, results: 0)
         
-        Env.servicesProvider.getSearchEvents(query: searchText, resultLimit: "20", page: "0")
+        Env.servicesProvider.getMultiSearchEvents(query: searchText, resultLimit: "5", page: "0")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

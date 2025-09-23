@@ -1113,6 +1113,16 @@ extension GomaProvider: EventsProvider {
         .eraseToAnyPublisher()
 
     }
+    
+    func getMultiSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+
+    }
+    
+    func getRecommendedMatch(domainId: Int, userId: String, isLive: Bool, terminalType: Int, apiKey: String) -> AnyPublisher<[Event], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     func getEventSummary(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError> {
 
@@ -1509,6 +1519,10 @@ extension GomaProvider: BettingProvider {
     }
     
     func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getRecentlyPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     

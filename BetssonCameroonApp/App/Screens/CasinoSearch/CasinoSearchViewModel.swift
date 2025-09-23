@@ -38,15 +38,17 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
     
     private func testing() {
         
-        servicesProvider.getRecommendedGames()
+        let playerId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
+        
+        servicesProvider.getRecentlyPlayedGames(playerId: playerId ?? "")
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure(let error) = completion {
-                    print("CASINO RECOMMENDED FAILED: \(error)")
+                    print("RECENTLY PLAYED FAILED: \(error)")
                 }
             } receiveValue: { [weak self] response in
                 let recommended = response
-                print("CASINO RECOMMENDED DONE: \(response)")
+                print("RECENTLY PLAYED DONE: \(response)")
             }
             .store(in: &cancellables)
     }

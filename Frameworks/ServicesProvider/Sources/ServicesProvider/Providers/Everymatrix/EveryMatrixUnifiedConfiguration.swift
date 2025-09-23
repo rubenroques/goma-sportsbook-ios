@@ -124,4 +124,8 @@ public final class EveryMatrixUnifiedConfiguration {
         return "iOS"
     }
     
+    public var defaultCasinoPlatform: String {
+        return "iPhone"
+    }
+    
 }

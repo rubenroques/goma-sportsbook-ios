@@ -40,20 +40,6 @@ public protocol CasinoProvider: Connector {
         platform: String?
     ) -> AnyPublisher<CasinoGame?, ServiceProviderError>
     
-    /// Retrieve recently played games for a user (requires authentication)
-    /// - Parameters:
-    ///   - playerId: Player identifier
-    ///   - language: Language code - optional, provider will use default
-    ///   - platform: Platform identifier - optional, provider will use default
-    ///   - pagination: Pagination parameters
-    /// - Returns: Publisher with paginated recently played games
-    func getRecentlyPlayedGames(
-        playerId: String,
-        language: String?,
-        platform: String?,
-        pagination: CasinoPaginationParams
-    ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
-    
     func searchGames(
         language: String?,
         platform: String?,

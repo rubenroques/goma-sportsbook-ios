@@ -6,7 +6,7 @@ extension EveryMatrix {
     /// DTO for recently played games API response
     struct CasinoRecentlyPlayedResponseDTO: Codable {
         let count: Int
-        let total: Int
+        let total: Int?
         let items: [FailableDecodable<CasinoRecentlyPlayedItemDTO>]
         let pagination: CasinoPaginationDTO?
         let pages: CasinoPagesDTO?

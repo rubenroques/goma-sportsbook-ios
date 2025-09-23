@@ -295,7 +295,7 @@ import SwiftUI
         let vc = UIViewController()
         vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
         
-        let searchedView = CasinoGameSearchedView(viewModel: MockCasinoGameSearchedViewModel.gonzo)
+        let searchedView = CasinoGameSearchedView(viewModel: MockCasinoGameSearchedViewModel.normal)
         searchedView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(searchedView)
         

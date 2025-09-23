@@ -34,6 +34,7 @@ enum WAMPRouter {
 
     // Search
     case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], eventTypes: [String], include: [String], bettingTypeIds: [Int], dataWithoutOdds: Bool)
+    case multiSearch(language: String, limit: Int, query: String, eventTypes: [String], include: [String])
 
     // MARK: - Subscription Publishers
     // Core Topics
@@ -127,6 +128,8 @@ enum WAMPRouter {
             return "/sports#odds"
         case .searchV2:
             return "/sports#searchV2"
+        case .multiSearch:
+            return "/sports#multiSearch"
         case .getSharedBetTokens:
             return "/sports#sharedBetTokens"
         case .getSharedBetData:
@@ -291,6 +294,20 @@ enum WAMPRouter {
                     "include": include,
                     "bettingTypeIds": bettingTypeIds,
                     "dataWithoutOdds": dataWithoutOdds]
+            
+        case .multiSearch(let language, let limit, let query, let eventTypes, let include):
+            return ["searchMap": [
+                "MATCH": [
+                    "eventTypes": eventTypes,
+                    "query": query,
+                    "limit": limit,
+                    "mainMarketsLimit": 3,
+                    "include": include,
+                    "searchQuery": query
+                ]
+            ],
+                    "lang": language
+            ]
 
         case .getSharedBetTokens(let betId):
             return ["betId": betId]

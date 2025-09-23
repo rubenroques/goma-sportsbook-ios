@@ -132,7 +132,7 @@ extension EveryMatrixModelMapper {
         
         return CasinoGamesResponse(
             count: games.count,
-            total: dto.total,
+            total: dto.total ?? 0,
             games: games,
             pagination: pagination
         )

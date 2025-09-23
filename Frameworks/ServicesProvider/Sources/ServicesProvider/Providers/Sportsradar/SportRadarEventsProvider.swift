@@ -1056,6 +1056,16 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
 
     }
+    
+    func getMultiSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool = false) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+
+    }
+    
+    func getRecommendedMatch(domainId: Int, userId: String, isLive: Bool, terminalType: Int, apiKey: String) -> AnyPublisher<[Event], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.homeSliders
