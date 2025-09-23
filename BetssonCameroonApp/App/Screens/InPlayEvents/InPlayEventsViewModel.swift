@@ -84,7 +84,7 @@ class InPlayEventsViewModel {
     var onCasinoQuickLinkSelected: ((QuickLinkType) -> Void)?
 
     // Sport banner navigation closure
-    var onSportBannerAction: ((SportBannerAction) -> Void)?
+    var onMatchTap: ((String) -> Void)?
     
     // MARK: - Private Properties
     var sport: Sport
@@ -218,8 +218,8 @@ class InPlayEventsViewModel {
 
         // Setup TopBannerSlider navigation callback
         if let sportBannerViewModel = topBannerSliderViewModel as? SportTopBannerSliderViewModel {
-            sportBannerViewModel.onBannerAction = { [weak self] bannerAction in
-                self?.onSportBannerAction?(bannerAction)
+            sportBannerViewModel.onMatchTap = { [weak self] eventId in
+                self?.onMatchTap?(eventId)
             }
         }
         
@@ -324,7 +324,7 @@ class InPlayEventsViewModel {
         marketGroupSelectorViewModel.updateWithMatches(matches, mainMarkets: mainMarkets)
 
         // Update all existing market group ViewModels with new matches
-        for (marketType, viewModel) in marketGroupCardsViewModels {
+        for (_, viewModel) in marketGroupCardsViewModels {
             viewModel.updateMatches(matches)
         }
 

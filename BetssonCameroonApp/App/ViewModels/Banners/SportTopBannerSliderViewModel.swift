@@ -19,11 +19,11 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
 
     // Internal state
-    private var sportBanners: [SportBannerData] = []
+    private var matchBannerViewModels: [MatchBannerViewModel] = []
     private var currentPageIndex: Int = 0
 
     // MARK: - Callbacks
-    var onBannerAction: ((SportBannerAction) -> Void) = { _ in }
+    var onMatchTap: ((String) -> Void) = { _ in }
 
     // MARK: - TopBannerSliderViewModelProtocol
     var currentDisplayState: TopBannerSliderDisplayState {
@@ -64,10 +64,9 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     }
 
     func bannerTapped(at index: Int) {
-        guard index < sportBanners.count else { return }
-        let bannerData = sportBanners[index]
-        let action = ServiceProviderModelMapper.sportBannerAction(fromBannerData: bannerData)
-        onBannerAction(action)
+        guard index < matchBannerViewModels.count else { return }
+        let matchBannerViewModel = matchBannerViewModels[index]
+        matchBannerViewModel.userDidTapBanner()
     }
 
     // MARK: - Private Methods
@@ -92,21 +91,21 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     }
 
     private func processCarouselEvents(_ imageHighlightedEvents: ImageHighlightedContents<Event>) {
-        // Convert ImageHighlightedContent<Event> to app models with proper image association
-        sportBanners = imageHighlightedEvents.compactMap { highlightedEvent in
-            return ServiceProviderModelMapper.sportBannerData(fromImageHighlightedContent: highlightedEvent)
+        // Convert ImageHighlightedContent<Event> directly to MatchBannerViewModel
+        matchBannerViewModels = imageHighlightedEvents.compactMap { highlightedEvent in
+            return self.createMatchBannerViewModel(from: highlightedEvent)
         }
 
-        // Filter visible banners
-        let visibleBanners = sportBanners.filter { $0.isVisible }
-
-        // Convert to BannerType array and setup callbacks
-        let bannerTypes = ServiceProviderModelMapper.bannerTypes(
-            fromSportBannerData: visibleBanners,
-            onBannerAction: { [weak self] action in
-                self?.onBannerAction(action)
+        // Set up match tap callbacks for each view model
+        matchBannerViewModels.forEach { [weak self] viewModel in
+            viewModel.onMatchTap = { [weak self] eventId in
+                self?.onMatchTap(eventId)
             }
-        )        
+        }
+
+        // Convert to BannerType array
+        let bannerTypes = matchBannerViewModels.map { BannerType.matchBanner($0) }
+
         // Update slider data
         updateSliderDataWithBanners(bannerTypes)
     }
@@ -168,5 +167,20 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     /// Reload sport banners from API
     func reloadBanners() {
         loadSportBanners()
+    }
+
+    // MARK: - Private Helper Methods
+
+    /// Convert ImageHighlightedContent<Event> directly to MatchBannerViewModel
+    private func createMatchBannerViewModel(from highlighted: ImageHighlightedContent<Event>) -> MatchBannerViewModel? {
+        let event = highlighted.content
+
+        // Map ServicesProvider.Event to app's Match model first
+        guard let match = ServiceProviderModelMapper.match(fromEvent: event) else {
+            return nil // Skip if event can't be mapped to match
+        }
+
+        // Create MatchBannerViewModel with the match and CMS image URL
+        return MatchBannerViewModel(match: match, imageURL: highlighted.imageURL)
     }
 }

@@ -135,6 +135,12 @@ public class Client {
                 eventsProvider: everyMatrixEventsProvider
             )
 
+            // Promotional Campaigns Provider - uses Goma CMS
+            let gomaPromotionalCampaignsProvider = GomaPromotionalCampaignsProvider(authenticator: gomaAuthenticator)
+            self.promotionalCampaignsProvider = EveryMatrixPromotionalCampaignsProvider(
+                gomaPromotionalCampaignsProvider: gomaPromotionalCampaignsProvider
+            )
+
         //
         case .goma:
             guard let deviceUUID = self.configuration.deviceUUID else {
@@ -178,7 +184,6 @@ public class Client {
                 }, receiveValue: { [weak self] connectorState in
                     self?.eventsConnectionStateSubject.send(connectorState)
                 }).store(in: &self.cancellables)
-
 
         case .sportradar:
 

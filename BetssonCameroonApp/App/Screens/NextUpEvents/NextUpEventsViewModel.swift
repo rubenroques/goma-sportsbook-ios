@@ -60,8 +60,8 @@ class NextUpEventsViewModel {
     }
 
     // MARK: - Child ViewModels
-    let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
-    let topBannerSliderViewModel: TopBannerSliderViewModelProtocol
+    let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
+    let topBannerSliderViewModel: SportTopBannerSliderViewModel
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
     var generalFiltersBarViewModel: GeneralFilterBarViewModelProtocol
@@ -83,7 +83,7 @@ class NextUpEventsViewModel {
     var onCasinoQuickLinkSelected: ((QuickLinkType) -> Void)?
 
     // Sport banner navigation closure
-    var onSportBannerAction: ((SportBannerAction) -> Void)?
+    var onMatchTap: ((String) -> Void)?
 
     // MARK: - Private Properties
     var sport: Sport
@@ -171,18 +171,16 @@ class NextUpEventsViewModel {
     // MARK: - Setup
     private func setupBindings() {
         // Setup QuickLinks navigation callback
-        if let quickLinksViewModel = quickLinksTabBarViewModel as? QuickLinksTabBarViewModel {
-            quickLinksViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
-                self?.onCasinoQuickLinkSelected?(quickLinkType)
-            }
+        quickLinksTabBarViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
+            self?.onCasinoQuickLinkSelected?(quickLinkType)
         }
+        
 
         // Setup TopBannerSlider navigation callback
-        if let sportBannerViewModel = topBannerSliderViewModel as? SportTopBannerSliderViewModel {
-            sportBannerViewModel.onBannerAction = { [weak self] bannerAction in
-                self?.onSportBannerAction?(bannerAction)
-            }
+        topBannerSliderViewModel.onMatchTap = { [weak self] eventId in
+            self?.onMatchTap?(eventId)
         }
+        
         
         // Listen to market group selection changes from selector ViewModel
         marketGroupSelectorViewModel.selectionEventPublisher

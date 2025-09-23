@@ -124,14 +124,14 @@ class GomaHomeContentAPIClient {
                 eventId: "281662226139582464",
                 eventMarketId: "1",
                 ctaUrl: nil,
-                imageUrl: "https://placehold.co/600x300/orange/white?text=Match+1"
+                imageUrl: "https://placehold.co/600x200/000144/F00.png?text=Event%201"
             ),
             GomaModels.CarouselEventPointer(
                 id: 2,
                 eventId: "281274207591075840",
                 eventMarketId: "1",
                 ctaUrl: nil,
-                imageUrl: "https://placehold.co/600x300/blue/white?text=Match+2"
+                imageUrl: "https://placehold.co/600x200/000144/F00.png?text=Event%202"
             )
         ]
 

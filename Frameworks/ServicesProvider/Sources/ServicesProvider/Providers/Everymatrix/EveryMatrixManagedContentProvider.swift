@@ -1,9 +1,3 @@
-//
-//  EveryMatrixManagedContentProvider.swift
-//
-//
-//  Created on: Today
-//
 
 import Foundation
 import Combine

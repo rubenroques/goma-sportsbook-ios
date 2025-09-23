@@ -58,14 +58,11 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
 
         // Immediate synchronous update with current data
         updateUI(with: viewModel.currentMatchData)
-
-        // Setup reactive updates for real-time changes
-        setupBindings()
     }
 
     // MARK: - TopBannerViewProtocol
     public func bannerDidBecomeVisible() {
-        viewModel?.loadMatchData()
+
     }
 
     public func bannerDidBecomeHidden() {
@@ -79,7 +76,7 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
 
         addSubview(backgroundImageView)
         addSubview(contentContainer)
-
+        
         contentContainer.addSubview(headerLabel)
         contentContainer.addSubview(homeTeamLabel)
         contentContainer.addSubview(awayTeamLabel)
@@ -107,17 +104,17 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
             // Header - 16px height, 11px font
             headerLabel.topAnchor.constraint(equalTo: contentContainer.topAnchor),
             headerLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
-            headerLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentContainer.trailingAnchor),
+            headerLabel.widthAnchor.constraint(equalTo: contentContainer.widthAnchor, multiplier: 0.8),
             headerLabel.heightAnchor.constraint(equalToConstant: 16),
 
             // Home team - 16px height, 2px gap from header
-            homeTeamLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 2),
+            homeTeamLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 4),
             homeTeamLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
             homeTeamLabel.trailingAnchor.constraint(lessThanOrEqualTo: homeScoreLabel.leadingAnchor, constant: -8),
             homeTeamLabel.heightAnchor.constraint(equalToConstant: 16),
 
             // Away team - 16px height, 2px gap from home team
-            awayTeamLabel.topAnchor.constraint(equalTo: homeTeamLabel.bottomAnchor, constant: 2),
+            awayTeamLabel.topAnchor.constraint(equalTo: homeTeamLabel.bottomAnchor, constant: 4),
             awayTeamLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
             awayTeamLabel.trailingAnchor.constraint(lessThanOrEqualTo: awayScoreLabel.leadingAnchor, constant: -8),
             awayTeamLabel.heightAnchor.constraint(equalToConstant: 16),
@@ -133,18 +130,18 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
             awayScoreLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 20),
 
             // Outcomes container - 48px height, 4px gap from away team
-            outcomesContainerView.topAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor, constant: 4),
+            outcomesContainerView.topAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor, constant: 6),
             outcomesContainerView.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
             outcomesContainerView.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
-            outcomesContainerView.heightAnchor.constraint(equalToConstant: 48),
-            outcomesContainerView.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor)
+            outcomesContainerView.heightAnchor.constraint(equalToConstant: 48)
         ])
     }
 
     private func setupWithTheme() {
         // Background overlay for text readability
-        contentContainer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-
+        contentContainer.backgroundColor = .clear
+        backgroundImageView.backgroundColor = .clear
+        
         // Text colors for visibility over background images
         headerLabel.textColor = StyleProvider.Color.allWhite
         homeTeamLabel.textColor = StyleProvider.Color.allWhite
@@ -158,27 +155,6 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
         contentContainer.addGestureRecognizer(tapGesture)
     }
 
-    private func setupBindings() {
-        guard let viewModel = viewModel else { return }
-
-        // Subscribe to match data updates
-        viewModel.matchDataPublisher
-            .dropFirst() // Skip initial emission since configure() already renders synchronously
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] matchData in
-                self?.updateUI(with: matchData)
-            }
-            .store(in: &cancellables)
-
-        // Subscribe to match live status changes
-        viewModel.matchLiveStatusChangedPublisher
-            .dropFirst() // Skip initial emission since configure() already handles initial state
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLive in
-                self?.updateScoreVisibility(isLive: isLive)
-            }
-            .store(in: &cancellables)
-    }
 
     private func updateUI(with matchData: MatchBannerModel) {
         // Update header text
@@ -189,10 +165,9 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
         awayTeamLabel.text = matchData.awayTeam
 
         // Update background image
-        if let imageURLString = matchData.backgroundImageURL,
-           !imageURLString.isEmpty,
-           let imageURL = URL(string: imageURLString) {
+        if let imageURLString = matchData.backgroundImageURL, !imageURLString.isEmpty, let imageURL = URL(string: imageURLString) {
             backgroundImageView.kf.setImage(with: imageURL)
+            backgroundImageView.backgroundColor = StyleProvider.Color.backgroundGradientDark
         } else {
             backgroundImageView.image = nil
             backgroundImageView.backgroundColor = StyleProvider.Color.backgroundGradientDark

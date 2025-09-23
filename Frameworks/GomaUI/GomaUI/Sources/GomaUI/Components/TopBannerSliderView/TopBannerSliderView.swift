@@ -5,7 +5,7 @@ import SwiftUI
 final public class TopBannerSliderView: UIView {
     
     // MARK: - Constants
-    public static let bannerHeight: CGFloat = 136
+    public static let bannerHeight: CGFloat = 140
 
     // MARK: - Private Properties
     private let collectionView: UICollectionView
@@ -84,14 +84,14 @@ final public class TopBannerSliderView: UIView {
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             // Page control container - top right
-            pageControlContainer.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            pageControlContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            pageControlContainer.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
-            pageControlContainer.heightAnchor.constraint(equalToConstant: 30),
-            
+            pageControlContainer.topAnchor.constraint(equalTo: topAnchor, constant: 9),
+            pageControlContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -11),
+
             // Page control - centered in container
-            pageControl.centerXAnchor.constraint(equalTo: pageControlContainer.centerXAnchor),
-            pageControl.centerYAnchor.constraint(equalTo: pageControlContainer.centerYAnchor)
+            pageControl.topAnchor.constraint(equalTo: pageControlContainer.topAnchor),
+            pageControl.bottomAnchor.constraint(equalTo: pageControlContainer.bottomAnchor),
+            pageControl.leadingAnchor.constraint(equalTo: pageControlContainer.leadingAnchor),
+            pageControl.trailingAnchor.constraint(equalTo: pageControlContainer.trailingAnchor),
         ])
     }
     
