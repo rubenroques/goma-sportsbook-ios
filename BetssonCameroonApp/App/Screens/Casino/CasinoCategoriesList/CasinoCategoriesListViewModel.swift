@@ -22,7 +22,8 @@ class CasinoCategoriesListViewModel: ObservableObject {
 
     // MARK: - Lobby Configuration
     private let lobbyType: CasinoLobbyType
-    
+    let showTopBanner: Bool
+
     // MARK: - Published Properties
     @Published private(set) var categorySections: [MockCasinoCategorySectionViewModel] = []
     @Published private(set) var isLoading: Bool = false
@@ -30,7 +31,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: MockQuickLinksTabBarViewModel
-    let topBannerSliderViewModel: TopBannerSliderViewModelProtocol
+    let topBannerSliderViewModel: TopBannerSliderViewModelProtocol?
     private(set) var recentlyPlayedGamesViewModel: MockRecentlyPlayedGamesViewModel
     
     // MARK: - Properties
@@ -38,14 +39,19 @@ class CasinoCategoriesListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    init(servicesProvider: ServicesProvider.Client, lobbyType: CasinoLobbyType = .casino) {
+    init(servicesProvider: ServicesProvider.Client, lobbyType: CasinoLobbyType = .casino, showTopBanner: Bool? = nil) {
         self.servicesProvider = servicesProvider
         self.lobbyType = lobbyType
+        self.showTopBanner = showTopBanner ?? (lobbyType == .casino)
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
 
-        // Initialize production casino banner viewModel
-        let casinoBannerViewModel = CasinoTopBannerSliderViewModel(servicesProvider: servicesProvider)
-        self.topBannerSliderViewModel = casinoBannerViewModel
+        // Initialize production casino banner viewModel only if banners are enabled
+        if self.showTopBanner {
+            let casinoBannerViewModel = CasinoTopBannerSliderViewModel(servicesProvider: servicesProvider)
+            self.topBannerSliderViewModel = casinoBannerViewModel
+        } else {
+            self.topBannerSliderViewModel = nil
+        }
 
         // Initialize with empty recently played - will be populated when categories load
         self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.emptyRecentlyPlayed
@@ -244,7 +250,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
             // Handle tab switching if needed
         }
 
-        // Casino banner callbacks
+        // Casino banner callbacks - only setup if banner is enabled
         if let casinoBannerViewModel = topBannerSliderViewModel as? CasinoTopBannerSliderViewModel {
             casinoBannerViewModel.onBannerAction = { [weak self] action in
                 self?.handleBannerAction(action)

@@ -197,66 +197,83 @@ class CasinoCategoriesListViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource
 extension CasinoCategoriesListViewController: UICollectionViewDataSource {
-    
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 3  // Fixed: Banner, Recently Played, Categories
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // 1 TopBanner + 1 RecentlyPlayed + n CategorySections
-        return 2 + categorySections.count
+        switch section {
+        case 0: return viewModel.showTopBanner ? 1 : 0  // Banner (ignored if 0 items)
+        case 1: return 1  // Recently played (always shown)
+        case 2: return categorySections.count  // All categories
+        default: return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch indexPath.item {
-        case 0:
-            // Top Banner Slider
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopBannerCell", for: indexPath) as! TopBannerSliderCollectionViewCell
-            
-            // Configure with mock viewModel for now
-            cell.configure(with: viewModel.topBannerSliderViewModel)
-            
-            // Setup callbacks
-            cell.onBannerTapped = { bannerIndex in
-                print("Banner tapped at index: \(bannerIndex)")
-                // TODO: Handle banner tap navigation
-            }
-            
-            return cell
-            
-        case 1:
-            // Recently Played Games
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecentlyPlayedCell", for: indexPath) as! RecentlyPlayedGamesCollectionViewCell
-            
-            // Configure with mock viewModel for now  
-            cell.configure(with: viewModel.recentlyPlayedGamesViewModel)
-            
-            // Setup callbacks
-            cell.onGameSelected = { [weak self] gameId in
-                self?.viewModel.gameSelected(gameId)
-            }
-            
-            return cell
-            
+        switch indexPath.section {
+        case 0: // Banner section (only called if showTopBanner is true)
+            return configureBannerCell(at: indexPath)
+        case 1: // Recently played section
+            return configureRecentlyPlayedCell(at: indexPath)
+        case 2: // Categories section
+            return configureCategoryCell(at: indexPath)
         default:
-            // Casino Category Sections
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategorySectionCell", for: indexPath) as! CasinoCategorySectionCollectionViewCell
-            
-            let categoryIndex = indexPath.item - 2
-            let categorySection = categorySections[categoryIndex]
-            
-            cell.configure(with: categorySection)
-            
-            // Setup callbacks
-            cell.onCategoryButtonTapped = { [weak self] categoryId in
-                self?.viewModel.categoryButtonTapped(
-                    categoryId: categoryId,
-                    categoryTitle: categorySection.categoryTitle
-                )
-            }
-            
-            cell.onGameSelected = { [weak self] gameId in
-                self?.viewModel.gameSelected(gameId)
-            }
-            
-            return cell
+            fatalError("Invalid section: \(indexPath.section)")
         }
+    }
+
+    // MARK: - Cell Configuration Methods
+
+    private func configureBannerCell(at indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopBannerCell", for: indexPath) as! TopBannerSliderCollectionViewCell
+
+        // Configure with banner viewModel (guaranteed non-nil when this method is called)
+        cell.configure(with: viewModel.topBannerSliderViewModel!)
+
+        // Setup callbacks
+        cell.onBannerTapped = { bannerIndex in
+            print("Banner tapped at index: \(bannerIndex)")
+            // TODO: Handle banner tap navigation
+        }
+
+        return cell
+    }
+
+    private func configureRecentlyPlayedCell(at indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecentlyPlayedCell", for: indexPath) as! RecentlyPlayedGamesCollectionViewCell
+
+        cell.configure(with: viewModel.recentlyPlayedGamesViewModel)
+
+        // Setup callbacks
+        cell.onGameSelected = { [weak self] gameId in
+            self?.viewModel.gameSelected(gameId)
+        }
+
+        return cell
+    }
+
+    private func configureCategoryCell(at indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategorySectionCell", for: indexPath) as! CasinoCategorySectionCollectionViewCell
+
+        let categorySection = categorySections[indexPath.item]
+
+        cell.configure(with: categorySection)
+
+        // Setup callbacks
+        cell.onCategoryButtonTapped = { [weak self] categoryId in
+            self?.viewModel.categoryButtonTapped(
+                categoryId: categoryId,
+                categoryTitle: categorySection.categoryTitle
+            )
+        }
+
+        cell.onGameSelected = { [weak self] gameId in
+            self?.viewModel.gameSelected(gameId)
+        }
+
+        return cell
     }
 }
 
@@ -265,17 +282,16 @@ extension CasinoCategoriesListViewController: UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.bounds.width
-        
-        switch indexPath.item {
-        case 0:
-            // Top Banner Slider
+
+        switch indexPath.section {
+        case 0: // Banner section
             return CGSize(width: width, height: Constants.topBannerHeight)
-        case 1:
-            // Recently Played Games
+        case 1: // Recently played section
             return CGSize(width: width, height: Constants.recentlyPlayedHeight)
-        default:
-            // Casino Category Sections
+        case 2: // Categories section
             return CGSize(width: width, height: Constants.categorySectionHeight)
+        default:
+            return CGSize(width: width, height: 0)
         }
     }
 }
