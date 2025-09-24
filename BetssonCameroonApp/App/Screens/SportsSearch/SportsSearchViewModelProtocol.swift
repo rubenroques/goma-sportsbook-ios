@@ -17,6 +17,7 @@ protocol SportsSearchViewModelProtocol: AnyObject {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var searchResultsPublisher: AnyPublisher<Int, Never> { get }
     var recentSearchesPublisher: AnyPublisher<[String], Never> { get }
+    var recommendedItemsPublisher: AnyPublisher<[TallOddsMatchCardViewModelProtocol], Never> { get }
 
     // Matches and Market Groups state
     var allMatchesPublisher: AnyPublisher<[Match], Never> { get }

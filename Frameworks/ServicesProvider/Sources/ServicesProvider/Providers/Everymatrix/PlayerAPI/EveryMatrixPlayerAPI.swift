@@ -17,6 +17,8 @@ enum EveryMatrixPlayerAPI {
     case getBankingWebView(userId: String, parameters: EveryMatrix.GetPaymentSessionRequest)
     case getRecentlyPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
     case getMostPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
+    case getRecommendedGames(language: String, platform: String)
+
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -47,6 +49,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/\(playerId)/games/last-played"
         case .getMostPlayedGames(let playerId, _, _, _, _):
             return "/v1/player/\(playerId)/games/most-played"
+        case .getRecommendedGames:
+            return "/v1/player/recommendedGames"
         }
     }
     
@@ -75,6 +79,11 @@ extension EveryMatrixPlayerAPI: Endpoint {
                 URLQueryItem(name: "dataSources", value: "Lobby1"),
                 URLQueryItem(name: "hasGameModel", value: "true"),
                 URLQueryItem(name: "order", value: "DESCENDING")
+            ]
+        case .getRecommendedGames(let language, let platform):
+            return [
+                URLQueryItem(name: "language", value: language),
+                URLQueryItem(name: "platform", value: platform),
             ]
         default:
             return nil
@@ -126,6 +135,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getRecentlyPlayedGames:
             return .get
         case .getMostPlayedGames:
+            return .get
+        case .getRecommendedGames:
             return .get
         }
     }
@@ -191,6 +202,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getBankingWebView:
             return true
         case .getRecentlyPlayedGames:
+            return true
+        case .getRecommendedGames:
             return true
         default:
             return false

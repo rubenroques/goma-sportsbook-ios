@@ -39,7 +39,7 @@ class PhoneLoginViewModel {
         
         phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
                                                                                                   placeholder: "Phone number *",
-//                                                                                                  prefix: "+237",
+                                                                                                  prefix: "+237",
                                                                                                   isSecure: false,
                                                                                                   visualState: .idle,
                                                                                                   keyboardType: .phonePad,
@@ -84,7 +84,7 @@ class PhoneLoginViewModel {
         
         isLoadingSubject.send(true)
         
-        let username = "\(phoneNumber)"
+        let username = "\(phoneFieldViewModel.prefixText ?? "")\(phoneNumber)"
         let password = "\(password)"
         
         Env.userSessionStore.login(withUsername: username, password: password)

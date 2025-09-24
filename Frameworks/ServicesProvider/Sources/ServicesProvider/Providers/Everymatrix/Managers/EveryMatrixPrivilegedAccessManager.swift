@@ -530,9 +530,45 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         let endpoint = EveryMatrixPlayerAPI.getMostPlayedGames(
             playerId: playerId,
             language: language ?? "en",
-            platform: platform ?? "PC",
+            platform: platform ?? "iPhone",
             offset: pagination.offset,
             limit: pagination.limit
+        )
+        
+        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { response in
+                let games = response.items.compactMap(\.content).compactMap { item in
+                    item.gameModel?.content.map { EveryMatrixModelMapper.casinoGame(from: $0) }
+                }
+                
+                return CasinoGamesResponse(
+                    count: games.count,
+                    total: response.total ?? 0,
+                    games: games,
+                    pagination: response.pages.map { EveryMatrixModelMapper.casinoPaginationInfo(from: $0) }
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func getRecommendedGames(language: String?, platform: String?) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        
+        guard connector.sessionToken != nil else {
+            return Just(CasinoGamesResponse(
+                count: 0,
+                total: 0,
+                games: [],
+                pagination: nil
+            ))
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+        }
+        
+        let endpoint = EveryMatrixPlayerAPI.getRecommendedGames(
+            language: language ?? "en",
+            platform: platform ?? "iPhone"
         )
         
         let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)

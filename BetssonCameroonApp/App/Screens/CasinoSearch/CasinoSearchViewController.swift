@@ -21,6 +21,8 @@ final class CasinoSearchViewController: UIViewController {
     private lazy var searchView: SearchView = Self.createSearchView(with: viewModel.searchViewModel)
     private lazy var searchHeaderInfoView: SearchHeaderInfoView = Self.createSearchHeaderInfoView(with: viewModel.searchHeaderInfoViewModel)
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
+    private lazy var suggestedErrorView: UIView = Self.createSuggestedErrorView()
+    private lazy var suggestedErrorLabel: UILabel = Self.createSuggestedErrorLabel()
     private lazy var resultsScrollView: UIScrollView = Self.createResultsScrollView()
     private lazy var resultsScrollContainerView: UIView = Self.createResultsScrollContainerView()
     private lazy var resultsContentStackView: UIStackView = Self.createResultsStackView()
@@ -88,6 +90,8 @@ final class CasinoSearchViewController: UIViewController {
         containerView.addSubview(emptyStateView)
         containerView.addSubview(resultsScrollView)
         resultsScrollView.addSubview(resultsScrollContainerView)
+        emptyStateView.addSubview(suggestedErrorView)
+        suggestedErrorView.addSubview(suggestedErrorLabel)
         resultsScrollContainerView.addSubview(resultsContentStackView)
         resultsContentStackView.addArrangedSubview(resultsContainerView)
         resultsContentStackView.addArrangedSubview(mostPlayedHeaderLabel)
@@ -167,8 +171,18 @@ final class CasinoSearchViewController: UIViewController {
             // Empty state fills remainder under header when shown
             emptyStateView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             emptyStateView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            emptyStateView.topAnchor.constraint(equalTo: searchHeaderInfoView.bottomAnchor, constant: 12),
+            emptyStateView.topAnchor.constraint(equalTo: searchView.bottomAnchor),
             emptyStateView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+
+            // Suggested error view inside empty state
+            suggestedErrorView.leadingAnchor.constraint(equalTo: emptyStateView.leadingAnchor),
+            suggestedErrorView.trailingAnchor.constraint(equalTo: emptyStateView.trailingAnchor),
+            suggestedErrorView.topAnchor.constraint(equalTo: emptyStateView.topAnchor),
+
+            suggestedErrorLabel.leadingAnchor.constraint(equalTo: suggestedErrorView.leadingAnchor, constant: 12),
+            suggestedErrorLabel.trailingAnchor.constraint(equalTo: suggestedErrorView.trailingAnchor, constant: -12),
+            suggestedErrorLabel.topAnchor.constraint(equalTo: suggestedErrorView.topAnchor, constant: 12),
+            suggestedErrorLabel.bottomAnchor.constraint(equalTo: suggestedErrorView.bottomAnchor, constant: -12),
             
             // Loading overlay covers container
             loadingIndicatorView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -182,6 +196,8 @@ final class CasinoSearchViewController: UIViewController {
         view.backgroundColor = StyleProvider.Color.backgroundSecondary
         containerView.backgroundColor = .clear
         emptyStateView.backgroundColor = StyleProvider.Color.backgroundSecondary
+        suggestedErrorView.backgroundColor = StyleProvider.Color.backgroundPrimary
+        suggestedErrorLabel.textColor = StyleProvider.Color.textPrimary
         resultsScrollContainerView.backgroundColor = .clear
         resultsContainerView.backgroundColor = StyleProvider.Color.backgroundTertiary
         mostPlayedContainerView.backgroundColor = StyleProvider.Color.backgroundTertiary
@@ -217,6 +233,15 @@ final class CasinoSearchViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 self?.loadingIndicatorView.isHidden = !isLoading
+            }
+            .store(in: &cancellables)
+
+        viewModel.recommendedGamesErrorMessagePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                let hasError = (message != nil)
+                self?.suggestedErrorLabel.text = hasError ? "[API error] \(message!)" : ""
+                self?.suggestedErrorView.isHidden = !hasError
             }
             .store(in: &cancellables)
     }
@@ -298,9 +323,25 @@ private extension CasinoSearchViewController {
     }
     
     static func createEmptyStateView() -> UIView {
-        let v = UIView()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    static func createSuggestedErrorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+
+    static func createSuggestedErrorLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .regular, size: 12)
+        label.text = "[API error] Couldn’t pull results for suggested games"
+        label.numberOfLines = 0
+        return label
     }
 
     static func createResultsScrollView() -> UIScrollView {

@@ -114,7 +114,9 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     private var marketGroupCardsViewModels: [String: MarketGroupCardsViewModel] = [:]
     
     // Recommended events storage (from RecSys)
-    private var recommendedEvents: [Event] = []
+    private let recommendedItemsSubject = CurrentValueSubject<[TallOddsMatchCardViewModelProtocol], Never>([])
+    var recommendedEventsPublisher: AnyPublisher<[Event], Never> { Just([]).eraseToAnyPublisher() }
+    var recommendedItemsPublisher: AnyPublisher<[TallOddsMatchCardViewModelProtocol], Never> { recommendedItemsSubject.eraseToAnyPublisher() }
     
     // MARK: - Initialization
     
@@ -132,6 +134,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         setupSearchComponentBindings()
         setupMarketGroupBindings()
         loadRecentSearches()
+        getRecommendedMatches()
     }
     
     // MARK: - SportsSearchViewModelProtocol
@@ -217,8 +220,9 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
             .store(in: &cancellables)
     }
     
-    private func testing() {
-        // Safely parse user id for API
+    private func getRecommendedMatches() {
+        isLoadingSubject.send(true)
+        
         let userId = userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
         
         Env.servicesProvider.getRecommendedMatch(userId: userId, isLive: false)
@@ -226,10 +230,39 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
                     print("RECOMMENDED ERROR: \(error)")
+                    self?.isLoadingSubject.send(false)
                 }
             }, receiveValue: { [weak self] events in
-                self?.recommendedEvents = events
+                guard let self = self else { return }
+                // Step 1: Event -> Match
+                let matches = ServiceProviderModelMapper.matches(fromEvents: events)
+                // Step 2: Match -> TallOddsMatchData -> MockTallOddsMatchCardViewModel
+                let items: [TallOddsMatchCardViewModelProtocol] = matches.map { match in
+//                    let header = MatchHeaderData(
+//                        id: match.id,
+//                        competitionName: match.competitionName,
+//                        matchTime: match.matchTime ?? "",
+//                        isLive: match.status.isLive
+//                    )
+//                    let marketInfo = MarketInfoData(
+//                        marketName: match.markets.first?.name ?? "",
+//                        marketCount: match.markets.count,
+//                        icons: []
+//                    )
+//                    let tallData = TallOddsMatchData(
+//                        matchId: match.id,
+//                        leagueInfo: header,
+//                        homeParticipantName: match.homeParticipant.name,
+//                        awayParticipantName: match.awayParticipant.name,
+//                        marketInfo: marketInfo,
+//                        outcomes: MarketGroupData(id: match.id, marketLines: [])
+//                    )
+                    let tallOddsMatchCardViewModel = TallOddsMatchCardViewModel.create(from: match, relevantMarkets: match.markets, marketTypeId: match.markets.first?.typeId ?? "", matchCardContext: .search)
+                    return tallOddsMatchCardViewModel
+                }
+                self.recommendedItemsSubject.send(items)
                 print("RECOMMENDED EVENTS STORED: \(events.map { $0.id })")
+                self.isLoadingSubject.send(false)
             })
             .store(in: &cancellables)
     }
@@ -239,9 +272,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
             searchResultsSubject.send(0)
             return
         }
-        
-        testing()
-        
+                
         isLoadingSubject.send(true)
         updateSearchResultsState(isLoading: true, results: 0)
         

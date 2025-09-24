@@ -23,6 +23,8 @@ class SportsSearchViewController: UIViewController {
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var recentSearchesScrollView: UIScrollView = Self.createRecentSearchesScrollView()
     private lazy var recentSearchesStackView: UIStackView = Self.createRecentSearchesStackView()
+    private lazy var recommendedCollectionView: UICollectionView = Self.createRecommendedCollectionView()
+    private var recommendedItems: [TallOddsMatchCardViewModelProtocol] = []
     private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
     private var pageViewController: UIPageViewController!
     
@@ -83,15 +85,20 @@ class SportsSearchViewController: UIViewController {
         containerView.addSubview(searchHeaderInfoView)
         containerView.addSubview(emptyStateView)
         containerView.addSubview(recentSearchesScrollView)
+        containerView.addSubview(recommendedCollectionView)
         recentSearchesScrollView.addSubview(recentSearchesStackView)
         setupMarketGroupSelectorTabView()
         setupPageViewController()
         setupLoadingIndicator()
+
+        recommendedCollectionView.dataSource = self
+        recommendedCollectionView.delegate = self
         
-        // Initially hide search header and market groups, show empty state and recent searches
+        // Initially hide search header and market groups, show empty state
         searchHeaderInfoView.isHidden = true
         emptyStateView.isHidden = false
-        recentSearchesScrollView.isHidden = false
+        recentSearchesScrollView.isHidden = true
+        recommendedCollectionView.isHidden = false
     }
     
     private func setupConstraints() {
@@ -117,6 +124,12 @@ class SportsSearchViewController: UIViewController {
             recentSearchesScrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             recentSearchesScrollView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             recentSearchesScrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+
+            // Recommended collection view below search
+            recommendedCollectionView.topAnchor.constraint(equalTo: searchView.bottomAnchor),
+            recommendedCollectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            recommendedCollectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            recommendedCollectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
             // Recent searches stack view inside scroll view
             recentSearchesStackView.topAnchor.constraint(equalTo: recentSearchesScrollView.topAnchor),
@@ -180,6 +193,16 @@ class SportsSearchViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        // Recommended items (TallOddsMatchCardViewModelProtocol)
+        viewModel.recommendedItemsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] items in
+                guard let self = self else { return }
+                self.recommendedItems = items
+                self.recommendedCollectionView.reloadData()
+            }
+            .store(in: &cancellables)
+
         viewModel.searchResultsPublisher
             .sink { [weak self] results in
                 guard let self = self else { return }
@@ -232,7 +255,7 @@ class SportsSearchViewController: UIViewController {
         if searchText.isEmpty {
             // Show empty state and recent searches, hide search header and market groups
             emptyStateView.isHidden = false
-            recentSearchesScrollView.isHidden = false
+            recentSearchesScrollView.isHidden = true
             searchHeaderInfoView.isHidden = true
             marketGroupSelectorTabView.isHidden = true
             pageViewController.view.isHidden = true
@@ -243,6 +266,7 @@ class SportsSearchViewController: UIViewController {
             searchHeaderInfoView.isHidden = false
             marketGroupSelectorTabView.isHidden = false
             pageViewController.view.isHidden = false
+            recommendedCollectionView.isHidden = true
         }
     }
     
@@ -399,6 +423,33 @@ private extension SportsSearchViewController {
     func getMarketGroupIndex(for marketTypeId: String) -> Int? {
         return viewModel.getCurrentMarketGroups().firstIndex { $0.id == marketTypeId }
     }
+
+    static func createRecommendedCollectionView() -> UICollectionView {
+        // Match MarketGroupCards layout: full-width list with estimated item height and insets
+        let layout = UICollectionViewCompositionalLayout { _, _ in
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(180)
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(180)
+            )
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 1.5
+            section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+            return section
+        }
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = StyleProvider.Color.backgroundSecondary
+        collectionView.register(TallOddsMatchCardCollectionViewCell.self, forCellWithReuseIdentifier: TallOddsMatchCardCollectionViewCell.identifier)
+        return collectionView
+    }
 }
 
 // MARK: - Page VC Protocols
@@ -431,6 +482,27 @@ extension SportsSearchViewController: UIPageViewControllerDataSource, UIPageView
             viewModel.selectMarketGroup(id: currentId)
         }
     }
+}
+
+// MARK: - Recommended Collection Data Source & Delegate
+extension SportsSearchViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return recommendedItems.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TallOddsMatchCardCollectionViewCell.identifier, for: indexPath) as? TallOddsMatchCardCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        let vm = recommendedItems[indexPath.item]
+        let isFirst = indexPath.item == 0
+        let isLast = indexPath.item == recommendedItems.count - 1
+        cell.configure(with: vm)
+        cell.configureCellPosition(isFirst: isFirst, isLast: isLast)
+        return cell
+    }
+
+    // Compositional layout uses estimated heights; no need to implement sizeForItem
 }
 
 extension SportsSearchViewController: MarketGroupCardsScrollDelegate {

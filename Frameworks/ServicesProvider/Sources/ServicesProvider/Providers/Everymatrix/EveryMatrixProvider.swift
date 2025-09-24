@@ -852,32 +852,13 @@ class EveryMatrixEventsProvider: EventsProvider {
             }
             .flatMap { [weak self] eventIds -> AnyPublisher<[Event], ServiceProviderError> in
                 guard let self = self else { return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher() }
-                
-                let perMatchPublishers: [AnyPublisher<[Event], ServiceProviderError>] = eventIds.map { eventId in
-                    let payload: [String: Any] = [
-                        "lang": "en",
-                        "matchId": eventId
-                    ]
-                    let router = WAMPRouter.matches(payload: payload)
-                    
-                    let rpcPublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = self.connector.request(router)
-                    return rpcPublisher
-                        .map { (rpcResponse: EveryMatrix.RPCResponse) in
-                            // Map RPC response to [Event]
-                            let store = EveryMatrix.EntityStore()
-                            store.storeRecords(rpcResponse.records)
-                            let matchDTOs = store.getAllInOrder(EveryMatrix.MatchDTO.self)
-                            let matches = matchDTOs.compactMap { dto in
-                                EveryMatrix.MatchBuilder.build(from: dto, store: store)
-                            }
-                            return matches.map { EveryMatrixModelMapper.event(fromInternalMatch: $0) }
-                        }
-                        .eraseToAnyPublisher()
+
+                let perEventPublishers: [AnyPublisher<Event, ServiceProviderError>] = eventIds.map { eventId in
+                    return self.getEventDetails(eventId: eventId)
                 }
-                
-                return Publishers.MergeMany(perMatchPublishers)
+
+                return Publishers.MergeMany(perEventPublishers)
                     .collect()
-                    .map { $0.flatMap { $0 } }
                     .eraseToAnyPublisher()
             }
             .mapError { error -> ServiceProviderError in
