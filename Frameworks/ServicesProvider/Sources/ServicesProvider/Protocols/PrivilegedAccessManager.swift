@@ -142,6 +142,13 @@ protocol PrivilegedAccessManagerProvider {
         platform: String?,
         pagination: CasinoPaginationParams
     ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
+    
+    func getMostPlayedGames(
+        playerId: String,
+        language: String?,
+        platform: String?,
+        pagination: CasinoPaginationParams
+    ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
 }
 
 // MARK: - Domain-Specific Protocols

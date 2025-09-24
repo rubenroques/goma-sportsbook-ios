@@ -2200,6 +2200,14 @@ extension Client {
         return casinoProvider.getRecentlyPlayedGames(playerId: playerId, language: language, platform: platform, pagination: pagination)
     }
     
+    public func getMostPlayedGames(playerId: String, language: String? = nil, platform: String? = nil, pagination: CasinoPaginationParams = CasinoPaginationParams()) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        guard let casinoProvider = self.privilegedAccessManager else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getMostPlayedGames(playerId: playerId, language: language, platform: platform, pagination: pagination)
+    }
+    
     public func searchGames(language: String? = nil, platform: String? = nil, name: String) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         guard let casinoProvider = self.casinoProvider else {
             return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()

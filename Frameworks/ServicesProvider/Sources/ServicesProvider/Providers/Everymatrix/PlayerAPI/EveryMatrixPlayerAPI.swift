@@ -16,7 +16,7 @@ enum EveryMatrixPlayerAPI {
     case getUserBalance(userId: String)
     case getBankingWebView(userId: String, parameters: EveryMatrix.GetPaymentSessionRequest)
     case getRecentlyPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
-
+    case getMostPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -45,6 +45,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/\(userId)/payment/GetPaymentSession"
         case .getRecentlyPlayedGames(let playerId, _, _, _, _):
             return "/v1/player/\(playerId)/games/last-played"
+        case .getMostPlayedGames(let playerId, _, _, _, _):
+            return "/v1/player/\(playerId)/games/most-played"
         }
     }
     
@@ -56,9 +58,23 @@ extension EveryMatrixPlayerAPI: Endpoint {
                 URLQueryItem(name: "platform", value: platform),
                 URLQueryItem(name: "offset", value: String(offset)),
                 URLQueryItem(name: "limit", value: String(limit)),
+                URLQueryItem(name: "period", value: "Last7Days"),
                 URLQueryItem(name: "unique", value: "true"),
+                URLQueryItem(name: "dataSources", value: "Lobby1"),
                 URLQueryItem(name: "hasGameModel", value: "true"),
-                URLQueryItem(name: "order", value: "ASCENDING")
+                URLQueryItem(name: "order", value: "DESCENDING")
+            ]
+        case .getMostPlayedGames(_, let language, let platform, let offset, let limit):
+            return [
+                URLQueryItem(name: "language", value: language),
+                URLQueryItem(name: "platform", value: platform),
+                URLQueryItem(name: "offset", value: String(offset)),
+                URLQueryItem(name: "limit", value: String(limit)),
+                URLQueryItem(name: "period", value: "Last7Days"),
+                URLQueryItem(name: "unique", value: "true"),
+                URLQueryItem(name: "dataSources", value: "Lobby1"),
+                URLQueryItem(name: "hasGameModel", value: "true"),
+                URLQueryItem(name: "order", value: "DESCENDING")
             ]
         default:
             return nil
@@ -108,6 +124,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getBankingWebView:
             return .post
         case .getRecentlyPlayedGames:
+            return .get
+        case .getMostPlayedGames:
             return .get
         }
     }

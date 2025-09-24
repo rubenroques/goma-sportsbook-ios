@@ -11,13 +11,16 @@ public final class MockSearchViewModel: SearchViewModelProtocol {
     public var isEnabledPublisher: AnyPublisher<Bool, Never> { isEnabled.eraseToAnyPublisher() }
 
     // Subjects
-    private let placeholderText = CurrentValueSubject<String, Never>("Search in Sportsbook")
-    private let attributedPlaceholder = CurrentValueSubject<NSAttributedString?, Never>(nil)
+    private let placeholderText: CurrentValueSubject<String, Never>
+    private let attributedPlaceholder: CurrentValueSubject<NSAttributedString?, Never>
     private let text = CurrentValueSubject<String, Never>("")
     private let isClearButtonVisible = CurrentValueSubject<Bool, Never>(false)
     private let isEnabled = CurrentValueSubject<Bool, Never>(true)
 
-    public init() {}
+    public init(placeholder: String = "Search in Sportsbook", attributedPlaceholder: NSAttributedString? = nil) {
+        self.placeholderText = CurrentValueSubject<String, Never>(placeholder)
+        self.attributedPlaceholder = CurrentValueSubject<NSAttributedString?, Never>(attributedPlaceholder)
+    }
 
     // Inputs
     public func updateText(_ text: String) {
@@ -39,6 +42,16 @@ public final class MockSearchViewModel: SearchViewModelProtocol {
     // Convenience presets
     public static var `default`: MockSearchViewModel {
         MockSearchViewModel()
+    }
+
+    // Convenience factory with placeholder
+    public static func withPlaceholder(_ text: String) -> MockSearchViewModel {
+        MockSearchViewModel(placeholder: text)
+    }
+
+    // Runtime update if needed
+    public func updatePlaceholder(_ text: String) {
+        self.placeholderText.send(text)
     }
 }
 

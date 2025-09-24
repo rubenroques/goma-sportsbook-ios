@@ -26,29 +26,51 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
     private var currentSearchText: String = ""
     private let searchedGameViewModelsSubject = CurrentValueSubject<[CasinoGameSearchedViewModelProtocol], Never>([])
     var searchedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { searchedGameViewModelsSubject.eraseToAnyPublisher() }
+    private let mostPlayedGameViewModelsSubject = CurrentValueSubject<[CasinoGameSearchedViewModelProtocol], Never>([])
+    var mostPlayedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { mostPlayedGameViewModelsSubject.eraseToAnyPublisher() }
     
     // MARK: - Init
     init(servicesProvider: ServicesProvider.Client = Env.servicesProvider) {
         self.servicesProvider = servicesProvider
-        self.searchComponentViewModel = MockSearchViewModel.default
+        self.searchComponentViewModel = MockSearchViewModel(placeholder: "Search in Casino")
         self.searchHeaderInfoViewModel = MockSearchHeaderInfoViewModel()
         setupBindings()
         
+        getMostPlayedGames()
     }
     
-    private func testing() {
+    private func getMostPlayedGames() {
+        let playerId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
+        guard !playerId.isEmpty else { return }
         
-        let playerId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
-        
-        servicesProvider.getRecentlyPlayedGames(playerId: playerId ?? "")
+        servicesProvider.getMostPlayedGames(playerId: playerId)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
+            .sink { completion in
                 if case .failure(let error) = completion {
-                    print("RECENTLY PLAYED FAILED: \(error)")
+                    print("MOST PLAYED FAILED: \(error)")
                 }
             } receiveValue: { [weak self] response in
-                let recommended = response
-                print("RECENTLY PLAYED DONE: \(response)")
+                guard let self = self else { return }
+                // Map to CasinoGameSearchedViewModelProtocol
+                let gameCardsData = response.games.map {
+                    ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
+                }
+                let viewModels: [CasinoGameSearchedViewModelProtocol] = gameCardsData.map { game in
+                    let data = CasinoGameSearchedData(
+                        id: game.id,
+                        title: game.name,
+                        provider: game.provider != nil ? game.provider : game.subProvider,
+                        imageURL: game.imageURL
+                    )
+                    let viewModel = MockCasinoGameSearchedViewModel(data: data, state: .normal)
+                    viewModel.onSelected
+                        .sink { [weak self] gameId in
+                            self?.gameSelectedSubject.send(gameId)
+                        }
+                        .store(in: &self.cancellables)
+                    return viewModel
+                }
+                self.mostPlayedGameViewModelsSubject.send(viewModels)
             }
             .store(in: &cancellables)
     }
@@ -86,6 +108,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
     func clearSearch() {
         currentSearchText = ""
         searchTextSubject.send("")
+        // When cleared, keep most played in memory but UI should hide sections via controller logic
     }
     
     // MARK: - Action
@@ -95,9 +118,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
             self.searchedGameViewModelsSubject.send([])
             return
         }
-        
-        testing()
-        
+                
         isLoadingSubject.send(true)
         updateSearchResultsState(isLoading: true, results: 0)
 

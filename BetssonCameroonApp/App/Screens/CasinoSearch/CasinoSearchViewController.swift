@@ -14,6 +14,7 @@ final class CasinoSearchViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: CasinoSearchViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
+    private var currentSearchText: String = ""
     
     // MARK: - UI Components
     private lazy var containerView: UIView = Self.createContainerView()
@@ -22,8 +23,12 @@ final class CasinoSearchViewController: UIViewController {
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var resultsScrollView: UIScrollView = Self.createResultsScrollView()
     private lazy var resultsScrollContainerView: UIView = Self.createResultsScrollContainerView()
+    private lazy var resultsContentStackView: UIStackView = Self.createResultsStackView()
     private lazy var resultsContainerView: UIView = Self.createResultsContainerView()
     private lazy var resultsStackView: UIStackView = Self.createResultsStackView()
+    private lazy var mostPlayedHeaderLabel: UILabel = Self.createMostPlayedHeaderLabel()
+    private lazy var mostPlayedContainerView: UIView = Self.createResultsContainerView()
+    private lazy var mostPlayedStackView: UIStackView = Self.createResultsStackView()
     
     // Loading overlay
     private let loadingIndicatorView: UIView = {
@@ -83,8 +88,12 @@ final class CasinoSearchViewController: UIViewController {
         containerView.addSubview(emptyStateView)
         containerView.addSubview(resultsScrollView)
         resultsScrollView.addSubview(resultsScrollContainerView)
-        resultsScrollContainerView.addSubview(resultsContainerView)
+        resultsScrollContainerView.addSubview(resultsContentStackView)
+        resultsContentStackView.addArrangedSubview(resultsContainerView)
+        resultsContentStackView.addArrangedSubview(mostPlayedHeaderLabel)
+        resultsContentStackView.addArrangedSubview(mostPlayedContainerView)
         resultsContainerView.addSubview(resultsStackView)
+        mostPlayedContainerView.addSubview(mostPlayedStackView)
         containerView.addSubview(loadingIndicatorView)
         
         // Initial visibility
@@ -124,17 +133,36 @@ final class CasinoSearchViewController: UIViewController {
             resultsScrollContainerView.bottomAnchor.constraint(equalTo: resultsScrollView.bottomAnchor),
             resultsScrollContainerView.widthAnchor.constraint(equalTo: resultsScrollView.widthAnchor),
 
-            // Results container view
-            resultsContainerView.leadingAnchor.constraint(equalTo: resultsScrollContainerView.leadingAnchor, constant: 8),
-            resultsContainerView.trailingAnchor.constraint(equalTo: resultsScrollContainerView.trailingAnchor, constant: -8),
-            resultsContainerView.topAnchor.constraint(equalTo: resultsScrollContainerView.topAnchor, constant: 8),
-            resultsContainerView.bottomAnchor.constraint(equalTo: resultsScrollContainerView.bottomAnchor),
+            // Content stack inside scroll container
+            resultsContentStackView.leadingAnchor.constraint(equalTo: resultsScrollContainerView.leadingAnchor, constant: 8),
+            resultsContentStackView.trailingAnchor.constraint(equalTo: resultsScrollContainerView.trailingAnchor, constant: -8),
+            resultsContentStackView.topAnchor.constraint(equalTo: resultsScrollContainerView.topAnchor, constant: 8),
+            resultsContentStackView.bottomAnchor.constraint(equalTo: resultsScrollContainerView.bottomAnchor, constant: -8),
+
+            // Results container view should fill width of content stack
+            resultsContainerView.leadingAnchor.constraint(equalTo: resultsContentStackView.leadingAnchor),
+            resultsContainerView.trailingAnchor.constraint(equalTo: resultsContentStackView.trailingAnchor),
+            
             
             // Stack view inside scroll container
             resultsStackView.leadingAnchor.constraint(equalTo: resultsContainerView.leadingAnchor, constant: 8),
             resultsStackView.trailingAnchor.constraint(equalTo: resultsContainerView.trailingAnchor, constant: -8),
             resultsStackView.topAnchor.constraint(equalTo: resultsContainerView.topAnchor, constant: 8),
             resultsStackView.bottomAnchor.constraint(equalTo: resultsContainerView.bottomAnchor, constant: -8),
+
+            // Most played header below results container, aligned to content stack
+            mostPlayedHeaderLabel.leadingAnchor.constraint(equalTo: resultsContentStackView.leadingAnchor, constant: 8),
+            mostPlayedHeaderLabel.trailingAnchor.constraint(equalTo: resultsContentStackView.trailingAnchor, constant: -8),
+
+            // Most played container view should fill width of content stack
+            mostPlayedContainerView.leadingAnchor.constraint(equalTo: resultsContentStackView.leadingAnchor),
+            mostPlayedContainerView.trailingAnchor.constraint(equalTo: resultsContentStackView.trailingAnchor),
+
+            // Most played stack inside its container
+            mostPlayedStackView.leadingAnchor.constraint(equalTo: mostPlayedContainerView.leadingAnchor, constant: 8),
+            mostPlayedStackView.trailingAnchor.constraint(equalTo: mostPlayedContainerView.trailingAnchor, constant: -8),
+            mostPlayedStackView.topAnchor.constraint(equalTo: mostPlayedContainerView.topAnchor, constant: 8),
+            mostPlayedStackView.bottomAnchor.constraint(equalTo: mostPlayedContainerView.bottomAnchor, constant: -8),
 
             // Empty state fills remainder under header when shown
             emptyStateView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -156,13 +184,17 @@ final class CasinoSearchViewController: UIViewController {
         emptyStateView.backgroundColor = StyleProvider.Color.backgroundSecondary
         resultsScrollContainerView.backgroundColor = .clear
         resultsContainerView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        mostPlayedContainerView.backgroundColor = StyleProvider.Color.backgroundTertiary
         resultsStackView.backgroundColor = .clear
+        mostPlayedStackView.backgroundColor = .clear
+        mostPlayedHeaderLabel.textColor = StyleProvider.Color.textPrimary
     }
     
     private func setupBindings() {
         viewModel.searchTextPublisher
             .sink { [weak self] searchText in
                 print("🔍 CasinoSearchViewController: Search text changed to: '\(searchText)'")
+                self?.currentSearchText = searchText
                 self?.updateSearchState(searchText: searchText)
             }
             .store(in: &cancellables)
@@ -171,6 +203,13 @@ final class CasinoSearchViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] viewModels in
                 self?.updateResults(with: viewModels)
+            }
+            .store(in: &cancellables)
+
+        viewModel.mostPlayedGameViewModelsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] viewModels in
+                self?.updateMostPlayed(with: viewModels)
             }
             .store(in: &cancellables)
 
@@ -184,8 +223,13 @@ final class CasinoSearchViewController: UIViewController {
 
     private func updateResults(with viewModels: [CasinoGameSearchedViewModelProtocol]) {
         let hasResults = !viewModels.isEmpty
-        resultsScrollView.isHidden = !hasResults
-        emptyStateView.isHidden = hasResults
+        // Show header + mostPlayed only when search text is non-empty and we are showing results area
+        let shouldShowSections = !currentSearchText.isEmpty && (hasResults || !mostPlayedStackView.arrangedSubviews.isEmpty)
+        mostPlayedHeaderLabel.isHidden = !shouldShowSections || mostPlayedStackView.arrangedSubviews.isEmpty
+        mostPlayedContainerView.isHidden = !shouldShowSections || mostPlayedStackView.arrangedSubviews.isEmpty
+        resultsContainerView.isHidden = !hasResults
+        resultsScrollView.isHidden = !shouldShowSections && !hasResults
+        emptyStateView.isHidden = !resultsScrollView.isHidden
 
         // Clear
         resultsStackView.arrangedSubviews.forEach { sub in
@@ -197,6 +241,26 @@ final class CasinoSearchViewController: UIViewController {
         for viewModel in viewModels {
             let itemView = CasinoGameSearchedView(viewModel: viewModel)
             resultsStackView.addArrangedSubview(itemView)
+        }
+    }
+
+    private func updateMostPlayed(with viewModels: [CasinoGameSearchedViewModelProtocol]) {
+        // Clear
+        mostPlayedStackView.arrangedSubviews.forEach { sub in
+            mostPlayedStackView.removeArrangedSubview(sub)
+            sub.removeFromSuperview()
+        }
+        
+        let hasMostPlayed = !viewModels.isEmpty
+        let shouldShow = !currentSearchText.isEmpty && hasMostPlayed
+        mostPlayedHeaderLabel.isHidden = !shouldShow
+        mostPlayedContainerView.isHidden = !shouldShow
+        
+        guard hasMostPlayed else { return }
+        
+        for vm in viewModels {
+            let itemView = CasinoGameSearchedView(viewModel: vm)
+            mostPlayedStackView.addArrangedSubview(itemView)
         }
     }
     
@@ -268,6 +332,15 @@ private extension CasinoSearchViewController {
         stack.alignment = .fill
         stack.distribution = .fill
         return stack
+    }
+
+    static func createMostPlayedHeaderLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "You might be interested in:"
+        label.font = AppFont.with(type: .semibold, size: 14)
+        label.isHidden = true
+        return label
     }
 }
 

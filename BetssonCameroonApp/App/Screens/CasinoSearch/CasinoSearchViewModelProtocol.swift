@@ -12,6 +12,7 @@ protocol CasinoSearchViewModelProtocol: AnyObject {
     var searchViewModel: SearchViewModelProtocol { get }
     var searchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol { get }
     var searchedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { get }
+    var mostPlayedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { get }
     
     // Inputs
     func updateSearchText(_ text: String)
