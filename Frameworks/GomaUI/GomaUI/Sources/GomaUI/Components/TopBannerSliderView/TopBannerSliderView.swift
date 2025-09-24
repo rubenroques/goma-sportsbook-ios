@@ -3,18 +3,20 @@ import Combine
 import SwiftUI
 
 final public class TopBannerSliderView: UIView {
+    
+    // MARK: - Constants
+    public static let bannerHeight: CGFloat = 140
+
     // MARK: - Private Properties
     private let collectionView: UICollectionView
     private let pageControl = UIPageControl()
     private let pageControlContainer = UIView()
-    
+
     private var cancellables = Set<AnyCancellable>()
-    private let viewModel: TopBannerSliderViewModelProtocol
-    
-    private var bannerViews: [TopBannerViewProtocol] = []
-    private var autoScrollTimer: Timer?
-    private var currentDisplayState: TopBannerSliderDisplayState?
-    
+    private var viewModel: TopBannerSliderViewModelProtocol
+
+    private var banners: [BannerType] = []
+
     // MARK: - Public Properties
     public var onBannerTapped: ((Int) -> Void) = { _ in }
     public var onPageChanged: ((Int) -> Void) = { _ in }
@@ -40,10 +42,6 @@ final public class TopBannerSliderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        stopAutoScroll()
-    }
-    
     // MARK: - Setup
     private func setupSubviews() {
         backgroundColor = StyleProvider.Color.backgroundColor
@@ -55,7 +53,9 @@ final public class TopBannerSliderView: UIView {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(BannerCollectionViewCell.self, forCellWithReuseIdentifier: "BannerCell")
+        // Register both cell types
+        collectionView.register(SingleButtonBannerViewCell.self, forCellWithReuseIdentifier: "SingleButtonBannerCell")
+        collectionView.register(MatchBannerViewCell.self, forCellWithReuseIdentifier: "MatchBannerCell")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(collectionView)
         
@@ -84,19 +84,24 @@ final public class TopBannerSliderView: UIView {
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             // Page control container - top right
-            pageControlContainer.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            pageControlContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            pageControlContainer.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
-            pageControlContainer.heightAnchor.constraint(equalToConstant: 30),
-            
+            pageControlContainer.topAnchor.constraint(equalTo: topAnchor, constant: 9),
+            pageControlContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -11),
+
             // Page control - centered in container
-            pageControl.centerXAnchor.constraint(equalTo: pageControlContainer.centerXAnchor),
-            pageControl.centerYAnchor.constraint(equalTo: pageControlContainer.centerYAnchor)
+            pageControl.topAnchor.constraint(equalTo: pageControlContainer.topAnchor),
+            pageControl.bottomAnchor.constraint(equalTo: pageControlContainer.bottomAnchor),
+            pageControl.leadingAnchor.constraint(equalTo: pageControlContainer.leadingAnchor),
+            pageControl.trailingAnchor.constraint(equalTo: pageControlContainer.trailingAnchor),
         ])
     }
     
     private func setupBindings() {
+        // Render initial state immediately (synchronous)
+        render(state: viewModel.currentDisplayState)
+
+        // Subscribe to future updates
         viewModel.displayStatePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
                 self?.render(state: displayState)
@@ -106,95 +111,112 @@ final public class TopBannerSliderView: UIView {
     
     // MARK: - Rendering
     private func render(state: TopBannerSliderDisplayState) {
-        currentDisplayState = state
         let sliderData = state.sliderData
-        
+
         // Update visibility
         isHidden = !state.isVisible
         isUserInteractionEnabled = state.isUserInteractionEnabled
-        
-        // Create banner views from factories
-        bannerViews = sliderData.bannerViewFactories.compactMap { factory in
-            let bannerView = factory.viewFactory()
-            return bannerView.isVisible ? bannerView : nil
-        }
-        
+
+        // Check if banners actually changed (avoid unnecessary reloads)
+        let bannersChanged = banners != sliderData.banners
+
+        // Update banners array
+        banners = sliderData.banners
+
         // Update page control
-        pageControl.numberOfPages = bannerViews.count
-        pageControl.currentPage = min(sliderData.currentPageIndex, bannerViews.count - 1)
-        pageControl.isHidden = !sliderData.showPageIndicators || bannerViews.count <= 1
-        
-        // Reload collection view
-        collectionView.reloadData()
-        
-        // Scroll to current page if needed
-        if !bannerViews.isEmpty {
-            let targetPage = min(sliderData.currentPageIndex, bannerViews.count - 1)
+        pageControl.numberOfPages = banners.count
+        pageControl.currentPage = min(sliderData.currentPageIndex, banners.count - 1)
+        pageControl.isHidden = !sliderData.showPageIndicators || banners.count <= 1
+
+        // Only reload collection view if banners actually changed
+        if bannersChanged {
+            print("   🔄 TopBannerSlider.render - banners changed, reloading collection view")
+            collectionView.reloadData()
+        } else {
+            print("   📍 TopBannerSlider.render - only page index changed, no reload needed")
+        }
+
+        // Scroll to current page if needed (and if we didn't just reload, since reload handles positioning)
+        if !banners.isEmpty && !bannersChanged {
+            let targetPage = min(sliderData.currentPageIndex, banners.count - 1)
             let indexPath = IndexPath(item: targetPage, section: 0)
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
         }
-        
-        // Handle auto-scroll
-        if sliderData.isAutoScrollEnabled && bannerViews.count > 1 {
-            self.startAutoScroll()
-        } else {
-            self.stopAutoScroll()
-        }
     }
     
-    // MARK: - Auto Scroll    
-    private func scrollToNextPage() {
-        guard !bannerViews.isEmpty else { return }
-        
-        let currentPage = pageControl.currentPage
-        let nextPage = (currentPage + 1) % bannerViews.count
-        
-        let indexPath = IndexPath(item: nextPage, section: 0)
-        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-    }
     
     // MARK: - Actions
     @objc private func pageControlValueChanged() {
         let targetPage = pageControl.currentPage
-        guard targetPage < bannerViews.count else { return }
-        
+        guard targetPage < banners.count else { return }
+
         let indexPath = IndexPath(item: targetPage, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        
+
         viewModel.didScrollToPage(targetPage)
         onPageChanged(targetPage)
     }
-    
+
     // MARK: - Public Methods
+    public func configure(with viewModel: TopBannerSliderViewModelProtocol) {
+        // Clear existing subscriptions
+        cancellables.removeAll()
+
+        // Update the view model reference
+        self.viewModel = viewModel
+
+        // Setup new bindings with immediate rendering
+        setupBindings()
+    }
+
+    public func clearContent() {
+        // Clear existing subscriptions
+        cancellables.removeAll()
+
+        // Clear banners and hide view
+        banners = []
+        isHidden = true
+
+        // Hide page control
+        pageControl.numberOfPages = 0
+        pageControl.isHidden = true
+
+        // Reload collection view to show empty state
+        collectionView.reloadData()
+
+        // Clear callbacks
+        onBannerTapped = { _ in }
+        onPageChanged = { _ in }
+    }
+
     public func scrollToPage(_ pageIndex: Int, animated: Bool = true) {
-        guard pageIndex >= 0 && pageIndex < bannerViews.count else { return }
-        
+        guard pageIndex >= 0 && pageIndex < banners.count else { return }
+
         let indexPath = IndexPath(item: pageIndex, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
-    }
-    
-    public func startAutoScroll() {
-        viewModel.startAutoScroll()
-    }
-    
-    public func stopAutoScroll() {
-        viewModel.stopAutoScroll()
     }
 }
 
 // MARK: - UICollectionViewDataSource
 extension TopBannerSliderView: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return bannerViews.count
+        return banners.count
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BannerCell", for: indexPath) as! BannerCollectionViewCell
-        
-        let bannerView = bannerViews[indexPath.item]
-        cell.configure(with: bannerView)
-        
-        return cell
+        let banner = banners[indexPath.item]
+
+        switch banner {
+        case .singleButton(let viewModel):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SingleButtonBannerCell", for: indexPath) as! SingleButtonBannerViewCell
+            cell.configure(with: viewModel)
+            return cell
+
+        case .matchBanner(let viewModel):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MatchBannerCell", for: indexPath) as! MatchBannerViewCell
+            cell.configure(with: viewModel)
+            return cell
+        }
     }
 }
 
@@ -226,54 +248,18 @@ extension TopBannerSliderView: UIScrollViewDelegate {
     private func updateCurrentPage() {
         let pageWidth = collectionView.frame.width
         guard pageWidth > 0 else { return }
-        
+
         let currentPage = Int((collectionView.contentOffset.x + pageWidth / 2) / pageWidth)
-        
-        if currentPage != pageControl.currentPage && currentPage >= 0 && currentPage < bannerViews.count {
+
+        if currentPage != pageControl.currentPage && currentPage >= 0 && currentPage < banners.count {
             pageControl.currentPage = currentPage
-            
-            // Notify visibility changes
-            for (index, bannerView) in bannerViews.enumerated() {
-                if index == currentPage {
-                    bannerView.bannerDidBecomeVisible()
-                } else {
-                    bannerView.bannerDidBecomeHidden()
-                }
-            }
-            
+
             viewModel.didScrollToPage(currentPage)
             onPageChanged(currentPage)
         }
     }
 }
 
-// MARK: - Banner Collection View Cell
-private class BannerCollectionViewCell: UICollectionViewCell {
-    private var bannerView: TopBannerViewProtocol?
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        bannerView?.removeFromSuperview()
-        bannerView = nil
-    }
-    
-    func configure(with bannerView: TopBannerViewProtocol) {
-        // Remove previous banner view
-        self.bannerView?.removeFromSuperview()
-        
-        // Add new banner view
-        self.bannerView = bannerView
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(bannerView)
-        
-        NSLayoutConstraint.activate([
-            bannerView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            bannerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            bannerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            bannerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
-    }
-}
 
 // MARK: - Preview Provider
 #if DEBUG
@@ -290,22 +276,6 @@ private class BannerCollectionViewCell: UICollectionViewCell {
 #Preview("Single Banner") {
     PreviewUIView {
         TopBannerSliderView(viewModel: MockTopBannerSliderViewModel.singleBannerMock)
-    }
-    .frame(height: 200)
-}
-
-@available(iOS 17.0, *)
-#Preview("Auto Scroll Banner") {
-    PreviewUIView {
-        TopBannerSliderView(viewModel: MockTopBannerSliderViewModel.autoScrollMock)
-    }
-    .frame(height: 200)
-}
-
-@available(iOS 17.0, *)
-#Preview("Casino Game Banner") {
-    PreviewUIView {
-        TopBannerSliderView(viewModel: MockTopBannerSliderViewModel.casinoGameMock)
     }
     .frame(height: 200)
 }

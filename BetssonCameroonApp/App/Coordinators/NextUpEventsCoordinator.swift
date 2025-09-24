@@ -95,7 +95,7 @@ class NextUpEventsCoordinator: Coordinator {
         let viewController = NextUpEventsViewController(viewModel: viewModel)
         self.nextUpEventsViewController = viewController
         
-        // RootTabBarCoordinator will handle embedding
+        // MainTabBarCoordinator will handle embedding
     }
     
     func finish() {
@@ -104,7 +104,7 @@ class NextUpEventsCoordinator: Coordinator {
         nextUpEventsViewModel = nil
     }
     
-    // MARK: - Public Methods for RootTabBarCoordinator
+    // MARK: - Public Methods for MainTabBarCoordinator
     func refresh() {
         nextUpEventsViewModel?.reloadEvents(forced: true)
     }

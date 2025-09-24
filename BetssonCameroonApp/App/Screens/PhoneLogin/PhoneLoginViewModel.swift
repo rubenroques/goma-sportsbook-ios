@@ -9,7 +9,7 @@ import Foundation
 import GomaUI
 import Combine
 
-class MockPhoneLoginViewModel: PhoneLoginViewModelProtocol {
+class PhoneLoginViewModel {
     let headerViewModel: PromotionalHeaderViewModelProtocol
     let highlightedTextViewModel: HighlightedTextViewModelProtocol
     let phoneFieldViewModel: BorderedTextFieldViewModelProtocol

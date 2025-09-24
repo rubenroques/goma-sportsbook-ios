@@ -6,6 +6,11 @@ final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelP
 
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<SingleButtonBannerDisplayState, Never>
+
+    public var currentDisplayState: SingleButtonBannerDisplayState {
+        return displayStateSubject.value
+    }
+
     public var displayStatePublisher: AnyPublisher<SingleButtonBannerDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
     }
@@ -25,6 +30,8 @@ final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelP
             isButtonEnabled: isButtonEnabled
         )
         self.displayStateSubject = CurrentValueSubject(initialState)
+
+        print("[BANNER_DEBUG] 🟢 ViewModel.init - bannerData.type: '\(bannerData.type)', button: '\(bannerData.buttonConfig?.title ?? "nil")'")
     }
 
     // MARK: - SingleButtonBannerViewModelProtocol
@@ -55,7 +62,20 @@ final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelP
 
 // MARK: - Mock Factory
 extension MockSingleButtonBannerViewModel {
-    
+
+    /// Empty state for cell reuse and initial state
+    public static var emptyState: MockSingleButtonBannerViewModel {
+        let bannerData = SingleButtonBannerData(
+            type: "empty_banner",
+            isVisible: false,
+            backgroundImageURL: nil,
+            messageText: "",
+            buttonConfig: nil
+        )
+
+        return MockSingleButtonBannerViewModel(bannerData: bannerData, isButtonEnabled: false)
+    }
+
     /// Default mock with gradient background and button
     public static var defaultMock: MockSingleButtonBannerViewModel {
         let buttonConfig = ButtonConfig(
@@ -68,10 +88,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "welcome_banner",
             isVisible: true,
-            backgroundImage: createGradientImage(
-                colors: [UIColor.systemPurple, UIColor.systemBlue],
-                size: CGSize(width: 400, height: 200)
-            ),
+            backgroundImageURL: "https://picsum.photos/400/200?random=1",
             messageText: "Get 2X the action,\ndouble your first\ndeposit!",
             buttonConfig: buttonConfig
         )
@@ -84,10 +101,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "info_banner",
             isVisible: true,
-            backgroundImage: createGradientImage(
-                colors: [UIColor.systemOrange, UIColor.systemRed],
-                size: CGSize(width: 400, height: 200)
-            ),
+            backgroundImageURL: "https://picsum.photos/400/200?random=2",
             messageText: "Welcome to our platform!\nEnjoy your experience.",
             buttonConfig: nil
         )
@@ -107,10 +121,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "promo_banner",
             isVisible: true,
-            backgroundImage: createGradientImage(
-                colors: [UIColor.systemTeal, UIColor.systemCyan],
-                size: CGSize(width: 400, height: 200)
-            ),
+            backgroundImageURL: "https://picsum.photos/400/200?random=3",
             messageText: "Special Offer!\nSign up today for exclusive benefits.",
             buttonConfig: buttonConfig
         )
@@ -129,10 +140,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "disabled_banner",
             isVisible: true,
-            backgroundImage: createGradientImage(
-                colors: [UIColor.systemGray, UIColor.systemGray2],
-                size: CGSize(width: 400, height: 200)
-            ),
+            backgroundImageURL: "https://picsum.photos/400/200?random=4",
             messageText: "New features coming soon!",
             buttonConfig: buttonConfig
         )
@@ -145,7 +153,7 @@ extension MockSingleButtonBannerViewModel {
         let bannerData = SingleButtonBannerData(
             type: "hidden_banner",
             isVisible: false,
-            backgroundImage: nil,
+            backgroundImageURL: nil,
             messageText: "This banner is hidden",
             buttonConfig: nil
         )

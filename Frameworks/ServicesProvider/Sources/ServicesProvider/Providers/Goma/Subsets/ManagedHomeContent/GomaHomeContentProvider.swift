@@ -89,12 +89,34 @@ class GomaHomeContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
     
-    func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
+    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
         return self.apiClient.carouselEvents()
             .map(GomaModelMapper.events(fromInternalHeroCardEvents:))
+            .map { events -> ImageHighlightedContents<Event> in
+                events.map { event in
+                    ImageHighlightedContent(
+                        content: event,
+                        promotedChildCount: 1,
+                        imageURL: event.promoImageURL
+                    )
+                }
+            }
             .eraseToAnyPublisher()
     }
-    
+
+    func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
+        return self.apiClient.casinoCarouselPointers()
+            .map(GomaModelMapper.casinoCarouselPointers(fromInternalCasinoCarouselPointers:))
+            .eraseToAnyPublisher()
+    }
+
+    func getCasinoCarouselGames() -> AnyPublisher<CasinoGameBanners, ServiceProviderError> {
+        // GomaHomeContentProvider only provides CMS data, not casino game data
+        // This method should be implemented by wrapper providers that have access to casino providers
+        return Fail(error: ServiceProviderError.notSupportedForProvider)
+            .eraseToAnyPublisher()
+    }
+
     func getBoostedOddsPointers() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
         return self.apiClient.boostedOddsPointers()
             .map(GomaModelMapper.boostedOddsPointers(fromInternalBoostedOddsPointers:))

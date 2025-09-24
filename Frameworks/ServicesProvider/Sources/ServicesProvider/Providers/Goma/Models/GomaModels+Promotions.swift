@@ -513,4 +513,51 @@ extension GomaModels {
         }
     }
 
+    // MARK: - Casino Carousel Banners
+    typealias CasinoCarouselPointers = [CasinoCarouselPointer]
+    struct CasinoCarouselPointer: Identifiable, Equatable, Hashable, Codable {
+
+        let id: Int
+        let type: String
+        let title: String?
+        let subtitle: String?
+        let casinoGameId: String?
+        let ctaText: String?
+        let ctaUrl: String?
+        let ctaTarget: String?
+        let imageUrl: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case type
+            case title
+            case subtitle
+            case casinoGameId = "casino_game_id"
+            case ctaText = "cta_text"
+            case ctaUrl = "cta_url"
+            case ctaTarget = "cta_target"
+            case imageUrl = "image_url"
+        }
+
+        init(id: Int,
+             type: String,
+             title: String?,
+             subtitle: String?,
+             casinoGameId: String?,
+             ctaText: String?,
+             ctaUrl: String?,
+             ctaTarget: String?,
+             imageUrl: String?) {
+            self.id = id
+            self.type = type
+            self.title = title
+            self.subtitle = subtitle
+            self.casinoGameId = casinoGameId
+            self.ctaText = ctaText
+            self.ctaUrl = ctaUrl
+            self.ctaTarget = ctaTarget
+            self.imageUrl = imageUrl
+        }
+    }
+
 }

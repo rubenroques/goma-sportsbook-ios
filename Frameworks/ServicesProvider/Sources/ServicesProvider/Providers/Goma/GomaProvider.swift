@@ -1154,16 +1154,7 @@ extension GomaProvider: EventsProvider {
     }
 
     func getNews() -> AnyPublisher<[News], ServiceProviderError> {
-        // TODO: SP MErge - it should have been replaced
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-//        let endpoint = GomaAPISchema.getNews
-//        let publisher: AnyPublisher<[GomaModels.News], ServiceProviderError> = self.connector.request(endpoint)
-//        return publisher.map({ news in
-//            let mappedNews = news.map({
-//                return GomaModelMapper.news(fromNews: $0)
-//            })
-//            return mappedNews
-//        }).eraseToAnyPublisher()
     }
 
     func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {

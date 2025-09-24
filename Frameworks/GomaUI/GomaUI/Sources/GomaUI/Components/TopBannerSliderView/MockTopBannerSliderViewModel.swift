@@ -6,6 +6,11 @@ final public class MockTopBannerSliderViewModel: TopBannerSliderViewModelProtoco
 
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<TopBannerSliderDisplayState, Never>
+
+    public var currentDisplayState: TopBannerSliderDisplayState {
+        return displayStateSubject.value
+    }
+
     public var displayStatePublisher: AnyPublisher<TopBannerSliderDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
     }
@@ -14,7 +19,6 @@ final public class MockTopBannerSliderViewModel: TopBannerSliderViewModelProtoco
     private var sliderData: TopBannerSliderData
     private var isVisible: Bool
     private var isUserInteractionEnabled: Bool
-    private var autoScrollTimer: Timer?
 
     // MARK: - Initialization
     public init(
@@ -35,9 +39,6 @@ final public class MockTopBannerSliderViewModel: TopBannerSliderViewModelProtoco
         self.displayStateSubject = CurrentValueSubject(initialState)
     }
 
-    deinit {
-        stopAutoScroll()
-    }
 
     // MARK: - TopBannerSliderViewModelProtocol
     public func didScrollToPage(_ pageIndex: Int) {
@@ -45,9 +46,7 @@ final public class MockTopBannerSliderViewModel: TopBannerSliderViewModelProtoco
 
         // Update current page index
         let updatedSliderData = TopBannerSliderData(
-            bannerViewFactories: sliderData.bannerViewFactories,
-            isAutoScrollEnabled: sliderData.isAutoScrollEnabled,
-            autoScrollInterval: sliderData.autoScrollInterval,
+            banners: sliderData.banners,
             showPageIndicators: sliderData.showPageIndicators,
             currentPageIndex: pageIndex
         )
@@ -61,27 +60,7 @@ final public class MockTopBannerSliderViewModel: TopBannerSliderViewModelProtoco
         // Mock action - could trigger navigation, analytics, etc.
     }
 
-    public func startAutoScroll() {
-        guard sliderData.isAutoScrollEnabled else { return }
-
-        stopAutoScroll()
-
-        autoScrollTimer = Timer.scheduledTimer(withTimeInterval: sliderData.autoScrollInterval, repeats: true) { [weak self] _ in
-            self?.autoScrollToNextPage()
-        }
-    }
-
-    public func stopAutoScroll() {
-        autoScrollTimer?.invalidate()
-        autoScrollTimer = nil
-    }
-
     // MARK: - Helper Methods
-    private func autoScrollToNextPage() {
-        let currentPage = sliderData.currentPageIndex
-        let nextPage = (currentPage + 1) % sliderData.bannerViewFactories.count
-        didScrollToPage(nextPage)
-    }
 
     public func updateSliderData(_ newSliderData: TopBannerSliderData) {
         sliderData = newSliderData
@@ -111,24 +90,16 @@ final public class MockTopBannerSliderViewModel: TopBannerSliderViewModelProtoco
 // MARK: - Mock Factory
 extension MockTopBannerSliderViewModel {
 
-    /// Default mock with multiple banners
+    /// Default mock with multiple single button banners
     public static var defaultMock: MockTopBannerSliderViewModel {
-        let bannerFactories = [
-            BannerViewFactory(id: "welcome_banner") {
-                SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.defaultMock)
-            },
-            BannerViewFactory(id: "promo_banner") {
-                SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.customStyledMock)
-            },
-            BannerViewFactory(id: "info_banner") {
-                SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.noButtonMock)
-            }
+        let banners: [BannerType] = [
+            .singleButton(MockSingleButtonBannerViewModel.defaultMock),
+            .singleButton(MockSingleButtonBannerViewModel.customStyledMock),
+            .singleButton(MockSingleButtonBannerViewModel.noButtonMock)
         ]
 
         let sliderData = TopBannerSliderData(
-            bannerViewFactories: bannerFactories,
-            isAutoScrollEnabled: false,
-            autoScrollInterval: 3.0,
+            banners: banners,
             showPageIndicators: true,
             currentPageIndex: 0
         )
@@ -138,16 +109,12 @@ extension MockTopBannerSliderViewModel {
 
     /// Mock with single banner (no page indicators)
     public static var singleBannerMock: MockTopBannerSliderViewModel {
-        let bannerFactories = [
-            BannerViewFactory(id: "single_banner") {
-                SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.defaultMock)
-            }
+        let banners: [BannerType] = [
+            .singleButton(MockSingleButtonBannerViewModel.defaultMock)
         ]
 
         let sliderData = TopBannerSliderData(
-            bannerViewFactories: bannerFactories,
-            isAutoScrollEnabled: false,
-            autoScrollInterval: 5.0,
+            banners: banners,
             showPageIndicators: true,
             currentPageIndex: 0
         )
@@ -155,86 +122,15 @@ extension MockTopBannerSliderViewModel {
         return MockTopBannerSliderViewModel(sliderData: sliderData)
     }
 
-    /// Mock with auto-scroll enabled
-    public static var autoScrollMock: MockTopBannerSliderViewModel {
-        let bannerFactories = [
-            BannerViewFactory(id: "auto_banner_1") {
-                let buttonConfig = ButtonConfig(
-                    title: "Learn More",
-                    backgroundColor: UIColor.systemBlue,
-                    textColor: UIColor.white
-                )
-                let bannerData = SingleButtonBannerData(
-                    type: "auto_banner_1",
-                    isVisible: true,
-                    backgroundImage: createGradientImage(
-                        colors: [UIColor.systemBlue, UIColor.systemPurple],
-                        size: CGSize(width: 400, height: 200)
-                    ),
-                    messageText: "Auto-scrolling banner 1\nSwipe or wait to see more!",
-                    buttonConfig: buttonConfig
-                )
-                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
-            },
-            BannerViewFactory(id: "auto_banner_2") {
-                let buttonConfig = ButtonConfig(
-                    title: "Discover",
-                    backgroundColor: UIColor.systemGreen,
-                    textColor: UIColor.white
-                )
-                let bannerData = SingleButtonBannerData(
-                    type: "auto_banner_2",
-                    isVisible: true,
-                    backgroundImage: createGradientImage(
-                        colors: [UIColor.systemGreen, UIColor.systemTeal],
-                        size: CGSize(width: 400, height: 200)
-                    ),
-                    messageText: "Auto-scrolling banner 2\nThis will change automatically!",
-                    buttonConfig: buttonConfig
-                )
-                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
-            },
-            BannerViewFactory(id: "auto_banner_3") {
-                let bannerData = SingleButtonBannerData(
-                    type: "auto_banner_3",
-                    isVisible: true,
-                    backgroundImage: createGradientImage(
-                        colors: [UIColor.systemOrange, UIColor.systemRed],
-                        size: CGSize(width: 400, height: 200)
-                    ),
-                    messageText: "Auto-scrolling banner 3\nNo button, just information!",
-                    buttonConfig: nil
-                )
-                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
-            }
-        ]
-
-        let sliderData = TopBannerSliderData(
-            bannerViewFactories: bannerFactories,
-            isAutoScrollEnabled: true,
-            autoScrollInterval: 3.0,
-            showPageIndicators: true,
-            currentPageIndex: 0
-        )
-
-        return MockTopBannerSliderViewModel(sliderData: sliderData)
-    }
-
-    /// Mock with no page indicators
+    /// Mock with multiple banners and no page indicators
     public static var noIndicatorsMock: MockTopBannerSliderViewModel {
-        let bannerFactories = [
-            BannerViewFactory(id: "no_indicators_1") {
-                SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.defaultMock)
-            },
-            BannerViewFactory(id: "no_indicators_2") {
-                SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.customStyledMock)
-            }
+        let banners: [BannerType] = [
+            .singleButton(MockSingleButtonBannerViewModel.defaultMock),
+            .singleButton(MockSingleButtonBannerViewModel.customStyledMock)
         ]
 
         let sliderData = TopBannerSliderData(
-            bannerViewFactories: bannerFactories,
-            isAutoScrollEnabled: false,
-            autoScrollInterval: 5.0,
+            banners: banners,
             showPageIndicators: false,
             currentPageIndex: 0
         )
@@ -244,19 +140,13 @@ extension MockTopBannerSliderViewModel {
 
     /// Mock with disabled user interaction
     public static var disabledInteractionMock: MockTopBannerSliderViewModel {
-        let bannerFactories = [
-            BannerViewFactory(id: "disabled_1") {
-                SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.disabledMock)
-            },
-            BannerViewFactory(id: "disabled_2") {
-                SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.noButtonMock)
-            }
+        let banners: [BannerType] = [
+            .singleButton(MockSingleButtonBannerViewModel.disabledMock),
+            .singleButton(MockSingleButtonBannerViewModel.noButtonMock)
         ]
 
         let sliderData = TopBannerSliderData(
-            bannerViewFactories: bannerFactories,
-            isAutoScrollEnabled: false,
-            autoScrollInterval: 5.0,
+            banners: banners,
             showPageIndicators: true,
             currentPageIndex: 0
         )
@@ -268,87 +158,38 @@ extension MockTopBannerSliderViewModel {
         )
     }
 
-    /// Casino-themed mock with Beast Below style banner
-    public static var casinoGameMock: MockTopBannerSliderViewModel {
-        let bannerFactories = [
-            BannerViewFactory(id: "beast_below_banner") {
-                let buttonConfig = ButtonConfig(
-                    title: "PLAY",
-                    backgroundColor: UIColor.white,
-                    textColor: StyleProvider.Color.highlightPrimary,
-                    cornerRadius: 4
-                )
-                let bannerData = SingleButtonBannerData(
-                    type: "casino_game_banner",
-                    isVisible: true,
-                    backgroundImage: UIImage(named: "casinoBannerGameDemo", in: Bundle.module, with: nil),
-                    messageText: "Discover 10 New Tom\nHorn Games",
-                    buttonConfig: buttonConfig
-                )
-                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
-            },
-            BannerViewFactory(id: "casino_promo_banner") {
-                let buttonConfig = ButtonConfig(
-                    title: "CLAIM BONUS",
-                    backgroundColor: UIColor.white,
-                    textColor: StyleProvider.Color.highlightPrimary,
-                    cornerRadius: 4
-                )
-                let bannerData = SingleButtonBannerData(
-                    type: "casino_promo_banner",
-                    isVisible: true,
-                    backgroundImage: UIImage(named: "casinoBannerGameDemo", in: Bundle.module, with: nil),
-                    messageText: "Win up to €50,000\nMega Jackpot!",
-                    buttonConfig: buttonConfig
-                )
-                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
-            },
-            BannerViewFactory(id: "welcome_bonus_banner") {
-                let buttonConfig = ButtonConfig(
-                    title: "GET STARTED",
-                    backgroundColor: UIColor.white,
-                    textColor: StyleProvider.Color.highlightPrimary,
-                    cornerRadius: 4
-                )
-                let bannerData = SingleButtonBannerData(
-                    type: "welcome_bonus_banner",
-                    isVisible: true,
-                    backgroundImage: UIImage(named: "casinoBannerGameDemo", in: Bundle.module, with: nil),
-                    messageText: "100% Match + 50 Free Spins\nWelcome Bonus!",
-                    buttonConfig: buttonConfig
-                )
-                return SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel(bannerData: bannerData))
-            }
+    /// Mock with mixed banner types (single button and match banners)
+    public static var mixedBannersMock: MockTopBannerSliderViewModel {
+        let banners: [BannerType] = [
+            .singleButton(MockSingleButtonBannerViewModel.defaultMock),
+            .matchBanner(MockMatchBannerViewModel.preliveMatch),
+            .singleButton(MockSingleButtonBannerViewModel.customStyledMock),
+            .matchBanner(MockMatchBannerViewModel.liveMatch)
         ]
 
         let sliderData = TopBannerSliderData(
-            bannerViewFactories: bannerFactories,
-            isAutoScrollEnabled: false,
-            autoScrollInterval: 0.0,
+            banners: banners,
             showPageIndicators: true,
             currentPageIndex: 0
         )
 
         return MockTopBannerSliderViewModel(sliderData: sliderData)
     }
-    
-    private static func createGradientImage(colors: [UIColor], size: CGSize) -> UIImage? {
-        let renderer = UIGraphicsImageRenderer(size: size)
-        return renderer.image { context in
-            let gradient = CGGradient(
-                colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                colors: colors.map { $0.cgColor } as CFArray,
-                locations: nil
-            )
 
-            guard let gradient = gradient else { return }
+    /// Mock with only match banners
+    public static var matchOnlyMock: MockTopBannerSliderViewModel {
+        let banners: [BannerType] = [
+            .matchBanner(MockMatchBannerViewModel.preliveMatch),
+            .matchBanner(MockMatchBannerViewModel.liveMatch),
+            .matchBanner(MockMatchBannerViewModel.interactiveMatch)
+        ]
 
-            context.cgContext.drawLinearGradient(
-                gradient,
-                start: CGPoint(x: 0, y: 0),
-                end: CGPoint(x: size.width, y: size.height),
-                options: []
-            )
-        }
+        let sliderData = TopBannerSliderData(
+            banners: banners,
+            showPageIndicators: true,
+            currentPageIndex: 0
+        )
+
+        return MockTopBannerSliderViewModel(sliderData: sliderData)
     }
 }

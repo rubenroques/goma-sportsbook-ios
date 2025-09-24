@@ -524,4 +524,11 @@ cwamp rpc -p "/sports#operatorInfo" --verbose --timestamp
 - **Resolution**: Fix at appropriate architectural layer (UI → GomaUI, Data → ServicesProvider, App → specific project)
 
 This workspace represents a sophisticated evolution from monolithic to modular architecture, enabling scalable multi-client development while maintaining code quality through established component libraries and backend abstractions.
-- this IS THE REAL implementation. Do not insert placeholder code or todo comments, this is production. If you didn't know something simply ask the project owner that is interacting with you
+
+
+this IS THE REAL implementation. Do not insert placeholder code or todo comments, this is production. If you didn't know something simply ask the project owner that is interacting with you
+
+
+Betsson Cameroon target Follow Model-View-ViewModel-Coordinator aka MVVM-C
+ - ViewControllers should NEVER create Coordinators - that's the parent coordinator's job
+ViewControllers should NEVER create Coordinators - that's the parent coordinator's job

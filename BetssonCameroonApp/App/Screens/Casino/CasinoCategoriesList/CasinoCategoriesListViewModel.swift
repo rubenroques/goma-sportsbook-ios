@@ -15,6 +15,8 @@ class CasinoCategoriesListViewModel: ObservableObject {
     // MARK: - Navigation Closures for CasinoCoordinator
     var onCategorySelected: ((String, String) -> Void) = { _, _ in }
     var onGameSelected: ((String) -> Void) = { _ in }
+    var onBannerGameSelected: ((String) -> Void) = { _ in }
+    var onBannerURLSelected: ((String) -> Void) = { _ in }
     
     private static let gamesPlatform = "PC"
     
@@ -36,10 +38,14 @@ class CasinoCategoriesListViewModel: ObservableObject {
     init(servicesProvider: ServicesProvider.Client) {
         self.servicesProvider = servicesProvider
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
-        self.topBannerSliderViewModel = MockTopBannerSliderViewModel.casinoGameMock
+
+        // Initialize production casino banner viewModel
+        let casinoBannerViewModel = CasinoTopBannerSliderViewModel(servicesProvider: servicesProvider)
+        self.topBannerSliderViewModel = casinoBannerViewModel
+
         // Initialize with empty recently played - will be populated when categories load
         self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.emptyRecentlyPlayed
-        
+
         setupChildViewModelCallbacks()
         loadCategoriesFromAPI()
     }
@@ -213,12 +219,31 @@ class CasinoCategoriesListViewModel: ObservableObject {
         // Update the recently played games ViewModel
         recentlyPlayedGamesViewModel.updateGames(limitedGames)
     }
-    
+
+    /// Handle banner action from casino banner tap
+    private func handleBannerAction(_ action: CasinoBannerAction) {
+        switch action {
+        case .launchGame(let gameId):
+            onBannerGameSelected(gameId)
+        case .openURL(let url):
+            onBannerURLSelected(url)
+        case .none:
+            print("Casino banner tapped with no action")
+        }
+    }
+
     private func setupChildViewModelCallbacks() {
         // QuickLinks tab bar callbacks
         quickLinksTabBarViewModel.onTabSelected = { tabId in
             print("Casino Categories: Tab selected: \(tabId)")
             // Handle tab switching if needed
+        }
+
+        // Casino banner callbacks
+        if let casinoBannerViewModel = topBannerSliderViewModel as? CasinoTopBannerSliderViewModel {
+            casinoBannerViewModel.onBannerAction = { [weak self] action in
+                self?.handleBannerAction(action)
+            }
         }
     }
 }

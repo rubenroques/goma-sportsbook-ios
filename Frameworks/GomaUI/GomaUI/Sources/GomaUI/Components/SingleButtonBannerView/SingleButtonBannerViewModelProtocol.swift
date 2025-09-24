@@ -5,29 +5,29 @@ import UIKit
 public struct SingleButtonBannerData: Equatable, Hashable, TopBannerProtocol {
     /// The type identifier for this banner
     public let type: String
-    
+
     /// Whether this banner should be visible
     public let isVisible: Bool
-    
-    /// The background image for the banner
-    public let backgroundImage: UIImage?
-    
+
+    /// The background image URL for the banner
+    public let backgroundImageURL: String?
+
     /// The message text to display
     public let messageText: String
-    
+
     /// The button configuration (optional)
     public let buttonConfig: ButtonConfig?
-    
+
     public init(
         type: String,
         isVisible: Bool = true,
-        backgroundImage: UIImage? = nil,
+        backgroundImageURL: String? = nil,
         messageText: String,
         buttonConfig: ButtonConfig? = nil
     ) {
         self.type = type
         self.isVisible = isVisible
-        self.backgroundImage = backgroundImage
+        self.backgroundImageURL = backgroundImageURL
         self.messageText = messageText
         self.buttonConfig = buttonConfig
     }
@@ -79,9 +79,12 @@ public struct SingleButtonBannerDisplayState: Equatable {
 
 // MARK: - View Model Protocol
 public protocol SingleButtonBannerViewModelProtocol {
+    /// Current display state for immediate access
+    var currentDisplayState: SingleButtonBannerDisplayState { get }
+
     /// Publisher for reactive updates
     var displayStatePublisher: AnyPublisher<SingleButtonBannerDisplayState, Never> { get }
-    
+
     /// Called when the button is tapped
     func buttonTapped()
 } 

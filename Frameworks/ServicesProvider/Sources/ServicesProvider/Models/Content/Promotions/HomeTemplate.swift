@@ -24,6 +24,7 @@ public enum HomeWidget: Codable, Equatable, Hashable {
     case alertBanners(WidgetData)
     case banners(WidgetData)
     case carouselEvents(WidgetData)
+    case casinoCarouselEvents(WidgetData)
     case stories(WidgetData)
     case heroCardEvents(WidgetData)
     case highlightedLiveEvents(WidgetData)
@@ -61,6 +62,8 @@ public enum HomeWidget: Codable, Equatable, Hashable {
             self = .banners(widgetData)
         case "carouselevents":
             self = .carouselEvents(widgetData)
+        case "casinocarouselevents":
+            self = .casinoCarouselEvents(widgetData)
         case "stories":
             self = .stories(widgetData)
         case "herocardevents":
@@ -147,6 +150,7 @@ public enum HomeWidget: Codable, Equatable, Hashable {
         case .alertBanners(let data),
                 .banners(let data),
                 .carouselEvents(let data),
+                .casinoCarouselEvents(let data),
                 .stories(let data),
                 .heroCardEvents(let data),
                 .highlightedLiveEvents(let data),

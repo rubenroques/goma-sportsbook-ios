@@ -3,14 +3,8 @@ import UIKit
 
 // MARK: - Data Models
 public struct TopBannerSliderData: Equatable {
-    /// The banner views to display
-    public let bannerViewFactories: [BannerViewFactory]
-
-    /// Whether auto-scroll is enabled
-    public let isAutoScrollEnabled: Bool
-
-    /// Auto-scroll interval in seconds (if auto-scroll is enabled)
-    public let autoScrollInterval: TimeInterval
+    /// The banner types to display
+    public let banners: [BannerType]
 
     /// Whether page indicators (dots) should be shown
     public let showPageIndicators: Bool
@@ -19,38 +13,23 @@ public struct TopBannerSliderData: Equatable {
     public let currentPageIndex: Int
 
     public init(
-        bannerViewFactories: [BannerViewFactory],
-        isAutoScrollEnabled: Bool = false,
-        autoScrollInterval: TimeInterval = 5.0,
+        banners: [BannerType],
         showPageIndicators: Bool = true,
         currentPageIndex: Int = 0
     ) {
-        self.bannerViewFactories = bannerViewFactories
-        self.isAutoScrollEnabled = isAutoScrollEnabled
-        self.autoScrollInterval = autoScrollInterval
+        self.banners = banners
         self.showPageIndicators = showPageIndicators
         self.currentPageIndex = currentPageIndex
     }
-}
-
-// MARK: - Banner View Factory
-public struct BannerViewFactory: Equatable {
-    /// Unique identifier for this banner
-    public let id: String
-
-    /// Factory closure to create the banner view
-    public let viewFactory: () -> TopBannerViewProtocol
-
-    public init(id: String, viewFactory: @escaping () -> TopBannerViewProtocol) {
-        self.id = id
-        self.viewFactory = viewFactory
-    }
 
     // Equatable conformance
-    public static func == (lhs: BannerViewFactory, rhs: BannerViewFactory) -> Bool {
-        return lhs.id == rhs.id
+    public static func == (lhs: TopBannerSliderData, rhs: TopBannerSliderData) -> Bool {
+        return lhs.banners == rhs.banners &&
+               lhs.showPageIndicators == rhs.showPageIndicators &&
+               lhs.currentPageIndex == rhs.currentPageIndex
     }
 }
+
 
 // MARK: - Display State
 public struct TopBannerSliderDisplayState: Equatable {
@@ -76,6 +55,9 @@ public struct TopBannerSliderDisplayState: Equatable {
 
 // MARK: - View Model Protocol
 public protocol TopBannerSliderViewModelProtocol {
+    /// Current display state for immediate access
+    var currentDisplayState: TopBannerSliderDisplayState { get }
+
     /// Publisher for reactive updates
     var displayStatePublisher: AnyPublisher<TopBannerSliderDisplayState, Never> { get }
 
@@ -84,10 +66,4 @@ public protocol TopBannerSliderViewModelProtocol {
 
     /// Called when a banner is tapped
     func bannerTapped(at index: Int)
-
-    /// Start auto-scroll (if enabled)
-    func startAutoScroll()
-
-    /// Stop auto-scroll
-    func stopAutoScroll()
 }

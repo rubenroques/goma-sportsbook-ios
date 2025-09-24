@@ -244,7 +244,9 @@ final public class MultiWidgetToolbarView: UIView {
         view.layer.cornerRadius = 16
 
         let label = UILabel()
-        label.text = "EN"
+        let localeLanguageCode = Locale.current.languageCode?.uppercased() ?? "EN"
+        let labelText = (widget.label ?? localeLanguageCode).uppercased()
+        label.text = labelText
         label.font = StyleProvider.fontWith(type: .medium, size: 14)
         label.textColor = StyleProvider.Color.allWhite
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -257,6 +259,14 @@ final public class MultiWidgetToolbarView: UIView {
             view.heightAnchor.constraint(equalToConstant: 32),
             view.widthAnchor.constraint(equalToConstant: 32)
         ])
+
+        view.accessibilityIdentifier = widget.id
+        view.isAccessibilityElement = true
+        view.accessibilityLabel = widget.label ?? "Language"
+        view.isUserInteractionEnabled = true
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        view.addGestureRecognizer(tapGesture)
 
         return view
     }

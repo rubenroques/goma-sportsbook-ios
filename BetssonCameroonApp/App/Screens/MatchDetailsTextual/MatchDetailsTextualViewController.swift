@@ -15,30 +15,14 @@ class MatchDetailsTextualViewController: UIViewController {
     
     private let viewModel: MatchDetailsTextualViewModel
     private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - Navigation Closures
+    // Closure called when betslip is requested - handled by coordinator
+    var onBetslipRequested: (() -> Void)?
     
-    // MARK: - Authentication Navigation Closures
-    // Closures called when authentication is requested - handled by coordinator
-    var onLoginRequested: (() -> Void)?
-    var onRegistrationRequested: (() -> Void)?
     
-    // MARK: - Profile Navigation Closure
-    // Closure called when profile is requested - handled by coordinator
-    var onProfileRequested: (() -> Void)?
-    
-    // MARK: - Wallet Navigation Closures
-    // Closures called when wallet operations are requested - handled by coordinator
-    var onDepositRequested: (() -> Void)?
-    var onWithdrawRequested: (() -> Void)?
-    
-    // MARK: Coordinators
-    private var betslipCoordinator: BetslipCoordinator?
     
     // MARK: - UI Components
-    private lazy var topSafeAreaView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
     
     private let mainStackView = UIStackView()
     private let pageContainerView = UIView()
@@ -71,11 +55,6 @@ class MatchDetailsTextualViewController: UIViewController {
         return label
     }()
     
-    private lazy var multiWidgetToolbarView: MultiWidgetToolbarView = {
-        let view = MultiWidgetToolbarView(viewModel: viewModel.multiWidgetToolbarViewModel)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
     
     private lazy var matchDateNavigationBarView: MatchDateNavigationBarView = {
         let view = MatchDateNavigationBarView(viewModel: viewModel.matchDateNavigationBarViewModel)
@@ -114,25 +93,6 @@ class MatchDetailsTextualViewController: UIViewController {
         return view
     }()
     
-    // MARK: - Wallet Status Overlay Components
-    
-    private lazy var walletStatusOverlayView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        view.isHidden = true
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideWalletStatusOverlay))
-        view.addGestureRecognizer(tapGesture)
-        
-        return view
-    }()
-    
-    private lazy var walletStatusView: WalletStatusView = {
-        let view = WalletStatusView(viewModel: viewModel.walletStatusViewModel)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
     
     private var pageViewController: UIPageViewController!
     private var marketControllers: [String: MarketsTabSimpleViewController] = [:]
@@ -176,7 +136,6 @@ class MatchDetailsTextualViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = UIColor.App.backgroundPrimary
         
-        topSafeAreaView.backgroundColor = UIColor.App.topBarGradient1
         
         // Configure page container view
         pageContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -195,7 +154,6 @@ class MatchDetailsTextualViewController: UIViewController {
         loadingIndicator.color = .systemGray
         
         // Add views to hierarchy
-        view.addSubview(topSafeAreaView)
         view.addSubview(mainStackView)
         view.addSubview(pageContainerView)
         view.addSubview(loadingIndicator)
@@ -208,56 +166,21 @@ class MatchDetailsTextualViewController: UIViewController {
         // Add betslip floating view
         view.addSubview(betslipFloatingView)
         
-        // Add wallet overlay on top of everything
-        view.addSubview(walletStatusOverlayView)
-        walletStatusOverlayView.addSubview(walletStatusView)
-        
         setupComponents()
     }
     
     private func setupComponents() {
-        setupMultiWidgetToolbarView()
-        
         setupMatchDateNavigationBarView()
-        
+
         setupMatchHeaderCompactView()
-        
+
         setupStatisticsWidgetView()
-        
+
         setupMarketGroupSelectorTabView()
-        
+
         setupPageViewController()
     }
     
-    private func setupMultiWidgetToolbarView() {
-        mainStackView.addArrangedSubview(multiWidgetToolbarView)
-        
-        // Setup widget selection handling
-        multiWidgetToolbarView.onWidgetSelected = { [weak self] widgetID in
-            self?.handleWidgetSelection(widgetID)
-        }
-        
-        // Add wallet balance tap handling
-        multiWidgetToolbarView.onBalanceTapped = { [weak self] widgetID in
-            if widgetID == "wallet" {
-                print("💰 MatchDetailsTextual: Wallet balance tapped")
-                
-                // Add haptic feedback
-                let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-                impactFeedback.impactOccurred()
-                
-                self?.showWalletStatusOverlay()
-            }
-        }
-        
-        // Add wallet deposit tap handling
-        multiWidgetToolbarView.onDepositTapped = { [weak self] widgetID in
-            if widgetID == "wallet" {
-                print("💳 MatchDetailsTextual: Deposit button tapped")
-                self?.onDepositRequested?()
-            }
-        }
-    }
     
     private func setupMatchDateNavigationBarView() {
         mainStackView.addArrangedSubview(matchDateNavigationBarView)
@@ -395,88 +318,11 @@ class MatchDetailsTextualViewController: UIViewController {
         viewModel.navigateBack()
     }
     
-    // MARK: - Wallet Status Overlay Methods
     
-    private func showWalletStatusOverlay() {
-        walletStatusOverlayView.alpha = 0
-        walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        walletStatusOverlayView.isHidden = false
-        
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: .curveEaseOut) {
-            self.walletStatusOverlayView.alpha = 1.0
-            self.walletStatusView.transform = CGAffineTransform.identity
-        }
-    }
     
-    @objc private func hideWalletStatusOverlay() {
-        UIView.animate(withDuration: 0.2, animations: {
-            self.walletStatusOverlayView.alpha = 0.0
-            self.walletStatusView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { _ in
-            self.walletStatusOverlayView.isHidden = true
-        }
-    }
-    
-    private func showBetslip() {
-        if betslipCoordinator == nil,
-           let navigationController {
-            let coordinator = BetslipCoordinator(
-                navigationController: navigationController,
-                environment: Env
-            )
-            
-            // Set up navigation closures
-            coordinator.onCloseBetslip = { [weak self] in
-                self?.betslipCoordinator = nil
-                navigationController.dismiss(animated: true)
-            }
-            
-            coordinator.onShowLogin = { [weak self] in
-                self?.betslipCoordinator = nil
-                navigationController.dismiss(animated: true)
-                self?.onLoginRequested?()
-            }
-            
-            coordinator.onShowRegistration = { [weak self] in
-                self?.betslipCoordinator = nil
-                navigationController.dismiss(animated: true)
-                self?.onRegistrationRequested?()
-            }
-            
-            betslipCoordinator = coordinator
-            coordinator.start()
-        }
-        
-        if let viewController = betslipCoordinator?.betslipViewController {
-            navigationController?.present(viewController, animated: true)
-        }
-        
-    }
-    
-    private func handleWidgetSelection(_ widgetID: String) {
-        switch widgetID {
-        case "loginButton":
-            print("🔐 MatchDetailsTextual: Login requested")
-            onLoginRequested?()
-        case "joinButton":
-            print("🔐 MatchDetailsTextual: Registration requested")
-            onRegistrationRequested?()
-        case "avatar":
-            print("👤 MatchDetailsTextual: Profile requested")
-            onProfileRequested?()
-        default:
-            break
-        }
-    }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Top Safe Area
-            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            
             // Main stack view (fixed at top)
             mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -523,35 +369,15 @@ class MatchDetailsTextualViewController: UIViewController {
             betslipFloatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50)
         ])
         
-        // Wallet Status Overlay constraints (covers entire screen)
-        NSLayoutConstraint.activate([
-            walletStatusOverlayView.topAnchor.constraint(equalTo: view.topAnchor),
-            walletStatusOverlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            walletStatusOverlayView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            walletStatusOverlayView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            // Wallet Status View (positioned below multiWidgetToolbarView)
-            walletStatusView.leadingAnchor.constraint(equalTo: walletStatusOverlayView.leadingAnchor, constant: 50),
-            walletStatusView.trailingAnchor.constraint(equalTo: walletStatusOverlayView.trailingAnchor, constant: -32),
-            walletStatusView.topAnchor.constraint(equalTo: multiWidgetToolbarView.bottomAnchor, constant: 16)
-        ])
     }
     
     private func setupBindings() {
         
         // Setup betslip callback
         viewModel.betslipFloatingViewModel.onBetslipTapped = { [weak self] in
-            self?.showBetslip()
+            self?.onBetslipRequested?()
         }
         
-        // Setup wallet navigation callbacks
-        viewModel.walletStatusViewModel.onDepositRequested = { [weak self] in
-            self?.onDepositRequested?()
-        }
-        
-        viewModel.walletStatusViewModel.onWithdrawRequested = { [weak self] in
-            self?.onWithdrawRequested?()
-        }
         
         // Bind loading state
         viewModel.isLoadingPublisher

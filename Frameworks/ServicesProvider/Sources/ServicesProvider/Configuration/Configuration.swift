@@ -8,11 +8,17 @@
 import Foundation
 
 public struct Configuration {
-    
+
     public enum Environment {
         case production
         case staging
         case development
+    }
+
+    public enum ClientBusinessUnit {
+        case betssonFrance
+        case betssonCameroon
+        case gomaDemo
     }
     
     /// Provider mapping for each domain
@@ -27,6 +33,9 @@ public struct Configuration {
     /// Device UUID for tracking and analytics
     private(set) var deviceUUID: String?
 
+    /// Client business unit identifier for CMS configuration
+    private(set) var clientBusinessUnit: ClientBusinessUnit?
+
     /// Credentials for a specific provider
     public struct ProviderCredentials {
         let name: String
@@ -36,11 +45,13 @@ public struct Configuration {
     private init(
         environment: Environment,
         deviceUUID: String?,
+        clientBusinessUnit: ClientBusinessUnit?,
         providerMapping: [Domain: Provider],
         credentials: [Provider: ProviderCredentials]
     ) {
         self.environment = environment
         self.deviceUUID = deviceUUID
+        self.clientBusinessUnit = clientBusinessUnit
         self.providerMapping = providerMapping
         self.credentials = credentials
     }
@@ -50,6 +61,7 @@ public struct Configuration {
     public class Builder {
         private var environment: Environment = .production
         private var deviceUUID: String?
+        private var clientBusinessUnit: ClientBusinessUnit?
         private var providerMapping: [Domain: Provider] = [:]
         private var credentials: [Provider: ProviderCredentials] = [:]
         
@@ -66,6 +78,13 @@ public struct Configuration {
         @discardableResult
         public func withDeviceUUID(_ uuid: String?) -> Builder {
             self.deviceUUID = uuid
+            return self
+        }
+
+        /// Sets the client business unit for CMS configuration
+        @discardableResult
+        public func withClientBusinessUnit(_ businessUnit: ClientBusinessUnit?) -> Builder {
+            self.clientBusinessUnit = businessUnit
             return self
         }
         
@@ -101,6 +120,7 @@ public struct Configuration {
             return Configuration(
                 environment: environment,
                 deviceUUID: deviceUUID,
+                clientBusinessUnit: clientBusinessUnit,
                 providerMapping: providerMapping,
                 credentials: credentials
             )
@@ -111,6 +131,7 @@ public struct Configuration {
     public init(environment: Environment = .production, deviceUUID: String? = nil) {
         self.environment = environment
         self.deviceUUID = deviceUUID
+        self.clientBusinessUnit = nil
         self.providerMapping = [:]
         self.credentials = [:]
     }

@@ -1,9 +1,3 @@
-//
-//  SportRadarManagedContentProvider.swift
-//
-//
-//  Created on: May 15, 2024
-//
 
 import Foundation
 import Combine
@@ -11,7 +5,7 @@ import SharedModels
 
 /// Implementation of ManagedContentProvider for the Sportradar API
 class SportRadarManagedContentProvider: HomeContentProvider {
-    
+
     // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
@@ -69,10 +63,10 @@ class SportRadarManagedContentProvider: HomeContentProvider {
         return self.homeContentProvider.getCarouselEventPointers()
     }
 
-    func getCarouselEvents() -> AnyPublisher<Events, ServiceProviderError> {
+    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
         let requestPublisher = self.getCarouselEventPointers()
         return requestPublisher
-            .flatMap({ topImageCardPointers -> AnyPublisher<Events, ServiceProviderError> in
+            .flatMap({ topImageCardPointers -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> in
 
                 var headlineItemsImages: [String: String] = [:]
 
@@ -86,15 +80,10 @@ class SportRadarManagedContentProvider: HomeContentProvider {
                 let publishers: [AnyPublisher<Event?, Never>] = marketIds.map(self.eventsProvider.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
-                    .map({ (events: [Event?]) -> Events in
+                    .map({ (events: [Event?]) -> [Event] in
                         return events.compactMap({ $0 })
                     })
-                    .map({ events -> Events in // Configure the image of each market
-                        for event in events {
-                            let firstMarketId = event.markets.first?.id ?? ""
-                            event.promoImageURL =  headlineItemsImages[firstMarketId]
-                        }
-
+                    .map({ events -> ImageHighlightedContents<Event> in
                         let cleanedEvents = events.compactMap({ $0 })
 
                         // create a dictionary from cleanedEvents using marketId as a key
@@ -104,9 +93,17 @@ class SportRadarManagedContentProvider: HomeContentProvider {
                             eventDict[firstMarketId] = event
                         })
 
-                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
-                        let orderedEvents = topImageCardPointers.compactMap { eventDict[$0.eventMarketId] }
-                        return orderedEvents
+                        // create ImageHighlightedContent array in the order of pointers
+                        let highlightedEvents: ImageHighlightedContents<Event> = topImageCardPointers.compactMap { pointer in
+                            guard let event = eventDict[pointer.eventMarketId] else { return nil }
+
+                            return ImageHighlightedContent(
+                                content: event,
+                                promotedChildCount: 1,
+                                imageURL: headlineItemsImages[pointer.eventMarketId]
+                            )
+                        }
+                        return highlightedEvents
                     })
                     .eraseToAnyPublisher()
 
@@ -501,6 +498,14 @@ class SportRadarManagedContentProvider: HomeContentProvider {
         return publisher.eraseToAnyPublisher()
     }
 
+    func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
+        fatalError("Casino Carousel not supported for this provider")
+    }
+
+    func getCasinoCarouselGames() -> AnyPublisher<CasinoGameBanners, ServiceProviderError> {
+        fatalError("Casino Carousel not supported for this provider")
+    }
+    
 }
 
 

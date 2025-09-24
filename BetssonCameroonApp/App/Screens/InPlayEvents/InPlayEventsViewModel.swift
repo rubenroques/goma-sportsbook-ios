@@ -61,6 +61,7 @@ class InPlayEventsViewModel {
 
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
+    let topBannerSliderViewModel: TopBannerSliderViewModelProtocol
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
 
@@ -81,6 +82,9 @@ class InPlayEventsViewModel {
     
     // Casino navigation closure for QuickLinks
     var onCasinoQuickLinkSelected: ((QuickLinkType) -> Void)?
+
+    // Sport banner navigation closure
+    var onMatchTap: ((String) -> Void)?
     
     // MARK: - Private Properties
     var sport: Sport
@@ -103,6 +107,10 @@ class InPlayEventsViewModel {
         self.servicesProvider = servicesProvider
         // Create production QuickLinks ViewModel
         self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forSportsScreens()
+
+        // Create TopBannerSlider ViewModel for sports banners
+        self.topBannerSliderViewModel = SportTopBannerSliderViewModel(servicesProvider: servicesProvider)
+
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
         
@@ -207,6 +215,13 @@ class InPlayEventsViewModel {
                 self?.onCasinoQuickLinkSelected?(quickLinkType)
             }
         }
+
+        // Setup TopBannerSlider navigation callback
+        if let sportBannerViewModel = topBannerSliderViewModel as? SportTopBannerSliderViewModel {
+            sportBannerViewModel.onMatchTap = { [weak self] eventId in
+                self?.onMatchTap?(eventId)
+            }
+        }
         
         // Listen to market group selection changes from selector ViewModel
         marketGroupSelectorViewModel.selectionEventPublisher
@@ -309,7 +324,7 @@ class InPlayEventsViewModel {
         marketGroupSelectorViewModel.updateWithMatches(matches, mainMarkets: mainMarkets)
 
         // Update all existing market group ViewModels with new matches
-        for (marketType, viewModel) in marketGroupCardsViewModels {
+        for (_, viewModel) in marketGroupCardsViewModels {
             viewModel.updateMatches(matches)
         }
 

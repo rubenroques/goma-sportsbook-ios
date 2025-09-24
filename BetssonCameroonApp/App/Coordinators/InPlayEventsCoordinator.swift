@@ -86,7 +86,7 @@ class InPlayEventsCoordinator: Coordinator {
         let viewController = InPlayEventsViewController(viewModel: viewModel)
         self.inPlayEventsViewController = viewController
         
-        // RootTabBarCoordinator will handle embedding
+        // MainTabBarCoordinator will handle embedding
     }
     
     func finish() {
@@ -95,7 +95,7 @@ class InPlayEventsCoordinator: Coordinator {
         inPlayEventsViewModel = nil
     }
     
-    // MARK: - Public Methods for RootTabBarCoordinator
+    // MARK: - Public Methods for MainTabBarCoordinator
     func refresh() {
         inPlayEventsViewModel?.reloadEvents(forced: true)
     }

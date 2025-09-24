@@ -34,7 +34,8 @@
       "mcp__ios-simulator-mcp__*",
       "mcp__swiftlens__*",
       "mcp__swiftlens__swift_get_symbols_overview",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "mcp__figma-dev-mode-mcp-server__get_screenshot"
     ],
     "deny": []
   },

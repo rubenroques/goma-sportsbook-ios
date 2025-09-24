@@ -87,6 +87,25 @@ extension GomaModelMapper {
             imageUrl: carousel.imageUrl)
     }
 
+    // MARK: - Casino Carousel Banners
+
+    static func casinoCarouselPointers(fromInternalCasinoCarouselPointers carousels: GomaModels.CasinoCarouselPointers) -> CasinoCarouselPointers {
+        return carousels.map { casinoCarouselPointer(fromInternalCasinoCarouselPointer: $0) }
+    }
+
+    static func casinoCarouselPointer(fromInternalCasinoCarouselPointer carousel: GomaModels.CasinoCarouselPointer) -> CasinoCarouselPointer {
+        return CasinoCarouselPointer(
+            id: String(carousel.id),
+            type: carousel.type,
+            title: carousel.title,
+            subtitle: carousel.subtitle,
+            casinoGameId: carousel.casinoGameId,
+            ctaText: carousel.ctaText,
+            ctaUrl: carousel.ctaUrl,
+            ctaTarget: carousel.ctaTarget,
+            imageUrl: carousel.imageUrl)
+    }
+
     // MARK: - Boosted Odds Banners
 
     static func boostedOddsPointers(fromInternalBoostedOddsPointers pointers: GomaModels.BoostedOddsPointers) -> BoostedOddsPointers {

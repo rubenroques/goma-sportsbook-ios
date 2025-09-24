@@ -44,7 +44,7 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: MockQuickLinksTabBarViewModel
-    let multiWidgetToolbarViewModel: MockMultiWidgetToolbarViewModel
+    // multiWidgetToolbarViewModel is now managed by TopBarContainerController
     
     // MARK: - Properties
     private let categoryId: String
@@ -57,7 +57,7 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
         self.categoryTitle = categoryTitle
         self.servicesProvider = servicesProvider
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
-        self.multiWidgetToolbarViewModel = MockMultiWidgetToolbarViewModel.defaultMock
+        // multiWidgetToolbarViewModel is now managed by TopBarContainerController
         
         setupChildViewModelCallbacks()
         loadInitialGames()

@@ -11,9 +11,7 @@ class TopBannerSliderViewController: UIViewController {
     private let slidersContainer = UIView()
     
     // Control elements
-    private let sliderTypeSegmentedControl = UISegmentedControl(items: ["Default", "Single", "Auto-Scroll", "No Indicators", "Disabled"])
-    private let autoScrollSwitch = UISwitch()
-    private let autoScrollLabel = UILabel()
+    private let sliderTypeSegmentedControl = UISegmentedControl(items: ["Default", "Single", "Mixed", "Match Only", "Disabled"])
     private let pageIndicatorsSwitch = UISwitch()
     private let pageIndicatorsLabel = UILabel()
     private let userInteractionSwitch = UISwitch()
@@ -80,19 +78,6 @@ class TopBannerSliderViewController: UIViewController {
         sliderTypeSegmentedControl.selectedSegmentIndex = 0
         sliderTypeSegmentedControl.addTarget(self, action: #selector(sliderTypeChanged), for: .valueChanged)
         
-        // Auto-scroll controls
-        autoScrollLabel.text = "Auto-Scroll"
-        autoScrollLabel.font = StyleProvider.fontWith(type: .medium, size: 16)
-        autoScrollLabel.textColor = StyleProvider.Color.textPrimary
-        
-        autoScrollSwitch.isOn = false
-        autoScrollSwitch.addTarget(self, action: #selector(autoScrollChanged), for: .valueChanged)
-        
-        let autoScrollStack = UIStackView(arrangedSubviews: [autoScrollLabel, autoScrollSwitch])
-        autoScrollStack.axis = .horizontal
-        autoScrollStack.spacing = 8
-        autoScrollStack.alignment = .center
-        
         // Page indicators controls
         pageIndicatorsLabel.text = "Page Indicators"
         pageIndicatorsLabel.font = StyleProvider.fontWith(type: .medium, size: 16)
@@ -137,7 +122,6 @@ class TopBannerSliderViewController: UIViewController {
         let mainStack = UIStackView(arrangedSubviews: [
             titleLabel,
             sliderTypeSegmentedControl,
-            autoScrollStack,
             pageIndicatorsStack,
             userInteractionStack,
             statusStack
@@ -198,8 +182,8 @@ class TopBannerSliderViewController: UIViewController {
     private enum SliderType {
         case `default`
         case single
-        case autoScroll
-        case noIndicators
+        case mixed
+        case matchOnly
         case disabled
     }
     
@@ -218,10 +202,10 @@ class TopBannerSliderViewController: UIViewController {
             viewModel = MockTopBannerSliderViewModel.defaultMock
         case .single:
             viewModel = MockTopBannerSliderViewModel.singleBannerMock
-        case .autoScroll:
-            viewModel = MockTopBannerSliderViewModel.autoScrollMock
-        case .noIndicators:
-            viewModel = MockTopBannerSliderViewModel.noIndicatorsMock
+        case .mixed:
+            viewModel = MockTopBannerSliderViewModel.mixedBannersMock
+        case .matchOnly:
+            viewModel = MockTopBannerSliderViewModel.matchOnlyMock
         case .disabled:
             viewModel = MockTopBannerSliderViewModel.disabledInteractionMock
         }
@@ -265,32 +249,20 @@ class TopBannerSliderViewController: UIViewController {
     private func updateControlsForSliderType(_ type: SliderType) {
         // Update control states based on slider type
         switch type {
-        case .autoScroll:
-            autoScrollSwitch.isOn = true
-            autoScrollSwitch.isEnabled = true
-            autoScrollLabel.textColor = StyleProvider.Color.textPrimary
         case .disabled:
             userInteractionSwitch.isOn = false
             userInteractionSwitch.isEnabled = true
             userInteractionLabel.textColor = StyleProvider.Color.textPrimary
-        case .noIndicators:
-            pageIndicatorsSwitch.isOn = false
-            pageIndicatorsSwitch.isEnabled = true
-            pageIndicatorsLabel.textColor = StyleProvider.Color.textPrimary
         case .single:
             // Single banner - page indicators automatically hidden
             pageIndicatorsSwitch.isEnabled = false
             pageIndicatorsLabel.textColor = StyleProvider.Color.textPrimary.withAlphaComponent(0.5)
         default:
             // Reset all controls to default state
-            autoScrollSwitch.isOn = false
-            autoScrollSwitch.isEnabled = true
-            autoScrollLabel.textColor = StyleProvider.Color.textPrimary
-            
             pageIndicatorsSwitch.isOn = true
             pageIndicatorsSwitch.isEnabled = true
             pageIndicatorsLabel.textColor = StyleProvider.Color.textPrimary
-            
+
             userInteractionSwitch.isOn = true
             userInteractionSwitch.isEnabled = true
             userInteractionLabel.textColor = StyleProvider.Color.textPrimary
@@ -298,9 +270,9 @@ class TopBannerSliderViewController: UIViewController {
     }
     
     private func updateStatusLabels(with displayState: TopBannerSliderDisplayState) {
-        let bannerCount = displayState.sliderData.bannerViewFactories.count
+        let bannerCount = displayState.sliderData.banners.count
         let currentPage = displayState.sliderData.currentPageIndex
-        
+
         bannerCountLabel.text = "Banner Count: \(bannerCount)"
         currentPageLabel.text = "Current Page: \(currentPage)"
     }
@@ -324,52 +296,29 @@ class TopBannerSliderViewController: UIViewController {
     @objc private func sliderTypeChanged() {
         let selectedIndex = sliderTypeSegmentedControl.selectedSegmentIndex
         let sliderType: SliderType
-        
+
         switch selectedIndex {
         case 0: sliderType = .default
         case 1: sliderType = .single
-        case 2: sliderType = .autoScroll
-        case 3: sliderType = .noIndicators
+        case 2: sliderType = .mixed
+        case 3: sliderType = .matchOnly
         case 4: sliderType = .disabled
         default: sliderType = .default
         }
-        
+
         showSlider(type: sliderType)
-    }
-    
-    @objc private func autoScrollChanged() {
-        guard let viewModel = currentViewModel,
-              let currentState = currentDisplayState else { return }
-        
-        let newSliderData = TopBannerSliderData(
-            bannerViewFactories: currentState.sliderData.bannerViewFactories,
-            isAutoScrollEnabled: autoScrollSwitch.isOn,
-            autoScrollInterval: currentState.sliderData.autoScrollInterval,
-            showPageIndicators: currentState.sliderData.showPageIndicators,
-            currentPageIndex: currentState.sliderData.currentPageIndex
-        )
-        
-        viewModel.updateSliderData(newSliderData)
-        
-        if autoScrollSwitch.isOn {
-            currentSliderView?.startAutoScroll()
-        } else {
-            currentSliderView?.stopAutoScroll()
-        }
     }
     
     @objc private func pageIndicatorsChanged() {
         guard let viewModel = currentViewModel,
               let currentState = currentDisplayState else { return }
-        
+
         let newSliderData = TopBannerSliderData(
-            bannerViewFactories: currentState.sliderData.bannerViewFactories,
-            isAutoScrollEnabled: currentState.sliderData.isAutoScrollEnabled,
-            autoScrollInterval: currentState.sliderData.autoScrollInterval,
+            banners: currentState.sliderData.banners,
             showPageIndicators: pageIndicatorsSwitch.isOn,
             currentPageIndex: currentState.sliderData.currentPageIndex
         )
-        
+
         viewModel.updateSliderData(newSliderData)
     }
     

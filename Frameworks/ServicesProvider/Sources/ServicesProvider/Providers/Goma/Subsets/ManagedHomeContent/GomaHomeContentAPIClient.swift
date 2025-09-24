@@ -110,18 +110,49 @@ class GomaHomeContentAPIClient {
     /// Get carousel events (formerly sport banners)
     /// - Returns: A publisher with the decoded response or error
     func carouselEventPointers() -> AnyPublisher<GomaModels.CarouselEventPointers, ServiceProviderError> {
-        let endpoint = GomaHomeContentAPISchema.sportBanners
+        // Check cache first (keep existing behavior)
         if let cachedData = self.cache.getCachedInitialDump(), let carouselEvents = cachedData.homeWidgetPointers?.carouselEventPointers {
             return Just(carouselEvents)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
         }
-        
-        return self.connector.request(endpoint)
+
+        // TEMPORARY: Hardcoded fallback data while CMS is not returning events
+        let hardcodedPointers: GomaModels.CarouselEventPointers = [
+            GomaModels.CarouselEventPointer(
+                id: 1,
+                eventId: "281662226139582464",
+                eventMarketId: "1",
+                ctaUrl: nil,
+                imageUrl: "https://placehold.co/600x200/000144/F00.png?text=Event%201"
+            ),
+            GomaModels.CarouselEventPointer(
+                id: 2,
+                eventId: "281274207591075840",
+                eventMarketId: "1",
+                ctaUrl: nil,
+                imageUrl: "https://placehold.co/600x200/000144/F00.png?text=Event%202"
+            )
+        ]
+
+        return Just(hardcodedPointers)
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+
+        // Original code (commented out until CMS returns data):
+        // let endpoint = GomaHomeContentAPISchema.sportBanners
+        // return self.connector.request(endpoint)
     }
     
     func carouselEvents() -> AnyPublisher<GomaModels.HeroCardEvents, ServiceProviderError> {
         let endpoint = GomaHomeContentAPISchema.sportBanners
+        return self.connector.request(endpoint)
+    }
+
+    /// Get casino carousel banners
+    /// - Returns: A publisher with the decoded response or error
+    func casinoCarouselPointers() -> AnyPublisher<GomaModels.CasinoCarouselPointers, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.casinoCarouselBanners
         return self.connector.request(endpoint)
     }
 

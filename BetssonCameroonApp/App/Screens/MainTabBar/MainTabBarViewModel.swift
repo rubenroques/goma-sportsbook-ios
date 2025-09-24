@@ -11,13 +11,11 @@ import LocalAuthentication
 import ServicesProvider
 import GomaUI
 
-class RootTabBarViewModel: ObservableObject {
+class MainTabBarViewModel: ObservableObject {
 
-    var multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel
     var adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol
     var floatingOverlayViewModel: FloatingOverlayViewModelProtocol
     var betslipFloatingViewModel: BetslipFloatingViewModelProtocol
-    var walletStatusViewModel: WalletStatusViewModel
 
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
@@ -46,22 +44,18 @@ class RootTabBarViewModel: ObservableObject {
     }
 
     init(userSessionStore: UserSessionStore,
-         multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel = MultiWidgetToolbarViewModel(),
          adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
          floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel(),
          betslipFloatingViewModel: BetslipFloatingViewModelProtocol = MockBetslipFloatingViewModel(state: .noTickets))
     {
         self.userSessionStore = userSessionStore
-        
-        self.multiWidgetToolbarViewModel = multiWidgetToolbarViewModel
+
         self.adaptiveTabBarViewModel = adaptiveTabBarViewModel
         self.floatingOverlayViewModel = floatingOverlayViewModel
         self.betslipFloatingViewModel = betslipFloatingViewModel
-        self.walletStatusViewModel = WalletStatusViewModel(userSessionStore: userSessionStore)
-        
+
         setupTabBarBinding()
         setupBetslipBinding()
-        setupMultiWidgetToolbarBinding()
     }
     
     func logoutUser() {
@@ -160,18 +154,6 @@ class RootTabBarViewModel: ObservableObject {
 
     }
     
-    private func setupMultiWidgetToolbarBinding() {
-        
-        userSessionStore.userWalletPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] wallet in
-                
-                if let walletBalance = wallet?.total {
-                    self?.multiWidgetToolbarViewModel.setWalletBalance(balance: walletBalance)
-                }
-            })
-            .store(in: &cancellables)
-    }
     
 
 }
