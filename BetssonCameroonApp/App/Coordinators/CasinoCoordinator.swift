@@ -20,6 +20,7 @@ class CasinoCoordinator: Coordinator {
     
     // MARK: - Properties
     private let environment: Environment
+    private let lobbyType: CasinoLobbyType
     private var casinoCategoriesListViewController: CasinoCategoriesListViewController?
     private var casinoCategoryGamesListViewController: CasinoCategoryGamesListViewController?
     private var casinoGamePrePlayViewController: CasinoGamePrePlayViewController?
@@ -31,9 +32,10 @@ class CasinoCoordinator: Coordinator {
     }
     
     // MARK: - Initialization
-    init(navigationController: UINavigationController, environment: Environment) {
+    init(navigationController: UINavigationController, environment: Environment, lobbyType: CasinoLobbyType = .casino) {
         self.navigationController = navigationController
         self.environment = environment
+        self.lobbyType = lobbyType
     }
     
     // MARK: - Navigation Methods
@@ -44,7 +46,8 @@ class CasinoCoordinator: Coordinator {
         let categoryGamesViewModel = CasinoCategoryGamesListViewModel(
             categoryId: categoryId,
             categoryTitle: categoryTitle,
-            servicesProvider: environment.servicesProvider
+            servicesProvider: environment.servicesProvider,
+            lobbyType: lobbyType.serviceProviderType
         )
         
         // Setup navigation closures
@@ -165,7 +168,8 @@ class CasinoCoordinator: Coordinator {
     func start() {
         // Create view model with injected dependencies
         let viewModel = CasinoCategoriesListViewModel(
-            servicesProvider: environment.servicesProvider
+            servicesProvider: environment.servicesProvider,
+            lobbyType: lobbyType
         )
         
         // Setup MVVM-C navigation closures - ViewModels signal navigation intent

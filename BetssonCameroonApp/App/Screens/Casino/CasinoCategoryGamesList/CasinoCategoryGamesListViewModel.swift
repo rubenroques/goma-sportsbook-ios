@@ -49,13 +49,15 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     // MARK: - Properties
     private let categoryId: String
     private let servicesProvider: ServicesProvider.Client
+    private let lobbyType: ServicesProvider.CasinoLobbyType?
     private var cancellables = Set<AnyCancellable>()
-    
+
     // MARK: - Initialization
-    init(categoryId: String, categoryTitle: String, servicesProvider: ServicesProvider.Client) {
+    init(categoryId: String, categoryTitle: String, servicesProvider: ServicesProvider.Client, lobbyType: ServicesProvider.CasinoLobbyType? = nil) {
         self.categoryId = categoryId
         self.categoryTitle = categoryTitle
         self.servicesProvider = servicesProvider
+        self.lobbyType = lobbyType
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
         // multiWidgetToolbarViewModel is now managed by TopBarContainerController
         
@@ -116,6 +118,7 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
             categoryId: categoryId,
             language: "en",
             platform: Self.gamesPlatform,
+            lobbyType: lobbyType,
             pagination: pagination
         )
         .receive(on: DispatchQueue.main)

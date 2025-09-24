@@ -1,11 +1,3 @@
-//
-//  EveryMatrixSessionCoordinator.swift
-//  ServicesProvider
-//
-//  Created by André Lascas on 09/07/2025.
-//  Enhanced with token refresh mechanism
-//
-
 import Foundation
 import Combine
 

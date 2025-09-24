@@ -11,14 +11,17 @@ import ServicesProvider
 import GomaUI
 
 class CasinoCategoriesListViewModel: ObservableObject {
-    
+
     // MARK: - Navigation Closures for CasinoCoordinator
     var onCategorySelected: ((String, String) -> Void) = { _, _ in }
     var onGameSelected: ((String) -> Void) = { _ in }
     var onBannerGameSelected: ((String) -> Void) = { _ in }
     var onBannerURLSelected: ((String) -> Void) = { _ in }
-    
+
     private static let gamesPlatform = "PC"
+
+    // MARK: - Lobby Configuration
+    private let lobbyType: CasinoLobbyType
     
     // MARK: - Published Properties
     @Published private(set) var categorySections: [MockCasinoCategorySectionViewModel] = []
@@ -35,8 +38,9 @@ class CasinoCategoriesListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    init(servicesProvider: ServicesProvider.Client) {
+    init(servicesProvider: ServicesProvider.Client, lobbyType: CasinoLobbyType = .casino) {
         self.servicesProvider = servicesProvider
+        self.lobbyType = lobbyType
         self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
 
         // Initialize production casino banner viewModel
@@ -70,7 +74,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        servicesProvider.getCasinoCategories(language: "en", platform: Self.gamesPlatform)
+        servicesProvider.getCasinoCategories(language: "en", platform: Self.gamesPlatform, lobbyType: lobbyType.serviceProviderType)
             .map { categories in
                 // Filter categories with games available
                 categories.filter { $0.gamesTotal > 0 }
@@ -120,6 +124,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
             categoryId: category.id,
             language: "en",
             platform: Self.gamesPlatform,
+            lobbyType: lobbyType.serviceProviderType,
             pagination: pagination
         )
         .map { gamesResponse in

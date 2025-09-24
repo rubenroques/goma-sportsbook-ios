@@ -1,10 +1,3 @@
-//
-//  EveryMatrixBaseConnector.swift
-//  ServicesProvider
-//
-//  Base connector with automatic token refresh for EveryMatrix APIs
-//
-
 import Foundation
 import Combine
 

@@ -41,7 +41,8 @@ class MainTabBarCoordinator: Coordinator {
     private var nextUpEventsCoordinator: NextUpEventsCoordinator?
     private var inPlayEventsCoordinator: InPlayEventsCoordinator?
     private var myBetsCoordinator: MyBetsCoordinator?
-    private var casinoCoordinator: CasinoCoordinator?
+    private var traditionalCasinoCoordinator: CasinoCoordinator?
+    private var virtualSportsCasinoCoordinator: CasinoCoordinator?
     private var betslipCoordinator: BetslipCoordinator?
     // MARK: - Initialization
     
@@ -113,7 +114,8 @@ class MainTabBarCoordinator: Coordinator {
         nextUpEventsCoordinator = nil
         inPlayEventsCoordinator = nil
         myBetsCoordinator = nil
-        casinoCoordinator = nil
+        traditionalCasinoCoordinator = nil
+        virtualSportsCasinoCoordinator = nil
         mainTabBarViewController = nil
         betslipCoordinator = nil
     }
@@ -664,35 +666,61 @@ class MainTabBarCoordinator: Coordinator {
     
     private func showCasinoHomeScreen() {
         // Lazy loading: only create coordinator when needed
-        if casinoCoordinator == nil {
+        if traditionalCasinoCoordinator == nil {
             let coordinator = CasinoCoordinator(
                 navigationController: self.navigationController,
-                environment: self.environment
+                environment: self.environment,
+                lobbyType: .casino
             )
-            
+
             // Set up navigation closures
             coordinator.onShowGamePlay = { [weak self] gameId in
                 print("🎰 Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
-            
-            casinoCoordinator = coordinator
+
+            traditionalCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
         }
-        
+
         // Show the screen through MainTabBarViewController
-        if let viewController = casinoCoordinator?.viewController {
+        if let viewController = traditionalCasinoCoordinator?.viewController {
             mainTabBarViewController?.showCasinoHomeScreen(with: viewController)
         }
-        
+
         // Refresh if needed
-        casinoCoordinator?.refresh()
+        traditionalCasinoCoordinator?.refresh()
     }
     
     private func showCasinoVirtualSportsScreen() {
-        let dummyViewController = DummyViewController(displayText: "Virtual Sports")
-        mainTabBarViewController?.showCasinoVirtualSportsScreen(with: dummyViewController)
+        // Lazy loading: only create coordinator when needed
+        if virtualSportsCasinoCoordinator == nil {
+            let coordinator = CasinoCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment,
+                lobbyType: .virtuals
+            )
+
+            // Set up navigation closures
+            coordinator.onShowGamePlay = { [weak self] gameId in
+                print("🎰 Virtual Sports: Game play started for game: \(gameId)")
+                // Additional game play handling if needed
+            }
+
+            virtualSportsCasinoCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+
+        // Get the view controller from coordinator
+        guard let viewController = virtualSportsCasinoCoordinator?.viewController else {
+            print("⚠️ MainTabBarCoordinator: Virtual Sports Casino Coordinator view controller is nil")
+            return
+        }
+
+        mainTabBarViewController?.showCasinoVirtualSportsScreen(with: viewController)
+        print("🎯 MainTabBarCoordinator: Showed virtual sports screen")
     }
     
     private func showCasinoAviatorGameScreen() {

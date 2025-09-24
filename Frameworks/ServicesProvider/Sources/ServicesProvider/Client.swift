@@ -2211,20 +2211,20 @@ extension Client {
 //
 extension Client {
 
-    public func getCasinoCategories(language: String? = nil, platform: String? = nil) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
+    public func getCasinoCategories(language: String? = nil, platform: String? = nil, lobbyType: CasinoLobbyType? = nil) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
         guard let casinoProvider = self.casinoProvider else {
             return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
         }
-        
-        return casinoProvider.getCasinoCategories(language: language, platform: platform)
+
+        return casinoProvider.getCasinoCategories(language: language, platform: platform, lobbyType: lobbyType)
     }
     
-    public func getGamesByCategory(categoryId: String, language: String? = nil, platform: String? = nil, pagination: CasinoPaginationParams = CasinoPaginationParams()) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+    public func getGamesByCategory(categoryId: String, language: String? = nil, platform: String? = nil, lobbyType: CasinoLobbyType? = nil, pagination: CasinoPaginationParams = CasinoPaginationParams()) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         guard let casinoProvider = self.casinoProvider else {
             return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
         }
-        
-        return casinoProvider.getGamesByCategory(categoryId: categoryId, language: language, platform: platform, pagination: pagination)
+
+        return casinoProvider.getGamesByCategory(categoryId: categoryId, language: language, platform: platform, lobbyType: lobbyType, pagination: pagination)
     }
     
     public func getGameDetails(gameId: String, language: String? = nil, platform: String? = nil) -> AnyPublisher<CasinoGame?, ServiceProviderError> {

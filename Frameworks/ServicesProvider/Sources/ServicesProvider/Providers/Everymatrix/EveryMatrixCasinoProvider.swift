@@ -15,14 +15,26 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     init(connector: EveryMatrixCasinoConnector) {
         self.connector = connector
     }
-    
-    func getCasinoCategories(language: String?, platform: String?) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
+
+    // MARK: - Private Helper Methods
+
+    /// Maps CasinoLobbyType enum to the appropriate datasource string
+    private func datasourceForLobbyType(_ lobbyType: CasinoLobbyType?) -> String {
+        switch lobbyType {
+        case .casino, nil:
+            return EveryMatrixUnifiedConfiguration.shared.casinoDataSource
+        case .virtuals:
+            return EveryMatrixUnifiedConfiguration.shared.virtualsDataSource
+        }
+    }
+
+    func getCasinoCategories(language: String?, platform: String?, lobbyType: CasinoLobbyType?) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
         let finalLanguage = language ?? getDefaultLanguage()
         let finalPlatform = platform ?? getDefaultPlatform()
-        let datasource = EveryMatrixUnifiedConfiguration.shared.casinoDataSource
+        let finalDatasource = datasourceForLobbyType(lobbyType)
         
         let endpoint = EveryMatrixCasinoAPI.getCategories(
-            datasource: datasource,
+            datasource: finalDatasource,
             language: finalLanguage,
             platform: finalPlatform
         )
@@ -37,16 +49,16 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             .eraseToAnyPublisher()
     }
     
-    func getGamesByCategory(categoryId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+    func getGamesByCategory(categoryId: String, language: String?, platform: String?, lobbyType: CasinoLobbyType?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         let finalLanguage = language ?? getDefaultLanguage()
         let finalPlatform = platform ?? getDefaultPlatform()
-        let datasource = EveryMatrixUnifiedConfiguration.shared.casinoDataSource
+        let finalDatasource = datasourceForLobbyType(lobbyType)
         
         // Category ID might already include datasource prefix, or we might need to add it
-        let fullCategoryId = categoryId.contains("$") ? categoryId : "\(datasource)$\(categoryId)"
-        
+        let fullCategoryId = categoryId.contains("$") ? categoryId : "\(finalDatasource)$\(categoryId)"
+
         let endpoint = EveryMatrixCasinoAPI.getGamesByCategory(
-            datasource: datasource,
+            datasource: finalDatasource,
             categoryId: fullCategoryId,
             language: finalLanguage,
             platform: finalPlatform,

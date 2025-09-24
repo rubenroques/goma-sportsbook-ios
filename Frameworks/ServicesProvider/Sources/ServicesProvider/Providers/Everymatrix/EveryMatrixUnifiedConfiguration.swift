@@ -1,11 +1,3 @@
-//
-//  EveryMatrixUnifiedConfiguration.swift
-//  ServicesProvider
-//
-//  Unified configuration for all EveryMatrix APIs
-//  Following the same pattern as SportRadarConfiguration
-//
-
 import Foundation
 
 /// Unified configuration for all EveryMatrix APIs
@@ -37,7 +29,7 @@ public final class EveryMatrixUnifiedConfiguration {
     public var playerAPIBaseURL: String {
         switch environment {
         case .production:
-            return "https://betsson-api.everymatrix.com"
+            return ""
         case .staging, .development:
             return "https://betsson-api.stage.norway.everymatrix.com"
         }
@@ -49,7 +41,7 @@ public final class EveryMatrixUnifiedConfiguration {
     public var oddsMatrixBaseURL: String {
         switch environment {
         case .production:
-            return "https://sports-api.everymatrix.com"
+            return ""
         case .staging, .development:
             return "https://sports-api-stage.everymatrix.com"
         }
@@ -77,13 +69,23 @@ public final class EveryMatrixUnifiedConfiguration {
         }
     }
     
-    /// Casino datasource for v2 API endpoints
+    // Casino datasource for v2 API endpoints
     public var casinoDataSource: String {
         switch environment {
         case .production:
-            return "Lobby1" // TODO: Verify production datasource
+            return "Lobby1"
         case .staging, .development:
             return "Lobby1"
+        }
+    }
+    
+    // Virtual lobby (used in casino request to get virtual games)
+    public var virtualsDataSource: String {
+        switch environment {
+        case .production:
+            return "Virtual-Lobby"
+        case .staging, .development:
+            return "Virtual-Lobby"
         }
     }
     
@@ -121,7 +123,7 @@ public final class EveryMatrixUnifiedConfiguration {
     
     /// Default platform identifier
     public var defaultPlatform: String {
-        return "iOS"
+        return "iPhone"
     }
     
 }

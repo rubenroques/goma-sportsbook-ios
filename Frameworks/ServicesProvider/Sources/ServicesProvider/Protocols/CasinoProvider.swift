@@ -11,20 +11,23 @@ public protocol CasinoProvider: Connector {
     /// - Parameters:
     ///   - language: Language code (e.g., "en", "fr") - optional, provider will use default
     ///   - platform: Platform identifier (e.g., "iOS", "PC") - optional, provider will use default
+    ///   - lobbyType: Lobby type specifier - optional, provider will use default (.casino)
     /// - Returns: Publisher with array of casino categories
-    func getCasinoCategories(language: String?, platform: String?) -> AnyPublisher<[CasinoCategory], ServiceProviderError>
+    func getCasinoCategories(language: String?, platform: String?, lobbyType: CasinoLobbyType?) -> AnyPublisher<[CasinoCategory], ServiceProviderError>
     
     /// Retrieve games for a specific category with pagination
     /// - Parameters:
     ///   - categoryId: Category identifier (e.g., "VIDEOSLOTS")
     ///   - language: Language code - optional, provider will use default
     ///   - platform: Platform identifier - optional, provider will use default
+    ///   - lobbyType: Lobby type specifier - optional, provider will use default (.casino)
     ///   - pagination: Pagination parameters
     /// - Returns: Publisher with paginated games response
     func getGamesByCategory(
         categoryId: String,
         language: String?,
         platform: String?,
+        lobbyType: CasinoLobbyType?,
         pagination: CasinoPaginationParams
     ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
     
