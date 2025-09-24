@@ -80,3 +80,4 @@ public extension MockCasinoGameSearchedViewModel {
         return MockCasinoGameSearchedViewModel(data: data, state: .imageError)
     }
 }
+

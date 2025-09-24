@@ -16,6 +16,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     var connector: EveryMatrixConnector
+    private let recsysConnector: EveryMatrixRecsysAPIConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
     // MARK: - Managers for different subscription types
@@ -35,6 +36,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     init(connector: EveryMatrixConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
         self.connector = connector
         self.sessionCoordinator = sessionCoordinator
+        self.recsysConnector = EveryMatrixRecsysAPIConnector(sessionCoordinator: sessionCoordinator)
     }
 
     deinit {
@@ -787,21 +789,17 @@ class EveryMatrixEventsProvider: EventsProvider {
     
     // MARK: - Recommendations
     
-    func getRecommendedMatch(domainId: Int, userId: String, isLive: Bool, terminalType: Int, apiKey: String) -> AnyPublisher<[Event], ServiceProviderError> {
-        let endpoint = RecommendationEndpoint(
-            domainId: domainId,
+    func getRecommendedMatch(userId: String, isLive: Bool) -> AnyPublisher<[Event], ServiceProviderError> {
+        let terminalType = 1
+
+        let endpoint = EveryMatrixRecsysAPI.recommendations(
             userId: userId,
             isLive: isLive,
-            terminalType: terminalType,
-            apiKey: apiKey
+            terminalType: terminalType
         )
-        
-        // Use NetworkManager for HTTP requests since this is an external API
-        let networkManager = NetworkManager()
-        
-        return networkManager.request(endpoint)
-            .map { (response: RecommendationResponse) in
-                // Use first 5 recommended event ids
+
+        return recsysConnector.request(endpoint)
+            .map { (response: EveryMatrix.RecommendationResponse) in
                 Array(response.recommendationsList.prefix(5)).map { $0.eventId }
             }
             .flatMap { [weak self] eventIds -> AnyPublisher<[Event], ServiceProviderError> in

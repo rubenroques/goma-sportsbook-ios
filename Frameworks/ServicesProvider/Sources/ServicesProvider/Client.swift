@@ -664,14 +664,14 @@ extension Client {
         return eventsProvider.getMultiSearchEvents(query: query, resultLimit: resultLimit, page: page, isLive: isLive)
     }
     
-    public func getRecommendedMatch(domainId: Int, userId: String, isLive: Bool, terminalType: Int, apiKey: String) -> AnyPublisher<[Event], ServiceProviderError> {
+    public func getRecommendedMatch(userId: String, isLive: Bool) -> AnyPublisher<[Event], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
         
-        return eventsProvider.getRecommendedMatch(domainId: domainId, userId: userId, isLive: isLive, terminalType: terminalType, apiKey: apiKey)
+        return eventsProvider.getRecommendedMatch(userId: userId, isLive: isLive)
     }
     
     //

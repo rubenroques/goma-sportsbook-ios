@@ -221,7 +221,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         // Safely parse user id for API
         let userId = userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
         
-        Env.servicesProvider.getRecommendedMatch(domainId: 4093, userId: userId, isLive: false, terminalType: 1, apiKey: "AIzaSyBE-HDs6eqAkiNXtfN1sZGHRaGppjLfCho")
+        Env.servicesProvider.getRecommendedMatch(userId: userId, isLive: false)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
