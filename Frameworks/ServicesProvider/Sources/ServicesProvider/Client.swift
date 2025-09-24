@@ -356,6 +356,7 @@ extension Client {
         return eventsProvider.subscribeToMarketDetails(withId: id, onEventId: eventId)
     }
 
+    // Return the full Event with all it's Markets, usually used in the Match Detail screen
     public func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -415,6 +416,7 @@ extension Client {
         return eventsProvider.subscribeOutrightMarkets(forMarketGroupId: marketGroupId)
     }
 
+    // Needs refactor, this func is too vague, 
     public func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider

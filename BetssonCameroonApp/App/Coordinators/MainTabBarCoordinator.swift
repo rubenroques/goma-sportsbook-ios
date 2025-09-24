@@ -166,7 +166,7 @@ class MainTabBarCoordinator: Coordinator {
             }
             
             coordinator.onShowSportsSelector = { [weak self] in
-                self?.showSportsSelector()
+                self?.showPreLiveSportsSelector()
             }
             
             coordinator.onShowFilters = { [weak self] in
@@ -212,7 +212,7 @@ class MainTabBarCoordinator: Coordinator {
             }
             
             coordinator.onShowSportsSelector = { [weak self] in
-                self?.showSportsSelector()
+                self?.showLiveSportsSelector()
             }
             
             coordinator.onShowFilters = { [weak self] in
@@ -352,9 +352,30 @@ class MainTabBarCoordinator: Coordinator {
         print("🎯 RootTabBarCoordinator: Navigated to bet detail for bet: \(bet.identifier)")
     }
    
-    private func showSportsSelector() {
+    private func showPreLiveSportsSelector() {
         // Create fresh SportSelectorViewModel on-demand
         let sportSelectorViewModel = PreLiveSportSelectorViewModel()
+        let sportsViewController = SportTypeSelectorViewController(viewModel: sportSelectorViewModel)
+        
+        // Use SportSelectorViewModel callback to get full Sport object
+        sportSelectorViewModel.onSportSelected = { [weak self] sport in
+            self?.updateCurrentSport(sport)
+            sportsViewController.dismiss()
+        }
+        
+        // Handle cancellation - presenter manages navigation
+        sportsViewController.onCancel = {
+            sportsViewController.dismiss()
+        }
+        
+        // Present modally from navigationController
+        sportsViewController.presentModally(from: navigationController)
+        print("🚀 MainCoordinator: Presented sports selector modal")
+    }
+    
+    private func showLiveSportsSelector() {
+        // Create fresh SportSelectorViewModel on-demand
+        let sportSelectorViewModel = LiveSportSelectorViewModel()
         let sportsViewController = SportTypeSelectorViewController(viewModel: sportSelectorViewModel)
         
         // Use SportSelectorViewModel callback to get full Sport object
