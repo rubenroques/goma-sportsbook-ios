@@ -34,7 +34,7 @@ final public class MainFilterPillView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Filter"
         label.font = StyleProvider.fontWith(type: .bold, size: 12)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }()
     
@@ -190,7 +190,7 @@ import SwiftUI
 #Preview("Main Filter View") {
     PreviewUIView {
         let containerView = UIView()
-        containerView.backgroundColor = StyleProvider.Color.toolbarBackgroundColor
+        containerView.backgroundColor = StyleProvider.Color.highlightPrimary
         
         let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter")
         

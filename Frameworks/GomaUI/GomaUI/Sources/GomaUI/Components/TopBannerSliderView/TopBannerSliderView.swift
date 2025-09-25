@@ -44,7 +44,7 @@ final public class TopBannerSliderView: UIView {
     
     // MARK: - Setup
     private func setupSubviews() {
-        backgroundColor = StyleProvider.Color.backgroundColor
+        backgroundColor = StyleProvider.Color.backgroundPrimary
         
         // Setup collection view
         collectionView.backgroundColor = UIColor.clear
@@ -65,8 +65,8 @@ final public class TopBannerSliderView: UIView {
         addSubview(pageControlContainer)
         
         // Setup page control
-        pageControl.currentPageIndicatorTintColor = StyleProvider.Color.primaryColor
-        pageControl.pageIndicatorTintColor = StyleProvider.Color.primaryColor.withAlphaComponent(0.3)
+        pageControl.currentPageIndicatorTintColor = StyleProvider.Color.highlightPrimary
+        pageControl.pageIndicatorTintColor = StyleProvider.Color.highlightPrimary.withAlphaComponent(0.3)
         pageControl.hidesForSinglePage = true
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         pageControl.addTarget(self, action: #selector(pageControlValueChanged), for: .valueChanged)

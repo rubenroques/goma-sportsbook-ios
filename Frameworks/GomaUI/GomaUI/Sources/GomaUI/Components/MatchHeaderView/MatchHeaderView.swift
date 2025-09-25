@@ -312,7 +312,7 @@ extension MatchHeaderView {
     private static func createLiveIndicatorView() -> UIView {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = StyleProvider.Color.primaryColor
+        containerView.backgroundColor = StyleProvider.Color.highlightPrimary
         containerView.isHidden = true // Hidden by default
 
         // Calculate pill shape corner radius based on height
@@ -439,7 +439,7 @@ extension MatchHeaderView {
                 }
                 .frame(width: 300, height: 17)
                 .padding()
-                .background(Color(StyleProvider.Color.backgroundColor))
+                .background(Color(StyleProvider.Color.backgroundPrimary))
                 .cornerRadius(8)
             }
 
@@ -455,7 +455,7 @@ extension MatchHeaderView {
                 }
                 .frame(width: 300, height: 17)
                 .padding()
-                .background(Color(StyleProvider.Color.backgroundColor))
+                .background(Color(StyleProvider.Color.backgroundPrimary))
                 .cornerRadius(8)
             }
 
@@ -471,7 +471,7 @@ extension MatchHeaderView {
                 }
                 .frame(width: 300, height: 17)
                 .padding()
-                .background(Color(StyleProvider.Color.backgroundColor))
+                .background(Color(StyleProvider.Color.backgroundPrimary))
                 .cornerRadius(8)
             }
 
@@ -490,7 +490,7 @@ extension MatchHeaderView {
                 }
                 .frame(width: 300, height: 17)
                 .padding()
-                .background(Color(StyleProvider.Color.backgroundColor))
+                .background(Color(StyleProvider.Color.backgroundPrimary))
                 .cornerRadius(8)
             }
         }

@@ -72,7 +72,7 @@ extension MockCustomSliderViewModel {
             trackCornerRadius: 2.0,
             thumbSize: 24.0,
             thumbImageName: nil, // Uses default circular thumb
-            thumbTintColor: nil  // Uses StyleProvider.Color.primaryColor
+            thumbTintColor: nil  // Uses StyleProvider.Color.highlightPrimary
         )
 
         return MockCustomSliderViewModel(

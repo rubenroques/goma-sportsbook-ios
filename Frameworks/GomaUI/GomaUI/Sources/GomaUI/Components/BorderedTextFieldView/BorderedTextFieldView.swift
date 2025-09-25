@@ -84,7 +84,7 @@ final public class BorderedTextFieldView: UIView {
         // Text field setup
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.font = StyleProvider.fontWith(type: .regular, size: 16)
-        textField.textColor = StyleProvider.Color.textColor
+        textField.textColor = StyleProvider.Color.textPrimary
         textField.backgroundColor = .clear
         textField.borderStyle = .none
         containerView.addSubview(textField)
@@ -92,7 +92,7 @@ final public class BorderedTextFieldView: UIView {
         // Floating label setup
         floatingLabel.translatesAutoresizingMaskIntoConstraints = false
 //        floatingLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-//        floatingLabel.textColor = StyleProvider.Color.secondaryColor
+//        floatingLabel.textColor = StyleProvider.Color.highlightSecondary
         floatingLabel.backgroundColor = .clear
         containerView.addSubview(floatingLabel)
 

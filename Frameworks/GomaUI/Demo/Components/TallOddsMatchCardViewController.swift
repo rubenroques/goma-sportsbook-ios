@@ -30,7 +30,7 @@ class TallOddsMatchCardViewController: UIViewController {
     
     // MARK: - Setup
     private func setupViews() {
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         title = "Pre-Live Match Card"
         
         setupScrollView()

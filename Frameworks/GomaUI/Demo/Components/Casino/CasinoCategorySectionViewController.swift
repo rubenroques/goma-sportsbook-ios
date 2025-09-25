@@ -27,7 +27,7 @@ class CasinoCategorySectionViewController: UIViewController {
     
     // MARK: - Setup
     private func setupViews() {
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         // Description label
         descriptionLabel = UILabel()

@@ -11,7 +11,7 @@ class OutcomeItemViewController: UIViewController {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = StyleProvider.fontWith(type: .regular, size: 16)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }()
 

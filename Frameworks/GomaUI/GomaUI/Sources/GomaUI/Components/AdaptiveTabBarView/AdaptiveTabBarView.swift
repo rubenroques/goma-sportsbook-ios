@@ -458,7 +458,7 @@ private extension AdaptiveTabBarView {
         blurEffectView = nil
 
         // Set solid background
-        self.backgroundColor = StyleProvider.Color.backgroundColor
+        self.backgroundColor = StyleProvider.Color.backgroundPrimary
     }
 
     private func setupBlurBackground() {

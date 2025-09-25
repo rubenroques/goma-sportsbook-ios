@@ -44,7 +44,7 @@ final public class CustomSliderView: UIView {
 
         // Track view setup
         trackView.translatesAutoresizingMaskIntoConstraints = false
-        trackView.backgroundColor = StyleProvider.Color.secondaryColor.withAlphaComponent(0.3)
+        trackView.backgroundColor = StyleProvider.Color.highlightSecondary.withAlphaComponent(0.3)
         addSubview(trackView)
 
         // Thumb image view setup
@@ -173,7 +173,7 @@ final public class CustomSliderView: UIView {
         }
 
         // Apply tint color
-        let tintColor = configuration.thumbTintColor ?? StyleProvider.Color.primaryColor
+        let tintColor = configuration.thumbTintColor ?? StyleProvider.Color.highlightPrimary
         thumbImageView.tintColor = tintColor
 
         // Set rendering mode to allow tinting

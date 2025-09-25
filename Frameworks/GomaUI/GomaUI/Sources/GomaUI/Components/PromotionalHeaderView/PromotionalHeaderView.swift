@@ -138,7 +138,7 @@ final public class PromotionalHeaderView: UIView {
         PreviewUIView {
             let view = PromotionalHeaderView(viewModel: MockPromotionalHeaderViewModel.defaultMock)
             
-            view.setCustomBackgroundColor(StyleProvider.Color.backgroundColor)
+            view.setCustomBackgroundColor(StyleProvider.Color.backgroundPrimary)
             
             return view
         }

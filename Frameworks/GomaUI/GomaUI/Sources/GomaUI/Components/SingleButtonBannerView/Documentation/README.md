@@ -151,9 +151,9 @@ The component uses StyleProvider for consistent theming:
 
 ```swift
 // The component will automatically use:
-StyleProvider.Color.backgroundColor     // For fallback background
+StyleProvider.Color.backgroundPrimary     // For fallback background
 StyleProvider.Color.primaryTextColor    // For message text
-StyleProvider.Color.primaryColor        // For default button background
+StyleProvider.Color.highlightPrimary        // For default button background
 StyleProvider.fontWith(type: .bold, size: 24)      // For message text
 StyleProvider.fontWith(type: .medium, size: 16)    // For button text
 ```

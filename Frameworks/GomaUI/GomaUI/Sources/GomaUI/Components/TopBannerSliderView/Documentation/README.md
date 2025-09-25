@@ -237,11 +237,11 @@ The component uses StyleProvider for consistent theming:
 
 ```swift
 // Page indicators use:
-StyleProvider.Color.primaryColor                    // For current page indicator
-StyleProvider.Color.primaryColor.withAlphaComponent(0.3)  // For inactive indicators
+StyleProvider.Color.highlightPrimary                    // For current page indicator
+StyleProvider.Color.highlightPrimary.withAlphaComponent(0.3)  // For inactive indicators
 
 // Background uses:
-StyleProvider.Color.backgroundColor                 // For slider background
+StyleProvider.Color.backgroundPrimary                 // For slider background
 ```
 
 ## Accessibility

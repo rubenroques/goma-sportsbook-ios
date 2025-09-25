@@ -119,7 +119,7 @@ import SwiftUI
 #Preview("Quick Link Item") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let item = QuickLinkItem(
             type: .aviator,

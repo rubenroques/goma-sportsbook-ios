@@ -149,7 +149,7 @@ class ScoreViewController: UIViewController {
         tennisViewModel = MockScoreViewModel.tennisMatch
         tennisScoreView = ScoreView()
         tennisScoreView.configure(with: tennisViewModel)
-        tennisScoreView.backgroundColor = StyleProvider.Color.backgroundColor
+        tennisScoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
         tennisScoreView.layer.cornerRadius = 8
         tennisScoreView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -157,7 +157,7 @@ class ScoreViewController: UIViewController {
         basketballViewModel = MockScoreViewModel.basketballMatch
         basketballScoreView = ScoreView()
         basketballScoreView.configure(with: basketballViewModel)
-        basketballScoreView.backgroundColor = StyleProvider.Color.backgroundColor
+        basketballScoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
         basketballScoreView.layer.cornerRadius = 8
         basketballScoreView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -165,7 +165,7 @@ class ScoreViewController: UIViewController {
         footballViewModel = MockScoreViewModel.footballMatch
         footballScoreView = ScoreView()
         footballScoreView.configure(with: footballViewModel)
-        footballScoreView.backgroundColor = StyleProvider.Color.backgroundColor
+        footballScoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
         footballScoreView.layer.cornerRadius = 8
         footballScoreView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -173,7 +173,7 @@ class ScoreViewController: UIViewController {
         loadingViewModel = MockScoreViewModel.loading
         loadingScoreView = ScoreView()
         loadingScoreView.configure(with: loadingViewModel)
-        loadingScoreView.backgroundColor = StyleProvider.Color.backgroundColor
+        loadingScoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
         loadingScoreView.layer.cornerRadius = 8
         loadingScoreView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -181,7 +181,7 @@ class ScoreViewController: UIViewController {
         emptyViewModel = MockScoreViewModel.empty
         emptyScoreView = ScoreView()
         emptyScoreView.configure(with: emptyViewModel)
-        emptyScoreView.backgroundColor = StyleProvider.Color.backgroundColor
+        emptyScoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
         emptyScoreView.layer.cornerRadius = 8
         emptyScoreView.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -215,7 +215,7 @@ class ScoreViewController: UIViewController {
         let label = UILabel()
         label.text = text
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

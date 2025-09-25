@@ -223,7 +223,7 @@ The component follows a vertical layout:
 
 ### Overall Layout
 - **Vertical spacing**: 12pt between category bar and collection
-- **Background**: StyleProvider.Color.backgroundColor
+- **Background**: StyleProvider.Color.backgroundPrimary
 
 ## States
 

@@ -33,7 +33,7 @@ class SingleButtonBannerViewController: UIViewController {
     
     // MARK: - Setup
     private func setupViews() {
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         // Setup scroll view
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,7 +59,7 @@ class SingleButtonBannerViewController: UIViewController {
     }
     
     private func setupControlsContainer() {
-        controlsContainer.backgroundColor = StyleProvider.Color.backgroundColor
+        controlsContainer.backgroundColor = StyleProvider.Color.backgroundPrimary
         controlsContainer.layer.cornerRadius = 12
         controlsContainer.layer.borderWidth = 1
         controlsContainer.layer.borderColor = UIColor.separator.cgColor

@@ -201,7 +201,7 @@ class EmptyStateActionViewController: UIViewController {
         let controlsDescription = UILabel()
         controlsDescription.text = "Test different states and interactions on the interactive demo above:"
         controlsDescription.font = StyleProvider.fontWith(type: .regular, size: 14)
-        controlsDescription.textColor = StyleProvider.Color.secondaryColor
+        controlsDescription.textColor = StyleProvider.Color.highlightSecondary
         controlsDescription.numberOfLines = 0
         stackView.addArrangedSubview(controlsDescription)
         
@@ -253,7 +253,7 @@ class EmptyStateActionViewController: UIViewController {
         statusLabel.tag = 999 // For easy reference
         statusLabel.text = "Watching interactive demo state changes..."
         statusLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-        statusLabel.textColor = StyleProvider.Color.secondaryColor
+        statusLabel.textColor = StyleProvider.Color.highlightSecondary
         statusLabel.numberOfLines = 0
         statusLabel.backgroundColor = StyleProvider.Color.backgroundSecondary
         statusLabel.layer.cornerRadius = 8
@@ -298,7 +298,7 @@ class EmptyStateActionViewController: UIViewController {
         let patternsDescription = UILabel()
         patternsDescription.text = "Common empty state patterns used in sports betting applications:"
         patternsDescription.font = StyleProvider.fontWith(type: .regular, size: 14)
-        patternsDescription.textColor = StyleProvider.Color.secondaryColor
+        patternsDescription.textColor = StyleProvider.Color.highlightSecondary
         patternsDescription.numberOfLines = 0
         stackView.addArrangedSubview(patternsDescription)
         
@@ -530,10 +530,10 @@ class EmptyStateActionViewController: UIViewController {
         
         // Update color based on state
         if data.isEnabled {
-            statusLabel.textColor = StyleProvider.Color.textColor
+            statusLabel.textColor = StyleProvider.Color.textPrimary
             statusLabel.backgroundColor = StyleProvider.Color.backgroundSecondary
         } else {
-            statusLabel.textColor = StyleProvider.Color.secondaryColor
+            statusLabel.textColor = StyleProvider.Color.highlightSecondary
             statusLabel.backgroundColor = StyleProvider.Color.backgroundSecondary.withAlphaComponent(0.5)
         }
     }
@@ -571,13 +571,13 @@ extension EmptyStateActionViewController {
         label.text = "EmptyStateActionView component for displaying empty states with images, titles, and optional action buttons. Features different states (logged in/out), customizable content, enabled/disabled modes, and proper styling using StyleProvider. Perfect for betslips, search results, favorites, bet history, and various empty content scenarios."
         label.numberOfLines = 0
         label.font = StyleProvider.fontWith(type: .regular, size: 16)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
     
     private func createSeparator() -> UIView {
         let separator = UIView()
-        separator.backgroundColor = StyleProvider.Color.secondaryColor
+        separator.backgroundColor = StyleProvider.Color.highlightSecondary
         separator.translatesAutoresizingMaskIntoConstraints = false
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         return separator
@@ -587,7 +587,7 @@ extension EmptyStateActionViewController {
         let label = UILabel()
         label.text = text
         label.font = StyleProvider.fontWith(type: .medium, size: 14)
-        label.textColor = StyleProvider.Color.secondaryColor
+        label.textColor = StyleProvider.Color.highlightSecondary
         return label
     }
     
@@ -595,7 +595,7 @@ extension EmptyStateActionViewController {
         let label = UILabel()
         label.text = text
         label.font = StyleProvider.fontWith(type: .bold, size: 18)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
     
@@ -603,17 +603,17 @@ extension EmptyStateActionViewController {
         let label = UILabel()
         label.text = "Tap the action button to see interaction feedback, or use the controls below to modify its state:"
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.textColor = StyleProvider.Color.secondaryColor
+        label.textColor = StyleProvider.Color.highlightSecondary
         label.numberOfLines = 0
         return label
     }
     
     private func createEmptyStateContainer() -> UIView {
         let container = UIView()
-        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.backgroundColor = StyleProvider.Color.backgroundPrimary
         container.layer.cornerRadius = 12
         container.layer.borderWidth = 1
-        container.layer.borderColor = StyleProvider.Color.secondaryColor.withAlphaComponent(0.2).cgColor
+        container.layer.borderColor = StyleProvider.Color.highlightSecondary.withAlphaComponent(0.2).cgColor
         container.translatesAutoresizingMaskIntoConstraints = false
         return container
     }
@@ -637,11 +637,11 @@ extension EmptyStateActionViewController {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
-        button.backgroundColor = StyleProvider.Color.backgroundColor
-        button.setTitleColor(StyleProvider.Color.primaryColor, for: .normal)
+        button.backgroundColor = StyleProvider.Color.backgroundPrimary
+        button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         button.layer.cornerRadius = 6
         button.layer.borderWidth = 1
-        button.layer.borderColor = StyleProvider.Color.primaryColor.cgColor
+        button.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
         button.addTarget(self, action: action, for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false

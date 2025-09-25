@@ -63,7 +63,7 @@ extension ServiceProviderModelMapper {
 
             return ButtonConfig(
                 title: ctaText,
-                backgroundColor: StyleProvider.Color.primaryColor,
+                backgroundColor: StyleProvider.Color.highlightPrimary,
                 textColor: StyleProvider.Color.textPrimary,
                 cornerRadius: 8.0
             )

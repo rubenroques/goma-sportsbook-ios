@@ -45,10 +45,6 @@ walletWidget.onDeposit = { widgetId in
 
 The component uses the StyleProvider to access appropriate colors and fonts:
 
-- `StyleProvider.Color.walletBackgroundColor` - Background color for the balance section
-- `StyleProvider.Color.contrastTextColor` - Text color for the balance and deposit button
-- `StyleProvider.Color.toolbarBackgroundColor` - Text color for the deposit button
-
 ## Integration with MultiWidgetToolbarView
 
 The WalletWidgetView is designed to be used as a widget within the MultiWidgetToolbarView component:

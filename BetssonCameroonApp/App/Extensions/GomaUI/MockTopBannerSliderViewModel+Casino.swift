@@ -53,7 +53,7 @@ extension MockTopBannerSliderViewModel {
             messageText: "Try your luck with Mega Fortune!",
             buttonConfig: ButtonConfig(
                 title: "Play Now",
-                backgroundColor: StyleProvider.Color.primaryColor,
+                backgroundColor: StyleProvider.Color.highlightPrimary,
                 textColor: StyleProvider.Color.textPrimary,
                 cornerRadius: 8.0
             )
@@ -70,7 +70,7 @@ extension MockTopBannerSliderViewModel {
             messageText: "Weekend Casino Bonus - Double your deposit!",
             buttonConfig: ButtonConfig(
                 title: "Claim Bonus",
-                backgroundColor: StyleProvider.Color.primaryColor,
+                backgroundColor: StyleProvider.Color.highlightPrimary,
                 textColor: StyleProvider.Color.textPrimary,
                 cornerRadius: 8.0
             )
@@ -87,7 +87,7 @@ extension MockTopBannerSliderViewModel {
             messageText: "Welcome to Casino! Get 100 free spins",
             buttonConfig: ButtonConfig(
                 title: "Start Playing",
-                backgroundColor: StyleProvider.Color.primaryColor,
+                backgroundColor: StyleProvider.Color.highlightPrimary,
                 textColor: StyleProvider.Color.textPrimary,
                 cornerRadius: 8.0
             )

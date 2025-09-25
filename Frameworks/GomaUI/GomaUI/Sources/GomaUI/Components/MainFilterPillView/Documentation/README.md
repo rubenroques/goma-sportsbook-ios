@@ -322,7 +322,7 @@ The component includes SwiftUI preview for design-time visualization:
 #Preview("Main Filter View") {
     PreviewUIView {
         let containerView = UIView()
-        containerView.backgroundColor = StyleProvider.Color.toolbarBackgroundColor
+        containerView.backgroundColor = StyleProvider.Color.highlightPrimary
         
         let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter")
         let viewModel = MockMainFilterPillViewModel(mainFilter: mainFilter)

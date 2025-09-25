@@ -34,7 +34,7 @@ class MatchHeaderViewController: UIViewController {
     }
 
     private func setupViews() {
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         title = "Match Header View"
 
         // Setup scroll view
@@ -64,7 +64,7 @@ class MatchHeaderViewController: UIViewController {
     private func setupControls() {
         // Controls container
         let controlsContainer = UIView()
-        controlsContainer.backgroundColor = StyleProvider.Color.toolbarBackgroundColor.withAlphaComponent(0.1)
+        controlsContainer.backgroundColor = StyleProvider.Color.highlightPrimary.withAlphaComponent(0.1)
         controlsContainer.layer.cornerRadius = 8
 
         controlsStackView.axis = .vertical
@@ -76,13 +76,13 @@ class MatchHeaderViewController: UIViewController {
         let stateLabel = UILabel()
         stateLabel.text = "Visual State:"
         stateLabel.font = StyleProvider.fontWith(type: .medium, size: 14)
-        stateLabel.textColor = StyleProvider.Color.textColor
+        stateLabel.textColor = StyleProvider.Color.textPrimary
 
         stateSegmentedControl.selectedSegmentIndex = 0
 
         // Favorite toggle
         favoriteToggleButton.setTitle("Toggle Favorite (First Item)", for: .normal)
-        favoriteToggleButton.backgroundColor = StyleProvider.Color.primaryColor
+        favoriteToggleButton.backgroundColor = StyleProvider.Color.highlightPrimary
         favoriteToggleButton.setTitleColor(.white, for: .normal)
         favoriteToggleButton.layer.cornerRadius = 8
         favoriteToggleButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
@@ -92,7 +92,7 @@ class MatchHeaderViewController: UIViewController {
         let nameLabel = UILabel()
         nameLabel.text = "Competition Name (First Item):"
         nameLabel.font = StyleProvider.fontWith(type: .medium, size: 14)
-        nameLabel.textColor = StyleProvider.Color.textColor
+        nameLabel.textColor = StyleProvider.Color.textPrimary
 
         competitionNameTextField.text = "Premier League"
         competitionNameTextField.borderStyle = .roundedRect
@@ -101,21 +101,21 @@ class MatchHeaderViewController: UIViewController {
 
         // Visibility toggle buttons
         countryFlagToggleButton.setTitle("Hide Country Flag (First Item)", for: .normal)
-        countryFlagToggleButton.backgroundColor = StyleProvider.Color.secondaryColor
+        countryFlagToggleButton.backgroundColor = StyleProvider.Color.highlightSecondary
         countryFlagToggleButton.setTitleColor(.white, for: .normal)
         countryFlagToggleButton.layer.cornerRadius = 8
         countryFlagToggleButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
         countryFlagToggleButton.addTarget(self, action: #selector(toggleCountryFlag), for: .touchUpInside)
 
         sportIconToggleButton.setTitle("Hide Sport Icon (First Item)", for: .normal)
-        sportIconToggleButton.backgroundColor = StyleProvider.Color.secondaryColor
+        sportIconToggleButton.backgroundColor = StyleProvider.Color.highlightSecondary
         sportIconToggleButton.setTitleColor(.white, for: .normal)
         sportIconToggleButton.layer.cornerRadius = 8
         sportIconToggleButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
         sportIconToggleButton.addTarget(self, action: #selector(toggleSportIcon), for: .touchUpInside)
 
         favoriteButtonToggleButton.setTitle("Hide Favorite Button (First Item)", for: .normal)
-        favoriteButtonToggleButton.backgroundColor = StyleProvider.Color.secondaryColor
+        favoriteButtonToggleButton.backgroundColor = StyleProvider.Color.highlightSecondary
         favoriteButtonToggleButton.setTitleColor(.white, for: .normal)
         favoriteButtonToggleButton.layer.cornerRadius = 8
         favoriteButtonToggleButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
@@ -171,24 +171,24 @@ class MatchHeaderViewController: UIViewController {
 
     private func createComponentContainer(title: String, viewModel: MockMatchHeaderViewModel) -> UIView {
         let container = UIView()
-        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.backgroundColor = StyleProvider.Color.backgroundPrimary
         container.layer.cornerRadius = 8
         container.layer.borderWidth = 1
-        container.layer.borderColor = StyleProvider.Color.secondaryColor.withAlphaComponent(0.3).cgColor
+        container.layer.borderColor = StyleProvider.Color.highlightSecondary.withAlphaComponent(0.3).cgColor
 
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = StyleProvider.fontWith(type: .medium, size: 16)
-        titleLabel.textColor = StyleProvider.Color.textColor
+        titleLabel.textColor = StyleProvider.Color.textPrimary
 
         let headerView = MatchHeaderView(viewModel: viewModel)
-        headerView.backgroundColor = StyleProvider.Color.backgroundColor.withAlphaComponent(0.8)
+        headerView.backgroundColor = StyleProvider.Color.backgroundPrimary.withAlphaComponent(0.8)
         headerView.layer.cornerRadius = 4
 
         let infoLabel = UILabel()
         infoLabel.numberOfLines = 0
         infoLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
-        infoLabel.textColor = StyleProvider.Color.secondaryColor
+        infoLabel.textColor = StyleProvider.Color.highlightSecondary
 
         let stackView = UIStackView(arrangedSubviews: [titleLabel, headerView, infoLabel])
         stackView.axis = .vertical

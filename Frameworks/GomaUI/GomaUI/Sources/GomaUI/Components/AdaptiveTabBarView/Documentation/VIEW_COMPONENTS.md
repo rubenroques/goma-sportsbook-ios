@@ -58,10 +58,10 @@ This document describes the Swift UIView subclasses that form the visual part of
     *   Calls `updateAppearance(isActive: displayData.isActive)` to style the view based on its active state.
 *   **Appearance (`updateAppearance(isActive: Bool)`)**: 
     *   If `isActive` is true:
-        *   Sets title and icon colors to `StyleProvider.Color.primaryColor`.
+        *   Sets title and icon colors to `StyleProvider.Color.highlightPrimary`.
         *   Sets view alpha to `1.0`.
     *   If `isActive` is false:
-        *   Sets title and icon colors to `StyleProvider.Color.secondaryColor`.
+        *   Sets title and icon colors to `StyleProvider.Color.highlightSecondary`.
         *   Sets view alpha to `0.3` (for a dimmed appearance).
 *   **Tap Handling**: 
     *   A `UITapGestureRecognizer` is attached to the view.

@@ -71,12 +71,12 @@ class BorderedTextFieldViewController: UIViewController {
         descriptionLabel.text = "BorderedTextFieldView with unified visual states and single animatable placeholder. The placeholder serves as both label (when floating) and placeholder (when centered). Each field demonstrates a different visual state: idle, focused, error, or disabled. Features custom border with gap behind floating labels."
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-        descriptionLabel.textColor = StyleProvider.Color.textColor
+        descriptionLabel.textColor = StyleProvider.Color.textPrimary
         stackView.addArrangedSubview(descriptionLabel)
         
         // Add separator
         let separator = UIView()
-        separator.backgroundColor = StyleProvider.Color.secondaryColor
+        separator.backgroundColor = StyleProvider.Color.highlightSecondary
         separator.translatesAutoresizingMaskIntoConstraints = false
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         stackView.addArrangedSubview(separator)
@@ -98,7 +98,7 @@ class BorderedTextFieldViewController: UIViewController {
             let sectionLabel = UILabel()
             sectionLabel.text = title
             sectionLabel.font = StyleProvider.fontWith(type: .medium, size: 14)
-            sectionLabel.textColor = StyleProvider.Color.secondaryColor
+            sectionLabel.textColor = StyleProvider.Color.highlightSecondary
             stackView.addArrangedSubview(sectionLabel)
             
             // Create text field
@@ -137,7 +137,7 @@ class BorderedTextFieldViewController: UIViewController {
         let sectionTitle = UILabel()
         sectionTitle.text = "Form Validation Demo"
         sectionTitle.font = StyleProvider.fontWith(type: .bold, size: 18)
-        sectionTitle.textColor = StyleProvider.Color.textColor
+        sectionTitle.textColor = StyleProvider.Color.textPrimary
         stackView.addArrangedSubview(sectionTitle)
         
         // Add validation status label
@@ -145,7 +145,7 @@ class BorderedTextFieldViewController: UIViewController {
         validationLabel.tag = 999 // For easy reference
         validationLabel.text = "Fill required fields without errors to enable submit"
         validationLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-        validationLabel.textColor = StyleProvider.Color.secondaryColor
+        validationLabel.textColor = StyleProvider.Color.highlightSecondary
         validationLabel.numberOfLines = 0
         stackView.addArrangedSubview(validationLabel)
         
@@ -153,7 +153,7 @@ class BorderedTextFieldViewController: UIViewController {
         let submitButton = UIButton(type: .system)
         submitButton.setTitle("Submit Form", for: .normal)
         submitButton.titleLabel?.font = StyleProvider.fontWith(type: .medium, size: 16)
-        submitButton.backgroundColor = StyleProvider.Color.primaryColor
+        submitButton.backgroundColor = StyleProvider.Color.highlightPrimary
         submitButton.setTitleColor(.white, for: .normal)
         submitButton.layer.cornerRadius = 8
         submitButton.isEnabled = false
@@ -175,13 +175,13 @@ class BorderedTextFieldViewController: UIViewController {
         let sectionTitle = UILabel()
         sectionTitle.text = "Visual State Controls"
         sectionTitle.font = StyleProvider.fontWith(type: .bold, size: 18)
-        sectionTitle.textColor = StyleProvider.Color.textColor
+        sectionTitle.textColor = StyleProvider.Color.textPrimary
         stackView.addArrangedSubview(sectionTitle)
         
         let subtitleLabel = UILabel()
         subtitleLabel.text = "Test the unified visual state system - states are mutually exclusive:"
         subtitleLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-        subtitleLabel.textColor = StyleProvider.Color.secondaryColor
+        subtitleLabel.textColor = StyleProvider.Color.highlightSecondary
         subtitleLabel.numberOfLines = 0
         stackView.addArrangedSubview(subtitleLabel)
         
@@ -210,11 +210,11 @@ class BorderedTextFieldViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
-        button.backgroundColor = StyleProvider.Color.backgroundColor
-        button.setTitleColor(StyleProvider.Color.primaryColor, for: .normal)
+        button.backgroundColor = StyleProvider.Color.backgroundPrimary
+        button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         button.layer.cornerRadius = 6
         button.layer.borderWidth = 1
-        button.layer.borderColor = StyleProvider.Color.primaryColor.cgColor
+        button.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
         button.addTarget(self, action: action, for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -278,7 +278,7 @@ class BorderedTextFieldViewController: UIViewController {
         submitButton.alpha = isValid ? 1.0 : 0.6
         
         validationLabel.text = isValid ? "Form is valid - ready to submit!" : "Fill required fields without errors to enable submit"
-        validationLabel.textColor = isValid ? StyleProvider.Color.successColor : StyleProvider.Color.secondaryColor
+        validationLabel.textColor = isValid ? StyleProvider.Color.alertSuccess : StyleProvider.Color.highlightSecondary
     }
     
     @objc private func submitButtonTapped() {

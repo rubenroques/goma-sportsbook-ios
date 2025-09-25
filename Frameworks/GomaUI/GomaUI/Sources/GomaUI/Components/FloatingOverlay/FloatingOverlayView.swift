@@ -172,7 +172,7 @@ extension FloatingOverlayView {
     private static func createContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.toolbarBackgroundColor.withAlphaComponent(0.95)
+        view.backgroundColor = StyleProvider.Color.highlightPrimary.withAlphaComponent(0.95)
         view.layer.cornerRadius = 16
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.2
@@ -185,7 +185,7 @@ extension FloatingOverlayView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = StyleProvider.Color.primaryColor
+        imageView.tintColor = StyleProvider.Color.highlightPrimary
         return imageView
     }
     

@@ -39,7 +39,7 @@ class MarketOutcomesMultiLineViewController: UIViewController {
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-        descriptionLabel.textColor = StyleProvider.Color.textColor
+        descriptionLabel.textColor = StyleProvider.Color.textPrimary
         
         view.addSubview(descriptionLabel)
         

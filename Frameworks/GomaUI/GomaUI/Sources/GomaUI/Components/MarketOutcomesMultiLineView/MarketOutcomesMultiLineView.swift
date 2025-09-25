@@ -138,16 +138,16 @@ final public class MarketOutcomesMultiLineView: UIView {
 
     private func setupWithTheme() {
         // Group title styling
-        groupTitleLabel.textColor = StyleProvider.Color.textColor
+        groupTitleLabel.textColor = StyleProvider.Color.textPrimary
         groupTitleLabel.font = StyleProvider.fontWith(type: .medium, size: 16)
         
         // Loading container styling
-        loadingContainer.backgroundColor = StyleProvider.Color.backgroundColor
+        loadingContainer.backgroundColor = StyleProvider.Color.backgroundPrimary
         loadingContainer.layer.cornerRadius = Constants.cornerRadius
         loadingContainer.clipsToBounds = true
         
         // Error container styling
-        errorContainer.backgroundColor = StyleProvider.Color.backgroundColor
+        errorContainer.backgroundColor = StyleProvider.Color.backgroundPrimary
         errorContainer.layer.cornerRadius = Constants.cornerRadius
         errorContainer.clipsToBounds = true
         
@@ -155,7 +155,7 @@ final public class MarketOutcomesMultiLineView: UIView {
         errorLabel.textColor = StyleProvider.Color.textDisabledOdds
         
         // Empty state container styling
-        emptyStateContainer.backgroundColor = StyleProvider.Color.backgroundColor
+        emptyStateContainer.backgroundColor = StyleProvider.Color.backgroundPrimary
         emptyStateContainer.layer.cornerRadius = Constants.cornerRadius
         emptyStateContainer.clipsToBounds = true
         
@@ -164,7 +164,7 @@ final public class MarketOutcomesMultiLineView: UIView {
         emptyStateLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
         
         // Loading indicator styling
-        loadingIndicator.color = StyleProvider.Color.primaryColor
+        loadingIndicator.color = StyleProvider.Color.highlightPrimary
     }
 
     private func setupBindings() {
@@ -397,7 +397,7 @@ private extension MarketOutcomesMultiLineView {
     static func createLoadingContainer() -> UIView {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
-        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.backgroundColor = StyleProvider.Color.backgroundPrimary
         container.layer.cornerRadius = Constants.cornerRadius
         container.clipsToBounds = true
         container.isHidden = true
@@ -407,7 +407,7 @@ private extension MarketOutcomesMultiLineView {
     static func createErrorContainer() -> UIView {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
-        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.backgroundColor = StyleProvider.Color.backgroundPrimary
         container.layer.cornerRadius = Constants.cornerRadius
         container.clipsToBounds = true
         container.isHidden = true
@@ -417,7 +417,7 @@ private extension MarketOutcomesMultiLineView {
     static func createEmptyStateContainer() -> UIView {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
-        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.backgroundColor = StyleProvider.Color.backgroundPrimary
         container.layer.cornerRadius = Constants.cornerRadius
         container.clipsToBounds = true
         container.isHidden = true
@@ -478,7 +478,7 @@ private extension MarketOutcomesMultiLineView {
             let label = UILabel()
             label.text = text
             label.font = StyleProvider.fontWith(type: .medium, size: 16)
-            label.textColor = StyleProvider.Color.textColor
+            label.textColor = StyleProvider.Color.textPrimary
             label.textAlignment = .center
             label.translatesAutoresizingMaskIntoConstraints = false
             return label

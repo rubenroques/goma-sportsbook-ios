@@ -102,7 +102,7 @@ final public class YourComponentView: UIView {
 
     // MARK: - Setup
     private func setupSubviews() {
-        backgroundColor = StyleProvider.Color.backgroundColor
+        backgroundColor = StyleProvider.Color.backgroundPrimary
 
         // Add and configure subviews here
         // Use StyleProvider for colors and fonts
@@ -261,7 +261,7 @@ Describe the various properties and methods available for customization.
 1. **Use StyleProvider** - Always use StyleProvider for colors and fonts instead of hardcoded values:
    ```swift
    // Correct
-   backgroundColor = StyleProvider.Color.backgroundColor
+   backgroundColor = StyleProvider.Color.backgroundPrimary
    label.font = StyleProvider.fontWith(type: .medium, size: 14)
 
    // Incorrect

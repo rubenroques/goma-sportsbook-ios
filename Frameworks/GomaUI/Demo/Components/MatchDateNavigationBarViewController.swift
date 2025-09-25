@@ -12,7 +12,7 @@ class MatchDateNavigationBarViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Match Date Navigation Bar"
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         setupViews()
         createNavigationBarExamples()

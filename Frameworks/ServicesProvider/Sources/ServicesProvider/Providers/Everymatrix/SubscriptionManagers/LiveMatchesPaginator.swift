@@ -465,7 +465,6 @@ class LiveMatchesPaginator: UnsubscriptionController {
         var homeScore: Int?
         var awayScore: Int?
         var matchTimeMinutes: Int?
-        var eventPartName: String? // For "1st Half", "2nd Half", etc.
         var status: EventStatus?
         var detailedScores: [String: Score] = [:]
         var activePlayerServing: ActivePlayerServe?
@@ -473,27 +472,153 @@ class LiveMatchesPaginator: UnsubscriptionController {
         for info in eventInfos {
             switch info.typeId {
             case "1": // Score
+
+                // ═══════════════════════════════════════════════════════════════════════
+                print("🏆 [SCORE_LOG] ═══════════════════════════════════════════════════════")
+                print("🏆 [SCORE_LOG] Event: \(eventId)")
+                print("🏆 [SCORE_LOG] EventPartName: \(info.eventPartName ?? "nil")")
+                print("🏆 [SCORE_LOG] TypeName: \(info.typeName ?? "nil")")
+                print("🏆 [SCORE_LOG] ShortTypeName: \(info.shortTypeName ?? "nil")")
+                print("🏆 [SCORE_LOG] StatusId: \(info.statusId)")
+                print("🏆 [SCORE_LOG] EventPartId: \(info.eventPartId ?? "nil")")
+                print("🏆 [SCORE_LOG] Raw ParamFloat1: \(info.paramFloat1 ?? -1)")
+                print("🏆 [SCORE_LOG] Raw ParamFloat2: \(info.paramFloat2 ?? -1)")
+
+                if let match = matchData {
+                    print("🏆 [SCORE_LOG] HomeParticipantName: \(match.homeParticipantName)")
+                    print("🏆 [SCORE_LOG] AwayParticipantName: \(match.awayParticipantName)")
+                } else {
+                    print("🏆 [SCORE_LOG] Match data: nil")
+                }
+
+                
                 if let eventPartName = info.eventPartName {
-                    let homeValue = Int(info.paramFloat1 ?? 0)
-                    let awayValue = Int(info.paramFloat2 ?? 0)
-                    
-                    // Determine score type based on event part name
-                    let score: Score
-                    if eventPartName == "Whole Match" || eventPartName.contains("Match") {
-                        score = .matchFull(home: homeValue, away: awayValue)
-                        // Set main scores for the event
-                        homeScore = homeValue
-                        awayScore = awayValue
-                    } else if eventPartName.contains("Set") {
-                        // Extract set number if possible
-                        let setIndex = extractSetIndex(from: eventPartName)
-                        score = .set(index: setIndex, home: homeValue, away: awayValue)
+                    var homeValue: Int?
+                    var awayValue: Int?
+
+                    // Map scores based on participant IDs (similar to serve logic)
+                    if let match = matchData {
+                        if let pid1 = info.paramParticipantId1, let score1 = info.paramFloat1 {
+                            if pid1 == match.homeParticipantId {
+                                homeValue = Int(score1)
+                            } else if pid1 == match.awayParticipantId {
+                                awayValue = Int(score1)
+                            }
+                        }
+
+                        if let pid2 = info.paramParticipantId2, let score2 = info.paramFloat2 {
+                            if pid2 == match.homeParticipantId {
+                                homeValue = Int(score2)
+                            } else if pid2 == match.awayParticipantId {
+                                awayValue = Int(score2)
+                            }
+                        }
                     } else {
-                        // Game part (current game within a set)
-                        score = .gamePart(home: homeValue, away: awayValue)
+                        // Fallback if no match data (maintain current behavior)
+                        homeValue = Int(info.paramFloat1 ?? 0)
+                        awayValue = Int(info.paramFloat2 ?? 0)
+                    }
+
+                    // Log the resolved mapping
+                    print("🏆 [SCORE_LOG] ───────────────────────────────────────────────────────")
+                    print("🏆 [SCORE_LOG] RESOLVED MAPPING:")
+                    if let match = matchData {
+                        if let pid1 = info.paramParticipantId1 {
+                            if pid1 == match.homeParticipantId {
+                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → HOME (\(match.homeParticipantName))")
+                            } else if pid1 == match.awayParticipantId {
+                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → AWAY (\(match.awayParticipantName))")
+                            } else {
+                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → UNKNOWN PARTICIPANT (\(pid1))")
+                            }
+                        }
+
+                        if let pid2 = info.paramParticipantId2 {
+                            if pid2 == match.homeParticipantId {
+                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → HOME (\(match.homeParticipantName))")
+                            } else if pid2 == match.awayParticipantId {
+                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → AWAY (\(match.awayParticipantName))")
+                            } else {
+                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → UNKNOWN PARTICIPANT (\(pid2))")
+                            }
+                        }
+                    } else {
+                        print("🏆 [SCORE_LOG] No match data - using fallback mapping:")
+                        print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → HOME (assumed)")
+                        print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → AWAY (assumed)")
                     }
                     
-                    detailedScores[eventPartName] = score
+                    
+                    // Only proceed if we have at least one score value
+                    if homeValue != nil || awayValue != nil {
+                        // Determine score type based on event part ID (more reliable than string comparison)
+                        let score: Score?
+
+                        // From API inference from logs
+                        // - "Whole Match" → EventPartId: 2
+                        // - "Ordinary Time" → EventPartId: 3
+                        // - "1st Half" → EventPartId: 5
+                        //
+                        // - "2nd Innings" → EventPartId: 787
+                        // - "2nd Innings" → EventPartId: 787
+                        
+                        // Findings:
+                        // Whole Match for foootbal is EventPartId 2 but for other sports is different
+                        
+                        // 1. Identify sport type using EventPartId ranges:
+                        // - EventPartId 2 = Football whole match
+                        // - EventPartId 20-25 = Tennis (20=match, 21-25=sets)
+                        // - EventPartId 400+ = Tennis games
+                        // 2. Filter tennis games by StatusId:
+                        // - StatusId "1" = Active/current → Keep
+                        // - StatusId "4" = Completed → Skip
+                        // - This ensures only the live game shows
+                        
+                        let eventPartNameLower = eventPartName.lowercased()
+                        
+                        // Check EventPartId first for reliable identification
+                        if info.eventPartId == "2" {
+                            // EventPartId "2" = "Whole Match" (main match score for football, etc.)
+                            score = .matchFull(home: homeValue, away: awayValue)
+                            // Set main scores for the event
+                            homeScore = homeValue
+                            awayScore = awayValue
+                        }
+                        else if eventPartNameLower == "whole match" {
+                            // Fallback string matching for sports that don't use EventPartId "2"
+                            score = .matchFull(home: homeValue, away: awayValue)
+                            // Only set main scores if we haven't already set them from EventPartId "2"
+                            if homeScore == nil && awayScore == nil {
+                                homeScore = homeValue
+                                awayScore = awayValue
+                            }
+                        }
+                        else if !eventPartNameLower.contains("tie") && !eventPartNameLower.contains("game") && (  eventPartNameLower.contains("set") || eventPartNameLower.contains("inning")) {
+                            // Extract set number for tennis
+                            let setIndex = extractSetIndex(from: eventPartName)
+                            score = .set(index: setIndex, home: homeValue, away: awayValue)
+                        }
+                        else {
+                            // Game part (current game within a set) or other part scores
+                        
+                            // We do not support all socre types, so we cannot have fallbacks
+                            // If we need to support more score types they need to be explicit in the top fields
+                            score = nil // .gamePart(home: homeValue, away: awayValue)
+                            
+                            print("🏆 [SCORE_LOG] fallback DETECTED ⛔️ eventPartId:\(info.eventPartId ?? "NOT_FOUND") ")
+                            print("🏆 [SCORE_LOG] fallback DETECTED ⛔️ eventPartName:\(eventPartName) ")
+                        }
+
+                    
+                        // we do not support nil scores cases, no
+                        if let scoreValue = score {
+                            print("🏆 [SCORE_LOG] Final HomeScore: \(homeValue?.description ?? "nil")")
+                            print("🏆 [SCORE_LOG] Final AwayScore: \(awayValue?.description ?? "nil")")
+                            print("🏆 [SCORE_LOG] ═══════════════════════════════════════════════════════ \n\n")
+                            
+                            detailedScores[eventPartName] = scoreValue
+                        }
+                    }
                 }
                 
             case "37": // Serve
@@ -511,13 +636,14 @@ class LiveMatchesPaginator: UnsubscriptionController {
             case "92": // Current event status
                 if let statusName = info.paramEventStatusName1?.lowercased() {
                     switch statusName {
-                    case "not started", "not_started":
+                    case "pending", "not started", "not_started":
                         status = .notStarted
-                    case "ended", "finished", "abandoned", "cancelled":
+                    case "ended" ,"interrupted" ,"canceled", "cancelled" ,"walkover" ,"abandoned"," retired":
                         status = .ended(info.paramEventPartName1 ?? statusName)
                     default:
                         status = .inProgress(info.paramEventPartName1 ?? statusName)
                     }
+                    
                 }
                 
             case "95": // Match Time

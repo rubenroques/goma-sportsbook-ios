@@ -145,7 +145,7 @@ final public class MultiWidgetToolbarView: UIView {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "default_brand_horizontal", in: Bundle.module, with: nil) ?? UIImage()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = StyleProvider.Color.contrastTextColor
+        imageView.tintColor = StyleProvider.Color.highlightPrimaryContrast
 
         // Set fixed height, let width grow to maintain aspect ratio
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -185,7 +185,7 @@ final public class MultiWidgetToolbarView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "generic_user_profile_icon", in: Bundle.module, with: nil)
-        imageView.tintColor = StyleProvider.Color.contrastTextColor
+        imageView.tintColor = StyleProvider.Color.highlightPrimaryContrast
         imageView.contentMode = .scaleAspectFit
 
         view.addSubview(imageView)

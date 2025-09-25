@@ -58,7 +58,7 @@ class SeeMoreButtonViewController: UIViewController {
     // MARK: - Setup
     private func setupView() {
         title = "See More Button"
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false

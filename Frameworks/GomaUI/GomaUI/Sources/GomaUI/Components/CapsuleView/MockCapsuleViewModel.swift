@@ -54,7 +54,7 @@ extension MockCapsuleViewModel {
     public static var tagStyle: MockCapsuleViewModel {
         let data = CapsuleData(
             text: "Football",
-            backgroundColor: StyleProvider.Color.backgroundColor,
+            backgroundColor: StyleProvider.Color.backgroundPrimary,
             textColor: StyleProvider.Color.textPrimary,
             font: StyleProvider.fontWith(type: .medium, size: 12),
             horizontalPadding: 16.0,

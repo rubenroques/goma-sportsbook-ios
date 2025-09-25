@@ -38,7 +38,7 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
 
     // MARK: - Setup
     private func setupSubviews() {
-        backgroundColor = StyleProvider.Color.backgroundColor
+        backgroundColor = StyleProvider.Color.backgroundPrimary
         clipsToBounds = true
 
         // Setup background image view

@@ -12,7 +12,7 @@ class CustomSliderViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Custom Slider"
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         setupViews()
     }
     
@@ -22,7 +22,7 @@ class CustomSliderViewController: UIViewController {
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         statusLabel.text = "Interact with the sliders below"
         statusLabel.font = StyleProvider.fontWith(type: .medium, size: 16)
-        statusLabel.textColor = StyleProvider.Color.textColor
+        statusLabel.textColor = StyleProvider.Color.textPrimary
         statusLabel.textAlignment = .center
         statusLabel.numberOfLines = 0
         
@@ -107,7 +107,7 @@ class CustomSliderViewController: UIViewController {
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-        descriptionLabel.textColor = StyleProvider.Color.secondaryColor
+        descriptionLabel.textColor = StyleProvider.Color.highlightSecondary
         
         // Add all views
         view.addSubview(statusLabel)
@@ -183,7 +183,7 @@ class CustomSliderViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = text
         label.font = StyleProvider.fontWith(type: .medium, size: 14)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
     

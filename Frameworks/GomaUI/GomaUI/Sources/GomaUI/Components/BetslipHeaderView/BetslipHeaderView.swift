@@ -47,7 +47,7 @@ public final class BetslipHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Betslip"
         label.font = StyleProvider.fontWith(type: .bold, size: 14)
-        label.textColor = StyleProvider.Color.contrastTextColor
+        label.textColor = StyleProvider.Color.highlightPrimaryContrast
         return label
     }()
     
@@ -73,14 +73,14 @@ public final class BetslipHeaderView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Join Now", for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
-        button.setTitleColor(StyleProvider.Color.contrastTextColor, for: .normal)
+        button.setTitleColor(StyleProvider.Color.highlightPrimaryContrast, for: .normal)
         button.addTarget(self, action: #selector(handleJoinNowTapped), for: .touchUpInside)
         
         // Add underline
         let attributes: [NSAttributedString.Key: Any] = [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .font: StyleProvider.fontWith(type: .medium, size: 14),
-            .foregroundColor: StyleProvider.Color.contrastTextColor
+            .foregroundColor: StyleProvider.Color.highlightPrimaryContrast
         ]
         let attributedTitle = NSAttributedString(string: "Join Now", attributes: attributes)
         button.setAttributedTitle(attributedTitle, for: .normal)
@@ -93,7 +93,7 @@ public final class BetslipHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "or"
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.textColor = StyleProvider.Color.contrastTextColor
+        label.textColor = StyleProvider.Color.highlightPrimaryContrast
         return label
     }()
     
@@ -102,14 +102,14 @@ public final class BetslipHeaderView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Log In", for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
-        button.setTitleColor(StyleProvider.Color.contrastTextColor, for: .normal)
+        button.setTitleColor(StyleProvider.Color.highlightPrimaryContrast, for: .normal)
         button.addTarget(self, action: #selector(handleLogInTapped), for: .touchUpInside)
         
         // Add underline
         let attributes: [NSAttributedString.Key: Any] = [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .font: StyleProvider.fontWith(type: .medium, size: 14),
-            .foregroundColor: StyleProvider.Color.contrastTextColor
+            .foregroundColor: StyleProvider.Color.highlightPrimaryContrast
         ]
         let attributedTitle = NSAttributedString(string: "Log In", attributes: attributes)
         button.setAttributedTitle(attributedTitle, for: .normal)
@@ -138,7 +138,7 @@ public final class BetslipHeaderView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.textColor = StyleProvider.Color.contrastTextColor
+        label.textColor = StyleProvider.Color.highlightPrimaryContrast
         return label
     }()
     
@@ -146,7 +146,7 @@ public final class BetslipHeaderView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .bold, size: 14)
-        label.textColor = StyleProvider.Color.contrastTextColor
+        label.textColor = StyleProvider.Color.highlightPrimaryContrast
         return label
     }()
     

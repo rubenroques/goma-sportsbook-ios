@@ -83,7 +83,7 @@ class CasinoCategoriesListViewController: UIViewController {
     
     // MARK: - Setup
     private func setupViews() {
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         setupQuickLinksTabBar()
         setupCollectionView()

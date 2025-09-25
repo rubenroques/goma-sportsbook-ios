@@ -72,7 +72,7 @@ final public class RecentlyPlayedGamesView: UIView {
     // MARK: - Setup
     private func setupSubviews() {
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = StyleProvider.Color.backgroundColor
+        backgroundColor = StyleProvider.Color.backgroundPrimary
         
         // Main stack view
         stackView.axis = .vertical
@@ -254,7 +254,7 @@ private class RecentlyPlayedGameCollectionViewCell: UICollectionViewCell {
 #Preview("Recently Played Games - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let recentlyPlayedView = RecentlyPlayedGamesView() // No viewModel - placeholder state
         recentlyPlayedView.translatesAutoresizingMaskIntoConstraints = false

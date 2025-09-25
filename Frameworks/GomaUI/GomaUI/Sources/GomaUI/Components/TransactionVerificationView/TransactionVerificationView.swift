@@ -162,7 +162,7 @@ public final class TransactionVerificationView: UIView {
     PreviewUIView {
         TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.defaultMock)
     }
-    .background(Color(StyleProvider.Color.backgroundColor))
+    .background(Color(StyleProvider.Color.backgroundPrimary))
     .padding()
 }
 
@@ -171,7 +171,7 @@ public final class TransactionVerificationView: UIView {
     PreviewUIView {
         TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.simpleMock)
     }
-    .background(Color(StyleProvider.Color.backgroundColor))
+    .background(Color(StyleProvider.Color.backgroundPrimary))
     .padding()
 }
 #endif

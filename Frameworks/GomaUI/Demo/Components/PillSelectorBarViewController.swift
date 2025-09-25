@@ -58,7 +58,7 @@ class PillSelectorBarViewController: UIViewController {
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-        descriptionLabel.textColor = StyleProvider.Color.textColor
+        descriptionLabel.textColor = StyleProvider.Color.textPrimary
         contentStackView.addArrangedSubview(descriptionLabel)
     }
 
@@ -135,7 +135,7 @@ class PillSelectorBarViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.text = title
         titleLabel.font = StyleProvider.fontWith(type: .semibold, size: 18)
-        titleLabel.textColor = StyleProvider.Color.textColor
+        titleLabel.textColor = StyleProvider.Color.textPrimary
         titleLabel.numberOfLines = 0
 
         // Description label

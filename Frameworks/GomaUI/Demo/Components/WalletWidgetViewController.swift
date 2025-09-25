@@ -47,8 +47,8 @@ class WalletWidgetViewController: UIViewController {
         // Update balance button
         updateBalanceButton = UIButton(type: .system)
         updateBalanceButton.setTitle("Update Balance", for: .normal)
-        updateBalanceButton.backgroundColor = StyleProvider.Color.primaryColor
-        updateBalanceButton.setTitleColor(StyleProvider.Color.contrastTextColor, for: .normal)
+        updateBalanceButton.backgroundColor = StyleProvider.Color.highlightPrimary
+        updateBalanceButton.setTitleColor(StyleProvider.Color.highlightPrimaryContrast, for: .normal)
         updateBalanceButton.layer.cornerRadius = 8
         updateBalanceButton.translatesAutoresizingMaskIntoConstraints = false
 

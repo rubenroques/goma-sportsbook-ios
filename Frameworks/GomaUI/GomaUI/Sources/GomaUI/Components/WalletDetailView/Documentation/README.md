@@ -218,9 +218,9 @@ The component uses StyleProvider for all visual properties:
 - **Background**: `StyleProvider.Color.highlightPrimary` (orange)
 - **Header background**: `StyleProvider.Color.backgroundTertiary` (white)
 - **Text on white**: `StyleProvider.Color.textPrimary` (dark)
-- **Text on orange**: `StyleProvider.Color.contrastTextColor` (white)
+- **Text on orange**: `StyleProvider.Color.highlightPrimaryContrast` (white)
 - **Icon background**: `StyleProvider.Color.highlightSecondary` (yellow)
-- **Separators**: `StyleProvider.Color.contrastTextColor` (white)
+- **Separators**: `StyleProvider.Color.highlightPrimaryContrast` (white)
 
 ### Typography
 

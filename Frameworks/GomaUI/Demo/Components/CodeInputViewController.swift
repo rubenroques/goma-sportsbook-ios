@@ -137,7 +137,7 @@ class CodeInputViewController: UIViewController {
         let controlsDescription = UILabel()
         controlsDescription.text = "Test different states and interactions on the interactive demo above:"
         controlsDescription.font = StyleProvider.fontWith(type: .regular, size: 14)
-        controlsDescription.textColor = StyleProvider.Color.secondaryColor
+        controlsDescription.textColor = StyleProvider.Color.highlightSecondary
         controlsDescription.numberOfLines = 0
         stackView.addArrangedSubview(controlsDescription)
         
@@ -185,7 +185,7 @@ class CodeInputViewController: UIViewController {
         statusLabel.tag = 999 // For easy reference
         statusLabel.text = "Watching interactive demo state changes..."
         statusLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-        statusLabel.textColor = StyleProvider.Color.secondaryColor
+        statusLabel.textColor = StyleProvider.Color.highlightSecondary
         statusLabel.numberOfLines = 0
         statusLabel.backgroundColor = StyleProvider.Color.backgroundSecondary
         statusLabel.layer.cornerRadius = 8
@@ -230,7 +230,7 @@ class CodeInputViewController: UIViewController {
         let validationDescription = UILabel()
         validationDescription.text = "This section demonstrates code validation patterns with different requirements:"
         validationDescription.font = StyleProvider.fontWith(type: .regular, size: 14)
-        validationDescription.textColor = StyleProvider.Color.secondaryColor
+        validationDescription.textColor = StyleProvider.Color.highlightSecondary
         validationDescription.numberOfLines = 0
         stackView.addArrangedSubview(validationDescription)
         
@@ -453,11 +453,11 @@ class CodeInputViewController: UIViewController {
         // Update color based on state
         switch data.state {
         case .default:
-            statusLabel.textColor = StyleProvider.Color.textColor
+            statusLabel.textColor = StyleProvider.Color.textPrimary
             statusLabel.backgroundColor = StyleProvider.Color.backgroundSecondary
         case .loading:
-            statusLabel.textColor = StyleProvider.Color.primaryColor
-            statusLabel.backgroundColor = StyleProvider.Color.primaryColor.withAlphaComponent(0.1)
+            statusLabel.textColor = StyleProvider.Color.highlightPrimary
+            statusLabel.backgroundColor = StyleProvider.Color.highlightPrimary.withAlphaComponent(0.1)
         case .error:
             statusLabel.textColor = StyleProvider.Color.alertWarning
             statusLabel.backgroundColor = StyleProvider.Color.alertWarning.withAlphaComponent(0.1)
@@ -497,13 +497,13 @@ extension CodeInputViewController {
         label.text = "CodeInputView component for code entry with validation, error handling, and loading states. Features text input field, submit button, error display, and loading indicator. Supports various input types including booking codes, promo codes, and validation patterns."
         label.numberOfLines = 0
         label.font = StyleProvider.fontWith(type: .regular, size: 16)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
     
     private func createSeparator() -> UIView {
         let separator = UIView()
-        separator.backgroundColor = StyleProvider.Color.secondaryColor
+        separator.backgroundColor = StyleProvider.Color.highlightSecondary
         separator.translatesAutoresizingMaskIntoConstraints = false
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         return separator
@@ -513,7 +513,7 @@ extension CodeInputViewController {
         let label = UILabel()
         label.text = text
         label.font = StyleProvider.fontWith(type: .medium, size: 14)
-        label.textColor = StyleProvider.Color.secondaryColor
+        label.textColor = StyleProvider.Color.highlightSecondary
         return label
     }
     
@@ -521,7 +521,7 @@ extension CodeInputViewController {
         let label = UILabel()
         label.text = text
         label.font = StyleProvider.fontWith(type: .bold, size: 18)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
     
@@ -529,17 +529,17 @@ extension CodeInputViewController {
         let label = UILabel()
         label.text = "Enter code and test various states using the controls below:"
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.textColor = StyleProvider.Color.secondaryColor
+        label.textColor = StyleProvider.Color.highlightSecondary
         label.numberOfLines = 0
         return label
     }
     
     private func createInputContainer() -> UIView {
         let container = UIView()
-        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.backgroundColor = StyleProvider.Color.backgroundPrimary
         container.layer.cornerRadius = 8
         container.layer.borderWidth = 1
-        container.layer.borderColor = StyleProvider.Color.secondaryColor.withAlphaComponent(0.3).cgColor
+        container.layer.borderColor = StyleProvider.Color.highlightSecondary.withAlphaComponent(0.3).cgColor
         container.translatesAutoresizingMaskIntoConstraints = false
         return container
     }
@@ -563,11 +563,11 @@ extension CodeInputViewController {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
-        button.backgroundColor = StyleProvider.Color.backgroundColor
-        button.setTitleColor(StyleProvider.Color.primaryColor, for: .normal)
+        button.backgroundColor = StyleProvider.Color.backgroundPrimary
+        button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         button.layer.cornerRadius = 6
         button.layer.borderWidth = 1
-        button.layer.borderColor = StyleProvider.Color.primaryColor.cgColor
+        button.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
         button.addTarget(self, action: action, for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false

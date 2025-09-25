@@ -41,8 +41,8 @@ class MultiWidgetToolbarViewController: UIViewController {
         // State toggle button
         stateToggleButton = UIButton(type: .system)
         stateToggleButton.setTitle("Toggle Logged In State", for: .normal)
-        stateToggleButton.backgroundColor = StyleProvider.Color.primaryColor
-        stateToggleButton.setTitleColor(StyleProvider.Color.contrastTextColor, for: .normal)
+        stateToggleButton.backgroundColor = StyleProvider.Color.highlightPrimary
+        stateToggleButton.setTitleColor(StyleProvider.Color.highlightPrimaryContrast, for: .normal)
         stateToggleButton.layer.cornerRadius = 8
         stateToggleButton.translatesAutoresizingMaskIntoConstraints = false
         

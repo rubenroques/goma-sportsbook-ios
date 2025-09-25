@@ -181,19 +181,19 @@ final public class OutcomeItemView: UIView {
 
     private func setupWithTheme() {
         // Base view styling
-        baseView.backgroundColor = StyleProvider.Color.backgroundColor
+        baseView.backgroundColor = StyleProvider.Color.backgroundPrimary
         baseView.layer.cornerRadius = Constants.cornerRadius
         baseView.clipsToBounds = true
 
         // Label styling
-        titleLabel.textColor = StyleProvider.Color.textColor
+        titleLabel.textColor = StyleProvider.Color.textPrimary
         titleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
 
-        valueLabel.textColor = StyleProvider.Color.textColor
+        valueLabel.textColor = StyleProvider.Color.textPrimary
         valueLabel.font = StyleProvider.fontWith(type: .bold, size: 16)
 
         // Change indicator styling
-        upChangeImage.tintColor = StyleProvider.Color.successColor
+        upChangeImage.tintColor = .systemGreen
         downChangeImage.tintColor = .systemRed
     }
 
@@ -484,7 +484,7 @@ private extension OutcomeItemView {
     static func createBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         view.layer.cornerRadius = Constants.cornerRadius
         view.clipsToBounds = true
         return view
@@ -495,7 +495,7 @@ private extension OutcomeItemView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.font = StyleProvider.fontWith(type: .regular, size: 12)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
 
@@ -504,7 +504,7 @@ private extension OutcomeItemView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
 
@@ -513,7 +513,7 @@ private extension OutcomeItemView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "arrowtriangle.up.fill")
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = StyleProvider.Color.successColor
+        imageView.tintColor = .systemGreen
         imageView.alpha = 0.0
         return imageView
     }

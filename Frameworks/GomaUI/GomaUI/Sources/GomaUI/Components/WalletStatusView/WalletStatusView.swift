@@ -190,7 +190,7 @@ extension WalletStatusView {
             walletView.heightAnchor.constraint(lessThanOrEqualToConstant: 340)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         return vc
     }
 }
@@ -259,7 +259,7 @@ extension WalletStatusView {
             highBalanceWallet.widthAnchor.constraint(equalToConstant: 350)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         return vc
     }
 }
@@ -305,7 +305,7 @@ extension WalletStatusView {
             walletView.widthAnchor.constraint(equalToConstant: 350)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         return vc
     }
 }

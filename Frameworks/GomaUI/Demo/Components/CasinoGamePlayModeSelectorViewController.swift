@@ -59,7 +59,7 @@ class CasinoGamePlayModeSelectorViewController: UIViewController {
     // MARK: - Setup
     private func setupView() {
         title = "Casino Game Play Mode Selector"
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false

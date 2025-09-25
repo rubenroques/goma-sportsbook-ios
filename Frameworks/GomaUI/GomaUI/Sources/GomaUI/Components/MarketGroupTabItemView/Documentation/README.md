@@ -145,16 +145,16 @@ The component uses StyleProvider for consistent theming:
 
 ```swift
 // Selected state styling
-titleLabel.textColor = StyleProvider.Color.primaryColor
+titleLabel.textColor = StyleProvider.Color.highlightPrimary
 titleLabel.font = StyleProvider.fontWith(type: .medium, size: 14)
-underlineView.backgroundColor = StyleProvider.Color.primaryColor
+underlineView.backgroundColor = StyleProvider.Color.highlightPrimary
 
 // Idle state styling
-titleLabel.textColor = StyleProvider.Color.secondaryColor
+titleLabel.textColor = StyleProvider.Color.highlightSecondary
 titleLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
 
 // Disabled state styling
-titleLabel.textColor = StyleProvider.Color.secondaryColor.withAlphaComponent(0.5)
+titleLabel.textColor = StyleProvider.Color.highlightSecondary.withAlphaComponent(0.5)
 alpha = 0.6
 ```
 

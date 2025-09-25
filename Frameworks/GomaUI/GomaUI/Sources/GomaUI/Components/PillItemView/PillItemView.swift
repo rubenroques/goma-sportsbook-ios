@@ -103,8 +103,8 @@ final public class PillItemView: UIView {
         stackView.addArrangedSubview(expandIconImageView)
 
         // Setup default theme
-        leftIconImageView.tintColor = StyleProvider.Color.primaryColor
-        expandIconImageView.tintColor = StyleProvider.Color.primaryColor
+        leftIconImageView.tintColor = StyleProvider.Color.highlightPrimary
+        expandIconImageView.tintColor = StyleProvider.Color.highlightPrimary
 
 //        #if DEBUG
 //        stackView.layer.borderColor = UIColor.red.cgColor
@@ -179,7 +179,7 @@ final public class PillItemView: UIView {
 //        Publishers.CombineLatest(viewModel.isSelectedPublisher, viewModel.leftIconNamePublisher)
 //            .receive(on: DispatchQueue.main)
 //            .sink { [weak self] isSelected, _ in
-//                let tintColor = isSelected ? StyleProvider.Color.contrastTextColor : StyleProvider.Color.primaryColor
+//                let tintColor = isSelected ? StyleProvider.Color.highlightPrimaryContrast : StyleProvider.Color.highlightPrimary
 //                self?.leftIconImageView.tintColor = tintColor
 //                self?.expandIconImageView.tintColor = tintColor
 //            }
@@ -190,12 +190,12 @@ final public class PillItemView: UIView {
         if isSelected {
             containerView.backgroundColor = StyleProvider.Color.pills
             containerView.layer.borderWidth = Constants.borderWidth
-            containerView.layer.borderColor = StyleProvider.Color.primaryColor.cgColor
+            containerView.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
             titleLabel.textColor = StyleProvider.Color.textPrimary
         } else {
             containerView.backgroundColor = StyleProvider.Color.pills
             containerView.layer.borderWidth = 0.0
-            containerView.layer.borderColor = StyleProvider.Color.primaryColor.cgColor
+            containerView.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
             titleLabel.textColor = StyleProvider.Color.textPrimary
         }
     }

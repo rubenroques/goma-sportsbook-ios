@@ -190,7 +190,7 @@ MockPillSelectorBarViewModel.readOnlyMarketFilters
 
 The component uses StyleProvider for consistent theming:
 
-- **Background**: `StyleProvider.Color.backgroundColor`
+- **Background**: `StyleProvider.Color.backgroundPrimary`
 - **Pill styling**: Handled by individual `PillItemView` components
 - **Spacing**: 12pt between pills, 16pt horizontal margins
 - **Height**: Minimum 60pt, adjusts to content

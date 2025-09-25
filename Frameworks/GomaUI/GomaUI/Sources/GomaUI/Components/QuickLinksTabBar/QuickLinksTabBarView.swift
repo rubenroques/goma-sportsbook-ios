@@ -90,7 +90,7 @@ import SwiftUI
 #Preview("Gaming Quick Links") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let quickLinksView = QuickLinksTabBarView(viewModel: MockQuickLinksTabBarViewModel.gamingMockViewModel)
         quickLinksView.translatesAutoresizingMaskIntoConstraints = false
@@ -110,7 +110,7 @@ import SwiftUI
 #Preview("Sports Quick Links") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let quickLinksView = QuickLinksTabBarView(viewModel: MockQuickLinksTabBarViewModel.sportsMockViewModel)
         quickLinksView.translatesAutoresizingMaskIntoConstraints = false
@@ -130,7 +130,7 @@ import SwiftUI
 #Preview("Account Quick Links") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let quickLinksView = QuickLinksTabBarView(viewModel: MockQuickLinksTabBarViewModel.accountMockViewModel)
         quickLinksView.translatesAutoresizingMaskIntoConstraints = false

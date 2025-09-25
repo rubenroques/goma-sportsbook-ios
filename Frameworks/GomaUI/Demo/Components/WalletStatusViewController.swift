@@ -21,7 +21,7 @@ class WalletStatusViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet Status View"
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         setupViewModel()
         setupViews()

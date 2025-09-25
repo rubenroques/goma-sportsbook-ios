@@ -131,7 +131,7 @@ class CodeClipboardViewController: UIViewController {
         let controlsDescription = UILabel()
         controlsDescription.text = "Test different states and interactions on the interactive demo above:"
         controlsDescription.font = StyleProvider.fontWith(type: .regular, size: 14)
-        controlsDescription.textColor = StyleProvider.Color.secondaryColor
+        controlsDescription.textColor = StyleProvider.Color.highlightSecondary
         controlsDescription.numberOfLines = 0
         stackView.addArrangedSubview(controlsDescription)
         
@@ -172,7 +172,7 @@ class CodeClipboardViewController: UIViewController {
         statusLabel.tag = 999 // For easy reference
         statusLabel.text = "Watching interactive demo state changes..."
         statusLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-        statusLabel.textColor = StyleProvider.Color.secondaryColor
+        statusLabel.textColor = StyleProvider.Color.highlightSecondary
         statusLabel.numberOfLines = 0
         statusLabel.backgroundColor = StyleProvider.Color.backgroundSecondary
         statusLabel.layer.cornerRadius = 8
@@ -273,13 +273,13 @@ class CodeClipboardViewController: UIViewController {
         
         // Update color based on state
         if data.state == .copied {
-            statusLabel.textColor = StyleProvider.Color.successColor
-            statusLabel.backgroundColor = StyleProvider.Color.successColor.withAlphaComponent(0.1)
+            statusLabel.textColor = StyleProvider.Color.alertSuccess
+            statusLabel.backgroundColor = StyleProvider.Color.alertSuccess.withAlphaComponent(0.1)
         } else if !data.isEnabled {
-            statusLabel.textColor = StyleProvider.Color.secondaryColor
+            statusLabel.textColor = StyleProvider.Color.highlightSecondary
             statusLabel.backgroundColor = StyleProvider.Color.backgroundSecondary
         } else {
-            statusLabel.textColor = StyleProvider.Color.textColor
+            statusLabel.textColor = StyleProvider.Color.textPrimary
             statusLabel.backgroundColor = StyleProvider.Color.backgroundSecondary
         }
     }
@@ -317,13 +317,13 @@ extension CodeClipboardViewController {
         label.text = "CodeClipboardView component with copy functionality and visual feedback. Features animated state transitions between default and copied states, with proper styling using StyleProvider. The component shows a label on the left and the code with copy icon on the right."
         label.numberOfLines = 0
         label.font = StyleProvider.fontWith(type: .regular, size: 16)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
     
     private func createSeparator() -> UIView {
         let separator = UIView()
-        separator.backgroundColor = StyleProvider.Color.secondaryColor
+        separator.backgroundColor = StyleProvider.Color.highlightSecondary
         separator.translatesAutoresizingMaskIntoConstraints = false
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         return separator
@@ -333,7 +333,7 @@ extension CodeClipboardViewController {
         let label = UILabel()
         label.text = text
         label.font = StyleProvider.fontWith(type: .medium, size: 14)
-        label.textColor = StyleProvider.Color.secondaryColor
+        label.textColor = StyleProvider.Color.highlightSecondary
         return label
     }
     
@@ -341,7 +341,7 @@ extension CodeClipboardViewController {
         let label = UILabel()
         label.text = text
         label.font = StyleProvider.fontWith(type: .bold, size: 18)
-        label.textColor = StyleProvider.Color.textColor
+        label.textColor = StyleProvider.Color.textPrimary
         return label
     }
     
@@ -349,17 +349,17 @@ extension CodeClipboardViewController {
         let label = UILabel()
         label.text = "Tap the code area to copy and see the animated state transition:"
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.textColor = StyleProvider.Color.secondaryColor
+        label.textColor = StyleProvider.Color.highlightSecondary
         label.numberOfLines = 0
         return label
     }
     
     private func createClipboardContainer() -> UIView {
         let container = UIView()
-        container.backgroundColor = StyleProvider.Color.backgroundColor
+        container.backgroundColor = StyleProvider.Color.backgroundPrimary
         container.layer.cornerRadius = 8
         container.layer.borderWidth = 1
-        container.layer.borderColor = StyleProvider.Color.secondaryColor.withAlphaComponent(0.3).cgColor
+        container.layer.borderColor = StyleProvider.Color.highlightSecondary.withAlphaComponent(0.3).cgColor
         container.translatesAutoresizingMaskIntoConstraints = false
         return container
     }
@@ -383,11 +383,11 @@ extension CodeClipboardViewController {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
-        button.backgroundColor = StyleProvider.Color.backgroundColor
-        button.setTitleColor(StyleProvider.Color.primaryColor, for: .normal)
+        button.backgroundColor = StyleProvider.Color.backgroundPrimary
+        button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         button.layer.cornerRadius = 6
         button.layer.borderWidth = 1
-        button.layer.borderColor = StyleProvider.Color.primaryColor.cgColor
+        button.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
         button.addTarget(self, action: action, for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false

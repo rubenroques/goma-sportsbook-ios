@@ -12,7 +12,7 @@ class TimeSliderFilterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Time Slider Filter"
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         setupViews()
     }
     
@@ -38,7 +38,7 @@ class TimeSliderFilterViewController: UIViewController {
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         statusLabel.text = "Current selection: All"
         statusLabel.font = StyleProvider.fontWith(type: .medium, size: 16)
-        statusLabel.textColor = StyleProvider.Color.textColor
+        statusLabel.textColor = StyleProvider.Color.textPrimary
         statusLabel.textAlignment = .center
         statusLabel.numberOfLines = 0
         
@@ -47,9 +47,9 @@ class TimeSliderFilterViewController: UIViewController {
         resetButton.translatesAutoresizingMaskIntoConstraints = false
         resetButton.setTitle("Reset to Default", for: .normal)
         resetButton.titleLabel?.font = StyleProvider.fontWith(type: .medium, size: 16)
-        resetButton.setTitleColor(StyleProvider.Color.primaryColor, for: .normal)
+        resetButton.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         resetButton.layer.borderWidth = 1
-        resetButton.layer.borderColor = StyleProvider.Color.primaryColor.cgColor
+        resetButton.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
         resetButton.layer.cornerRadius = 8
         resetButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
         resetButton.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
@@ -61,7 +61,7 @@ class TimeSliderFilterViewController: UIViewController {
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-        descriptionLabel.textColor = StyleProvider.Color.secondaryColor
+        descriptionLabel.textColor = StyleProvider.Color.highlightSecondary
         
         // Add all views
         view.addSubview(timeSliderView)

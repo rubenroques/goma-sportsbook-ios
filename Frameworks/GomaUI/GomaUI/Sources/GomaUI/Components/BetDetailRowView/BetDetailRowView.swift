@@ -149,7 +149,7 @@ public class BetDetailRowView: UIView {
 #Preview("Bet Detail Row - Standard") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let rowView = BetDetailRowView(viewModel: MockBetDetailRowViewModel.defaultMock(), cornerStyle: .none)
         rowView.translatesAutoresizingMaskIntoConstraints = false
@@ -170,7 +170,7 @@ public class BetDetailRowView: UIView {
 #Preview("Bet Detail Row - Top Corners") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let rowView = BetDetailRowView(viewModel: MockBetDetailRowViewModel.defaultMock(), cornerStyle: .topOnly(radius: 8))
         rowView.translatesAutoresizingMaskIntoConstraints = false
@@ -191,7 +191,7 @@ public class BetDetailRowView: UIView {
 #Preview("Bet Detail Row - Bottom Corners") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let rowView = BetDetailRowView(viewModel: MockBetDetailRowViewModel.defaultMock(), cornerStyle: .bottomOnly(radius: 8))
         rowView.translatesAutoresizingMaskIntoConstraints = false
@@ -212,7 +212,7 @@ public class BetDetailRowView: UIView {
 #Preview("Bet Detail Row - Header Style") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let rowView = BetDetailRowView(viewModel: MockBetDetailRowViewModel.headerMock(), cornerStyle: .none)
         rowView.translatesAutoresizingMaskIntoConstraints = false

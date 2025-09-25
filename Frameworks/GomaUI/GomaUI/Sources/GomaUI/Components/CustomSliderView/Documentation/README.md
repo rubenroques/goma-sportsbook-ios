@@ -33,7 +33,7 @@ let configuration = SliderConfiguration(
     trackCornerRadius: 2.0,
     thumbSize: 24.0,
     thumbImageName: nil,        // Uses default circular thumb
-    thumbTintColor: nil         // Uses StyleProvider.Color.primaryColor
+    thumbTintColor: nil         // Uses StyleProvider.Color.highlightPrimary
 )
 
 // Create view model
@@ -137,7 +137,7 @@ The CustomSliderView provides exact visual control matching design specification
 ### Track Styling
 - **Height**: Configurable (default 4px)
 - **Corner Radius**: Configurable (default 2px)
-- **Color**: Uses `StyleProvider.Color.secondaryColor` with alpha
+- **Color**: Uses `StyleProvider.Color.highlightSecondary` with alpha
 - **Background**: Transparent
 
 ### Thumb Styling

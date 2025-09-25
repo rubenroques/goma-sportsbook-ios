@@ -188,7 +188,7 @@ final public class CasinoCategoryBarView: UIView {
 #Preview("Casino Category Bar - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         let categoryBarView = CasinoCategoryBarView() // No viewModel - placeholder state
         categoryBarView.translatesAutoresizingMaskIntoConstraints = false

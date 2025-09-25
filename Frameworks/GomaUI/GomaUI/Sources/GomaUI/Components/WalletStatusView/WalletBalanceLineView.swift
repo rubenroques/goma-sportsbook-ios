@@ -230,7 +230,7 @@ private extension WalletBalanceLineView {
             withdrawableLineView.heightAnchor.constraint(equalToConstant: 40)
         ])
         
-        vc.view.backgroundColor = StyleProvider.Color.backgroundColor
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         return vc
     }
 }

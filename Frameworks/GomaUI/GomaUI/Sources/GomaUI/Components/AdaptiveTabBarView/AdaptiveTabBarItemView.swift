@@ -97,7 +97,7 @@ private extension AdaptiveTabBarItemView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         // Set a placeholder or default tint color if needed upon creation
-        imageView.tintColor = StyleProvider.Color.secondaryColor
+        imageView.tintColor = StyleProvider.Color.highlightSecondary
         return imageView
     }
 
@@ -107,7 +107,7 @@ private extension AdaptiveTabBarItemView {
         label.font = StyleProvider.fontWith(type: .semibold, size: 12.0)
         label.textAlignment = .center
         // Set a placeholder or default text color if needed upon creation
-        label.textColor = StyleProvider.Color.secondaryColor
+        label.textColor = StyleProvider.Color.highlightSecondary
         return label
     }
 }

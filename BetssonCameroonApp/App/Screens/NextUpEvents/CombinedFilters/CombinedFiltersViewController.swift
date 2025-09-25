@@ -211,7 +211,7 @@ public class CombinedFiltersViewController: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         
         view.addSubview(scrollView)
         view.addSubview(bottomContainerView)

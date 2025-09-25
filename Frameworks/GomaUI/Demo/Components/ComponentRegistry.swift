@@ -47,7 +47,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockTallOddsMatchCardViewModel.premierLeagueMock
                 let matchCardView = TallOddsMatchCardView(viewModel: viewModel)
-                matchCardView.backgroundColor = StyleProvider.Color.backgroundColor
+                matchCardView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 matchCardView.layer.cornerRadius = 8
                 return matchCardView
             }
@@ -59,7 +59,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockMarketOutcomesLineViewModel.threeWayMarket
                 let marketView = MarketOutcomesLineView(viewModel: viewModel)
-                marketView.backgroundColor = StyleProvider.Color.backgroundColor
+                marketView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 marketView.layer.cornerRadius = 4.5
                 return marketView
             }
@@ -71,7 +71,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockMarketOutcomesMultiLineViewModel.overUnderMarketGroup
                 let multiLineView = MarketOutcomesMultiLineView(viewModel: viewModel)
-                multiLineView.backgroundColor = StyleProvider.Color.backgroundColor
+                multiLineView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 multiLineView.layer.cornerRadius = 4.5
                 return multiLineView
             }
@@ -126,7 +126,7 @@ struct ComponentRegistry {
                 let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter", icon: "filter_icon", actionIcon: "right_arrow_icon")
                 let viewModel = MockMainFilterPillViewModel(mainFilter: mainFilter)
                 let mainFilterView = MainFilterPillView(viewModel: viewModel)
-                mainFilterView.backgroundColor = StyleProvider.Color.backgroundColor
+                mainFilterView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 mainFilterView.layer.cornerRadius = 4.5
                 return mainFilterView
             }
@@ -202,7 +202,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockCasinoGamePlayModeSelectorViewModel.defaultMock
                 let selectorView = CasinoGamePlayModeSelectorView(viewModel: viewModel)
-                selectorView.backgroundColor = StyleProvider.Color.backgroundColor
+                selectorView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 selectorView.layer.cornerRadius = 12
                 selectorView.clipsToBounds = true
                 return selectorView
@@ -219,7 +219,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockMatchHeaderViewModel.premierLeagueHeader
                 let headerView = MatchHeaderView(viewModel: viewModel)
-                headerView.backgroundColor = StyleProvider.Color.backgroundColor.withAlphaComponent(0.8)
+                headerView.backgroundColor = StyleProvider.Color.backgroundPrimary.withAlphaComponent(0.8)
                 headerView.layer.cornerRadius = 4
                 return headerView
             }
@@ -264,7 +264,7 @@ struct ComponentRegistry {
                 let viewModel = MockScoreViewModel.tennisMatch
                 let scoreView = ScoreView()
                 scoreView.configure(with: viewModel)
-                scoreView.backgroundColor = StyleProvider.Color.backgroundColor
+                scoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 scoreView.layer.cornerRadius = 8
                 return scoreView
             }
@@ -396,7 +396,7 @@ struct ComponentRegistry {
                     selectedId: "1"
                 )
                 let filterView = SportGamesFilterView(viewModel: viewModel)
-                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 filterView.layer.cornerRadius = 8
                 return filterView
             }
@@ -416,7 +416,7 @@ struct ComponentRegistry {
                     selectedId: "1"
                 )
                 let filterView = SortFilterView(viewModel: viewModel)
-                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 filterView.layer.cornerRadius = 8
                 return filterView
             }
@@ -453,7 +453,7 @@ struct ComponentRegistry {
                     selectedId: "nba"
                 )
                 let filterView = CountryLeaguesFilterView(viewModel: viewModel)
-                filterView.backgroundColor = StyleProvider.Color.backgroundColor
+                filterView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 filterView.layer.cornerRadius = 8
                 return filterView
             }
@@ -514,7 +514,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockCustomNavigationViewModel.defaultMock
                 let navView = CustomNavigationView(viewModel: viewModel)
-                navView.backgroundColor = StyleProvider.Color.backgroundColor
+                navView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 navView.layer.cornerRadius = 8
                 return navView
             }
@@ -548,7 +548,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockPinDigitEntryViewModel.defaultMock
                 let pinView = PinDigitEntryView(viewModel: viewModel)
-                pinView.backgroundColor = StyleProvider.Color.backgroundColor
+                pinView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 pinView.layer.cornerRadius = 8
                 return pinView
             }
@@ -620,7 +620,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockAmountPillsViewModel.defaultMock
                 let pillsView = AmountPillsView(viewModel: viewModel)
-                pillsView.backgroundColor = StyleProvider.Color.backgroundColor
+                pillsView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 pillsView.layer.cornerRadius = 8
                 return pillsView
             }
@@ -632,7 +632,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockDepositBonusInfoViewModel.defaultMock
                 let bonusView = DepositBonusInfoView(viewModel: viewModel)
-                bonusView.backgroundColor = StyleProvider.Color.backgroundColor
+                bonusView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 bonusView.layer.cornerRadius = 8
                 return bonusView
             }
@@ -648,7 +648,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockPromotionalBonusCardViewModel.defaultMock
                 let cardView = PromotionalBonusCardView(viewModel: viewModel)
-                cardView.backgroundColor = StyleProvider.Color.backgroundColor
+                cardView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 cardView.layer.cornerRadius = 12
                 return cardView
             }
@@ -660,7 +660,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockPromotionalHeaderViewModel.defaultMock
                 let headerView = PromotionalHeaderView(viewModel: viewModel)
-                headerView.backgroundColor = StyleProvider.Color.backgroundColor
+                headerView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 headerView.layer.cornerRadius = 8
                 return headerView
             }
@@ -740,7 +740,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockTermsAcceptanceViewModel.defaultMock
                 let termsView = TermsAcceptanceView(viewModel: viewModel)
-                termsView.backgroundColor = StyleProvider.Color.backgroundColor
+                termsView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 termsView.layer.cornerRadius = 8
                 return termsView
             }
@@ -756,7 +756,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockStatusNotificationViewModel.successMock
                 let notificationView = StatusNotificationView(viewModel: viewModel)
-                notificationView.backgroundColor = StyleProvider.Color.backgroundColor
+                notificationView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 notificationView.layer.cornerRadius = 8
                 return notificationView
             }
@@ -774,7 +774,7 @@ struct ComponentRegistry {
                     )
                 )
                 let statusInfoView = StatusInfoView(viewModel: viewModel)
-                statusInfoView.backgroundColor = StyleProvider.Color.backgroundColor
+                statusInfoView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 statusInfoView.layer.cornerRadius = 12
                 return statusInfoView
             }
@@ -859,7 +859,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockButtonViewModel.solidBackgroundMock
                 let buttonView = ButtonView(viewModel: viewModel)
-                buttonView.backgroundColor = StyleProvider.Color.backgroundColor
+                buttonView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 buttonView.layer.cornerRadius = 8
                 return buttonView
             }
@@ -904,7 +904,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockStepInstructionViewModel.defaultMock
                 let stepView = StepInstructionView(viewModel: viewModel)
-                stepView.backgroundColor = StyleProvider.Color.backgroundColor
+                stepView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 stepView.layer.cornerRadius = 8
                 return stepView
             }
@@ -916,7 +916,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockInfoRowViewModel.defaultMock
                 let infoRowView = InfoRowView(viewModel: viewModel)
-                infoRowView.backgroundColor = StyleProvider.Color.backgroundColor
+                infoRowView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 infoRowView.layer.cornerRadius = 8
                 return infoRowView
             }
@@ -928,7 +928,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockTransactionVerificationViewModel.defaultMock
                 let verificationView = TransactionVerificationView(viewModel: viewModel)
-                verificationView.backgroundColor = StyleProvider.Color.backgroundColor
+                verificationView.backgroundColor = StyleProvider.Color.backgroundPrimary
                 verificationView.layer.cornerRadius = 8
                 return verificationView
             }

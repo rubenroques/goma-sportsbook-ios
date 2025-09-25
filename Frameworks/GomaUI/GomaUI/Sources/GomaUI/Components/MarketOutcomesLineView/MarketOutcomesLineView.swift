@@ -105,13 +105,13 @@ final public class MarketOutcomesLineView: UIView {
 
     private func setupWithTheme() {
         // Suspended view
-        suspendedBaseView.backgroundColor = StyleProvider.Color.secondaryColor.withAlphaComponent(0.1)
-        suspendedBaseView.layer.borderColor = StyleProvider.Color.secondaryColor.cgColor
-        suspendedLabel.textColor = StyleProvider.Color.secondaryColor
+        suspendedBaseView.backgroundColor = StyleProvider.Color.highlightSecondary.withAlphaComponent(0.1)
+        suspendedBaseView.layer.borderColor = StyleProvider.Color.highlightSecondary.cgColor
+        suspendedLabel.textColor = StyleProvider.Color.highlightSecondary
 
         // See all view
-        seeAllBaseView.backgroundColor = StyleProvider.Color.secondaryColor.withAlphaComponent(0.1)
-        seeAllLabel.textColor = StyleProvider.Color.textColor
+        seeAllBaseView.backgroundColor = StyleProvider.Color.highlightSecondary.withAlphaComponent(0.1)
+        seeAllLabel.textColor = StyleProvider.Color.textPrimary
     }
 
     private func setupSeeAllGesture() {

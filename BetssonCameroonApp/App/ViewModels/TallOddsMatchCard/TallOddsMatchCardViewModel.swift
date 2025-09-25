@@ -264,18 +264,8 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
             scoreCells: scoreCells
         )
     }
-    
-    private func setupPublishers() {
-        
-        //        Env.betslipManager.bettingTicketsPublisher
-        //            .receive(on: DispatchQueue.main)
-        //            .sink(receiveValue: { [weak self] tickets in
-        //
-        //            })
-        //            .store(in: &cancellables)
-    }
-    
 }
+
 // MARK: - Factory Methods for Child ViewModels
 extension TallOddsMatchCardViewModel {
     

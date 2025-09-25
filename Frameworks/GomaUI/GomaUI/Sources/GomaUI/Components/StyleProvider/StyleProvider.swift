@@ -923,23 +923,6 @@ public class StyleProvider {
             return createDynamicColor(from: currentColors.backgroundEmptyMessage3)
         }
 
-        // Legacy color mappings for backward compatibility with existing GomaUI components
-        public static var primaryColor: UIColor { highlightPrimary }
-        public static var secondaryColor: UIColor { highlightSecondary }
-        public static var accentColor: UIColor { highlightTertiary }
-        public static var backgroundColor: UIColor { backgroundPrimary }
-        public static var textColor: UIColor { textPrimary }
-        public static var contrastTextColor: UIColor { highlightPrimaryContrast }
-        public static var toolbarBackgroundColor: UIColor { highlightPrimary }
-        public static var walletBackgroundColor: UIColor { highlightPrimary }
-        public static var successColor: UIColor { alertSuccess }
-        public static var semiTransparentColor: UIColor {
-            return UIColor { traitCollection in
-                let isDark = traitCollection.userInterfaceStyle == .dark
-                return UIColor(white: isDark ? 0.0 : 1.0, alpha: 0.2)
-            }
-        }
-        public static var matchTimeColor: UIColor { liveTag }
     }
 
     // MARK: - Customization Methods
