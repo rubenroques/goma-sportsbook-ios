@@ -28,12 +28,16 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
     var searchedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { searchedGameViewModelsSubject.eraseToAnyPublisher() }
     private let mostPlayedGameViewModelsSubject = CurrentValueSubject<[CasinoGameSearchedViewModelProtocol], Never>([])
     var mostPlayedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { mostPlayedGameViewModelsSubject.eraseToAnyPublisher() }
-    private let recommendedGamesErrorSubject = CurrentValueSubject<String?, Never>(nil)
+    let recommendedGamesErrorSubject = CurrentValueSubject<String?, Never>(nil)
     var recommendedGamesErrorMessagePublisher: AnyPublisher<String?, Never> { recommendedGamesErrorSubject.eraseToAnyPublisher() }
     
+    // MARK: - Config
+    let config: CasinoSearchConfig
+
     // MARK: - Init
-    init(servicesProvider: ServicesProvider.Client = Env.servicesProvider) {
+    init(servicesProvider: ServicesProvider.Client = Env.servicesProvider, config: CasinoSearchConfig = .default) {
         self.servicesProvider = servicesProvider
+        self.config = config
         self.searchComponentViewModel = MockSearchViewModel(placeholder: "Search in Casino")
         self.searchHeaderInfoViewModel = MockSearchHeaderInfoViewModel()
         setupBindings()
@@ -46,6 +50,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
         
         self.isLoadingSubject.send(true)
 
+        guard config.recommendedGames.enabled else { return }
         servicesProvider.getRecommendedGames()
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -93,6 +98,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
         let playerId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
         guard !playerId.isEmpty else { return }
         
+        guard config.sections.mostPlayed.enabled else { return }
         servicesProvider.getMostPlayedGames(playerId: playerId)
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -169,8 +175,10 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
             return
         }
                 
-        isLoadingSubject.send(true)
-        updateSearchResultsState(isLoading: true, results: 0)
+        isLoadingSubject.send(config.searchResults.enabled && config.searchResults.showResults)
+        if config.noResults.enabled {
+            updateSearchResultsState(isLoading: true, results: 0)
+        }
 
         servicesProvider.searchGames(language: nil, name: query)
             .receive(on: DispatchQueue.main)
@@ -179,6 +187,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                 if case .failure(_) = completion {
                     self?.searchedGameViewModelsSubject.send([])
                     self?.searchHeaderInfoViewModel.updateSearch(term: query, category: "Casino", state: .noResults, count: 0)
+                    
                 }
             } receiveValue: { [weak self] response in
                 self?.isLoadingSubject.send(false)
@@ -206,9 +215,11 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                     return viewModel
                 }
                 self?.searchedGameViewModelsSubject.send(viewModels)
+                
                 let count = viewModels.count
                 let state: SearchState = count > 0 ? .results : .noResults
                 self?.searchHeaderInfoViewModel.updateSearch(term: query, category: "Casino", state: state, count: count)
+                
             }
             .store(in: &cancellables)
     }

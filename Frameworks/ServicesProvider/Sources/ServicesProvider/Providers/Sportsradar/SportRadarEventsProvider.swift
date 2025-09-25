@@ -1063,7 +1063,7 @@ extension SportRadarEventsProvider {
 
     }
     
-    func getRecommendedMatch(userId: String, isLive: Bool) -> AnyPublisher<[Event], ServiceProviderError> {
+    func getRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 

@@ -141,5 +141,5 @@ protocol EventsProvider: Connector {
     func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError>
     
     // Recommendations
-    func getRecommendedMatch(userId: String, isLive: Bool) -> AnyPublisher<[Event], ServiceProviderError>
+    func getRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError>
 }

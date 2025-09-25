@@ -14,7 +14,13 @@ public class MockSearchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol {
     public var state: SearchState
     public var count: Int?
     
+    public var statePublisher: AnyPublisher<SearchState, Never> {
+        stateSubject.eraseToAnyPublisher()
+    }
+    
     public var refreshData: (() -> Void)?
+    
+    private let stateSubject = CurrentValueSubject<SearchState, Never>(.loading)
     
     public init(
         searchTerm: String = "",
@@ -26,6 +32,7 @@ public class MockSearchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol {
         self.category = category
         self.state = state
         self.count = count
+        self.stateSubject.send(state)
     }
     
     public func updateSearch(term: String, category: String, state: SearchState, count: Int?) {
@@ -33,6 +40,7 @@ public class MockSearchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol {
         self.category = category
         self.state = state
         self.count = count
+        self.stateSubject.send(state)
         
         self.refreshData?()
     }

@@ -11,6 +11,8 @@ import GomaUI
 import ServicesProvider
 
 protocol SportsSearchViewModelProtocol: AnyObject {
+    // Config
+    var config: SportsSearchConfig { get }
     
     // MARK: - Publishers
     var searchTextPublisher: AnyPublisher<String, Never> { get }

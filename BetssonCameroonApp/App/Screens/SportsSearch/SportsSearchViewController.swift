@@ -27,7 +27,6 @@ class SportsSearchViewController: UIViewController {
     private var recommendedItems: [TallOddsMatchCardViewModelProtocol] = []
     private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
     private var pageViewController: UIPageViewController!
-    private let headerViewModel = MockHeaderTextViewViewModel(title: "Suggested Events")
     
     // Loading overlay
     private let loadingIndicatorView: UIView = {
@@ -95,11 +94,10 @@ class SportsSearchViewController: UIViewController {
         recommendedCollectionView.dataSource = self
         recommendedCollectionView.delegate = self
         
-        // Initially hide search header and market groups, show empty state
-        searchHeaderInfoView.isHidden = true
+        // Initial visibility based on config
         emptyStateView.isHidden = false
         recentSearchesScrollView.isHidden = true
-        recommendedCollectionView.isHidden = false
+        recommendedCollectionView.isHidden = !(viewModel.config.suggestedEvents.enabled)
     }
     
     private func setupConstraints() {
@@ -233,9 +231,26 @@ class SportsSearchViewController: UIViewController {
                         }
                     }
                     self.marketGroupSelectorTabView.isHidden = true
+                    
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.searchHeaderInfoViewModel.statePublisher
+            .sink(receiveValue: { [weak self] searchState in
+                guard let self = self else { return }
+
+                if searchState == .noResults {
+                    searchHeaderInfoView.isHidden = !(viewModel.config.noResults.enabled)
+                    searchHeaderInfoView.alpha = !(viewModel.config.noResults.enabled) ? 0 : 1
+                }
+                else {
+                    searchHeaderInfoView.isHidden = false
+                    searchHeaderInfoView.alpha = 1
+                }
+            })
+            .store(in: &cancellables)
+
         
         // Recent searches
         viewModel.recentSearchesPublisher
@@ -272,20 +287,20 @@ class SportsSearchViewController: UIViewController {
     
     private func updateSearchState(searchText: String) {
         if searchText.isEmpty {
-            // Show empty state and recent searches, hide search header and market groups
+            // Show empty state and suggested events, hide search results
             emptyStateView.isHidden = false
-            recentSearchesScrollView.isHidden = true
             searchHeaderInfoView.isHidden = true
+            recentSearchesScrollView.isHidden = true
             marketGroupSelectorTabView.isHidden = true
             pageViewController.view.isHidden = true
-            recommendedCollectionView.isHidden = false
+            recommendedCollectionView.isHidden = !(viewModel.config.suggestedEvents.enabled)
         } else {
             // Hide empty state and recent searches, show search header and market groups
             emptyStateView.isHidden = true
-            recentSearchesScrollView.isHidden = true
             searchHeaderInfoView.isHidden = false
-            marketGroupSelectorTabView.isHidden = false
-            pageViewController.view.isHidden = false
+            recentSearchesScrollView.isHidden = true
+            marketGroupSelectorTabView.isHidden = !(viewModel.config.searchResults.enabled && viewModel.config.searchResults.showResults)
+            pageViewController.view.isHidden = marketGroupSelectorTabView.isHidden
             recommendedCollectionView.isHidden = true
         }
     }

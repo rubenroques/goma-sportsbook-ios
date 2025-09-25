@@ -837,7 +837,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     
     // MARK: - Recommendations
     
-    func getRecommendedMatch(userId: String, isLive: Bool) -> AnyPublisher<[Event], ServiceProviderError> {
+    func getRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError> {
         let terminalType = 1
 
         let endpoint = EveryMatrixRecsysAPI.recommendations(
@@ -848,7 +848,7 @@ class EveryMatrixEventsProvider: EventsProvider {
 
         return recsysConnector.request(endpoint)
             .map { (response: EveryMatrix.RecommendationResponse) in
-                Array(response.recommendationsList.prefix(5)).map { $0.eventId }
+                Array(response.recommendationsList.prefix(limit)).map { $0.eventId }
             }
             .flatMap { [weak self] eventIds -> AnyPublisher<[Event], ServiceProviderError> in
                 guard let self = self else { return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher() }

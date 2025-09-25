@@ -13,6 +13,7 @@ public protocol SearchHeaderInfoViewModelProtocol: AnyObject {
     var category: String { get }
     var state: SearchState { get }
     var count: Int? { get }
+    var statePublisher: AnyPublisher<SearchState, Never> { get }
     
     var refreshData: (() -> Void)? { get set }
     

@@ -100,10 +100,9 @@ final class CasinoSearchViewController: UIViewController {
         mostPlayedContainerView.addSubview(mostPlayedStackView)
         containerView.addSubview(loadingIndicatorView)
         
-        // Initial visibility
-        searchHeaderInfoView.isHidden = true
+        // Initial visibility based on config
         emptyStateView.isHidden = false
-        resultsScrollView.isHidden = true
+        resultsScrollView.isHidden = !(viewModel.config.searchResults.enabled && viewModel.config.searchResults.showResults)
     }
     
     private func setupConstraints() {
@@ -209,7 +208,6 @@ final class CasinoSearchViewController: UIViewController {
     private func setupBindings() {
         viewModel.searchTextPublisher
             .sink { [weak self] searchText in
-                print("🔍 CasinoSearchViewController: Search text changed to: '\(searchText)'")
                 self?.currentSearchText = searchText
                 self?.updateSearchState(searchText: searchText)
             }
@@ -249,13 +247,16 @@ final class CasinoSearchViewController: UIViewController {
     private func updateResults(with viewModels: [CasinoGameSearchedViewModelProtocol]) {
         let hasResults = !viewModels.isEmpty
         // Show header + mostPlayed only when search text is non-empty and we are showing results area
-        let shouldShowSections = !currentSearchText.isEmpty && (hasResults || !mostPlayedStackView.arrangedSubviews.isEmpty)
-        mostPlayedHeaderLabel.isHidden = !shouldShowSections || mostPlayedStackView.arrangedSubviews.isEmpty
-        mostPlayedContainerView.isHidden = !shouldShowSections || mostPlayedStackView.arrangedSubviews.isEmpty
-        resultsContainerView.isHidden = !hasResults
-        resultsScrollView.isHidden = !shouldShowSections && !hasResults
-        emptyStateView.isHidden = !resultsScrollView.isHidden
-
+        let shouldShowSections = (viewModel.config.sections.searchResults.enabled && !currentSearchText.isEmpty) && (hasResults || !mostPlayedStackView.arrangedSubviews.isEmpty)
+        mostPlayedHeaderLabel.isHidden = !(viewModel.config.sections.mostPlayed.enabled) || !shouldShowSections || mostPlayedStackView.arrangedSubviews.isEmpty
+        mostPlayedContainerView.isHidden = !(viewModel.config.sections.mostPlayed.enabled) || !shouldShowSections || mostPlayedStackView.arrangedSubviews.isEmpty
+        resultsContainerView.isHidden = !(viewModel.config.sections.searchResults.enabled) || !hasResults
+        resultsScrollView.isHidden = !(viewModel.config.searchResults.enabled && viewModel.config.searchResults.showResults) || (!shouldShowSections && !hasResults)
+        
+        if !hasResults {
+            searchHeaderInfoView.isHidden = !(viewModel.config.noResults.enabled)
+        }
+        
         // Clear
         resultsStackView.arrangedSubviews.forEach { sub in
             resultsStackView.removeArrangedSubview(sub)
@@ -277,7 +278,7 @@ final class CasinoSearchViewController: UIViewController {
         }
         
         let hasMostPlayed = !viewModels.isEmpty
-        let shouldShow = !currentSearchText.isEmpty && hasMostPlayed
+        let shouldShow = viewModel.config.sections.mostPlayed.enabled && !currentSearchText.isEmpty && hasMostPlayed
         mostPlayedHeaderLabel.isHidden = !shouldShow
         mostPlayedContainerView.isHidden = !shouldShow
         
@@ -290,15 +291,17 @@ final class CasinoSearchViewController: UIViewController {
     }
     
     private func updateSearchState(searchText: String) {
+        
         if searchText.isEmpty {
-            // Show empty state and recent searches, hide search header and market groups
             emptyStateView.isHidden = false
             searchHeaderInfoView.isHidden = true
+            
         } else {
-            // Hide empty state and recent searches, show search header and market groups
             emptyStateView.isHidden = true
             searchHeaderInfoView.isHidden = false
+            
         }
+        
     }
 }
 

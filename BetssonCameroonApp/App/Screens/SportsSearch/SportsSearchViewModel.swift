@@ -120,10 +120,14 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     var recommendedEventsPublisher: AnyPublisher<[Event], Never> { Just([]).eraseToAnyPublisher() }
     var recommendedItemsPublisher: AnyPublisher<[TallOddsMatchCardViewModelProtocol], Never> { recommendedItemsSubject.eraseToAnyPublisher() }
     
+    // MARK: - Config
+    let config: SportsSearchConfig
+
     // MARK: - Initialization
     
-    init(userSessionStore: UserSessionStore) {
+    init(userSessionStore: UserSessionStore, config: SportsSearchConfig = .default) {
         self.userSessionStore = userSessionStore
+        self.config = config
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
         
         // Create the SearchView's view model
@@ -206,7 +210,6 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
             }
             .store(in: &cancellables)
 
-        // Focus changes observed at the controller level
     }
     
     private func setupMarketGroupBindings() {
@@ -226,11 +229,12 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     }
     
     private func getRecommendedMatches() {
+        guard config.suggestedEvents.enabled else { return }
         isLoadingSubject.send(true)
         
         let userId = userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
         
-        Env.servicesProvider.getRecommendedMatch(userId: userId, isLive: false)
+        Env.servicesProvider.getRecommendedMatch(userId: userId, isLive: false, limit: config.suggestedEvents.maxEvents ?? 5)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
@@ -239,34 +243,15 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
                 }
             }, receiveValue: { [weak self] events in
                 guard let self = self else { return }
-                // Step 1: Event -> Match
                 let matches = ServiceProviderModelMapper.matches(fromEvents: events)
-                // Step 2: Match -> TallOddsMatchData -> MockTallOddsMatchCardViewModel
+                
                 let items: [TallOddsMatchCardViewModelProtocol] = matches.map { match in
-//                    let header = MatchHeaderData(
-//                        id: match.id,
-//                        competitionName: match.competitionName,
-//                        matchTime: match.matchTime ?? "",
-//                        isLive: match.status.isLive
-//                    )
-//                    let marketInfo = MarketInfoData(
-//                        marketName: match.markets.first?.name ?? "",
-//                        marketCount: match.markets.count,
-//                        icons: []
-//                    )
-//                    let tallData = TallOddsMatchData(
-//                        matchId: match.id,
-//                        leagueInfo: header,
-//                        homeParticipantName: match.homeParticipant.name,
-//                        awayParticipantName: match.awayParticipant.name,
-//                        marketInfo: marketInfo,
-//                        outcomes: MarketGroupData(id: match.id, marketLines: [])
-//                    )
+
                     let tallOddsMatchCardViewModel = TallOddsMatchCardViewModel.create(from: match, relevantMarkets: match.markets, marketTypeId: match.markets.first?.typeId ?? "", matchCardContext: .search)
                     return tallOddsMatchCardViewModel
                 }
+                
                 self.recommendedItemsSubject.send(items)
-                print("RECOMMENDED EVENTS STORED: \(events.map { $0.id })")
                 self.isLoadingSubject.send(false)
             })
             .store(in: &cancellables)
@@ -289,8 +274,8 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
                     ()
                 case .failure(let error):
                     print("SEARCH ERROR: \(error)")
-                    self?.searchResultsSubject.send(0)
                     self?.updateSearchResultsState(isLoading: false, results: 0)
+                    self?.searchResultsSubject.send(0)
                 }
                 
                 self?.isLoadingSubject.send(false)
@@ -308,8 +293,8 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
                     viewModel.updateMatches(matches)
                 }
                 
-                self?.searchResultsSubject.send(matches.count)
                 self?.updateSearchResultsState(isLoading: false, results: matches.count)
+                self?.searchResultsSubject.send(matches.count)
                 self?.addRecentSearch(searchText)
             })
             .store(in: &cancellables)
