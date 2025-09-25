@@ -11,6 +11,16 @@ class NextUpEventsViewController: UIViewController {
     private var pillSelectorBarView: PillSelectorBarView!
     private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
     private var pageViewController: UIPageViewController!
+
+    // ComplexScroll: Unified header stack view
+    private lazy var headerStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 0
+        stack.backgroundColor = UIColor.App.backgroundPrimary
+        return stack
+    }()
     
     private let loadingIndicatorView: UIView = {
         let view = UIView()
@@ -36,16 +46,27 @@ class NextUpEventsViewController: UIViewController {
     private let viewModel: NextUpEventsViewModel
     private var marketGroupControllers: [String: MarketGroupCardsViewController] = [:]
     private var cancellables = Set<AnyCancellable>()
-    private var isAnimating = false // Track animation state
     
-    // MARK: - Header Animation Properties
-    private var headerContainerView: UIView!
-    private var headerTopConstraint: NSLayoutConstraint!
-    private var isHeaderVisible = true
-    private let headerAnimationDuration: TimeInterval = 0.37
+    // MARK: - ComplexScroll Properties
+    private var calculatedHeaderHeight: CGFloat = 0
+    private var headerHeight: CGFloat {
+        return calculatedHeaderHeight > 0 ? calculatedHeaderHeight : 286.0
+    }
+
+    // Header components container
     private var pillsContainerStackView: UIStackView!
-    private let scrollThreshold: CGFloat = 12.0 // Minimum scroll to trigger hide
-    private var headerHeight: CGFloat = 142.0 // Will be calculated dynamically (40 + 60 + 42)
+
+    // ComplexScroll: Container view for page controller (like POC)
+    private lazy var pageContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.App.backgroundPrimary
+        return view
+    }()
+
+    // Scroll Synchronization Properties
+    private var isSyncing = false
+    private var lastSyncedOffset: CGFloat = 0
 
     // MARK: - Lifecycle
     init(viewModel: NextUpEventsViewModel) {
@@ -74,19 +95,23 @@ class NextUpEventsViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updateHeaderHeightIfNeeded()
+        updateHeaderHeightAndInsets()
     }
-    
-    private func updateHeaderHeightIfNeeded() {
-        let calculatedHeight = headerContainerView.frame.height + 4
-        
-        // Only update if height actually changed and is valid
-        guard calculatedHeight > 0 && abs(calculatedHeight - headerHeight) > 0.1 else { return }
-        
-        headerHeight = calculatedHeight
-        // Update all existing market group controllers
+
+    // ComplexScroll: Dynamic header height calculation
+    private func updateHeaderHeightAndInsets() {
+        headerStackView.layoutIfNeeded()
+        let newHeaderHeight = headerStackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+
+        if abs(newHeaderHeight - calculatedHeaderHeight) > 1 {
+            calculatedHeaderHeight = newHeaderHeight
+            updateChildTableViewInsets()
+        }
+    }
+
+    private func updateChildTableViewInsets() {
         for controller in marketGroupControllers.values {
-            controller.topContentInset = headerHeight
+            controller.updateContentInset(headerHeight: headerHeight)
         }
     }
 
@@ -94,28 +119,115 @@ class NextUpEventsViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = UIColor.App.backgroundPrimary
 
-        setupHeaderContainer()
-        setupQuickLinksTabBar()
-        setupTopBannerSliderView()
-        setupPillSelectorBarView()
-        setupMarketGroupSelectorTabView()
+        view.addSubview(pageContainerView)
+
+        setupHeaderComponents()
         setupPageViewController()
         setupLoadingIndicator()
-        
+
         setupConstraints()
     }
-    
-    private func setupHeaderContainer() {
-        headerContainerView = UIView()
-        headerContainerView.translatesAutoresizingMaskIntoConstraints = false
-        headerContainerView.backgroundColor = UIColor.App.backgroundPrimary
-        view.addSubview(headerContainerView)
+
+    // ComplexScroll: Unified header setup
+    private func setupHeaderComponents() {
+        // Initialize components
+        topBannerSliderView = TopBannerSliderView(viewModel: viewModel.topBannerSliderViewModel)
+        pillSelectorBarView = PillSelectorBarView(viewModel: viewModel.pillSelectorBarViewModel)
+        marketGroupSelectorTabView = MarketGroupSelectorTabView(viewModel: viewModel.marketGroupSelectorViewModel)
+
+        // Configure components
+        topBannerSliderView.translatesAutoresizingMaskIntoConstraints = false
+        pillSelectorBarView.translatesAutoresizingMaskIntoConstraints = false
+        marketGroupSelectorTabView.translatesAutoresizingMaskIntoConstraints = false
+        quickLinksTabBarView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add to header stack in order (top to bottom)
+        headerStackView.addArrangedSubview(quickLinksTabBarView)
+        headerStackView.addArrangedSubview(topBannerSliderView)
+        headerStackView.addArrangedSubview(createPillsContainer())
+        headerStackView.addArrangedSubview(marketGroupSelectorTabView)
+
+        // Add header stack to view
+        view.addSubview(headerStackView)
+
+        setupHeaderCallbacks()
     }
 
-    private func setupMarketGroupSelectorTabView() {
-        marketGroupSelectorTabView = MarketGroupSelectorTabView(viewModel: viewModel.marketGroupSelectorViewModel)
-        marketGroupSelectorTabView.translatesAutoresizingMaskIntoConstraints = false
-        headerContainerView.addSubview(marketGroupSelectorTabView)
+    private func createPillsContainer() -> UIStackView {
+        // Create horizontal stack view for pills + filter button
+        let pillsContainerStackView = UIStackView()
+        pillsContainerStackView.axis = .horizontal
+        pillsContainerStackView.distribution = .fill
+        pillsContainerStackView.alignment = .fill
+        pillsContainerStackView.spacing = 0
+        pillsContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Create filter button container
+        let filterButtonContainer = UIView()
+        filterButtonContainer.backgroundColor = UIColor.App.navPills
+        filterButtonContainer.translatesAutoresizingMaskIntoConstraints = false
+
+        // Create filter pill button
+        let filterPillData = PillData(
+            id: "filter",
+            title: "Filter",
+            leftIconName: "line.3.horizontal.decrease",
+            showExpandIcon: true,
+            isSelected: false
+        )
+        let filterPillViewModel = MockPillItemViewModel(pillData: filterPillData)
+        let filterPillView = PillItemView(viewModel: filterPillViewModel)
+        filterPillView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Handle filter button tap
+        filterPillView.onPillSelected = { [weak self] in
+            self?.viewModel.onFiltersRequested()
+        }
+
+        // Add filter pill to container with padding
+        filterButtonContainer.addSubview(filterPillView)
+
+        // Add views to stack
+        pillsContainerStackView.addArrangedSubview(pillSelectorBarView)
+        pillsContainerStackView.addArrangedSubview(filterButtonContainer)
+
+        // Setup constraints
+        NSLayoutConstraint.activate([
+            // Filter pill constraints within container (8px padding)
+            filterPillView.topAnchor.constraint(equalTo: filterButtonContainer.topAnchor, constant: 8),
+            filterPillView.leadingAnchor.constraint(equalTo: filterButtonContainer.leadingAnchor, constant: 8),
+            filterPillView.trailingAnchor.constraint(equalTo: filterButtonContainer.trailingAnchor, constant: -8),
+            filterPillView.bottomAnchor.constraint(equalTo: filterButtonContainer.bottomAnchor, constant: -8),
+            filterPillView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+
+        self.pillsContainerStackView = pillsContainerStackView
+        return pillsContainerStackView
+    }
+
+    private func setupHeaderCallbacks() {
+        // Setup QuickLinks navigation callback
+        quickLinksTabBarView.onQuickLinkSelected = { [weak self] quickLinkType in
+            print("🎯 NextUpEventsViewController: QuickLink tapped - \(quickLinkType.rawValue)")
+        }
+
+        // Setup banner tap callback
+        topBannerSliderView.onBannerTapped = { [weak self] bannerIndex in
+            print("🎯 NextUpEventsViewController: Sports Banner tapped at index - \(bannerIndex)")
+        }
+
+        // Handle pill selection events
+        pillSelectorBarView.onPillSelected = { [weak self] pillId in
+            print("🎯 NextUpEventsViewController: Pill selected - \(pillId)")
+            if pillId == "sport_selector" {
+                self?.viewModel.onSportsSelectionRequested()
+            }
+        }
+
+        // Handle sports selector modal presentation
+        viewModel.pillSelectorBarViewModel.onShowSportsSelector = { [weak self] in
+            self?.viewModel.onSportsSelectionRequested()
+        }
     }
 
     private func setupPageViewController() {
@@ -128,151 +240,41 @@ class NextUpEventsViewController: UIViewController {
         pageViewController.delegate = self
 
         addChild(pageViewController)
-        view.addSubview(pageViewController.view)
+        pageContainerView.addSubview(pageViewController.view)
         pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
         pageViewController.didMove(toParent: self)
-        
-        // Send page view controller to back so header can overlay
-        view.sendSubviewToBack(pageViewController.view)
     }
 
-    private func setupQuickLinksTabBar() {
-        headerContainerView.addSubview(quickLinksTabBarView)
-        quickLinksTabBarView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Setup QuickLinks navigation callback
-        quickLinksTabBarView.onQuickLinkSelected = { [weak self] quickLinkType in
-            print("🎯 NextUpEventsViewController: QuickLink tapped - \(quickLinkType.rawValue)")
-            // This callback is already handled by the production QuickLinksTabBarViewModel
-            // which will trigger the onCasinoQuickLinkSelected closure in the ViewModel
-        }
-    }
 
-    private func setupTopBannerSliderView() {
-        topBannerSliderView = TopBannerSliderView(viewModel: viewModel.topBannerSliderViewModel)
-        topBannerSliderView.translatesAutoresizingMaskIntoConstraints = false
-        headerContainerView.addSubview(topBannerSliderView)
-
-        // Setup banner tap callback
-        topBannerSliderView.onBannerTapped = { [weak self] bannerIndex in
-            print("🎯 NextUpEventsViewController: Sports Banner tapped at index - \(bannerIndex)")
-            // Banner action handling is done through the ViewModel callbacks
-        }
-    }
-
-    private func setupPillSelectorBarView() {
-        pillSelectorBarView = PillSelectorBarView(viewModel: viewModel.pillSelectorBarViewModel)
-        pillSelectorBarView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Create horizontal stack view for pills + filter button
-        let pillsContainerStackView = UIStackView()
-        pillsContainerStackView.axis = .horizontal
-        pillsContainerStackView.distribution = .fill
-        pillsContainerStackView.alignment = .fill
-        pillsContainerStackView.spacing = 0
-        pillsContainerStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Create filter button container (red for debugging)
-        let filterButtonContainer = UIView()
-        filterButtonContainer.backgroundColor = UIColor.App.navPills
-        filterButtonContainer.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Create filter pill button
-        let filterPillData = PillData(
-            id: "filter",
-            title: "Filter",
-            leftIconName: "line.3.horizontal.decrease",
-            showExpandIcon: true,
-            isSelected: false
-        )
-        let filterPillViewModel = MockPillItemViewModel(pillData: filterPillData)
-        let filterPillView = PillItemView(viewModel: filterPillViewModel)
-        filterPillView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Handle filter button tap - delegate to ViewModel (MVVM-C pattern)
-        filterPillView.onPillSelected = { [weak self] in
-            self?.viewModel.onFiltersRequested()
-        }
-        
-        // Add filter pill to container with padding
-        filterButtonContainer.addSubview(filterPillView)
-        
-        // Add views to stack
-        pillsContainerStackView.addArrangedSubview(pillSelectorBarView)
-        pillsContainerStackView.addArrangedSubview(filterButtonContainer)
-        
-        // Add stack to header container
-        headerContainerView.addSubview(pillsContainerStackView)
-        self.pillsContainerStackView = pillsContainerStackView
-        
-        // Setup constraints
-        NSLayoutConstraint.activate([
-            // Stack view constraints (now positioned after topBannerSliderView)
-            pillsContainerStackView.topAnchor.constraint(equalTo: topBannerSliderView.bottomAnchor),
-            pillsContainerStackView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
-            pillsContainerStackView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
-
-            // Filter pill constraints within container (8px padding)
-            filterPillView.topAnchor.constraint(equalTo: filterButtonContainer.topAnchor, constant: 8),
-            filterPillView.leadingAnchor.constraint(equalTo: filterButtonContainer.leadingAnchor, constant: 8),
-            filterPillView.trailingAnchor.constraint(equalTo: filterButtonContainer.trailingAnchor, constant: -8),
-            filterPillView.bottomAnchor.constraint(equalTo: filterButtonContainer.bottomAnchor, constant: -8),
-            filterPillView.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        
-        // Handle pill selection events - delegate to ViewModel (MVVM-C pattern)
-        pillSelectorBarView.onPillSelected = { [weak self] pillId in
-            print("🎯 NextUpEventsViewController: Pill selected - \(pillId)")
-            if pillId == "sport_selector" {
-                self?.viewModel.onSportsSelectionRequested()
-            }
-            // Other pills can be handled here as needed
-        }
-        
-        // Handle sports selector modal presentation - delegate to ViewModel (MVVM-C pattern)
-        viewModel.pillSelectorBarViewModel.onShowSportsSelector = { [weak self] in
-            self?.viewModel.onSportsSelectionRequested()
-        }
-    }
 
     private func setupLoadingIndicator() {
         view.addSubview(loadingIndicatorView)
     }
 
     private func setupConstraints() {
-        // Header container constraints - positioned as overlay
-        headerTopConstraint = headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-        
         NSLayoutConstraint.activate([
-            // Header Container - floating overlay
-            headerTopConstraint,
-            headerContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerContainerView.bottomAnchor.constraint(equalTo: marketGroupSelectorTabView.bottomAnchor),
-            
-            // Quick Links Tab Bar inside header container
-            quickLinksTabBarView.topAnchor.constraint(equalTo: headerContainerView.topAnchor),
-            quickLinksTabBarView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
-            quickLinksTabBarView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
+            // Container fills entire safe area (like POC)
+            pageContainerView.topAnchor.constraint(equalTo: view.topAnchor),
+            pageContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            pageContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pageContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            
-            // Top Banner Slider below Quick Links Tab Bar
+            // Header Stack View - positioned at safe area top (like POC)
+            headerStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            // Top Banner height constraint
             topBannerSliderView.heightAnchor.constraint(equalToConstant: TopBannerSliderView.bannerHeight),
-            topBannerSliderView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
-            topBannerSliderView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
-            topBannerSliderView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
 
-            // Market Group Selector below Pills Container inside header container
-            marketGroupSelectorTabView.topAnchor.constraint(equalTo: pillsContainerStackView.bottomAnchor),
-            marketGroupSelectorTabView.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
-            marketGroupSelectorTabView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
+            // Market Group Selector height constraint
             marketGroupSelectorTabView.heightAnchor.constraint(equalToConstant: 42),
 
-            // Page View Controller - decoupled from header, starts from top
-            pageViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            pageViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            // Page View Controller fills container
+            pageViewController.view.topAnchor.constraint(equalTo: pageContainerView.topAnchor),
+            pageViewController.view.leadingAnchor.constraint(equalTo: pageContainerView.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: pageContainerView.trailingAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: pageContainerView.bottomAnchor),
 
             // Loading Indicator
             loadingIndicatorView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -336,21 +338,21 @@ class NextUpEventsViewController: UIViewController {
 
     // MARK: - UI Updates
     private func updateMarketGroupControllers(marketGroups: [MarketGroupTabItemData]) {
-        print("Updating UI controllers for \(marketGroups.count) groups")
+        print("[SetupMarketGroups] Updating UI controllers for \(marketGroups.count) groups")
 
         // Create UI controllers for each market group ViewModel
         for marketGroup in marketGroups {
             if marketGroupControllers[marketGroup.id] == nil {
                 // Get the ViewModel from the main ViewModel
                 guard let marketGroupCardsViewModel = viewModel.getMarketGroupCardsViewModel(for: marketGroup.id) else {
-                    print("No ViewModel found for market type: \(marketGroup.id)")
+                    print("[SetupMarketGroups] No ViewModel found for market type: \(marketGroup.id)")
                     continue
                 }
 
                 // Create UI controller with ViewModel
                 let controller = MarketGroupCardsViewController(viewModel: marketGroupCardsViewModel)
-                controller.scrollDelegate = self
-                controller.topContentInset = headerHeight
+                controller.scrollSyncDelegate = self
+                controller.updateContentInset(headerHeight: headerHeight)
                 
                 // Add card tap callback for match detail navigation - delegate to ViewModel (MVVM-C pattern)
                 controller.onCardTapped = { [weak self] selectedMatch in
@@ -358,7 +360,7 @@ class NextUpEventsViewController: UIViewController {
                 }
                 
                 marketGroupControllers[marketGroup.id] = controller
-                print("Created new UI controller for market type: \(marketGroup.id)")
+                print("[SetupMarketGroups] Created new UI controller for market type: \(marketGroup.id)")
             }
         }
 
@@ -380,12 +382,6 @@ class NextUpEventsViewController: UIViewController {
     }
 
     private func handleMarketGroupSelection(marketGroupId: String) {
-        // Prevent multiple animations at once
-        guard !isAnimating else {
-            print("Animation already in progress, ignoring selection")
-            return
-        }
-
         guard let targetController = marketGroupControllers[marketGroupId] else {
             print("No UI controller found for market type: \(marketGroupId)")
             return
@@ -407,20 +403,11 @@ class NextUpEventsViewController: UIViewController {
             to: marketGroupId
         )
 
-        isAnimating = true
-
         pageViewController.setViewControllers(
             [targetController],
             direction: direction,
             animated: true,
-            completion: { [weak self] completed in
-                self?.isAnimating = false
-                if completed {
-                    print("Successfully switched to market type: \(marketGroupId)")
-                } else {
-                    print("Failed to switch to market type: \(marketGroupId)")
-                }
-            }
+            completion: nil
         )
     }
 
@@ -474,25 +461,15 @@ class NextUpEventsViewController: UIViewController {
         // but this is useful for testing the UI behavior
     }
     
-    // MARK: - Header Animation
-    private func animateHeader(show: Bool) {
-        guard isHeaderVisible != show else { return }
-        
-        isHeaderVisible = show
-        let targetOffset = show ? 0 : -headerHeight
-        
-        UIView.animate(
-            withDuration: headerAnimationDuration,
-            delay: 0,
-            usingSpringWithDamping: 0.8,
-            initialSpringVelocity: 0,
-            options: [.curveEaseInOut, .allowUserInteraction],
-            animations: {
-                self.headerTopConstraint.constant = targetOffset
-                self.view.layoutIfNeeded()
-            },
-            completion: nil
-        )
+    // MARK: - ComplexScroll Header Animation
+    private func updateHeaderVisibility(for scrollOffset: CGFloat) {
+        // ComplexScroll algorithm: scrollOffset ranges from -headerHeight (visible) to 0+ (hidden)
+        // When scrollOffset = -headerHeight (showing headers): progress = 1 (fully visible)
+        // When scrollOffset = 0 (headers gone): progress = 0 (fully hidden)
+        let progress = min(max((-scrollOffset) / headerHeight, 0), 1)
+        let translateY = -headerHeight * (1 - progress)
+
+        headerStackView.transform = CGAffineTransform(translationX: 0, y: translateY)
     }
     
     // MARK: - Navigation Methods Removed (MVVM-C Pattern)
@@ -553,10 +530,6 @@ extension NextUpEventsViewController: UIPageViewControllerDataSource {
 extension NextUpEventsViewController: UIPageViewControllerDelegate {
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-
-        // Reset animation state regardless of completion
-        isAnimating = false
-
         guard completed,
               let currentController = pageViewController.viewControllers?.first as? MarketGroupCardsViewController,
               let currentMarketTypeId = getCurrentMarketTypeId(for: currentController) else {
@@ -564,7 +537,6 @@ extension NextUpEventsViewController: UIPageViewControllerDelegate {
         }
 
         // Update the tab selection to match the current page
-        // Only if we're not currently processing a tab selection (to avoid circular updates)
         if viewModel.getCurrentSelectedMarketGroupId() != currentMarketTypeId {
             viewModel.selectMarketGroup(id: currentMarketTypeId)
             print("Updated tab selection to match page: \(currentMarketTypeId)")
@@ -572,50 +544,37 @@ extension NextUpEventsViewController: UIPageViewControllerDelegate {
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        // Set animation state when transition begins (for user swipes)
-        isAnimating = true
-        
-        // Show header when swiping between pages
-        animateHeader(show: true)
+        // No special handling needed - content insets handle everything naturally
     }
 }
 
 // MARK: - MarketGroupCardsScrollDelegate
-extension NextUpEventsViewController: MarketGroupCardsScrollDelegate {
-    
-    func marketGroupCardsDidScroll(_ scrollView: UIScrollView, scrollDirection: ScrollDirection, in viewController: MarketGroupCardsViewController) {
-        // Only react to scroll from the currently visible page
-        guard let currentController = pageViewController.viewControllers?.first,
-              currentController === viewController else { return }
-        
-        let offset = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let scrollViewHeight = scrollView.bounds.height
-        
-        // Calculate if we're at the bottom
-        let maxScrollOffset = contentHeight - scrollViewHeight
-        let isAtBottom = offset >= maxScrollOffset - 10
-        
-        // Check if we're bouncing at the bottom
-        let isBouncing = offset > maxScrollOffset
-        
-        // Determine whether to show or hide headers
-        if scrollDirection == .down && offset > scrollThreshold && !isAtBottom {
-            // Only hide when scrolling down and not near bottom
-            animateHeader(show: false)
-        } else if scrollDirection == .up && !isBouncing && offset < maxScrollOffset {
-            // Only show when scrolling up and not bouncing
-            animateHeader(show: true)
-        } else if offset <= 0 {
-            // Always show at top
-            animateHeader(show: true)
-        }
+// MARK: - ComplexScroll Implementation
+extension NextUpEventsViewController: ScrollSyncDelegate {
+
+    func didScroll(to offset: CGPoint, from controller: MarketGroupCardsViewController) {
+        // Update header visibility using ComplexScroll algorithm
+        updateHeaderVisibility(for: offset.y)
+
+        // Sync scroll position to all other pages (like POC)
+        syncScrollPositions(from: offset, excluding: controller)
     }
-    
-    func marketGroupCardsDidEndScrolling(_ scrollView: UIScrollView, in viewController: MarketGroupCardsViewController) {
-        // Show headers if we're at the top after scrolling ends
-        if scrollView.contentOffset.y <= 0 {
-            animateHeader(show: true)
+
+    private func syncScrollPositions(from sourceOffset: CGPoint, excluding excludedController: MarketGroupCardsViewController?) {
+        guard !isSyncing else { return }
+
+        let offsetY = sourceOffset.y
+        guard abs(offsetY - lastSyncedOffset) > 1 else { return }
+
+        isSyncing = true
+        lastSyncedOffset = offsetY
+
+        for controller in marketGroupControllers.values {
+            if controller !== excludedController {
+                controller.setSyncedContentOffset(CGPoint(x: 0, y: offsetY))
+            }
         }
+
+        isSyncing = false
     }
 }

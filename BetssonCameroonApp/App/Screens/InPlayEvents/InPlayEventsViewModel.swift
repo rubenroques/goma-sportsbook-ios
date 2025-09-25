@@ -298,11 +298,6 @@ class InPlayEventsViewModel {
                 print("InPlayEventsViewModel: 📡 Received content update with \(content.count) event groups for sport: \(self.sport.name)")
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: content)
                 let mainMarkets = ServiceProviderModelMapper.mainMarkets(fromEventsGroups: content)
-                
-                print("   - Mapped to \(matches.count) matches")
-                if let mainMarkets = mainMarkets {
-                    print("   - Mapped to \(mainMarkets.count) main markets")
-                }
                       
                 self.processMatches(matches, mainMarkets: mainMarkets)
 

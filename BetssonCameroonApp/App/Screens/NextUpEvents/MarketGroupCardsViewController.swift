@@ -14,18 +14,13 @@ class MarketGroupCardsViewController: UIViewController {
     
     // MARK: - Scroll Tracking
     weak var scrollDelegate: MarketGroupCardsScrollDelegate?
-    private var lastContentOffset: CGFloat = 0
-    private var scrollDirection: ScrollDirection = .none
-    
+    weak var scrollSyncDelegate: ScrollSyncDelegate?
+
     // MARK: - Card Tap Callback
     var onCardTapped: ((Match) -> Void)?
-    
-    // MARK: - Configurable Content Inset
-    var topContentInset: CGFloat = 0 {
-        didSet {
-            updateContentInset()
-        }
-    }
+
+    // MARK: - ComplexScroll Properties
+    private var isReceivingSync = false
 
     enum Section: String, CaseIterable {
         case matchCards
@@ -71,12 +66,13 @@ class MarketGroupCardsViewController: UIViewController {
 
     // MARK: - Setup
     private func setupViews() {
-        view.backgroundColor = UIColor.App.backgroundPrimary
-
-        updateContentInset()
         
-        collectionView.backgroundColor = UIColor.App.backgroundPrimary
-        collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
+        let appliedColor = UIColor.clear // UIColor.App.backgroundPrimary
+        
+        view.backgroundColor = appliedColor
+        
+        collectionView.backgroundColor = appliedColor
+        collectionView.backgroundView?.backgroundColor = appliedColor
         
         view.addSubview(collectionView)
 
@@ -206,10 +202,30 @@ class MarketGroupCardsViewController: UIViewController {
         return collectionView.contentOffset
     }
     
-    // MARK: - Content Inset Management
-    private func updateContentInset() {
-        collectionView.contentInset = .init(top: topContentInset, left: 0, bottom: 54, right: 0)
-        collectionView.scrollIndicatorInsets = .init(top: topContentInset + 4, left: 0, bottom: 60, right: 0)
+    // MARK: - ComplexScroll Content Inset Management
+    func updateContentInset(headerHeight: CGFloat) {
+        // 1. Check if user is currently viewing headers
+        let wasAtTop = collectionView.contentOffset.y <= -collectionView.contentInset.top + 10
+
+        // 2. Update insets with new header height
+        collectionView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 54, right: 0)
+        collectionView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: 60, right: 0)
+
+        collectionView.contentOffset = CGPoint(x: 0, y: -headerHeight)
+                
+        // 3. If they were viewing headers, maintain that view
+        if wasAtTop {
+            collectionView.contentOffset = CGPoint(x: 0, y: -headerHeight)
+        }
+        else {
+            // 4. If they were scrolled into content, leave them there
+        }
+    }
+
+    func setSyncedContentOffset(_ offset: CGPoint) {
+        isReceivingSync = true
+        collectionView.contentOffset = offset
+        isReceivingSync = false
     }
 }
 
@@ -217,31 +233,9 @@ class MarketGroupCardsViewController: UIViewController {
 extension MarketGroupCardsViewController: UICollectionViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // Calculate scroll direction
-        let currentOffset = scrollView.contentOffset.y
-        if currentOffset > lastContentOffset && currentOffset > 0 {
-            scrollDirection = .down
-        } else if currentOffset < lastContentOffset {
-            scrollDirection = .up
-        } else {
-            scrollDirection = .none
-        }
-        
-        lastContentOffset = currentOffset
-        
-        // Notify delegate
-        scrollDelegate?.marketGroupCardsDidScroll(scrollView, scrollDirection: scrollDirection, in: self)
-    }
-
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        // Ensure final position is synced via ViewModel
-        scrollDelegate?.marketGroupCardsDidEndScrolling(scrollView, in: self)
-    }
-
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        // If not decelerating, sync the final position via ViewModel
-        if !decelerate {
-            scrollDelegate?.marketGroupCardsDidEndScrolling(scrollView, in: self)
+        // Only propagate scroll events if we're not receiving a sync update
+        if !isReceivingSync {
+            scrollSyncDelegate?.didScroll(to: scrollView.contentOffset, from: self)
         }
     }
 }

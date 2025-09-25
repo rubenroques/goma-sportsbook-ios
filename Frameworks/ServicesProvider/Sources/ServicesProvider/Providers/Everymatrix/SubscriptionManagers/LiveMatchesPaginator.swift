@@ -193,7 +193,6 @@ class LiveMatchesPaginator: UnsubscriptionController {
             }
             .map { outcome -> Outcome? in
                 // Map internal model to domain model using existing mapper
-                print("#DEBUG [LiveMatchesPaginator] subscribeToOutcomeUpdates outcome: \(outcome)")
                 return EveryMatrixModelMapper.outcome(fromInternalOutcome: outcome)
             }
             .setFailureType(to: ServiceProviderError.self)
@@ -462,6 +461,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
     // MARK: - Live Data Building
     
     private func buildEventLiveData(eventId: String, from eventInfos: [EveryMatrix.EventInfoDTO], matchData: EveryMatrix.MatchDTO? = nil) -> EventLiveData {
+        
         var homeScore: Int?
         var awayScore: Int?
         var matchTimeMinutes: Int?
@@ -513,7 +513,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
                     switch statusName {
                     case "not started", "not_started":
                         status = .notStarted
-                    case "ended", "finished":
+                    case "ended", "finished", "abandoned", "cancelled":
                         status = .ended(info.paramEventPartName1 ?? statusName)
                     default:
                         status = .inProgress(info.paramEventPartName1 ?? statusName)
@@ -537,7 +537,9 @@ class LiveMatchesPaginator: UnsubscriptionController {
                 print("    - Unknown EVENT_INFO typeId: \(info.typeId)")
                 print("      - paramFloat1: \(info.paramFloat1 ?? -1)")
                 print("      - paramFloat2: \(info.paramFloat2 ?? -1)")
+                print("      - typeName: \(info.typeName ?? "nil")")
                 print("      - eventPartName: \(info.eventPartName ?? "nil")")
+                print("      - paramScoringUnitName1: \(info.paramScoringUnitName1 ?? "nil")")
                 break
             }
         }

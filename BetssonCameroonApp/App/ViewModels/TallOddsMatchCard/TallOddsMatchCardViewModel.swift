@@ -166,7 +166,9 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                     print("[TallOddsMatchCardViewModel] 🟢 Live data connected: \(subscription.id) for match: \(self.matchData.matchId)")
                     
                 case .contentUpdate(let eventLiveData):
-                    // print("[TallOddsMatchCardViewModel] contentUpdated live data")
+                    
+                    print("[TallOddsMatchCardViewModel] contentUpdated live data")
+                    
                     self.currentEventLiveData = eventLiveData
                     self.updateScoreViewModel(from: eventLiveData)
                     self.updateMatchHeaderViewModel(from: eventLiveData)
