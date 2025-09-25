@@ -69,7 +69,6 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         // Start live data subscription for live matches
         self.subscribeToLiveData()
         
-        self.setupPublishers()
     }
     
     // MARK: - Cleanup

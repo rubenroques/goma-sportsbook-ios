@@ -1514,6 +1514,24 @@ extension SportRadarPrivilegedAccessManager {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
+    // MARK: - Transaction History Methods (Not Supported for SportRadar)
+
+    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getWageringTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getWageringTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {

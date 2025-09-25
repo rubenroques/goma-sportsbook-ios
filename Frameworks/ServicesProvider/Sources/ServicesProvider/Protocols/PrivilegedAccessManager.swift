@@ -9,6 +9,16 @@ import Foundation
 import Combine
 import SharedModels
 
+// MARK: - Transaction Date Filter
+
+public enum TransactionDateFilter {
+    case all        // 180 days
+    case oneDay
+    case oneWeek
+    case oneMonth
+    case threeMonths
+}
+
 protocol PrivilegedAccessManagerProvider {
 
     var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
@@ -80,7 +90,15 @@ protocol PrivilegedAccessManagerProvider {
     func addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError>
 
     func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionType]?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
-    
+
+    // MARK: - New Transaction History Methods
+    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError>
+    func getWageringTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError>
+
+    // Helper methods with date filter
+    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError>
+    func getWageringTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError>
+
     func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError>
 
     func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError>

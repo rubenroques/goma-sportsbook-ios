@@ -128,8 +128,8 @@ final class ProfileWalletCoordinator: Coordinator {
             XPush.forceOpenInbox()
             
         case .transactionHistory:
-            // TODO: Navigate to transaction history
-            showPlaceholderAlert(title: "Transaction History", message: "Feature coming soon")
+            // Navigate to transaction history
+            showTransactionHistory()
         case .changeLanguage:
             // Show language selection
             showLanguageSelection()
@@ -167,6 +167,29 @@ final class ProfileWalletCoordinator: Coordinator {
     
     private func showLanguageSelection() {
         // TODO:
+    }
+
+    private func showTransactionHistory() {
+        guard let profileNavigationController = profileNavigationController else {
+            print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
+            return
+        }
+
+        // Create TransactionHistoryCoordinator using profile's NavigationController
+        let transactionHistoryCoordinator = TransactionHistoryCoordinator(
+            navigationController: profileNavigationController,
+            servicesProvider: servicesProvider
+        )
+
+        // Setup closure-based callbacks
+        transactionHistoryCoordinator.onDismiss = { [weak self] in
+            self?.removeChildCoordinator(transactionHistoryCoordinator)
+        }
+
+        addChildCoordinator(transactionHistoryCoordinator)
+        transactionHistoryCoordinator.start()
+
+        print("🚀 ProfileWalletCoordinator: Navigated to transaction history from profile modal context")
     }
     
     // COMMENTED OUT - Using XPush.openInbox() for now

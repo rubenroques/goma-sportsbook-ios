@@ -15,6 +15,8 @@ enum EveryMatrixPlayerAPI {
     case getUserProfile(userId: String)
     case getUserBalance(userId: String)
     case getBankingWebView(userId: String, parameters: EveryMatrix.GetPaymentSessionRequest)
+    case getWageringTransactions(userId: String, startDate: String, endDate: String, pageNumber: Int?)
+    case getBankingTransactions(userId: String, startDate: String, endDate: String, pageNumber: Int?)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -41,21 +43,47 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v2/player/\(userId)/balance"
         case .getBankingWebView(let userId, _):
             return "/v1/player/\(userId)/payment/GetPaymentSession"
+        case .getWageringTransactions(let userId, _, _, _):
+            return "/v1/player/\(userId)/transactions/wagering"
+        case .getBankingTransactions(let userId, _, _, _):
+            return "/v1/player/\(userId)/transactions/banking"
         }
     }
     
     var query: [URLQueryItem]? {
-        return nil
+        switch self {
+        case .getWageringTransactions(_, let startDate, let endDate, let pageNumber):
+            var queryItems = [
+                URLQueryItem(name: "startDate", value: startDate),
+                URLQueryItem(name: "endDate", value: endDate)
+            ]
+            if let pageNumber = pageNumber {
+                queryItems.append(URLQueryItem(name: "page", value: String(pageNumber)))
+            }
+            return queryItems
+        case .getBankingTransactions(_, let startDate, let endDate, let pageNumber):
+            var queryItems = [
+                URLQueryItem(name: "startDate", value: startDate),
+                URLQueryItem(name: "endDate", value: endDate)
+            ]
+            if let pageNumber = pageNumber {
+                queryItems.append(URLQueryItem(name: "page", value: String(pageNumber)))
+            }
+            return queryItems
+        default:
+            return nil
+        }
     }
     
     var headers: HTTP.Headers? {
-        
+
         switch self {
-        case .getUserProfile, .getUserBalance:
+        case .getUserProfile, .getUserBalance, .getWageringTransactions, .getBankingTransactions:
             let headers = [
                 "Content-Type": "application/json",
                 "User-Agent": "GOMA/native-app/iOS",
                 "X-Session-Type": "others",
+                "Accept": "application/json"
             ]
             return headers
         case .getBankingWebView:
@@ -67,7 +95,7 @@ extension EveryMatrixPlayerAPI: Endpoint {
             let headers = EveryMatrixUnifiedConfiguration.shared.defaultHeaders
             return headers
         }
-        
+
     }
     
     var cachePolicy: URLRequest.CachePolicy {
@@ -90,6 +118,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return .get
         case .getBankingWebView:
             return .post
+        case .getWageringTransactions, .getBankingTransactions:
+            return .get
         }
     }
     
@@ -153,10 +183,12 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return true
         case .getBankingWebView:
             return true
+        case .getWageringTransactions, .getBankingTransactions:
+            return true
         default:
             return false
         }
-        
+
     }
     
     var comment: String? {

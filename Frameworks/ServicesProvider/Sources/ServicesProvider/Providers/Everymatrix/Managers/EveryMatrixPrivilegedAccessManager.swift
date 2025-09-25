@@ -473,5 +473,72 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     func searchUserWithCode(code: String) -> AnyPublisher<SearchUser, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
+    // MARK: - Transaction History Methods
+
+    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+        let currentUserId = sessionCoordinator.currentUserId ?? ""
+
+        let endpoint = EveryMatrixPlayerAPI.getBankingTransactions(userId: currentUserId, startDate: startDate, endDate: endDate, pageNumber: pageNumber)
+        let publisher: AnyPublisher<EveryMatrix.BankingTransactionsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher
+            .map { internalResponse in
+                EveryMatrixModelMapper.bankingTransactionsResponse(from: internalResponse)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func getWageringTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
+        let currentUserId = sessionCoordinator.currentUserId ?? ""
+
+        let endpoint = EveryMatrixPlayerAPI.getWageringTransactions(userId: currentUserId, startDate: startDate, endDate: endDate, pageNumber: pageNumber)
+        let publisher: AnyPublisher<EveryMatrix.WageringTransactionsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher
+            .map { internalResponse in
+                EveryMatrixModelMapper.wageringTransactionsResponse(from: internalResponse)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    // Helper methods with date filter
+    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+        let (startDate, endDate) = calculateDates(for: filter)
+        return getBankingTransactionsHistory(startDate: startDate, endDate: endDate, pageNumber: pageNumber)
+    }
+
+    func getWageringTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
+        let (startDate, endDate) = calculateDates(for: filter)
+        return getWageringTransactionsHistory(startDate: startDate, endDate: endDate, pageNumber: pageNumber)
+    }
+
+    // MARK: - Private Date Calculation Helper
+
+    private func calculateDates(for filter: TransactionDateFilter) -> (String, String) {
+        let calendar = Calendar.current
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+
+        let endDate = formatter.string(from: now)
+
+        let startDate: String
+        switch filter {
+        case .all:
+            // 179 days back (API limit is 180 days, using 179 to avoid edge cases)
+            startDate = formatter.string(from: calendar.date(byAdding: .day, value: -179, to: now) ?? now)
+        case .oneDay:
+            startDate = formatter.string(from: calendar.date(byAdding: .day, value: -1, to: now) ?? now)
+        case .oneWeek:
+            startDate = formatter.string(from: calendar.date(byAdding: .day, value: -7, to: now) ?? now)
+        case .oneMonth:
+            startDate = formatter.string(from: calendar.date(byAdding: .month, value: -1, to: now) ?? now)
+        case .threeMonths:
+            startDate = formatter.string(from: calendar.date(byAdding: .month, value: -3, to: now) ?? now)
+        }
+
+        return (startDate, endDate)
+    }
+
 }
