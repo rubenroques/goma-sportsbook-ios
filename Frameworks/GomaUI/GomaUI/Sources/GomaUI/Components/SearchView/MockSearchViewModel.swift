@@ -9,6 +9,7 @@ public final class MockSearchViewModel: SearchViewModelProtocol {
     public var textPublisher: AnyPublisher<String, Never> { text.eraseToAnyPublisher() }
     public var isClearButtonVisiblePublisher: AnyPublisher<Bool, Never> { isClearButtonVisible.eraseToAnyPublisher() }
     public var isEnabledPublisher: AnyPublisher<Bool, Never> { isEnabled.eraseToAnyPublisher() }
+    public var isFocusedPublisher: AnyPublisher<Bool, Never> { isFocused.eraseToAnyPublisher() }
 
     // Subjects
     private let placeholderText: CurrentValueSubject<String, Never>
@@ -16,6 +17,7 @@ public final class MockSearchViewModel: SearchViewModelProtocol {
     private let text = CurrentValueSubject<String, Never>("")
     private let isClearButtonVisible = CurrentValueSubject<Bool, Never>(false)
     private let isEnabled = CurrentValueSubject<Bool, Never>(true)
+    private let isFocused = CurrentValueSubject<Bool, Never>(false)
 
     public init(placeholder: String = "Search in Sportsbook", attributedPlaceholder: NSAttributedString? = nil) {
         self.placeholderText = CurrentValueSubject<String, Never>(placeholder)
@@ -34,6 +36,7 @@ public final class MockSearchViewModel: SearchViewModelProtocol {
     }
 
     public func setFocused(_ isFocused: Bool) {
+        self.isFocused.send(isFocused)
     }
 
     public func submit() {

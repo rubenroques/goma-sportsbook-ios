@@ -12,6 +12,7 @@ public protocol SearchViewModelProtocol: AnyObject {
     // UI State
     var isClearButtonVisiblePublisher: AnyPublisher<Bool, Never> { get }
     var isEnabledPublisher: AnyPublisher<Bool, Never> { get }
+    var isFocusedPublisher: AnyPublisher<Bool, Never> { get }
 
     // Inputs
     func updateText(_ text: String)

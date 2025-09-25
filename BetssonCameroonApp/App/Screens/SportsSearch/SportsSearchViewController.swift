@@ -27,6 +27,7 @@ class SportsSearchViewController: UIViewController {
     private var recommendedItems: [TallOddsMatchCardViewModelProtocol] = []
     private var marketGroupSelectorTabView: MarketGroupSelectorTabView!
     private var pageViewController: UIPageViewController!
+    private let headerViewModel = MockHeaderTextViewViewModel(title: "Suggested Events")
     
     // Loading overlay
     private let loadingIndicatorView: UIView = {
@@ -172,7 +173,6 @@ class SportsSearchViewController: UIViewController {
         // Search text changes
         viewModel.searchTextPublisher
             .sink { [weak self] searchText in
-                print("🔍 SportsSearchViewController: Search text changed to: '\(searchText)'")
                 self?.updateSearchState(searchText: searchText)
             }
             .store(in: &cancellables)
@@ -180,9 +180,28 @@ class SportsSearchViewController: UIViewController {
         // Search submission (keyboard search button pressed)
         viewModel.onSearchSubmitted
             .sink { [weak self] searchText in
-                print("🔍 SportsSearchViewController: Search submitted: '\(searchText)'")
                 self?.updateSearchState(searchText: searchText)
                 
+            }
+            .store(in: &cancellables)
+        
+        // Focus changes from SearchView: show/hide recent searches scroll view
+        viewModel.searchFocusPublisher
+            .sink { [weak self] isFocused in
+                guard let self = self else { return }
+                let hasText = !self.viewModel.currentSearchText.isEmpty
+                let shouldShowRecent = isFocused && !hasText
+                self.recentSearchesScrollView.isHidden = !shouldShowRecent
+
+                if isFocused {
+                    // While focused, hide suggested events
+                    self.recommendedCollectionView.isHidden = true
+                } else {
+                    // On blur and no text, show suggested events
+                    if !hasText {
+                        self.recommendedCollectionView.isHidden = false
+                    }
+                }
             }
             .store(in: &cancellables)
         
@@ -259,6 +278,7 @@ class SportsSearchViewController: UIViewController {
             searchHeaderInfoView.isHidden = true
             marketGroupSelectorTabView.isHidden = true
             pageViewController.view.isHidden = true
+            recommendedCollectionView.isHidden = false
         } else {
             // Hide empty state and recent searches, show search header and market groups
             emptyStateView.isHidden = true
@@ -442,12 +462,25 @@ private extension SportsSearchViewController {
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = 1.5
             section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+            // Header supplementary item
+            let headerSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(36)
+            )
+            let header = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: headerSize,
+                elementKind: UICollectionView.elementKindSectionHeader,
+                alignment: .top
+            )
+            header.pinToVisibleBounds = false
+            section.boundarySupplementaryItems = [header]
             return section
         }
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = StyleProvider.Color.backgroundSecondary
+        collectionView.backgroundColor = StyleProvider.Color.backgroundTertiary
         collectionView.register(TallOddsMatchCardCollectionViewCell.self, forCellWithReuseIdentifier: TallOddsMatchCardCollectionViewCell.identifier)
+        collectionView.register(HeaderTextReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderTextReusableView.identifier)
         return collectionView
     }
 }
@@ -494,15 +527,22 @@ extension SportsSearchViewController: UICollectionViewDataSource, UICollectionVi
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TallOddsMatchCardCollectionViewCell.identifier, for: indexPath) as? TallOddsMatchCardCollectionViewCell else {
             return UICollectionViewCell()
         }
-        let vm = recommendedItems[indexPath.item]
+        let viewModel = recommendedItems[indexPath.item]
         let isFirst = indexPath.item == 0
         let isLast = indexPath.item == recommendedItems.count - 1
-        cell.configure(with: vm)
+        cell.configure(with: viewModel, backgroundColor: StyleProvider.Color.backgroundSecondary)
         cell.configureCellPosition(isFirst: isFirst, isLast: isLast)
         return cell
     }
 
-    // Compositional layout uses estimated heights; no need to implement sizeForItem
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderTextReusableView.identifier, for: indexPath) as! HeaderTextReusableView
+            header.configure(title: "Suggested Events")
+            return header
+        }
+        return UICollectionReusableView()
+    }
 }
 
 extension SportsSearchViewController: MarketGroupCardsScrollDelegate {

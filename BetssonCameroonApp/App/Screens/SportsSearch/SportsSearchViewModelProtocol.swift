@@ -14,6 +14,7 @@ protocol SportsSearchViewModelProtocol: AnyObject {
     
     // MARK: - Publishers
     var searchTextPublisher: AnyPublisher<String, Never> { get }
+    var searchFocusPublisher: AnyPublisher<Bool, Never> { get }
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var searchResultsPublisher: AnyPublisher<Int, Never> { get }
     var recentSearchesPublisher: AnyPublisher<[String], Never> { get }

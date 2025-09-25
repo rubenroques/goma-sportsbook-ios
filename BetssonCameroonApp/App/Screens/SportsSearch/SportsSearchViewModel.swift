@@ -76,6 +76,8 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
     var searchTextPublisher: AnyPublisher<String, Never> {
         searchTextSubject.eraseToAnyPublisher()
     }
+
+    var searchFocusPublisher: AnyPublisher<Bool, Never> { searchComponentViewModel.isFocusedPublisher }
     
     var searchResultsPublisher: AnyPublisher<Int, Never> {
         searchResultsSubject.eraseToAnyPublisher()
@@ -137,6 +139,16 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         getRecommendedMatches()
     }
     
+    func clearData() {
+        allMatches = []
+        mainMarkets = nil
+        marketGroups = []
+        selectedMarketGroupId = nil
+        marketGroupCardsViewModels.removeAll()
+        self.marketGroupSelectorViewModel.updateWithMatches([], mainMarkets: [])
+        self.marketGroupSelectorViewModel.clearSelection()
+    }
+    
     // MARK: - SportsSearchViewModelProtocol
     
     func updateSearchText(_ text: String) {
@@ -156,12 +168,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         _currentSearchText = ""
         searchTextSubject.send("")
         searchResultsSubject.send(0)
-        allMatches = []
-        mainMarkets = nil
-        marketGroups = []
-        selectedMarketGroupId = nil
-        marketGroupCardsViewModels.removeAll()
-        self.marketGroupSelectorViewModel.updateWithMatches([], mainMarkets: [])
+        clearData()
     }
     
     func searchFromRecent(_ text: String) {
@@ -176,10 +183,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         searchResultsPublisher
             .sink { [weak self] results in
                 if results == 0 {
-                    self?.allMatches = []
-                    self?.mainMarkets = nil
-                    self?.marketGroups = []
-                    self?.marketGroupCardsViewModels.removeAll()
+                    self?.clearData()
                 }
             }
             .store(in: &cancellables)
@@ -190,7 +194,6 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         searchComponentViewModel.textPublisher
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .sink { [weak self] text in
-                print("SEARCH NOW!")
                 self?.updateSearchText(text)
             }
             .store(in: &cancellables)
@@ -202,6 +205,8 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
                 self?.clearSearch()
             }
             .store(in: &cancellables)
+
+        // Focus changes observed at the controller level
     }
     
     private func setupMarketGroupBindings() {
@@ -376,46 +381,6 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         }
         
         self.marketGroups = marketGroups
-    }
-    
-    private func generateMockSearchResults(for searchText: String) -> [SearchResult] {
-        // Mock data for demonstration
-        let mockResults = [
-            SearchResult(
-                id: "1",
-                title: "Football",
-                subtitle: "Sport",
-                type: .sport,
-                imageUrl: nil
-            ),
-            SearchResult(
-                id: "2",
-                title: "Premier League",
-                subtitle: "Football League",
-                type: .league,
-                imageUrl: nil
-            ),
-            SearchResult(
-                id: "3",
-                title: "Manchester United",
-                subtitle: "Football Team",
-                type: .team,
-                imageUrl: nil
-            ),
-            SearchResult(
-                id: "4",
-                title: "Manchester United vs Liverpool",
-                subtitle: "Premier League Match",
-                type: .match,
-                imageUrl: nil
-            )
-        ]
-        
-        // Filter results based on search text
-        return mockResults.filter { result in
-            result.title.localizedCaseInsensitiveContains(searchText) ||
-            result.subtitle?.localizedCaseInsensitiveContains(searchText) == true
-        }
     }
     
     // MARK: - Recent Searches Management

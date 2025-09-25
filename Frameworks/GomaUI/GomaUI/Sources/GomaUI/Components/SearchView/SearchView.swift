@@ -199,12 +199,10 @@ public final class SearchView: UIView {
 
     @objc private func editingDidBegin() {
         self.viewModel.setFocused(true)
-        print("STARTED SEARCH")
     }
 
     @objc private func editingDidEnd() {
         self.viewModel.setFocused(false)
-        print("FINISHED SEARCH")
     }
 
     @objc private func clearTapped() {
