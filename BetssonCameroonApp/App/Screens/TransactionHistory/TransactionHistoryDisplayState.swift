@@ -1,9 +1,3 @@
-//
-//  TransactionHistoryDisplayState.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 25/01/2025.
-//
 
 import Foundation
 import ServicesProvider

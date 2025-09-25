@@ -1,9 +1,3 @@
-//
-//  TransactionHistoryItem.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 25/01/2025.
-//
 
 import Foundation
 
@@ -17,6 +11,7 @@ struct TransactionHistoryItem: Hashable, Identifiable {
     let description: String
     let details: String?
     let iconName: String
+    let balance: Double?
 }
 
 enum TransactionHistoryItemType: Hashable {
@@ -82,7 +77,8 @@ extension TransactionHistoryItem {
             status: bankingTransaction.status,
             description: description,
             details: details,
-            iconName: bankingTransaction.type.iconName
+            iconName: bankingTransaction.type.iconName,
+            balance: nil // Banking transactions don't have balance information
         )
     }
 
@@ -99,7 +95,8 @@ extension TransactionHistoryItem {
             status: "Completed", // Wagering transactions are always completed when we receive them
             description: description,
             details: details,
-            iconName: wageringTransaction.transType.iconName
+            iconName: wageringTransaction.transType.iconName,
+            balance: wageringTransaction.balance // Use the actual balance from wagering transaction
         )
     }
 }

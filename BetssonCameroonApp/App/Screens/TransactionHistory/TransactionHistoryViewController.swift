@@ -1,9 +1,3 @@
-//
-//  TransactionHistoryViewController.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 25/01/2025.
-//
 
 import UIKit
 import Combine
@@ -14,7 +8,7 @@ final class TransactionHistoryViewController: UIViewController {
 
     // MARK: - Private Properties
 
-    private let viewModel: TransactionHistoryViewModel
+    private let viewModel: TransactionHistoryViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - UI Components
@@ -29,8 +23,13 @@ final class TransactionHistoryViewController: UIViewController {
         return view
     }()
 
-    private lazy var timeFilterHeaderView: UIView = Self.createTimeFilterHeaderView()
-    private lazy var timeFilterButtons: [UIButton] = Self.createTimeFilterButtons()
+    private lazy var timeFilterBar: TimeFilterBar = {
+        let filterBar = TimeFilterBar()
+        filterBar.onFilterSelected = { [weak self] filter in
+            self?.viewModel.selectDateFilter(filter)
+        }
+        return filterBar
+    }()
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -60,7 +59,7 @@ final class TransactionHistoryViewController: UIViewController {
 
     // MARK: - Initialization
 
-    init(viewModel: TransactionHistoryViewModel) {
+    init(viewModel: TransactionHistoryViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -97,6 +96,9 @@ final class TransactionHistoryViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = UIColor.App.backgroundPrimary
 
+        timeFilterBar.backgroundColor = UIColor.App.backgroundTertiary
+        errorView.backgroundColor = UIColor.App.backgroundTertiary
+        
         setupViewHierarchy()
         setupConstraints()
     }
@@ -104,18 +106,13 @@ final class TransactionHistoryViewController: UIViewController {
     private func setupViewHierarchy() {
         view.addSubview(customNavigationView)
         view.addSubview(pillSelectorBarView)
-        view.addSubview(timeFilterHeaderView)
+        view.addSubview(timeFilterBar)
         view.addSubview(tableView)
         view.addSubview(loadingView)
         view.addSubview(errorView)
 
         customNavigationView.addSubview(titleLabel)
         customNavigationView.addSubview(backButton)
-
-        // Add time filter buttons to header
-        for button in timeFilterButtons {
-            timeFilterHeaderView.addSubview(button)
-        }
     }
 
     private func setupConstraints() {
@@ -138,18 +135,17 @@ final class TransactionHistoryViewController: UIViewController {
 
             // Pill Selector Bar
             pillSelectorBarView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor, constant: 16),
-            pillSelectorBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            pillSelectorBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            pillSelectorBarView.heightAnchor.constraint(equalToConstant: 44),
+            pillSelectorBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 4),
+            pillSelectorBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -4),
+            pillSelectorBarView.heightAnchor.constraint(equalToConstant: 32),
 
-            // Time Filter Header
-            timeFilterHeaderView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 16),
-            timeFilterHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            timeFilterHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            timeFilterHeaderView.heightAnchor.constraint(equalToConstant: 44),
+            // Time Filter Bar
+            timeFilterBar.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 16),
+            timeFilterBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            timeFilterBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
             // Table View
-            tableView.topAnchor.constraint(equalTo: timeFilterHeaderView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: timeFilterBar.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -166,34 +162,6 @@ final class TransactionHistoryViewController: UIViewController {
             errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-
-        // Time filter buttons constraints - create a horizontal stack
-        let buttonSpacing: CGFloat = 16
-        let buttonWidth: CGFloat = 60
-
-        if timeFilterButtons.count > 0 {
-            // Center the first button
-            let centerButton = timeFilterButtons[2] // "1W" is in the middle (index 2 of 5)
-            NSLayoutConstraint.activate([
-                centerButton.centerXAnchor.constraint(equalTo: timeFilterHeaderView.centerXAnchor),
-                centerButton.centerYAnchor.constraint(equalTo: timeFilterHeaderView.centerYAnchor),
-                centerButton.widthAnchor.constraint(equalToConstant: buttonWidth),
-                centerButton.heightAnchor.constraint(equalToConstant: 32)
-            ])
-
-            // Position remaining buttons relative to center
-            for (index, button) in timeFilterButtons.enumerated() {
-                if index != 2 { // Skip the center button
-                    let offsetFromCenter = (index - 2) // -2, -1, 0, 1, 2 becomes -2, -1, skip, 1, 2
-                    NSLayoutConstraint.activate([
-                        button.centerXAnchor.constraint(equalTo: centerButton.centerXAnchor, constant: CGFloat(offsetFromCenter) * (buttonWidth + buttonSpacing)),
-                        button.centerYAnchor.constraint(equalTo: timeFilterHeaderView.centerYAnchor),
-                        button.widthAnchor.constraint(equalToConstant: buttonWidth),
-                        button.heightAnchor.constraint(equalToConstant: 32)
-                    ])
-                }
-            }
-        }
     }
 
     private func setupBindings() {
@@ -207,13 +175,6 @@ final class TransactionHistoryViewController: UIViewController {
 
     private func setupActions() {
         backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
-
-        // Time filter buttons actions
-        timeFilterButtons[0].addTarget(self, action: #selector(didTapAllTimeFilter), for: .touchUpInside)
-        timeFilterButtons[1].addTarget(self, action: #selector(didTapOneDayFilter), for: .touchUpInside)
-        timeFilterButtons[2].addTarget(self, action: #selector(didTapOneWeekFilter), for: .touchUpInside)
-        timeFilterButtons[3].addTarget(self, action: #selector(didTapOneMonthFilter), for: .touchUpInside)
-        timeFilterButtons[4].addTarget(self, action: #selector(didTapThreeMonthsFilter), for: .touchUpInside)
     }
 
     // MARK: - Rendering
@@ -230,29 +191,19 @@ final class TransactionHistoryViewController: UIViewController {
         let hasError = displayState.error != nil
         customNavigationView.isHidden = hasError  // Keep navigation visible during loading
         pillSelectorBarView.isHidden = displayState.isLoading || hasError
-        timeFilterHeaderView.isHidden = displayState.isLoading || hasError
+        timeFilterBar.isHidden = displayState.isLoading || hasError
         tableView.isHidden = displayState.isLoading || hasError
 
         // Update transactions and table
         currentTransactions = displayState.filteredTransactions
         tableView.reloadData()
 
-        // Update time filter button states
-        updateTimeFilterButtons(selectedFilter: displayState.selectedDateFilter)
+        // Update time filter bar selection
+        timeFilterBar.setSelectedFilter(displayState.selectedDateFilter)
 
         // Update error message if present
         if let error = displayState.error {
             updateErrorView(with: error)
-        }
-    }
-
-    private func updateTimeFilterButtons(selectedFilter: TransactionDateFilter) {
-        let filters: [TransactionDateFilter] = [.all, .oneDay, .oneWeek, .oneMonth, .threeMonths]
-
-        for (index, button) in timeFilterButtons.enumerated() {
-            let isSelected = filters[index] == selectedFilter
-            button.backgroundColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.buttonBackgroundSecondary
-            button.setTitleColor(isSelected ? UIColor.white : StyleProvider.Color.textPrimary, for: .normal)
         }
     }
 
@@ -270,26 +221,6 @@ final class TransactionHistoryViewController: UIViewController {
 
     @objc private func handleRefresh() {
         viewModel.refreshData()
-    }
-
-    @objc private func didTapAllTimeFilter() {
-        viewModel.selectDateFilter(.all)
-    }
-
-    @objc private func didTapOneDayFilter() {
-        viewModel.selectDateFilter(.oneDay)
-    }
-
-    @objc private func didTapOneWeekFilter() {
-        viewModel.selectDateFilter(.oneWeek)
-    }
-
-    @objc private func didTapOneMonthFilter() {
-        viewModel.selectDateFilter(.oneMonth)
-    }
-
-    @objc private func didTapThreeMonthsFilter() {
-        viewModel.selectDateFilter(.threeMonths)
     }
 
     @objc private func didTapRetry() {
@@ -310,7 +241,7 @@ extension TransactionHistoryViewController: UITableViewDataSource {
         }
 
         let transaction = currentTransactions[indexPath.row]
-        let viewModel = TransactionItemViewModel.from(transactionHistoryItem: transaction, balance: getBalanceForTransaction(transaction))
+        let viewModel = TransactionItemViewModel.from(transactionHistoryItem: transaction)
 
         // Determine if it's first or last cell for corner radius
         let isFirstCell = indexPath.row == 0
@@ -331,12 +262,6 @@ extension TransactionHistoryViewController: UITableViewDataSource {
 
         return cell
     }
-
-    private func getBalanceForTransaction(_ transaction: TransactionHistoryItem) -> Double {
-        // For now, return a placeholder balance. In the future, this could be calculated
-        // based on the actual balance at the time of the transaction
-        return 18.29 // Placeholder based on the design
-    }
 }
 
 // MARK: - UITableViewDelegate
@@ -355,21 +280,7 @@ extension TransactionHistoryViewController {
     private static func createCustomNavigationView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundPrimary
-
-        // Add bottom separator line
-        let separatorView = UIView()
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.backgroundColor = StyleProvider.Color.separatorLine
-
-        view.addSubview(separatorView)
-
-        NSLayoutConstraint.activate([
-            separatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            separatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            separatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            separatorView.heightAnchor.constraint(equalToConstant: 1)
-        ])
+        view.backgroundColor = UIColor.App.backgroundTertiary
 
         return view
     }
@@ -391,57 +302,11 @@ extension TransactionHistoryViewController {
         // Use standard iOS back arrow icon
         let backImage = UIImage(systemName: "chevron.left")
         button.setImage(backImage, for: .normal)
-        button.tintColor = StyleProvider.Color.highlightPrimary
+        button.tintColor = StyleProvider.Color.textPrimary
 
         return button
     }
 
-    private static func createTimeFilterHeaderView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundSecondary
-
-        // Add top and bottom separator lines
-        let topSeparator = UIView()
-        topSeparator.translatesAutoresizingMaskIntoConstraints = false
-        topSeparator.backgroundColor = StyleProvider.Color.separatorLine
-
-        let bottomSeparator = UIView()
-        bottomSeparator.translatesAutoresizingMaskIntoConstraints = false
-        bottomSeparator.backgroundColor = StyleProvider.Color.separatorLine
-
-        view.addSubview(topSeparator)
-        view.addSubview(bottomSeparator)
-
-        NSLayoutConstraint.activate([
-            topSeparator.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topSeparator.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topSeparator.topAnchor.constraint(equalTo: view.topAnchor),
-            topSeparator.heightAnchor.constraint(equalToConstant: 1),
-
-            bottomSeparator.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomSeparator.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomSeparator.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomSeparator.heightAnchor.constraint(equalToConstant: 1)
-        ])
-
-        return view
-    }
-
-    private static func createTimeFilterButtons() -> [UIButton] {
-        let titles = ["All", "1D", "1W", "1M", "3M"]
-
-        return titles.map { title in
-            let button = UIButton(type: .system)
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.setTitle(title, for: .normal)
-            button.titleLabel?.font = StyleProvider.fontWith(type: .medium, size: 14)
-            button.backgroundColor = StyleProvider.Color.buttonBackgroundSecondary
-            button.layer.cornerRadius = 16
-            button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
-            return button
-        }
-    }
 
     private static func createLoadingView() -> UIView {
         let view = UIView()
@@ -515,3 +380,41 @@ extension TransactionHistoryViewController {
         return view
     }
 }
+
+// MARK: - SwiftUI Preview
+#if DEBUG
+import SwiftUI
+
+@available(iOS 17.0, *)
+#Preview("Transaction History - Populated") {
+    PreviewUIViewController {
+        let viewModel = MockTransactionHistoryViewModel.defaultMock
+        return TransactionHistoryViewController(viewModel: viewModel)
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Transaction History - Loading") {
+    PreviewUIViewController {
+        let viewModel = MockTransactionHistoryViewModel.loadingMock
+        return TransactionHistoryViewController(viewModel: viewModel)
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Transaction History - Error") {
+    PreviewUIViewController {
+        let viewModel = MockTransactionHistoryViewModel.errorMock
+        return TransactionHistoryViewController(viewModel: viewModel)
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Transaction History - Empty") {
+    PreviewUIViewController {
+        let viewModel = MockTransactionHistoryViewModel.emptyMock
+        return TransactionHistoryViewController(viewModel: viewModel)
+    }
+}
+
+#endif

@@ -1,9 +1,3 @@
-//
-//  TransactionItemViewModel.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 25/01/2025.
-//
 
 import Foundation
 import UIKit
@@ -56,7 +50,7 @@ class TransactionItemViewModel: TransactionItemViewModelProtocol {
 
 extension TransactionItemViewModel {
 
-    static func from(transactionHistoryItem: TransactionHistoryItem, balance: Double) -> TransactionItemViewModel {
+    static func from(transactionHistoryItem: TransactionHistoryItem) -> TransactionItemViewModel {
         var status: GomaUI.TransactionStatus?
         var category: String
 
@@ -89,7 +83,7 @@ extension TransactionItemViewModel {
             currency: transactionHistoryItem.currency,
             transactionId: transactionHistoryItem.id,
             date: transactionHistoryItem.date,
-            balance: balance
+            balance: transactionHistoryItem.balance
         )
 
         return TransactionItemViewModel(data: transactionData)

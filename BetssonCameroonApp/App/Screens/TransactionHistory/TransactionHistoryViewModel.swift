@@ -1,16 +1,10 @@
-//
-//  TransactionHistoryViewModel.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 25/01/2025.
-//
 
 import Foundation
 import Combine
 import GomaUI
 import ServicesProvider
 
-final class TransactionHistoryViewModel {
+final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
 
     // MARK: - Published Properties
 

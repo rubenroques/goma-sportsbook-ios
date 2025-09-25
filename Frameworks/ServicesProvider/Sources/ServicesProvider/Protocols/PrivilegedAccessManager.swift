@@ -9,16 +9,6 @@ import Foundation
 import Combine
 import SharedModels
 
-// MARK: - Transaction Date Filter
-
-public enum TransactionDateFilter {
-    case all        // 180 days
-    case oneDay
-    case oneWeek
-    case oneMonth
-    case threeMonths
-}
-
 protocol PrivilegedAccessManagerProvider {
 
     var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
