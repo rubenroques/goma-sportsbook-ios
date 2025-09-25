@@ -31,7 +31,7 @@ extension EveryMatrixCasinoAPI: Endpoint {
             return [
                 URLQueryItem(name: "language", value: language),
                 URLQueryItem(name: "platform", value: platform),
-                URLQueryItem(name: "pagination", value: "offset=0,games(offset=0,limit=0)"),
+                URLQueryItem(name: "pagination", value: "games(offset=0,limit=1)"),
                 URLQueryItem(name: "fields", value: "id,name,games")
             ]
             

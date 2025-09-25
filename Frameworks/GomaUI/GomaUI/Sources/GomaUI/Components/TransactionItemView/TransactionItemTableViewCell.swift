@@ -1,62 +1,56 @@
-//
-//  TransactionItemTableViewCell.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 25/01/2025.
-//
-
 import UIKit
 
-final class TransactionItemTableViewCell: UITableViewCell {
+public final class TransactionItemTableViewCell: UITableViewCell {
 
     // MARK: - Constants
 
-    struct Constants {
+    private struct Constants {
         static let horizontalInset: CGFloat = 0
         static let verticalInset: CGFloat = 0
     }
 
     // MARK: - Properties
 
-    private let transactionItemView: TransactionItemView
+    private lazy var transactionItemView: TransactionItemView = {
+        let view = TransactionItemView(viewModel: nil)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     // MARK: - Cell Identifier
 
-    static let identifier = "TransactionItemTableViewCell"
+    public static let identifier = "TransactionItemTableViewCell"
 
     // MARK: - Initialization
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        self.transactionItemView = TransactionItemView()
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupCell()
     }
 
-    required init?(coder: NSCoder) {
-        self.transactionItemView = TransactionItemView()
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupCell()
     }
 
     // MARK: - Cell Lifecycle
 
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
 
-        // Reset the transaction view to empty state
-        transactionItemView.reset()
+        // Reset the transaction view with nil viewModel to clear content
+        transactionItemView.configure(with: nil)
     }
 
     // MARK: - Setup
 
     private func setupCell() {
         // Clear background and selection
-        contentView.backgroundColor = UIColor.App.backgroundPrimary
-        backgroundColor = UIColor.App.backgroundPrimary
+        contentView.backgroundColor = StyleProvider.Color.backgroundPrimary
+        backgroundColor = StyleProvider.Color.backgroundPrimary
         selectionStyle = .none
 
-        // Setup transaction item view
-        transactionItemView.translatesAutoresizingMaskIntoConstraints = false
+        // Add transaction item view to content view
         contentView.addSubview(transactionItemView)
 
         // Setup constraints
@@ -70,8 +64,8 @@ final class TransactionItemTableViewCell: UITableViewCell {
 
     // MARK: - Configuration
 
-    func configure(
-        with viewModel: TransactionItemViewModel?,
+    public func configure(
+        with viewModel: TransactionItemViewModelProtocol?,
         cornerRadiusStyle: TransactionCornerRadiusStyle,
         isFirstCell: Bool = false,
         isLastCell: Bool = false
@@ -79,5 +73,4 @@ final class TransactionItemTableViewCell: UITableViewCell {
         // Configure the transaction item view with the viewModel and corner radius
         transactionItemView.configure(with: viewModel, cornerRadiusStyle: cornerRadiusStyle)
     }
-
 }

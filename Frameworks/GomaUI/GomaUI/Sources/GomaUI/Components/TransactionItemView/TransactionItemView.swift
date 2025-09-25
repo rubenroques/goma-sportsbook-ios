@@ -1,25 +1,11 @@
-//
-//  TransactionItemView.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 25/01/2025.
-//
-
 import UIKit
-import GomaUI
+import SwiftUI
 
-enum TransactionCornerRadiusStyle {
-    case all
-    case topOnly
-    case bottomOnly
-    case none
-}
-
-class TransactionItemView: UIView {
+public class TransactionItemView: UIView {
 
     // MARK: - Properties
 
-    private var viewModel: TransactionItemViewModel?
+    private var viewModel: TransactionItemViewModelProtocol?
     private var cornerRadiusStyle: TransactionCornerRadiusStyle
 
     // MARK: - UI Components
@@ -27,7 +13,7 @@ class TransactionItemView: UIView {
     private let wrapperView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundPrimary
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
         return view
     }()
 
@@ -72,8 +58,8 @@ class TransactionItemView: UIView {
 
     // MARK: - Initialization
 
-    init(cornerRadiusStyle: TransactionCornerRadiusStyle = .none) {
-        self.viewModel = nil
+    public init(viewModel: TransactionItemViewModelProtocol? = MockTransactionItemViewModel.defaultMock, cornerRadiusStyle: TransactionCornerRadiusStyle = .none) {
+        self.viewModel = viewModel
         self.cornerRadiusStyle = cornerRadiusStyle
         super.init(frame: .zero)
         setupUI()
@@ -81,13 +67,18 @@ class TransactionItemView: UIView {
     }
 
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.viewModel = nil
+        self.cornerRadiusStyle = .none
+        super.init(coder: coder)
+        setupUI()
+        configureContent()
     }
 
     // MARK: - Setup
 
     private func setupUI() {
-        backgroundColor = UIColor.App.backgroundPrimary
+        self.translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
 
         setupViewHierarchy()
         setupConstraints()
@@ -125,6 +116,19 @@ class TransactionItemView: UIView {
     }
 
     private func setupConstraints() {
+        // Set content priorities to ensure statusBadgeView and amountLabel are always visible
+        // Category label should be compressed first when space is limited
+        categoryLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        statusBadgeView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        statusLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        amountLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        // Set hugging priorities
+        categoryLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        statusBadgeView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        statusLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        amountLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+
         NSLayoutConstraint.activate([
             // Wrapper View
             wrapperView.topAnchor.constraint(equalTo: topAnchor),
@@ -133,10 +137,10 @@ class TransactionItemView: UIView {
             wrapperView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
             // Container View (with padding)
-            containerView.topAnchor.constraint(equalTo: wrapperView.topAnchor, constant: 8),
-            containerView.leadingAnchor.constraint(equalTo: wrapperView.leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor, constant: -16),
-            containerView.bottomAnchor.constraint(equalTo: wrapperView.bottomAnchor, constant: -8),
+            containerView.topAnchor.constraint(equalTo: wrapperView.topAnchor, constant: 12),
+            containerView.leadingAnchor.constraint(equalTo: wrapperView.leadingAnchor, constant: 12),
+            containerView.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor, constant: -12),
+            containerView.bottomAnchor.constraint(equalTo: wrapperView.bottomAnchor, constant: -12),
 
             // Main Stack View
             mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -145,15 +149,16 @@ class TransactionItemView: UIView {
             mainStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
 
             // Header Row Height
-            headerView.heightAnchor.constraint(equalToConstant: 56),
+            headerView.heightAnchor.constraint(equalToConstant: 44),
 
             // Header Row Content
             categoryLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             categoryLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
 
-            statusBadgeView.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 12),
+            statusBadgeView.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 8),
             statusBadgeView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             statusBadgeView.heightAnchor.constraint(equalToConstant: 24),
+            statusBadgeView.trailingAnchor.constraint(lessThanOrEqualTo: amountLabel.leadingAnchor, constant: -6),
 
             statusLabel.topAnchor.constraint(equalTo: statusBadgeView.topAnchor, constant: 4),
             statusLabel.leadingAnchor.constraint(equalTo: statusBadgeView.leadingAnchor, constant: 8),
@@ -164,7 +169,7 @@ class TransactionItemView: UIView {
             amountLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
 
             // Transaction ID Row Height
-            transactionIdView.heightAnchor.constraint(equalToConstant: 56),
+            transactionIdView.heightAnchor.constraint(equalToConstant: 44),
 
             // Transaction ID Row Content
             transactionIdLabel.leadingAnchor.constraint(equalTo: transactionIdView.leadingAnchor, constant: 16),
@@ -176,7 +181,7 @@ class TransactionItemView: UIView {
             copyButton.heightAnchor.constraint(equalToConstant: 24),
 
             // Footer Row Height
-            footerView.heightAnchor.constraint(equalToConstant: 56),
+            footerView.heightAnchor.constraint(equalToConstant: 44),
 
             // Footer Row Content
             dateLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 16),
@@ -212,21 +217,21 @@ class TransactionItemView: UIView {
             wrapperView.layer.cornerRadius = 0
         }
 
+        wrapperView.layer.masksToBounds = true
         wrapperView.clipsToBounds = true
     }
 
     private func configureContent() {
-        guard let viewModel = viewModel else {
-            // Empty state
+        guard let viewModel = viewModel, let data = viewModel.data else {
             clearContent()
             return
         }
 
         // Category
-        categoryLabel.text = viewModel.category
+        categoryLabel.text = data.category
 
         // Status badge
-        if let status = viewModel.status {
+        if let status = data.status {
             statusBadgeView.isHidden = false
             statusLabel.text = status.displayName
             statusBadgeView.backgroundColor = status.backgroundColor
@@ -236,17 +241,42 @@ class TransactionItemView: UIView {
         }
 
         // Amount
-        amountLabel.text = viewModel.formattedAmount
-        amountLabel.textColor = viewModel.isPositive ? StyleProvider.Color.alertSuccess : StyleProvider.Color.alertError
+        amountLabel.text = data.formattedAmount
+        amountLabel.textColor = data.isPositive ? StyleProvider.Color.alertSuccess : StyleProvider.Color.alertError
 
         // Transaction ID
-        transactionIdLabel.text = viewModel.transactionId
+        transactionIdLabel.text = data.transactionId
 
         // Date
-        dateLabel.text = viewModel.formattedDate
+        dateLabel.text = data.formattedDate
 
-        // Balance
-        balanceLabel.text = viewModel.formattedBalance
+        // Balance - create attributed string with normal and bold parts or hide if no balance
+        if data.balance != nil && !viewModel.balanceAmount.isEmpty {
+            balanceLabel.isHidden = false
+            let balanceAttributedString = NSMutableAttributedString()
+
+            let balancePrefix = NSAttributedString(
+                string: viewModel.balancePrefix,
+                attributes: [
+                    .font: StyleProvider.fontWith(type: .medium, size: 14),
+                    .foregroundColor: StyleProvider.Color.iconSecondary
+                ]
+            )
+
+            let balanceAmount = NSAttributedString(
+                string: viewModel.balanceAmount,
+                attributes: [
+                    .font: StyleProvider.fontWith(type: .bold, size: 14),
+                    .foregroundColor: StyleProvider.Color.iconSecondary
+                ]
+            )
+
+            balanceAttributedString.append(balancePrefix)
+            balanceAttributedString.append(balanceAmount)
+            balanceLabel.attributedText = balanceAttributedString
+        } else {
+            balanceLabel.isHidden = true
+        }
     }
 
     private func clearContent() {
@@ -257,9 +287,13 @@ class TransactionItemView: UIView {
         transactionIdLabel.text = ""
         dateLabel.text = ""
         balanceLabel.text = ""
+        balanceLabel.attributedText = nil
 
         // Hide status badge
         statusBadgeView.isHidden = true
+
+        // Show balance label by default (it will be hidden if needed in configureContent)
+        balanceLabel.isHidden = false
 
         // Reset colors to default
         amountLabel.textColor = StyleProvider.Color.textPrimary
@@ -273,20 +307,24 @@ class TransactionItemView: UIView {
 
     // MARK: - Public Methods
 
-    func configure(with viewModel: TransactionItemViewModel?) {
+    public func configure(with viewModel: TransactionItemViewModelProtocol?) {
         self.viewModel = viewModel
         configureContent()
     }
 
-    func configure(with viewModel: TransactionItemViewModel?, cornerRadiusStyle: TransactionCornerRadiusStyle) {
+    public func configure(with viewModel: TransactionItemViewModelProtocol?, cornerRadiusStyle: TransactionCornerRadiusStyle) {
         self.viewModel = viewModel
         self.cornerRadiusStyle = cornerRadiusStyle
         configureContent()
         applyCornerRadius()
     }
 
-    func reset() {
-        self.viewModel = nil
+    public func configure(with cornerRadiusStyle: TransactionCornerRadiusStyle) {
+        self.cornerRadiusStyle = cornerRadiusStyle
+        applyCornerRadius()
+    }
+
+    public func reset() {
         clearContent()
     }
 }
@@ -305,8 +343,8 @@ extension TransactionItemView {
     private static func createCategoryLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .semibold, size: 16)
-        label.textColor = StyleProvider.Color.highlightPrimary
+        label.font = StyleProvider.fontWith(type: .regular, size: 14)
+        label.textColor = StyleProvider.Color.highlightTertiary
         return label
     }
 
@@ -329,7 +367,7 @@ extension TransactionItemView {
     private static func createAmountLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .bold, size: 18)
+        label.font = StyleProvider.fontWith(type: .medium, size: 14)
         label.textAlignment = .right
         return label
     }
@@ -354,7 +392,7 @@ extension TransactionItemView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .medium, size: 14)
-        label.textColor = StyleProvider.Color.textPrimary
+        label.textColor = StyleProvider.Color.iconSecondary
         return label
     }
 
@@ -362,7 +400,7 @@ extension TransactionItemView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .medium, size: 14)
-        label.textColor = StyleProvider.Color.textSecondary
+        label.textColor = StyleProvider.Color.iconSecondary
         label.textAlignment = .right
         return label
     }
@@ -374,3 +412,132 @@ extension TransactionItemView {
         return view
     }
 }
+
+// MARK: - SwiftUI Preview
+#if DEBUG
+
+@available(iOS 17.0, *)
+#Preview("Transaction Item - Deposit") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemGray5
+
+        let transactionView = TransactionItemView(viewModel: MockTransactionItemViewModel.depositMock)
+        transactionView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(transactionView)
+
+        NSLayoutConstraint.activate([
+            transactionView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            transactionView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            transactionView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            transactionView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Transaction Item - Bet Won") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemGray5
+
+        let transactionView = TransactionItemView(viewModel: MockTransactionItemViewModel.betWonMock)
+        transactionView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(transactionView)
+
+        NSLayoutConstraint.activate([
+            transactionView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            transactionView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            transactionView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            transactionView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Transaction Item - Bet Placed") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemGray5
+
+        let transactionView = TransactionItemView(viewModel: MockTransactionItemViewModel.betPlacedMock)
+        transactionView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(transactionView)
+
+        NSLayoutConstraint.activate([
+            transactionView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            transactionView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            transactionView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            transactionView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Corner Radius Test - Three Cards") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .red
+
+        // Container view for the three cards
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.backgroundColor = .blue
+        containerView.layer.cornerRadius = 12
+        vc.view.addSubview(containerView)
+
+        // Create stack view for the three transaction cards
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        containerView.addSubview(stackView)
+
+        // First card (top only corners)
+        let firstCard = TransactionItemView(
+            viewModel: MockTransactionItemViewModel.depositMock,
+            cornerRadiusStyle: .topOnly
+        )
+
+        // Middle card (no corners)
+        let middleCard = TransactionItemView(
+            viewModel: MockTransactionItemViewModel.betPlacedMock,
+            cornerRadiusStyle: .none
+        )
+
+        // Last card (bottom only corners)
+        let lastCard = TransactionItemView(
+            viewModel: MockTransactionItemViewModel.betWonMock,
+            cornerRadiusStyle: .bottomOnly
+        )
+
+        stackView.addArrangedSubview(firstCard)
+        stackView.addArrangedSubview(middleCard)
+        stackView.addArrangedSubview(lastCard)
+
+        NSLayoutConstraint.activate([
+            // Container view constraints
+            containerView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            containerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            containerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            // Stack view constraints
+            stackView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+
+        return vc
+    }
+}
+
+#endif

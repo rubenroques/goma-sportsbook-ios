@@ -636,6 +636,15 @@ struct ComponentRegistry {
                 bonusView.layer.cornerRadius = 8
                 return bonusView
             }
+        ),
+        UIComponent(
+            title: "Transaction Item View",
+            description: "Displays individual transaction details including category, status badge, amount, transaction ID, date and balance. Supports different transaction types (deposits, withdrawals, bets) and corner radius styles.",
+            viewController: TransactionItemViewController.self,
+            previewFactory: {
+                let viewModel = MockTransactionItemViewModel.betWonMock
+                return TransactionItemView(viewModel: viewModel)
+            }
         )
     ]
     
