@@ -2280,11 +2280,11 @@ extension Client {
     }
     
     public func getRecommendedGames(language: String? = nil, platform: String? = nil) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
-        guard let privilegedAccessManager = self.privilegedAccessManager else {
-            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
         }
         
-        return privilegedAccessManager.getRecommendedGames(language: language, platform: platform)
+        return casinoProvider.getRecommendedGames(language: language, platform: platform)
     }
     
     public func buildCasinoGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String? = nil, language: String? = nil) -> String? {

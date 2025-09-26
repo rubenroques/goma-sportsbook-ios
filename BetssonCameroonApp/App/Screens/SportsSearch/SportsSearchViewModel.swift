@@ -140,7 +140,6 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         setupSearchComponentBindings()
         setupMarketGroupBindings()
         loadRecentSearches()
-        getRecommendedMatches()
     }
     
     func clearData() {
@@ -191,6 +190,19 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
                 }
             }
             .store(in: &cancellables)
+        
+        userSessionStore.userProfilePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] profile in
+                if let profile {
+                    self?.getRecommendedMatches()
+                }
+                else {
+                    self?.recommendedItemsSubject.send([])
+                }
+            })
+            .store(in: &cancellables)
+        
     }
     
     private func setupSearchComponentBindings() {

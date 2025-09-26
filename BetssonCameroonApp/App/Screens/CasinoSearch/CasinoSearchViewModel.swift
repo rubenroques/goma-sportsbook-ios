@@ -28,6 +28,8 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
     var searchedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { searchedGameViewModelsSubject.eraseToAnyPublisher() }
     private let mostPlayedGameViewModelsSubject = CurrentValueSubject<[CasinoGameSearchedViewModelProtocol], Never>([])
     var mostPlayedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { mostPlayedGameViewModelsSubject.eraseToAnyPublisher() }
+    private let recommendedGameViewModelsSubject = CurrentValueSubject<[CasinoGameSearchedViewModelProtocol], Never>([])
+    var recommendedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { recommendedGameViewModelsSubject.eraseToAnyPublisher() }
     let recommendedGamesErrorSubject = CurrentValueSubject<String?, Never>(nil)
     var recommendedGamesErrorMessagePublisher: AnyPublisher<String?, Never> { recommendedGamesErrorSubject.eraseToAnyPublisher() }
     
@@ -42,8 +44,6 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
         self.searchHeaderInfoViewModel = MockSearchHeaderInfoViewModel()
         setupBindings()
         
-        getRecommendedGames()
-        getMostPlayedGames()
     }
     
     private func getRecommendedGames() {
@@ -89,7 +89,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                         .store(in: &self.cancellables)
                     return viewModel
                 }
-                
+                self.recommendedGameViewModelsSubject.send(viewModels)
             }
             .store(in: &cancellables)
     }
@@ -99,15 +99,57 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
         guard !playerId.isEmpty else { return }
         
         guard config.sections.mostPlayed.enabled else { return }
-        servicesProvider.getMostPlayedGames(playerId: playerId)
+        // TODO: Enable correct endpoint later when it's functional
+//        servicesProvider.getMostPlayedGames(playerId: playerId)
+//            .receive(on: DispatchQueue.main)
+//            .sink { completion in
+//                if case .failure(let error) = completion {
+//                    print("MOST PLAYED FAILED: \(error)")
+//                }
+//            } receiveValue: { [weak self] response in
+//                guard let self = self else { return }
+//                // Map to CasinoGameSearchedViewModelProtocol
+//                let gameCardsData = response.games.map {
+//                    ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
+//                }
+//                let viewModels: [CasinoGameSearchedViewModelProtocol] = gameCardsData.map { game in
+//                    let data = CasinoGameSearchedData(
+//                        id: game.id,
+//                        title: game.name,
+//                        provider: game.provider != nil ? game.provider : game.subProvider,
+//                        imageURL: game.imageURL
+//                    )
+//                    let viewModel = MockCasinoGameSearchedViewModel(data: data, state: .normal)
+//                    viewModel.onSelected
+//                        .sink { [weak self] gameId in
+//                            self?.gameSelectedSubject.send(gameId)
+//                        }
+//                        .store(in: &self.cancellables)
+//                    return viewModel
+//                }
+//                self.mostPlayedGameViewModelsSubject.send(viewModels)
+//            }
+//            .store(in: &cancellables)
+        servicesProvider.getRecommendedGames()
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 if case .failure(let error) = completion {
-                    print("MOST PLAYED FAILED: \(error)")
+                    print("RECOMMENDED GAMES FAILED: \(error)")
+                    let message: String
+                    switch error {
+                    case .errorMessage(let msg):
+                        message = msg
+                    default:
+                        message = "Couldn’t pull results for suggested games"
+                    }
+                    self.recommendedGamesErrorSubject.send(message)
+                    self.isLoadingSubject.send(false)
                 }
             } receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                // Map to CasinoGameSearchedViewModelProtocol
+                self.recommendedGamesErrorSubject.send(nil)
+                self.isLoadingSubject.send(false)
+                
                 let gameCardsData = response.games.map {
                     ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
                 }
@@ -146,6 +188,20 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
             .sink { [weak self] _ in
                 self?.clearSearch()
             }
+            .store(in: &cancellables)
+        
+        Env.userSessionStore.userProfilePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] profile in
+                if let profile {
+                    self?.getRecommendedGames()
+                    self?.getMostPlayedGames()
+                }
+                else {
+                    self?.recommendedGameViewModelsSubject.send([])
+                    self?.mostPlayedGameViewModelsSubject.send([])
+                }
+            })
             .store(in: &cancellables)
     }
     

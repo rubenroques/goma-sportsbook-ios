@@ -97,7 +97,7 @@ class SportsSearchViewController: UIViewController {
         // Initial visibility based on config
         emptyStateView.isHidden = false
         recentSearchesScrollView.isHidden = true
-        recommendedCollectionView.isHidden = !(viewModel.config.suggestedEvents.enabled)
+        recommendedCollectionView.isHidden = true // Will be shown by updateRecommendedVisibility if there are items
     }
     
     private func setupConstraints() {
@@ -195,9 +195,9 @@ class SportsSearchViewController: UIViewController {
                     // While focused, hide suggested events
                     self.recommendedCollectionView.isHidden = true
                 } else {
-                    // On blur and no text, show suggested events
+                    // On blur and no text, show suggested events if we have any
                     if !hasText {
-                        self.recommendedCollectionView.isHidden = false
+                        self.updateRecommendedVisibility()
                     }
                 }
             }
@@ -217,6 +217,7 @@ class SportsSearchViewController: UIViewController {
                 guard let self = self else { return }
                 self.recommendedItems = items
                 self.recommendedCollectionView.reloadData()
+                self.updateRecommendedVisibility()
             }
             .store(in: &cancellables)
 
@@ -293,7 +294,8 @@ class SportsSearchViewController: UIViewController {
             recentSearchesScrollView.isHidden = true
             marketGroupSelectorTabView.isHidden = true
             pageViewController.view.isHidden = true
-            recommendedCollectionView.isHidden = !(viewModel.config.suggestedEvents.enabled)
+            // Show recommended collection view if we have items
+            updateRecommendedVisibility()
         } else {
             // Hide empty state and recent searches, show search header and market groups
             emptyStateView.isHidden = true
@@ -303,6 +305,12 @@ class SportsSearchViewController: UIViewController {
             pageViewController.view.isHidden = marketGroupSelectorTabView.isHidden
             recommendedCollectionView.isHidden = true
         }
+    }
+    
+    private func updateRecommendedVisibility() {
+        let hasRecommendedItems = !recommendedItems.isEmpty
+        let shouldShow = viewModel.config.suggestedEvents.enabled && hasRecommendedItems && viewModel.currentSearchText.isEmpty
+        recommendedCollectionView.isHidden = !shouldShow
     }
     
     private func updateRecentSearches(_ recentSearches: [String]) {

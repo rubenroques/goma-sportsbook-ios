@@ -15,6 +15,7 @@ protocol CasinoSearchViewModelProtocol: AnyObject {
     var searchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol { get }
     var searchedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { get }
     var mostPlayedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { get }
+    var recommendedGameViewModelsPublisher: AnyPublisher<[CasinoGameSearchedViewModelProtocol], Never> { get }
     var recommendedGamesErrorMessagePublisher: AnyPublisher<String?, Never> { get }
 
     // Inputs

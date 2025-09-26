@@ -5,6 +5,7 @@ enum EveryMatrixCasinoAPI {
     case getGamesByCategory(datasource: String, categoryId: String, language: String, platform: String, offset: Int, limit: Int)
     case getGameDetails(gameId: String, language: String, platform: String)
     case searchGames(language: String, platform: String, name: String)
+    case getRecommendedGames(language: String, platform: String)
 }
 
 extension EveryMatrixCasinoAPI: Endpoint {
@@ -22,6 +23,8 @@ extension EveryMatrixCasinoAPI: Endpoint {
             return "/v1/casino/games"
         case .searchGames:
             return "/v1/casino/games"
+        case .getRecommendedGames:
+            return "/v1/casino/recommendedGames"
         }
     }
     
@@ -59,6 +62,12 @@ extension EveryMatrixCasinoAPI: Endpoint {
                 URLQueryItem(name: "platform", value: platform),
                 URLQueryItem(name: "filter", value: "name=\(name)")
             ]
+            
+        case .getRecommendedGames(let language, let platform):
+            return [
+                URLQueryItem(name: "language", value: language),
+                URLQueryItem(name: "platform", value: platform),
+            ]
         }
     }
     
@@ -86,6 +95,8 @@ extension EveryMatrixCasinoAPI: Endpoint {
     
     var requireSessionKey: Bool {
         switch self {
+        case .getRecommendedGames:
+            return true
         default:
             return false
         }
@@ -101,6 +112,8 @@ extension EveryMatrixCasinoAPI: Endpoint {
             return "Fetch details for a specific game"
         case .searchGames:
             return "Fetch searched games"
+        case .getRecommendedGames:
+            return "Fetch recommended games"
         }
     }
 }

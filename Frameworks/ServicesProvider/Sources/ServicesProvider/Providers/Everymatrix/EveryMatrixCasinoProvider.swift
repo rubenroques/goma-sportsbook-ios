@@ -124,6 +124,43 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             .eraseToAnyPublisher()
     }
     
+    func getRecommendedGames(language: String?, platform: String?) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        
+        guard connector.sessionToken != nil else {
+            return Just(CasinoGamesResponse(
+                count: 0,
+                total: 0,
+                games: [],
+                pagination: nil
+            ))
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+        }
+        
+        let endpoint = EveryMatrixCasinoAPI.getRecommendedGames(
+            language: language ?? "en",
+            platform: platform ?? "iPhone"
+        )
+        
+        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { response in
+                let games = response.items.compactMap(\.content).map {
+                    EveryMatrixModelMapper.casinoGame(from: $0)
+                }
+                return CasinoGamesResponse(
+                    count: games.count,
+                    total: response.total,
+                    games: games,
+                    pagination: response.pages.map {
+                        EveryMatrixModelMapper.casinoPaginationInfo(from: $0)
+                    }
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+    
     func buildGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String?, language: String?) -> String? {
 
         let gameLaunchBaseURL = EveryMatrixUnifiedConfiguration.shared.gameLaunchBaseURL

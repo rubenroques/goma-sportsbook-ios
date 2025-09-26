@@ -46,6 +46,11 @@ public protocol CasinoProvider: Connector {
         name: String
     ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
     
+    func getRecommendedGames(
+        language: String?,
+        platform: String?
+    ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
+    
     // MARK: - Game Launch Methods
     
     /// Build game launch URL with appropriate parameters for the specified mode

@@ -31,6 +31,10 @@ final class CasinoSearchViewController: UIViewController {
     private lazy var mostPlayedHeaderLabel: UILabel = Self.createMostPlayedHeaderLabel()
     private lazy var mostPlayedContainerView: UIView = Self.createResultsContainerView()
     private lazy var mostPlayedStackView: UIStackView = Self.createResultsStackView()
+    private lazy var suggestedScrollView: UIScrollView = Self.createSuggestedScrollView()
+    private lazy var suggestedScrollContainerView: UIView = Self.createSuggestedScrollContainerView()
+    private lazy var suggestedHeaderView: HeaderTextView = Self.createSuggestedHeaderView()
+    private lazy var suggestedStackView: UIStackView = Self.createSuggestedStackView()
     
     // Loading overlay
     private let loadingIndicatorView: UIView = {
@@ -89,10 +93,14 @@ final class CasinoSearchViewController: UIViewController {
         containerView.addSubview(searchHeaderInfoView)
         containerView.addSubview(emptyStateView)
         containerView.addSubview(resultsScrollView)
+        containerView.addSubview(suggestedScrollView)
         resultsScrollView.addSubview(resultsScrollContainerView)
+        suggestedScrollView.addSubview(suggestedScrollContainerView)
         emptyStateView.addSubview(suggestedErrorView)
         suggestedErrorView.addSubview(suggestedErrorLabel)
         resultsScrollContainerView.addSubview(resultsContentStackView)
+        suggestedScrollContainerView.addSubview(suggestedHeaderView)
+        suggestedScrollContainerView.addSubview(suggestedStackView)
         resultsContentStackView.addArrangedSubview(resultsContainerView)
         resultsContentStackView.addArrangedSubview(mostPlayedHeaderLabel)
         resultsContentStackView.addArrangedSubview(mostPlayedContainerView)
@@ -103,6 +111,7 @@ final class CasinoSearchViewController: UIViewController {
         // Initial visibility based on config
         emptyStateView.isHidden = false
         resultsScrollView.isHidden = !(viewModel.config.searchResults.enabled && viewModel.config.searchResults.showResults)
+        suggestedScrollView.isHidden = true // Will be shown by updateSuggested if there are games
     }
     
     private func setupConstraints() {
@@ -129,6 +138,12 @@ final class CasinoSearchViewController: UIViewController {
             resultsScrollView.topAnchor.constraint(equalTo: searchHeaderInfoView.bottomAnchor),
             resultsScrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
 
+            // Suggested scroll view fills remainder (same as results)
+            suggestedScrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            suggestedScrollView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            suggestedScrollView.topAnchor.constraint(equalTo: searchView.bottomAnchor),
+            suggestedScrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+
             // Scroll container sizing
             resultsScrollContainerView.leadingAnchor.constraint(equalTo: resultsScrollView.leadingAnchor),
             resultsScrollContainerView.trailingAnchor.constraint(equalTo: resultsScrollView.trailingAnchor),
@@ -136,11 +151,29 @@ final class CasinoSearchViewController: UIViewController {
             resultsScrollContainerView.bottomAnchor.constraint(equalTo: resultsScrollView.bottomAnchor),
             resultsScrollContainerView.widthAnchor.constraint(equalTo: resultsScrollView.widthAnchor),
 
+            // Suggested scroll container sizing
+            suggestedScrollContainerView.leadingAnchor.constraint(equalTo: suggestedScrollView.leadingAnchor),
+            suggestedScrollContainerView.trailingAnchor.constraint(equalTo: suggestedScrollView.trailingAnchor),
+            suggestedScrollContainerView.topAnchor.constraint(equalTo: suggestedScrollView.topAnchor),
+            suggestedScrollContainerView.bottomAnchor.constraint(equalTo: suggestedScrollView.bottomAnchor),
+            suggestedScrollContainerView.widthAnchor.constraint(equalTo: suggestedScrollView.widthAnchor),
+
             // Content stack inside scroll container
             resultsContentStackView.leadingAnchor.constraint(equalTo: resultsScrollContainerView.leadingAnchor, constant: 8),
             resultsContentStackView.trailingAnchor.constraint(equalTo: resultsScrollContainerView.trailingAnchor, constant: -8),
             resultsContentStackView.topAnchor.constraint(equalTo: resultsScrollContainerView.topAnchor, constant: 8),
             resultsContentStackView.bottomAnchor.constraint(equalTo: resultsScrollContainerView.bottomAnchor, constant: -8),
+
+            // Suggested header view
+            suggestedHeaderView.leadingAnchor.constraint(equalTo: suggestedScrollContainerView.leadingAnchor, constant: 8),
+            suggestedHeaderView.trailingAnchor.constraint(equalTo: suggestedScrollContainerView.trailingAnchor, constant: -8),
+            suggestedHeaderView.topAnchor.constraint(equalTo: suggestedScrollContainerView.topAnchor, constant: 8),
+
+            // Suggested stack view below header
+            suggestedStackView.leadingAnchor.constraint(equalTo: suggestedScrollContainerView.leadingAnchor, constant: 8),
+            suggestedStackView.trailingAnchor.constraint(equalTo: suggestedScrollContainerView.trailingAnchor, constant: -8),
+            suggestedStackView.topAnchor.constraint(equalTo: suggestedHeaderView.bottomAnchor, constant: 16),
+            suggestedStackView.bottomAnchor.constraint(equalTo: suggestedScrollContainerView.bottomAnchor, constant: -8),
 
             // Results container view should fill width of content stack
             resultsContainerView.leadingAnchor.constraint(equalTo: resultsContentStackView.leadingAnchor),
@@ -203,6 +236,8 @@ final class CasinoSearchViewController: UIViewController {
         resultsStackView.backgroundColor = .clear
         mostPlayedStackView.backgroundColor = .clear
         mostPlayedHeaderLabel.textColor = StyleProvider.Color.textPrimary
+        suggestedScrollView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        suggestedScrollContainerView.backgroundColor = .clear
     }
     
     private func setupBindings() {
@@ -224,6 +259,13 @@ final class CasinoSearchViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] viewModels in
                 self?.updateMostPlayed(with: viewModels)
+            }
+            .store(in: &cancellables)
+
+        viewModel.recommendedGameViewModelsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] viewModels in
+                self?.updateSuggested(with: viewModels)
             }
             .store(in: &cancellables)
 
@@ -290,16 +332,40 @@ final class CasinoSearchViewController: UIViewController {
         }
     }
     
+    private func updateSuggested(with viewModels: [CasinoGameSearchedViewModelProtocol]) {
+        // Clear
+        suggestedStackView.arrangedSubviews.forEach { sub in
+            suggestedStackView.removeArrangedSubview(sub)
+            sub.removeFromSuperview()
+        }
+        
+        // Hide suggested scroll view if no games
+        let hasSuggestedGames = !viewModels.isEmpty
+        suggestedScrollView.isHidden = !hasSuggestedGames
+        
+        guard hasSuggestedGames else { return }
+        
+        // Add items
+        for viewModel in viewModels {
+            let itemView = CasinoGameSearchedView(viewModel: viewModel)
+            suggestedStackView.addArrangedSubview(itemView)
+        }
+    }
+
     private func updateSearchState(searchText: String) {
         
         if searchText.isEmpty {
             emptyStateView.isHidden = false
             searchHeaderInfoView.isHidden = true
+            resultsScrollView.isHidden = true
+            let currentSuggestedGames = suggestedStackView.arrangedSubviews.count > 0
+            suggestedScrollView.isHidden = !currentSuggestedGames
             
         } else {
             emptyStateView.isHidden = true
             searchHeaderInfoView.isHidden = false
-            
+            suggestedScrollView.isHidden = true
+            resultsScrollView.isHidden = !(viewModel.config.searchResults.enabled && viewModel.config.searchResults.showResults)
         }
         
     }
@@ -385,6 +451,38 @@ private extension CasinoSearchViewController {
         label.font = AppFont.with(type: .semibold, size: 14)
         label.isHidden = true
         return label
+    }
+
+    static func createSuggestedScrollView() -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }
+    
+    static func createSuggestedScrollContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    static func createSuggestedHeaderView() -> HeaderTextView {
+        let headerViewModel = MockHeaderTextViewViewModel(title: "Suggested Games")
+        let headerView = HeaderTextView(viewModel: headerViewModel)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        headerView.configure()
+        return headerView
+    }
+    
+    static func createSuggestedStackView() -> UIStackView {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 12
+        stack.alignment = .fill
+        stack.distribution = .fill
+        return stack
     }
 }
 
