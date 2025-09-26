@@ -13,7 +13,7 @@ import GomaUI
 final class HeaderTextReusableView: UICollectionReusableView {
     static let identifier = "HeaderTextReusableView"
 
-    private var headerViewModel: MockHeaderTextViewViewModel?
+    private var headerViewModel: MockHeaderTextViewModel?
     private var headerView: HeaderTextView?
 
     override init(frame: CGRect) {
@@ -34,7 +34,7 @@ final class HeaderTextReusableView: UICollectionReusableView {
 
     func configure(title: String) {
         if headerView == nil {
-            let viewModel = MockHeaderTextViewViewModel(title: title)
+            let viewModel = MockHeaderTextViewModel(title: title)
             let headerView = HeaderTextView(viewModel: viewModel)
             headerView.translatesAutoresizingMaskIntoConstraints = false
             headerView.configure()

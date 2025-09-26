@@ -468,7 +468,7 @@ private extension CasinoSearchViewController {
     }
     
     static func createSuggestedHeaderView() -> HeaderTextView {
-        let headerViewModel = MockHeaderTextViewViewModel(title: "Suggested Games")
+        let headerViewModel = MockHeaderTextViewModel(title: "Suggested Games")
         let headerView = HeaderTextView(viewModel: headerViewModel)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.configure()

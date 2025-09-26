@@ -1,5 +1,5 @@
 //
-//  MockHeaderTextViewViewModel.swift
+//  MockHeaderTextViewModel.swift
 //  GomaUI
 //
 //  Created by Assistant on 2025-01-27.
@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-public class MockHeaderTextViewViewModel: HeaderTextViewViewModelProtocol {
+public class MockHeaderTextViewModel: HeaderTextViewModelProtocol {
     public var title: String
     
     public var refreshData: (() -> Void)?

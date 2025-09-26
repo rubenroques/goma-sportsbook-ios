@@ -14,10 +14,10 @@ public class HeaderTextView: UIView {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     
     // MARK: ViewModel
-    private let viewModel: HeaderTextViewViewModelProtocol
+    private let viewModel: HeaderTextViewModelProtocol
     
     // MARK: - Lifetime and Cycle
-    public init(viewModel: HeaderTextViewViewModelProtocol) {
+    public init(viewModel: HeaderTextViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         self.commonInit()
@@ -121,7 +121,7 @@ import SwiftUI
         stackView.distribution = .fillEqually
         
         // Default style
-        let defaultViewModel = MockHeaderTextViewViewModel()
+        let defaultViewModel = MockHeaderTextViewModel()
         defaultViewModel.updateTitle("Suggested Events")
         let defaultView = HeaderTextView(viewModel: defaultViewModel)
         defaultView.configure()
