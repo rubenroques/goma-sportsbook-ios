@@ -23,18 +23,31 @@ final class TransactionHistoryViewController: UIViewController {
         return view
     }()
 
-    private lazy var timeFilterBar: TimeFilterBar = {
-        let filterBar = TimeFilterBar()
-        filterBar.onFilterSelected = { [weak self] filter in
+    private lazy var timeFilterBar: SimpleSquaredFilterBarView = {
+        let timeFilters = SimpleSquaredFilterBarData(
+            items: [
+                ("all", "All"),
+                ("1d", "1D"),
+                ("1w", "1W"),
+                ("1m", "1M"),
+                ("3m", "3M")
+            ],
+            selectedId: "all"
+        )
+
+        let filterBar = SimpleSquaredFilterBarView(data: timeFilters)
+        filterBar.onFilterSelected = { [weak self] filterId in
+            let filter = self?.mapToTransactionDateFilter(filterId) ?? .all
             self?.viewModel.selectDateFilter(filter)
         }
+        filterBar.backgroundColor = .clear
         return filterBar
     }()
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = UIColor.App.backgroundPrimary
+        tableView.backgroundColor = UIColor.App.backgroundTertiary
         tableView.separatorStyle = .none
 
         tableView.dataSource = self
@@ -94,9 +107,27 @@ final class TransactionHistoryViewController: UIViewController {
     // MARK: - Setup Methods
 
     private func setupUI() {
-        view.backgroundColor = UIColor.App.backgroundPrimary
+        view.backgroundColor = UIColor.App.backgroundTertiary
 
-        timeFilterBar.backgroundColor = UIColor.App.backgroundTertiary
+        
+        let pillCustomization = PillItemCustomization(
+            selectedStyle: PillItemStyle(
+                textColor: UIColor.App.highlightSecondaryContrast,
+                backgroundColor: UIColor.App.highlightPrimary,
+                borderColor: .clear,
+                borderWidth: 0.0
+            ),
+            unselectedStyle: PillItemStyle(
+                textColor: UIColor.App.textPrimary,
+                backgroundColor: UIColor.App.backgroundSecondary,
+                borderColor: .clear,
+                borderWidth: 0.0
+            )
+        )
+        pillSelectorBarView.setPillCustomization(pillCustomization)
+        pillSelectorBarView.setCustomBackgroundColor( UIColor.App.backgroundTertiary )
+
+        
         errorView.backgroundColor = UIColor.App.backgroundTertiary
         
         setupViewHierarchy()
@@ -106,7 +137,6 @@ final class TransactionHistoryViewController: UIViewController {
     private func setupViewHierarchy() {
         view.addSubview(customNavigationView)
         view.addSubview(pillSelectorBarView)
-        view.addSubview(timeFilterBar)
         view.addSubview(tableView)
         view.addSubview(loadingView)
         view.addSubview(errorView)
@@ -134,20 +164,15 @@ final class TransactionHistoryViewController: UIViewController {
             backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
 
             // Pill Selector Bar
-            pillSelectorBarView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor, constant: 16),
+            pillSelectorBarView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor, constant: 4),
             pillSelectorBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 4),
             pillSelectorBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -4),
             pillSelectorBarView.heightAnchor.constraint(equalToConstant: 32),
 
-            // Time Filter Bar
-            timeFilterBar.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 16),
-            timeFilterBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            timeFilterBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
-            // Table View
-            tableView.topAnchor.constraint(equalTo: timeFilterBar.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            // Table View (now directly connected to pill selector)
+            tableView.topAnchor.constraint(equalTo: pillSelectorBarView.bottomAnchor, constant: 4),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
             // Loading View
@@ -191,7 +216,6 @@ final class TransactionHistoryViewController: UIViewController {
         let hasError = displayState.error != nil
         customNavigationView.isHidden = hasError  // Keep navigation visible during loading
         pillSelectorBarView.isHidden = displayState.isLoading || hasError
-        timeFilterBar.isHidden = displayState.isLoading || hasError
         tableView.isHidden = displayState.isLoading || hasError
 
         // Update transactions and table
@@ -199,7 +223,8 @@ final class TransactionHistoryViewController: UIViewController {
         tableView.reloadData()
 
         // Update time filter bar selection
-        timeFilterBar.setSelectedFilter(displayState.selectedDateFilter)
+        let selectedId = mapFromTransactionDateFilter(displayState.selectedDateFilter)
+        timeFilterBar.setSelected(selectedId)
 
         // Update error message if present
         if let error = displayState.error {
@@ -226,13 +251,41 @@ final class TransactionHistoryViewController: UIViewController {
     @objc private func didTapRetry() {
         viewModel.refreshData()
     }
+
+    // MARK: - Filter Mapping
+
+    private func mapToTransactionDateFilter(_ filterId: String) -> TransactionDateFilter {
+        switch filterId {
+        case "all": return .all
+        case "1d": return .oneDay
+        case "1w": return .oneWeek
+        case "1m": return .oneMonth
+        case "3m": return .threeMonths
+        default: return .all
+        }
+    }
+
+    private func mapFromTransactionDateFilter(_ filter: TransactionDateFilter) -> String {
+        switch filter {
+        case .all: return "all"
+        case .oneDay: return "1d"
+        case .oneWeek: return "1w"
+        case .oneMonth: return "1m"
+        case .threeMonths: return "3m"
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource
 
 extension TransactionHistoryViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentTransactions.count
+        return self.currentTransactions.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -270,6 +323,28 @@ extension TransactionHistoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // TODO: Handle transaction selection
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let containerView = UIView()
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
+        containerView.addSubview(timeFilterBar)
+
+        NSLayoutConstraint.activate([
+            timeFilterBar.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            timeFilterBar.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            timeFilterBar.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
+        ])
+        
+        containerView.layer.cornerRadius = 8
+        containerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        containerView.clipsToBounds = true
+        
+        return containerView
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 62
     }
 }
 

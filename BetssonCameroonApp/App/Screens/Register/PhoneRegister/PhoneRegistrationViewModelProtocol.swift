@@ -13,7 +13,7 @@ protocol PhoneRegistrationViewModelProtocol {
     var isRegisterDataComplete: CurrentValueSubject<Bool, Never> { get }
     var headerViewModel: PromotionalHeaderViewModelProtocol { get }
     var highlightedTextViewModel: HighlightedTextViewModelProtocol { get }
-    var phonePrefixFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
+
     var phoneFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
     var passwordFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
     var termsViewModel: TermsAcceptanceViewModelProtocol? { get }

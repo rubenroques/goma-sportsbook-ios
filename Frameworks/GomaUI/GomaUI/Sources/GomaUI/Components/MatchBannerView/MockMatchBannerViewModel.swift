@@ -167,6 +167,14 @@ public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
         // This would contain the actual score data in a real implementation
         return MockScoreViewModel.footballMatch
     }
+    
+    public func onOutcomeSelected(outcomeId: String) {
+        print("Mock: onOutcomeSelected")
+    }
+    
+    public func onOutcomeDeselected(outcomeId: String) {
+        print("Mock: onOutcomeDeselected")
+    }
 }
 
 // MARK: - Static Factory Methods

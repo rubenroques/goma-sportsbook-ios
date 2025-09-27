@@ -18,6 +18,8 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
 
     // MARK: - Callbacks
     var onMatchTap: ((String) -> Void)?
+    var onOutcomeSelected: ((String) -> Void)?
+    var onOutcomeDeselected: ((String) -> Void)?
 
     // MARK: - Initialization
     init(match: Match, imageURL: String?) {
@@ -38,6 +40,10 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
             return MockMarketOutcomesLineViewModel(displayMode: .triple)
         }
 
+        
+        // Use production ViewModel that syncs with BetslipManager
+        // return MatchBannerMarketOutcomesLineViewModel(match: match, market: firstMarket
+        
         let outcomes = firstMarket.outcomes
 
         // Determine display mode based on number of outcomes
@@ -66,6 +72,53 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
 
     func userDidTapBanner() {
         onMatchTap?(match.id)
+    }
+
+    // MARK: - Outcome Selection
+    func onOutcomeSelected(outcomeId: String) {
+        // Find the outcome from the match markets
+        guard let firstMarket = match.markets.first else { return }
+
+        let outcome = firstMarket.outcomes.first { $0.id == outcomeId }
+        guard let outcome = outcome else { return }
+
+        // Create BettingTicket
+        let bettingTicket = BettingTicket(
+            id: outcome.bettingOffer.id,
+            outcomeId: outcomeId,
+            marketId: firstMarket.id,
+            matchId: match.id,
+            decimalOdd: outcome.bettingOffer.decimalOdd,
+            isAvailable: outcome.bettingOffer.isAvailable,
+            matchDescription: "\(match.homeParticipant.name) - \(match.awayParticipant.name)",
+            marketDescription: firstMarket.name,
+            outcomeDescription: outcome.translatedName,
+            homeParticipantName: match.homeParticipant.name,
+            awayParticipantName: match.awayParticipant.name,
+            sportIdCode: match.sportIdCode,
+            competition: match.competitionName,
+            date: match.date
+        )
+
+        // Add to betslip
+        Env.betslipManager.addBettingTicket(bettingTicket)
+
+        // Notify callback if set
+        onOutcomeSelected?(outcomeId)
+    }
+
+    func onOutcomeDeselected(outcomeId: String) {
+        // Find and remove from betslip
+        guard let firstMarket = match.markets.first else { return }
+
+        let outcome = firstMarket.outcomes.first { $0.id == outcomeId }
+        guard let outcome = outcome else { return }
+
+        // Remove from betslip using the betting offer ID
+        Env.betslipManager.removeBettingTicket(withId: outcome.bettingOffer.id)
+
+        // Notify callback if set
+        onOutcomeDeselected?(outcomeId)
     }
 
     // MARK: - Private Helper Methods

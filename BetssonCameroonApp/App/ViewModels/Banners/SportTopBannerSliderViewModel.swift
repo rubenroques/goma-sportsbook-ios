@@ -24,6 +24,8 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
 
     // MARK: - Callbacks
     var onMatchTap: ((String) -> Void) = { _ in }
+    var onOutcomeSelected: ((String) -> Void) = { _ in }
+    var onOutcomeDeselected: ((String) -> Void) = { _ in }
 
     // MARK: - TopBannerSliderViewModelProtocol
     var currentDisplayState: TopBannerSliderDisplayState {
@@ -96,10 +98,19 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
             return self.createMatchBannerViewModel(from: highlightedEvent)
         }
 
-        // Set up match tap callbacks for each view model
+        // Set up callbacks for each view model
         matchBannerViewModels.forEach { [weak self] viewModel in
             viewModel.onMatchTap = { [weak self] eventId in
                 self?.onMatchTap(eventId)
+            }
+
+            // Add outcome selection callbacks
+            viewModel.onOutcomeSelected = { [weak self] outcomeId in
+                self?.onOutcomeSelected(outcomeId)
+            }
+
+            viewModel.onOutcomeDeselected = { [weak self] outcomeId in
+                self?.onOutcomeDeselected(outcomeId)
             }
         }
 

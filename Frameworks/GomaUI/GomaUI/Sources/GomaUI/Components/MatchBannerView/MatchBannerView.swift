@@ -27,6 +27,10 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
 
     public var isVisible: Bool = true
 
+    // MARK: - Public Callbacks
+    public var onOutcomeSelected: ((String) -> Void) = { _ in }
+    public var onOutcomeDeselected: ((String) -> Void) = { _ in }
+
     // MARK: - Initialization
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -218,6 +222,17 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
             outcomeView.trailingAnchor.constraint(equalTo: outcomesContainerView.trailingAnchor),
             outcomeView.bottomAnchor.constraint(equalTo: outcomesContainerView.bottomAnchor)
         ])
+
+        // Setup outcome selection callbacks
+        outcomeView.onOutcomeSelected = { [weak self] outcomeId, _ in
+            self?.onOutcomeSelected(outcomeId)
+            self?.viewModel?.onOutcomeSelected(outcomeId: outcomeId)
+        }
+
+        outcomeView.onOutcomeDeselected = { [weak self] outcomeId, _ in
+            self?.onOutcomeDeselected(outcomeId)
+            self?.viewModel?.onOutcomeDeselected(outcomeId: outcomeId)
+        }
     }
 
     private func updateVisibility(for matchData: MatchBannerModel) {

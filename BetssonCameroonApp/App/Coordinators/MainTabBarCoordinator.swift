@@ -522,7 +522,7 @@ class MainTabBarCoordinator: Coordinator {
     // MARK: - Registration with First Deposit Flow
     
     private func presentRegistrationWithFirstDepositFlow() {
-        var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = MockPhoneRegistrationViewModel()
+        var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = PhoneRegistrationViewModel()
         
         // Setup registration success callback to trigger first deposit flow
         phoneRegistrationViewModel.registerComplete = { [weak self] in

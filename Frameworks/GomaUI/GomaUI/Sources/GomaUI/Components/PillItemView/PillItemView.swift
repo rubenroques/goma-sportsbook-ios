@@ -12,9 +12,18 @@ final public class PillItemView: UIView {
 
     private var cancellables = Set<AnyCancellable>()
     private let viewModel: PillItemViewModelProtocol
+    private var customization: PillItemCustomization?
+    private var currentIsSelected: Bool = false
 
     // MARK: - Public Properties
     public var onPillSelected: (() -> Void) = { }
+
+    // MARK: - Public Methods
+    public func setCustomization(_ customization: PillItemCustomization?) {
+        self.customization = customization
+        // Re-apply current selection state with new customization
+        updateSelectionState(isSelected: currentIsSelected)
+    }
 
     // MARK: - Constants
     private enum Constants {
@@ -187,17 +196,22 @@ final public class PillItemView: UIView {
     }
 
     private func updateSelectionState(isSelected: Bool) {
-        if isSelected {
-            containerView.backgroundColor = StyleProvider.Color.pills
-            containerView.layer.borderWidth = Constants.borderWidth
-            containerView.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
-            titleLabel.textColor = StyleProvider.Color.textPrimary
+        // Store current selection state
+        currentIsSelected = isSelected
+
+        // Use customization if available, otherwise fall back to defaults
+        let style: PillItemStyle
+        if let customization = customization {
+            style = isSelected ? customization.selectedStyle : customization.unselectedStyle
         } else {
-            containerView.backgroundColor = StyleProvider.Color.pills
-            containerView.layer.borderWidth = 0.0
-            containerView.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
-            titleLabel.textColor = StyleProvider.Color.textPrimary
+            style = isSelected ? PillItemStyle.defaultSelected() : PillItemStyle.defaultUnselected()
         }
+
+        // Apply the style
+        containerView.backgroundColor = style.backgroundColor
+        containerView.layer.borderWidth = style.borderWidth
+        containerView.layer.borderColor = style.borderColor.cgColor
+        titleLabel.textColor = style.textColor
     }
 
     private func setupGestures() {

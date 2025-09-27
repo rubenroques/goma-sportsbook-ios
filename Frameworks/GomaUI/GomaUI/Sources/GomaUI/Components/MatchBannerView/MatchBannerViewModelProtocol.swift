@@ -16,4 +16,12 @@ public protocol MatchBannerViewModelProtocol {
 
     /// Called when user taps on the banner
     func userDidTapBanner()
+
+    // MARK: - Outcome Selection
+
+    /// Called when user selects an outcome
+    func onOutcomeSelected(outcomeId: String)
+
+    /// Called when user deselects an outcome
+    func onOutcomeDeselected(outcomeId: String)
 }

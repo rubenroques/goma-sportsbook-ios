@@ -8,11 +8,13 @@ final public class PillSelectorBarView: UIView {
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
     private let viewModel: PillSelectorBarViewModelProtocol
-    
+
     private var cancellables = Set<AnyCancellable>()
     private var pillViews: [String: PillItemView] = [:]
     private var pillViewModels: [String: MockPillItemViewModel] = [:]
     private var currentDisplayState: PillSelectorBarDisplayState?
+    private var customBackgroundColor: UIColor?
+    private var pillCustomization: PillItemCustomization?
     
     // Fade overlay views and their masks
     private let leadingFadeView = UIView()
@@ -131,9 +133,14 @@ final public class PillSelectorBarView: UIView {
             let isReadOnly = currentDisplayState?.barData.allowsVisualStateChanges == false
             let pillViewModel = MockPillItemViewModel(pillData: updatedPillData, isReadOnly: isReadOnly)
             let pillView = PillItemView(viewModel: pillViewModel)
-            
+
+            // Apply customization if available
+            if let customization = pillCustomization {
+                pillView.setCustomization(customization)
+            }
+
             // Let PillItemView determine its own size
-            
+
             // Store references
             pillViews[pill.id] = pillView
             pillViewModels[pill.id] = pillViewModel
@@ -218,23 +225,42 @@ final public class PillSelectorBarView: UIView {
     public func scrollToPillWithId(_ id: String, animated: Bool = true) {
         scrollToPill(id: id, animated: animated)
     }
+
+    public func setCustomBackgroundColor(_ color: UIColor?) {
+        customBackgroundColor = color
+        updateBackgroundColors()
+    }
+
+    public func setPillCustomization(_ customization: PillItemCustomization?) {
+        pillCustomization = customization
+        // Apply to existing pills
+        pillViews.values.forEach { pillView in
+            pillView.setCustomization(customization)
+        }
+    }
     
     /// Gets the current scroll position as a percentage (0.0 - 1.0)
     public var scrollProgress: CGFloat {
         let contentWidth = scrollView.contentSize.width
         let frameWidth = scrollView.frame.width
-        
+
         guard contentWidth > frameWidth else { return 0.0 }
-        
+
         let scrollableWidth = contentWidth - frameWidth
         return scrollView.contentOffset.x / scrollableWidth
+    }
+
+    private func updateBackgroundColors() {
+        let bgColor = customBackgroundColor ?? StyleProvider.Color.navPills
+        backgroundColor = bgColor
+        leadingFadeView.backgroundColor = bgColor
+        trailingFadeView.backgroundColor = bgColor
     }
     
     // MARK: - Layout
  
     // MARK: - Setup
     private func setupSubviews() {
-        backgroundColor = StyleProvider.Color.navPills
         translatesAutoresizingMaskIntoConstraints = false
         
         // Setup scroll view
@@ -260,13 +286,11 @@ final public class PillSelectorBarView: UIView {
         
         // Setup leading fade view (left side)
         leadingFadeView.translatesAutoresizingMaskIntoConstraints = false
-        leadingFadeView.backgroundColor = StyleProvider.Color.navPills
         leadingFadeView.isUserInteractionEnabled = false
         addSubview(leadingFadeView)
-        
+
         // Setup trailing fade view (right side)
         trailingFadeView.translatesAutoresizingMaskIntoConstraints = false
-        trailingFadeView.backgroundColor = StyleProvider.Color.navPills
         trailingFadeView.isUserInteractionEnabled = false
         addSubview(trailingFadeView)
         
@@ -291,7 +315,10 @@ final public class PillSelectorBarView: UIView {
         trailingMask.startPoint = CGPoint(x: 0.0, y: 0.5)
         trailingMask.endPoint = CGPoint(x: 1.0, y: 0.5)
         trailingFadeView.layer.mask = trailingMask
-        
+
+        // Set initial background colors
+        updateBackgroundColors()
+
         setupConstraints()
     }
     
@@ -443,15 +470,112 @@ extension PillData {
         let pillSelectorView = PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.footballPopularLeagues)
         pillSelectorView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(pillSelectorView)
-        
+
         NSLayoutConstraint.activate([
             pillSelectorView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
             pillSelectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
             pillSelectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
             pillSelectorView.heightAnchor.constraint(equalToConstant: 60)
         ])
-        
+
         vc.view.backgroundColor = UIColor.lightText
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Custom Pill Styles") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let pillSelectorView = PillSelectorBarView(viewModel: MockPillSelectorBarViewModel.marketFilters)
+        pillSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(pillSelectorView)
+
+        // Create button stack for customization options
+        let buttonStack = UIStackView()
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 12
+        buttonStack.distribution = .fillEqually
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default Style Button
+        let defaultButton = UIButton(type: .system)
+        defaultButton.setTitle("Default", for: .normal)
+        defaultButton.backgroundColor = .systemGray5
+        defaultButton.layer.cornerRadius = 8
+        defaultButton.addAction(UIAction { _ in
+            pillSelectorView.setPillCustomization(nil)
+            pillSelectorView.setCustomBackgroundColor(nil)
+        }, for: .touchUpInside)
+
+        // Dark Theme Button
+        let darkButton = UIButton(type: .system)
+        darkButton.setTitle("Dark", for: .normal)
+        darkButton.backgroundColor = .systemGray5
+        darkButton.layer.cornerRadius = 8
+        darkButton.addAction(UIAction { _ in
+            let darkCustomization = PillItemCustomization(
+                selectedStyle: PillItemStyle(
+                    textColor: .white,
+                    backgroundColor: .systemBlue,
+                    borderColor: .systemBlue,
+                    borderWidth: 2.0
+                ),
+                unselectedStyle: PillItemStyle(
+                    textColor: .lightGray,
+                    backgroundColor: .darkGray,
+                    borderColor: .clear,
+                    borderWidth: 0.0
+                )
+            )
+            pillSelectorView.setPillCustomization(darkCustomization)
+            pillSelectorView.setCustomBackgroundColor(.black)
+        }, for: .touchUpInside)
+
+        // Colorful Theme Button
+        let colorfulButton = UIButton(type: .system)
+        colorfulButton.setTitle("Colorful", for: .normal)
+        colorfulButton.backgroundColor = .systemGray5
+        colorfulButton.layer.cornerRadius = 8
+        colorfulButton.addAction(UIAction { _ in
+            let colorfulCustomization = PillItemCustomization(
+                selectedStyle: PillItemStyle(
+                    textColor: .white,
+                    backgroundColor: .systemPurple,
+                    borderColor: .systemYellow,
+                    borderWidth: 3.0
+                ),
+                unselectedStyle: PillItemStyle(
+                    textColor: .systemPurple,
+                    backgroundColor: .systemYellow.withAlphaComponent(0.3),
+                    borderColor: .systemPurple,
+                    borderWidth: 1.0
+                )
+            )
+            pillSelectorView.setPillCustomization(colorfulCustomization)
+            pillSelectorView.setCustomBackgroundColor(.systemTeal.withAlphaComponent(0.2))
+        }, for: .touchUpInside)
+
+        buttonStack.addArrangedSubview(defaultButton)
+        buttonStack.addArrangedSubview(darkButton)
+        buttonStack.addArrangedSubview(colorfulButton)
+
+        vc.view.addSubview(pillSelectorView)
+        vc.view.addSubview(buttonStack)
+
+        NSLayoutConstraint.activate([
+            pillSelectorView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            pillSelectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            pillSelectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            pillSelectorView.heightAnchor.constraint(equalToConstant: 60),
+
+            buttonStack.topAnchor.constraint(equalTo: pillSelectorView.bottomAnchor, constant: 30),
+            buttonStack.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            buttonStack.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            buttonStack.heightAnchor.constraint(equalToConstant: 44)
+        ])
+
+        vc.view.backgroundColor = .systemBackground
         return vc
     }
 }

@@ -79,6 +79,7 @@ final public class BorderedTextFieldView: UIView {
         prefixLabel.textColor = StyleProvider.Color.textDisablePrimary
         prefixLabel.backgroundColor = .clear
         prefixLabel.isHidden = true
+        prefixLabel.isUserInteractionEnabled = false // Allow touches to pass through
         containerView.addSubview(prefixLabel)
         
         // Text field setup
@@ -113,6 +114,7 @@ final public class BorderedTextFieldView: UIView {
 
         setupConstraints()
         setupAccessibility()
+        setupTapGesture()
         updatePrefixLabel()
     }
 
@@ -174,6 +176,11 @@ final public class BorderedTextFieldView: UIView {
         errorLabel.accessibilityIdentifier = "borderedTextField.errorLabel"
 
         suffixButton.accessibilityLabel = "Toggle password visibility"
+    }
+
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(containerTapped))
+        containerView.addGestureRecognizer(tapGesture)
     }
 
     private func setupTextFieldDelegate() {
@@ -267,6 +274,12 @@ final public class BorderedTextFieldView: UIView {
 
     @objc private func suffixButtonTapped() {
         viewModel.togglePasswordVisibility()
+    }
+
+    @objc private func containerTapped() {
+        // Only become first responder if the field is enabled
+        guard currentVisualState != .disabled else { return }
+        textField.becomeFirstResponder()
     }
 
     // MARK: - Visual State Management

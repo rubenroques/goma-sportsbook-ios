@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="file-tree" class="sidebar"></div>
+        <div class="content-viewer">
+            <div class="toolbar">
+                <span id="file-name"></span>
+                <div class="toggle-switch">
+                    <button id="rendered-btn" class="active">Rendered</button>
+                    <button id="source-btn">Source</button>
+                </div>
+            </div>
+            <div id="rendered-content" class="content"></div>
+            <pre id="source-content-pre" class="content source-view" style="display: none;"><code></code></pre>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

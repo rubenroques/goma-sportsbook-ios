@@ -169,13 +169,7 @@ class PhoneRegistrationViewController: UIViewController {
     }
     
     private func setupComponentsLayout() {
-        
-        if let phonePrefixFieldViewModel = viewModel.phonePrefixFieldViewModel {
-            let phonePrefixField = BorderedTextFieldView(viewModel: phonePrefixFieldViewModel)
-            self.phonePrefixField = phonePrefixField
-            componentsStackView.addArrangedSubview(phonePrefixField)
-        }
-        
+
         if let phoneFieldViewModel = viewModel.phoneFieldViewModel {
             let phoneField = BorderedTextFieldView(viewModel: phoneFieldViewModel)
             self.phoneField = phoneField
