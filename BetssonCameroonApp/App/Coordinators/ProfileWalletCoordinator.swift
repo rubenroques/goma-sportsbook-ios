@@ -142,6 +142,8 @@ final class ProfileWalletCoordinator: Coordinator {
         case .changePassword:
             // TODO: Navigate to change password
             showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
+        case .promotions:
+            showPromotions()
         }
     }
     
@@ -200,6 +202,29 @@ final class ProfileWalletCoordinator: Coordinator {
         print("🚀 ProfileWalletCoordinator: Presented notifications from profile modal context")
     }
     */
+    
+    private func showPromotions() {
+        guard let profileNavigationController = profileNavigationController else {
+            print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
+            return
+        }
+        
+        // Create PromotionsViewModel
+        let promotionsViewModel = PromotionsViewModel(servicesProvider: servicesProvider)
+        
+        // Create PromotionsViewController
+        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
+        
+        // Setup ViewModel callbacks
+        promotionsViewModel.onDismiss = { [weak self] in
+            // The view controller will handle the back navigation
+        }
+        
+        // Push the promotions view controller
+        profileNavigationController.pushViewController(promotionsViewController, animated: true)
+        
+        print("🚀 ProfileWalletCoordinator: Presented promotions screen")
+    }
     
     private func showPlaceholderAlert(title: String, message: String) {
         guard let profileViewController = profileViewController else { return }

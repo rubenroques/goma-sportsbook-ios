@@ -76,6 +76,14 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
     private func loadMenuConfiguration() {
         menuItems = [
             ProfileMenuItem(
+                id: "promotions",
+                icon: "promotion_icon",
+                title: "Promotions",
+                subtitle: nil,
+                type: .navigation,
+                action: .promotions
+            ),
+            ProfileMenuItem(
                 id: "notifications",
                 icon: "bell",
                 title: "Notifications",
