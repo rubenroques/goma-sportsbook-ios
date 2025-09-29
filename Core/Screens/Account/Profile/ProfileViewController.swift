@@ -387,7 +387,7 @@ class ProfileViewController: UIViewController {
 
         bonusBalanceBaseView.layer.cornerRadius = CornerRadius.view
 
-        totalBalanceTitleLabel.text = localized("total_balance")
+        totalBalanceTitleLabel.text = localized("mon_solde_total")
         totalBalanceTitleLabel.font = AppFont.with(type: .bold, size: 21)
         totalBalanceLabel.font = AppFont.with(type: .bold, size: 21)
 
@@ -424,11 +424,11 @@ class ProfileViewController: UIViewController {
         bonusBalanceLabel.setContentHuggingPriority(.required, for: .horizontal)
         bonusBalanceDottedLineView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-        creditsBalanceTitleLabel.text = localized("betsson_credits")
+        creditsBalanceTitleLabel.text = localized("my_credits")
         creditsBalanceTitleLabel.font = AppFont.with(type: .bold, size: 21)
         creditsBalanceLabel.font = AppFont.with(type: .bold, size: 21)
         
-        freeBetsBalanceTitleLabel.text = localized("freebet")
+        freeBetsBalanceTitleLabel.text = localized("free_bet_balance")
         freeBetsBalanceTitleLabel.font = AppFont.with(type: .regular, size: 16)
         freeBetsBalanceLabel.font = AppFont.with(type: .regular, size: 16)
         

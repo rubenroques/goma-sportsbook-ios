@@ -420,7 +420,7 @@ extension TopBarView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "cashback_small_blue_icon")
+        imageView.image = UIImage(named: "credits_betsson_icon")
         return imageView
     }
 
@@ -601,9 +601,10 @@ extension TopBarView {
             self.cashbackView.centerYAnchor.constraint(equalTo: self.cashbackBaseView.centerYAnchor),
 
             self.cashbackIconImageView.leadingAnchor.constraint(equalTo: self.cashbackView.leadingAnchor, constant: 4),
-            self.cashbackIconImageView.topAnchor.constraint(equalTo: self.cashbackView.topAnchor, constant: 4),
-            self.cashbackIconImageView.bottomAnchor.constraint(equalTo: self.cashbackView.bottomAnchor, constant: -4),
-            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 14),
+            self.cashbackIconImageView.topAnchor.constraint(equalTo: self.cashbackView.topAnchor, constant: 0),
+            self.cashbackIconImageView.bottomAnchor.constraint(equalTo: self.cashbackView.bottomAnchor, constant: 0),
+            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
 
             self.cashbackLabel.leadingAnchor.constraint(equalTo: self.cashbackIconImageView.trailingAnchor, constant: 4),
             self.cashbackLabel.trailingAnchor.constraint(equalTo: self.cashbackView.trailingAnchor, constant: -4),

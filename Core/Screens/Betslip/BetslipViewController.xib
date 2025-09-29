@@ -109,11 +109,11 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wRz-z9-shZ">
                                     <rect key="frame" x="4" y="4" width="17" height="17"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="automated_withdraw_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Rju-iO-jTS">
-                                            <rect key="frame" x="2" y="2" width="13" height="13"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="betboost_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Rju-iO-jTS">
+                                            <rect key="frame" x="-0.5" y="-0.5" width="18" height="18"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="Rju-iO-jTS" secondAttribute="height" multiplier="1:1" id="Sxb-EF-ibW"/>
-                                                <constraint firstAttribute="width" constant="13" id="Uda-8N-izz"/>
+                                                <constraint firstAttribute="width" constant="18" id="Uda-8N-izz"/>
                                             </constraints>
                                         </imageView>
                                     </subviews>
@@ -159,10 +159,10 @@
                                     <rect key="frame" x="4" y="4" width="17" height="17"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cashback_small_blue_icon" translatesAutoresizingMaskIntoConstraints="NO" id="2Xy-bA-QrL">
-                                            <rect key="frame" x="2" y="2" width="13" height="13"/>
+                                            <rect key="frame" x="-0.5" y="-0.5" width="18" height="18"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="2Xy-bA-QrL" secondAttribute="height" multiplier="1:1" id="1AI-3p-Iy1"/>
-                                                <constraint firstAttribute="width" constant="13" id="ASv-kG-2Iz"/>
+                                                <constraint firstAttribute="width" constant="18" id="ASv-kG-2Iz"/>
                                             </constraints>
                                         </imageView>
                                     </subviews>
@@ -240,7 +240,7 @@
         </view>
     </objects>
     <resources>
-        <image name="automated_withdraw_icon" width="28" height="28"/>
+        <image name="betboost_icon" width="49" height="49"/>
         <image name="cashback_small_blue_icon" width="49" height="39"/>
         <image name="plus_small_icon" width="16" height="16"/>
     </resources>

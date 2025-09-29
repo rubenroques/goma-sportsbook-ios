@@ -247,16 +247,22 @@ class BetSubmissionSuccessViewController: UIViewController {
         
         self.topBackgroundView.bringSubviewToFront(self.shapeView)
         
-        if self.usedCashback {
-            self.resizeTopViewAndAnimate()
-        }
-        else {
-            self.topImageView.isHidden = false
-            self.betSuccessAnimationView.isHidden = true
-            
-            self.topGradientViewHeightConstraint.isActive = false
-            self.topGradientViewCenterConstraint.isActive = true
-        }
+//        if self.usedCashback {
+//            self.resizeTopViewAndAnimate()
+//        }
+//        else {
+//            self.topImageView.isHidden = false
+//            self.betSuccessAnimationView.isHidden = true
+//            
+//            self.topGradientViewHeightConstraint.isActive = false
+//            self.topGradientViewCenterConstraint.isActive = true
+//        }
+        
+        self.topImageView.isHidden = false
+        self.betSuccessAnimationView.isHidden = true
+        
+        self.topGradientViewHeightConstraint.isActive = false
+        self.topGradientViewCenterConstraint.isActive = true
         
         if TargetVariables.features.contains(.spinWheel) {
             self.spinWheelBaseView.isHidden = false
@@ -425,9 +431,9 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.topBackgroundView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient2, NSNumber(1.0))]
         
-        if self.usedCashback {
-            self.topBackgroundView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient1, NSNumber(1.0))]
-        }
+//        if self.usedCashback {
+//            self.topBackgroundView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient1, NSNumber(1.0))]
+//        }
 
         self.bottomBackgroundView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -743,7 +749,7 @@ class BetSubmissionSuccessViewController: UIViewController {
             let retrySubject = PassthroughSubject<Int, Never>()
             retrySubjects.append(retrySubject)
             
-            let attempt = 1
+            var attempt = 1
             
             return retrySubject
                 .flatMap { attempt -> AnyPublisher<BetWheelInfo, Never> in
@@ -760,7 +766,9 @@ class BetSubmissionSuccessViewController: UIViewController {
                                 case "NOT_ELIGIBLE":
                                     print("Bet is not eligible for \(gameTransId)")
                                     return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil)
-                                    
+                                case "TIMED_OUT":
+                                    print("Bet timed out for \(gameTransId)")
+                                    return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil)
                                 default:
                                     return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .pending, winBoostId: nil)
                                 }
@@ -779,7 +787,8 @@ class BetSubmissionSuccessViewController: UIViewController {
                     if result.wheelBetStatus == .pending {
                         // Schedule next attempt after 3 seconds if no definitive status found
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            retrySubject.send(attempt + 1)
+                            attempt += 1
+                            retrySubject.send(attempt)
                         }
                     }
                 })

@@ -247,7 +247,7 @@ class MyTicketCardView: NibView {
         
         self.cashbackValueLabel.font = AppFont.with(type: .semibold, size: 16)
         
-        self.freebetLabel.text = localized("Freebet")
+        self.freebetLabel.text = localized("free_bet_balance")
         self.freebetLabel.font = AppFont.with(type: .bold, size: 9.0)
         
         self.freebetBaseView.clipsToBounds = true
