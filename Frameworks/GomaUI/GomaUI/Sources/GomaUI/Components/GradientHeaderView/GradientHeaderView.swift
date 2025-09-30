@@ -12,7 +12,7 @@ public class GradientHeaderView: UIView {
     // MARK: Private properties
     private lazy var gradientView: GradientView = Self.createGradientView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private let viewModel: GradientHeaderViewModelProtocol
+    private var viewModel: GradientHeaderViewModelProtocol
     
     // MARK: - Lifetime and Cycle
     public init(viewModel: GradientHeaderViewModelProtocol) {
@@ -28,7 +28,7 @@ public class GradientHeaderView: UIView {
     
     func commonInit() {
         self.setupSubviews()
-        self.configure()
+        self.configure(viewModel: self.viewModel)
     }
     
     public override func layoutSubviews() {
@@ -44,8 +44,9 @@ public class GradientHeaderView: UIView {
     }
     
     // MARK: Functions
-    private func configure() {
-        self.titleLabel.text = self.viewModel.title
+    public func configure(viewModel: GradientHeaderViewModelProtocol) {
+        self.viewModel = viewModel
+        self.titleLabel.text = viewModel.title
     }
 }
 
