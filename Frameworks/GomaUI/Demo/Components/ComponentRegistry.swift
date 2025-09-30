@@ -701,6 +701,137 @@ struct ComponentRegistry {
                 sliderView.clipsToBounds = true
                 return sliderView
             }
+        ),
+        UIComponent(
+            title: "Action Button Block",
+            description: "Promotional action button with customizable title and action handling for promotional campaigns",
+            viewController: ActionButtonBlockViewController.self,
+            previewFactory: {
+                let viewModel = MockActionButtonBlockViewModel.defaultMock
+                let buttonView = ActionButtonBlockView(viewModel: viewModel)
+                buttonView.backgroundColor = StyleProvider.Color.backgroundColor
+                buttonView.layer.cornerRadius = 8
+                return buttonView
+            }
+        ),
+        UIComponent(
+            title: "Bullet Item Block",
+            description: "Bullet point text component with highlighted bullet symbols for promotional feature lists",
+            viewController: BulletItemBlockViewController.self,
+            previewFactory: {
+                let viewModel = MockBulletItemBlockViewModel.defaultMock
+                let bulletView = BulletItemBlockView(viewModel: viewModel)
+                bulletView.backgroundColor = StyleProvider.Color.backgroundColor
+                bulletView.layer.cornerRadius = 8
+                return bulletView
+            }
+        ),
+        UIComponent(
+            title: "Gradient Header",
+            description: "Gradient background header with centered title text for promotional content sections",
+            viewController: GradientHeaderViewController.self,
+            previewFactory: {
+                let viewModel = MockGradientHeaderViewModel.defaultMock
+                let headerView = GradientHeaderView(viewModel: viewModel)
+                headerView.layer.cornerRadius = 8
+                return headerView
+            }
+        ),
+        UIComponent(
+            title: "Stack View Block",
+            description: "Container component for stacking multiple promotional views vertically with consistent styling",
+            viewController: StackViewBlockViewController.self,
+            previewFactory: {
+                let viewModel = MockStackViewBlockViewModel.defaultMock
+                let stackView = StackViewBlockView(viewModel: viewModel)
+                stackView.backgroundColor = StyleProvider.Color.backgroundColor
+                stackView.layer.cornerRadius = 8
+                return stackView
+            }
+        ),
+        UIComponent(
+            title: "Title Block",
+            description: "Promotional title component with customizable alignment and highlight styling",
+            viewController: TitleBlockViewController.self,
+            previewFactory: {
+                let viewModel = MockTitleBlockViewModel.defaultMock
+                let titleView = TitleBlockView(viewModel: viewModel)
+                titleView.backgroundColor = StyleProvider.Color.backgroundColor
+                titleView.layer.cornerRadius = 8
+                return titleView
+            }
+        ),
+        UIComponent(
+            title: "Description Block",
+            description: "Promotional description text component with multi-line support and consistent typography",
+            viewController: DescriptionBlockViewController.self,
+            previewFactory: {
+                let viewModel = MockDescriptionBlockViewModel.defaultMock
+                let descriptionView = DescriptionBlockView(viewModel: viewModel)
+                descriptionView.backgroundColor = StyleProvider.Color.backgroundColor
+                descriptionView.layer.cornerRadius = 8
+                return descriptionView
+            }
+        ),
+        UIComponent(
+            title: "Image Block",
+            description: "Promotional image component with centered layout and rounded corners for promotional content",
+            viewController: ImageBlockViewController.self,
+            previewFactory: {
+                let viewModel = MockImageBlockViewModel.defaultMock
+                let imageView = ImageBlockView(viewModel: viewModel)
+                imageView.backgroundColor = StyleProvider.Color.backgroundColor
+                imageView.layer.cornerRadius = 8
+                return imageView
+            }
+        ),
+        UIComponent(
+            title: "Image Section",
+            description: "Full-width promotional image section component for banner-style promotional content",
+            viewController: ImageSectionViewController.self,
+            previewFactory: {
+                let viewModel = MockImageSectionViewModel.defaultMock
+                let imageView = ImageSectionView(viewModel: viewModel)
+                imageView.backgroundColor = StyleProvider.Color.backgroundColor
+                imageView.layer.cornerRadius = 8
+                return imageView
+            }
+        ),
+        UIComponent(
+            title: "List Block",
+            description: "Promotional list component with icon support and vertical stacking of promotional items",
+            viewController: ListBlockViewController.self,
+            previewFactory: {
+                let viewModel = MockListBlockViewModel.defaultMock
+                let listView = ListBlockView(viewModel: viewModel)
+                listView.backgroundColor = StyleProvider.Color.backgroundColor
+                listView.layer.cornerRadius = 8
+                return listView
+            }
+        ),
+        UIComponent(
+            title: "Video Block",
+            description: "Promotional video component with play/pause controls and dynamic height adjustment",
+            viewController: VideoBlockViewController.self,
+            previewFactory: {
+                let viewModel = MockVideoBlockViewModel.defaultMock
+                let videoView = VideoBlockView(viewModel: viewModel)
+                videoView.backgroundColor = StyleProvider.Color.backgroundColor
+                videoView.layer.cornerRadius = 8
+                return videoView
+            }
+        ),
+        UIComponent(
+            title: "Video Section",
+            description: "Full-width promotional video section component with fixed height for banner-style video content",
+            viewController: VideoSectionViewController.self,
+            previewFactory: {
+                let viewModel = MockVideoSectionViewModel.defaultMock
+                let videoView = VideoSectionView(viewModel: viewModel)
+                videoView.backgroundColor = StyleProvider.Color.backgroundColor
+                videoView.layer.cornerRadius = 8
+                return videoView
+            }
         )
     ]
     
