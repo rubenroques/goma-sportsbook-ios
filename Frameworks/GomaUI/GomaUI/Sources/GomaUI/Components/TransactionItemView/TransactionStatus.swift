@@ -5,7 +5,9 @@ public enum TransactionStatus: Hashable {
     case won
     case placed
     case tax
-
+    case pending
+    case cancelled
+    
     public var displayName: String {
         switch self {
         case .won:
@@ -14,6 +16,10 @@ public enum TransactionStatus: Hashable {
             return "Placed"
         case .tax:
             return "Tax"
+        case .pending:
+            return "Pending"
+        case .cancelled:
+            return "Cancelled"
         }
     }
 
@@ -23,7 +29,7 @@ public enum TransactionStatus: Hashable {
             return StyleProvider.Color.alertSuccess.withAlphaComponent(0.2)
         case .placed:
             return StyleProvider.Color.highlightTertiary.withAlphaComponent(0.2)
-        case .tax:
+        case .tax, .pending, .cancelled:
             return StyleProvider.Color.backgroundPrimary
         }
     }
@@ -34,7 +40,7 @@ public enum TransactionStatus: Hashable {
             return StyleProvider.Color.alertSuccess
         case .placed:
             return StyleProvider.Color.highlightTertiary
-        case .tax:
+        case .tax, .pending, .cancelled:
             return StyleProvider.Color.textPrimary
         }
     }

@@ -24,6 +24,10 @@ extension ServiceProviderModelMapper {
             type = .deposit
         case .withdrawal:
             type = .withdrawal
+        case .systemDeposit:
+            type = .systemDeposit
+        case .systemWithdrawal:
+            type = .systemWithdrawal
         }
 
         return BankingTransaction(
@@ -64,6 +68,12 @@ extension ServiceProviderModelMapper {
             type = .bet
         case .win:
             type = .win
+        case .cancel:
+            type = .cancel
+        case .batchAmountsDebit:
+            type = .batchAmountsDebit
+        case .batchAmountsCredit:
+            type = .batchAmountsCredit
         }
 
         return WageringTransaction(

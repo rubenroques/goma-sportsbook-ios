@@ -8,6 +8,7 @@ struct TransactionHistoryDisplayState: Equatable {
     let transactions: [TransactionHistoryItem]
     let selectedCategory: TransactionCategory
     let selectedDateFilter: TransactionDateFilter
+    let selectedGameType: GameTransactionType  // Level 1 filter for games
     let hasMoreData: Bool
 
     static let initial = TransactionHistoryDisplayState(
@@ -16,6 +17,7 @@ struct TransactionHistoryDisplayState: Equatable {
         transactions: [],
         selectedCategory: .all,
         selectedDateFilter: .all,
+        selectedGameType: .all,
         hasMoreData: false
     )
 
@@ -26,7 +28,20 @@ struct TransactionHistoryDisplayState: Equatable {
             transactions: self.transactions,
             selectedCategory: self.selectedCategory,
             selectedDateFilter: self.selectedDateFilter,
+            selectedGameType: self.selectedGameType,
             hasMoreData: self.hasMoreData
+        )
+    }
+
+    func loadingWithClearedData() -> TransactionHistoryDisplayState {
+        TransactionHistoryDisplayState(
+            isLoading: true,
+            error: nil,
+            transactions: [],  // Clear old data for centered loading indicator
+            selectedCategory: self.selectedCategory,
+            selectedDateFilter: self.selectedDateFilter,
+            selectedGameType: self.selectedGameType,
+            hasMoreData: false
         )
     }
 
@@ -37,6 +52,7 @@ struct TransactionHistoryDisplayState: Equatable {
             transactions: transactions,
             selectedCategory: self.selectedCategory,
             selectedDateFilter: self.selectedDateFilter,
+            selectedGameType: self.selectedGameType,
             hasMoreData: hasMoreData
         )
     }
@@ -48,6 +64,7 @@ struct TransactionHistoryDisplayState: Equatable {
             transactions: self.transactions,
             selectedCategory: self.selectedCategory,
             selectedDateFilter: self.selectedDateFilter,
+            selectedGameType: self.selectedGameType,
             hasMoreData: false
         )
     }
@@ -59,6 +76,7 @@ struct TransactionHistoryDisplayState: Equatable {
             transactions: self.transactions,
             selectedCategory: category,
             selectedDateFilter: self.selectedDateFilter,
+            selectedGameType: .all,  // Reset game type when category changes
             hasMoreData: self.hasMoreData
         )
     }
@@ -70,20 +88,51 @@ struct TransactionHistoryDisplayState: Equatable {
             transactions: self.transactions,
             selectedCategory: self.selectedCategory,
             selectedDateFilter: dateFilter,
+            selectedGameType: self.selectedGameType,
+            hasMoreData: self.hasMoreData
+        )
+    }
+
+    func gameTypeFiltered(gameType: GameTransactionType) -> TransactionHistoryDisplayState {
+        TransactionHistoryDisplayState(
+            isLoading: self.isLoading,
+            error: self.error,
+            transactions: self.transactions,
+            selectedCategory: self.selectedCategory,
+            selectedDateFilter: self.selectedDateFilter,
+            selectedGameType: gameType,
             hasMoreData: self.hasMoreData
         )
     }
 
     var filteredTransactions: [TransactionHistoryItem] {
-        return transactions.filter { transaction in
-            switch selectedCategory {
+        // First filter by category (Level 0: All/Payments/Games)
+        let categoryFiltered: [TransactionHistoryItem]
+
+        switch selectedCategory {
+        case .all:
+            categoryFiltered = transactions
+        case .payments:
+            categoryFiltered = transactions.filter { $0.type.category == .payments }
+        case .games:
+            // Apply game type sub-filter (Level 1: All/Sportsbook/Casino)
+            let gameTransactions = transactions.filter { $0.type.category == .games }
+
+            switch selectedGameType {
             case .all:
-                return true
-            case .payments:
-                return transaction.type.category == .payments
-            case .games:
-                return transaction.type.category == .games
+                return gameTransactions
+            case .sportsbook:
+                // Filter by gameId == "OddsMatrix2"
+                return gameTransactions.filter { $0.gameId == "OddsMatrix2" }
+            case .casino:
+                // Filter by gameId != "OddsMatrix2" (and gameId exists)
+                return gameTransactions.filter {
+                    guard let gameId = $0.gameId else { return false }
+                    return gameId != "OddsMatrix2"
+                }
             }
         }
+
+        return categoryFiltered
     }
 }

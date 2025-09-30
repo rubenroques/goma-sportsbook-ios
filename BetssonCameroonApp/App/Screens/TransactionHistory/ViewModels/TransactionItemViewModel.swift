@@ -55,19 +55,35 @@ extension TransactionItemViewModel {
         var category: String
 
         // Determine category and status based on transaction type
+        // Matches web implementation: banking shows no badge unless cancelled/pending, wagering shows status badge
         switch transactionHistoryItem.type {
         case .banking(let bankingType):
             category = bankingType.displayName
-            status = nil // Banking transactions don't have status badges
+
+            // Banking: Only show badge if status is not empty (cancelled or pending)
+            // Matches web: bankingTransactionStatuses returns '' for success states
+            if !transactionHistoryItem.displayStatus.isEmpty {
+                // Map to appropriate status badge
+                if transactionHistoryItem.displayStatus.lowercased().contains("cancel") {
+                    status = .cancelled
+                } else if transactionHistoryItem.displayStatus.lowercased().contains("pending") {
+                    status = .pending
+                }
+            }
 
         case .wagering(let wageringType):
+            category = transactionHistoryItem.description
+
+            // Wagering: Show status badge based on transType (matches web: wageringTransactionStatuses)
             switch wageringType {
             case .bet:
-                category = transactionHistoryItem.description
                 status = .placed
             case .win:
-                category = transactionHistoryItem.description
                 status = .won
+            case .cancel:
+                status = .cancelled
+            case .batchAmountsDebit, .batchAmountsCredit:
+                status = nil // No specific badge for batch operations
             }
         }
 
@@ -79,11 +95,12 @@ extension TransactionItemViewModel {
         let transactionData = TransactionItemData(
             category: category,
             status: status,
-            amount: transactionHistoryItem.amount,
+            amount: transactionHistoryItem.displayAmount,  // Use displayAmount (totalAmount for wagering)
             currency: transactionHistoryItem.currency,
             transactionId: transactionHistoryItem.id,
             date: transactionHistoryItem.date,
-            balance: transactionHistoryItem.balance
+            balance: transactionHistoryItem.balance,
+            amountIndicator: transactionHistoryItem.displayAmountIndicator  // Pass indicator from transaction
         )
 
         return TransactionItemViewModel(data: transactionData)

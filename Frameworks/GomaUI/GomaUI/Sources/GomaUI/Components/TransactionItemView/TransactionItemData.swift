@@ -14,6 +14,7 @@ public struct TransactionItemData {
     public let date: Date
     public let balance: Double?
     public let isPositive: Bool
+    public let amountIndicator: String?  // "+" or "-" from web spec (based on transaction type)
 
     // MARK: - Initialization
 
@@ -25,7 +26,8 @@ public struct TransactionItemData {
         currency: String,
         transactionId: String,
         date: Date,
-        balance: Double? = nil
+        balance: Double? = nil,
+        amountIndicator: String? = nil
     ) {
         self.id = id
         self.category = category
@@ -36,6 +38,7 @@ public struct TransactionItemData {
         self.date = date
         self.balance = balance
         self.isPositive = amount >= 0
+        self.amountIndicator = amountIndicator
     }
 
     // MARK: - Computed Properties
@@ -46,7 +49,8 @@ public struct TransactionItemData {
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
 
-        let prefix = isPositive ? "+" : "-"
+        // Use amountIndicator if provided (from transaction type), otherwise fallback to amount sign
+        let prefix = amountIndicator ?? (isPositive ? "+" : "-")
         let absAmount = abs(amount)
 
         if let formattedNumber = formatter.string(from: NSNumber(value: absAmount)) {

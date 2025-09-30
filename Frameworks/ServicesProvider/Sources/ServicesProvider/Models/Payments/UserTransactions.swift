@@ -66,6 +66,8 @@ public struct BankingTransaction {
 public enum BankingTransactionType {
     case deposit
     case withdrawal
+    case systemDeposit
+    case systemWithdrawal
 
     public var displayName: String {
         switch self {
@@ -73,6 +75,10 @@ public enum BankingTransactionType {
             return "Deposit"
         case .withdrawal:
             return "Withdrawal"
+        case .systemDeposit:
+            return "System Deposit"
+        case .systemWithdrawal:
+            return "System Withdrawal"
         }
     }
 }
@@ -136,6 +142,9 @@ public struct WageringTransaction {
 public enum WageringTransactionType {
     case bet
     case win
+    case cancel
+    case batchAmountsDebit
+    case batchAmountsCredit
 
     public var displayName: String {
         switch self {
@@ -143,6 +152,12 @@ public enum WageringTransactionType {
             return "Bet"
         case .win:
             return "Win"
+        case .cancel:
+            return "Cancel"
+        case .batchAmountsDebit:
+            return "Batch Amounts Debit"
+        case .batchAmountsCredit:
+            return "Batch Amounts Credit"
         }
     }
 }

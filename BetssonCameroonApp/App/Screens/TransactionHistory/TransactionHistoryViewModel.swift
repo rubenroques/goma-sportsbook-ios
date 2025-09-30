@@ -22,6 +22,7 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
 
     let transactionTypePillSelectorViewModel: PillSelectorBarViewModelProtocol
+    let gameTypeTabBarViewModel: MarketGroupSelectorTabViewModelProtocol
 
     // MARK: - Callbacks
 
@@ -32,6 +33,7 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
     init(servicesProvider: ServicesProvider.Client) {
         self.servicesProvider = servicesProvider
         self.transactionTypePillSelectorViewModel = TransactionTypePillSelectorViewModel()
+        self.gameTypeTabBarViewModel = GameTypeTabBarViewModel()
 
         setupBindings()
     }
@@ -39,11 +41,19 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
     // MARK: - Private Methods
 
     private func setupBindings() {
-        // Listen to pill selector changes
+        // Listen to pill selector changes (Level 0: All/Payments/Games)
         transactionTypePillSelectorViewModel.selectionEventPublisher
             .sink { [weak self] selectionEvent in
                 guard let category = TransactionCategory(rawValue: selectionEvent.selectedId) else { return }
                 self?.updateCategoryFilter(category)
+            }
+            .store(in: &cancellables)
+
+        // Listen to game type selector changes (Level 1: All/Sportsbook/Casino)
+        gameTypeTabBarViewModel.selectionEventPublisher
+            .sink { [weak self] selectionEvent in
+                guard let gameType = GameTransactionType(rawValue: selectionEvent.selectedId) else { return }
+                self?.updateGameTypeFilter(gameType)
             }
             .store(in: &cancellables)
     }
@@ -51,12 +61,12 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
     // MARK: - Actions
 
     func loadInitialData() {
-        displayState = displayState.loading()
+        displayState = displayState.loadingWithClearedData()
         loadTransactionsData()
     }
 
     func refreshData() {
-        displayState = displayState.loading()
+        displayState = displayState.loadingWithClearedData()
         loadTransactionsData()
     }
 
@@ -65,7 +75,14 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
     }
 
     func selectDateFilter(_ filter: TransactionDateFilter) {
+        // Prevent concurrent requests (matches web implementation request locking)
+        guard !displayState.isLoading else {
+            print("Transaction loading in progress, ignoring filter change")
+            return
+        }
+
         displayState = displayState.dateFiltered(dateFilter: filter)
+        displayState = displayState.loadingWithClearedData()
         loadTransactionsData()
     }
 
@@ -79,22 +96,32 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
         displayState = displayState.filtered(category: category)
     }
 
+    private func updateGameTypeFilter(_ gameType: GameTransactionType) {
+        displayState = displayState.gameTypeFiltered(gameType: gameType)
+    }
+
     private func loadTransactionsData() {
         let dateFilter = displayState.selectedDateFilter
 
         // Load both banking and wagering transactions concurrently
         let bankingPublisher = servicesProvider.getBankingTransactionsHistory(filter: dateFilter, pageNumber: nil)
-            .map { ServiceProviderModelMapper.bankingTransactions(from: $0) }
-            .catch { error -> AnyPublisher<[BankingTransaction], Never> in
+            .catch { error -> AnyPublisher<ServicesProvider.BankingTransactionsResponse, Never> in
                 print("Failed to load banking transactions: \(error)")
-                return Just([]).eraseToAnyPublisher()
+                // Return empty response on error
+                return Just(ServicesProvider.BankingTransactionsResponse(
+                    pagination: ServicesProvider.TransactionPagination(next: nil, previous: nil),
+                    transactions: []
+                )).eraseToAnyPublisher()
             }
 
         let wageringPublisher = servicesProvider.getWageringTransactionsHistory(filter: dateFilter, pageNumber: nil)
-            .map { ServiceProviderModelMapper.wageringTransactions(from: $0) }
-            .catch { error -> AnyPublisher<[WageringTransaction], Never> in
+            .catch { error -> AnyPublisher<ServicesProvider.WageringTransactionsResponse, Never> in
                 print("Failed to load wagering transactions: \(error)")
-                return Just([]).eraseToAnyPublisher()
+                // Return empty response on error
+                return Just(ServicesProvider.WageringTransactionsResponse(
+                    pagination: ServicesProvider.TransactionPagination(next: nil, previous: nil),
+                    transactions: []
+                )).eraseToAnyPublisher()
             }
 
         Publishers.CombineLatest(bankingPublisher, wageringPublisher)
@@ -105,10 +132,10 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
                         self?.displayState = self?.displayState.failed(error: error.localizedDescription) ?? .initial
                     }
                 },
-                receiveValue: { [weak self] (bankingTransactions, wageringTransactions) in
+                receiveValue: { [weak self] (bankingResponse, wageringResponse) in
                     self?.handleTransactionsLoaded(
-                        bankingTransactions: bankingTransactions,
-                        wageringTransactions: wageringTransactions
+                        bankingResponse: bankingResponse,
+                        wageringResponse: wageringResponse
                     )
                 }
             )
@@ -116,9 +143,13 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
     }
 
     private func handleTransactionsLoaded(
-        bankingTransactions: [BankingTransaction],
-        wageringTransactions: [WageringTransaction]
+        bankingResponse: ServicesProvider.BankingTransactionsResponse,
+        wageringResponse: ServicesProvider.WageringTransactionsResponse
     ) {
+        // Map transactions to app models
+        let bankingTransactions = ServiceProviderModelMapper.bankingTransactions(from: bankingResponse)
+        let wageringTransactions = ServiceProviderModelMapper.wageringTransactions(from: wageringResponse)
+
         // Convert to unified transaction items
         let bankingItems = bankingTransactions.map { TransactionHistoryItem.from(bankingTransaction: $0) }
         let wageringItems = wageringTransactions.map { TransactionHistoryItem.from(wageringTransaction: $0) }
@@ -126,6 +157,9 @@ final class TransactionHistoryViewModel: TransactionHistoryViewModelProtocol {
         // Combine and sort by date (newest first)
         let allTransactions = (bankingItems + wageringItems).sorted { $0.date > $1.date }
 
-        displayState = displayState.loaded(transactions: allTransactions, hasMoreData: false)
+        // Determine if there's more data (matches web implementation: hasMore if either endpoint has more)
+        let hasMoreData = bankingResponse.pagination.next != nil || wageringResponse.pagination.next != nil
+
+        displayState = displayState.loaded(transactions: allTransactions, hasMoreData: hasMoreData)
     }
 }

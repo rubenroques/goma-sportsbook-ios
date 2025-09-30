@@ -17,6 +17,7 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
     // MARK: - Properties
 
     let transactionTypePillSelectorViewModel: PillSelectorBarViewModelProtocol
+    let gameTypeTabBarViewModel: MarketGroupSelectorTabViewModelProtocol
 
     // MARK: - Callbacks
 
@@ -25,7 +26,7 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
     // MARK: - Mock Data
 
     private static let mockTransactions: [TransactionHistoryItem] = [
-        // Wagering transactions with balance
+        // Wagering transactions with balance (Sportsbook)
         TransactionHistoryItem(
             id: "#T1023387206402751",
             type: .wagering(.bet),
@@ -36,7 +37,12 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
             description: "Football Bet",
             details: "OddsMatrix2",
             iconName: "minus.circle",
-            balance: 175456.99
+            balance: 175456.99,
+            gameId: "OddsMatrix2",
+            displayType: "Bet",
+            displayStatus: "Placed",
+            displayAmountIndicator: "-",
+            displayAmount: 1000.0
         ),
         TransactionHistoryItem(
             id: "#T1023387206402752",
@@ -48,7 +54,30 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
             description: "Football Win",
             details: "OddsMatrix2",
             iconName: "plus.circle",
-            balance: 177956.99
+            balance: 177956.99,
+            gameId: "OddsMatrix2",
+            displayType: "Win",
+            displayStatus: "Won",
+            displayAmountIndicator: "+",
+            displayAmount: 2500.0
+        ),
+        // Casino transaction
+        TransactionHistoryItem(
+            id: "#T1023387206402756",
+            type: .wagering(.bet),
+            date: Calendar.current.date(byAdding: .hour, value: -5, to: Date()) ?? Date(),
+            amount: -500.0,
+            currency: "XAF",
+            status: "Completed",
+            description: "Roulette Bet",
+            details: "Evolution_Roulette",
+            iconName: "minus.circle",
+            balance: 174956.99,
+            gameId: "Evolution_Roulette",
+            displayType: "Bet",
+            displayStatus: "Placed",
+            displayAmountIndicator: "-",
+            displayAmount: 500.0
         ),
         // Banking transactions without balance
         TransactionHistoryItem(
@@ -61,7 +90,12 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
             description: "Mobile Money Deposit",
             details: "MTN_MOMO",
             iconName: "arrow.down.circle",
-            balance: nil
+            balance: nil,
+            gameId: nil,
+            displayType: "Deposit",
+            displayStatus: "Success",
+            displayAmountIndicator: "+",
+            displayAmount: 10000.0
         ),
         TransactionHistoryItem(
             id: "#T1023387206402754",
@@ -73,7 +107,12 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
             description: "Bank Withdrawal",
             details: "ECOBANK_TRANSFER",
             iconName: "arrow.up.circle",
-            balance: nil
+            balance: nil,
+            gameId: nil,
+            displayType: "Withdrawal",
+            displayStatus: "Success",
+            displayAmountIndicator: "-",
+            displayAmount: 5000.0
         ),
         TransactionHistoryItem(
             id: "#T1023387206402755",
@@ -85,7 +124,12 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
             description: "Basketball Bet",
             details: "OddsMatrix2",
             iconName: "minus.circle",
-            balance: 172456.99
+            balance: 172456.99,
+            gameId: "OddsMatrix2",
+            displayType: "Bet",
+            displayStatus: "Placed",
+            displayAmountIndicator: "-",
+            displayAmount: 500.0
         )
     ]
 
@@ -93,6 +137,7 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
 
     init(mockState: MockState = .populated) {
         self.transactionTypePillSelectorViewModel = TransactionTypePillSelectorViewModel()
+        self.gameTypeTabBarViewModel = GameTypeTabBarViewModel()
 
         setupInitialState(mockState)
     }
@@ -100,7 +145,7 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
     // MARK: - Actions
 
     func loadInitialData() {
-        displayState = displayState.loading()
+        displayState = displayState.loadingWithClearedData()
 
         // Simulate network delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
@@ -109,7 +154,7 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
     }
 
     func refreshData() {
-        displayState = displayState.loading()
+        displayState = displayState.loadingWithClearedData()
 
         // Simulate refresh with slight delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
@@ -136,7 +181,7 @@ final class MockTransactionHistoryViewModel: TransactionHistoryViewModelProtocol
         case .empty:
             displayState = displayState.loaded(transactions: [])
         case .loading:
-            displayState = displayState.loading()
+            displayState = displayState.loadingWithClearedData()
         case .error:
             displayState = displayState.failed(error: "Failed to load transactions. Please check your internet connection.")
         case .populated:

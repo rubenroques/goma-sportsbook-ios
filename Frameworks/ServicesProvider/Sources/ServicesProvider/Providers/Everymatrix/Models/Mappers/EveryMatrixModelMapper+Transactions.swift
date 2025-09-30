@@ -25,13 +25,17 @@ extension EveryMatrixModelMapper {
     }
 
     static func bankingTransaction(from internalModel: EveryMatrix.BankingTransaction) -> BankingTransaction? {
-        // Map transaction type
+        // Map transaction type (matches web implementation: bankingTransactionTypes)
         let type: BankingTransactionType
         switch internalModel.type {
         case 0:
             type = .deposit
         case 1:
             type = .withdrawal
+        case 13:
+            type = .systemDeposit
+        case 14:
+            type = .systemWithdrawal
         default:
             return nil // Unknown transaction type
         }
@@ -88,13 +92,20 @@ extension EveryMatrixModelMapper {
     }
 
     static func wageringTransaction(from internalModel: EveryMatrix.WageringTransaction) -> WageringTransaction? {
-        // Map transaction type
+        // Map transaction type (matches web implementation: wageringTransactionStatuses)
+        // transType: "1"=Bet, "2"=Win, "3"=Cancel, "4"=BatchAmountsDebit, "5"=BatchAmountsCredit
         let type: WageringTransactionType
         switch internalModel.transType {
         case "1":
             type = .bet
         case "2":
             type = .win
+        case "3":
+            type = .cancel
+        case "4":
+            type = .batchAmountsDebit
+        case "5":
+            type = .batchAmountsCredit
         default:
             return nil // Unknown transaction type
         }

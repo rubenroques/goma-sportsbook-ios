@@ -28,11 +28,28 @@ struct BankingTransaction: Hashable, Identifiable {
     let creditName: String?
     let creditCurrency: String?
     let rejectionNote: String?
+
+    // Computed properties for normalized display
+    var normalizedStatus: BankingTransactionStatus {
+        return BankingTransactionStatus.from(rawStatus: status)
+    }
+
+    var amountIndicator: String {
+        return type.amountIndicator
+    }
+
+    /// Display date - uses completed date if available, otherwise created date
+    /// Matches web implementation which uses "completed" for banking transactions
+    var displayDate: Date {
+        return completed ?? created
+    }
 }
 
 enum BankingTransactionType: Hashable {
     case deposit
     case withdrawal
+    case systemDeposit
+    case systemWithdrawal
 
     var displayName: String {
         switch self {
@@ -40,15 +57,28 @@ enum BankingTransactionType: Hashable {
             return "Deposit"
         case .withdrawal:
             return "Withdrawal"
+        case .systemDeposit:
+            return "System Deposit"
+        case .systemWithdrawal:
+            return "System Withdrawal"
         }
     }
 
     var iconName: String {
         switch self {
-        case .deposit:
+        case .deposit, .systemDeposit:
             return "arrow.down.circle"
-        case .withdrawal:
+        case .withdrawal, .systemWithdrawal:
             return "arrow.up.circle"
+        }
+    }
+
+    var amountIndicator: String {
+        switch self {
+        case .deposit, .systemDeposit:
+            return "+"
+        case .withdrawal, .systemWithdrawal:
+            return "-"
         }
     }
 }

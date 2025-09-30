@@ -28,11 +28,38 @@ struct WageringTransaction: Hashable, Identifiable {
     let transName: String?
     let coreTransId: String?
     let currencyCode: String
+
+    // Computed properties for normalized display
+    var normalizedStatus: WageringTransactionStatus {
+        return WageringTransactionStatus.from(transType: transType)
+    }
+
+    /// Amount indicator based on transName (web implementation: transName == 'Credit' ? '+' : '-')
+    var amountIndicator: String {
+        if let transName = transName, transName.lowercased() == "credit" {
+            return "+"
+        } else {
+            return "-"
+        }
+    }
+
+    /// Display date - uses createdDate (matches "ins" field in web)
+    var displayDate: Date {
+        return createdDate
+    }
+
+    /// Display amount - uses totalAmount for wagering (matches web implementation)
+    var displayAmount: Double {
+        return totalAmount ?? realAmount
+    }
 }
 
 enum WageringTransactionType: Hashable {
     case bet
     case win
+    case cancel
+    case batchAmountsDebit
+    case batchAmountsCredit
 
     var displayName: String {
         switch self {
@@ -40,15 +67,23 @@ enum WageringTransactionType: Hashable {
             return "Bet"
         case .win:
             return "Win"
+        case .cancel:
+            return "Cancel"
+        case .batchAmountsDebit:
+            return "Batch Amounts Debit"
+        case .batchAmountsCredit:
+            return "Batch Amounts Credit"
         }
     }
 
     var iconName: String {
         switch self {
-        case .bet:
+        case .bet, .batchAmountsDebit:
             return "minus.circle"
-        case .win:
+        case .win, .batchAmountsCredit:
             return "plus.circle"
+        case .cancel:
+            return "xmark.circle"
         }
     }
 }

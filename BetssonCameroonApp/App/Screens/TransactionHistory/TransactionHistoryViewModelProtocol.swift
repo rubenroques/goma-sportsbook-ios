@@ -13,6 +13,7 @@ protocol TransactionHistoryViewModelProtocol {
     // MARK: - Properties
 
     var transactionTypePillSelectorViewModel: PillSelectorBarViewModelProtocol { get }
+    var gameTypeTabBarViewModel: MarketGroupSelectorTabViewModelProtocol { get }
 
     // MARK: - Callbacks
 

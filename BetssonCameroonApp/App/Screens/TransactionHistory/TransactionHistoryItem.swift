@@ -12,6 +12,13 @@ struct TransactionHistoryItem: Hashable, Identifiable {
     let details: String?
     let iconName: String
     let balance: Double?
+    let gameId: String?  // Required for sportsbook vs casino distinction
+
+    // Display fields (matches web implementation pattern)
+    let displayType: String
+    let displayStatus: String
+    let displayAmountIndicator: String
+    let displayAmount: Double
 }
 
 enum TransactionHistoryItemType: Hashable {
@@ -71,14 +78,19 @@ extension TransactionHistoryItem {
         return TransactionHistoryItem(
             id: "#T"+bankingTransaction.id,
             type: .banking(bankingTransaction.type),
-            date: bankingTransaction.created,
+            date: bankingTransaction.displayDate,  // Use displayDate (completed, not created)
             amount: bankingTransaction.realAmount,
             currency: bankingTransaction.currency,
             status: bankingTransaction.status,
             description: description,
             details: details,
             iconName: bankingTransaction.type.iconName,
-            balance: nil // Banking transactions don't have balance information
+            balance: nil,  // Banking transactions don't have balance information
+            gameId: nil,  // Banking transactions have no gameId
+            displayType: bankingTransaction.type.displayName,
+            displayStatus: bankingTransaction.normalizedStatus.displayName,
+            displayAmountIndicator: bankingTransaction.amountIndicator,
+            displayAmount: bankingTransaction.realAmount
         )
     }
 
@@ -89,14 +101,19 @@ extension TransactionHistoryItem {
         return TransactionHistoryItem(
             id: "#T"+wageringTransaction.id,
             type: .wagering(wageringTransaction.transType),
-            date: wageringTransaction.createdDate,
+            date: wageringTransaction.displayDate,  // Uses createdDate (matches "ins" field)
             amount: wageringTransaction.realAmount,
             currency: wageringTransaction.currencyCode,
-            status: "Completed", // Wagering transactions are always completed when we receive them
+            status: wageringTransaction.normalizedStatus.displayName,
             description: description,
             details: details,
             iconName: wageringTransaction.transType.iconName,
-            balance: wageringTransaction.balance // Use the actual balance from wagering transaction
+            balance: wageringTransaction.balance,  // Use the actual balance from wagering transaction
+            gameId: wageringTransaction.gameId,  // Pass through gameId for game type filtering
+            displayType: wageringTransaction.transType.displayName,
+            displayStatus: wageringTransaction.normalizedStatus.displayName,
+            displayAmountIndicator: wageringTransaction.amountIndicator,
+            displayAmount: wageringTransaction.displayAmount  // Uses totalAmount
         )
     }
 }
