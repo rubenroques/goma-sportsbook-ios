@@ -17,12 +17,30 @@ class SportTypeStore {
             return firstSport
         }
         else {
-            return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: "1", showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
+            return Sport(
+                id: "1",
+                name: "Football",
+                alphaId: "FBL",
+                numericId: "1",
+                showEventCategory: false,
+                liveEventsCount: 0,
+                eventsCount: 1,
+                hasMatches: true,
+                hasOutrights: false)
         }
     }
     
     var football: Sport {
-        return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: "1", showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
+        return Sport(
+            id: "1",
+            name: "Football",
+            alphaId: "FBL",
+            numericId: "1",
+            showEventCategory: false,
+            liveEventsCount: 0,
+            eventsCount: 1,
+            hasMatches: true,
+            hasOutrights: false)
     }
 
     var defaultLiveSport: Sport {
@@ -102,7 +120,9 @@ class SportTypeStore {
 
     func getActiveSports() -> [Sport] {
         if case .loaded(let sports) = self.activeSportsCurrentValueSubject.value {
-            return sports
+            return sports.filter { sport in
+                return sport.hasMatches
+            }
         }
         else {
             return []

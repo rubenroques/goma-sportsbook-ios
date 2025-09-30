@@ -51,11 +51,11 @@ public final class SimpleSquaredFilterBarButton: UIButton {
 
     private func updateAppearance() {
         if isFilterSelected {
-            backgroundColor = StyleProvider.Color.backgroundPrimary
+            backgroundColor = StyleProvider.Color.backgroundTertiary
             setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         } else {
             backgroundColor = .clear
-            setTitleColor(StyleProvider.Color.textSecondary, for: .normal)
+            setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
         }
     }
 

@@ -37,8 +37,14 @@ public struct TransactionItemData {
         self.transactionId = transactionId
         self.date = date
         self.balance = balance
-        self.isPositive = amount >= 0
         self.amountIndicator = amountIndicator
+
+        // Determine isPositive from amountIndicator if provided, otherwise from amount sign
+        if let indicator = amountIndicator {
+            self.isPositive = indicator == "+"
+        } else {
+            self.isPositive = amount >= 0
+        }
     }
 
     // MARK: - Computed Properties

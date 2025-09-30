@@ -76,7 +76,7 @@ extension TransactionHistoryItem {
         let details = bankingTransaction.vendorReference ?? bankingTransaction.externalReference
 
         return TransactionHistoryItem(
-            id: "#T"+bankingTransaction.id,
+            id: "#"+bankingTransaction.id,
             type: .banking(bankingTransaction.type),
             date: bankingTransaction.displayDate,  // Use displayDate (completed, not created)
             amount: bankingTransaction.realAmount,
@@ -99,7 +99,7 @@ extension TransactionHistoryItem {
         let details = wageringTransaction.gameId
 
         return TransactionHistoryItem(
-            id: "#T"+wageringTransaction.id,
+            id: "#"+wageringTransaction.id,
             type: .wagering(wageringTransaction.transType),
             date: wageringTransaction.displayDate,  // Uses createdDate (matches "ins" field)
             amount: wageringTransaction.realAmount,

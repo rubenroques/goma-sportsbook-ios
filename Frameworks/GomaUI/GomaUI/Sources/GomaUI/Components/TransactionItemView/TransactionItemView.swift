@@ -242,7 +242,7 @@ public class TransactionItemView: UIView {
 
         // Amount
         amountLabel.text = data.formattedAmount
-        amountLabel.textColor = data.isPositive ? StyleProvider.Color.alertSuccess : StyleProvider.Color.alertError
+        amountLabel.textColor = data.isPositive ? StyleProvider.Color.alertSuccess : StyleProvider.Color.highlightTertiary
 
         // Transaction ID
         transactionIdLabel.text = data.transactionId

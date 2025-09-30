@@ -391,7 +391,9 @@ extension ServiceProviderModelMapper {
                           showEventCategory: false,
                           liveEventsCount: tournament.numberOfLiveEvents,
                           outrightEventsCount: 0,
-                          eventsCount: tournament.numberOfEvents)
+                          eventsCount: tournament.numberOfEvents,
+                          hasMatches: true,
+                          hasOutrights: true)
         
         let location = Location(
             id: tournament.venueId ?? "",

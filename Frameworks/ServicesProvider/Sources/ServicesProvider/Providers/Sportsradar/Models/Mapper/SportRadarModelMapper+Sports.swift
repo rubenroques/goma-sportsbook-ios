@@ -36,7 +36,9 @@ extension SportRadarModelMapper {
                                   numberEvents: sportRadarSportType.numberEvents,
                                   numberOutrightEvents: sportRadarSportType.numberOutrightEvents,
                                   numberOutrightMarkets: sportRadarSportType.numberOutrightMarkets,
-                                  numberLiveEvents: sportRadarSportType.numberLiveEvents)
+                                  numberLiveEvents: sportRadarSportType.numberLiveEvents,
+                                  hasMatches: sportRadarSportType.numberEvents > 0,
+                                  hasOutrights: sportRadarSportType.numberOutrightEvents > 0)
         return sportType
     }
 

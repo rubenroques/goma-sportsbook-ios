@@ -16,6 +16,8 @@ struct Sport: Codable, Hashable {
     var liveEventsCount: Int
     var outrightEventsCount: Int
     var eventsCount: Int
+    var hasMatches: Bool
+    var hasOutrights: Bool
 
     init(id: String,
          name: String,
@@ -24,7 +26,10 @@ struct Sport: Codable, Hashable {
          showEventCategory: Bool,
          liveEventsCount: Int,
          outrightEventsCount: Int = 0,
-         eventsCount: Int = 0) {
+         eventsCount: Int = 0,
+         hasMatches: Bool = false,
+         hasOutrights: Bool = false) {
+        
         self.id = id
         self.name = name
         self.alphaId = alphaId
@@ -33,6 +38,8 @@ struct Sport: Codable, Hashable {
         self.liveEventsCount = liveEventsCount
         self.outrightEventsCount = outrightEventsCount
         self.eventsCount = eventsCount
+        self.hasMatches = hasMatches
+        self.hasOutrights = hasOutrights
     }
     
 }

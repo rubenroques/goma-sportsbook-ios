@@ -18,5 +18,8 @@ extension EveryMatrix {
         let numberOfUpcomingMatches: Int?
         let showEventCategory: Bool?
         let isTopSport: Bool?
+        
+        let hasMatches: Bool?
+        let hasOutrights: Bool?
     }
 }

@@ -107,7 +107,7 @@ class SportsManager {
 
     private func buildSportTypes() -> [SportType] {
         // Get all sports from the entity store
-        let sportsDTO = store.getAll(EveryMatrix.SportDTO.self)
+        let sportsDTO = store.getAllInOrder(EveryMatrix.SportDTO.self)
 
         // Convert DTOs to internal sports model
         let internalSports = sportsDTO.compactMap { sportDTO in
@@ -125,7 +125,7 @@ class SportsManager {
         }
 
         // Sort by name for consistent ordering
-        return filteredSports.sorted { $0.name < $1.name }
+        return filteredSports
     }
     
     // MARK: - Sports-Specific Parsing

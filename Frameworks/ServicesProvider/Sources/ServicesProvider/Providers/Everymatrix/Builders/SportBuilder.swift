@@ -22,7 +22,9 @@ extension EveryMatrix {
                 numberOfLiveEvents: sport.numberOfLiveEvents,
                 numberOfUpcomingMatches: sport.numberOfUpcomingMatches,
                 showEventCategory: sport.showEventCategory,
-                isTopSport: sport.isTopSport
+                isTopSport: sport.isTopSport,
+                hasMatches: sport.hasMatches,
+                hasOutrights: sport.hasOutrights
             )
         }
     }

@@ -57,19 +57,15 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
             currentSportId = sportId
         }
         
-        let currentSport = Env.sportsStore.getActiveSports().first(where: {
-            $0.id == currentSportId
-        })
+        guard
+            let currentSport = Env.sportsStore.getActiveSports().first(where: {
+                $0.id == currentSportId
+            })
+        else {
+            return
+        }
         
-        let sportType = SportType(name: currentSport?.name ?? "",
-                                  numericId: currentSport?.numericId ?? "",
-                                  alphaId: currentSport?.alphaId ?? "", iconId: currentSport?.id ?? "",
-                                  showEventCategory: false,
-                                  numberEvents: 0,
-                                  numberOutrightEvents: 0,
-                                  numberOutrightMarkets: 0,
-                                  numberLiveEvents: 0)
-        
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: currentSport)
         let sportTournamentsPublisher = servicesProvider.getTournaments(forSportType: sportType)
             .map { tournaments -> [Competition] in
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)

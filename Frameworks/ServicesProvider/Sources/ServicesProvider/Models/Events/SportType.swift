@@ -18,6 +18,8 @@ public struct SportType: Codable, Equatable, Hashable {
     public var numberOutrightEvents: Int
     public var numberOutrightMarkets: Int
     public var numberLiveEvents: Int
+    public var hasMatches: Bool
+    public var hasOutrights: Bool
 
     public init(name: String,
                 numericId: String?,
@@ -27,7 +29,9 @@ public struct SportType: Codable, Equatable, Hashable {
                 numberEvents: Int,
                 numberOutrightEvents: Int,
                 numberOutrightMarkets: Int,
-                numberLiveEvents: Int) {
+                numberLiveEvents: Int,
+                hasMatches: Bool,
+                hasOutrights: Bool) {
         self.name = name
         self.numericId = numericId
         self.alphaId = alphaId
@@ -37,6 +41,9 @@ public struct SportType: Codable, Equatable, Hashable {
         self.numberOutrightEvents = numberOutrightEvents
         self.numberOutrightMarkets = numberOutrightMarkets
         self.numberLiveEvents = numberLiveEvents
+        
+        self.hasMatches = hasMatches
+        self.hasOutrights = hasOutrights
     }
     
     public init(name: String) {
@@ -49,6 +56,8 @@ public struct SportType: Codable, Equatable, Hashable {
         self.numberOutrightEvents = 0
         self.numberOutrightMarkets = 0
         self.numberLiveEvents = 0
+        self.hasMatches = true
+        self.hasOutrights = false
     }
     
     public static var defaultFootball: SportType {
@@ -61,7 +70,10 @@ public struct SportType: Codable, Equatable, Hashable {
             numberEvents: 0,
             numberOutrightEvents: 0,
             numberOutrightMarkets: 0,
-            numberLiveEvents: 0)
+            numberLiveEvents: 0,
+            hasMatches: true,
+            hasOutrights: false
+        )
     }
     
     /// Helper initializer for creating SportType from ID and name (for EveryMatrix mapping)
@@ -85,6 +97,8 @@ public struct SportType: Codable, Equatable, Hashable {
         self.numberOutrightEvents = 0
         self.numberOutrightMarkets = 0
         self.numberLiveEvents = 0
+        self.hasMatches = true
+        self.hasOutrights = false
     }
 }
 

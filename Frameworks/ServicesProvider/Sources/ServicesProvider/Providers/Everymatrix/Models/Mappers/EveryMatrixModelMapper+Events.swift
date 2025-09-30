@@ -91,7 +91,9 @@ extension EveryMatrixModelMapper {
             numberEvents: internalSport.numberOfEvents ?? 0,
             numberOutrightEvents: 0, // Not available in EveryMatrix data
             numberOutrightMarkets: 0, // Not available in EveryMatrix data
-            numberLiveEvents: internalSport.numberOfLiveEvents ?? 0
+            numberLiveEvents: internalSport.numberOfLiveEvents ?? 0,
+            hasMatches: internalSport.hasMatches ?? false,
+            hasOutrights: internalSport.hasOutrights ?? false
         )
     }
 

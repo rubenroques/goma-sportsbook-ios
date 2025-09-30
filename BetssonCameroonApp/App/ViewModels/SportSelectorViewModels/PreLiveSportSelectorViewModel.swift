@@ -29,7 +29,7 @@ final class PreLiveSportSelectorViewModel: SportTypeSelectorViewModelProtocol {
         
         // Get sports synchronously - no need for live updates in modal
         let activeSports = sportTypeStore.getActiveSports().filter { sport in
-            sport.liveEventsCount > 0 || sport.eventsCount > 0
+            sport.eventsCount > 0
         }
         self.internalSports = activeSports.map { Self.sportToSportTypeData($0) }
         

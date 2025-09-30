@@ -31,7 +31,9 @@ extension GomaModelMapper {
                                   numberEvents: sport.preLiveEventsCount ?? 0,
                                   numberOutrightEvents: 0,
                                   numberOutrightMarkets: 0,
-                                  numberLiveEvents: sport.liveEventsCount ?? 0)
+                                  numberLiveEvents: sport.liveEventsCount ?? 0,
+                                  hasMatches: ((sport.preLiveEventsCount ?? 0) + (sport.liveEventsCount ?? 0)) > 0,
+                                  hasOutrights: false)
         return sportType
     }
     

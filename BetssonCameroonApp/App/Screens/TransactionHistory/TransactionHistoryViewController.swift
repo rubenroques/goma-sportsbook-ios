@@ -17,14 +17,15 @@ final class TransactionHistoryViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
 
+    private lazy var pillSelectorBarViewContainer: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .clear
+        return container
+    }()
+    
     private lazy var pillSelectorBarView: PillSelectorBarView = {
         let view = PillSelectorBarView(viewModel: viewModel.transactionTypePillSelectorViewModel)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var gameTypeFilterBar: MarketGroupSelectorTabView = {
-        let view = MarketGroupSelectorTabView(viewModel: viewModel.gameTypeTabBarViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -35,6 +36,17 @@ final class TransactionHistoryViewController: UIViewController {
         container.backgroundColor = .clear
         return container
     }()
+    
+    private lazy var gameTypeFilterBar: MarketGroupSelectorTabView = {
+        let view = MarketGroupSelectorTabView.init(viewModel: viewModel.gameTypeTabBarViewModel,
+                                                   barBackgroundColor: UIColor.App.backgroundTertiary,
+                                                   itemIdleBackgroundColor: UIColor.App.backgroundTertiary,
+                                                   itemSelectedBackgroundColor: UIColor.App.backgroundTertiary)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    
 
     private lazy var filtersStackView: UIStackView = {
         let stackView = UIStackView()
@@ -172,11 +184,13 @@ final class TransactionHistoryViewController: UIViewController {
         customNavigationView.addSubview(titleLabel)
         customNavigationView.addSubview(backButton)
 
-        // Add game type filter bar to its container
+
+        pillSelectorBarViewContainer.addSubview(pillSelectorBarView)
+        
         gameTypeFilterBarContainer.addSubview(gameTypeFilterBar)
 
         // Add filters to stack view
-        filtersStackView.addArrangedSubview(pillSelectorBarView)
+        filtersStackView.addArrangedSubview(pillSelectorBarViewContainer)
         filtersStackView.addArrangedSubview(gameTypeFilterBarContainer)
     }
 
@@ -200,30 +214,34 @@ final class TransactionHistoryViewController: UIViewController {
 
             // Filters Stack View (contains pill selector and game type bar)
             filtersStackView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor, constant: 4),
-            filtersStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 4),
-            filtersStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -4),
+            filtersStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 6),
+            filtersStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -6),
 
             // Individual filter bar heights
-            pillSelectorBarView.heightAnchor.constraint(equalToConstant: 32),
-
+            pillSelectorBarViewContainer.heightAnchor.constraint(equalToConstant: 62),
+            pillSelectorBarView.heightAnchor.constraint(equalToConstant: 40),
+            pillSelectorBarView.centerYAnchor.constraint(equalTo: pillSelectorBarViewContainer.centerYAnchor),
+            pillSelectorBarView.leadingAnchor.constraint(equalTo: pillSelectorBarViewContainer.leadingAnchor),
+            pillSelectorBarView.trailingAnchor.constraint(equalTo: pillSelectorBarViewContainer.trailingAnchor),
+                        
             // Game type filter bar container with custom spacing
             gameTypeFilterBarContainer.heightAnchor.constraint(equalToConstant: 46),
             gameTypeFilterBar.leadingAnchor.constraint(equalTo: gameTypeFilterBarContainer.leadingAnchor, constant: 12),
             gameTypeFilterBar.trailingAnchor.constraint(equalTo: gameTypeFilterBarContainer.trailingAnchor, constant: -12),
-            gameTypeFilterBar.centerYAnchor.constraint(equalTo: gameTypeFilterBarContainer.centerYAnchor),
+            gameTypeFilterBar.bottomAnchor.constraint(equalTo: gameTypeFilterBarContainer.bottomAnchor),
             gameTypeFilterBar.heightAnchor.constraint(equalToConstant: 32),
 
             // Table View (now connected to filters stack)
-            tableView.topAnchor.constraint(equalTo: filtersStackView.bottomAnchor, constant: 4),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            tableView.topAnchor.constraint(equalTo: filtersStackView.bottomAnchor, constant: 0),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            // Loading View
-            loadingView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
-            loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            // Loading View (centered within tableView content area)
+            loadingView.topAnchor.constraint(equalTo: tableView.topAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor),
 
             // Error View
             errorView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
@@ -258,9 +276,9 @@ final class TransactionHistoryViewController: UIViewController {
 
         // Update main content
         let hasError = displayState.error != nil
-        customNavigationView.isHidden = hasError  // Keep navigation visible during loading
-        filtersStackView.isHidden = displayState.isLoading || hasError
-        tableView.isHidden = displayState.isLoading || hasError
+        customNavigationView.isHidden = hasError
+        filtersStackView.isHidden = hasError  // Keep filters visible during loading
+        tableView.isHidden = hasError  // Keep tableView visible during loading (shows header)
 
         // Show/hide game type bar based on selected category (Level 1 filter only visible when Games is selected)
         let shouldShowGameTypeBar = displayState.selectedCategory == .games
@@ -434,7 +452,7 @@ extension TransactionHistoryViewController {
     private static func createLoadingView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundPrimary
+        view.backgroundColor = .clear
         view.isHidden = true
 
         let spinner = UIActivityIndicatorView(style: .large)

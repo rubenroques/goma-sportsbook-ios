@@ -21,7 +21,9 @@ extension ServiceProviderModelMapper {
                           showEventCategory: sportType.showEventCategory,
                           liveEventsCount: sportType.numberLiveEvents,
                           outrightEventsCount: sportType.numberOutrightEvents,
-                          eventsCount: sportType.numberEvents)
+                          eventsCount: sportType.numberEvents,
+                          hasMatches: sportType.hasMatches,
+                          hasOutrights: sportType.hasOutrights)
         return sport
     }
 
@@ -34,7 +36,9 @@ extension ServiceProviderModelMapper {
                                                                   numberEvents: sport.liveEventsCount,
                                                                   numberOutrightEvents: sport.outrightEventsCount,
                                                                   numberOutrightMarkets: 0,
-                                                                  numberLiveEvents: sport.liveEventsCount)
+                                                                  numberLiveEvents: sport.liveEventsCount,
+                                                                  hasMatches: sport.hasMatches,
+                                                                  hasOutrights: sport.hasOutrights)
         return serviceProviderSportType
     }
 
