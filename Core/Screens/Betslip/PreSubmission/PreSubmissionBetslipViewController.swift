@@ -1094,6 +1094,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                 else {
                     self?.multipleWinningsValueLabel.text = localized("no_value")
                     self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
+                    
+                    self?.systemWinningsValueLabel.text = localized("no_value")
+                    self?.secondarySystemWinningsValueLabel.text = localized("no_value")
                 }
 
                 self?.placeBetButton.isEnabled = hasValidBettingValue
@@ -1148,12 +1151,16 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         //
         //
-        Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
+        Publishers.CombineLatest4(self.listTypePublisher,
+                                  self.simpleBetsBettingValues,
+                                  Env.betslipManager.bettingTicketsPublisher,
+                                  self.isCashbackToggleOn)
             .receive(on: DispatchQueue.main)
-            .filter { betslipType, _, _ in
+            .filter { betslipType, _, _, _ in
                 betslipType == .simple
             }
-            .map({ [weak self] _, simpleBetsBettingValues, tickets -> String in
+            .map({ [weak self] _, simpleBetsBettingValues, tickets, isCashbackToggleOn -> String in
+                
                 var expectedReturn = 0.0
                 let currentOddsBoost = self?.singleBettingTicketDataSource.currentTicketOddsBoostSelected
 
@@ -1167,7 +1174,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                         }
                         else {
-                            let expectedTicketReturn = ticket.decimalOdd * betValue
+                            var expectedTicketReturn = ticket.decimalOdd * betValue
+                            if isCashbackToggleOn {
+                                expectedTicketReturn -= betValue
+                            }
                             expectedReturn += expectedTicketReturn
                         }
                     }
@@ -1881,7 +1891,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         ])
 
-
         self.isCashbackToggleOn
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isCashbackToggleOn in
@@ -1921,6 +1930,13 @@ class PreSubmissionBetslipViewController: UIViewController {
                         self.betValueSubject.send(higherBalance)
                         self.amountTextfield.text = String(format: "%.2f", higherBalance) // CurrencyFormater.defaultFormat.string(from: NSNumber(value: higherBalance))
                         self.secondaryAmountTextfield.text = String(format: "%.2f", higherBalance)
+                    }
+                    // For system bets, send the same bet amount and re-check potential winnings
+                    else {
+                        let currentStake = self.betValueSubject.value
+                        self.betValueSubject.send(currentStake)
+                        self.amountTextfield.text = String(format: "%.2f", currentStake)
+                        self.secondaryAmountTextfield.text = String(format: "%.2f", currentStake)
                     }
 
                     if self.singleBettingTicketDataSource.bettingTickets.count == 1,
@@ -2162,9 +2178,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiTicketsOdd)
         self.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiTicketsOdd)
 
-        let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.potentialReturn)) ?? localized("no_value")
-        self.multipleWinningsValueLabel.text = possibleWinningsString
-        self.secondaryMultipleWinningsValueLabel.text = possibleWinningsString
+        if self.isCashbackToggleOn.value {
+            let freeBetPotentialReturn = betPotencialReturn.potentialReturn - betPotencialReturn.totalStake
+            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetPotentialReturn)) ?? localized("no_value")
+            self.multipleWinningsValueLabel.text = possibleWinningsString
+            self.secondaryMultipleWinningsValueLabel.text = possibleWinningsString
+        }
+        else {
+            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.potentialReturn)) ?? localized("no_value")
+            self.multipleWinningsValueLabel.text = possibleWinningsString
+            self.secondaryMultipleWinningsValueLabel.text = possibleWinningsString
+        }
     }
 
     func requestSystemBetInfo() {
@@ -2198,10 +2222,18 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func configureWithSystemBetPotencialReturn(_ betPotencialReturn: BetPotencialReturn) {
 
-        let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.potentialReturn)) ?? localized("no_value")
-        self.systemWinningsValueLabel.text = possibleWinningsString
-        self.secondarySystemWinningsValueLabel.text = possibleWinningsString
-
+        if self.isCashbackToggleOn.value {
+            let freeBetPotentialReturn = betPotencialReturn.potentialReturn - betPotencialReturn.totalStake
+            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetPotentialReturn)) ?? localized("no_value")
+            self.systemWinningsValueLabel.text = possibleWinningsString
+            self.secondarySystemWinningsValueLabel.text = possibleWinningsString
+        }
+        else {
+            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.potentialReturn)) ?? localized("no_value")
+            self.systemWinningsValueLabel.text = possibleWinningsString
+            self.secondarySystemWinningsValueLabel.text = possibleWinningsString
+        }
+        
         let totalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.totalStake)) ?? localized("no_value")
         self.systemOddsValueLabel.text = totalBetAmountString
         self.secondarySystemOddsValueLabel.text = totalBetAmountString
@@ -2964,8 +2996,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
 
         // Append the new digit to the end of the string
         internalValueString = internalValueString + newValue // swiftlint:disable:this shorthand_operator
-
-
+        
         //
         // internalValue = (internalValue * 10) + newValue
 

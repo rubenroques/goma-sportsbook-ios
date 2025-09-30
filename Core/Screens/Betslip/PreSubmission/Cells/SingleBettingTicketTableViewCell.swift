@@ -431,18 +431,23 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 if let currentBoostedOddPercentage = self?.currentBoostedOddPercentage, currentBoostedOddPercentage != 0 {
                     let boostedValue = newOddValue + (newOddValue * currentBoostedOddPercentage)
 
-                    let possibleWinnings = boostedValue * (self?.betValue ?? 0)
+                    var possibleWinnings = boostedValue * (self?.betValue ?? 0)
+                    
+                    if shouldHighlightTextfield {
+                        possibleWinnings -= (self?.betValue ?? 0)
+                    }
+                    
                     let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
                     self?.returnsValueLabel.text = possibleWinningsString
 
                     //self?.oddValueLabel.text = OddConverter.stringForValue(boostedValue, format: UserDefaults.standard.userOddsFormat)
                     self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: boostedValue)
-                    self?.refreshPossibleWinnings()
+                    self?.refreshPossibleWinnings(withFreeBetValues: shouldHighlightTextfield)
                 }
                 else {
                     // self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                    self?.refreshPossibleWinnings()
+                    self?.refreshPossibleWinnings(withFreeBetValues: shouldHighlightTextfield)
                 }
 
             })
@@ -588,13 +593,18 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.addAmountValue(50.0)
     }
 
-    func refreshPossibleWinnings() {
+    func refreshPossibleWinnings(withFreeBetValues: Bool = false) {
 
         if let currentOddValue = currentOddValue {
 
             let boostedValue = currentOddValue * (1 + self.currentBoostedOddPercentage)
 
-            let possibleWinnings = boostedValue * self.betValue
+            var possibleWinnings = boostedValue * self.betValue
+            
+            if withFreeBetValues {
+                possibleWinnings -= self.betValue
+            }
+            
             let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
             self.returnsValueLabel.text = possibleWinningsString
         }

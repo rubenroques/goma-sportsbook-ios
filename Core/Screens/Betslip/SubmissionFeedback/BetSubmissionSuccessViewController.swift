@@ -174,7 +174,14 @@ class BetSubmissionSuccessViewController: UIViewController {
         // Possible Earnings
         var possibleEarningsDouble = betPlacedDetailsArray
             .map({ betPlacedDetails in
-                betPlacedDetails.response.maxWinning ?? 0.0
+                var maxWinnings = betPlacedDetails.response.maxWinning ?? 0.0
+                
+                if usedCashback {
+                    maxWinnings -= betPlacedDetails.response.amount ?? 0.0
+                }
+                
+                return maxWinnings
+                
             })
             .reduce(0.0, +)
 
@@ -494,6 +501,12 @@ class BetSubmissionSuccessViewController: UIViewController {
                     if mappedBetHistoryEntrySelection.count >= 2, betType == "accumulator", uniqueEventIds.count == 1 {
                         betType = "mix_match"
                     }
+                    
+                    var maxWinnings = betPlacedDetails.response.maxWinning ?? 0.0
+                    
+                    if usedCashback {
+                        maxWinnings -= betPlacedDetails.response.amount ?? 0
+                    }
 
                     let bettingTicketHistory = BetHistoryEntry(betId: betPlacedDetails.response.betId ?? "",
                                                                selections: mappedBetHistoryEntrySelection,
@@ -504,7 +517,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                                                                freeBetAmount: nil,
                                                                bonusBetAmount: nil,
                                                                currency: "EUR",
-                                                               maxWinning: betPlacedDetails.response.maxWinning,
+                                                               maxWinning: maxWinnings,
                                                                totalPriceValue: betPlacedDetails.response.totalPriceValue,
                                                                overallBetReturns: nil,
                                                                numberOfSelections: mappedBetHistoryEntrySelection.count,
