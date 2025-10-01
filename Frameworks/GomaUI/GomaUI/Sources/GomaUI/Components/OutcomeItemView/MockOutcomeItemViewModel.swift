@@ -108,8 +108,10 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
     public func setSelected(_ selected: Bool) {
         let currentData = outcomeDataSubject.value
+        print("[BETSLIP_SYNC] MockOutcomeItemViewModel: setSelected(\(selected)) called for outcome '\(currentData.title)' (ID: \(currentData.id), offerID: \(currentData.bettingOfferId ?? "nil")) - current: \(currentData.isSelected)")
         let newData = currentData.withSelection(selected)
         outcomeDataSubject.send(newData)
+        print("[BETSLIP_SYNC] MockOutcomeItemViewModel: Published new state with isSelected=\(selected)")
     }
 
     public func setDisabled(_ disabled: Bool) {

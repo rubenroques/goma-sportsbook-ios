@@ -194,38 +194,64 @@ class EveryMatrixBaseConnector: Connector {
     /// Perform HTTP request and handle response
     private func performRequest(_ request: URLRequest) -> AnyPublisher<Data, Error> {
         print("[EveryMatrix-\(apiIdentifier)] Performing request: \(request.url?.absoluteString ?? "unknown")")
-        
+
+        // Log request body for debugging
+        if let body = request.httpBody, let bodyString = String(data: body, encoding: .utf8) {
+            print("[EveryMatrix-\(apiIdentifier)] 📤 Request body: \(bodyString)")
+        }
+
+        // Log headers for debugging
+        if let headers = request.allHTTPHeaderFields {
+            print("[EveryMatrix-\(apiIdentifier)] 📋 Request headers: \(headers)")
+        }
+
         return session.dataTaskPublisher(for: request)
             .tryMap { [weak self] result in
                 guard let self = self else {
                     throw ServiceProviderError.unknown
                 }
-                
+
                 guard let httpResponse = result.response as? HTTPURLResponse else {
                     throw ServiceProviderError.invalidResponse
                 }
-                
+
                 print("[EveryMatrix-\(self.apiIdentifier)] Response status code: \(httpResponse.statusCode)")
-                
+
+                // Log response body for debugging
+                if let responseString = String(data: result.data, encoding: .utf8) {
+                    print("[EveryMatrix-\(self.apiIdentifier)] 📥 Response body: \(responseString)")
+                }
+
                 switch httpResponse.statusCode {
                 case 200...299:
                     return result.data
-                    
+
                 case 401:
                     print("[EveryMatrix-\(self.apiIdentifier)] Received 401 Unauthorized")
                     throw ServiceProviderError.unauthorized
-                    
+
                 case 403:
                     // EveryMatrix often returns 403 for expired sessions
                     print("[EveryMatrix-\(self.apiIdentifier)] Received 403 Forbidden (likely expired session)")
                     throw ServiceProviderError.forbidden
-                    
+
                 case 404:
+                    print("[EveryMatrix-\(self.apiIdentifier)] ❌ 404 Not Found")
                     throw ServiceProviderError.notFound
-                    
+
+                case 409:
+                    // 409 Conflict - usually duplicate bet or validation error
+                    print("[EveryMatrix-\(self.apiIdentifier)] ⚠️ 409 Conflict - Possible duplicate bet or validation error")
+                    if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
+                        let errorMessage = apiError.thirdPartyResponse?.message ?? apiError.error ?? "Conflict Error"
+                        print("[EveryMatrix-\(self.apiIdentifier)] 409 Error message: \(errorMessage)")
+                        throw ServiceProviderError.errorMessage(message: errorMessage)
+                    }
+                    throw ServiceProviderError.errorMessage(message: "Bet already placed or validation error")
+
                 case 429:
                     throw ServiceProviderError.rateLimitExceeded
-                    
+
                 case 500...599:
                     // Try to decode error message
                     if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
@@ -233,8 +259,9 @@ class EveryMatrixBaseConnector: Connector {
                         throw ServiceProviderError.errorMessage(message: errorMessage)
                     }
                     throw ServiceProviderError.internalServerError
-                    
+
                 default:
+                    print("[EveryMatrix-\(self.apiIdentifier)] ❌ Unexpected status code: \(httpResponse.statusCode)")
                     throw ServiceProviderError.unknown
                 }
             }

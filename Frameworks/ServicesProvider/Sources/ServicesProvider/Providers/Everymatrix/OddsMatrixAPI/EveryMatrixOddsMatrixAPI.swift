@@ -8,7 +8,7 @@
 import Foundation
 
 enum EveryMatrixOddsMatrixAPI {
-    case placeBet(betData: PlaceBetRequest)
+    case placeBet(betData: EveryMatrix.PlaceBetRequest)
     
     // MyBets API endpoints
     case getOpenBets(limit: Int, placedBefore: String)
@@ -154,43 +154,3 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
     }
 }
 
-// MARK: - Request Models
-public struct PlaceBetRequest: Codable {
-    public let ucsOperatorId: Int
-    public let userId: String
-    public let username: String
-    public let currency: String
-    public let type: String
-    public let selections: [BetSelectionInfo]
-    public let amount: Double
-    public let oddsValidationType: String
-    public let terminalType: String
-    public let ubsWalletId: String?
-    public let freeBet: String?
-    
-    public init(ucsOperatorId: Int, userId: String, username: String, currency: String, type: String, selections: [BetSelectionInfo], amount: Double, oddsValidationType: String, terminalType: String, ubsWalletId: String? = nil, freeBet: String? = nil) {
-        self.ucsOperatorId = ucsOperatorId
-        self.userId = userId
-        self.username = username
-        self.currency = currency
-        self.type = type
-        self.selections = selections
-        self.amount = amount
-        self.oddsValidationType = oddsValidationType
-        self.terminalType = terminalType
-        self.ubsWalletId = ubsWalletId
-        self.freeBet = freeBet
-    }
-}
-
-public struct BetSelectionInfo: Codable {
-    public let bettingOfferId: String
-    public let priceValue: Double
-    
-    public init(bettingOfferId: String, priceValue: Double) {
-        self.bettingOfferId = bettingOfferId
-        self.priceValue = priceValue
-    }
-}
-
- 

@@ -99,7 +99,38 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         )
         marketStateSubject.send(newState)
     }
-    
+
+    public func updateSelectionStates(selectedOfferIds: Set<String>) {
+        let currentState = marketStateSubject.value
+
+        // Update left outcome selection
+        if let leftOutcome = currentState.leftOutcome,
+           let bettingOfferId = leftOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            if leftOutcome.isSelected != shouldBeSelected {
+                outcomeViewModels[.left]?.setSelected(shouldBeSelected)
+            }
+        }
+
+        // Update middle outcome selection
+        if let middleOutcome = currentState.middleOutcome,
+           let bettingOfferId = middleOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            if middleOutcome.isSelected != shouldBeSelected {
+                outcomeViewModels[.middle]?.setSelected(shouldBeSelected)
+            }
+        }
+
+        // Update right outcome selection
+        if let rightOutcome = currentState.rightOutcome,
+           let bettingOfferId = rightOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            if rightOutcome.isSelected != shouldBeSelected {
+                outcomeViewModels[.right]?.setSelected(shouldBeSelected)
+            }
+        }
+    }
+
     // MARK: - Private Methods
     private func setupMarketSubscription() {
         servicesProvider.subscribeToEventOnListsMarketUpdates(withId: marketId)

@@ -81,6 +81,37 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         return outcomeViewModels[type]
     }
 
+    public func updateSelectionStates(selectedOfferIds: Set<String>) {
+        let currentState = marketStateSubject.value
+
+        // Update left outcome selection
+        if let leftOutcome = currentState.leftOutcome,
+           let bettingOfferId = leftOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            if leftOutcome.isSelected != shouldBeSelected {
+                outcomeViewModels[.left]?.setSelected(shouldBeSelected)
+            }
+        }
+
+        // Update middle outcome selection
+        if let middleOutcome = currentState.middleOutcome,
+           let bettingOfferId = middleOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            if middleOutcome.isSelected != shouldBeSelected {
+                outcomeViewModels[.middle]?.setSelected(shouldBeSelected)
+            }
+        }
+
+        // Update right outcome selection
+        if let rightOutcome = currentState.rightOutcome,
+           let bettingOfferId = rightOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            if rightOutcome.isSelected != shouldBeSelected {
+                outcomeViewModels[.right]?.setSelected(shouldBeSelected)
+            }
+        }
+    }
+
     // MARK: - Private Methods
     private func createOutcomeViewModels(from displayState: MarketOutcomesLineDisplayState) {
         outcomeViewModels.removeAll()
@@ -108,10 +139,12 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
     }
 
     private func setupBetslipSubscription() {
+        print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Setting up betslip subscription")
         // Subscribe to betslip changes to update selection state
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] bettingTickets in
+                print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Betslip changed - \(bettingTickets.count) tickets")
                 self?.updateSelectionState(based: bettingTickets)
             }
             .store(in: &cancellables)
@@ -125,16 +158,22 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         let middleSelected = isOutcomeInBetslip(currentState.middleOutcome, bettingTickets: bettingTickets)
         let rightSelected = isOutcomeInBetslip(currentState.rightOutcome, bettingTickets: bettingTickets)
 
-        // Update outcome view models selection state
-        if let leftOutcome = currentState.leftOutcome, leftOutcome.isSelected != leftSelected {
+        print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Selection states from betslip - left: \(leftSelected), middle: \(middleSelected), right: \(rightSelected)")
+        print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Selection states in parent state - left: \(currentState.leftOutcome?.isSelected ?? false), middle: \(currentState.middleOutcome?.isSelected ?? false), right: \(currentState.rightOutcome?.isSelected ?? false)")
+
+        // ALWAYS update child ViewModels to match betslip state (don't rely on parent state)
+        if let leftOutcome = currentState.leftOutcome {
+            print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Setting LEFT outcome '\(leftOutcome.title)' to \(leftSelected)")
             outcomeViewModels[.left]?.setSelected(leftSelected)
         }
 
-        if let middleOutcome = currentState.middleOutcome, middleOutcome.isSelected != middleSelected {
+        if let middleOutcome = currentState.middleOutcome {
+            print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Setting MIDDLE outcome '\(middleOutcome.title)' to \(middleSelected)")
             outcomeViewModels[.middle]?.setSelected(middleSelected)
         }
 
-        if let rightOutcome = currentState.rightOutcome, rightOutcome.isSelected != rightSelected {
+        if let rightOutcome = currentState.rightOutcome {
+            print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Setting RIGHT outcome '\(rightOutcome.title)' to \(rightSelected)")
             outcomeViewModels[.right]?.setSelected(rightSelected)
         }
     }

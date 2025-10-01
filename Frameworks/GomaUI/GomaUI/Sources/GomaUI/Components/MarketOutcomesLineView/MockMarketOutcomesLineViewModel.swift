@@ -234,6 +234,57 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
 
         return updateOutcome(in: state, type: type, outcome: updatedOutcome)
     }
+
+    // MARK: - Selection State Synchronization
+    public func updateSelectionStates(selectedOfferIds: Set<String>) {
+        print("[BETSLIP_SYNC] MockMarketOutcomesLineViewModel: updateSelectionStates called with \(selectedOfferIds.count) IDs")
+        let currentState = marketStateSubject.value
+
+        // Check each outcome and update selection based on betting offer IDs
+        var stateChanged = false
+
+        // Update left outcome
+        if let leftOutcome = currentState.leftOutcome,
+           let bettingOfferId = leftOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            print("[BETSLIP_SYNC] MockMarketOutcomesLineViewModel: Left outcome '\(leftOutcome.title)' (ID: \(bettingOfferId)) - current: \(leftOutcome.isSelected), should be: \(shouldBeSelected)")
+            if leftOutcome.isSelected != shouldBeSelected {
+                print("[BETSLIP_SYNC] MockMarketOutcomesLineViewModel: Updating left outcome to \(shouldBeSelected)")
+                let updatedState = updateOutcomeSelection(in: currentState, type: .left, isSelected: shouldBeSelected)
+                marketStateSubject.send(updatedState)
+                stateChanged = true
+            }
+        } else {
+            print("[BETSLIP_SYNC] MockMarketOutcomesLineViewModel: No left outcome or betting offer ID")
+        }
+
+        // Update middle outcome
+        let stateToCheck = stateChanged ? marketStateSubject.value : currentState
+        if let middleOutcome = stateToCheck.middleOutcome,
+           let bettingOfferId = middleOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            print("[BETSLIP_SYNC] MockMarketOutcomesLineViewModel: Middle outcome '\(middleOutcome.title)' (ID: \(bettingOfferId)) - current: \(middleOutcome.isSelected), should be: \(shouldBeSelected)")
+            if middleOutcome.isSelected != shouldBeSelected {
+                print("[BETSLIP_SYNC] MockMarketOutcomesLineViewModel: Updating middle outcome to \(shouldBeSelected)")
+                let updatedState = updateOutcomeSelection(in: stateToCheck, type: .middle, isSelected: shouldBeSelected)
+                marketStateSubject.send(updatedState)
+                stateChanged = true
+            }
+        }
+
+        // Update right outcome
+        let finalStateToCheck = stateChanged ? marketStateSubject.value : stateToCheck
+        if let rightOutcome = finalStateToCheck.rightOutcome,
+           let bettingOfferId = rightOutcome.bettingOfferId {
+            let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
+            print("[BETSLIP_SYNC] MockMarketOutcomesLineViewModel: Right outcome '\(rightOutcome.title)' (ID: \(bettingOfferId)) - current: \(rightOutcome.isSelected), should be: \(shouldBeSelected)")
+            if rightOutcome.isSelected != shouldBeSelected {
+                print("[BETSLIP_SYNC] MockMarketOutcomesLineViewModel: Updating right outcome to \(shouldBeSelected)")
+                let updatedState = updateOutcomeSelection(in: finalStateToCheck, type: .right, isSelected: shouldBeSelected)
+                marketStateSubject.send(updatedState)
+            }
+        }
+    }
 }
 
 // MARK: - Mock Factory

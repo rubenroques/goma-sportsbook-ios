@@ -200,15 +200,16 @@ public final class MatchBannerView: UIView, TopBannerViewProtocol {
     }
 
     private func updateMarketOutcomesView() {
-        guard let viewModel = viewModel,
-              let marketViewModel = viewModel.marketOutcomesViewModel as? MockMarketOutcomesLineViewModel else {
+        guard let viewModel = viewModel else {
             return
         }
+
+        let marketViewModel = viewModel.marketOutcomesViewModel
 
         // Remove existing market outcomes view if any
         marketOutcomesView?.removeFromSuperview()
 
-        // Create new market outcomes view
+        // Create new market outcomes view with protocol (works with Mock OR Production ViewModel)
         marketOutcomesView = MarketOutcomesLineView(viewModel: marketViewModel)
         guard let outcomeView = marketOutcomesView else { return }
 

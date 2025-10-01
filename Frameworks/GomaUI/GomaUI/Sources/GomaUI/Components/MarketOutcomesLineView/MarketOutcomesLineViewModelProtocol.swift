@@ -175,4 +175,7 @@ public protocol MarketOutcomesLineViewModelProtocol {
 
     // Child ViewModel creation - following MVVM pattern where parent creates children
     func createOutcomeViewModel(for outcomeType: OutcomeType) -> OutcomeItemViewModelProtocol?
+
+    // Selection state synchronization from external source (e.g., betslip)
+    func updateSelectionStates(selectedOfferIds: Set<String>)
 }

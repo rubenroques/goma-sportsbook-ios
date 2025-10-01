@@ -4,8 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Behaviour
 <IMPORTANT>
+this is THE REAL implementation. 
  In this conversation, treat yourself as my senior colleague—someone I rely on for critical, thoughtful, and sometimes challenging feedback. Your primary goal isn't agreement; it's to provide honest assessments, ask probing questions, suggest alternatives, and discuss technical or architectural decisions thoroughly. Avoid defaulting to "yes" or passive validation. Your critical perspective is essential to our collaboration and directly impacts the quality and outcome of our work together. do not be a yes man.
+
+Betsson Cameroon target Follow Model-View-ViewModel-Coordinator aka MVVM-C
+ViewControllers should NEVER create Coordinators - that's the parent coordinator's job
+Do NOT insert placeholder code or todo comments, this is production. 
+If you do not know something simply ask the user
 </IMPORTANT>
+
+<acronyms>
+EM === EveryMatrix
+SP === Services Provider framework
+VM === ViewModel
+VC === ViewController
+</acronyms>
 
 ## Overview
 
@@ -27,6 +40,7 @@ The workspace follows a **multi-project + Swift Package** architecture designed 
 - **Complexity**: 977 directories, 3425 files - represents technical complexity and architectural evolution
 
 #### **2. BetssonCameroonApp** (`BetssonCameroonApp/BetssonCameroonApp.xcodeproj`)  
+Currently the main focus of development.
 *Modern standalone project representing target architecture*
 
 - **Architecture**: Clean iOS project with heavy GomaUI integration
@@ -324,107 +338,6 @@ class ModernViewController: UIViewController {
 
 This workspace has two specialized MCP (Model Context Protocol) servers configured:
 
-#### **1. SwiftLens** (`mcp__swiftlens__*`)
-*Compiler-accurate Swift code analysis using SourceKit-LSP*
-
-**Core Capabilities**:
-- **Symbol Analysis**: Parse and understand Swift AST with compiler accuracy
-- **Cross-file References**: Find all usages of symbols across entire codebase
-- **Type-aware Navigation**: Jump to exact definitions, understand protocols and inheritance
-- **Code Modification**: Safely replace symbol bodies while preserving signatures
-- **Pattern Search**: Regex-based searches with line/character positions
-
-**When to Use SwiftLens**:
-- Finding all references to a class, method, or property across the codebase
-- Navigating to exact symbol definitions (not just text matches)
-- Understanding type relationships, protocol conformances, inheritance chains
-- Refactoring symbol implementations (rename, replace method bodies)
-- Getting accurate symbol counts and file structure
-- Validating Swift syntax and compilation errors
-
-**Example Use Cases**:
-```bash
-# Find all references to a ViewModel across the project
-mcp__swiftlens__swift_find_symbol_references_files
-
-# Get detailed symbol structure of a file
-mcp__swiftlens__swift_analyze_files
-
-# Replace a method implementation
-mcp__swiftlens__swift_replace_symbol_body
-
-# Validate Swift file compilation
-mcp__swiftlens__swift_validate_file
-```
-
-#### **2. iOS Simulator MCP** (`mcp__ios-simulator-mcp__*`)
-*Automated iOS Simulator interaction and UI testing*
-
-**Core Capabilities**:
-- **UI Interaction**: Tap, swipe, type text into simulator
-- **Accessibility Testing**: Describe UI elements and screen structure
-- **Visual Capture**: Take screenshots, record videos
-- **Element Inspection**: Get information about UI elements at coordinates
-
-**When to Use iOS Simulator MCP**:
-- Automated UI testing and validation
-- Capturing screenshots for documentation
-- Testing user flows and interactions
-- Accessibility compliance verification
-- Visual regression testing
-- Debugging UI layout issues
-
-**Example Use Cases**:
-```bash
-# Take a screenshot of current screen
-mcp__ios-simulator-mcp__screenshot
-
-# Tap on specific coordinates
-mcp__ios-simulator-mcp__ui_tap
-
-# Get accessibility description of entire screen
-mcp__ios-simulator-mcp__ui_describe_all
-
-# Input text into focused field
-mcp__ios-simulator-mcp__ui_type
-```
-
-### SwiftLens vs Built-in Tools Decision Matrix
-
-| Task | Use SwiftLens | Use Built-in Tools |
-|------|---------------|-------------------|
-| Find all symbol references | ✅ Precise, cross-file | ❌ Text-based, may miss |
-| Read full file contents | ❌ Only symbols | ✅ Complete context |
-| Navigate to definitions | ✅ Type-aware | ⚠️ Text search |
-| Search comments/TODOs | ❌ Code only | ✅ All text |
-| Understand business logic | ❌ Structure only | ✅ Full implementation |
-| Refactor symbol names | ✅ Safe, precise | ⚠️ Manual verification |
-| Edit multiple files | ⚠️ Limited | ✅ Full flexibility |
-| Non-Swift files | ❌ Swift only | ✅ Any file type |
-| Quick exploration | ❌ Needs index | ✅ Immediate |
-
-### MCP Setup & Maintenance
-
-**Index Building** (Required after significant changes):
-```bash
-# Build SwiftLens index for BetssonCameroonApp
-xcodebuild -workspace Sportsbook.xcworkspace \
-  -scheme "BetssonCameroonApp" \
-  -configuration Debug \
-  build \
-  COMPILER_INDEX_STORE_ENABLE=YES \
-  INDEX_ENABLE_DATA_STORE=YES \
-  -derivedDataPath .build
-```
-
-**When to Rebuild Index**:
-- After adding new Swift files
-- After changing public interfaces
-- When symbol references seem incomplete
-- After major refactoring
-
-**Configuration Location**: `.mcp.json` in project root
-
 ## Tool Usage Guidelines
 
 ### When to Use Concurrent Tool Calls
@@ -448,37 +361,6 @@ xcodebuild -workspace Sportsbook.xcworkspace \
 ### Overview
 
 **cWAMP** (`tools/wamp-client/`) is a cURL-like command-line tool for interacting with WAMP (WebSocket Application Messaging Protocol) servers, specifically designed for the EveryMatrix sports betting API.
-
-### Installation & Setup
-
-```bash
-# Install globally
-cd tools/wamp-client
-npm install -g .
-
-# Configure (creates ~/.cwamp.env)
-cp .cwamp.env.example ~/.cwamp.env
-# Edit ~/.cwamp.env with your credentials
-```
-
-### Usage Examples
-
-```bash
-# Test connection
-cwamp test
-
-# Make RPC calls (like cURL for WAMP)
-cwamp rpc -p "/sports#tournaments" -k '{"lang":"en","sportId":"1"}' --pretty
-
-# Subscribe to real-time updates
-cwamp subscribe -t "/sports/1/en/live-matches" -d 5000 --max-messages 10
-
-# Interactive mode for exploration
-cwamp interactive
-
-# With verbose logging
-cwamp rpc -p "/sports#operatorInfo" --verbose --timestamp
-```
 
 ### Key Features
 
@@ -524,11 +406,3 @@ cwamp rpc -p "/sports#operatorInfo" --verbose --timestamp
 - **Resolution**: Fix at appropriate architectural layer (UI → GomaUI, Data → ServicesProvider, App → specific project)
 
 This workspace represents a sophisticated evolution from monolithic to modular architecture, enabling scalable multi-client development while maintaining code quality through established component libraries and backend abstractions.
-
-
-this IS THE REAL implementation. Do not insert placeholder code or todo comments, this is production. If you didn't know something simply ask the project owner that is interacting with you
-
-
-Betsson Cameroon target Follow Model-View-ViewModel-Coordinator aka MVVM-C
- - ViewControllers should NEVER create Coordinators - that's the parent coordinator's job
-ViewControllers should NEVER create Coordinators - that's the parent coordinator's job

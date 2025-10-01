@@ -8,6 +8,7 @@
 import Foundation
 import ServicesProvider
 import GomaUI
+import Combine
 
 /// Production ViewModel for MatchBannerView that displays sport carousel banners
 final class MatchBannerViewModel: MatchBannerViewModelProtocol {
@@ -15,6 +16,9 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
     // MARK: - Properties
     private let match: Match
     private let imageURL: String?
+
+    // Store the market outcomes ViewModel to maintain state and subscriptions
+    private let _marketOutcomesViewModel: MarketOutcomesLineViewModelProtocol
 
     // MARK: - Callbacks
     var onMatchTap: ((String) -> Void)?
@@ -25,6 +29,10 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
     init(match: Match, imageURL: String?) {
         self.match = match
         self.imageURL = imageURL
+
+        // Create market outcomes ViewModel once during initialization
+        // MatchBannerMarketOutcomesLineViewModel handles its own betslip subscription
+        self._marketOutcomesViewModel = Self.createMarketOutcomesViewModel(from: match)
     }
 
     // MARK: - MatchBannerViewModelProtocol
@@ -33,41 +41,7 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
     }
 
     var marketOutcomesViewModel: MarketOutcomesLineViewModelProtocol {
-        // Extract market data from match if available
-        guard let firstMarket = match.markets.first,
-              !firstMarket.outcomes.isEmpty else {
-            // Return empty outcomes if no market data is available
-            return MockMarketOutcomesLineViewModel(displayMode: .triple)
-        }
-
-        
-        // Use production ViewModel that syncs with BetslipManager
-        // return MatchBannerMarketOutcomesLineViewModel(match: match, market: firstMarket
-        
-        let outcomes = firstMarket.outcomes
-
-        // Determine display mode based on number of outcomes
-        let displayMode: MarketDisplayMode
-        if outcomes.count == 2 {
-            displayMode = .double
-        } else if outcomes.count >= 3 {
-            displayMode = .triple
-        } else {
-            // Single outcome - use triple with only left outcome
-            displayMode = .triple
-        }
-
-        // Create outcome data from app's Outcome model
-        let leftOutcome = outcomes.count > 0 ? createOutcomeDataFromAppModel(outcomes[0]) : nil
-        let middleOutcome = outcomes.count > 2 ? createOutcomeDataFromAppModel(outcomes[1]) : nil
-        let rightOutcome = outcomes.count > 1 ? createOutcomeDataFromAppModel(outcomes[outcomes.count >= 3 ? 2 : 1]) : nil
-
-        return MockMarketOutcomesLineViewModel(
-            displayMode: displayMode,
-            leftOutcome: leftOutcome,
-            middleOutcome: middleOutcome,
-            rightOutcome: rightOutcome
-        )
+        return _marketOutcomesViewModel
     }
 
     func userDidTapBanner() {
@@ -122,16 +96,17 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
     }
 
     // MARK: - Private Helper Methods
-    private func createOutcomeDataFromAppModel(_ outcome: Outcome) -> MarketOutcomeData {
-        return MarketOutcomeData(
-            id: outcome.id,
-            bettingOfferId: outcome.bettingOffer.id,
-            title: outcome.translatedName,
-            value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
-            oddsChangeDirection: .none,
-            isSelected: false,
-            isDisabled: !outcome.bettingOffer.isAvailable
-        )
+    private static func createMarketOutcomesViewModel(from match: Match) -> MarketOutcomesLineViewModelProtocol {
+        // Extract market data from match if available
+        guard let firstMarket = match.markets.first,
+              !firstMarket.outcomes.isEmpty else {
+            // Return empty outcomes if no market data is available
+            return MockMarketOutcomesLineViewModel(displayMode: .triple)
+        }
+
+        // Use production ViewModel that has built-in betslip subscription
+        print("[BETSLIP_SYNC] MatchBannerViewModel: Creating MatchBannerMarketOutcomesLineViewModel for match \(match.id)")
+        return MatchBannerMarketOutcomesLineViewModel(match: match, market: firstMarket)
     }
 
     private static func createMatchBannerModel(from match: Match, imageURL: String?) -> MatchBannerModel {

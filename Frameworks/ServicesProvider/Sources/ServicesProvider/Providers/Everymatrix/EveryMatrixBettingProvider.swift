@@ -134,13 +134,13 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?, oddsValidationType: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Convert BetTickets to PlaceBetRequest
         let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType)
-        
+
         // Create the API endpoint
         let endpoint = EveryMatrixOddsMatrixAPI.placeBet(betData: placeBetRequest)
-        
+
         // Make the API call
         return connector.request(endpoint)
-            .flatMap { (response: EveryMatrixPlaceBetResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
+            .flatMap { (response: EveryMatrix.PlaceBetResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
                 // Convert the response to PlacedBetsResponse
                 let placedBetsResponse = self.convertResponseToPlacedBetsResponse(response, originalTickets: betTickets)
                 return Just(placedBetsResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -262,39 +262,35 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Private Helper Methods
     
-    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?) -> PlaceBetRequest {
+    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?) -> EveryMatrix.PlaceBetRequest {
         let selections = betTickets.flatMap { betTicket in
             betTicket.tickets.map { selection in
-                BetSelectionInfo(
+                EveryMatrix.BetSelectionInfo(
                     bettingOfferId: selection.outcomeId ?? "",
                     priceValue: selection.odd.decimalOdd
                 )
             }
         }
-        
+
         let totalAmount = betTickets.reduce(0.0) { $0 + ($1.globalStake ?? 0.0) }
-        
+
         let type = selections.count > 1 ? "MULTIPLE" : "SINGLE"
-        
-        return PlaceBetRequest(
-            ucsOperatorId: 4093, // Default operator ID, should be configurable
-            userId: userId ?? "",
-            username: username ?? "",
-            currency: currency ?? "EUR",
+
+        return EveryMatrix.PlaceBetRequest(
             type: type,
+            systemBetType: nil,
+            eachWay: false,
             selections: selections,
-            amount: totalAmount,
-            oddsValidationType: oddsValidationType ?? "ACCEPT_ANY",
-            terminalType: "MOBILE",
-            ubsWalletId: nil,
-            freeBet: nil
+            stakeAmount: totalAmount,
+            terminalType: "SSBT",
+            lang: "en"
         )
     }
     
-    private func convertResponseToPlacedBetsResponse(_ response: EveryMatrixPlaceBetResponse, originalTickets: [BetTicket]) -> PlacedBetsResponse {
+    private func convertResponseToPlacedBetsResponse(_ response: EveryMatrix.PlaceBetResponse, originalTickets: [BetTicket]) -> PlacedBetsResponse {
         // Create a PlacedBetEntry from the response
         let totalStake = originalTickets.reduce(0.0) { $0 + ($1.globalStake ?? 0.0) }
-        
+
         let placedBetEntry = PlacedBetEntry(
             identifier: response.betId ?? UUID().uuidString,
             potentialReturn: response.potentialReturn ?? 0.0,
@@ -302,7 +298,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             betLegs: [], // EveryMatrix doesn't provide bet legs in this format
             type: nil
         )
-        
+
         return PlacedBetsResponse(
             identifier: response.betId ?? UUID().uuidString,
             bets: [placedBetEntry],
@@ -326,20 +322,3 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     }
 }
 
-// MARK: - EveryMatrix Response Models
-
-struct EveryMatrixPlaceBetResponse: Codable {
-    let betId: String?
-    let potentialReturn: Double?
-    let status: String?
-    let message: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case betId = "betId"
-        case potentialReturn = "potentialReturn"
-        case status = "status"
-        case message = "message"
-    }
-}
-
- 
