@@ -14,6 +14,8 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
     private var tallOddsMatchCardView: TallOddsMatchCardView?
     
     private var cancellables = Set<AnyCancellable>()
+    
+    private var customBackgroundColor: UIColor?
 
     // MARK: - Cell Identifier
     static let identifier = "TallOddsMatchCardCollectionViewCell"
@@ -47,8 +49,14 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: - Configuration
-    func configure(with viewModel: TallOddsMatchCardViewModelProtocol) {
+    func configure(with viewModel: TallOddsMatchCardViewModelProtocol, backgroundColor: UIColor? = nil) {
 
+        if let backgroundColor {
+            self.customBackgroundColor = backgroundColor
+            self.contentView.backgroundColor = backgroundColor
+            self.backgroundColor = .clear
+        }
+        
         if let existingCardView = tallOddsMatchCardView {
             // Reuse existing card view - much more efficient for scrolling
             existingCardView.configure(with: viewModel)
@@ -100,7 +108,7 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
             .store(in: &cancellables)
         
     }
-
+    
     // Configure cell position for proper styling
     func configureCellPosition(isFirst: Bool, isLast: Bool) {
         // Configure rounded corners
@@ -127,10 +135,9 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
     // MARK: - Private Setup Methods
     private func createAndSetupCardView(with viewModel: TallOddsMatchCardViewModelProtocol) {
         let imageResolver = AppMatchHeaderImageResolver()
-        let cardView = TallOddsMatchCardView(viewModel: viewModel, imageResolver: imageResolver)
+        let cardView = TallOddsMatchCardView(viewModel: viewModel, imageResolver: imageResolver, customBackgroundColor: customBackgroundColor)
         cardView.translatesAutoresizingMaskIntoConstraints = false
-
-        cardView.backgroundColor = UIColor.App.backgroundCards
+        
         // Add to content view (make sure it's added before separator)
         contentView.addSubview(cardView)
 

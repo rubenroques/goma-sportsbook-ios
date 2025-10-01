@@ -42,4 +42,48 @@ extension EveryMatrix {
             self.records = try container.decode([EntityRecord].self, forKey: .records)
         }
     }
+    
+    struct RPCBasicResponse: Codable {
+        let records: [EntityRecord]
+        let includedData : [EntityRecord]?
+        
+        enum CodingKeys: String, CodingKey {
+            case records
+            case includedData
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            self.records = try container.decode([EntityRecord].self, forKey: .records)
+            
+            self.includedData = try container.decodeIfPresent([EntityRecord].self, forKey: .includedData)
+        }
+    }
+    
+    struct RPCMultiSearchResponse: Codable {
+        let resultMap: RPCResultMap
+    }
+
+    struct RPCResultMap: Codable {
+        let match: RPCBasicResponse
+
+        struct AnyKey: CodingKey {
+            var stringValue: String
+            init?(stringValue: String) { self.stringValue = stringValue }
+            var intValue: Int? { nil }
+            init?(intValue: Int) { nil }
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: AnyKey.self)
+            if let k = AnyKey(stringValue: "MATCH"), container.contains(k) {
+                self.match = try container.decode(RPCBasicResponse.self, forKey: k)
+            } else if let first = container.allKeys.first {
+                self.match = try container.decode(RPCBasicResponse.self, forKey: first)
+            } else {
+                throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "resultMap empty"))
+            }
+        }
+    }
 }

@@ -11,7 +11,7 @@ import SharedModels
 import CryptoKit
 
 class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
-  
+    
     var connector: OmegaConnector
     var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
         return self.sessionStateSubject.eraseToAnyPublisher()
@@ -1513,6 +1513,18 @@ extension SportRadarPrivilegedAccessManager {
     func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
+    
+    func getRecentlyPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getMostPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getRecommendedGames(language: String?, platform: String?) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     // MARK: - Transaction History Methods (Not Supported for SportRadar)
 
@@ -1531,6 +1543,7 @@ extension SportRadarPrivilegedAccessManager {
     func getWageringTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
+
 
 }
 

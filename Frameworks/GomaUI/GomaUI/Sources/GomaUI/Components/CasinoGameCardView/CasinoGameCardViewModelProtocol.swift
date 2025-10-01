@@ -10,6 +10,7 @@ public struct CasinoGameCardData: Equatable, Hashable, Identifiable {
     public let rating: Double       // 0.0 to 5.0
     public let provider: String?     // game provider name
     public let minStake: String     // minimum stake amount
+    public let subProvider: String?
     
     public init(
         id: String,
@@ -18,7 +19,8 @@ public struct CasinoGameCardData: Equatable, Hashable, Identifiable {
         imageURL: String? = nil,
         rating: Double,
         provider: String? = nil,
-        minStake: String
+        minStake: String,
+        subProvider: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -27,6 +29,7 @@ public struct CasinoGameCardData: Equatable, Hashable, Identifiable {
         self.rating = max(0.0, min(5.0, rating)) // Clamp between 0-5
         self.provider = provider
         self.minStake = minStake
+        self.subProvider = subProvider
     }
 }
 

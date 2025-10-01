@@ -79,6 +79,21 @@ public final class EveryMatrixUnifiedConfiguration {
         }
     }
     
+    /// Base URL for Recsys API
+    public var recsysAPIBaseURL: String {
+        switch environment {
+        case .production:
+            return "https://recsys-api-gateway-test-bshwjrve.ew.gateway.dev"
+        case .staging, .development:
+            return "https://recsys-api-gateway-test-bshwjrve.ew.gateway.dev"
+        }
+    }
+    
+    public var recsysAPIKey: String {
+        return "AIzaSyBE-HDs6eqAkiNXtfN1sZGHRaGppjLfCho"
+
+    }
+    
     // Virtual lobby (used in casino request to get virtual games)
     public var virtualsDataSource: String {
         switch environment {
@@ -123,6 +138,10 @@ public final class EveryMatrixUnifiedConfiguration {
     
     /// Default platform identifier
     public var defaultPlatform: String {
+        return "iPhone"
+    }
+    
+    public var defaultCasinoPlatform: String {
         return "iPhone"
     }
     

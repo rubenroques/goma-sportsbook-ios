@@ -40,10 +40,18 @@ class MainTabBarCoordinator: Coordinator {
     
     private var nextUpEventsCoordinator: NextUpEventsCoordinator?
     private var inPlayEventsCoordinator: InPlayEventsCoordinator?
+
     private var myBetsCoordinator: MyBetsCoordinator?
+
+    private var casinoSearchCoordinator: CasinoSearchCoordinator?
+    private var sportsSearchCoordinator: SportsSearchCoordinator?
+
     private var traditionalCasinoCoordinator: CasinoCoordinator?
     private var virtualSportsCasinoCoordinator: CasinoCoordinator?
+
     private var betslipCoordinator: BetslipCoordinator?
+    
+    //
     // MARK: - Initialization
     
     init(navigationController: UINavigationController, environment: Environment) {
@@ -116,6 +124,7 @@ class MainTabBarCoordinator: Coordinator {
         myBetsCoordinator = nil
         traditionalCasinoCoordinator = nil
         virtualSportsCasinoCoordinator = nil
+        sportsSearchCoordinator = nil
         mainTabBarViewController = nil
         betslipCoordinator = nil
     }
@@ -615,6 +624,7 @@ class MainTabBarCoordinator: Coordinator {
         // Update sport in both coordinators if they exist and are active
         nextUpEventsCoordinator?.updateSport(sport)
         inPlayEventsCoordinator?.updateSport(sport)
+        sportsSearchCoordinator?.updateSport(sport)
         print("🚀 MainCoordinator: Updated current sport to: \(sport.name) and filters")
     }
     
@@ -626,6 +636,7 @@ class MainTabBarCoordinator: Coordinator {
         // Update filters in child coordinators and refresh with new filters
         nextUpEventsCoordinator?.updateFilters(filterSelection)
         inPlayEventsCoordinator?.updateFilters(filterSelection)
+        sportsSearchCoordinator?.updateFilters(filterSelection)
     }
         
     private func showMyBetsScreen() {
@@ -660,8 +671,38 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     private func showSearchScreen() {
-        let dummyViewController = DummyViewController(displayText: "Search")
-        mainTabBarViewController?.showSearchScreen(with: dummyViewController)
+        // Lazy loading: only create coordinator when needed
+        if sportsSearchCoordinator == nil {
+            let coordinator = SportsSearchCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment
+            )
+            
+            // Set up navigation closures
+            coordinator.onShowMatchDetail = { [weak self] match in
+                self?.showMatchDetail(match: match)
+            }
+            
+            coordinator.onShowSportsSelector = { [weak self] in
+                self?.showPreLiveSportsSelector()
+            }
+            
+            coordinator.onShowFilters = { [weak self] in
+                self?.showFilters(isLiveMode: false)
+            }
+            
+            sportsSearchCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+        
+        // Show the screen through RootTabBarViewController
+        if let viewController = sportsSearchCoordinator?.viewController {
+            mainTabBarViewController?.showSearchScreen(with: viewController)
+        }
+        
+        // Refresh if needed
+        sportsSearchCoordinator?.refresh()
     }
     
     private func showCasinoHomeScreen() {
@@ -729,8 +770,22 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     private func showCasinoSearchScreen() {
-        let dummyViewController = DummyViewController(displayText: "Casino Search")
-        mainTabBarViewController?.showCasinoSearchScreen(with: dummyViewController)
+        // Lazy loading: only create coordinator when needed
+        if casinoSearchCoordinator == nil {
+            let coordinator = CasinoSearchCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment
+            )
+            casinoSearchCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+        
+        if let viewController = casinoSearchCoordinator?.viewController {
+            mainTabBarViewController?.showCasinoSearchScreen(with: viewController)
+        }
+        
+        casinoSearchCoordinator?.refresh()
     }
     
     // MARK: - Banking Flow Methods

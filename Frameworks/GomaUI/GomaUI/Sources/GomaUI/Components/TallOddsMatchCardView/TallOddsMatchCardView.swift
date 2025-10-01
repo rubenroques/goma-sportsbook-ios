@@ -36,11 +36,14 @@ final public class TallOddsMatchCardView: UIView {
 
     // MARK: - Private Properties
     private let imageResolver: MatchHeaderImageResolver
+    private let customBackgroundColor: UIColor?
     
     // MARK: - Initialization
-    public init(viewModel: TallOddsMatchCardViewModelProtocol, imageResolver: MatchHeaderImageResolver = DefaultMatchHeaderImageResolver()) {
+    public init(viewModel: TallOddsMatchCardViewModelProtocol, imageResolver: MatchHeaderImageResolver = DefaultMatchHeaderImageResolver(),
+                customBackgroundColor: UIColor? = nil) {
         self.viewModel = viewModel
         self.imageResolver = imageResolver
+        self.customBackgroundColor = customBackgroundColor
         super.init(frame: .zero)
         setupSubviews()
         setupBindings()
@@ -145,7 +148,12 @@ extension TallOddsMatchCardView {
 
     private func render(state: TallOddsMatchCardDisplayState) {
         // Update container appearance
-        containerView.backgroundColor = StyleProvider.Color.backgroundCards
+        if let customBackgroundColor {
+            containerView.backgroundColor = customBackgroundColor
+        }
+        else {
+            containerView.backgroundColor = .clear
+        }
 
         // Update participant labels
         homeParticipantLabel.text = state.homeParticipantName
@@ -284,9 +292,16 @@ extension TallOddsMatchCardView {
     }
 
     private func setupAdditionalConfiguration() {
-        self.backgroundColor = StyleProvider.Color.backgroundCards
-        self.containerView.backgroundColor = StyleProvider.Color.backgroundCards
-        self.contentStackView.backgroundColor = StyleProvider.Color.backgroundCards
+        if let customBackgroundColor {
+            self.backgroundColor = customBackgroundColor
+            self.containerView.backgroundColor = customBackgroundColor
+            self.contentStackView.backgroundColor = customBackgroundColor
+        }
+        else {
+            self.backgroundColor = StyleProvider.Color.backgroundCards
+            self.containerView.backgroundColor = StyleProvider.Color.backgroundCards
+            self.contentStackView.backgroundColor = StyleProvider.Color.backgroundCards
+        }
 
         self.separatorLine.backgroundColor = StyleProvider.Color.highlightPrimary
 

@@ -22,7 +22,8 @@ extension ServiceProviderModelMapper {
             imageURL: bestImageURL(from: casinoGame),
             rating: bestRating(from: casinoGame),
             provider: casinoGame.vendor?.displayName,
-            minStake: "-" // As specified: set to "-" when not available
+            minStake: "-", // As specified: set to "-" when not available
+            subProvider: casinoGame.subVendor
         )
     }
     

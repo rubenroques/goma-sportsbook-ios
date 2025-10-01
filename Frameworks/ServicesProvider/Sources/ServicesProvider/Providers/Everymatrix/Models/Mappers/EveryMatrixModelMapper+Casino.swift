@@ -94,6 +94,7 @@ extension EveryMatrixModelMapper {
             thumbnail: dto.thumbnail ?? dto.defaultThumbnail ?? "",
             backgroundImageUrl: dto.backgroundImageUrl ?? "",
             vendor: vendor,
+            subVendor: dto.subVendor,
             description: dto.description ?? "",
             slug: dto.slug ?? "",
             hasFunMode: dto.hasFunMode ?? false,
@@ -131,7 +132,7 @@ extension EveryMatrixModelMapper {
         
         return CasinoGamesResponse(
             count: games.count,
-            total: dto.total,
+            total: dto.total ?? 0,
             games: games,
             pagination: pagination
         )

@@ -43,9 +43,12 @@ class MarketGroupCardsViewModel: ObservableObject {
     private var allMatches: [Match] = []
     private var cancellables = Set<AnyCancellable>()
     
-    init(marketTypeId: String) {
+    var matchCardContext: MatchCardContext
+    
+    init(marketTypeId: String, matchCardContext: MatchCardContext = .lists) {
         print("[MarketGroupCardsViewModel] 🟢 init for marketType: \(marketTypeId)")
         self.marketTypeId = marketTypeId
+        self.matchCardContext = matchCardContext
     }
 
     deinit {
@@ -92,7 +95,12 @@ class MarketGroupCardsViewModel: ObservableObject {
         return TallOddsMatchCardViewModel.create(
             from: filteredData.match,
             relevantMarkets: filteredData.relevantMarkets,
-            marketTypeId: marketTypeId
+            marketTypeId: marketTypeId,
+            matchCardContext: self.matchCardContext
         )
     }
+}
+enum MatchCardContext {
+    case lists
+    case search
 }

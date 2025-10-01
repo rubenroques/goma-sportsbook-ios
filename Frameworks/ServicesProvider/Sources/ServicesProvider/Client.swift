@@ -698,6 +698,26 @@ extension Client {
         return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page, isLive: isLive)
     }
     
+    public func getMultiSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool = false) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return eventsProvider.getMultiSearchEvents(query: query, resultLimit: resultLimit, page: page, isLive: isLive)
+    }
+    
+    public func getRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return eventsProvider.getRecommendedMatch(userId: userId, isLive: isLive, limit: limit)
+    }
+    
     //
     //
     public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
@@ -2274,11 +2294,35 @@ extension Client {
     }
     
     public func getRecentlyPlayedGames(playerId: String, language: String? = nil, platform: String? = nil, pagination: CasinoPaginationParams = CasinoPaginationParams()) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        guard let casinoProvider = self.privilegedAccessManager else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getRecentlyPlayedGames(playerId: playerId, language: language, platform: platform, pagination: pagination)
+    }
+    
+    public func getMostPlayedGames(playerId: String, language: String? = nil, platform: String? = nil, pagination: CasinoPaginationParams = CasinoPaginationParams()) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        guard let casinoProvider = self.privilegedAccessManager else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getMostPlayedGames(playerId: playerId, language: language, platform: platform, pagination: pagination)
+    }
+    
+    public func searchGames(language: String? = nil, platform: String? = nil, name: String) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         guard let casinoProvider = self.casinoProvider else {
             return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
         }
         
-        return casinoProvider.getRecentlyPlayedGames(playerId: playerId, language: language, platform: platform, pagination: pagination)
+        return casinoProvider.searchGames(language: language, platform: platform, name: name)
+    }
+    
+    public func getRecommendedGames(language: String? = nil, platform: String? = nil) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return casinoProvider.getRecommendedGames(language: language, platform: platform)
     }
     
     public func buildCasinoGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String? = nil, language: String? = nil) -> String? {
