@@ -866,6 +866,15 @@ extension SportRadarEventsProvider {
     func subscribeToFilteredLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
+
+    func requestFilteredPreLiveMatchesNextPage(filters: MatchesFilterOptions) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func requestFilteredLiveMatchesNextPage(filters: MatchesFilterOptions) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
 }
 
 //
@@ -1433,6 +1442,10 @@ extension SportRadarEventsProvider {
 
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+    }
+
+    func subscribeToEventWithSingleOutcome(eventId: String, outcomeId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
 }

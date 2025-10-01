@@ -358,7 +358,13 @@ class NextUpEventsViewController: UIViewController {
                 controller.onCardTapped = { [weak self] selectedMatch in
                     self?.viewModel.onMatchSelected(selectedMatch)
                 }
-                
+
+                // Add load more callback for pagination - delegate to ViewModel
+                controller.onLoadMoreTapped = { [weak self] in
+                    print("[NextUpEventsVC] Load more tapped")
+                    self?.viewModel.loadNextPage()
+                }
+
                 marketGroupControllers[marketGroup.id] = controller
                 print("[SetupMarketGroups] Created new UI controller for market type: \(marketGroup.id)")
             }

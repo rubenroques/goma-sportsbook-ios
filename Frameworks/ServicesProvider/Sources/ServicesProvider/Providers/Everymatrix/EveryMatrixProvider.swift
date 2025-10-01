@@ -29,9 +29,12 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     private var popularTournamentsManager: PopularTournamentsManager?
     private var sportTournamentsManager: SportTournamentsManager?
-    
+
     // MARK: - Match Details Manager
     private var matchDetailsManager: MatchDetailsManager?
+
+    // MARK: - Single Outcome Managers (for betslip)
+    private var singleOutcomeManagers: [String: SingleOutcomeSubscriptionManager] = [:]
 
     init(connector: EveryMatrixConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
         self.connector = connector
@@ -46,6 +49,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         popularTournamentsManager?.unsubscribe()
         sportTournamentsManager?.unsubscribe()
         matchDetailsManager?.unsubscribe()
+        singleOutcomeManagers.values.forEach { $0.unsubscribe() }
     }
 
     func reconnectIfNeeded() {
@@ -60,13 +64,13 @@ class EveryMatrixEventsProvider: EventsProvider {
         let sportId = sportType.numericId ?? "1"
 
         // Create new paginator with custom configuration if provided
-        let numberOfEvents = 10 // Default value, could be made configurable
+        let initialEventLimit = 10 // Default value, could be made configurable
         let numberOfMarkets = 5 // Default value, could be made configurable
 
         livePaginator = LiveMatchesPaginator(
             connector: connector,
             sportId: sportId,
-            numberOfEvents: numberOfEvents,
+            initialEventLimit: initialEventLimit,
             numberOfMarkets: numberOfMarkets
         )
 
@@ -94,9 +98,7 @@ class EveryMatrixEventsProvider: EventsProvider {
 
         prelivePaginator = PreLiveMatchesPaginator(
             connector: connector,
-            sportId: sportId,
-            numberOfEvents: numberOfEvents,
-            numberOfMarkets: numberOfMarkets
+            sportId: sportId
         )
 
         return prelivePaginator!.subscribe()
@@ -111,43 +113,61 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
     
     // MARK: - New Filtered Subscription Methods
-    
+
     func subscribeToFilteredPreLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         // Clean up any existing paginator
         prelivePaginator?.unsubscribe()
-        
+
         // Create new paginator with filters
-        let numberOfEvents = 10 // Default value, could be made configurable
-        let numberOfMarkets = 5 // Default value, could be made configurable
-        
+        let initialEventLimit = 10  // Default initial page size
+        let numberOfMarkets = 5     // Default value, could be made configurable
+
         prelivePaginator = PreLiveMatchesPaginator(
             connector: connector,
             sportId: filters.sportId,
-            numberOfEvents: numberOfEvents,
+            initialEventLimit: initialEventLimit,
             numberOfMarkets: numberOfMarkets,
             filters: filters
         )
-        
+
         return prelivePaginator!.subscribe()
     }
-    
+
     func subscribeToFilteredLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         // Clean up any existing paginator
         livePaginator?.unsubscribe()
-        
+
         // Create new paginator with filters
-        let numberOfEvents = 10 // Default value, could be made configurable
+        let initialEventLimit = 10 // Default value, could be made configurable
         let numberOfMarkets = 5 // Default value, could be made configurable
-        
+
         livePaginator = LiveMatchesPaginator(
             connector: connector,
             sportId: filters.sportId,
-            numberOfEvents: numberOfEvents,
+            initialEventLimit: initialEventLimit,
             numberOfMarkets: numberOfMarkets,
             filters: filters
         )
-        
+
         return livePaginator!.subscribe()
+    }
+
+    // MARK: - Filtered Pagination Methods
+
+    func requestFilteredPreLiveMatchesNextPage(filters: MatchesFilterOptions) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard let paginator = prelivePaginator else {
+            return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
+        }
+
+        return paginator.loadNextPage()
+    }
+
+    func requestFilteredLiveMatchesNextPage(filters: MatchesFilterOptions) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard let paginator = livePaginator else {
+            return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
+        }
+
+        return paginator.loadNextPage()
     }
 
     func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
@@ -712,27 +732,6 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
-//        let language = "en" // Could be made configurable
-//        let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()
-//        let router = WAMPRouter.oddsMatch(operatorId: operatorId,
-//                                          language: language,
-//                                          matchId: eventId)
-//
-//        return connector.request(router)
-//            .tryMap { (response: EveryMatrix.RPCResponse) -> Event in
-//                guard let event = self.buildEvent(from: response, expectedMatchId: eventId) else {
-//                    throw ServiceProviderError.decodingError(message: "Failed to build event for \(eventId)")
-//                }
-//                return event
-//            }
-//            .mapError { error -> ServiceProviderError in
-//                if let serviceError = error as? ServiceProviderError {
-//                    return serviceError
-//                }
-//                return ServiceProviderError.decodingError(message: error.localizedDescription)
-//            }
-//            .eraseToAnyPublisher()
-        
         return self.getEventWithMainMarkets(eventId: eventId, mainMarketsCount: 1)
     }
 
@@ -777,6 +776,25 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func subscribeToEventWithSingleOutcome(eventId: String, outcomeId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        // Key format: "eventId:outcomeId" for tracking multiple betslip items
+        let managerKey = "\(eventId):\(outcomeId)"
+
+        // Clean up existing manager for this outcome if any
+        singleOutcomeManagers[managerKey]?.unsubscribe()
+
+        // Create new manager for this specific outcome
+        let manager = SingleOutcomeSubscriptionManager(
+            connector: connector,
+            eventId: eventId,
+            outcomeId: outcomeId
+        )
+
+        singleOutcomeManagers[managerKey] = manager
+
+        return manager.subscribe()
     }
 
     func getHighlightedLiveEventsPointers(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {

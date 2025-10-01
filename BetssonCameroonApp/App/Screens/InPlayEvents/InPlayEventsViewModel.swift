@@ -97,6 +97,18 @@ class InPlayEventsViewModel {
     // Store market group ViewModels
     private var marketGroupCardsViewModels: [String: MarketGroupCardsViewModel] = [:]
 
+    // MARK: - Pagination State (NEW)
+    private var isLoadingMore = false
+
+    private let hasMoreEventsSubject = CurrentValueSubject<Bool, Never>(true)
+    var hasMoreEventsPublisher: AnyPublisher<Bool, Never> {
+        hasMoreEventsSubject.eraseToAnyPublisher()
+    }
+    var hasMoreEvents: Bool {
+        get { hasMoreEventsSubject.value }
+        set { hasMoreEventsSubject.send(newValue) }
+    }
+
     // MARK: - Public Properties
     var eventsState: AnyPublisher<LoadableContent<[Match]>, Never> {
         return self.eventsStateSubject.eraseToAnyPublisher()
@@ -243,6 +255,52 @@ class InPlayEventsViewModel {
         self.loadEvents()
     }
 
+    /// Load next page of live matches (pagination)
+    /// This triggers the provider to request more events with an increased limit
+    /// New data arrives automatically via the existing subscription
+    func loadNextPage() {
+        // Guard: Don't trigger if already loading more
+        guard !isLoadingMore else {
+            print("[InPlayEventsViewModel] ⚠️ Already loading more events")
+            return
+        }
+
+        print("[InPlayEventsViewModel] 📄 Loading next page of events")
+        isLoadingMore = true
+
+        // Propagate loading state to child ViewModels
+        for (_, viewModel) in marketGroupCardsViewModels {
+            viewModel.isLoadingMore = true
+        }
+
+        // Convert current filters to MatchesFilterOptions
+        let filterOptions = appliedFilters.toMatchesFilterOptions()
+
+        // Request next page
+        // Returns Bool immediately (success/failure)
+        // New data flows through the existing subscription automatically
+        servicesProvider
+            .requestFilteredLiveMatchesNextPage(filters: filterOptions)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case .failure(let error) = completion {
+                    print("[InPlayEventsViewModel] ❌ Pagination error: \(error)")
+                    self?.isLoadingMore = false
+                }
+            } receiveValue: { [weak self] success in
+                if success {
+                    print("[InPlayEventsViewModel] ✅ Pagination started - waiting for data")
+                    // New data will arrive via existing subscription in loadEvents()
+                    // processMatches() will reset isLoadingMore to false
+                } else {
+                    print("[InPlayEventsViewModel] ℹ️ No more pages available")
+                    self?.isLoadingMore = false
+                    self?.hasMoreEvents = false  // No more pages to load
+                }
+            }
+            .store(in: &cancellables)
+    }
+
     func selectMarketGroup(id: String) {
         marketGroupSelectorViewModel.selectMarketGroup(id: id)
     }
@@ -311,6 +369,7 @@ class InPlayEventsViewModel {
     private func processMatches(_ matches: [Match], mainMarkets: [MainMarket]? = nil) {
         print("[InPlayEventsViewModel] processMatches called with \(matches.count) matches")
         isLoading = false
+        isLoadingMore = false  // Reset pagination state
         allMatches = matches
         self.mainMarkets = mainMarkets
         eventsStateSubject.send(LoadableContent.loaded(matches))
@@ -318,9 +377,11 @@ class InPlayEventsViewModel {
         // Update market group selector with new matches and main markets
         marketGroupSelectorViewModel.updateWithMatches(matches, mainMarkets: mainMarkets)
 
-        // Update all existing market group ViewModels with new matches
+        // Update all existing market group ViewModels with new matches and pagination state
         for (_, viewModel) in marketGroupCardsViewModels {
             viewModel.updateMatches(matches)
+            viewModel.hasMoreEvents = self.hasMoreEvents  // Propagate pagination state
+            viewModel.isLoadingMore = self.isLoadingMore  // Propagate loading state
         }
 
     }

@@ -310,7 +310,7 @@ extension Client {
     }
     
     // MARK: - New Filtered Subscription Methods
-    
+
     /// Subscribe to filtered pre-live matches using custom-matches-aggregator
     public func subscribeToFilteredPreLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard let eventsProvider = self.eventsProvider else {
@@ -318,13 +318,29 @@ extension Client {
         }
         return eventsProvider.subscribeToFilteredPreLiveMatches(filters: filters)
     }
-    
+
+    /// Request next page of filtered pre-live matches
+    public func requestFilteredPreLiveMatchesNextPage(filters: MatchesFilterOptions) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.requestFilteredPreLiveMatchesNextPage(filters: filters)
+    }
+
     /// Subscribe to filtered live matches using custom-matches-aggregator
     public func subscribeToFilteredLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard let eventsProvider = self.eventsProvider else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.subscribeToFilteredLiveMatches(filters: filters)
+    }
+
+    /// Request next page for filtered live matches
+    public func requestFilteredLiveMatchesNextPage(filters: MatchesFilterOptions) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.requestFilteredLiveMatchesNextPage(filters: filters)
     }
 
     func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
@@ -860,10 +876,25 @@ extension Client {
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-        
+
         return eventsProvider.subscribeToEventAndSecondaryMarkets(withId: id)
     }
-    
+
+    /// Subscribe to live updates for a single outcome (for betslip odds tracking)
+    /// - Parameters:
+    ///   - eventId: The match/event identifier
+    ///   - outcomeId: The outcome identifier (bettingOfferId)
+    /// - Returns: Publisher emitting Event with single market containing single outcome
+    public func subscribeToEventWithSingleOutcome(eventId: String, outcomeId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.subscribeToEventWithSingleOutcome(eventId: eventId, outcomeId: outcomeId)
+    }
+
     public func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider

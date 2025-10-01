@@ -28,23 +28,37 @@ class LiveMatchesPaginator: UnsubscriptionController {
     private var currentServiceSubscription: Subscription?
     private var cancellables = Set<AnyCancellable>()
 
+    // MARK: - Pagination Publisher (NEW)
+    /// PassthroughSubject that keeps the external subscription alive during pagination
+    /// When loadNextPage() is called, we recreate internal subscriptions but emit via this subject
+    private let contentSubject = PassthroughSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>()
+
+    /// Internal subscription to WAMP that can be recreated during pagination
+    private var internalSubscriptionCancellable: AnyCancellable?
+
     // MARK: - Configuration
     private let sportId: String
-    private let numberOfEvents: Int
+    private var currentEventLimit: Int        // Changed from immutable numberOfEvents
+    private let eventLimitIncrement = 10      // Pagination increment
+    private let maxEventLimit = 100           // Safety limit
     private let numberOfMarkets: Int
     private let filters: MatchesFilterOptions?
+
+    // MARK: - Pagination State (NEW)
+    private var isPaginationInProgress = false
+    private var hasMoreEvents = true          // Assume true until proven otherwise
 
     // MARK: - Initialization
     init(connector: EveryMatrixConnector,
          sportId: String,
-         numberOfEvents: Int = 10,
+         initialEventLimit: Int = 10,         // Renamed parameter
          numberOfMarkets: Int = 5,
          filters: MatchesFilterOptions? = nil) {
         self.connector = connector
         self.store = EveryMatrix.EntityStore()
         self.eventInfoStore = EveryMatrix.EntityStore()
         self.sportId = sportId
-        self.numberOfEvents = numberOfEvents
+        self.currentEventLimit = initialEventLimit
         self.numberOfMarkets = numberOfMarkets
         self.filters = filters
     }
@@ -56,71 +70,145 @@ class LiveMatchesPaginator: UnsubscriptionController {
 
     // MARK: - Public Methods
 
-    /// Subscribe to pre-live matches for the configured sport
+    /// Subscribe to live matches for the configured sport
+    /// Returns a publisher that remains alive during pagination - internal subscriptions are recreated
     func subscribe() -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-        // Clean up any existing subscription
-        unsubscribe()
+        // Start the internal subscription
+        startInternalSubscription()
 
-        // Clear both stores for fresh subscription
+        // Return the subject that will emit all updates (initial and paginated)
+        return contentSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - Internal Subscription Management
+
+    /// Starts or restarts the internal WAMP subscription with current configuration
+    /// This can be called multiple times during pagination without breaking the external subscription
+    private func startInternalSubscription() {
+        print("[LiveMatchesPaginator] Starting internal subscription with eventLimit=\(currentEventLimit)")
+
+        // Cancel any existing internal subscription
+        internalSubscriptionCancellable?.cancel()
+
+        // Unsubscribe from WAMP topic
+        if let currentSubscriptionValue = currentSubscription {
+            connector.unsubscribe(currentSubscriptionValue)
+            currentSubscription = nil
+        }
+
+        // Clear both stores for fresh data
         store.clear()
         eventInfoStore.clear()
 
-        let router: WAMPRouter
-        
+        // Build router with current event limit
+        let router = buildRouter()
+
+        // Subscribe to WAMP and forward all events to contentSubject
+        internalSubscriptionCancellable = connector.subscribe(router)
+            .handleEvents(receiveOutput: { [weak self] content in
+                // Store subscription ID for cleanup
+                if case .connect(let subscription) = content {
+                    self?.currentSubscription = subscription
+                }
+            })
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        print("[LiveMatchesPaginator] Internal subscription error: \(error)")
+                        self?.contentSubject.send(completion: .failure(error))
+                    }
+                },
+                receiveValue: { [weak self] wampContent in
+                    self?.handleWAMPContent(wampContent)
+                }
+            )
+    }
+
+    /// Build WAMP router with current configuration
+    private func buildRouter() -> WAMPRouter {
         // Use custom aggregator if filters are provided
         if let filters = filters {
-            router = WAMPRouter.customMatchesAggregatorPublisher(
+            return WAMPRouter.customMatchesAggregatorPublisher(
                 operatorId: "4093",
                 language: "en",
                 sportId: sportId,
-                locationId: filters.location.serverRawValue,    // "all" or specific ID
-                tournamentId: filters.tournament.serverRawValue, // "all" or specific ID
-                hoursInterval: filters.timeRange.serverRawValue, // "all", "0-1", "0-24", etc.
-                sortEventsBy: filters.sortBy.serverRawValue,     // "POPULAR", "UPCOMING", "FAVORITES"
+                locationId: filters.location.serverRawValue,
+                tournamentId: filters.tournament.serverRawValue,
+                hoursInterval: filters.timeRange.serverRawValue,
+                sortEventsBy: filters.sortBy.serverRawValue,
                 liveStatus: "LIVE",                           // Live matches only
-                eventLimit: numberOfEvents,
+                eventLimit: currentEventLimit,                // Use mutable currentEventLimit
                 mainMarketsLimit: numberOfMarkets,
                 optionalUserId: filters.optionalUserId
             )
         } else {
             // Fallback to simple live matches endpoint
-            router = WAMPRouter.liveMatchesPublisher(
+            return WAMPRouter.liveMatchesPublisher(
                 operatorId: "4093",
                 language: "en",
                 sportId: sportId,
-                matchesCount: numberOfEvents
+                matchesCount: currentEventLimit               // Use mutable currentEventLimit
             )
         }
-
-        // Subscribe to the websocket topic
-        return connector.subscribe(router)
-            .handleEvents(receiveOutput: { [weak self] content in
-                // Store the subscription for cleanup later
-                if case .connect(let subscription) = content {
-                    self?.currentSubscription = subscription
-                }
-            })
-            .compactMap { [weak self] (content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) -> SubscribableContent<[EventsGroup]>? in
-                guard let self = self else {
-                    return nil
-                }
-
-                return try? self.handleSubscriptionContent(content)
-            }
-            .mapError { error -> ServiceProviderError in
-                if let serviceError = error as? ServiceProviderError {
-                    return serviceError
-                }
-                return ServiceProviderError.unknown
-            }
-            .eraseToAnyPublisher()
     }
 
-    /// Load the next page of matches (for future pagination implementation)
+    /// Handle WAMP content and forward to contentSubject
+    private func handleWAMPContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) {
+        guard let subscribableContent = try? handleSubscriptionContent(content) else {
+            return
+        }
+
+        // Forward to external subscribers via contentSubject
+        contentSubject.send(subscribableContent)
+    }
+
+    /// Load the next page of matches
+    /// Increments eventLimit and re-subscribes with new limit
+    /// Returns true if pagination started, false if no more pages available
     func loadNextPage() -> AnyPublisher<Bool, ServiceProviderError> {
-        // TODO: Implement pagination logic
-        // This would involve subscribing to a different topic with updated parameters
-        return Just(false)
+        // Guard: Check if pagination is already in progress
+        guard !isPaginationInProgress else {
+            print("[LiveMatchesPaginator] ⚠️ Pagination already in progress, ignoring request")
+            return Just(false)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+
+        // Guard: Check if we've hit the max limit
+        guard currentEventLimit < maxEventLimit else {
+            print("[LiveMatchesPaginator] ⚠️ Max event limit reached (\(maxEventLimit))")
+            hasMoreEvents = false
+            return Just(false)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+
+        // Guard: Check if there are more events
+        guard hasMoreEvents else {
+            print("[LiveMatchesPaginator] ℹ️ No more events available")
+            return Just(false)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+
+        // Calculate new limit
+        let previousLimit = currentEventLimit
+        let newLimit = min(currentEventLimit + eventLimitIncrement, maxEventLimit)
+
+        print("[LiveMatchesPaginator] 📄 Loading next page: \(previousLimit) → \(newLimit) events")
+
+        // Update state
+        isPaginationInProgress = true
+        currentEventLimit = newLimit
+
+        // Re-subscribe with new limit
+        // This will trigger new data to flow through contentSubject
+        // The external subscription (from ViewModel) will receive the updates automatically
+        startInternalSubscription()
+
+        // Return success immediately
+        // Actual data will arrive via the existing subscription (contentSubject)
+        return Just(true)
             .setFailureType(to: ServiceProviderError.self)
             .eraseToAnyPublisher()
     }
@@ -134,12 +222,37 @@ class LiveMatchesPaginator: UnsubscriptionController {
 
     /// Clean up subscription and resources
     func unsubscribe() {
+        // Cancel internal subscription
+        internalSubscriptionCancellable?.cancel()
+        internalSubscriptionCancellable = nil
+
+        // Unsubscribe from WAMP topic
         if let subscription = currentSubscription {
             connector.unsubscribe(subscription)
             currentSubscription = nil
         }
+
         currentServiceSubscription = nil
         cancellables.removeAll()
+    }
+
+    // MARK: - Public State Access
+
+    /// Check if more pages can be loaded
+    func canLoadMore() -> Bool {
+        return hasMoreEvents &&
+               currentEventLimit < maxEventLimit &&
+               !isPaginationInProgress
+    }
+
+    /// Get current number of matches in store
+    func getCurrentEventCount() -> Int {
+        return store.getAll(EveryMatrix.MatchDTO.self).count
+    }
+
+    /// Get current event limit (page size)
+    func getCurrentEventLimit() -> Int {
+        return currentEventLimit
     }
     
     // MARK: - Individual Entity Subscriptions
@@ -236,6 +349,17 @@ class LiveMatchesPaginator: UnsubscriptionController {
 
             // Convert stored entities to EventsGroup array
             let eventsGroups = buildEventsGroups()
+
+            // Check if we received fewer events than requested (end of data detection)
+            let matchCount = store.getAll(EveryMatrix.MatchDTO.self).count
+            if matchCount < currentEventLimit {
+                hasMoreEvents = false
+                print("[LiveMatchesPaginator] 🏁 Received \(matchCount) events, less than requested \(currentEventLimit) - no more pages available")
+            }
+
+            // Reset pagination state
+            isPaginationInProgress = false
+
             return .contentUpdate(content: eventsGroups)
 
         case .updatedContent(let response):

@@ -326,12 +326,18 @@ class InPlayEventsViewController: UIViewController {
                 let controller = MarketGroupCardsViewController(viewModel: marketGroupCardsViewModel)
                 controller.scrollSyncDelegate = self
                 controller.updateContentInset(headerHeight: headerHeight)
-                
+
                 // Add card tap callback for match detail navigation
                 controller.onCardTapped = { [weak self] tappedMatch in
                     self?.viewModel.onMatchSelected(tappedMatch)
                 }
-                
+
+                // Add load more callback for pagination - delegate to ViewModel
+                controller.onLoadMoreTapped = { [weak self] in
+                    print("[InPlayEventsVC] Load more tapped")
+                    self?.viewModel.loadNextPage()
+                }
+
                 marketGroupControllers[marketGroup.id] = controller
                 print("Created new UI controller for market type: \(marketGroup.id)")
             }

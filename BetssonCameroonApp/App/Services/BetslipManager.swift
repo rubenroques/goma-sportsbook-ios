@@ -129,15 +129,20 @@ class BetslipManager: NSObject {
     }
     
     private func subscribeBettingTicketPublisher(bettingTicket: BettingTicket) {
-        
+
         if let publisher = self.bettingTicketPublisher[bettingTicket.id] {
             publisher.send(bettingTicket)
         }
         else {
             self.bettingTicketPublisher[bettingTicket.id] = .init(bettingTicket)
         }
-        
-        let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId, onEventId: bettingTicket.matchId)
+
+        // Subscribe to single outcome updates using the new API
+        // bettingTicket.id is the bettingOfferId (outcomeId in EveryMatrix)
+        let bettingTicketSubscriber = Env.servicesProvider.subscribeToEventWithSingleOutcome(
+            eventId: bettingTicket.matchId,
+            outcomeId: bettingTicket.id
+        )
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {
@@ -146,24 +151,29 @@ class BetslipManager: NSObject {
                     case .resourceUnavailableOrDeleted:
                         self?.disableBettingTicket(bettingTicket)
                     default:
-                        print("Error retrieving data! subscribeToMarketDetails \(error)")
+                        print("Error retrieving single outcome subscription: \(error)")
                     }
                 case .finished:
-                    print("Data retrieved!")
+                    print("Single outcome subscription completed")
                 }
             } receiveValue: { [weak self] subscribableContent in
                 switch subscribableContent {
                 case .connected(let subscription):
                     self?.serviceProviderSubscriptions[bettingTicket.id] = subscription
-                case .contentUpdate(let market):
+                case .contentUpdate(let event):
+                    // Extract the single market from the event
+                    guard let market = event.markets.first else {
+                        print("⚠️ BetslipManager: No market found in single outcome event")
+                        return
+                    }
                     let internalMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: market)
                     self?.updateBettingTickets(ofMarket: internalMarket)
                 case .disconnected:
-                    print("Betslip subscribeToMarketDetails disconnected")
+                    print("Single outcome subscription disconnected")
                 }
             }
         self.bettingTicketsCancellables[bettingTicket.id] = bettingTicketSubscriber
-        
+
     }
     
     private func disableBettingTicket(_ bettingTicket: BettingTicket) {

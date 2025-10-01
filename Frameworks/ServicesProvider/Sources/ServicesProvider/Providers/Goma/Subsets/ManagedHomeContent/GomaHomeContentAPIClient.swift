@@ -121,14 +121,14 @@ class GomaHomeContentAPIClient {
         let hardcodedPointers: GomaModels.CarouselEventPointers = [
             GomaModels.CarouselEventPointer(
                 id: 1,
-                eventId: "281887009513017344",
+                eventId: "282311336258572288",
                 eventMarketId: "1",
                 ctaUrl: nil,
                 imageUrl: "https://placehold.co/600x200/000144/F00.png?text=Event%201"
             ),
             GomaModels.CarouselEventPointer(
                 id: 2,
-                eventId: "282538389267419136",
+                eventId: "282462779746684928",
                 eventMarketId: "1",
                 ctaUrl: nil,
                 imageUrl: "https://placehold.co/600x200/000144/F00.png?text=Event%202"

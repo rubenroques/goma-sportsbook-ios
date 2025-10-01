@@ -25,6 +25,10 @@ protocol EventsProvider: Connector {
     func subscribeToFilteredPreLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
     func subscribeToFilteredLiveMatches(filters: MatchesFilterOptions) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
 
+    // Filtered pagination methods
+    func requestFilteredPreLiveMatchesNextPage(filters: MatchesFilterOptions) -> AnyPublisher<Bool, ServiceProviderError>
+    func requestFilteredLiveMatchesNextPage(filters: MatchesFilterOptions) -> AnyPublisher<Bool, ServiceProviderError>
+
     //
     func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
     func requestEndedMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError>
@@ -118,6 +122,13 @@ protocol EventsProvider: Connector {
 
     // Event and markets updates
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
+
+    /// Subscribe to live updates for a single outcome (for betslip odds tracking)
+    /// - Parameters:
+    ///   - eventId: The match/event identifier
+    ///   - outcomeId: The outcome identifier (equivalent to bettingOfferId in EveryMatrix)
+    /// - Returns: Publisher emitting Event with single market containing single outcome
+    func subscribeToEventWithSingleOutcome(eventId: String, outcomeId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
 
     func getHighlightedLiveEventsPointers(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>
     func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<Events, ServiceProviderError>

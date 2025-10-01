@@ -39,10 +39,14 @@ class MarketGroupCardsViewModel: ObservableObject {
     @Published var filteredMatches: [FilteredMatchData] = []
     @Published var matchCardsData: [MatchCardData] = []
 
+    // MARK: - Pagination State (NEW)
+    @Published var hasMoreEvents: Bool = true
+    @Published var isLoadingMore: Bool = false
+
     private let marketTypeId: String
     private var allMatches: [Match] = []
     private var cancellables = Set<AnyCancellable>()
-    
+
     var matchCardContext: MatchCardContext
     
     init(marketTypeId: String, matchCardContext: MatchCardContext = .lists) {

@@ -19,15 +19,22 @@ class MarketGroupCardsViewController: UIViewController {
     // MARK: - Card Tap Callback
     var onCardTapped: ((Match) -> Void)?
 
+    // MARK: - Load More Callback (NEW)
+    var onLoadMoreTapped: (() -> Void)?
+
     // MARK: - ComplexScroll Properties
     private var isReceivingSync = false
 
     enum Section: String, CaseIterable {
         case matchCards
+        case loadMoreButton
+        case footer
     }
 
     enum CollectionViewItem: Hashable {
         case matchCard(MatchCardData)
+        case loadMoreButton
+        case footer
     }
 
     // MARK: - Initialization
@@ -107,6 +114,42 @@ class MarketGroupCardsViewController: UIViewController {
                 section.interGroupSpacing = 1.5
                 section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
                 return section
+
+            case .loadMoreButton:
+                // Full width button, fixed height
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(60)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(60)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+                return section
+
+            case .footer:
+                // Full width footer, fixed height
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(80)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(80)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+                return section
             }
         }
     }
@@ -116,6 +159,14 @@ class MarketGroupCardsViewController: UIViewController {
         collectionView.register(
             TallOddsMatchCardCollectionViewCell.self,
             forCellWithReuseIdentifier: TallOddsMatchCardCollectionViewCell.identifier
+        )
+        collectionView.register(
+            SeeMoreButtonCollectionViewCell.self,
+            forCellWithReuseIdentifier: "SeeMoreButtonCell"
+        )
+        collectionView.register(
+            FooterCollectionViewCell.self,
+            forCellWithReuseIdentifier: "FooterCell"
         )
 
         // Registration for match card cells
@@ -149,6 +200,31 @@ class MarketGroupCardsViewController: UIViewController {
             cell.configureCellPosition(isFirst: isFirst, isLast: isLast)
         }
 
+        // Registration for load more button cell
+        let loadMoreButtonRegistration = UICollectionView.CellRegistration<SeeMoreButtonCollectionViewCell, Void> { [weak self] cell, indexPath, _ in
+            let buttonData = SeeMoreButtonData(
+                id: "load-more-matches",
+                title: "Load More Events",
+                remainingCount: nil
+            )
+
+            cell.configure(
+                with: buttonData,
+                isLoading: self?.viewModel.isLoadingMore ?? false,
+                isEnabled: !(self?.viewModel.isLoadingMore ?? false)
+            )
+
+            cell.onSeeMoreTapped = { [weak self] in
+                print("[MarketGroupCardsVC] Load more button tapped")
+                self?.onLoadMoreTapped?()
+            }
+        }
+
+        // Registration for footer cell
+        let footerRegistration = UICollectionView.CellRegistration<FooterCollectionViewCell, Void> { cell, indexPath, _ in
+            // Footer is already configured in cell
+        }
+
         self.dataSource = UICollectionViewDiffableDataSource<Section, CollectionViewItem>(collectionView: collectionView)
           { collectionView, indexPath, item in
             switch item {
@@ -157,6 +233,18 @@ class MarketGroupCardsViewController: UIViewController {
                     using: matchCardCellRegistration,
                     for: indexPath,
                     item: matchCardData
+                )
+            case .loadMoreButton:
+                return collectionView.dequeueConfiguredReusableCell(
+                    using: loadMoreButtonRegistration,
+                    for: indexPath,
+                    item: ()
+                )
+            case .footer:
+                return collectionView.dequeueConfiguredReusableCell(
+                    using: footerRegistration,
+                    for: indexPath,
+                    item: ()
                 )
             }
         }
@@ -177,6 +265,30 @@ class MarketGroupCardsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        // Bind to hasMoreEvents to show/hide load more button
+        viewModel.$hasMoreEvents
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] hasMore in
+                print("[MarketGroupCardsVC] 📥 hasMoreEvents changed: \(hasMore)")
+                // Trigger collection view update to show/hide button
+                if let matchCardsData = self?.viewModel.matchCardsData {
+                    self?.updateCollectionView(with: matchCardsData)
+                }
+            }
+            .store(in: &cancellables)
+
+        // Bind to isLoadingMore to update button state
+        viewModel.$isLoadingMore
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                print("[MarketGroupCardsVC] 📥 isLoadingMore changed: \(isLoading)")
+                // Reload load more section to update loading state
+                if let matchCardsData = self?.viewModel.matchCardsData {
+                    self?.updateCollectionView(with: matchCardsData)
+                }
+            }
+            .store(in: &cancellables)
+
     }
 
     // MARK: - UI Update Methods
@@ -188,9 +300,17 @@ class MarketGroupCardsViewController: UIViewController {
         // Add all sections
         snapshot.appendSections(Section.allCases)
 
-        // Match cards section - always show
+        // Section 0: Match cards - always show
         let matchCardsItems = matchCardsData.map { CollectionViewItem.matchCard($0) }
         snapshot.appendItems(matchCardsItems, toSection: .matchCards)
+
+        // Section 1: Load More Button - conditionally show based on hasMoreEvents
+        if viewModel.hasMoreEvents && !matchCardsData.isEmpty {
+            snapshot.appendItems([.loadMoreButton], toSection: .loadMoreButton)
+        }
+
+        // Section 2: Footer - always show
+        snapshot.appendItems([.footer], toSection: .footer)
 
         dataSource.apply(snapshot, animatingDifferences: false, completion: { [weak self] in
             self?.collectionView.layoutIfNeeded()
