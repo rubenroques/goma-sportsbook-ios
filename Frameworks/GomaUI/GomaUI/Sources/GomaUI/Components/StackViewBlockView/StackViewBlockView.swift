@@ -32,12 +32,11 @@ public class StackViewBlockView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        self.stackView.layer.cornerRadius = 8 // Using fixed corner radius for now
     }
     
     func setupWithTheme() {
         self.backgroundColor = .clear
-        self.stackView.backgroundColor = StyleProvider.Color.backgroundSecondary
+        self.stackView.backgroundColor = .clear
     }
     
     // MARK: Functions

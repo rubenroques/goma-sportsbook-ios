@@ -642,6 +642,45 @@ struct ComponentRegistry {
     // MARK: - Promotional Components
     private static let promotionalComponents: [UIComponent] = [
         UIComponent(
+            title: "Promotion Card",
+            description: "A comprehensive promotion card with image, tag, title, description, CTA button and read more link. Perfect for promotion listings.",
+            viewController: PromotionCardViewController.self,
+            previewFactory: {
+                let viewModel = MockPromotionCardViewModel.defaultMock
+                let cardView = PromotionCardView(viewModel: viewModel)
+                cardView.backgroundColor = StyleProvider.Color.backgroundColor
+                cardView.layer.cornerRadius = 8
+                return cardView
+            }
+        ),
+        UIComponent(
+            title: "Promotion Item",
+            description: "A pill-shaped button component for promotion category selection with selection states and animations.",
+            viewController: PromotionItemViewController.self,
+            previewFactory: {
+                let data = PromotionItemData(id: "demo", title: "Welcome", isSelected: true)
+                let viewModel = MockPromotionItemViewModel(promotionItemData: data)
+                let itemView = PromotionItemView(viewModel: viewModel)
+                return itemView
+            }
+        ),
+        UIComponent(
+            title: "Promotion Selector Bar",
+            description: "A horizontal scrolling container for promotion category selection with fade effects and state management.",
+            viewController: PromotionSelectorBarViewController.self,
+            previewFactory: {
+                let items = [
+                    PromotionItemData(id: "1", title: "Welcome", isSelected: true),
+                    PromotionItemData(id: "2", title: "Sports", isSelected: false),
+                    PromotionItemData(id: "3", title: "Casino", isSelected: false)
+                ]
+                let barData = PromotionSelectorBarData(id: "demo", promotionItems: items, selectedPromotionId: "1")
+                let viewModel = MockPromotionSelectorBarViewModel(barData: barData)
+                let selectorBar = PromotionSelectorBarView(viewModel: viewModel)
+                return selectorBar
+            }
+        ),
+        UIComponent(
             title: "Promotional Bonus Card",
             description: "A card view for displaying promotional bonuses, using PromotionalBonusCardView.",
             viewController: PromotionalBonusCardViewController.self,

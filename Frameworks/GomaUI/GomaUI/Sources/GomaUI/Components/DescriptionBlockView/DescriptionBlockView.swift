@@ -36,7 +36,7 @@ public class DescriptionBlockView: UIView {
     
     func setupWithTheme() {
         self.backgroundColor = .clear
-        self.descriptionLabel.textColor = StyleProvider.Color.textPrimary
+        self.descriptionLabel.textColor = StyleProvider.Color.highlightSecondaryContrast
     }
     
     // MARK: Functions

@@ -351,6 +351,11 @@ extension GomaModels {
         let id: Int
         let title: String
         let slug: String
+        let tag: String?
+        let hasReadMoreButton: Bool
+        let ctaText: String?
+        let ctaUrl: String?
+        let ctaTarget: String?
         let sortOrder: Int
         let platform: String
         let status: String
@@ -362,11 +367,17 @@ extension GomaModels {
         let endDate: String?
         let staticPageSlug: String?
         let staticPage: StaticPage?
+        let categories: [PromotionCategory]?
 
         enum CodingKeys: String, CodingKey {
             case id = "id"
             case title = "title"
             case slug = "slug"
+            case tag = "tag"
+            case hasReadMoreButton = "has_read_more_button"
+            case ctaText = "cta_text"
+            case ctaUrl = "cta_url"
+            case ctaTarget = "cta_target"
             case sortOrder = "sort_order"
             case platform = "platform"
             case status = "status"
@@ -378,6 +389,17 @@ extension GomaModels {
             case endDate = "end_date"
             case staticPageSlug = "static_page_slug"
             case staticPage = "static_page"
+            case categories = "categories"
+        }
+    }
+
+    struct PromotionCategory: Codable, Equatable, Hashable {
+        let id: Int
+        let name: String
+        
+        enum CodingKeys: String, CodingKey {
+            case id = "id"
+            case name = "name"
         }
     }
 

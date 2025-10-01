@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import ServicesProvider
+import GomaUI
 
 class PromotionsViewController: UIViewController {
 
@@ -16,7 +17,19 @@ class PromotionsViewController: UIViewController {
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
-    private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var promotionalHeaderView: PromotionalHeaderView = {
+        let view = PromotionalHeaderView(viewModel: viewModel.promotionalHeaderViewModel!)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private lazy var promotionSelectorBarView: PromotionSelectorBarView = {
+        let view = PromotionSelectorBarView(viewModel: viewModel.promotionSelectorBarViewModel!)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private lazy var scrollView: UIScrollView = Self.createScrollView()
+    private lazy var containerView: UIView = Self.createContainerView()
+    private lazy var stackView: UIStackView = Self.createStackView()
     private lazy var emptyStateBaseView: UIView = Self.createEmptyStateBaseView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
@@ -24,6 +37,10 @@ class PromotionsViewController: UIViewController {
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    
+    // Data source for promotions
+    private var filteredPromotions: [PromotionInfo] = []
+    private var selectedCategoryId: String?
     
     private var viewModel: PromotionsViewModel
 
@@ -57,11 +74,6 @@ class PromotionsViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
         
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-
-        self.tableView.register(PromotionTableViewCell.self, forCellReuseIdentifier: PromotionTableViewCell.identifier)
-        
         self.bind(toViewModel: self.viewModel)
         
     }
@@ -84,23 +96,27 @@ class PromotionsViewController: UIViewController {
 
     private func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = StyleProvider.Color.backgroundTertiary
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-        self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        self.bottomSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-        self.titleLabel.backgroundColor = .clear
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.titleLabel.textColor = StyleProvider.Color.textPrimary
 
-        self.tableView.backgroundColor = .clear
+        self.backButton.backgroundColor = .clear
         
-        self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.emptyStateLabel.textColor = UIColor.App.textPrimary
+        self.promotionalHeaderView.backgroundColor = .clear
+        self.promotionSelectorBarView.backgroundColor = .clear
+        self.scrollView.backgroundColor = .clear
+        self.containerView.backgroundColor = .clear
         
-        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyStateBaseView.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        self.emptyStateLabel.textColor = StyleProvider.Color.textPrimary
+        
+        self.loadingBaseView.backgroundColor = StyleProvider.Color.backgroundPrimary
 
     }
     
@@ -116,12 +132,23 @@ class PromotionsViewController: UIViewController {
                 }
                 else {
                     self?.hideLoading()
-                    self?.tableView.reloadData()
+                    // Set initial filtered promotions based on first category (default selection)
+                    if let firstCategory = viewModel.categories.first {
+                        self?.selectedCategoryId = String(firstCategory.id)
+                        self?.filteredPromotions = viewModel.getPromotions(for: String(firstCategory.id))
+                    } else {
+                        self?.filteredPromotions = viewModel.promotions
+                    }
+                    self?.updatePromotionsList()
                     
-                    self?.isEmptyState = viewModel.promotions.isEmpty ? true : false
+                    self?.isEmptyState = self?.filteredPromotions.isEmpty ?? viewModel.promotions.isEmpty
                 }
             })
             .store(in: &cancellables)
+        
+        viewModel.onCategorySelected = { [weak self] categoryId in
+            self?.handleCategorySelection(categoryId)
+        }
     }
 
     
@@ -134,6 +161,13 @@ class PromotionsViewController: UIViewController {
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
         self.loadingActivityIndicatorView.stopAnimating()
+    }
+    
+    private func openPromotionURL(urlString: String) {
+        
+        if let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+        }
     }
     
     private func openPromotionDetail(promotion: PromotionInfo) {
@@ -157,40 +191,53 @@ class PromotionsViewController: UIViewController {
     }
 }
 
-extension PromotionsViewController: UITableViewDelegate, UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.promotions.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: PromotionTableViewCell.identifier, for: indexPath) as? PromotionTableViewCell,
-            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
-        else {
-            fatalError("PromotionTableViewCell not found")
+// MARK: - Data Management
+extension PromotionsViewController {
+    
+    private func updatePromotionsList() {
+        // Clear existing views
+        self.stackView.arrangedSubviews.forEach { view in
+            self.stackView.removeArrangedSubview(view)
+            view.removeFromSuperview()
         }
         
-        cell.configure(viewModel: cellViewModel)
-        
-        cell.didTapPromotionAction = { [weak self] in
-            self?.openPromotionDetail(promotion: cellViewModel.promotionInfo)
+        // Add promotion card views
+        for (index, promotion) in self.filteredPromotions.enumerated() {
+            // Find the original index in ViewModel promotions to get the correct ViewModel
+            guard let originalIndex = self.viewModel.promotions.firstIndex(where: { $0.id == promotion.id }),
+                  let cardViewModel = self.viewModel.cardViewModel(forIndex: originalIndex) else {
+                continue
+            }
+            
+            // Setup callbacks for button actions
+            if let mockCardViewModel = cardViewModel as? MockPromotionCardViewModel {
+                
+                mockCardViewModel.onCTATapped = { [weak self] ctaUrl in
+                    self?.openPromotionURL(urlString: ctaUrl)
+                }
+                
+                mockCardViewModel.onReadMoreTapped = { [weak self] in
+                    self?.openPromotionDetail(promotion: promotion)
+                }
+            }
+            
+            let cardView = PromotionCardView(viewModel: cardViewModel)
+            self.stackView.addArrangedSubview(cardView)
         }
-        
-        return cell
-        
-        
     }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    
+    
+    private func handleCategorySelection(_ categoryId: String?) {
+        selectedCategoryId = categoryId
         
-        return UITableView.automaticDimension
+        // Get filtered promotions from ViewModel
+        self.filteredPromotions = self.viewModel.getPromotions(for: categoryId)
         
+        // Update the promotions list
+        updatePromotionsList()
+        
+        // Update empty state
+        self.isEmptyState = self.filteredPromotions.isEmpty
     }
 }
 
@@ -211,28 +258,44 @@ extension PromotionsViewController {
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.textColor = UIColor.App.textPrimary
-        titleLabel.font = AppFont.with(type: .semibold, size: 14)
-        titleLabel.textAlignment = .center
-        titleLabel.text = "Promotions"
+        titleLabel.font = AppFont.with(type: .bold, size: 12)
+        titleLabel.textAlignment = .left
+        titleLabel.text = localized("back")
         return titleLabel
     }
 
     private static func createBackButton() -> UIButton {
-        let backButton = UIButton.init(type: .custom)
+        let backButton = UIButton()
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
         backButton.setTitle(nil, for: .normal)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
         return backButton
     }
     
-    private static func createTableView() -> UITableView {
-        let tableView = UITableView.init(frame: .zero, style: .plain)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.separatorStyle = .none
-        tableView.contentInset = .zero
-        tableView.allowsSelection = false
-        return tableView
+    
+    private static func createScrollView() -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }
+    
+    private static func createContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    
+    private static func createStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        return stackView
     }
     
     private static func createEmptyStateBaseView() -> UIView {
@@ -285,7 +348,11 @@ extension PromotionsViewController {
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.titleLabel)
         
-        self.view.addSubview(self.tableView)
+        self.view.addSubview(self.promotionSelectorBarView)
+        self.view.addSubview(self.scrollView)
+        self.scrollView.addSubview(self.containerView)
+        self.containerView.addSubview(self.promotionalHeaderView)
+        self.containerView.addSubview(self.stackView)
         
         self.view.addSubview(self.emptyStateBaseView)
 
@@ -320,28 +387,49 @@ extension PromotionsViewController {
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 46),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-
+            self.backButton.heightAnchor.constraint(equalToConstant: 40),
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
-            self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
             
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 2),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -16),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            
+            self.promotionSelectorBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.promotionSelectorBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.promotionSelectorBarView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.promotionSelectorBarView.heightAnchor.constraint(equalToConstant: 60),
+            
+            self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.scrollView.topAnchor.constraint(equalTo: self.promotionSelectorBarView.bottomAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+            
+            self.containerView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor),
+            self.containerView.topAnchor.constraint(equalTo: self.scrollView.topAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor),
+            self.containerView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor),
+            
+            self.promotionalHeaderView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.promotionalHeaderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.promotionalHeaderView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.promotionalHeaderView.heightAnchor.constraint(equalToConstant: 56),
+            
+            self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16),
+            self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
+            self.stackView.topAnchor.constraint(equalTo: self.promotionalHeaderView.bottomAnchor, constant: 16),
+            self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16)
         ])
         
         // Empty state view
         NSLayoutConstraint.activate([
             self.emptyStateBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.emptyStateBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.emptyStateBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.emptyStateBaseView.topAnchor.constraint(equalTo: self.promotionSelectorBarView.bottomAnchor),
             self.emptyStateBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
 
             self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),

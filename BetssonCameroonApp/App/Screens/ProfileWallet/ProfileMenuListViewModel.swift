@@ -78,7 +78,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ProfileMenuItem(
                 id: "promotions",
                 icon: "promotion_icon",
-                title: "Promotions",
+                title: "Promotions and Bonuses",
                 subtitle: nil,
                 type: .navigation,
                 action: .promotions

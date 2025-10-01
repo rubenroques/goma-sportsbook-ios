@@ -36,7 +36,7 @@ public class TitleBlockView: UIView {
     
     func setupWithTheme() {
         self.backgroundColor = .clear
-        self.titleLabel.textColor = StyleProvider.Color.highlightPrimary
+        self.titleLabel.textColor = StyleProvider.Color.highlightSecondaryContrast
         self.titleLabel.textAlignment = self.viewModel.isCentered ? .center : .left
     }
     
@@ -51,7 +51,7 @@ extension TitleBlockView {
     
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
-        label.font = StyleProvider.fontWith(type: .bold, size: 18)
+        label.font = StyleProvider.fontWith(type: .semibold, size: 24)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0

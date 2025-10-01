@@ -9,5 +9,6 @@ import UIKit
 
 public protocol ListBlockViewModelProtocol {
     var iconUrl: String { get }
+    var counter: String? { get }
     var views: [UIView] { get }
 }

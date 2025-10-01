@@ -220,7 +220,30 @@ extension GomaModelMapper {
         
         let endDate = GomaProvider.parseGomaDateString(promotionInfo.endDate ?? "")
         
-        return PromotionInfo(id: promotionInfo.id, title: promotionInfo.title, slug: promotionInfo.slug, sortOrder: promotionInfo.sortOrder, platform: promotionInfo.platform, status: promotionInfo.status, userType: promotionInfo.userType, listDisplayNote: promotionInfo.listDisplayNote, listDisplayDescription: promotionInfo.listDisplayDescription, listDisplayImageUrl: promotionInfo.listDisplayImageUrl, startDate: startDate, endDate: endDate, staticPageSlug: promotionInfo.staticPageSlug, staticPage: staticPage)
+        let categories = promotionInfo.categories?.map { self.promotionCategory(fromInternalPromotionCategory: $0) }
+        
+        return PromotionInfo(
+            id: promotionInfo.id,
+            title: promotionInfo.title,
+            slug: promotionInfo.slug,
+            tag: promotionInfo.tag,
+            hasReadMoreButton: promotionInfo.hasReadMoreButton,
+            ctaText: promotionInfo.ctaText,
+            ctaUrl: promotionInfo.ctaUrl,
+            ctaTarget: promotionInfo.ctaTarget,
+            sortOrder: promotionInfo.sortOrder,
+            platform: promotionInfo.platform,
+            status: promotionInfo.status,
+            userType: promotionInfo.userType,
+            listDisplayNote: promotionInfo.listDisplayNote,
+            listDisplayDescription: promotionInfo.listDisplayDescription,
+            listDisplayImageUrl: promotionInfo.listDisplayImageUrl,
+            startDate: startDate,
+            endDate: endDate,
+            staticPageSlug: promotionInfo.staticPageSlug,
+            staticPage: staticPage,
+            categories: categories
+        )
     }
     
     static func staticPage(fromInternalStaticPage staticPage: GomaModels.StaticPage?) -> StaticPage? {
@@ -323,5 +346,12 @@ extension GomaModelMapper {
         }
         
         return TermItem(displayType: TermsDisplayType(rawValue: term.displayType), richText: term.richText, bulletedListItems: bulletedListItems, sortOrder: term.sortOrder)
+    }
+    
+    static func promotionCategory(fromInternalPromotionCategory category: GomaModels.PromotionCategory) -> PromotionCategory {
+        return PromotionCategory(
+            id: category.id,
+            name: category.name
+        )
     }
 }

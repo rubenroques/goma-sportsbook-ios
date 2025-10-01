@@ -36,7 +36,7 @@ public class BulletItemBlockView: UIView {
     
     func setupWithTheme() {
         self.backgroundColor = .clear
-        self.titleLabel.textColor = StyleProvider.Color.textPrimary
+        self.titleLabel.textColor = StyleProvider.Color.highlightSecondaryContrast
     }
     
     // MARK: Functions
@@ -72,7 +72,7 @@ extension BulletItemBlockView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "• Title"
-        label.font = StyleProvider.fontWith(type: .semibold, size: 14)
+        label.font = StyleProvider.fontWith(type: .semibold, size: 16)
         label.textAlignment = .left
         label.numberOfLines = 0
         return label

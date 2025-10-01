@@ -10,10 +10,12 @@ import UIKit
 public class MockListBlockViewModel: ListBlockViewModelProtocol {
     
     public let iconUrl: String
+    public let counter: String?
     public let views: [UIView]
     
-    public init(iconUrl: String, views: [UIView]) {
+    public init(iconUrl: String, counter: String?, views: [UIView]) {
         self.iconUrl = iconUrl
+        self.counter = counter
         self.views = views
     }
 }
@@ -27,6 +29,7 @@ extension MockListBlockViewModel {
         
         return MockListBlockViewModel(
             iconUrl: "https://example.com/icon.jpg",
+            counter: nil,
             views: [bulletView1, bulletView2]
         )
     }
@@ -37,6 +40,7 @@ extension MockListBlockViewModel {
         
         return MockListBlockViewModel(
             iconUrl: "https://picsum.photos/40/40",
+            counter: nil,
             views: [bulletView1, bulletView2]
         )
     }
@@ -46,6 +50,7 @@ extension MockListBlockViewModel {
         
         return MockListBlockViewModel(
             iconUrl: "",
+            counter: nil,
             views: [bulletView1]
         )
     }

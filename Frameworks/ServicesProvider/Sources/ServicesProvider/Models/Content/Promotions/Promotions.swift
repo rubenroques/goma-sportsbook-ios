@@ -12,6 +12,11 @@ public struct PromotionInfo: Codable {
     public let id: Int
     public let title: String
     public let slug: String
+    public let tag: String?
+    public let hasReadMoreButton: Bool
+    public let ctaText: String?
+    public let ctaUrl: String?
+    public let ctaTarget: String?
     public let sortOrder: Int
     public let platform: String
     public let status: String
@@ -23,10 +28,16 @@ public struct PromotionInfo: Codable {
     public let endDate: Date?
     public let staticPageSlug: String?
     public let staticPage: StaticPage?
+    public let categories: [PromotionCategory]?
 
     init(id: Int,
          title: String,
          slug: String,
+         tag: String?,
+         hasReadMoreButton: Bool,
+         ctaText: String?,
+         ctaUrl: String?,
+         ctaTarget: String?,
          sortOrder: Int,
          platform: String,
          status: String,
@@ -37,11 +48,17 @@ public struct PromotionInfo: Codable {
          startDate: Date?,
          endDate: Date?,
          staticPageSlug: String?,
-         staticPage: StaticPage?)
+         staticPage: StaticPage?,
+         categories: [PromotionCategory]?)
     {
         self.id = id
         self.title = title
         self.slug = slug
+        self.tag = tag
+        self.hasReadMoreButton = hasReadMoreButton
+        self.ctaText = ctaText
+        self.ctaUrl = ctaUrl
+        self.ctaTarget = ctaTarget
         self.sortOrder = sortOrder
         self.platform = platform
         self.status = status
@@ -53,6 +70,17 @@ public struct PromotionInfo: Codable {
         self.endDate = endDate
         self.staticPageSlug = staticPageSlug
         self.staticPage = staticPage
+        self.categories = categories
+    }
+}
+
+public struct PromotionCategory: Codable, Equatable, Hashable {
+    public let id: Int
+    public let name: String
+    
+    init(id: Int, name: String) {
+        self.id = id
+        self.name = name
     }
 }
 

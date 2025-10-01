@@ -62,12 +62,12 @@ class PromotionDetailViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
-    private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var gradientHeaderView: GradientHeaderView = Self.createGradientHeaderView()
     private lazy var headerImageView: UIImageView = Self.createHeaderImageView()
+    private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var stackView: UIStackView = Self.createStackView()
     private lazy var termsContainerView: UIView = Self.createTermsContainerView()
     private lazy var termsView: UIView = Self.createTermsView()
@@ -93,7 +93,7 @@ class PromotionDetailViewController: UIViewController {
     var isTermsCollapsed = true {
         didSet {
             if isTermsCollapsed {
-                self.termsToggleButton.setImage(UIImage(named: "arrow_down_icon"), for: .normal)
+                self.termsToggleButton.setImage(UIImage(named: "chevron_down_icon"), for: .normal)
 
                 UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
                     self.termsDescriptionLabel.alpha = 0
@@ -105,7 +105,7 @@ class PromotionDetailViewController: UIViewController {
 
             }
             else {
-                self.termsToggleButton.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
+                self.termsToggleButton.setImage(UIImage(named: "chevron_up_icon"), for: .normal)
 
                 UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
                     if self.termsDescriptionLabel.alpha != self.enabledAlpha && self.termsDescriptionLabel.alpha != 0 {
@@ -169,27 +169,26 @@ class PromotionDetailViewController: UIViewController {
 
     private func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = StyleProvider.Color.highlightPrimaryContrast
         
-        self.gradientHeaderView
+        self.topSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        self.bottomSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-        self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.titleLabel.backgroundColor = .clear
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.titleLabel.textColor = StyleProvider.Color.allWhite
 
         self.headerImageView.backgroundColor = .clear
         
         self.stackView.backgroundColor = .clear
         
-        self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.emptyStateLabel.textColor = UIColor.App.textPrimary
+        self.termsContainerView.backgroundColor = StyleProvider.Color.backgroundTertiary
         
-        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyStateBaseView.backgroundColor = StyleProvider.Color.backgroundTertiary
+
+        self.emptyStateLabel.textColor = StyleProvider.Color.textPrimary
+        
+        self.loadingBaseView.backgroundColor = StyleProvider.Color.backgroundPrimary
 
     }
     
@@ -258,8 +257,7 @@ class PromotionDetailViewController: UIViewController {
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.axis = .vertical
             stackView.spacing = 0
-            stackView.layer.cornerRadius = CornerRadius.button
-            stackView.backgroundColor = UIColor.App.backgroundSecondary
+            stackView.backgroundColor = .clear
             
             if sectionBlock.type == .text {
                 
@@ -347,7 +345,7 @@ class PromotionDetailViewController: UIViewController {
                         blockViews.append(titleBlockView)
                     }
                     
-                    for itemBlock in listBlock.items {
+                    for (index, itemBlock) in listBlock.items.enumerated() {
                         
                         var listItemViews = [UIView]()
                         
@@ -416,7 +414,9 @@ class PromotionDetailViewController: UIViewController {
                             }
                         }
                         
-                        let listBlockViewModel = MockListBlockViewModel(iconUrl: itemIconName ?? "", views: listItemViews)
+                        var counterString = itemIconName != nil ? nil : "\(index + 1)"
+                        
+                        let listBlockViewModel = MockListBlockViewModel(iconUrl: itemIconName ?? "", counter: counterString, views: listItemViews)
                         let listBlockView = ListBlockView(viewModel: listBlockViewModel)
                         listBlockView.translatesAutoresizingMaskIntoConstraints = false
                         
@@ -692,8 +692,7 @@ extension PromotionDetailViewController {
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.textColor = UIColor.App.textPrimary
-        titleLabel.font = AppFont.with(type: .semibold, size: 14)
+        titleLabel.font = AppFont.with(type: .bold, size: 32)
         titleLabel.textAlignment = .center
         titleLabel.text = "Promotion Details"
         return titleLabel
@@ -759,9 +758,9 @@ extension PromotionDetailViewController {
     private static func createTermsTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 13)
+        label.font = AppFont.with(type: .bold, size: 24)
         label.text = "Terms and Conditions"
-        label.textAlignment = .center
+        label.textAlignment = .left
         return label
     }
 
@@ -769,7 +768,8 @@ extension PromotionDetailViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "arrow_down_icon"), for: .normal)
+        button.setImage(UIImage(named: "chevron_down_icon"), for: .normal)
+        button.imageView?.setTintColor(color: StyleProvider.Color.highlightPrimary)
         return button
     }
 
@@ -850,7 +850,6 @@ extension PromotionDetailViewController {
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationView)
         self.navigationView.addSubview(self.backButton)
-        self.navigationView.addSubview(self.titleLabel)
         
         self.view.addSubview(self.scrollView)
 
@@ -859,6 +858,8 @@ extension PromotionDetailViewController {
         self.containerView.addSubview(self.gradientHeaderView)
         self.containerView.addSubview(self.headerImageView)
         
+        self.headerImageView.addSubview(self.titleLabel)
+
         self.containerView.addSubview(self.stackView)
         
         self.containerView.addSubview(self.termsContainerView)
@@ -904,11 +905,7 @@ extension PromotionDetailViewController {
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 46),
-
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
@@ -932,38 +929,44 @@ extension PromotionDetailViewController {
             self.gradientHeaderView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.gradientHeaderView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.gradientHeaderView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.gradientHeaderView.heightAnchor.constraint(equalToConstant: 208),
+            self.gradientHeaderView.heightAnchor.constraint(equalToConstant: 257),
             
             self.headerImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.headerImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.headerImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.headerImageView.heightAnchor.constraint(equalToConstant: 208),
+            self.headerImageView.heightAnchor.constraint(equalToConstant: 257),
             
-            self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.stackView.topAnchor.constraint(equalTo: self.gradientHeaderView.bottomAnchor, constant: -30),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.headerImageView.leadingAnchor, constant: 32),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.headerImageView.trailingAnchor, constant: -32),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.headerImageView.centerYAnchor, constant: 25),
+            
+            self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.stackView.topAnchor.constraint(equalTo: self.gradientHeaderView.bottomAnchor, constant: -60),
         ])
         
         // Terms
         NSLayoutConstraint.activate([
-            self.termsContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
-            self.termsContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
+            self.termsContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.termsContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.termsContainerView.topAnchor.constraint(greaterThanOrEqualTo: self.stackView.bottomAnchor, constant: 20),
 
             self.termsView.topAnchor.constraint(equalTo: self.termsContainerView.topAnchor),
-            self.termsView.centerXAnchor.constraint(equalTo: self.termsContainerView.centerXAnchor),
+            self.termsView.leadingAnchor.constraint(equalTo: self.termsContainerView.leadingAnchor, constant: 16),
+            self.termsView.trailingAnchor.constraint(equalTo: self.termsContainerView.trailingAnchor, constant: -16),
+//            self.termsView.centerXAnchor.constraint(equalTo: self.termsContainerView.centerXAnchor),
 
             self.termsTitleLabel.leadingAnchor.constraint(equalTo: self.termsView.leadingAnchor),
             self.termsTitleLabel.topAnchor.constraint(equalTo: self.termsView.topAnchor, constant: 10),
             self.termsTitleLabel.bottomAnchor.constraint(equalTo: self.termsView.bottomAnchor, constant: -10),
 
-            self.termsToggleButton.leadingAnchor.constraint(equalTo: self.termsTitleLabel.trailingAnchor, constant: 5),
+//            self.termsToggleButton.leadingAnchor.constraint(equalTo: self.termsTitleLabel.trailingAnchor, constant: 5),
             self.termsToggleButton.trailingAnchor.constraint(equalTo: self.termsView.trailingAnchor),
             self.termsToggleButton.heightAnchor.constraint(equalToConstant: 20),
             self.termsToggleButton.centerYAnchor.constraint(equalTo: self.termsTitleLabel.centerYAnchor),
 
-            self.termsDescriptionLabel.leadingAnchor.constraint(equalTo: self.termsContainerView.leadingAnchor),
-            self.termsDescriptionLabel.trailingAnchor.constraint(equalTo: self.termsContainerView.trailingAnchor),
+            self.termsDescriptionLabel.leadingAnchor.constraint(equalTo: self.termsContainerView.leadingAnchor, constant: 16),
+            self.termsDescriptionLabel.trailingAnchor.constraint(equalTo: self.termsContainerView.trailingAnchor, constant: -16),
             self.termsDescriptionLabel.topAnchor.constraint(equalTo: self.termsView.bottomAnchor, constant: 5)
         ])
         
@@ -1012,7 +1015,7 @@ extension PromotionDetailViewController {
                            toItem: self.containerView,
                            attribute: .bottom,
                            multiplier: 1,
-                           constant: -20)
+                           constant: 0)
         self.termsContainerBottomConstraint.isActive = false
 
         self.termsViewBottomConstraint =
