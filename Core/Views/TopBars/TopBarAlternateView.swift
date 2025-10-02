@@ -300,7 +300,8 @@ class TopBarView: UIView {
     }
 
     @objc private func didTapReplayBaseView() {
-        self.shouldShowReplay?()
+        // TODO: Enable later for betsson credits promotion page
+//        self.shouldShowReplay?()
     }
 
 }
