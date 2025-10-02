@@ -60,7 +60,6 @@ public class VideoSectionView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        self.videoContainerView.layer.cornerRadius = 8 // Using fixed corner radius for now
         self.playerLayer?.frame = self.videoContainerView.bounds
     }
     

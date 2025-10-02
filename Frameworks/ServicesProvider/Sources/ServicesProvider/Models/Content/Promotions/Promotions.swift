@@ -149,12 +149,14 @@ public struct BannerBlock: Codable {
     public let bannerType: BannerPromoType?
     public let bannerLinkTarget: String?
     public let imageUrl: String?
+    public let videoUrl: String?
     
     enum CodingKeys: String, CodingKey {
         case bannerLinkUrl = "banner_link_url"
         case bannerType = "banner_type"
         case bannerLinkTarget = "banner_link_target"
         case imageUrl = "image_url"
+        case videoUrl = "video_url"
     }
 }
 

@@ -25,6 +25,7 @@ public class MockPromotionCardViewModel: PromotionCardViewModelProtocol {
     // MARK: - Callbacks
     public var onCTATapped: ((String) -> Void)?
     public var onReadMoreTapped: (() -> Void)?
+    public var onCardTapped: (() -> Void)?
     
     // MARK: - Initialization
     public init(cardData: PromotionCardData) {
@@ -75,6 +76,14 @@ public class MockPromotionCardViewModel: PromotionCardViewModelProtocol {
         // Call external callback if set
         onReadMoreTapped?()
         
+    }
+    
+    public func didTapCard() {
+        let currentState = displayStateSubject.value
+        print("Mock PromotionCardViewModel: Card tapped for promotion '\(currentState.title)'")
+        
+        // Call external callback if set
+        onCardTapped?()
     }
     
     // MARK: - Configuration

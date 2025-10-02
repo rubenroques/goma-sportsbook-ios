@@ -293,7 +293,8 @@ extension GomaModelMapper {
             bannerLinkUrl: banner.bannerLinkUrl,
             bannerType: BannerPromoType(rawValue: banner.bannerType),
             bannerLinkTarget: banner.bannerLinkTarget,
-            imageUrl: banner.imageUrl
+            imageUrl: banner.imageUrl,
+            videoUrl: banner.videoUrl
         )
     }
 

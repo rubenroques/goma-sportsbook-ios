@@ -81,10 +81,6 @@ class PromotionsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if self.isRootModal {
-            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
-        }
-        
     }
     
     // MARK: - Layout and Theme
@@ -219,6 +215,10 @@ extension PromotionsViewController {
                 mockCardViewModel.onReadMoreTapped = { [weak self] in
                     self?.openPromotionDetail(promotion: promotion)
                 }
+                
+                mockCardViewModel.onCardTapped = { [weak self] in
+                    self?.openPromotionDetail(promotion: promotion)
+                }
             }
             
             let cardView = PromotionCardView(viewModel: cardViewModel)
@@ -267,7 +267,8 @@ extension PromotionsViewController {
     private static func createBackButton() -> UIButton {
         let backButton = UIButton()
         backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+        backButton.setImage(UIImage(named: "arrow_back_icon")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        backButton.tintColor = StyleProvider.Color.iconPrimary
         backButton.setTitle(nil, for: .normal)
         return backButton
     }

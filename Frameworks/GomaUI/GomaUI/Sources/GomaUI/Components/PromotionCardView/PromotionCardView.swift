@@ -183,7 +183,18 @@ extension PromotionCardView {
         self.contentStackView.addArrangedSubview(self.ctaButton)
         self.contentStackView.addArrangedSubview(self.readMoreButton)
         
+        self.setupTapGesture()
         self.initConstraints()
+    }
+    
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCardTap))
+        self.containerView.addGestureRecognizer(tapGesture)
+        self.containerView.isUserInteractionEnabled = true
+    }
+    
+    @objc private func handleCardTap() {
+        self.viewModel.didTapCard()
     }
     
     private func initConstraints() {

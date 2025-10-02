@@ -11,62 +11,18 @@ import ServicesProvider
 import GomaUI
 import Kingfisher
 
-class PromotionDetailViewModel {
-    
-    var promotion: PromotionInfo
-    
-    var promotionDetailsPublisher: CurrentValueSubject<PromotionInfo?, Never> = .init(nil)
-    
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    
-    var cancellables = Set<AnyCancellable>()
-    
-    private let servicesProvider: ServicesProvider.Client
-    
-    init(promotion: PromotionInfo, servicesProvider: ServicesProvider.Client) {
-        self.promotion = promotion
-        self.servicesProvider = servicesProvider
-        
-        self.getPromotionDetails()
-    }
-    
-    private func getPromotionDetails() {
-        self.isLoadingPublisher.send(true)
-        
-        if let staticPageSlug = promotion.staticPageSlug {
-            servicesProvider.getPromotionDetails(promotionSlug: self.promotion.slug, staticPageSlug: staticPageSlug)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    
-                    switch completion {
-                    case .finished:
-                        print("FINISHED GET PROMOTION DETAILS")
-                    case .failure(let error):
-                        print("ERROR GET PROMOTION DETAILS: \(error)")
-                    }
-                    
-                    self?.isLoadingPublisher.send(false)
-
-                }, receiveValue: { [weak self] promotionsInfo in
-                    
-                    self?.promotionDetailsPublisher.send(promotionsInfo)
-                                        
-                })
-                .store(in: &cancellables)
-        }
-    }
-}
-
 class PromotionDetailViewController: UIViewController {
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var backLabel: UILabel = Self.createBackLabel()
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var gradientHeaderView: GradientHeaderView = Self.createGradientHeaderView()
     private lazy var headerImageView: UIImageView = Self.createHeaderImageView()
+    private lazy var headerGradientView: UIView = Self.createHeaderGradientView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var stackView: UIStackView = Self.createStackView()
     private lazy var termsContainerView: UIView = Self.createTermsContainerView()
@@ -119,7 +75,11 @@ class PromotionDetailViewController: UIViewController {
                 })
                 self.termsViewBottomConstraint.isActive = false
                 self.termsDescriptionLabelBottomConstraint.isActive = true
-
+                
+                // Scroll to bottom when terms are expanded
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    self.scrollToBottom()
+                }
             }
         }
     }
@@ -170,22 +130,22 @@ class PromotionDetailViewController: UIViewController {
     private func setupWithTheme() {
 
         self.view.backgroundColor = StyleProvider.Color.highlightPrimaryContrast
-        
+
         self.topSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
         self.bottomSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
 
         self.navigationView.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-        self.titleLabel.textColor = StyleProvider.Color.allWhite
+        self.titleLabel.textColor = StyleProvider.Color.highlightSecondaryContrast
 
         self.headerImageView.backgroundColor = .clear
         
         self.stackView.backgroundColor = .clear
         
         self.termsContainerView.backgroundColor = StyleProvider.Color.backgroundTertiary
-        
-        self.emptyStateBaseView.backgroundColor = StyleProvider.Color.backgroundTertiary
 
+        self.emptyStateBaseView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        
         self.emptyStateLabel.textColor = StyleProvider.Color.textPrimary
         
         self.loadingBaseView.backgroundColor = StyleProvider.Color.backgroundPrimary
@@ -443,7 +403,7 @@ class PromotionDetailViewController: UIViewController {
                         stackView.addArrangedSubview(imageSectionView)
                     }
                     else if listBlock.bannerType == .video {
-                        let mockViewModel = MockVideoSectionViewModel(videoURL: URL(string: listBlock.bannerLinkUrl ?? ""))
+                        let mockViewModel = MockVideoSectionViewModel(videoURL: URL(string: listBlock.videoUrl ?? ""))
                         let videoSectionView = VideoSectionView(viewModel: mockViewModel)
                         videoSectionView.translatesAutoresizingMaskIntoConstraints = false
                         
@@ -699,16 +659,28 @@ extension PromotionDetailViewController {
     }
 
     private static func createBackButton() -> UIButton {
-        let backButton = UIButton.init(type: .custom)
-        backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
-        backButton.setTitle(nil, for: .normal)
+        let backButton = UIButton()
         backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.setImage(UIImage(named: "arrow_back_icon")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        backButton.tintColor = StyleProvider.Color.iconPrimary
+        backButton.setTitle(nil, for: .normal)
         return backButton
+    }
+    
+    private static func createBackLabel() -> UILabel {
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.font = AppFont.with(type: .bold, size: 12)
+        titleLabel.textAlignment = .left
+        titleLabel.text = localized("back")
+        return titleLabel
     }
     
     private static func createScrollView() -> UIScrollView {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.bounces = false
+        scrollView.alwaysBounceVertical = false
         return scrollView
 
     }
@@ -731,7 +703,29 @@ extension PromotionDetailViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = nil
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
+    }
+    
+    private static func createHeaderGradientView() -> UIView {
+        let gradientView = UIView()
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
+        gradientView.backgroundColor = .clear
+        
+        // Create gradient layer
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [
+            StyleProvider.Color.highlightPrimaryContrast.cgColor,
+            StyleProvider.Color.highlightPrimaryContrast.withAlphaComponent(0.0).cgColor
+        ]
+        gradientLayer.locations = [0.0, 1.0]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0) // Bottom
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0)   // Top
+        
+        gradientView.layer.addSublayer(gradientLayer)
+        gradientView.tag = 999 // Tag to find the gradient layer later for updates
+        
+        return gradientView
     }
     
     private static func createStackView() -> UIStackView {
@@ -850,6 +844,7 @@ extension PromotionDetailViewController {
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationView)
         self.navigationView.addSubview(self.backButton)
+        self.navigationView.addSubview(self.backLabel)
         
         self.view.addSubview(self.scrollView)
 
@@ -857,9 +852,10 @@ extension PromotionDetailViewController {
         
         self.containerView.addSubview(self.gradientHeaderView)
         self.containerView.addSubview(self.headerImageView)
+        self.headerImageView.addSubview(self.headerGradientView)
         
         self.headerImageView.addSubview(self.titleLabel)
-
+        
         self.containerView.addSubview(self.stackView)
         
         self.containerView.addSubview(self.termsContainerView)
@@ -907,10 +903,14 @@ extension PromotionDetailViewController {
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
+            self.backButton.heightAnchor.constraint(equalToConstant: 40),
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
-            self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            
+            self.backLabel.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 2),
+            self.backLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -16),
+            self.backLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             
             self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -935,6 +935,11 @@ extension PromotionDetailViewController {
             self.headerImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.headerImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.headerImageView.heightAnchor.constraint(equalToConstant: 257),
+            
+            self.headerGradientView.leadingAnchor.constraint(equalTo: self.headerImageView.leadingAnchor),
+            self.headerGradientView.trailingAnchor.constraint(equalTo: self.headerImageView.trailingAnchor),
+            self.headerGradientView.topAnchor.constraint(equalTo: self.headerImageView.topAnchor),
+            self.headerGradientView.bottomAnchor.constraint(equalTo: self.headerImageView.bottomAnchor),
             
             self.titleLabel.leadingAnchor.constraint(equalTo: self.headerImageView.leadingAnchor, constant: 32),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.headerImageView.trailingAnchor, constant: -32),
@@ -1037,6 +1042,29 @@ extension PromotionDetailViewController {
                            multiplier: 1,
                            constant: 0)
         self.termsDescriptionLabelBottomConstraint.isActive = false
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // Update gradient layer frame
+        self.updateHeaderGradientFrame()
+    }
+    
+    private func updateHeaderGradientFrame() {
+        guard let gradientLayer = self.headerGradientView.layer.sublayers?.first(where: { $0 is CAGradientLayer }) as? CAGradientLayer else {
+            return
+        }
+        
+        gradientLayer.frame = self.headerGradientView.bounds
+    }
+    
+    private func scrollToBottom() {
+        let bottomOffset = CGPoint(x: 0, y: self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom)
+        
+        if bottomOffset.y > 0 {
+            self.scrollView.setContentOffset(bottomOffset, animated: true)
+        }
     }
 
 }

@@ -662,6 +662,56 @@ class MainTabBarCoordinator: Coordinator {
         mainTabBarViewController?.showSearchScreen(with: dummyViewController)
     }
     
+    private func showPromotionsScreen() {
+        // Create PromotionsViewModel
+        let promotionsViewModel = PromotionsViewModel(servicesProvider: environment.servicesProvider)
+        
+        // Create PromotionsViewController
+        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
+        
+        // Setup ViewModel callbacks
+        promotionsViewModel.onDismiss = { [weak self] in
+            self?.navigationController.popViewController(animated: true)
+        }
+        
+        // Create TopBar ViewModel (handles all business logic)
+        let topBarViewModel = TopBarContainerViewModel(
+            userSessionStore: environment.userSessionStore
+        )
+
+        // Wrap in TopBarContainerController
+        let container = TopBarContainerController(
+            contentViewController: promotionsViewController,
+            viewModel: topBarViewModel
+        )
+
+        // Setup navigation callbacks on container
+        container.onLoginRequested = { [weak self] in
+            self?.showLogin()
+        }
+
+        container.onRegistrationRequested = { [weak self] in
+            self?.showRegistration()
+        }
+
+        container.onProfileRequested = { [weak self] in
+            self?.showProfile()
+        }
+
+        container.onDepositRequested = { [weak self] in
+            self?.presentDepositFlow()
+        }
+
+        container.onWithdrawRequested = { [weak self] in
+            self?.presentWithdrawFlow()
+        }
+        
+        // Push the container using navigation stack
+        navigationController.pushViewController(container, animated: true)
+        
+        print("🚀 MainTabBarCoordinator: Presented promotions screen")
+    }
+    
     private func showCasinoHomeScreen() {
         // Lazy loading: only create coordinator when needed
         if casinoCoordinator == nil {
@@ -765,7 +815,7 @@ class MainTabBarCoordinator: Coordinator {
         case .crash:
             self.showCasinoHomeScreen()
         case .promos:
-            self.showCasinoHomeScreen()
+            self.showPromotionsScreen()
         default:
             break
         }

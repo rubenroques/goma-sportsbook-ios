@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Chevron-up.png",
+      "filename" : "icon down.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Chevron-up@2x.png",
+      "filename" : "icon down@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Chevron-up@3x.png",
+      "filename" : "icon down@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

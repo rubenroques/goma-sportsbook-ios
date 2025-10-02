@@ -13,6 +13,10 @@ public class ImageSectionView: UIView {
     private lazy var imageView: UIImageView = Self.createImageView()
     private let viewModel: ImageSectionViewModelProtocol
     
+    // MARK: - Aspect Ratio Properties
+    private var aspectRatio: CGFloat = 1.0
+    private var dynamicHeightConstraint: NSLayoutConstraint?
+    
     // MARK: - Lifetime and Cycle
     public init(viewModel: ImageSectionViewModelProtocol) {
         self.viewModel = viewModel
@@ -32,7 +36,6 @@ public class ImageSectionView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        self.imageView.layer.cornerRadius = 8 // Using fixed corner radius for now
     }
     
     func setupWithTheme() {
@@ -43,12 +46,41 @@ public class ImageSectionView: UIView {
     // MARK: Functions
     private func configure() {
         if let imageUrl = URL(string: self.viewModel.imageUrl) {
-            // Note: In a real implementation, you would use an image loading library like Kingfisher
-            // For now, we'll set a placeholder or system image
-            self.imageView.image = UIImage(systemName: "photo")
-        } else {
-            self.imageView.image = UIImage(systemName: "photo")
+            self.imageView.kf.setImage(with: imageUrl) { [weak self] result in
+                switch result {
+                case .success(let value):
+                    DispatchQueue.main.async {
+                        self?.resizeImageView(with: value.image)
+                    }
+                case .failure(let error):
+                    print("Failed to load image: \(error)")
+                }
+            }
         }
+    }
+    
+    private func resizeImageView(with image: UIImage) {
+        // Calculate aspect ratio
+        self.aspectRatio = image.size.width / image.size.height
+        
+        // Deactivate existing dynamic height constraint if it exists
+        self.dynamicHeightConstraint?.isActive = false
+        
+        // Create new dynamic height constraint based on aspect ratio
+        self.dynamicHeightConstraint = NSLayoutConstraint(
+            item: self.imageView,
+            attribute: .height,
+            relatedBy: .equal,
+            toItem: self.imageView,
+            attribute: .width,
+            multiplier: 1 / self.aspectRatio,
+            constant: 0
+        )
+        
+        self.dynamicHeightConstraint?.isActive = true
+        
+        // Force layout update
+        self.layoutIfNeeded()
     }
 }
 

@@ -74,6 +74,7 @@ public protocol PromotionCardViewModelProtocol {
     /// Actions
     func didTapCTAButton()
     func didTapReadMoreButton()
+    func didTapCard()
     
     /// Configuration
     func configure(with cardData: PromotionCardData)
