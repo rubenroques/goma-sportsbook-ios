@@ -66,13 +66,17 @@ public struct MarketOutcomesMultiLineDisplayState: Equatable {
 
 // MARK: - View Model Protocol
 public protocol MarketOutcomesMultiLineViewModelProtocol {
-    // MARK: - Line View Models (Simple Aggregation)
-    /// Publisher that emits the array of line view models
-    var lineViewModelsPublisher: AnyPublisher<[MarketOutcomesLineViewModelProtocol], Never> { get }
-    
-    /// Direct access to current line view models
+    // MARK: - Current Values (Synchronous Access for TableView)
+    /// Direct access to current line view models - synchronous for proper UITableView sizing
     var lineViewModels: [MarketOutcomesLineViewModelProtocol] { get }
-    
-    /// Simple display state (title, count)
+
+    /// Direct access to current display state - synchronous for proper UITableView sizing
+    var currentDisplayState: MarketOutcomesMultiLineDisplayState { get }
+
+    // MARK: - Publishers (Asynchronous Updates)
+    /// Publisher that emits the array of line view models for real-time updates
+    var lineViewModelsPublisher: AnyPublisher<[MarketOutcomesLineViewModelProtocol], Never> { get }
+
+    /// Publisher for display state updates (title, count, empty state)
     var displayStatePublisher: AnyPublisher<MarketOutcomesMultiLineDisplayState, Never> { get }
 } 

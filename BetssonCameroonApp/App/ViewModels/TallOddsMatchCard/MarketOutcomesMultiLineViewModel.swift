@@ -9,14 +9,20 @@ final class MarketOutcomesMultiLineViewModel: MarketOutcomesMultiLineViewModelPr
     private let displayStateSubject: CurrentValueSubject<MarketOutcomesMultiLineDisplayState, Never>
     
     // MARK: - Protocol Conformance
-    public var lineViewModelsPublisher: AnyPublisher<[MarketOutcomesLineViewModelProtocol], Never> {
-        lineViewModelsSubject.eraseToAnyPublisher()
-    }
-    
+    // Current Values (Synchronous Access)
     public var lineViewModels: [MarketOutcomesLineViewModelProtocol] {
         lineViewModelsSubject.value
     }
-    
+
+    public var currentDisplayState: MarketOutcomesMultiLineDisplayState {
+        displayStateSubject.value
+    }
+
+    // Publishers (Asynchronous Updates)
+    public var lineViewModelsPublisher: AnyPublisher<[MarketOutcomesLineViewModelProtocol], Never> {
+        lineViewModelsSubject.eraseToAnyPublisher()
+    }
+
     public var displayStatePublisher: AnyPublisher<MarketOutcomesMultiLineDisplayState, Never> {
         displayStateSubject.eraseToAnyPublisher()
     }

@@ -61,16 +61,23 @@ public struct TallOddsMatchCardDisplayState: Equatable {
 
 // MARK: - View Model Protocol
 public protocol TallOddsMatchCardViewModelProtocol {
-    // Main display state
+    // MARK: - Current Values (Synchronous Access for TableView)
+    // These provide immediate data access for UITableView sizing
+    var currentDisplayState: TallOddsMatchCardDisplayState { get }
+    var currentMatchHeaderViewModel: MatchHeaderViewModelProtocol { get }
+    var currentMarketInfoLineViewModel: MarketInfoLineViewModelProtocol { get }
+    var currentMarketOutcomesViewModel: MarketOutcomesMultiLineViewModelProtocol { get }
+    var currentScoreViewModel: ScoreViewModelProtocol? { get }
+
+    // MARK: - Publishers (Asynchronous Updates)
+    // These provide reactive updates for real-time changes
     var displayStatePublisher: AnyPublisher<TallOddsMatchCardDisplayState, Never> { get }
-    
-    // Child view model publishers
     var matchHeaderViewModelPublisher: AnyPublisher<MatchHeaderViewModelProtocol, Never> { get }
     var marketInfoLineViewModelPublisher: AnyPublisher<MarketInfoLineViewModelProtocol, Never> { get }
     var marketOutcomesViewModelPublisher: AnyPublisher<MarketOutcomesMultiLineViewModelProtocol, Never> { get }
     var scoreViewModelPublisher: AnyPublisher<ScoreViewModelProtocol?, Never> { get }
-    
-    // Action handlers
+
+    // MARK: - Action Handlers
     func onMatchHeaderAction()
     func onFavoriteToggle()
     func onOutcomeSelected(outcomeId: String)

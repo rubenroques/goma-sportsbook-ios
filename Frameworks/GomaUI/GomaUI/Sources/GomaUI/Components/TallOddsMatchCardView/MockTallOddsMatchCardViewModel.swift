@@ -10,22 +10,44 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
     private let marketOutcomesViewModelSubject: CurrentValueSubject<MarketOutcomesMultiLineViewModelProtocol, Never>
     private let scoreViewModelSubject: CurrentValueSubject<ScoreViewModelProtocol?, Never>
     
+    // MARK: - Current Values (Synchronous Access for TableView)
+    public var currentDisplayState: TallOddsMatchCardDisplayState {
+        return displayStateSubject.value
+    }
+
+    public var currentMatchHeaderViewModel: MatchHeaderViewModelProtocol {
+        return matchHeaderViewModelSubject.value
+    }
+
+    public var currentMarketInfoLineViewModel: MarketInfoLineViewModelProtocol {
+        return marketInfoLineViewModelSubject.value
+    }
+
+    public var currentMarketOutcomesViewModel: MarketOutcomesMultiLineViewModelProtocol {
+        return marketOutcomesViewModelSubject.value
+    }
+
+    public var currentScoreViewModel: ScoreViewModelProtocol? {
+        return scoreViewModelSubject.value
+    }
+
+    // MARK: - Publishers (Asynchronous Updates)
     public var displayStatePublisher: AnyPublisher<TallOddsMatchCardDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
     }
-    
+
     public var matchHeaderViewModelPublisher: AnyPublisher<MatchHeaderViewModelProtocol, Never> {
         return matchHeaderViewModelSubject.eraseToAnyPublisher()
     }
-    
+
     public var marketInfoLineViewModelPublisher: AnyPublisher<MarketInfoLineViewModelProtocol, Never> {
         return marketInfoLineViewModelSubject.eraseToAnyPublisher()
     }
-    
+
     public var marketOutcomesViewModelPublisher: AnyPublisher<MarketOutcomesMultiLineViewModelProtocol, Never> {
         return marketOutcomesViewModelSubject.eraseToAnyPublisher()
     }
-    
+
     public var scoreViewModelPublisher: AnyPublisher<ScoreViewModelProtocol?, Never> {
         return scoreViewModelSubject.eraseToAnyPublisher()
     }

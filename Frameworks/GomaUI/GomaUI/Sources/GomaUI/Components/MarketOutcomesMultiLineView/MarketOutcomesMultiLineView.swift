@@ -52,28 +52,46 @@ final public class MarketOutcomesMultiLineView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupSubviews()
+
+        // ✅ CRITICAL: Configure immediately with current data (synchronous for UITableView sizing)
+        configureImmediately(with: viewModel)
+
+        // Subscribe to updates for real-time changes (asynchronous)
         setupBindings()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Configuration
     /// Configures the view with a new view model for efficient reuse
     public func configure(with newViewModel: MarketOutcomesMultiLineViewModelProtocol) {
         // Clear previous bindings
         cancellables.removeAll()
-        
+
         // Clear all line views
         lineViews.forEach { $0.removeFromSuperview() }
         lineViews.removeAll()
-        
+
         // Update view model reference
         self.viewModel = newViewModel
-        
-        // Re-establish bindings with new view model
+
+        // ✅ CRITICAL: Configure immediately with current data (synchronous for UITableView sizing)
+        configureImmediately(with: newViewModel)
+
+        // Subscribe to updates for real-time changes (asynchronous)
         setupBindings()
+    }
+
+    /// Immediately configure the view with current data from view model
+    /// This is synchronous and required for proper UITableView automatic dimension calculation
+    private func configureImmediately(with viewModel: MarketOutcomesMultiLineViewModelProtocol) {
+        // Update display state immediately
+        updateDisplayState(viewModel.currentDisplayState)
+
+        // Update line views immediately with current data
+        updateLineViews(with: viewModel.lineViewModels)
     }
 
     // MARK: - Setup
@@ -169,7 +187,9 @@ final public class MarketOutcomesMultiLineView: UIView {
 
     private func setupBindings() {
         // Line view models binding (main aggregation)
+        // Use dropFirst() since we already configured with current value
         viewModel.lineViewModelsPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] lineViewModels in
                 self?.updateLineViews(with: lineViewModels)
@@ -177,7 +197,9 @@ final public class MarketOutcomesMultiLineView: UIView {
             .store(in: &cancellables)
 
         // Display state binding (title, loading, etc.)
+        // Use dropFirst() since we already configured with current value
         viewModel.displayStatePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
                 self?.updateDisplayState(displayState)

@@ -25,7 +25,7 @@ final public class TallOddsMatchCardView: UIView {
 
     // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
-    private var viewModel: TallOddsMatchCardViewModelProtocol
+    private var viewModel: TallOddsMatchCardViewModelProtocol?
 
     // MARK: - Public Properties
     public var onMatchHeaderTapped: (() -> Void) = {}
@@ -37,16 +37,23 @@ final public class TallOddsMatchCardView: UIView {
     // MARK: - Private Properties
     private let imageResolver: MatchHeaderImageResolver
     private let customBackgroundColor: UIColor?
-    
+
     // MARK: - Initialization
-    public init(viewModel: TallOddsMatchCardViewModelProtocol, imageResolver: MatchHeaderImageResolver = DefaultMatchHeaderImageResolver(),
+    public init(viewModel: TallOddsMatchCardViewModelProtocol? = nil, imageResolver: MatchHeaderImageResolver = DefaultMatchHeaderImageResolver(),
                 customBackgroundColor: UIColor? = nil) {
         self.viewModel = viewModel
         self.imageResolver = imageResolver
         self.customBackgroundColor = customBackgroundColor
         super.init(frame: .zero)
         setupSubviews()
-        setupBindings()
+
+        if let viewModel {
+            // ✅ CRITICAL: Configure immediately with current data (synchronous for UITableView sizing)
+            configureImmediately(with: viewModel)
+
+            // Subscribe to updates for real-time changes (asynchronous)
+            setupBindings()
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -55,15 +62,38 @@ final public class TallOddsMatchCardView: UIView {
 
     // MARK: - Reconfiguration
     /// Configures the view with a new view model for efficient reuse
-    public func configure(with newViewModel: TallOddsMatchCardViewModelProtocol) {
+    /// Pass nil to reset the view to empty state
+    public func configure(with newViewModel: TallOddsMatchCardViewModelProtocol?) {
         // Clear previous bindings
-        prepareForReuse()
+        cancellables.removeAll()
 
         // Update view model reference
         self.viewModel = newViewModel
 
-        // Re-establish bindings with new view model
-        setupBindings()
+        // Reset to empty state
+        resetChildViewsState()
+
+        // If we have a view model, configure immediately with current data
+        if let viewModel = newViewModel {
+            // ✅ CRITICAL: Configure immediately with current data (synchronous for UITableView sizing)
+            configureImmediately(with: viewModel)
+
+            // Subscribe to updates for real-time changes (asynchronous)
+            setupBindings()
+        }
+    }
+
+    /// Immediately configure the view with current data from view model
+    /// This is synchronous and required for proper UITableView automatic dimension calculation
+    private func configureImmediately(with viewModel: TallOddsMatchCardViewModelProtocol) {
+        // Update display state immediately
+        self.render(state: viewModel.currentDisplayState)
+
+        // Update child views immediately with current data
+        self.updateMatchHeaderView(with: viewModel.currentMatchHeaderViewModel)
+        self.updateMarketInfoLineView(with: viewModel.currentMarketInfoLineViewModel)
+        self.updateMarketOutcomesView(with: viewModel.currentMarketOutcomesViewModel)
+        self.updateScoreView(with: viewModel.currentScoreViewModel)
     }
 
     /// Prepares the view for reuse by clearing reactive bindings and resetting state
@@ -100,8 +130,12 @@ final public class TallOddsMatchCardView: UIView {
 extension TallOddsMatchCardView {
 
     private func setupBindings() {
+        guard let viewModel else { return }
+
         // Bind to display state
+        // Use dropFirst() since we already configured with current value
         viewModel.displayStatePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
                 self?.render(state: displayState)
@@ -113,8 +147,12 @@ extension TallOddsMatchCardView {
     }
 
     private func setupChildViewModelBindings() {
+        guard let viewModel else { return }
+
         // Match Header View Model
+        // Use dropFirst() since we already configured with current value
         viewModel.matchHeaderViewModelPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] headerViewModel in
                 self?.updateMatchHeaderView(with: headerViewModel)
@@ -122,7 +160,9 @@ extension TallOddsMatchCardView {
             .store(in: &cancellables)
 
         // Market Info Line View Model
+        // Use dropFirst() since we already configured with current value
         viewModel.marketInfoLineViewModelPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] marketInfoViewModel in
                 self?.updateMarketInfoLineView(with: marketInfoViewModel)
@@ -130,7 +170,9 @@ extension TallOddsMatchCardView {
             .store(in: &cancellables)
 
         // Market Outcomes View Model
+        // Use dropFirst() since we already configured with current value
         viewModel.marketOutcomesViewModelPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] outcomesViewModel in
                 self?.updateMarketOutcomesView(with: outcomesViewModel)
@@ -138,7 +180,9 @@ extension TallOddsMatchCardView {
             .store(in: &cancellables)
 
         // Score View Model
+        // Use dropFirst() since we already configured with current value
         viewModel.scoreViewModelPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] scoreViewModel in
                 self?.updateScoreView(with: scoreViewModel)
@@ -192,12 +236,12 @@ extension TallOddsMatchCardView {
     // MARK: - Actions
     @objc private func matchHeaderTapped() {
         onMatchHeaderTapped()
-        viewModel.onMatchHeaderAction()
+        viewModel?.onMatchHeaderAction()
     }
     
     @objc private func cardTapped() {
         onCardTapped()
-        viewModel.onCardTapped()
+        viewModel?.onCardTapped()
     }
 
 }
@@ -318,11 +362,11 @@ extension TallOddsMatchCardView {
         // Setup market outcomes callback
         marketOutcomesView.onOutcomeSelected = { [weak self] outcomeId, outcomeType in
             self?.onOutcomeSelected(outcomeId)
-            self?.viewModel.onOutcomeSelected(outcomeId: outcomeId)
+            self?.viewModel?.onOutcomeSelected(outcomeId: outcomeId)
         }
         
         marketOutcomesView.onOutcomeDeselected = { [weak self] outcomeId, outcomeType in
-            self?.viewModel.onOutcomeDeselected(outcomeId: outcomeId)
+            self?.viewModel?.onOutcomeDeselected(outcomeId: outcomeId)
         }
     }
 

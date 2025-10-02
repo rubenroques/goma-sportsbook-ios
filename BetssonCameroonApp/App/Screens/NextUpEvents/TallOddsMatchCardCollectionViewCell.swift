@@ -43,7 +43,6 @@ final class TallOddsMatchCardCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Setup
     private func setupCell() {
-        // Debug colors to identify layout issues
         contentView.backgroundColor = UIColor.App.backgroundCards
         backgroundColor = UIColor.App.backgroundPrimary
     }

@@ -8,10 +8,9 @@ class MarketGroupCardsViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: MarketGroupCardsViewModel
 
-    private let collectionView: UICollectionView
-    private var dataSource: UICollectionViewDiffableDataSource<Section, CollectionViewItem>?
+    private let tableView: UITableView
     private var cancellables = Set<AnyCancellable>()
-    
+
     // MARK: - Scroll Tracking
     weak var scrollDelegate: MarketGroupCardsScrollDelegate?
     weak var scrollSyncDelegate: ScrollSyncDelegate?
@@ -19,33 +18,26 @@ class MarketGroupCardsViewController: UIViewController {
     // MARK: - Card Tap Callback
     var onCardTapped: ((Match) -> Void)?
 
-    // MARK: - Load More Callback (NEW)
+    // MARK: - Load More Callback
     var onLoadMoreTapped: (() -> Void)?
 
     // MARK: - ComplexScroll Properties
     private var isReceivingSync = false
 
-    enum Section: String, CaseIterable {
-        case matchCards
-        case loadMoreButton
-        case footer
+    enum Section: Int, CaseIterable {
+        case matchCards = 0
+        case loadMoreButton = 1
+        case footer = 2
     }
 
-    enum CollectionViewItem: Hashable {
-        case matchCard(MatchCardData)
-        case loadMoreButton
-        case footer
-    }
 
     // MARK: - Initialization
     init(viewModel: MarketGroupCardsViewModel) {
         self.viewModel = viewModel
 
-        // Create collection view with list-like layout
-        let layout = Self.createCollectionViewLayout()
-        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+        self.tableView = UITableView(frame: .zero, style: .plain)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -60,148 +52,171 @@ class MarketGroupCardsViewController: UIViewController {
         
         self.setupViews()
         self.configureDataSource()
-        self.setupScrollDelegate()
         self.bindToViewModel()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        // Force collection view to recalculate layout
-        collectionView.collectionViewLayout.invalidateLayout()
+        tableView.reloadData()
     }
 
     // MARK: - Setup
     private func setupViews() {
-        
-        let appliedColor = UIColor.clear // UIColor.App.backgroundPrimary
-        
+
+        let appliedColor = UIColor.clear
+
         view.backgroundColor = appliedColor
-        
-        collectionView.backgroundColor = appliedColor
-        collectionView.backgroundView?.backgroundColor = appliedColor
-        
-        view.addSubview(collectionView)
+
+        tableView.backgroundColor = appliedColor
+        tableView.backgroundView?.backgroundColor = appliedColor
+        tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 180
+
+        view.addSubview(tableView)
 
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
-    private static func createCollectionViewLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { sectionIndex, _ in
-            let section = Section.allCases[sectionIndex]
+    private func configureDataSource() {
+        tableView.register(
+            TallOddsMatchCardTableViewCell.self,
+            forCellReuseIdentifier: TallOddsMatchCardTableViewCell.identifier
+        )
+        tableView.register(
+            SeeMoreButtonTableViewCell.self,
+            forCellReuseIdentifier: SeeMoreButtonTableViewCell.identifier
+        )
+        tableView.register(
+            FooterTableViewCell.self,
+            forCellReuseIdentifier: FooterTableViewCell.identifier
+        )
 
-            switch section {
-            case .matchCards:
-                // Dynamic height for match cards
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(180) // Estimated height - Auto Layout will determine actual size
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
 
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(180) // Estimated height - Auto Layout will determine actual size
-                )
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 1.5
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
-                return section
-
-            case .loadMoreButton:
-                // Full width button, fixed height
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(60)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(60)
-                )
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
-                return section
-
-            case .footer:
-                // Full width footer, fixed height
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(80)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(80)
-                )
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-                return section
+    // MARK: - ViewModel Binding
+    private func bindToViewModel() {
+        viewModel.$matchCardsData
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] matchCardsData in
+                print("[MarketGroupCardsVC] 📥 VIEWMODEL UPDATE RECEIVED - \(matchCardsData.count) matches")
+                self?.tableView.reloadData()
             }
+            .store(in: &cancellables)
+
+        viewModel.$hasMoreEvents
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] hasMore in
+                print("[MarketGroupCardsVC] 📥 hasMoreEvents changed: \(hasMore)")
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+
+        viewModel.$isLoadingMore
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                print("[MarketGroupCardsVC] 📥 isLoadingMore changed: \(isLoading)")
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+    }
+
+    func getCurrentScrollPosition() -> CGPoint {
+        return tableView.contentOffset
+    }
+
+    // MARK: - ComplexScroll Content Inset Management
+    func updateContentInset(headerHeight: CGFloat) {
+        let wasAtTop = tableView.contentOffset.y <= -tableView.contentInset.top + 10
+
+        tableView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 54, right: 0)
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: 60, right: 0)
+
+        tableView.contentOffset = CGPoint(x: 0, y: -headerHeight)
+
+        if wasAtTop {
+            tableView.contentOffset = CGPoint(x: 0, y: -headerHeight)
         }
     }
 
-    private func configureDataSource() {
-        // Register the custom cells
-        collectionView.register(
-            TallOddsMatchCardCollectionViewCell.self,
-            forCellWithReuseIdentifier: TallOddsMatchCardCollectionViewCell.identifier
-        )
-        collectionView.register(
-            SeeMoreButtonCollectionViewCell.self,
-            forCellWithReuseIdentifier: "SeeMoreButtonCell"
-        )
-        collectionView.register(
-            FooterCollectionViewCell.self,
-            forCellWithReuseIdentifier: "FooterCell"
-        )
+    func setSyncedContentOffset(_ offset: CGPoint) {
+        isReceivingSync = true
+        tableView.contentOffset = offset
+        isReceivingSync = false
+    }
+}
 
-        // Registration for match card cells
-        let matchCardCellRegistration = UICollectionView.CellRegistration<TallOddsMatchCardCollectionViewCell, MatchCardData> { [weak self] cell, indexPath, matchCardData in
+// MARK: - UITableViewDataSource
+extension MarketGroupCardsViewController: UITableViewDataSource {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return Section.allCases.count
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let sectionType = Section(rawValue: section)
+
+        switch sectionType {
+        case .matchCards:
+            return viewModel.matchCardsData.count
+        case .loadMoreButton:
+            return (viewModel.hasMoreEvents && !viewModel.matchCardsData.isEmpty) ? 1 : 0
+        case .footer:
+            return 1
+        case .none:
+            return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let sectionType = Section(rawValue: indexPath.section)
+
+        switch sectionType {
+        case .matchCards:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: TallOddsMatchCardTableViewCell.identifier,
+                for: indexPath
+            ) as? TallOddsMatchCardTableViewCell else {
+                return UITableViewCell()
+            }
+
+            let matchCardData = viewModel.matchCardsData[indexPath.row]
             let tallOddsViewModel = matchCardData.tallOddsViewModel
-            let match = matchCardData.filteredData.match
 
             cell.configure(
                 with: tallOddsViewModel,
-                onMatchHeaderTapped: {
-                    // Handle match header tap
-                },
-                onFavoriteToggled: {
-                    // Handle favorite toggle
-                },
-                onOutcomeSelected: { outcomeId in
-                    // Handle outcome selection
-                },
-                onMarketInfoTapped: {
-                    // Handle market info tap
-                },
+                onMatchHeaderTapped: {},
+                onFavoriteToggled: {},
+                onOutcomeSelected: { _ in },
+                onMarketInfoTapped: {},
                 onCardTapped: { [weak self] in
-                    // Handle card tap - forward to parent controller
                     self?.onCardTapped?(matchCardData.filteredData.match)
                 }
             )
 
-            let sectionItemCount = self?.dataSource?.snapshot().numberOfItems(inSection: .matchCards) ?? 0
-            let isFirst = indexPath.item == 0
-            let isLast = indexPath.item == sectionItemCount - 1
+            let totalMatchCards = viewModel.matchCardsData.count
+            let isFirst = indexPath.row == 0
+            let isLast = indexPath.row == totalMatchCards - 1
             cell.configureCellPosition(isFirst: isFirst, isLast: isLast)
-        }
 
-        // Registration for load more button cell
-        let loadMoreButtonRegistration = UICollectionView.CellRegistration<SeeMoreButtonCollectionViewCell, Void> { [weak self] cell, indexPath, _ in
+            return cell
+
+        case .loadMoreButton:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: SeeMoreButtonTableViewCell.identifier,
+                for: indexPath
+            ) as? SeeMoreButtonTableViewCell else {
+                return UITableViewCell()
+            }
+
             let buttonData = SeeMoreButtonData(
                 id: "load-more-matches",
                 title: "Load More Events",
@@ -210,152 +225,125 @@ class MarketGroupCardsViewController: UIViewController {
 
             cell.configure(
                 with: buttonData,
-                isLoading: self?.viewModel.isLoadingMore ?? false,
-                isEnabled: !(self?.viewModel.isLoadingMore ?? false)
+                isLoading: viewModel.isLoadingMore,
+                isEnabled: !viewModel.isLoadingMore
             )
 
             cell.onSeeMoreTapped = { [weak self] in
                 print("[MarketGroupCardsVC] Load more button tapped")
                 self?.onLoadMoreTapped?()
             }
-        }
 
-        // Registration for footer cell
-        let footerRegistration = UICollectionView.CellRegistration<FooterCollectionViewCell, Void> { cell, indexPath, _ in
-            // Footer is already configured in cell
-        }
+            return cell
 
-        self.dataSource = UICollectionViewDiffableDataSource<Section, CollectionViewItem>(collectionView: collectionView)
-          { collectionView, indexPath, item in
-            switch item {
-            case .matchCard(let matchCardData):
-                return collectionView.dequeueConfiguredReusableCell(
-                    using: matchCardCellRegistration,
-                    for: indexPath,
-                    item: matchCardData
-                )
-            case .loadMoreButton:
-                return collectionView.dequeueConfiguredReusableCell(
-                    using: loadMoreButtonRegistration,
-                    for: indexPath,
-                    item: ()
-                )
-            case .footer:
-                return collectionView.dequeueConfiguredReusableCell(
-                    using: footerRegistration,
-                    for: indexPath,
-                    item: ()
-                )
+        case .footer:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: FooterTableViewCell.identifier,
+                for: indexPath
+            ) as? FooterTableViewCell else {
+                return UITableViewCell()
             }
+
+            return cell
+
+        case .none:
+            return UITableViewCell()
         }
-    }
-
-    private func setupScrollDelegate() {
-        collectionView.delegate = self
-    }
-
-    // MARK: - ViewModel Binding
-    private func bindToViewModel() {
-        // Bind to match card data from ViewModel
-        viewModel.$matchCardsData
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] matchCardsData in
-                print("[MarketGroupCardsVC] 📥 VIEWMODEL UPDATE RECEIVED at - \(matchCardsData.count) matches with relevantMarkets")
-                self?.updateCollectionView(with: matchCardsData)
-            }
-            .store(in: &cancellables)
-
-        // Bind to hasMoreEvents to show/hide load more button
-        viewModel.$hasMoreEvents
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] hasMore in
-                print("[MarketGroupCardsVC] 📥 hasMoreEvents changed: \(hasMore)")
-                // Trigger collection view update to show/hide button
-                if let matchCardsData = self?.viewModel.matchCardsData {
-                    self?.updateCollectionView(with: matchCardsData)
-                }
-            }
-            .store(in: &cancellables)
-
-        // Bind to isLoadingMore to update button state
-        viewModel.$isLoadingMore
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                print("[MarketGroupCardsVC] 📥 isLoadingMore changed: \(isLoading)")
-                // Reload load more section to update loading state
-                if let matchCardsData = self?.viewModel.matchCardsData {
-                    self?.updateCollectionView(with: matchCardsData)
-                }
-            }
-            .store(in: &cancellables)
-
-    }
-
-    // MARK: - UI Update Methods
-    private func updateCollectionView(with matchCardsData: [MatchCardData]) {
-        guard let dataSource = dataSource else { return }
-
-        var snapshot = NSDiffableDataSourceSnapshot<Section, CollectionViewItem>()
-
-        // Add all sections
-        snapshot.appendSections(Section.allCases)
-
-        // Section 0: Match cards - always show
-        let matchCardsItems = matchCardsData.map { CollectionViewItem.matchCard($0) }
-        snapshot.appendItems(matchCardsItems, toSection: .matchCards)
-
-        // Section 1: Load More Button - conditionally show based on hasMoreEvents
-        if viewModel.hasMoreEvents && !matchCardsData.isEmpty {
-            snapshot.appendItems([.loadMoreButton], toSection: .loadMoreButton)
-        }
-
-        // Section 2: Footer - always show
-        snapshot.appendItems([.footer], toSection: .footer)
-
-        dataSource.apply(snapshot, animatingDifferences: false, completion: { [weak self] in
-            self?.collectionView.layoutIfNeeded()
-            self?.collectionView.collectionViewLayout.invalidateLayout()
-        })
-    }
-
-    func getCurrentScrollPosition() -> CGPoint {
-        return collectionView.contentOffset
-    }
-    
-    // MARK: - ComplexScroll Content Inset Management
-    func updateContentInset(headerHeight: CGFloat) {
-        // 1. Check if user is currently viewing headers
-        let wasAtTop = collectionView.contentOffset.y <= -collectionView.contentInset.top + 10
-
-        // 2. Update insets with new header height
-        collectionView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 54, right: 0)
-        collectionView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: 60, right: 0)
-
-        collectionView.contentOffset = CGPoint(x: 0, y: -headerHeight)
-                
-        // 3. If they were viewing headers, maintain that view
-        if wasAtTop {
-            collectionView.contentOffset = CGPoint(x: 0, y: -headerHeight)
-        }
-        else {
-            // 4. If they were scrolled into content, leave them there
-        }
-    }
-
-    func setSyncedContentOffset(_ offset: CGPoint) {
-        isReceivingSync = true
-        collectionView.contentOffset = offset
-        isReceivingSync = false
     }
 }
 
-// MARK: - UICollectionViewDelegate
-extension MarketGroupCardsViewController: UICollectionViewDelegate {
+// MARK: - UITableViewDelegate
+extension MarketGroupCardsViewController: UITableViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // Only propagate scroll events if we're not receiving a sync update
         if !isReceivingSync {
             scrollSyncDelegate?.didScroll(to: scrollView.contentOffset, from: self)
         }
     }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let section = Section(rawValue: indexPath.section)
+
+        switch section {
+        case .matchCards:
+            return UITableView.automaticDimension
+        case .loadMoreButton:
+            return 60
+        case .footer:
+            return 80
+        case .none:
+            return UITableView.automaticDimension
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let sectionType = Section(rawValue: section)
+
+        switch sectionType {
+        case .matchCards:
+            return 8
+        case .loadMoreButton:
+            return 0
+        case .footer:
+            return 0
+        case .none:
+            return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        return headerView
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        let sectionType = Section(rawValue: section)
+
+        switch sectionType {
+        case .matchCards:
+            return 8
+        case .loadMoreButton:
+            return 0
+        case .footer:
+            return 0
+        case .none:
+            return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        footerView.backgroundColor = .clear
+        return footerView
+    }
+
+    /*
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let section = Section(rawValue: indexPath.section)
+
+        if section == .matchCards {
+            let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+
+            if indexPath.row < totalRows - 1 {
+                let separatorView = UIView()
+                separatorView.backgroundColor = UIColor.App.backgroundPrimary
+                separatorView.translatesAutoresizingMaskIntoConstraints = false
+                separatorView.tag = 9999
+
+                cell.contentView.subviews.first(where: { $0.tag == 9999 })?.removeFromSuperview()
+
+                cell.contentView.addSubview(separatorView)
+
+                NSLayoutConstraint.activate([
+                    separatorView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 8),
+                    separatorView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -8),
+                    separatorView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+                    separatorView.heightAnchor.constraint(equalToConstant: 1.5)
+                ])
+            }
+        }
+    }
+    */
+    
 }
