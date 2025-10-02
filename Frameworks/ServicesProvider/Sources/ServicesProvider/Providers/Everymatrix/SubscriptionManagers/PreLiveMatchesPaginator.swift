@@ -56,6 +56,10 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     private var isPaginationInProgress = false
     private var hasMoreEvents = true          // Assume true until proven otherwise
 
+    /// Subject to emit pagination response when data arrives
+    /// This allows loadNextPage() to return accurate boolean based on actual server response
+    private var paginationResponseSubject: PassthroughSubject<Bool, ServiceProviderError>?
+
     // MARK: - Initialization
     init(connector: EveryMatrixConnector,
          sportId: String,
@@ -121,6 +125,13 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
                         print("[PreLiveMatchesPaginator] Internal subscription error: \(error)")
+
+                        // Emit error to pagination subject if waiting
+                        if let paginationSubject = self?.paginationResponseSubject {
+                            paginationSubject.send(completion: .failure(error))
+                            self?.paginationResponseSubject = nil
+                        }
+
                         self?.contentSubject.send(completion: .failure(error))
                     }
                 },
@@ -168,7 +179,9 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
 
     /// Load the next page of matches
     /// Increments eventLimit and re-subscribes with new limit
-    /// Returns true if pagination started, false if no more pages available
+    /// Returns Publisher that emits true/false when data arrives (not immediately)
+    /// - true: Pagination succeeded and more events might be available
+    /// - false: End of data reached (no more events available)
     func loadNextPage() -> AnyPublisher<Bool, ServiceProviderError> {
         // Guard: Check if pagination is already in progress
         guard !isPaginationInProgress else {
@@ -195,11 +208,21 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 .eraseToAnyPublisher()
         }
 
+        // Cancel any pending pagination request
+        if let previousSubject = paginationResponseSubject {
+            previousSubject.send(completion: .finished)
+            paginationResponseSubject = nil
+        }
+
         // Calculate new limit
         let previousLimit = currentEventLimit
         let newLimit = min(currentEventLimit + eventLimitIncrement, maxEventLimit)
 
         print("[PreLiveMatchesPaginator] 📄 Loading next page: \(previousLimit) → \(newLimit) events")
+
+        // Create subject to emit response when data arrives
+        let responseSubject = PassthroughSubject<Bool, ServiceProviderError>()
+        paginationResponseSubject = responseSubject
 
         // Update state
         isPaginationInProgress = true
@@ -207,14 +230,11 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
 
         // Re-subscribe with new limit
         // This will trigger new data to flow through contentSubject
-        // The external subscription (from ViewModel) will receive the updates automatically
+        // When data arrives, handleSubscriptionContent() will emit response through responseSubject
         startInternalSubscription()
 
-        // Return success immediately
-        // Actual data will arrive via the existing subscription (contentSubject)
-        return Just(true)
-            .setFailureType(to: ServiceProviderError.self)
-            .eraseToAnyPublisher()
+        // Return subject that will emit when actual data arrives
+        return responseSubject.eraseToAnyPublisher()
     }
 
     /// Refresh the current subscription
@@ -354,6 +374,14 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             if matchCount < currentEventLimit {
                 hasMoreEvents = false
                 print("[PreLiveMatchesPaginator] 🏁 Received \(matchCount) events, less than requested \(currentEventLimit) - no more pages available")
+            }
+
+            // If this was a pagination request, send response based on actual data
+            if let paginationSubject = paginationResponseSubject {
+                print("[PreLiveMatchesPaginator] 📤 Emitting pagination response: hasMoreEvents=\(hasMoreEvents)")
+                paginationSubject.send(hasMoreEvents)  // true if more data, false if end
+                paginationSubject.send(completion: .finished)
+                paginationResponseSubject = nil
             }
 
             // Reset pagination state
