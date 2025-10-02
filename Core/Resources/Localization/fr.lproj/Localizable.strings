@@ -2123,12 +2123,12 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 
 "check_bet_result" = "J'ai tenté de pari! Si tu veux tenter ta chance toi aussi, inscris-toi avec mon lien et on empoche chacun 10€ de bonus!";
 
-"betsson_credits_mise_max" = "Crédits Betsson (mise max)";
+"betsson_credits_mise_max" = "Mes crédits (mise max)";
 "betsson_credits_dialog_info" = "Vous ne pouvez placer un pari que jusqu’au montant disponible dans un seul portefeuille. Montant max possible: {amount}";
 "betsson_credits" = "Crédits Betsson";
 "betsson_credits_used" = "Solde Crédits Betsson Utilisé";
 "betslip_credits_error" = "Solde Crédits dépassé. Max: {amount}";
-"my_credits" = "Més Crédits";
+"my_credits" = "Mes Crédits";
 "mon_solde_total" = "Mon Solde Total";
 "freebet_and_cashback" = "Freebet & Cashback";
 "free_bet_balance" = "BetBoost";

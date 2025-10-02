@@ -442,12 +442,12 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
                     //self?.oddValueLabel.text = OddConverter.stringForValue(boostedValue, format: UserDefaults.standard.userOddsFormat)
                     self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: boostedValue)
-                    self?.refreshPossibleWinnings(withFreeBetValues: shouldHighlightTextfield)
+                    self?.refreshPossibleWinnings()
                 }
                 else {
                     // self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                    self?.refreshPossibleWinnings(withFreeBetValues: shouldHighlightTextfield)
+                    self?.refreshPossibleWinnings()
                 }
 
             })
@@ -593,7 +593,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.addAmountValue(50.0)
     }
 
-    func refreshPossibleWinnings(withFreeBetValues: Bool = false) {
+    func refreshPossibleWinnings() {
 
         if let currentOddValue = currentOddValue {
 
@@ -601,7 +601,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
             var possibleWinnings = boostedValue * self.betValue
             
-            if withFreeBetValues {
+            if self.shouldHighlightTextfield() {
                 possibleWinnings -= self.betValue
             }
             

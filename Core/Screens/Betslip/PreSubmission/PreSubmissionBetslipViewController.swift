@@ -1758,7 +1758,6 @@ class PreSubmissionBetslipViewController: UIViewController {
     private func setupCashback() {
         self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
 
-//        self.cashbackTitleLabel.text = localized("cashback")
         self.cashbackTitleLabel.text = localized("betsson_credits_mise_max")
         self.cashbackSwitch.setOn(false, animated: false)
         self.isCashbackToggleOn.send(false)

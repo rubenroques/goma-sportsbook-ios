@@ -436,7 +436,7 @@ class ProfileViewController: UIViewController {
         freeBetsBalanceLabel.setContentHuggingPriority(.required, for: .horizontal)
         freeBetsBalanceDottedLineView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
-        replayBalanceTitleLabel.text = localized("cashback_balance")
+        replayBalanceTitleLabel.text = localized("cashback")
         replayBalanceTitleLabel.font = AppFont.with(type: .regular, size: 16)
         replayBalanceLabel.font = AppFont.with(type: .regular, size: 16)
 
