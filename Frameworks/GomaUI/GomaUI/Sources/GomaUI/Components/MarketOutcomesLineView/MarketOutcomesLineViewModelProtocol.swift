@@ -108,6 +108,7 @@ public enum OddsChangeDirection: Equatable {
 public enum MarketDisplayMode: Equatable, Hashable {
     case triple  // Three-way market (left, middle, right)
     case double  // Two-way market (left, right only)
+    case single  // Single non-interactive placeholder (for empty markets)
     case suspended(text: String)
     case seeAll(text: String)
 
@@ -118,7 +119,7 @@ public enum MarketDisplayMode: Equatable, Hashable {
             return text
         case .seeAll(let text):
             return text
-        case .triple, .double:
+        case .triple, .double, .single:
             return nil
         }
     }

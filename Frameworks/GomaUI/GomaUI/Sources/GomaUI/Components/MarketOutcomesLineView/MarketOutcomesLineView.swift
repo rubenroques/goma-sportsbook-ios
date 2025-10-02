@@ -174,6 +174,12 @@ final public class MarketOutcomesLineView: UIView {
 
     private func updateDisplayMode(_ mode: MarketDisplayMode) {
         switch mode {
+        case .single:
+            oddsStackView.isHidden = false
+            middleOutcomeView?.isHidden = true
+            rightOutcomeView?.isHidden = true
+            suspendedBaseView.isHidden = true
+            seeAllBaseView.isHidden = true
         case .double:
             oddsStackView.isHidden = false
             middleOutcomeView?.isHidden = true
@@ -291,6 +297,8 @@ final public class MarketOutcomesLineView: UIView {
         
         // Use default single-line logic
         switch currentDisplayMode {
+        case .single:
+            return .single // Full rounded corners for single placeholder
         case .double:
             switch outcomeType {
             case .left: return .singleFirst

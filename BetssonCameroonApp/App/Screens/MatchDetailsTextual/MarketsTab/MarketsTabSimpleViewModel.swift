@@ -79,7 +79,13 @@ class MarketsTabSimpleViewModel {
     var marketGroupsPublisher: AnyPublisher<[MarketGroupWithIcons], Never> {
         marketGroupsSubject.eraseToAnyPublisher()
     }
-    
+
+    // MARK: - Current Values (Synchronous Access for TableView)
+
+    var currentMarketGroups: [MarketGroupWithIcons] {
+        return marketGroupsSubject.value
+    }
+
     // MARK: - Methods
     
     func loadMarkets() {

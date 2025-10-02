@@ -230,26 +230,64 @@ final public class MarketOutcomesMultiLineView: UIView {
         // Clear existing line views
         lineViews.forEach { $0.removeFromSuperview() }
         lineViews.removeAll()
-        
+
         // Hide empty state when we have content to show
         emptyStateContainer.isHidden = true
         linesStackView.isHidden = false
-        
-        // Create new line views from the aggregated view models
-        for lineViewModel in lineViewModels {
-            let lineView = MarketOutcomesLineView(viewModel: lineViewModel)
+
+        // If empty, create placeholder line to maintain visual consistency
+        if lineViewModels.isEmpty {
+            let placeholderViewModel = createPlaceholderLineViewModel()
+            let lineView = MarketOutcomesLineView(viewModel: placeholderViewModel)
             lineView.translatesAutoresizingMaskIntoConstraints = false
-            
-            // Set up callbacks (simplified - no line ID needed)
-            setupLineCallbacks(lineView: lineView)
-            
-            // Store and add to stack
+
+            // No callbacks needed for placeholder (non-interactive)
+
             lineViews.append(lineView)
             linesStackView.addArrangedSubview(lineView)
+        } else {
+            // Create new line views from the aggregated view models
+            for lineViewModel in lineViewModels {
+                let lineView = MarketOutcomesLineView(viewModel: lineViewModel)
+                lineView.translatesAutoresizingMaskIntoConstraints = false
+
+                // Set up callbacks (simplified - no line ID needed)
+                setupLineCallbacks(lineView: lineView)
+
+                // Store and add to stack
+                lineViews.append(lineView)
+                linesStackView.addArrangedSubview(lineView)
+            }
         }
-        
+
         // Apply multi-line corner radius to all lines
         applyMultiLineCornerRadiusToAllLines()
+    }
+
+    /// Creates a placeholder line view model when no markets are available
+    /// Displays a single disabled button with "-" to maintain visual consistency
+    private func createPlaceholderLineViewModel() -> MarketOutcomesLineViewModelProtocol {
+        let placeholderOutcome = MarketOutcomeData(
+            id: "placeholder",
+            bettingOfferId: nil,
+            title: "",
+            value: "-",
+            isDisabled: true  // Non-interactive
+        )
+
+        let displayState = MarketOutcomesLineDisplayState(
+            displayMode: .single,
+            leftOutcome: placeholderOutcome,
+            middleOutcome: nil,
+            rightOutcome: nil
+        )
+
+        return MockMarketOutcomesLineViewModel(
+            displayMode: .single,
+            leftOutcome: placeholderOutcome,
+            middleOutcome: nil,
+            rightOutcome: nil
+        )
     }
 
     private func setupLineCallbacks(lineView: MarketOutcomesLineView) {

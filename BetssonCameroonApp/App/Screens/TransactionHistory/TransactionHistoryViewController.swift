@@ -87,10 +87,7 @@ final class TransactionHistoryViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0
-        }
-        
+        tableView.sectionHeaderTopPadding = 0
         tableView.contentInsetAdjustmentBehavior = .never
         
         // Register transaction cell
