@@ -663,53 +663,40 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     private func showPromotionsScreen() {
-        // Create PromotionsViewModel
-        let promotionsViewModel = PromotionsViewModel(servicesProvider: environment.servicesProvider)
-        
-        // Create PromotionsViewController
-        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
-        
-        // Setup ViewModel callbacks
-        promotionsViewModel.onDismiss = { [weak self] in
-            self?.navigationController.popViewController(animated: true)
-        }
-        
-        // Create TopBar ViewModel (handles all business logic)
-        let topBarViewModel = TopBarContainerViewModel(
-            userSessionStore: environment.userSessionStore
+        // Create and start PromotionsCoordinator
+        let promotionsCoordinator = PromotionsCoordinator(
+            navigationController: navigationController,
+            environment: environment
         )
-
-        // Wrap in TopBarContainerController
-        let container = TopBarContainerController(
-            contentViewController: promotionsViewController,
-            viewModel: topBarViewModel
-        )
-
-        // Setup navigation callbacks on container
-        container.onLoginRequested = { [weak self] in
+        
+        // Setup TopBar container callbacks to delegate to MainTabBarCoordinator
+        promotionsCoordinator.onLoginRequested = { [weak self] in
             self?.showLogin()
         }
-
-        container.onRegistrationRequested = { [weak self] in
+        
+        promotionsCoordinator.onRegistrationRequested = { [weak self] in
             self?.showRegistration()
         }
-
-        container.onProfileRequested = { [weak self] in
+        
+        promotionsCoordinator.onProfileRequested = { [weak self] in
             self?.showProfile()
         }
-
-        container.onDepositRequested = { [weak self] in
+        
+        promotionsCoordinator.onDepositRequested = { [weak self] in
             self?.presentDepositFlow()
         }
-
-        container.onWithdrawRequested = { [weak self] in
+        
+        promotionsCoordinator.onWithdrawRequested = { [weak self] in
             self?.presentWithdrawFlow()
         }
         
-        // Push the container using navigation stack
-        navigationController.pushViewController(container, animated: true)
+        // Add as child coordinator for proper lifecycle management
+        addChildCoordinator(promotionsCoordinator)
         
-        print("🚀 MainTabBarCoordinator: Presented promotions screen")
+        // Start the coordinator (which will handle the entire promotions flow)
+        promotionsCoordinator.start()
+        
+        print("🚀 MainTabBarCoordinator: Started PromotionsCoordinator")
     }
     
     private func showCasinoHomeScreen() {

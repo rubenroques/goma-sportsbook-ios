@@ -97,9 +97,8 @@ class PromotionDetailViewController: UIViewController {
 
     // MARK: Lifetime and cycle
     init(viewModel: PromotionDetailViewModel) {
-
         self.viewModel = viewModel
-
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -548,13 +547,8 @@ class PromotionDetailViewController: UIViewController {
     
     // MARK: Actions
     @objc private func didTapBackButton() {
-        
-        if self.isRootModal {
-            self.presentingViewController?.dismiss(animated: true)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        // Delegate back navigation to viewModel
+        viewModel.onDismiss?()
     }
     
     @objc private func didTapToggleButton() {

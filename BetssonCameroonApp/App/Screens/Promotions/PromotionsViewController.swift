@@ -43,7 +43,6 @@ class PromotionsViewController: UIViewController {
     private var selectedCategoryId: String?
     
     private var viewModel: PromotionsViewModel
-
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public properties
@@ -55,9 +54,8 @@ class PromotionsViewController: UIViewController {
     
     // MARK: Lifetime and cycle
     init(viewModel: PromotionsViewModel) {
-
         self.viewModel = viewModel
-
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -160,30 +158,17 @@ class PromotionsViewController: UIViewController {
     }
     
     private func openPromotionURL(urlString: String) {
-        
-        if let url = URL(string: urlString) {
-            UIApplication.shared.open(url)
-        }
+        viewModel.openPromotionURL(urlString: urlString)
     }
     
     private func openPromotionDetail(promotion: PromotionInfo) {
-        
-        let promotionDetailViewModel = PromotionDetailViewModel(promotion: promotion, servicesProvider: viewModel.servicesProvider)
-        
-        let promotionDetailViewController = PromotionDetailViewController(viewModel: promotionDetailViewModel)
-        
-        self.navigationController?.pushViewController(promotionDetailViewController, animated: true)
+        viewModel.openPromotionDetail(promotion: promotion)
     }
     
     // MARK: Actions
     @objc private func didTapBackButton() {
-        
-        if self.isRootModal {
-            self.presentingViewController?.dismiss(animated: true)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        // Delegate back navigation to coordinator
+        viewModel.onDismiss?()
     }
 }
 

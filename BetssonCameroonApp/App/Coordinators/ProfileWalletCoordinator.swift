@@ -209,21 +209,47 @@ final class ProfileWalletCoordinator: Coordinator {
             return
         }
         
-        // Create PromotionsViewModel
-        let promotionsViewModel = PromotionsViewModel(servicesProvider: servicesProvider)
+        // Create and start PromotionsCoordinator
+        let promotionsCoordinator = PromotionsCoordinator(
+            navigationController: profileNavigationController,
+            environment: Env
+        )
         
-        // Create PromotionsViewController
-        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
-        
-        // Setup ViewModel callbacks
-        promotionsViewModel.onDismiss = { [weak self] in
-            // The view controller will handle the back navigation
+        // Setup TopBar container callbacks to delegate to ProfileWalletCoordinator
+        promotionsCoordinator.onLoginRequested = { [weak self] in
+            // Handle login request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Login requested from promotions")
         }
         
-        // Push the promotions view controller
-        profileNavigationController.pushViewController(promotionsViewController, animated: true)
+        promotionsCoordinator.onRegistrationRequested = { [weak self] in
+            // Handle registration request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Registration requested from promotions")
+        }
         
-        print("🚀 ProfileWalletCoordinator: Presented promotions screen")
+        promotionsCoordinator.onProfileRequested = { [weak self] in
+            // Handle profile request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Profile requested from promotions")
+        }
+        
+        promotionsCoordinator.onDepositRequested = { [weak self] in
+            // Delegate to parent coordinator
+            self?.onDepositRequested?()
+            self?.presentDepositFlow()
+        }
+        
+        promotionsCoordinator.onWithdrawRequested = { [weak self] in
+            // Delegate to parent coordinator
+            self?.onWithdrawRequested?()
+            self?.presentWithdrawFlow()
+        }
+        
+        // Add as child coordinator for proper lifecycle management
+        addChildCoordinator(promotionsCoordinator)
+        
+        // Start the coordinator (which will handle the entire promotions flow)
+        promotionsCoordinator.start()
+        
+        print("🚀 ProfileWalletCoordinator: Started PromotionsCoordinator")
     }
     
     private func showPlaceholderAlert(title: String, message: String) {

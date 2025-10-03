@@ -20,6 +20,9 @@ class PromotionDetailViewModel {
     
     var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Navigation Callbacks
+    var onDismiss: (() -> Void)?
+    
     private let servicesProvider: ServicesProvider.Client
     
     init(promotion: PromotionInfo, servicesProvider: ServicesProvider.Client) {
