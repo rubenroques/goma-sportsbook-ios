@@ -11,13 +11,15 @@ public final class MockSuggestedBetsExpandedViewModel: SuggestedBetsExpandedView
 
     public init(title: String = "Explore more bets",
                 isExpanded: Bool = true,
+                isVisible: Bool = true,
+                initialPage: Int = 0,
                 matchCardViewModels: [TallOddsMatchCardViewModelProtocol]) {
         self.matchCardsSubject = .init(matchCardViewModels)
         let initialState = SuggestedBetsSectionState(title: title,
                                                      isExpanded: isExpanded,
-                                                     currentPageIndex: 0,
+                                                     currentPageIndex: initialPage,
                                                      totalPages: matchCardViewModels.count,
-                                                     isVisible: true)
+                                                     isVisible: isVisible)
         self.displayStateSubject = .init(initialState)
     }
 
@@ -41,6 +43,21 @@ public final class MockSuggestedBetsExpandedViewModel: SuggestedBetsExpandedView
                                                 isVisible: current.isVisible)
         displayStateSubject.send(updated)
     }
+    
+    // Update method to change the data without creating a new instance
+    public func updateMatches(_ matchCardViewModels: [TallOddsMatchCardViewModelProtocol]) {
+        // Update the stored view models
+        matchCardsSubject.send(matchCardViewModels)
+        
+        // Update the display state - keep collapsed but visible when matches exist
+        let current = displayStateSubject.value
+        let updated = SuggestedBetsSectionState(title: current.title,
+                                                isExpanded: false,
+                                                currentPageIndex: 0,
+                                                totalPages: matchCardViewModels.count,
+                                                isVisible: !matchCardViewModels.isEmpty)
+        displayStateSubject.send(updated)
+    }
 
     // Convenience factory
     public static var demo: MockSuggestedBetsExpandedViewModel {
@@ -50,7 +67,13 @@ public final class MockSuggestedBetsExpandedViewModel: SuggestedBetsExpandedView
             .compactMock(singleLineOutcomes: true),
             .bundesliegaMock(singleLineOutcomes: true)
         ]
-        return MockSuggestedBetsExpandedViewModel(matchCardViewModels: vms)
+        return MockSuggestedBetsExpandedViewModel(
+            title: "Explore more bets",
+            isExpanded: true,
+            isVisible: true,
+            initialPage: 0,
+            matchCardViewModels: vms
+        )
     }
 }
 

@@ -140,4 +140,5 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
         let notLoggedInState = BetslipHeaderState.notLoggedIn
         headerViewModel.updateState(notLoggedInState)
     }
+    
 }

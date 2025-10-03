@@ -19,6 +19,7 @@ final public class SuggestedBetsExpandedView: UIView {
     private var viewModel: SuggestedBetsExpandedViewModelProtocol
     private var itemViewModels: [TallOddsMatchCardViewModelProtocol] = []
     private var headerBottomConstraint: NSLayoutConstraint?
+    private var hasBeenExpandedBefore = false
 
     // MARK: - Init
     public init(viewModel: SuggestedBetsExpandedViewModelProtocol) {
@@ -184,8 +185,8 @@ extension SuggestedBetsExpandedView {
         headerContainerView.addGestureRecognizer(tap)
         headerContainerView.isUserInteractionEnabled = true
         pageControl.addTarget(self, action: #selector(pageControlChanged), for: .valueChanged)
-        let dotsTap = UITapGestureRecognizer(target: self, action: #selector(pageControlTapped(_:)))
-        pageControl.addGestureRecognizer(dotsTap)
+        let pageControlTap = UITapGestureRecognizer(target: self, action: #selector(pageControlTapped(_:)))
+        pageControl.addGestureRecognizer(pageControlTap)
 
         // Constraint used when collapsed: header sticks to bottom
         headerBottomConstraint = headerContainerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
@@ -204,7 +205,6 @@ extension SuggestedBetsExpandedView {
             .sink { [weak self] models in
                 self?.itemViewModels = models
                 self?.pageControl.numberOfPages = models.count
-                self?.collectionView.reloadData()
             }
             .store(in: &cancellables)
     }
@@ -221,6 +221,16 @@ extension SuggestedBetsExpandedView {
 
         if state.isExpanded {
             headerBottomConstraint?.isActive = false
+            
+            // Only reload collection view on first expansion
+            if !hasBeenExpandedBefore {
+                hasBeenExpandedBefore = true
+                DispatchQueue.main.async {
+                    self.layoutIfNeeded()
+                    self.collectionView.layoutIfNeeded()
+                    self.collectionView.reloadData()
+                }
+            }
         } else {
             headerBottomConstraint?.isActive = true
         }
@@ -247,13 +257,16 @@ extension SuggestedBetsExpandedView {
         viewModel.didScrollToPage(targetPage)
     }
 
-    @objc private func pageControlTapped(_ gesture: UITapGestureRecognizer) {
-        let location = gesture.location(in: pageControl)
-        let total = max(pageControl.numberOfPages, 1)
-        let widthPerDot = pageControl.bounds.width / CGFloat(total)
-        let tappedIndex = min(total - 1, max(0, Int(location.x / max(widthPerDot, 1))))
-        pageControl.currentPage = tappedIndex
-        pageControlChanged()
+    @objc private func pageControlTapped(_ sender: UITapGestureRecognizer) {
+        let location = sender.location(in: pageControl)
+        let width = pageControl.bounds.width
+        let numberOfPages = pageControl.numberOfPages
+        let page = Int(location.x / (width / CGFloat(numberOfPages)))
+        
+        guard page != pageControl.currentPage else { return } // Only act if a different page is tapped
+        
+        pageControl.currentPage = page
+        pageControlChanged() // Trigger the same logic as valueChanged
     }
 }
 

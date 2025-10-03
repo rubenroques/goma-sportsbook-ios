@@ -867,6 +867,37 @@ class EveryMatrixEventsProvider: EventsProvider {
             }
             .eraseToAnyPublisher()
     }
+    
+    func getComboRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError> {
+        let terminalType = 1
+
+        let endpoint = EveryMatrixRecsysAPI.comboRecommendations(
+            userId: userId,
+            isLive: isLive,
+            terminalType: terminalType
+        )
+
+        return recsysConnector.request(endpoint)
+            .map { (response: EveryMatrix.RecommendationResponse) in
+                Array(response.recommendationsList.prefix(limit)).map { $0.eventId }
+            }
+            .flatMap { [weak self] eventIds -> AnyPublisher<[Event], ServiceProviderError> in
+                guard let self = self else { return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher() }
+
+                let perEventPublishers: [AnyPublisher<Event, ServiceProviderError>] = eventIds.map { eventId in
+                    return self.getEventDetails(eventId: eventId)
+                }
+
+                return Publishers.MergeMany(perEventPublishers)
+                    .collect()
+                    .eraseToAnyPublisher()
+            }
+            .mapError { error -> ServiceProviderError in
+                print("❌ EveryMatrixProvider: Recommendation request failed: \(error)")
+                return error
+            }
+            .eraseToAnyPublisher()
+    }
 
     // MARK: - Private Helper Methods
 

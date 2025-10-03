@@ -70,6 +70,13 @@ class SportsBetslipViewController: UIViewController {
         return view
     }()
     
+    // Suggested bets expanded view
+    private lazy var suggestedBetsView: SuggestedBetsExpandedView = {
+        let view = SuggestedBetsExpandedView(viewModel: viewModel.suggestedBetsViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     // Code input view
     private lazy var codeInputView: CodeInputView = {
         let view = CodeInputView(viewModel: viewModel.codeInputViewModel)
@@ -124,6 +131,7 @@ class SportsBetslipViewController: UIViewController {
         view.addSubview(buttonBarView)
         view.addSubview(emptyStateView)
         view.addSubview(ticketsTableView)
+        view.addSubview(suggestedBetsView)
         view.addSubview(betInfoSubmissionView)
         view.addSubview(codeInputView)
         view.addSubview(loginButton) // Add login button
@@ -160,11 +168,15 @@ class SportsBetslipViewController: UIViewController {
             emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            // Tickets table view - fill remaining space above bet info submission
+            // Tickets table view - fill remaining space above suggested bets
             ticketsTableView.topAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: 8),
             ticketsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             ticketsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ticketsTableView.bottomAnchor.constraint(equalTo: betInfoSubmissionView.topAnchor, constant: -8),
+            
+            // Suggested bets view - between tickets table and bet info submission
+            suggestedBetsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            suggestedBetsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            suggestedBetsView.bottomAnchor.constraint(equalTo: codeInputView.topAnchor),
             
             // Bet info submission view - bottom of the view
             betInfoSubmissionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -246,6 +258,14 @@ class SportsBetslipViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+        
+        // Setup suggested bets updates
+        viewModel.suggestedBetsViewModel.matchCardViewModelsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.toggleSuggestedBetsVisibility()
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Private Methods
@@ -260,6 +280,11 @@ class SportsBetslipViewController: UIViewController {
         if hasTickets {
             ticketsTableView.reloadData()
         }
+    }
+    
+    private func toggleSuggestedBetsVisibility() {
+        let hasMatches = !viewModel.suggestedBetsViewModel.matchCardViewModels.isEmpty
+        suggestedBetsView.isHidden = !hasMatches
     }
     
     private func handleClearBetslipTapped() {

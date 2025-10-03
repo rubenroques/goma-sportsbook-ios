@@ -40,6 +40,9 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     public var showPlacedBetState: ((BetPlacedState) -> Void)?
     public var showLoginScreen: (() -> Void)?
     
+    // MARK: - Recommended Matches
+    public var suggestedBetsViewModel: SuggestedBetsExpandedViewModelProtocol
+    
     // MARK: - Initialization
     init(environment: Environment) {
         self.environment = environment
@@ -69,8 +72,46 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                                                             ButtonData(id: "login", title: "Login", style: .solidBackground)
         )
         
+        // Initialize suggested bets view model
+        self.suggestedBetsViewModel = MockSuggestedBetsExpandedViewModel(
+            title: "Explore more bets",
+            isExpanded: false,
+            matchCardViewModels: []
+        )
+        
         // Setup real data subscription
         setupPublishers()
+        getRecommendedMatches()
+    }
+    
+    private func getRecommendedMatches() {
+                
+        let userId = environment.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
+        
+        environment.servicesProvider.getRecommendedMatch(userId: userId, isLive: false, limit: 5)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    print("RECOMMENDED ERROR: \(error)")
+//                    self?.isLoadingSubject.send(false)
+                }
+            }, receiveValue: { [weak self] events in
+                guard let self = self else { return }
+                let matches = ServiceProviderModelMapper.matches(fromEvents: events)
+                
+                let items: [TallOddsMatchCardViewModelProtocol] = matches.map { match in
+                    let tallOddsMatchCardViewModel = TallOddsMatchCardViewModel.create(from: match, relevantMarkets: match.markets, marketTypeId: match.markets.first?.typeId ?? "", matchCardContext: .search)
+                    return tallOddsMatchCardViewModel
+                }
+                
+                // Update suggested bets view model with matches
+                if let mockViewModel = self.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
+                    mockViewModel.updateMatches(items)
+                }
+                                
+                self.isLoadingSubject.send(false)
+            })
+            .store(in: &cancellables)
     }
     
     // MARK: - Public Methods
