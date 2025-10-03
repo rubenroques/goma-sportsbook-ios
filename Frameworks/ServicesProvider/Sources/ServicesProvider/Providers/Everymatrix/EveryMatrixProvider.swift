@@ -10,12 +10,13 @@ import Combine
 import SharedModels
 
 class EveryMatrixEventsProvider: EventsProvider {
-
+    
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         return self.connector.connectionStatePublisher.eraseToAnyPublisher()
     }
 
     var connector: EveryMatrixConnector
+    private let recsysConnector: EveryMatrixRecsysAPIConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
     // MARK: - Managers for different subscription types
@@ -35,6 +36,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     init(connector: EveryMatrixConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
         self.connector = connector
         self.sessionCoordinator = sessionCoordinator
+        self.recsysConnector = EveryMatrixRecsysAPIConnector(sessionCoordinator: sessionCoordinator)
     }
 
     deinit {
@@ -543,7 +545,138 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        let language = "en"
+        let bettingTypeIds = [69, 466, 112, 76, 9]
+        let includes = ["BETTING_OFFERS", "EVENT_INFO"]
+        let eventTypes = ["MATCH"]
+        let router = WAMPRouter.searchV2(
+            language: language,
+            limit: Int(resultLimit) ?? 20,
+            query: query,
+            eventStatuses: [1, 2],
+            eventTypes: eventTypes,
+            include: includes,
+            bettingTypeIds: bettingTypeIds,
+            dataWithoutOdds: false
+        )
+
+        // Request the RPC search response
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCBasicResponse, ServiceProviderError> = connector.request(router)
+
+        // Map RPC response to EventsGroup by populating an EntityStore and building matches with markets/outcomes
+        return rpcResponsePublisher
+            .map { rpcResponse in
+                // 1) Create a temporary store and ingest all entities from both records and includedData
+                let store = EveryMatrix.EntityStore()
+                store.storeRecords(rpcResponse.records)
+                if let includedData = rpcResponse.includedData {
+                    store.storeRecords(includedData)
+                }
+
+                // 2) Build matches from records (ignore tournaments for now)
+                //    We keep the original order using getAllInOrder
+                let matchDTOs = store.getAllInOrder(EveryMatrix.MatchDTO.self)
+                let matches = matchDTOs.compactMap { dto in
+                    EveryMatrix.MatchBuilder.build(from: dto, store: store)
+                }
+
+                // 3) Aggregate available markets across all matches to build the MainMarkets list
+                // Assume MAIN_MARKET DTOs are not available; synthesize from distinct betting type IDs.
+                let marketsAcrossMatches = matches.flatMap { $0.markets }
+                var marketsByBettingTypeId: [String: [EveryMatrix.Market]] = [:]
+                for market in marketsAcrossMatches {
+                    let bettingTypeId = market.bettingType?.id ?? ""
+                    guard !bettingTypeId.isEmpty else { continue }
+                    marketsByBettingTypeId[bettingTypeId, default: []].append(market)
+                }
+                let mainMarkets: [MainMarket] = marketsByBettingTypeId.compactMap { (bettingTypeId, group) in
+                    let bettingTypeName = group.first?.bettingType?.name ?? ""
+                    return MainMarket(
+                        id: bettingTypeId,
+                        bettingTypeId: bettingTypeId,
+                        eventPartId: "0",
+                        sportId: matches.first?.sport?.id ?? "",
+                        bettingTypeName: bettingTypeName,
+                        eventPartName: "",
+                        numberOfOutcomes: group.first?.outcomes.count,
+                        liveMarket: false,
+                        outright: false
+                    )
+                }
+
+                // 4) Convert internal matches to external Events and attach mainMarkets
+                let eventsGroup = EveryMatrixModelMapper.eventsGroup(fromInternalMatches: matches, mainMarkets: mainMarkets)
+                return eventsGroup
+            }
+            .eraseToAnyPublisher()
+    }
+
+    // Restored: Multi-search wrapper (uses WAMPRouter.multiSearch)
+    func getMultiSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        let language = "en"
+        let eventTypes = ["MATCH"]
+        let include = ["BETTING_OFFERS", "EVENT_INFO"]
+        let router = WAMPRouter.multiSearch(
+            language: language,
+            limit: Int(resultLimit) ?? 20,
+            query: query,
+            eventTypes: eventTypes,
+            include: include
+        )
+
+        // Request the RPC multiSearch response (RPCBasicResponse under MATCH)
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCMultiSearchResponse, ServiceProviderError> = connector.request(router)
+
+        return rpcResponsePublisher
+            .map { rpcMultiResponse in
+                
+                let rpcResponse = rpcMultiResponse.resultMap.match
+                
+                // 1) Create a temporary store and ingest all entities from both records and includedData
+                let store = EveryMatrix.EntityStore()
+                store.storeRecords(rpcResponse.records)
+                if let includedData = rpcResponse.includedData {
+                    store.storeRecords(includedData)
+                }
+
+                // 2) Build matches from records (ignore tournaments for now)
+                //    We keep the original order using getAllInOrder
+                let matchDTOs = store.getAllInOrder(EveryMatrix.MatchDTO.self)
+                let matches = matchDTOs.compactMap { dto in
+                    EveryMatrix.MatchBuilder.build(from: dto, store: store)
+                }
+                
+                let mainMarketsStored = store.getAllInOrder(EveryMatrix.MainMarketDTO.self)
+
+                // 3) Aggregate available markets across all matches to build the MainMarkets list
+                // Assume MAIN_MARKET DTOs are not available; synthesize from distinct betting type IDs.
+                let marketsAcrossMatches = matches.flatMap { $0.markets }
+                var marketsByBettingTypeId: [String: [EveryMatrix.Market]] = [:]
+                for market in marketsAcrossMatches {
+                    let bettingTypeId = market.bettingType?.id ?? ""
+                    guard !bettingTypeId.isEmpty else { continue }
+                    marketsByBettingTypeId[bettingTypeId, default: []].append(market)
+                }
+                let mainMarkets: [MainMarket] = marketsByBettingTypeId.compactMap { (bettingTypeId, group) in
+                    let bettingTypeName = group.first?.bettingType?.name ?? ""
+                    return MainMarket(
+                        id: bettingTypeId,
+                        bettingTypeId: bettingTypeId,
+                        eventPartId: "0",
+                        sportId: matches.first?.sport?.id ?? "",
+                        bettingTypeName: bettingTypeName,
+                        eventPartName: "",
+                        numberOfOutcomes: group.first?.outcomes.count,
+                        liveMarket: false,
+                        outright: false
+                    )
+                }
+
+                // 4) Convert internal matches to external Events and attach mainMarkets
+                let eventsGroup = EveryMatrixModelMapper.eventsGroup(fromInternalMatches: matches, mainMarkets: mainMarkets)
+                return eventsGroup
+            }
+            .eraseToAnyPublisher()
     }
 
     func getEventSummary(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError> {
@@ -700,6 +833,39 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    // MARK: - Recommendations
+    
+    func getRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError> {
+        let terminalType = 1
+
+        let endpoint = EveryMatrixRecsysAPI.recommendations(
+            userId: userId,
+            isLive: isLive,
+            terminalType: terminalType
+        )
+
+        return recsysConnector.request(endpoint)
+            .map { (response: EveryMatrix.RecommendationResponse) in
+                Array(response.recommendationsList.prefix(limit)).map { $0.eventId }
+            }
+            .flatMap { [weak self] eventIds -> AnyPublisher<[Event], ServiceProviderError> in
+                guard let self = self else { return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher() }
+
+                let perEventPublishers: [AnyPublisher<Event, ServiceProviderError>] = eventIds.map { eventId in
+                    return self.getEventDetails(eventId: eventId)
+                }
+
+                return Publishers.MergeMany(perEventPublishers)
+                    .collect()
+                    .eraseToAnyPublisher()
+            }
+            .mapError { error -> ServiceProviderError in
+                print("❌ EveryMatrixProvider: Recommendation request failed: \(error)")
+                return error
+            }
+            .eraseToAnyPublisher()
     }
 
     // MARK: - Private Helper Methods

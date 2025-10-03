@@ -74,7 +74,7 @@ extension EveryMatrix {
     
     /// DTO for game vendor information (v2 only has href)
     struct CasinoGameVendorDTO: Codable {
-        let href: String
+        let href: String?
     }
     
     /// DTO for game tags

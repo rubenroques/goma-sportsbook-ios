@@ -474,4 +474,83 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
+    // Games
+    func getRecentlyPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        
+        guard connector.sessionToken != nil else {
+            return Just(CasinoGamesResponse(
+                count: 0,
+                total: 0,
+                games: [],
+                pagination: nil
+            ))
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+        }
+        
+        let endpoint = EveryMatrixPlayerAPI.getRecentlyPlayedGames(
+            playerId: playerId,
+            language: language ?? "en",
+            platform: platform ?? "iPhone",
+            offset: pagination.offset,
+            limit: pagination.limit
+        )
+        
+        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { response in
+                let games = response.items.compactMap(\.content).compactMap { item in
+                    item.gameModel?.content.map { EveryMatrixModelMapper.casinoGame(from: $0) }
+                }
+                
+                return CasinoGamesResponse(
+                    count: games.count,
+                    total: response.total ?? 0,
+                    games: games,
+                    pagination: response.pages.map { EveryMatrixModelMapper.casinoPaginationInfo(from: $0) }
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func getMostPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
+        
+        guard connector.sessionToken != nil else {
+            return Just(CasinoGamesResponse(
+                count: 0,
+                total: 0,
+                games: [],
+                pagination: nil
+            ))
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+        }
+        
+        let endpoint = EveryMatrixPlayerAPI.getMostPlayedGames(
+            playerId: playerId,
+            language: language ?? "en",
+            platform: platform ?? "iPhone",
+            offset: pagination.offset,
+            limit: pagination.limit
+        )
+        
+        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { response in
+                let games = response.items.compactMap(\.content).compactMap { item in
+                    item.gameModel?.content.map { EveryMatrixModelMapper.casinoGame(from: $0) }
+                }
+                
+                return CasinoGamesResponse(
+                    count: games.count,
+                    total: response.total ?? 0,
+                    games: games,
+                    pagination: response.pages.map { EveryMatrixModelMapper.casinoPaginationInfo(from: $0) }
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+    
 }

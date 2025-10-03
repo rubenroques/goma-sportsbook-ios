@@ -87,6 +87,21 @@ public final class EveryMatrixUnifiedConfiguration {
         }
     }
     
+    /// Base URL for Recsys API
+    public var recsysAPIBaseURL: String {
+        switch environment {
+        case .production:
+            return "https://recsys-api-gateway-test-bshwjrve.ew.gateway.dev"
+        case .staging, .development:
+            return "https://recsys-api-gateway-test-bshwjrve.ew.gateway.dev"
+        }
+    }
+    
+    public var recsysAPIKey: String {
+        return "AIzaSyBE-HDs6eqAkiNXtfN1sZGHRaGppjLfCho"
+
+    }
+    
     // MARK: - Shared Configuration
     
     /// Domain ID for all APIs
@@ -122,6 +137,10 @@ public final class EveryMatrixUnifiedConfiguration {
     /// Default platform identifier
     public var defaultPlatform: String {
         return "iOS"
+    }
+    
+    public var defaultCasinoPlatform: String {
+        return "iPhone"
     }
     
 }
