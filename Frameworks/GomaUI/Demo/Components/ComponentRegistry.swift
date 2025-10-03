@@ -53,6 +53,16 @@ struct ComponentRegistry {
             }
         ),
         UIComponent(
+            title: "Suggested Bets Expanded",
+            description: "Expandable section with horizontal match cards and page indicators",
+            viewController: SuggestedBetsExpandedViewController.self,
+            previewFactory: {
+                let viewModel = MockSuggestedBetsExpandedViewModel.demo
+                let view = SuggestedBetsExpandedView(viewModel: viewModel)
+                return view
+            }
+        ),
+        UIComponent(
             title: "Market Outcomes Line",
             description: "Flexible betting market outcomes display with selection states, odds changes, and multiple display modes",
             viewController: MarketOutcomesLineViewController.self,
