@@ -10,6 +10,7 @@ import Foundation
 public protocol ActionButtonBlockViewModelProtocol {
     var title: String { get }
     var actionName: String { get }
+    var actionURL: String? { get }
     var isEnabled: Bool { get }
     
     func didTapActionButton()

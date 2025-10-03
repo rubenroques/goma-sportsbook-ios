@@ -258,10 +258,10 @@ class PromotionDetailViewController: UIViewController {
                             blockViews.append(videoBlockView)
                         }
                         else if textContentBlock.blockType == .button {
-                            let mockViewModel = MockActionButtonBlockViewModel(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonURL ?? "")
-//                            mockViewModel.didTapActionButton = { [weak self] in
-//                                self?.openAction(actionName: textContentBlock.buttonURL ?? "")
-//                            }
+                            let mockViewModel = MockActionButtonBlockViewModel(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonText ?? "", actionURL: textContentBlock.buttonURL)
+                            mockViewModel.onActionTapped = { [weak self] actionUrl in
+                                self?.openAction(actionUrl: actionUrl ?? "")
+                            }
                             let actionButtonBlockView = ActionButtonBlockView(viewModel: mockViewModel)
                             actionButtonBlockView.translatesAutoresizingMaskIntoConstraints = false
                             
@@ -348,10 +348,10 @@ class PromotionDetailViewController: UIViewController {
                                 listItemViews.append(videoBlockView)
                             }
                             else if textContentBlock.blockType == .button {
-                                let mockViewModel = MockActionButtonBlockViewModel(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonURL ?? "")
-//                                mockViewModel.didTapActionButton = { [weak self] in
-//                                    self?.openAction(actionName: textContentBlock.buttonURL ?? "")
-//                                }
+                                let mockViewModel = MockActionButtonBlockViewModel(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonText ?? "", actionURL: textContentBlock.buttonURL)
+                                mockViewModel.onActionTapped = { [weak self] actionUrl in
+                                    self?.openAction(actionUrl: actionUrl ?? "")
+                                }
                                 let actionButtonBlockView = ActionButtonBlockView(viewModel: mockViewModel)
                                 actionButtonBlockView.translatesAutoresizingMaskIntoConstraints = false
                                 
@@ -540,8 +540,8 @@ class PromotionDetailViewController: UIViewController {
         }
     }
     
-    private func openAction(actionName: String) {
-        if let url = URL(string: actionName) {
+    private func openAction(actionUrl: String) {
+        if let url = URL(string: actionUrl) {
             UIApplication.shared.open(url)
         }
     }
