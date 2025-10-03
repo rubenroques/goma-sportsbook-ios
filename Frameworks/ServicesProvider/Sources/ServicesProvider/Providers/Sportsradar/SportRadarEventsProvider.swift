@@ -1448,6 +1448,10 @@ extension SportRadarEventsProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
+    func subscribeToEventWithBalancedMarket(eventId: String, marketIdentifier: MarketIdentifier) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
 }
 
 //

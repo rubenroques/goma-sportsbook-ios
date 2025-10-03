@@ -36,12 +36,12 @@ public protocol CasinoProvider: Connector {
     ///   - gameId: Game identifier
     ///   - language: Language code - optional, provider will use default
     ///   - platform: Platform identifier - optional, provider will use default
-    /// - Returns: Publisher with game details (nil if game not found)
+    /// - Returns: Publisher with game details or error if not found
     func getGameDetails(
         gameId: String,
         language: String?,
         platform: String?
-    ) -> AnyPublisher<CasinoGame?, ServiceProviderError>
+    ) -> AnyPublisher<CasinoGame, ServiceProviderError>
     
     func searchGames(
         language: String?,

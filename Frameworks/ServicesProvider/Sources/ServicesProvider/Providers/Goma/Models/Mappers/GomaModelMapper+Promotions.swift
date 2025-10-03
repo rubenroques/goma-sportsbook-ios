@@ -318,10 +318,101 @@ extension GomaModelMapper {
     }
 
     static func termItem(fromInternalTermItem term: GomaModels.TermItem) -> TermItem {
-        
+
         let bulletedListItems = term.bulletedListItems?.map { self.bulletedListItem(fromInternalBulletedListItem: $0)
         }
-        
+
         return TermItem(displayType: TermsDisplayType(rawValue: term.displayType), richText: term.richText, bulletedListItems: bulletedListItems, sortOrder: term.sortOrder)
+    }
+
+    // MARK: - Rich Banners
+
+    /// Maps an array of internal rich banners to public rich banners with enrichment
+    /// - Parameters:
+    ///   - internalBanners: Internal GomaModels.RichBanner array from API
+    ///   - casinoGames: Array of casino games for enriching casino game banners
+    ///   - events: Array of events for enriching sport event banners
+    /// - Returns: Array of enriched public RichBanner
+    static func richBanners(
+        fromInternalRichBanners internalBanners: GomaModels.RichBanners,
+        casinoGames: [CasinoGame],
+        events: [Event]
+    ) -> RichBanners {
+        return internalBanners.compactMap { internalBanner in
+            return richBanner(
+                fromInternalRichBanner: internalBanner,
+                casinoGames: casinoGames,
+                events: events
+            )
+        }
+    }
+
+    /// Maps a single internal rich banner to public rich banner with enrichment
+    /// - Parameters:
+    ///   - internalBanner: Internal GomaModels.RichBanner from API
+    ///   - casinoGames: Array of casino games for enriching casino game banners
+    ///   - events: Array of events for enriching sport event banners
+    /// - Returns: Enriched public RichBanner, or nil if enrichment data is missing
+    static func richBanner(
+        fromInternalRichBanner internalBanner: GomaModels.RichBanner,
+        casinoGames: [CasinoGame],
+        events: [Event]
+    ) -> RichBanner? {
+        switch internalBanner {
+        case .info(let data):
+            let infoBanner = InfoBanner(
+                id: String(data.id),
+                title: data.title,
+                subtitle: data.subtitle,
+                ctaText: data.ctaText,
+                ctaUrl: data.ctaUrl,
+                ctaTarget: data.ctaTarget,
+                imageUrl: data.imageUrl
+            )
+            return .info(infoBanner)
+
+        case .casinoGame(let data):
+            // Lookup casino game by ID
+            guard let casinoGame = casinoGames.first(where: { $0.id == data.casinoGameId }) else {
+                return nil // Skip if game not found
+            }
+
+            let bannerMetadata = CasinoGameBanner.BannerMetadata(
+                bannerId: String(data.id),
+                type: "game",
+                title: data.title,
+                subtitle: data.subtitle,
+                ctaText: data.ctaText,
+                ctaUrl: data.ctaUrl,
+                ctaTarget: data.ctaTarget,
+                customImageUrl: data.imageUrl
+            )
+
+            let casinoGameBanner = CasinoGameBanner(
+                casinoGame: casinoGame,
+                bannerMetadata: bannerMetadata
+            )
+            return .casinoGame(casinoGameBanner)
+
+        case .sportEvent(let data):
+            // Lookup event by ID
+            guard let event = events.first(where: { $0.id == data.sportEventId }) else {
+                return nil // Skip if event not found
+            }
+
+            let imageHighlightedContent = ImageHighlightedContent(
+                content: event,
+                promotedChildCount: 1,
+                imageURL: data.imageUrl
+            )
+
+            let sportEventBanner = SportEventBanner(
+                id: String(data.id),
+                eventContent: imageHighlightedContent,
+                marketBettingTypeId: data.marketBettingTypeId,
+                marketEventPartId: data.marketEventPartId
+            )
+            return .sportEvent(sportEventBanner)
+        }
     }
 }

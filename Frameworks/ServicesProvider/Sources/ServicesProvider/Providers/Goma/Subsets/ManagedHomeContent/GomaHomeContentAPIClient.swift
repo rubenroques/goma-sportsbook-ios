@@ -149,6 +149,20 @@ class GomaHomeContentAPIClient {
         return self.connector.request(endpoint)
     }
 
+    /// Get casino rich banners (unified casino + info banners)
+    /// - Returns: A publisher with the decoded response or error
+    func casinoRichBanners() -> AnyPublisher<GomaModels.RichBanners, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.casinoCarouselBanners
+        return self.connector.request(endpoint)
+    }
+
+    /// Get sport rich banners (unified sport event + info banners)
+    /// - Returns: A publisher with the decoded response or error
+    func sportRichBanners() -> AnyPublisher<GomaModels.RichBanners, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.sportBanners
+        return self.connector.request(endpoint)
+    }
+
     /// Get casino carousel banners
     /// - Returns: A publisher with the decoded response or error
     func casinoCarouselPointers() -> AnyPublisher<GomaModels.CasinoCarouselPointers, ServiceProviderError> {

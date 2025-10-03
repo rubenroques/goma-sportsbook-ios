@@ -1923,6 +1923,26 @@ extension Client {
         return homeContentProvider.getCasinoCarouselGames()
     }
 
+    public func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+        guard
+            let homeContentProvider = self.homeContentProvider
+        else {
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return homeContentProvider.getCasinoRichBanners()
+    }
+
+    public func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+        guard
+            let homeContentProvider = self.homeContentProvider
+        else {
+            return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return homeContentProvider.getSportRichBanners()
+    }
+
     public func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
         guard
             let homeContentProvider = self.homeContentProvider

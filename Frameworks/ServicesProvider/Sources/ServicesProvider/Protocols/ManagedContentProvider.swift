@@ -36,6 +36,18 @@ protocol HomeContentProvider: Connector {
     /// - Returns: Publisher that emits an array of banners
     func getBanners() -> AnyPublisher<[Banner], ServiceProviderError>
 
+    // MARK: - Rich Banners (Casino)
+
+    /// Retrieves casino rich banners supporting both info and casino game types
+    /// - Returns: Publisher that emits an array of rich banners with enriched data
+    func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError>
+
+    // MARK: - Rich Banners (Sport)
+
+    /// Retrieves sport rich banners supporting both info and sport event types
+    /// - Returns: Publisher that emits an array of rich banners with enriched data
+    func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError>
+
     // MARK: - Sport Banners
 
     /// Retrieves sport-specific promotional banners

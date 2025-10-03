@@ -70,6 +70,7 @@ enum WAMPRouter {
     case matchMarketGroupDetailsPublisher(operatorId: String, language: String, matchId: String, marketGroupName: String)
     case matchDetailsAggregatorPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketOdds(operatorId: String, language: String, matchId: String, bettingType: String, eventPartId: String)
+    case matchBalancedMarketOdds(operatorId: String, language: String, matchId: String, bettingType: String, eventPartId: String)
     case eventPartScoresPublisher(operatorId: String, language: String, matchId: String)
     case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
 
@@ -189,6 +190,8 @@ enum WAMPRouter {
             return "/sports/\(operatorId)/\(language)/cashout/\(betId)"
         case .matchMarketOdds(let operatorId, let language, let matchId, let bettingType, let eventPartId):
             return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds/\(bettingType)/\(eventPartId)"
+        case .matchBalancedMarketOdds(let operatorId, let language, let matchId, let bettingType, let eventPartId):
+            return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds/\(bettingType)-\(eventPartId)"
 
         case .popularTournamentsPublisher(let operatorId, let language, let sportId, let tournamentsCount):
             return "/sports/\(operatorId)/\(language)/popular-tournaments/\(sportId)/\(tournamentsCount)"
@@ -395,6 +398,8 @@ enum WAMPRouter {
         case .matchDetailsAggregatorPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .matchMarketOdds:
+            return .sportsInitialDump(topic: self.procedure)
+        case .matchBalancedMarketOdds:
             return .sportsInitialDump(topic: self.procedure)
         case .tournamentOddsPublisher:
             return .sportsInitialDump(topic: self.procedure)

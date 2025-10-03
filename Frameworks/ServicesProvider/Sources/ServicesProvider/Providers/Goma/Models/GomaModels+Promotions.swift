@@ -513,10 +513,10 @@ extension GomaModels {
         }
     }
 
-    // MARK: - Casino Carousel Banners
+    // MARK: - Legacy Casino Carousel (for backward compatibility)
     typealias CasinoCarouselPointers = [CasinoCarouselPointer]
-    struct CasinoCarouselPointer: Identifiable, Equatable, Hashable, Codable {
 
+    struct CasinoCarouselPointer: Identifiable, Equatable, Hashable, Codable {
         let id: Int
         let type: String
         let title: String?
@@ -528,35 +528,128 @@ extension GomaModels {
         let imageUrl: String?
 
         enum CodingKeys: String, CodingKey {
-            case id
-            case type
-            case title
-            case subtitle
+            case id, type, title, subtitle
             case casinoGameId = "casino_game_id"
             case ctaText = "cta_text"
             case ctaUrl = "cta_url"
             case ctaTarget = "cta_target"
             case imageUrl = "image_url"
         }
+    }
 
-        init(id: Int,
-             type: String,
-             title: String?,
-             subtitle: String?,
-             casinoGameId: String?,
-             ctaText: String?,
-             ctaUrl: String?,
-             ctaTarget: String?,
-             imageUrl: String?) {
-            self.id = id
-            self.type = type
-            self.title = title
-            self.subtitle = subtitle
-            self.casinoGameId = casinoGameId
-            self.ctaText = ctaText
-            self.ctaUrl = ctaUrl
-            self.ctaTarget = ctaTarget
-            self.imageUrl = imageUrl
+    // MARK: - Rich Banners (Unified Casino + Sport Banners)
+    typealias RichBanners = [RichBanner]
+
+    enum RichBanner: Identifiable, Equatable, Hashable, Codable {
+        case info(InfoBannerData)
+        case casinoGame(CasinoGameBannerData)
+        case sportEvent(SportEventBannerData)
+
+        var id: String {
+            switch self {
+            case .info(let data): return String(data.id)
+            case .casinoGame(let data): return String(data.id)
+            case .sportEvent(let data): return String(data.id)
+            }
+        }
+
+        struct InfoBannerData: Identifiable, Equatable, Hashable, Codable {
+            let id: Int
+            let title: String?
+            let subtitle: String?
+            let ctaText: String?
+            let ctaUrl: String?
+            let ctaTarget: String?
+            let imageUrl: String?
+
+            enum CodingKeys: String, CodingKey {
+                case id, title, subtitle
+                case ctaText = "cta_text"
+                case ctaUrl = "cta_url"
+                case ctaTarget = "cta_target"
+                case imageUrl = "image_url"
+            }
+        }
+
+        struct CasinoGameBannerData: Identifiable, Equatable, Hashable, Codable {
+            let id: Int
+            let title: String?
+            let subtitle: String?
+            let casinoGameId: String
+            let ctaText: String?
+            let ctaUrl: String?
+            let ctaTarget: String?
+            let imageUrl: String?
+
+            enum CodingKeys: String, CodingKey {
+                case id, title, subtitle
+                case casinoGameId = "casino_game_id"
+                case ctaText = "cta_text"
+                case ctaUrl = "cta_url"
+                case ctaTarget = "cta_target"
+                case imageUrl = "image_url"
+            }
+        }
+
+        struct SportEventBannerData: Identifiable, Equatable, Hashable, Codable {
+            let id: Int
+            let sportEventId: String
+            let sportEventMarketId: String
+            let imageUrl: String?
+            let marketBettingTypeId: String?
+            let marketEventPartId: String?
+
+            enum CodingKeys: String, CodingKey {
+                case id
+                case sportEventId = "sport_event_id"
+                case sportEventMarketId = "sport_event_market_id"
+                case imageUrl = "image_url"
+                case marketBettingTypeId = "market_betting_type_id"
+                case marketEventPartId = "market_event_part_id"
+            }
+        }
+
+        enum CodingKeys: String, CodingKey {
+            case type
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let type = try container.decode(String.self, forKey: .type)
+
+            switch type {
+            case "info":
+                let content = try InfoBannerData(from: decoder)
+                self = .info(content)
+            case "game":
+                let content = try CasinoGameBannerData(from: decoder)
+                self = .casinoGame(content)
+            case "event":
+                let content = try SportEventBannerData(from: decoder)
+                self = .sportEvent(content)
+            default:
+                throw DecodingError.dataCorruptedError(
+                    forKey: .type,
+                    in: container,
+                    debugDescription: "Unknown banner type: \(type)"
+                )
+            }
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+
+            switch self {
+            case .info(let content):
+                try container.encode("info", forKey: .type)
+                try content.encode(to: encoder)
+            case .casinoGame(let content):
+                try container.encode("game", forKey: .type)
+                try content.encode(to: encoder)
+            case .sportEvent(let content):
+                try container.encode("event", forKey: .type)
+                try content.encode(to: encoder)
+            }
         }
     }
 

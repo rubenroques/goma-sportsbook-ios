@@ -10,22 +10,32 @@ import Combine
 
 /// Implementation of ManagedContentProvider for the Goma API
 class GomaHomeContentProvider: HomeContentProvider {
-    
+
     // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
     }
-    
+
     private let connectionStateSubject = CurrentValueSubject<ConnectorState, Never>(.disconnected)
     private let authenticator: GomaAuthenticator
     private let apiClient: GomaHomeContentAPIClient
-    
+
+    // Optional providers for enrichment
+    private var casinoProvider: CasinoProvider?
+    private var eventsProvider: EventsProvider?
+
     private var cancellables = Set<AnyCancellable>()
-    
+
     // MARK: - Initialization
-    init(authenticator: GomaAuthenticator = GomaAuthenticator(deviceIdentifier: "")) {
+    init(
+        authenticator: GomaAuthenticator = GomaAuthenticator(deviceIdentifier: ""),
+        casinoProvider: CasinoProvider? = nil,
+        eventsProvider: EventsProvider? = nil
+    ) {
         self.authenticator = authenticator
-        
+        self.casinoProvider = casinoProvider
+        self.eventsProvider = eventsProvider
+
         self.apiClient = GomaHomeContentAPIClient(
             connector: GomaConnector(authenticator: authenticator),
             cache: GomaAPIPromotionsCache()
@@ -107,6 +117,112 @@ class GomaHomeContentProvider: HomeContentProvider {
     func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
         return self.apiClient.casinoCarouselPointers()
             .map(GomaModelMapper.casinoCarouselPointers(fromInternalCasinoCarouselPointers:))
+            .eraseToAnyPublisher()
+    }
+
+    func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+        guard let casinoProvider = self.casinoProvider else {
+            return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        }
+
+        return self.apiClient.casinoRichBanners()
+            .flatMap { (internalBanners: GomaModels.RichBanners) -> AnyPublisher<RichBanners, ServiceProviderError> in
+                // Extract casino game IDs from banners
+                let casinoGameIds = internalBanners.compactMap { banner -> String? in
+                    if case .casinoGame(let data) = banner {
+                        return data.casinoGameId
+                    }
+                    return nil
+                }
+
+                // If no casino games, just map info banners
+                guard !casinoGameIds.isEmpty else {
+                    let richBanners = GomaModelMapper.richBanners(
+                        fromInternalRichBanners: internalBanners,
+                        casinoGames: [],
+                        events: []
+                    )
+                    return Just(richBanners)
+                        .setFailureType(to: ServiceProviderError.self)
+                        .eraseToAnyPublisher()
+                }
+
+                // Fetch casino games in parallel
+                // Order is preserved by mapper iterating through internalBanners
+                let publishers: [AnyPublisher<CasinoGame?, Never>] = casinoGameIds.map { gameId in
+                    casinoProvider.getGameDetails(gameId: gameId, language: nil, platform: nil)
+                        .map { Optional.some($0) }
+                        .catch { _ in Just(nil) }
+                        .eraseToAnyPublisher()
+                }
+
+                return Publishers.MergeMany(publishers)
+                    .collect()
+                    .map { (games: [CasinoGame?]) -> RichBanners in
+                        let casinoGames = games.compactMap { $0 }
+                        // Mapper iterates internalBanners in order and looks up games by ID
+                        return GomaModelMapper.richBanners(
+                            fromInternalRichBanners: internalBanners,
+                            casinoGames: casinoGames,
+                            events: []
+                        )
+                    }
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        }
+
+        return self.apiClient.sportRichBanners()
+            .flatMap { (internalBanners: GomaModels.RichBanners) -> AnyPublisher<RichBanners, ServiceProviderError> in
+                // Extract event IDs from banners
+                let eventIds = internalBanners.compactMap { banner -> String? in
+                    if case .sportEvent(let data) = banner {
+                        return data.sportEventId
+                    }
+                    return nil
+                }
+
+                // If no events, just map info banners
+                guard !eventIds.isEmpty else {
+                    let richBanners = GomaModelMapper.richBanners(
+                        fromInternalRichBanners: internalBanners,
+                        casinoGames: [],
+                        events: []
+                    )
+                    return Just(richBanners)
+                        .setFailureType(to: ServiceProviderError.self)
+                        .eraseToAnyPublisher()
+                }
+
+                // Fetch events in parallel
+                // Order is preserved by mapper iterating through internalBanners
+                let publishers: [AnyPublisher<Event?, Never>] = eventIds.map { eventId in
+                    eventsProvider.getEventDetails(eventId: eventId)
+                        .map { Optional.some($0) }
+                        .catch { _ in Just(nil) }
+                        .eraseToAnyPublisher()
+                }
+
+                return Publishers.MergeMany(publishers)
+                    .collect()
+                    .map { (events: [Event?]) -> RichBanners in
+                        let validEvents = events.compactMap { $0 }
+                        // Mapper iterates internalBanners in order and looks up events by ID
+                        return GomaModelMapper.richBanners(
+                            fromInternalRichBanners: internalBanners,
+                            casinoGames: [],
+                            events: validEvents
+                        )
+                    }
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            }
             .eraseToAnyPublisher()
     }
 

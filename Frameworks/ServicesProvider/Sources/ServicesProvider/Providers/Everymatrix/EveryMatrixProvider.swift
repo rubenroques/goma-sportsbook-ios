@@ -36,6 +36,9 @@ class EveryMatrixEventsProvider: EventsProvider {
     // MARK: - Single Outcome Managers (for betslip)
     private var singleOutcomeManagers: [String: SingleOutcomeSubscriptionManager] = [:]
 
+    // MARK: - Balanced Market Managers (for betslip)
+    private var balancedMarketManagers: [String: EventWithBalancedMarketSubscriptionManager] = [:]
+
     init(connector: EveryMatrixConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
         self.connector = connector
         self.sessionCoordinator = sessionCoordinator
@@ -50,6 +53,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         sportTournamentsManager?.unsubscribe()
         matchDetailsManager?.unsubscribe()
         singleOutcomeManagers.values.forEach { $0.unsubscribe() }
+        balancedMarketManagers.values.forEach { $0.unsubscribe() }
     }
 
     func reconnectIfNeeded() {
@@ -795,6 +799,37 @@ class EveryMatrixEventsProvider: EventsProvider {
         singleOutcomeManagers[managerKey] = manager
 
         return manager.subscribe()
+    }
+
+    func subscribeToEventWithBalancedMarket(eventId: String, marketIdentifier: MarketIdentifier) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        // Only EveryMatrix supports this - extract betting type and event part
+        guard case .everyMatrixMarket(let eventPartId, let bettingTypeId) = marketIdentifier else {
+            return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        }
+
+        // Key format: "eventId:bettingTypeId:eventPartId" for tracking multiple betslip items
+        let managerKey = "\(eventId):\(bettingTypeId):\(eventPartId)"
+
+        // Clean up existing manager for this market if any
+        balancedMarketManagers[managerKey]?.unsubscribe()
+
+        // Create new manager for this specific balanced market
+        let manager = EventWithBalancedMarketSubscriptionManager(
+            connector: connector,
+            eventId: eventId,
+            bettingTypeId: bettingTypeId,
+            eventPartId: eventPartId
+        )
+
+        balancedMarketManagers[managerKey] = manager
+
+        // Return subscription that auto-cleans up on completion
+        return manager.subscribe()
+            .handleEvents(receiveCompletion: { [weak self] _ in
+                // Automatic cleanup when subscription completes or is cancelled
+                self?.balancedMarketManagers.removeValue(forKey: managerKey)
+            })
+            .eraseToAnyPublisher()
     }
 
     func getHighlightedLiveEventsPointers(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {

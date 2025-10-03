@@ -86,22 +86,30 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             .eraseToAnyPublisher()
     }
     
-    func getGameDetails(gameId: String, language: String?, platform: String?) -> AnyPublisher<CasinoGame?, ServiceProviderError> {
+    func getGameDetails(gameId: String, language: String?, platform: String?) -> AnyPublisher<CasinoGame, ServiceProviderError> {
         let finalLanguage = language ?? getDefaultLanguage()
         let finalPlatform = platform ?? getDefaultPlatform()
-        
+
         let endpoint = EveryMatrixCasinoAPI.getGameDetails(
             gameId: gameId,
             language: finalLanguage,
             platform: finalPlatform
         )
-        
+
         let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
-        
+
         return publisher
-            .map { response in
-                guard let firstGame = response.items.compactMap(\.content).first else { return nil }
+            .tryMap { response -> CasinoGame in
+                guard let firstGame = response.items.compactMap(\.content).first else {
+                    throw ServiceProviderError.resourceNotFound
+                }
                 return EveryMatrixModelMapper.casinoGame(from: firstGame)
+            }
+            .mapError { error in
+                if let serviceError = error as? ServiceProviderError {
+                    return serviceError
+                }
+                return ServiceProviderError.unknown(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
     }

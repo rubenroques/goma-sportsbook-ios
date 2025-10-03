@@ -130,6 +130,21 @@ protocol EventsProvider: Connector {
     /// - Returns: Publisher emitting Event with single market containing single outcome
     func subscribeToEventWithSingleOutcome(eventId: String, outcomeId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
 
+    /// Subscribe to event with the most balanced market for given betting type + event part
+    ///
+    /// Returns Event with:
+    /// - Full event details (teams, scores, status, live data)
+    /// - Single market in markets array (the most balanced for the specified betting type and event part)
+    ///
+    /// Note: The specific market returned may change over time as the provider rebalances odds.
+    /// Subscription is automatically cleaned up when the subscriber is deallocated.
+    ///
+    /// - Parameters:
+    ///   - eventId: The match/event identifier
+    ///   - marketIdentifier: Provider-specific market identification (EveryMatrix uses eventPartId + bettingTypeId)
+    /// - Returns: Publisher emitting Event with single balanced market
+    func subscribeToEventWithBalancedMarket(eventId: String, marketIdentifier: MarketIdentifier) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
+
     func getHighlightedLiveEventsPointers(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>
     func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<Events, ServiceProviderError>
 

@@ -11,6 +11,9 @@ class MarketGroupCardsViewController: UIViewController {
     private let tableView: UITableView
     private var cancellables = Set<AnyCancellable>()
 
+    // MARK: - Footer Properties (BetssonFrance pattern)
+    private let footerInnerView = UIView(frame: .zero)
+
     // MARK: - Scroll Tracking
     weak var scrollDelegate: MarketGroupCardsScrollDelegate?
     weak var scrollSyncDelegate: ScrollSyncDelegate?
@@ -27,7 +30,7 @@ class MarketGroupCardsViewController: UIViewController {
     enum Section: Int, CaseIterable {
         case matchCards = 0
         case loadMoreButton = 1
-        case footer = 2
+        // Footer moved to tableFooterView (BetssonFrance pattern)
     }
 
 
@@ -61,6 +64,20 @@ class MarketGroupCardsViewController: UIViewController {
         tableView.reloadData()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // Dynamically update tableFooterView height based on footerInnerView
+        // (BetssonFrance pattern - required because tableFooterView uses frame-based layout)
+        if let footerView = tableView.tableFooterView {
+            let size = footerInnerView.frame.size
+            if footerView.frame.size.height != size.height {
+                footerView.frame.size.height = size.height
+                tableView.tableFooterView = footerView  // Reassign to trigger update
+            }
+        }
+    }
+
     // MARK: - Setup
     private func setupViews() {
 
@@ -76,11 +93,52 @@ class MarketGroupCardsViewController: UIViewController {
 
         view.addSubview(tableView)
 
+        // Setup sticky footer (BetssonFrance pattern)
+        setupStickyFooter()
+
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    // MARK: - Sticky Footer Setup (BetssonFrance pattern)
+    private func setupStickyFooter() {
+        // Configure footer inner view
+        footerInnerView.translatesAutoresizingMaskIntoConstraints = false
+        footerInnerView.backgroundColor = .clear
+
+        // Create table footer view with arbitrary height
+        let tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 80))
+        tableFooterView.backgroundColor = .clear
+
+        // Set as table footer
+        tableView.tableFooterView = tableFooterView
+        tableFooterView.addSubview(footerInnerView)
+
+        // Create actual footer content
+        let footerCell = FooterTableViewCell()
+        footerCell.translatesAutoresizingMaskIntoConstraints = false
+        footerInnerView.addSubview(footerCell.contentView)
+
+        NSLayoutConstraint.activate([
+            // Pin footerInnerView to tableFooterView edges
+            footerInnerView.rightAnchor.constraint(equalTo: tableFooterView.rightAnchor),
+            footerInnerView.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor),
+            footerInnerView.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor),
+
+            // THE MAGIC CONSTRAINT: Pin to tableView's superview bottom
+            // This makes footer stick to bottom when content is short
+            footerInnerView.bottomAnchor.constraint(greaterThanOrEqualTo: tableView.superview!.bottomAnchor),
+
+            // Footer content constraints
+            footerCell.contentView.leadingAnchor.constraint(equalTo: footerInnerView.leadingAnchor),
+            footerCell.contentView.trailingAnchor.constraint(equalTo: footerInnerView.trailingAnchor),
+            footerCell.contentView.topAnchor.constraint(equalTo: footerInnerView.topAnchor),
+            footerCell.contentView.bottomAnchor.constraint(equalTo: footerInnerView.bottomAnchor),
+            footerCell.contentView.heightAnchor.constraint(equalToConstant: 80)
         ])
     }
 
@@ -93,10 +151,7 @@ class MarketGroupCardsViewController: UIViewController {
             SeeMoreButtonTableViewCell.self,
             forCellReuseIdentifier: SeeMoreButtonTableViewCell.identifier
         )
-        tableView.register(
-            FooterTableViewCell.self,
-            forCellReuseIdentifier: FooterTableViewCell.identifier
-        )
+        // FooterTableViewCell no longer registered - used in tableFooterView instead
 
         tableView.dataSource = self
         tableView.delegate = self
@@ -169,8 +224,6 @@ extension MarketGroupCardsViewController: UITableViewDataSource {
             return viewModel.matchCardsData.count
         case .loadMoreButton:
             return (viewModel.hasMoreEvents && !viewModel.matchCardsData.isEmpty) ? 1 : 0
-        case .footer:
-            return 1
         case .none:
             return 0
         }
@@ -236,16 +289,6 @@ extension MarketGroupCardsViewController: UITableViewDataSource {
 
             return cell
 
-        case .footer:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: FooterTableViewCell.identifier,
-                for: indexPath
-            ) as? FooterTableViewCell else {
-                return UITableViewCell()
-            }
-
-            return cell
-
         case .none:
             return UITableViewCell()
         }
@@ -269,8 +312,6 @@ extension MarketGroupCardsViewController: UITableViewDelegate {
             return UITableView.automaticDimension
         case .loadMoreButton:
             return 60
-        case .footer:
-            return 80
         case .none:
             return UITableView.automaticDimension
         }
@@ -283,8 +324,6 @@ extension MarketGroupCardsViewController: UITableViewDelegate {
         case .matchCards:
             return 8
         case .loadMoreButton:
-            return 0
-        case .footer:
             return 0
         case .none:
             return 0
@@ -304,8 +343,6 @@ extension MarketGroupCardsViewController: UITableViewDelegate {
         case .matchCards:
             return 8
         case .loadMoreButton:
-            return 0
-        case .footer:
             return 0
         case .none:
             return 0

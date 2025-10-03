@@ -191,6 +191,14 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
+    func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
     func getBoostedOddsPointers() -> AnyPublisher<BoostedOddsPointers, ServiceProviderError> {
         return gomaHomeContentProvider.getBoostedOddsPointers()
     }

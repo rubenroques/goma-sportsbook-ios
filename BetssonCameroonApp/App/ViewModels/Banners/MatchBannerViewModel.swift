@@ -18,7 +18,7 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
     private let imageURL: String?
 
     // Store the market outcomes ViewModel to maintain state and subscriptions
-    private let _marketOutcomesViewModel: MarketOutcomesLineViewModelProtocol
+    var marketOutcomesViewModel: MarketOutcomesLineViewModelProtocol
 
     // MARK: - Callbacks
     var onMatchTap: ((String) -> Void)?
@@ -32,16 +32,12 @@ final class MatchBannerViewModel: MatchBannerViewModelProtocol {
 
         // Create market outcomes ViewModel once during initialization
         // MatchBannerMarketOutcomesLineViewModel handles its own betslip subscription
-        self._marketOutcomesViewModel = Self.createMarketOutcomesViewModel(from: match)
+        self.marketOutcomesViewModel = Self.createMarketOutcomesViewModel(from: match)
     }
 
     // MARK: - MatchBannerViewModelProtocol
     var currentMatchData: MatchBannerModel {
         return Self.createMatchBannerModel(from: match, imageURL: imageURL)
-    }
-
-    var marketOutcomesViewModel: MarketOutcomesLineViewModelProtocol {
-        return _marketOutcomesViewModel
     }
 
     func userDidTapBanner() {

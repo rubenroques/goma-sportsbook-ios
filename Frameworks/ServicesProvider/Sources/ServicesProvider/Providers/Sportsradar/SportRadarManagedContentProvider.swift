@@ -505,7 +505,15 @@ class SportRadarManagedContentProvider: HomeContentProvider {
     func getCasinoCarouselGames() -> AnyPublisher<CasinoGameBanners, ServiceProviderError> {
         fatalError("Casino Carousel not supported for this provider")
     }
-    
+
+    func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
 }
 
 
