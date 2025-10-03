@@ -2,7 +2,7 @@
 //  MyBetsCoordinator.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on 28/08/2025.
+//  Created on 28/08/2025.
 //
 
 import UIKit

@@ -28,10 +28,10 @@ extension MockPromotionalHeaderViewModel {
     /// Default mock with both title and subtitle (matches the image provided)
     public static var defaultMock: MockPromotionalHeaderViewModel {
         let headerData = PromotionalHeaderData(
-            id: "deposit_bonus",
-            icon: "dollarsign.circle.fill",
-            title: "Claim a first deposit bonus!",
-            subtitle: "Select a first deposit bonus of your choosing..."
+            id: "promotions_bonuses",
+            icon: "gift.fill",
+            title: "Promotions & Bonuses",
+            subtitle: nil
         )
         
         return MockPromotionalHeaderViewModel(headerData: headerData)

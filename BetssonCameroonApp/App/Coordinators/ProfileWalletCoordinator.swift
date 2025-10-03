@@ -2,7 +2,7 @@
 //  ProfileWalletCoordinator.swift  
 //  BetssonCameroonApp
 //
-//  Created by Claude on 29/08/2025.
+//  Created on 29/08/2025.
 //
 
 import UIKit
@@ -142,6 +142,8 @@ final class ProfileWalletCoordinator: Coordinator {
         case .changePassword:
             // TODO: Navigate to change password
             showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
+        case .promotions:
+            showPromotions()
         }
     }
     
@@ -223,6 +225,56 @@ final class ProfileWalletCoordinator: Coordinator {
         print("🚀 ProfileWalletCoordinator: Presented notifications from profile modal context")
     }
     */
+    
+    private func showPromotions() {
+        guard let profileNavigationController = profileNavigationController else {
+            print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
+            return
+        }
+
+        // Create PromotionsViewModel
+        let promotionsViewModel = PromotionsViewModel(servicesProvider: servicesProvider)
+
+        // Create PromotionsViewController
+        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
+
+        // Setup ViewModel callbacks
+        promotionsViewModel.onNavigateBack = { [weak profileNavigationController] in
+            profileNavigationController?.popViewController(animated: true)
+        }
+
+        // Create TopBar ViewModel (handles all business logic)
+        let topBarViewModel = TopBarContainerViewModel(
+            userSessionStore: userSessionStore
+        )
+
+        // Wrap in TopBarContainerController
+        let container = TopBarContainerController(
+            contentViewController: promotionsViewController,
+            viewModel: topBarViewModel
+        )
+
+        // Setup navigation callbacks on container
+        container.onLoginRequested = { // [weak self] in
+            // Profile wallet cannot be present if the user isn't logged in'
+            // self?.showLogin()
+        }
+
+        container.onRegistrationRequested = { // [weak self] in
+            // Profile wallet cannot be present if the user isn't logged in'
+            // self?.showRegistration()
+        }
+
+        container.onProfileRequested = { // [weak self] in
+            // Already in profile flow, just pop to root
+            profileNavigationController.popToRootViewController(animated: true)
+        }
+
+        // Push the container
+        profileNavigationController.pushViewController(container, animated: true)
+
+        print("🚀 ProfileWalletCoordinator: Presented promotions screen")
+    }
     
     private func showPlaceholderAlert(title: String, message: String) {
         guard let profileViewController = profileViewController else { return }

@@ -199,6 +199,9 @@ extension MockProfileMenuListViewModel {
                 print("🔒 Would open change password screen")
             case .logout:
                 print("🚪 Would show logout confirmation")
+            case .promotions:
+                print("🚪 Would open promotions screen")
+
             }
         }
     }

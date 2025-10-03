@@ -257,6 +257,7 @@ public enum ProfileMenuAction: String, Codable {
     case helpCenter
     case changePassword
     case logout
+    case promotions
 }
 
 public struct ProfileMenuItem: Codable, Identifiable {

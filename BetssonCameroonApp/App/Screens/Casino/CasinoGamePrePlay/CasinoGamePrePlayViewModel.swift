@@ -162,19 +162,18 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
         )
         .receive(on: DispatchQueue.main)
         .sink(
-            receiveCompletion: { [weak self] completion in
+            receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     break
                 case .failure(let error):
                     print("Failed to load game details: \(error)")
-                    // Create fallback state with basic info
-                    self?.createFallbackState()
                 }
             },
             receiveValue: { [weak self] game in
-                guard let self = self, let game = game else {
-                    self?.createFallbackState()
+                guard
+                    let self = self
+                else {
                     return
                 }
                 
@@ -212,28 +211,6 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
             buttons: loadingButtons,
             isLoading: true
         )
-    }
-    
-    private func createFallbackState() {
-        let fallbackGameData = CasinoGamePlayModeSelectorGameData(
-            id: gameId,
-            name: "Casino Game",
-            imageURL: nil,
-            provider: "Unknown",
-            volatility: "Medium",
-            minStake: "-",
-            description: "This casino game offers exciting gameplay with potential for great rewards!"
-        )
-        
-        let buttons = determineButtonConfiguration()
-        
-        let fallbackState = CasinoGamePlayModeSelectorDisplayState(
-            gameData: fallbackGameData,
-            buttons: buttons,
-            isLoading: false
-        )
-        
-        displayStateSubject.send(fallbackState)
     }
     
     private func createDisplayState(from game: CasinoGame, isLoading: Bool) -> CasinoGamePlayModeSelectorDisplayState {

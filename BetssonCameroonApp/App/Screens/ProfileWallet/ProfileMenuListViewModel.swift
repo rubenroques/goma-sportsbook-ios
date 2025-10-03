@@ -2,7 +2,7 @@
 //  ProfileMenuListViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on 29/08/2025.
+//  Created on 29/08/2025.
 //
 
 import Foundation
@@ -75,6 +75,14 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
     
     private func loadMenuConfiguration() {
         menuItems = [
+            ProfileMenuItem(
+                id: "promotions",
+                icon: "promotion_icon",
+                title: "Promotions and Bonuses",
+                subtitle: nil,
+                type: .navigation,
+                action: .promotions
+            ),
             ProfileMenuItem(
                 id: "notifications",
                 icon: "bell",

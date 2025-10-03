@@ -2336,7 +2336,7 @@ extension Client {
         return casinoProvider.getGamesByCategory(categoryId: categoryId, language: language, platform: platform, lobbyType: lobbyType, pagination: pagination)
     }
     
-    public func getGameDetails(gameId: String, language: String? = nil, platform: String? = nil) -> AnyPublisher<CasinoGame?, ServiceProviderError> {
+    public func getGameDetails(gameId: String, language: String? = nil, platform: String? = nil) -> AnyPublisher<CasinoGame, ServiceProviderError> {
         guard let casinoProvider = self.casinoProvider else {
             return Fail(error: ServiceProviderError.casinoProviderNotFound).eraseToAnyPublisher()
         }

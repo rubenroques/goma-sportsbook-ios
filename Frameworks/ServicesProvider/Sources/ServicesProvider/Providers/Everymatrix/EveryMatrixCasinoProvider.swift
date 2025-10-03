@@ -109,7 +109,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
                 if let serviceError = error as? ServiceProviderError {
                     return serviceError
                 }
-                return ServiceProviderError.unknown(message: error.localizedDescription)
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
     }

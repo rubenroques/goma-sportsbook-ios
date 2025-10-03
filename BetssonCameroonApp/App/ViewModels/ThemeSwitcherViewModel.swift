@@ -2,7 +2,7 @@
 //  ThemeSwitcherViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on 2025
+//  Created on 2025
 //
 
 import Foundation

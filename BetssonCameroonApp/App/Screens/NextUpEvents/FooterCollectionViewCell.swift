@@ -2,7 +2,7 @@
 //  FooterCollectionViewCell.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on 01/10/2025.
+//  Created on 01/10/2025.
 //
 
 import UIKit

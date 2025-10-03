@@ -2,7 +2,7 @@
 //  MatchBannerMarketOutcomesLineViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on 26/09/2025.
+//  Created on 26/09/2025.
 //
 
 import GomaUI
