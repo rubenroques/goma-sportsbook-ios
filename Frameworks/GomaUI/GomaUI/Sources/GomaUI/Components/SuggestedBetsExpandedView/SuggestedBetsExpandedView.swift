@@ -20,6 +20,7 @@ final public class SuggestedBetsExpandedView: UIView {
     private var itemViewModels: [TallOddsMatchCardViewModelProtocol] = []
     private var headerBottomConstraint: NSLayoutConstraint?
     private var hasBeenExpandedBefore = false
+    // removed: state lives in the view model
 
     // MARK: - Init
     public init(viewModel: SuggestedBetsExpandedViewModelProtocol) {
@@ -43,11 +44,18 @@ final public class SuggestedBetsExpandedView: UIView {
 
 // MARK: - Setup
 extension SuggestedBetsExpandedView {
-    private static func createContainerView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        return view
+    private static func createContainerView() -> GradientView {
+        
+        // Gradient container as the content background
+        let gradient = GradientView()
+        gradient.translatesAutoresizingMaskIntoConstraints = false
+        gradient.colors = [
+            (StyleProvider.Color.backgroundGradient1, 0.3345),
+            (StyleProvider.Color.backgroundGradient2, 1.0)
+        ]
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.1)
+        gradient.endPoint = CGPoint(x: 1.0, y: 0.9)
+        return gradient
     }
 
     private static func createHeaderContainerView() -> GradientView {
@@ -67,8 +75,14 @@ extension SuggestedBetsExpandedView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "flame.fill")?.withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = StyleProvider.Color.primaryColor
+        
+        if let customImage = UIImage(named: "popular_icon") {
+            imageView.image = customImage.withRenderingMode(.alwaysTemplate)
+        }
+        else {
+            imageView.image = UIImage(systemName: "flame.fill")?.withRenderingMode(.alwaysTemplate)
+        }
+        imageView.tintColor = StyleProvider.Color.highlightPrimary
         return imageView
     }
 
@@ -84,22 +98,22 @@ extension SuggestedBetsExpandedView {
     private static func createChevronImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = StyleProvider.Color.primaryColor
+        if let customImage = UIImage(named: "chevron_down_icon") {
+            imageView.image = customImage.withRenderingMode(.alwaysTemplate)
+        }
+        else {
+            imageView.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
+        }
+        imageView.tintColor = StyleProvider.Color.highlightPrimary
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }
 
-    private static func createContentContainerView() -> GradientView {
-        // Gradient container as the content background
-        let gradient = GradientView()
-        gradient.translatesAutoresizingMaskIntoConstraints = false
-        gradient.colors = [
-            (StyleProvider.Color.backgroundGradient1, 0.3345),
-            (StyleProvider.Color.backgroundGradient2, 1.0)
-        ]
-        gradient.startPoint = CGPoint(x: 0.0, y: 0.1)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0.9)
-        return gradient
+    private static func createContentContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
     }
 
     private static func createCollectionView() -> UICollectionView {
@@ -156,7 +170,7 @@ extension SuggestedBetsExpandedView {
 
             chevronImageView.centerYAnchor.constraint(equalTo: headerContainerView.centerYAnchor),
             chevronImageView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -8),
-            chevronImageView.widthAnchor.constraint(equalToConstant: 18),
+            chevronImageView.widthAnchor.constraint(equalToConstant: 14),
             chevronImageView.heightAnchor.constraint(equalTo: chevronImageView.widthAnchor),
 
             titleLabel.leadingAnchor.constraint(equalTo: leftIconImageView.trailingAnchor, constant: 8),
@@ -207,13 +221,21 @@ extension SuggestedBetsExpandedView {
                 self?.pageControl.numberOfPages = models.count
             }
             .store(in: &cancellables)
+        
+        viewModel.selectedOutcomeIdsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.collectionView.reloadData()
+            }
+            .store(in: &cancellables)
+        
     }
 
     private func render(state: SuggestedBetsSectionState) {
         isHidden = !state.isVisible
         titleLabel.text = state.title
-        let chevron = state.isExpanded ? "chevron.up" : "chevron.down"
-        chevronImageView.image = UIImage(systemName: chevron)?.withRenderingMode(.alwaysTemplate)
+        
+        self.setCollapsedIconState(isExpanded: state.isExpanded)
 
         // Toggle visibility of content and update constraints so header occupies full height when collapsed
         contentContainerView.isHidden = !state.isExpanded
@@ -240,6 +262,28 @@ extension SuggestedBetsExpandedView {
 
         setNeedsLayout()
         layoutIfNeeded()
+    }
+    
+    private func setCollapsedIconState(isExpanded: Bool) {
+        
+        if isExpanded {
+            
+            if let customImage = UIImage(named: "chevron_up_icon") {
+                chevronImageView.image = customImage.withRenderingMode(.alwaysTemplate)
+            }
+            else {
+                chevronImageView.image = UIImage(systemName: "chevron.up")?.withRenderingMode(.alwaysTemplate)
+            }
+        }
+        else {
+            if let customImage = UIImage(named: "chevron_down_icon") {
+                chevronImageView.image = customImage.withRenderingMode(.alwaysTemplate)
+            }
+            else {
+                chevronImageView.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
+            }
+        }
+        
     }
 
     @objc private func toggleExpandedTapped() {
@@ -278,8 +322,9 @@ extension SuggestedBetsExpandedView: UICollectionViewDataSource, UICollectionVie
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SuggestedBetsMatchCardCell.reuseId, for: indexPath) as! SuggestedBetsMatchCardCell
-        let vm = itemViewModels[indexPath.item]
-        cell.configure(with: vm)
+        let viewModel = itemViewModels[indexPath.item]
+        cell.configure(with: viewModel, selectedOutcomeIds: self.viewModel.selectedOutcomeIds)
+        
         return cell
     }
 
@@ -298,6 +343,7 @@ extension SuggestedBetsExpandedView: UICollectionViewDataSource, UICollectionVie
 final class SuggestedBetsMatchCardCell: UICollectionViewCell {
     static let reuseId = "SuggestedBetsMatchCardCell"
     private var matchCardView: TallOddsMatchCardView?
+    private var cancellables = Set<AnyCancellable>()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -308,11 +354,15 @@ final class SuggestedBetsMatchCardCell: UICollectionViewCell {
         return nil
     }
 
-    func configure(with vm: TallOddsMatchCardViewModelProtocol) {
+    func configure(with viewModel: TallOddsMatchCardViewModelProtocol,
+                   selectedOutcomeIds: Set<String>) {
+        
+        cancellables.removeAll()
+        
         if let existing = matchCardView {
-            existing.configure(with: vm)
+            existing.configure(with: viewModel)
         } else {
-            let view = TallOddsMatchCardView(viewModel: vm)
+            let view = TallOddsMatchCardView(viewModel: viewModel, customBackgroundColor: .clear)
             view.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(view)
             NSLayoutConstraint.activate([
@@ -323,6 +373,45 @@ final class SuggestedBetsMatchCardCell: UICollectionViewCell {
             ])
             matchCardView = view
         }
+        
+        viewModel.marketOutcomesViewModelPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] marketOutcomes in
+                
+                // Check each line view model for all outcomes
+                for lineViewModel in marketOutcomes.lineViewModels {
+                    // Check left outcome
+                    if let leftOutcome = lineViewModel.marketStateSubject.value.leftOutcome {
+                        let shouldBeSelected = selectedOutcomeIds.contains(leftOutcome.id)
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .left)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .left)
+                        }
+                    }
+                    
+                    // Check middle outcome
+                    if let middleOutcome = lineViewModel.marketStateSubject.value.middleOutcome {
+                        let shouldBeSelected = selectedOutcomeIds.contains(middleOutcome.id)
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .middle)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .middle)
+                        }
+                    }
+                    
+                    // Check right outcome
+                    if let rightOutcome = lineViewModel.marketStateSubject.value.rightOutcome {
+                        let shouldBeSelected = selectedOutcomeIds.contains(rightOutcome.id)
+                        if shouldBeSelected {
+                            lineViewModel.setOutcomeSelected(type: .right)
+                        } else {
+                            lineViewModel.setOutcomeDeselected(type: .right)
+                        }
+                    }
+                }
+            })
+            .store(in: &cancellables)
     }
 }
 

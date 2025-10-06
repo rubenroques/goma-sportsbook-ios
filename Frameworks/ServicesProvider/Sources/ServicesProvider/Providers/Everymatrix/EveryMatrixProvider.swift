@@ -853,12 +853,21 @@ class EveryMatrixEventsProvider: EventsProvider {
             .flatMap { [weak self] eventIds -> AnyPublisher<[Event], ServiceProviderError> in
                 guard let self = self else { return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher() }
 
-                let perEventPublishers: [AnyPublisher<Event, ServiceProviderError>] = eventIds.map { eventId in
-                    return self.getEventDetails(eventId: eventId)
+                // For each eventId, fetch details but catch errors so one failure doesn't cancel all
+                let perEventPublishers: [AnyPublisher<Event?, Never>] = eventIds.map { eventId in
+                    self.getEventDetails(eventId: eventId)
+                        .map { Optional($0) }
+                        .catch { error -> AnyPublisher<Event?, Never> in
+                            print("⚠️ Skipping recommended event \(eventId) due to error: \(error)")
+                            return Just(nil).eraseToAnyPublisher()
+                        }
+                        .eraseToAnyPublisher()
                 }
 
                 return Publishers.MergeMany(perEventPublishers)
                     .collect()
+                    .map { $0.compactMap { $0 } }
+                    .setFailureType(to: ServiceProviderError.self)
                     .eraseToAnyPublisher()
             }
             .mapError { error -> ServiceProviderError in
@@ -884,12 +893,20 @@ class EveryMatrixEventsProvider: EventsProvider {
             .flatMap { [weak self] eventIds -> AnyPublisher<[Event], ServiceProviderError> in
                 guard let self = self else { return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher() }
 
-                let perEventPublishers: [AnyPublisher<Event, ServiceProviderError>] = eventIds.map { eventId in
-                    return self.getEventDetails(eventId: eventId)
+                let perEventPublishers: [AnyPublisher<Event?, Never>] = eventIds.map { eventId in
+                    self.getEventDetails(eventId: eventId)
+                        .map { Optional.some($0) }
+                        .catch { error -> AnyPublisher<Event?, Never> in
+                            print("⚠️ Skipping combo recommended event \(eventId) due to error: \(error)")
+                            return Just(nil).eraseToAnyPublisher()
+                        }
+                        .eraseToAnyPublisher()
                 }
 
                 return Publishers.MergeMany(perEventPublishers)
                     .collect()
+                    .map { $0.compactMap { $0 } }
+                    .setFailureType(to: ServiceProviderError.self)
                     .eraseToAnyPublisher()
             }
             .mapError { error -> ServiceProviderError in

@@ -4,10 +4,14 @@ import Combine
 public final class MockSuggestedBetsExpandedViewModel: SuggestedBetsExpandedViewModelProtocol {
     private let displayStateSubject: CurrentValueSubject<SuggestedBetsSectionState, Never>
     private let matchCardsSubject: CurrentValueSubject<[TallOddsMatchCardViewModelProtocol], Never>
+    private let selectedOutcomeIdsSubject: CurrentValueSubject<Set<String>, Never> = .init([])
 
     public var displayStatePublisher: AnyPublisher<SuggestedBetsSectionState, Never> { displayStateSubject.eraseToAnyPublisher() }
     public var matchCardViewModelsPublisher: AnyPublisher<[TallOddsMatchCardViewModelProtocol], Never> { matchCardsSubject.eraseToAnyPublisher() }
     public var matchCardViewModels: [TallOddsMatchCardViewModelProtocol] { matchCardsSubject.value }
+    // Expose selected outcome IDs to allow external selection syncing (e.g., betslip tickets)
+    public var selectedOutcomeIdsPublisher: AnyPublisher<Set<String>, Never> { selectedOutcomeIdsSubject.eraseToAnyPublisher() }
+    public var selectedOutcomeIds: Set<String> { selectedOutcomeIdsSubject.value }
 
     public init(title: String = "Explore more bets",
                 isExpanded: Bool = true,
@@ -57,6 +61,11 @@ public final class MockSuggestedBetsExpandedViewModel: SuggestedBetsExpandedView
                                                 totalPages: matchCardViewModels.count,
                                                 isVisible: !matchCardViewModels.isEmpty)
         displayStateSubject.send(updated)
+    }
+
+    // External update of selected outcome ids (e.g., from betslip tickets)
+    public func updateSelectedOutcomeIds(_ ids: Set<String>) {
+        selectedOutcomeIdsSubject.send(ids)
     }
 
     // Convenience factory

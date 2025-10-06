@@ -132,6 +132,12 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                 self?.ticketsSubject.send(tickets)
                 // Recalculate potential winnings when tickets change
                 self?.calculatePotentialWinnings()
+
+                // Forward selected outcomes to suggested bets VM (for cell selection state)
+                if let mockSuggested = self?.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
+                    let selectedOutcomeIds = Set(tickets.map { String($0.outcomeId) })
+                    mockSuggested.updateSelectedOutcomeIds(selectedOutcomeIds)
+                }
             }
             .store(in: &cancellables)
         

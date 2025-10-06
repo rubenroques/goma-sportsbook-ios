@@ -31,6 +31,10 @@ public protocol SuggestedBetsExpandedViewModelProtocol: AnyObject {
     var matchCardViewModelsPublisher: AnyPublisher<[TallOddsMatchCardViewModelProtocol], Never> { get }
     var matchCardViewModels: [TallOddsMatchCardViewModelProtocol] { get }
 
+    // Selected outcomes coming from the betslip (for selection sync in cells)
+    var selectedOutcomeIdsPublisher: AnyPublisher<Set<String>, Never> { get }
+    var selectedOutcomeIds: Set<String> { get }
+
     // Actions
     func toggleExpanded()
     func didScrollToPage(_ index: Int)
