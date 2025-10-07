@@ -4,6 +4,7 @@ import Combine
 
 /// Data model for the bet info submission view
 public struct BetInfoSubmissionData: Equatable {
+    public let odds: String
     public let potentialWinnings: String
     public let winBonus: String
     public let payout: String
@@ -13,6 +14,7 @@ public struct BetInfoSubmissionData: Equatable {
     public let currency: String
     
     public init(
+        odds: String = "0.00",
         potentialWinnings: String = "XAF 0",
         winBonus: String = "XAF 0",
         payout: String = "XAF 0",
@@ -21,6 +23,7 @@ public struct BetInfoSubmissionData: Equatable {
         isEnabled: Bool = true,
         currency: String = "XAF"
     ) {
+        self.odds = odds
         self.potentialWinnings = potentialWinnings
         self.winBonus = winBonus
         self.payout = payout
@@ -40,6 +43,7 @@ public protocol BetInfoSubmissionViewModelProtocol {
     var currentData: BetInfoSubmissionData { get }
     
     /// Child view models
+    var oddsRowViewModel: BetSummaryRowViewModelProtocol { get }
     var potentialWinningsRowViewModel: BetSummaryRowViewModelProtocol { get }
     var winBonusRowViewModel: BetSummaryRowViewModelProtocol { get }
     var payoutRowViewModel: BetSummaryRowViewModelProtocol { get }
@@ -49,6 +53,9 @@ public protocol BetInfoSubmissionViewModelProtocol {
     var amountTextFieldViewModel: BorderedTextFieldViewModelProtocol { get }
     var placeBetButtonViewModel: ButtonViewModelProtocol { get }
     
+    /// Update odds
+    func updateOdds(_ odds: String)
+
     /// Update potential winnings
     func updatePotentialWinnings(_ amount: String)
     

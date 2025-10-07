@@ -20,7 +20,7 @@ final public class SuggestedBetsExpandedView: UIView {
     private var itemViewModels: [TallOddsMatchCardViewModelProtocol] = []
     private var headerBottomConstraint: NSLayoutConstraint?
     private var hasBeenExpandedBefore = false
-    // removed: state lives in the view model
+   
 
     // MARK: - Init
     public init(viewModel: SuggestedBetsExpandedViewModelProtocol) {
@@ -46,7 +46,6 @@ final public class SuggestedBetsExpandedView: UIView {
 extension SuggestedBetsExpandedView {
     private static func createContainerView() -> GradientView {
         
-        // Gradient container as the content background
         let gradient = GradientView()
         gradient.translatesAutoresizingMaskIntoConstraints = false
         gradient.colors = [
@@ -59,7 +58,7 @@ extension SuggestedBetsExpandedView {
     }
 
     private static func createHeaderContainerView() -> GradientView {
-        // Gradient container as the header background
+        
         let gradient = GradientView()
         gradient.translatesAutoresizingMaskIntoConstraints = false
         gradient.colors = [
@@ -131,12 +130,12 @@ extension SuggestedBetsExpandedView {
     }
 
     private static func createPageControl() -> UIPageControl {
-        let pc = UIPageControl()
-        pc.translatesAutoresizingMaskIntoConstraints = false
-        pc.currentPageIndicatorTintColor = StyleProvider.Color.navBannerActive
-        pc.pageIndicatorTintColor = StyleProvider.Color.navBanner
-        pc.hidesForSinglePage = true
-        return pc
+        let pageControl = UIPageControl()
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageControl.currentPageIndicatorTintColor = StyleProvider.Color.navBannerActive
+        pageControl.pageIndicatorTintColor = StyleProvider.Color.navBanner
+        pageControl.hidesForSinglePage = true
+        return pageControl
     }
 
     private func setupSubviews() {
@@ -182,8 +181,6 @@ extension SuggestedBetsExpandedView {
             contentContainerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             contentContainerView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor),
             contentContainerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-
-            
 
             collectionView.leadingAnchor.constraint(equalTo: contentContainerView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: contentContainerView.trailingAnchor),
@@ -236,15 +233,11 @@ extension SuggestedBetsExpandedView {
         titleLabel.text = state.title
         
         self.setCollapsedIconState(isExpanded: state.isExpanded)
-
-        // Toggle visibility of content and update constraints so header occupies full height when collapsed
-        contentContainerView.isHidden = !state.isExpanded
         pageControl.isHidden = !state.isExpanded || state.totalPages <= 1
 
         if state.isExpanded {
             headerBottomConstraint?.isActive = false
             
-            // Only reload collection view on first expansion
             if !hasBeenExpandedBefore {
                 hasBeenExpandedBefore = true
                 DispatchQueue.main.async {
@@ -256,13 +249,12 @@ extension SuggestedBetsExpandedView {
         } else {
             headerBottomConstraint?.isActive = true
         }
-
+        
         pageControl.numberOfPages = max(state.totalPages, itemViewModels.count)
         pageControl.currentPage = min(state.currentPageIndex, max(pageControl.numberOfPages - 1, 0))
-
-        setNeedsLayout()
-        layoutIfNeeded()
     }
+
+    
     
     private func setCollapsedIconState(isExpanded: Bool) {
         

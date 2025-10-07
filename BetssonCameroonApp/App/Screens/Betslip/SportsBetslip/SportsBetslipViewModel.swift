@@ -130,6 +130,8 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
                 self?.ticketsSubject.send(tickets)
+                // Recalculate odds
+                self?.calculateOdds()
                 // Recalculate potential winnings when tickets change
                 self?.calculatePotentialWinnings()
 
@@ -251,6 +253,20 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         betInfoSubmissionViewModel.updatePotentialWinnings(formattedWinnings)
         
         print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
+    }
+    
+    private func calculateOdds() {
+        
+        // Calculate total odds by multiplying each odd value sequentially
+        var totalOdds = 1.0
+        for ticket in currentTickets {
+            totalOdds *= ticket.decimalOdd
+        }
+        
+        let formattedOdds = String(format: "%.2f", totalOdds)
+
+        betInfoSubmissionViewModel.updateOdds(formattedOdds)
+        
     }
     
     func convertToDouble(_ string: String) -> Double {

@@ -85,6 +85,13 @@ class SportsBetslipViewController: UIViewController {
     }()
     
     // Login button
+    private lazy var loginButtonContainerView: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .clear
+        return container
+    }()
+    
     private lazy var loginButton: ButtonView = {
         let button = ButtonView(viewModel: viewModel.loginButtonViewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -99,8 +106,6 @@ class SportsBetslipViewController: UIViewController {
         stack.spacing = 0
         stack.alignment = .fill
         stack.distribution = .fill
-//        stack.isLayoutMarginsRelativeArrangement = true
-//        stack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         return stack
     }()
     
@@ -150,7 +155,8 @@ class SportsBetslipViewController: UIViewController {
         // Add arranged subviews to stack
         bottomActionsStackView.addArrangedSubview(betInfoSubmissionView)
         bottomActionsStackView.addArrangedSubview(codeInputView)
-        bottomActionsStackView.addArrangedSubview(loginButton)
+        bottomActionsStackView.addArrangedSubview(loginButtonContainerView)
+        loginButtonContainerView.addSubview(loginButton)
         
         // Add loading view on top of everything
         view.addSubview(loadingView)
@@ -198,7 +204,16 @@ class SportsBetslipViewController: UIViewController {
             // Bottom actions stack - bottom of the view
             bottomActionsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomActionsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomActionsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomActionsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+        ])
+        
+        // Login button container internal padding
+        NSLayoutConstraint.activate([
+            loginButton.leadingAnchor.constraint(equalTo: loginButtonContainerView.leadingAnchor, constant: 16),
+            loginButton.trailingAnchor.constraint(equalTo: loginButtonContainerView.trailingAnchor, constant: -16),
+            loginButton.topAnchor.constraint(equalTo: loginButtonContainerView.topAnchor, constant: 16),
+            loginButton.bottomAnchor.constraint(equalTo: loginButtonContainerView.bottomAnchor, constant: -16)
         ])
         
         // Loading view constraints - covers the entire view
@@ -237,19 +252,19 @@ class SportsBetslipViewController: UIViewController {
             case .noTicketsLoggedOut:
                 self?.betInfoSubmissionView.isHidden = true
                 self?.codeInputView.isHidden = true
-                self?.loginButton.isHidden = true
+                self?.loginButtonContainerView.isHidden = true
             case .ticketsLoggedOut:
                 self?.betInfoSubmissionView.isHidden = true
                 self?.codeInputView.isHidden = true
-                self?.loginButton.isHidden = false
+                self?.loginButtonContainerView.isHidden = false
             case .noTicketsLoggedIn:
                 self?.betInfoSubmissionView.isHidden = true
                 self?.codeInputView.isHidden = false
-                self?.loginButton.isHidden = true
+                self?.loginButtonContainerView.isHidden = true
             case .ticketsLoggedIn:
                 self?.betInfoSubmissionView.isHidden = false
                 self?.codeInputView.isHidden = true
-                self?.loginButton.isHidden = true
+                self?.loginButtonContainerView.isHidden = true
                 
             }
         }
