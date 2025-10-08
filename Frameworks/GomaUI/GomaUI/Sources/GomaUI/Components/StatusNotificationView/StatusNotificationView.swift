@@ -3,34 +3,6 @@ import UIKit
 import Combine
 import SwiftUI
 
-public enum StatusNotificationType {
-    case success
-    case error
-    case warning
-    
-    var backgroundColor: UIColor {
-        switch self {
-        case .success:
-            return StyleProvider.Color.alertSuccess
-        case .error:
-            return StyleProvider.Color.alertError
-        case .warning:
-            return StyleProvider.Color.alertWarning
-        }
-    }
-    
-    var iconImage: UIImage? {
-        switch self {
-        case .success:
-            return UIImage(named: "checkmark.circle.fill")
-        case .error:
-            return UIImage(systemName: "xmark.circle.fill")
-        case .warning:
-            return UIImage(systemName: "exclamationmark.triangle.fill")
-        }
-    }
-}
-
 public final class StatusNotificationView: UIView {
     
     // MARK: - UI Components
@@ -136,29 +108,106 @@ public final class StatusNotificationView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-struct StatusNotificationView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 16) {
-            PreviewUIView {
-                StatusNotificationView(viewModel: MockStatusNotificationViewModel.successMock)
-            }
-            .frame(height: 48)
-            .previewDisplayName("Success")
-            
-            PreviewUIView {
-                StatusNotificationView(viewModel: MockStatusNotificationViewModel.errorMock)
-            }
-            .frame(height: 48)
-            .previewDisplayName("Error")
-            
-            PreviewUIView {
-                StatusNotificationView(viewModel: MockStatusNotificationViewModel.warningMock)
-            }
-            .frame(height: 48)
-            .previewDisplayName("Alert")
-        }
-        .padding()
-        .frame(maxHeight: 250)
+#Preview("Success") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockStatusNotificationViewModel.successMock
+        let notificationView = StatusNotificationView(viewModel: mockViewModel)
+        notificationView.translatesAutoresizingMaskIntoConstraints = false
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(notificationView)
+
+        NSLayoutConstraint.activate([
+            notificationView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            notificationView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            notificationView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+
+        return vc
     }
 }
+
+@available(iOS 17.0, *)
+#Preview("Error") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockStatusNotificationViewModel.errorMock
+        let notificationView = StatusNotificationView(viewModel: mockViewModel)
+        notificationView.translatesAutoresizingMaskIntoConstraints = false
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(notificationView)
+
+        NSLayoutConstraint.activate([
+            notificationView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            notificationView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            notificationView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Warning") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockStatusNotificationViewModel.warningMock
+        let notificationView = StatusNotificationView(viewModel: mockViewModel)
+        notificationView.translatesAutoresizingMaskIntoConstraints = false
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(notificationView)
+
+        NSLayoutConstraint.activate([
+            notificationView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            notificationView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            notificationView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+
+        let successView = StatusNotificationView(viewModel: MockStatusNotificationViewModel.successMock)
+        successView.translatesAutoresizingMaskIntoConstraints = false
+
+        let errorView = StatusNotificationView(viewModel: MockStatusNotificationViewModel.errorMock)
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+
+        let warningView = StatusNotificationView(viewModel: MockStatusNotificationViewModel.warningMock)
+        warningView.translatesAutoresizingMaskIntoConstraints = false
+
+        vc.view.addSubview(successView)
+        vc.view.addSubview(errorView)
+        vc.view.addSubview(warningView)
+
+        NSLayoutConstraint.activate([
+            // Success view (top)
+            successView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            successView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            successView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+
+            // Error view (middle)
+            errorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            errorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            errorView.topAnchor.constraint(equalTo: successView.bottomAnchor, constant: 16),
+
+            // Warning view (bottom)
+            warningView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            warningView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            warningView.topAnchor.constraint(equalTo: errorView.bottomAnchor, constant: 16)
+        ])
+
+        return vc
+    }
+}
+
 #endif

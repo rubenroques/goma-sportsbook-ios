@@ -8,9 +8,13 @@
 import Foundation
 
 extension EveryMatrix {
-    
+
     // MARK: - MyBets Request Models
-    
+
+    struct EarlySettlementOption: Codable {
+        let scoreDifference: Double?
+    }
+
     struct CashoutRequest: Codable {
         let betId: String
         let cashoutValue: Double
@@ -80,8 +84,12 @@ extension EveryMatrix {
         let paymentTime: String?
         let ticketCode: String?
         let paymentStatus: String?
-        
-        
+        let bonusWalletId: String?
+        let hasBonusMoney: Bool?
+        let realStake: Double?
+        let bonusStake: Double?
+
+
         enum CodingKeys: String, CodingKey {
             case id
             case selections
@@ -135,9 +143,13 @@ extension EveryMatrix {
             case paymentTime
             case ticketCode
             case paymentStatus
+            case bonusWalletId
+            case hasBonusMoney
+            case realStake
+            case bonusStake
         }
     }
-    
+
     struct BetSelection: Codable {
         let id: String?
         let outcomeId: String?
@@ -179,7 +191,7 @@ extension EveryMatrix {
         let eachWay: String?
         let earlySettlement: String?
         let earlySettlementDate: String?
-        let earlySettlementOption: String?
+        let earlySettlementOption: EarlySettlementOption?
         let eventTemplateName: String?
         let boreDrawOption: String?
         let venueId: String?

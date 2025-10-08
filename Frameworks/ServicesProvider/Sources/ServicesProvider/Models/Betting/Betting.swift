@@ -48,6 +48,10 @@ public struct Bet: Codable, Equatable, Hashable {
     // Note: This property was only present in Multibet implementation
     public var shareId: String?
 
+    // MARK: - EveryMatrix specific properties
+    // Ticket code for customer reference
+    public var ticketCode: String?
+
     public init(
         identifier: String,
         type: String,
@@ -68,7 +72,8 @@ public struct Bet: Codable, Equatable, Hashable {
         freebetReturn: Double? = nil,
         potentialCashbackReturn: Double? = nil,
         potentialFreebetReturn: Double? = nil,
-        shareId: String? = nil
+        shareId: String? = nil,
+        ticketCode: String? = nil
     ) {
         self.identifier = identifier
         self.type = type
@@ -90,6 +95,7 @@ public struct Bet: Codable, Equatable, Hashable {
         self.potentialCashbackReturn = potentialCashbackReturn
         self.potentialFreebetReturn = potentialFreebetReturn
         self.shareId = shareId
+        self.ticketCode = ticketCode
     }
 }
 

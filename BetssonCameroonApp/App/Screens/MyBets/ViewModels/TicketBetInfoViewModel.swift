@@ -230,7 +230,7 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     }
     
     private static func formatBetDetails(_ myBet: MyBet) -> String {
-        return "Bet ID: \(myBet.identifier)"
+        return "Ticket: \(myBet.displayTicketReference)"
     }
     
     private static func formatOdds(_ oddFormat: OddFormat) -> String {

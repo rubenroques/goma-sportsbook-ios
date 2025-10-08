@@ -73,9 +73,9 @@ final class MyBetDetailViewModel: ObservableObject {
 
 extension MyBetDetailViewModel {
     
-    /// Returns a formatted bet identifier for display
+    /// Returns a formatted ticket reference for display
     var displayBetId: String {
-        return "Bet #\(bet.identifier)"
+        return "Ticket #\(bet.displayTicketReference)"
     }
     
     /// Returns a formatted bet type description

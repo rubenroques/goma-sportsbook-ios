@@ -188,38 +188,68 @@ public final class BetInfoSubmissionView: UIView {
 
 @available(iOS 17.0, *)
 #Preview("Default") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.defaultMock(currency: "XAF"))
-        }
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockBetInfoSubmissionViewModel.defaultMock(currency: "XAF")
+        let betInfoView = BetInfoSubmissionView(viewModel: mockViewModel)
+        betInfoView.translatesAutoresizingMaskIntoConstraints = false
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(betInfoView)
+
+        NSLayoutConstraint.activate([
+            betInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            betInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            betInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+
+        return vc
     }
-    .frame(height: 200)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Sample Data") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.withAmountsMock(currency: "XAF"))
-        }
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockBetInfoSubmissionViewModel.withAmountsMock(currency: "XAF")
+        let betInfoView = BetInfoSubmissionView(viewModel: mockViewModel)
+        betInfoView.translatesAutoresizingMaskIntoConstraints = false
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(betInfoView)
+
+        NSLayoutConstraint.activate([
+            betInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            betInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            betInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+
+        return vc
     }
-    .frame(height: 200)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Disabled") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.disabledMock(currency: "XAF"))
-        }
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockBetInfoSubmissionViewModel.disabledMock(currency: "XAF")
+        let betInfoView = BetInfoSubmissionView(viewModel: mockViewModel)
+        betInfoView.translatesAutoresizingMaskIntoConstraints = false
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(betInfoView)
+
+        NSLayoutConstraint.activate([
+            betInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            betInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            betInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+
+        return vc
     }
-    .frame(height: 200)
-    .padding()
 }
 
-#endif 
+#endif
+
+
+ 

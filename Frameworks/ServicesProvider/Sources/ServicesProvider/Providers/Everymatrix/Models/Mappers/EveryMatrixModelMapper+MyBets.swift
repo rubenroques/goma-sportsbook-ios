@@ -48,7 +48,8 @@ extension EveryMatrixModelMapper {
             date: date,
             freebet: everyMatrixBet.freeBet ?? false,
             partialCashoutReturn: everyMatrixBet.overallCashoutAmount,
-            partialCashoutStake: everyMatrixBet.betRemainingStake
+            partialCashoutStake: everyMatrixBet.betRemainingStake,
+            ticketCode: everyMatrixBet.ticketCode
         )
     }
     

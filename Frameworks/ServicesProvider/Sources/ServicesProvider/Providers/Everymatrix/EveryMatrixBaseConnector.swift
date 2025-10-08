@@ -205,6 +205,10 @@ class EveryMatrixBaseConnector: Connector {
             print("[EveryMatrix-\(apiIdentifier)] 📋 Request headers: \(headers)")
         }
 
+        print("============ \n [EveryMatrix-\(apiIdentifier)] cURL Command:")
+        print(request.cURL(pretty: true))
+        print("============\n")
+        
         return session.dataTaskPublisher(for: request)
             .tryMap { [weak self] result in
                 guard let self = self else {

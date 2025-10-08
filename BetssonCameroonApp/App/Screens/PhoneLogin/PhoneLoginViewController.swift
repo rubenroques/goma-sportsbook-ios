@@ -284,10 +284,10 @@ class PhoneLoginViewController: UIViewController {
             .sink { phone in
                 if phone.isEmpty {
                     // First tap: Fill with the provided credentials
-                    phoneToSet = "+237666999005"
+                    phoneToSet = "699198921"
                     passwordToSet = "4050"
                 }
-                else if phone == "+237666999005" {
+                else if phone == "666999005" {
                     // Second tap: Alternative test account
                     phoneToSet = "+237123456789"
                     passwordToSet = "test123"

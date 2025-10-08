@@ -276,14 +276,21 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
 
         let type = selections.count > 1 ? "MULTIPLE" : "SINGLE"
 
+        let domainId = EveryMatrixUnifiedConfiguration.shared.domainId
+        let operatorId = Int(domainId) ?? 4093
+
         return EveryMatrix.PlaceBetRequest(
+            ucsOperatorId: operatorId,
+            userId: userId ?? "",
+            username: username ?? "",
+            currency: currency ?? "EUR",
             type: type,
-            systemBetType: nil,
-            eachWay: false,
             selections: selections,
-            stakeAmount: totalAmount,
+            amount: String(format: "%.2f", totalAmount),
+            oddsValidationType: oddsValidationType ?? "ACCEPT_ANY",
             terminalType: "SSBT",
-            lang: "en"
+            ubsWalletId: nil,
+            freeBet: nil
         )
     }
     
