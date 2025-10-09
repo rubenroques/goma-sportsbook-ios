@@ -1138,8 +1138,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                         self?.betBuilderWarningView.alpha = 1.0
                     }
                     else {
-                        self?.multipleWinningsValueLabel.text = localized("no_value")
-                        self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
+                        self?.mixMatchWinningsValueLabel.text = localized("no_value")
+                        self?.secondaryMixMatchWinningsValueLabel.text = localized("no_value")
                     }
                 }
 
@@ -2720,14 +2720,27 @@ extension PreSubmissionBetslipViewController {
 
             // Hide error view
             self.betBuilderWarningView.alpha = 0.0
+            
+            if self.isCashbackToggleOn.value {
+                let freeBetPotentialReturn = potentialReturn.potentialReturn - potentialReturn.totalStake
+                
+                let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBetPotentialReturn)) ?? localized("no_value")
 
-            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: potentialReturn.potentialReturn)) ?? localized("no_value")
+                self.mixMatchWinningsValueLabel.text = possibleWinningsString
+                self.secondaryMixMatchWinningsValueLabel.text = possibleWinningsString
 
-            self.mixMatchWinningsValueLabel.text = possibleWinningsString
-            self.secondaryMixMatchWinningsValueLabel.text = possibleWinningsString
+                self.mixMatchOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
+                self.secondaryMixMatchOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
+            }
+            else {
+                let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: potentialReturn.potentialReturn)) ?? localized("no_value")
 
-            self.mixMatchOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
-            self.secondaryMixMatchOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
+                self.mixMatchWinningsValueLabel.text = possibleWinningsString
+                self.secondaryMixMatchWinningsValueLabel.text = possibleWinningsString
+
+                self.mixMatchOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
+                self.secondaryMixMatchOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
+            }
 
         case .invalid:
             print("DebugMixMatch: response invalid")
