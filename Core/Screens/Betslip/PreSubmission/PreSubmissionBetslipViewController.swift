@@ -2740,10 +2740,17 @@ extension PreSubmissionBetslipViewController {
     }
 
     private func placeBetBuilderBet() {
-        if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-            if self.betValueSubject.value > cashbackValue {
-                let errorMessage = localized("betslip_cashback_error")
-                self.showErrorView(errorMessage: errorMessage)
+        if self.isCashbackToggleOn.value {
+            let cashbackValue = Env.userSessionStore.userCashbackBalance.value ?? 0.0
+            let freeBetValue = Env.userSessionStore.userFreeBetBalance.value ?? 0.0
+            let maxAvailableBalance = max(cashbackValue, freeBetValue)
+            
+            if self.betValueSubject.value > maxAvailableBalance {
+                let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxAvailableBalance))
+                
+                let errorMessage = localized("betslip_credits_error").replacingFirstOccurrence(of: "{amount}", with: amount ?? "")
+                
+                self.showErrorView(errorMessage: errorMessage, isAlertLayout: true)
                 self.isLoading = false
                 return
             }
