@@ -739,6 +739,33 @@ class EveryMatrixEventsProvider: EventsProvider {
         return self.getEventWithMainMarkets(eventId: eventId, mainMarketsCount: 1)
     }
 
+    func getBettingOfferReference(forOutcomeId outcomeId: String) -> AnyPublisher<OutcomeBettingOfferReference, ServiceProviderError> {
+        print("[EveryMatrixProvider] 🎯 Getting betting offer reference for outcome: \(outcomeId)")
+
+        let router = WAMPRouter.getBettingOfferReference(outcomeId: outcomeId)
+
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.BettingOfferReferenceResponse, ServiceProviderError> = connector.request(router)
+
+        return rpcResponsePublisher
+            .tryMap { response in
+                guard let reference = EveryMatrixModelMapper.outcomeBettingOfferReference(fromResponse: response) else {
+                    print("[EveryMatrixProvider] ❌ Failed to map betting offer reference for outcome \(outcomeId)")
+                    throw ServiceProviderError.errorMessage(message: "Failed to map betting offer reference for outcome \(outcomeId)")
+                }
+
+                print("[EveryMatrixProvider] ✅ Resolved outcome \(outcomeId) → event: \(reference.eventId), offers: \(reference.bettingOfferIds)")
+                return reference
+            }
+            .mapError { error in
+                if let serviceError = error as? ServiceProviderError {
+                    return serviceError
+                }
+                print("[EveryMatrixProvider] ❌ Error getting betting offer reference: \(error.localizedDescription)")
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
     private func getEventWithMainMarkets(eventId: String, mainMarketsCount: Int = 1) -> AnyPublisher<Event, ServiceProviderError> {
         let language = "en" // Could be made configurable
         let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()

@@ -97,6 +97,18 @@ protocol EventsProvider: Connector {
 
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError>
 
+    /// Resolves a betting outcome ID to its current betting offer IDs and parent event.
+    ///
+    /// This is primarily used for the **rebet feature** to reconstruct betting tickets.
+    /// Historical bets store outcome IDs, but placing new bets requires betting offer IDs.
+    ///
+    /// **Use Case**: When a user taps "Rebet" on a historical bet, we need to convert the
+    /// stored outcome IDs into current betting offer IDs to place a fresh bet.
+    ///
+    /// - Parameter outcomeId: The outcome identifier from a historical bet selection
+    /// - Returns: Reference containing event ID and betting offer IDs, or error if outcome not found
+    func getBettingOfferReference(forOutcomeId outcomeId: String) -> AnyPublisher<OutcomeBettingOfferReference, ServiceProviderError>
+
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>
 
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>

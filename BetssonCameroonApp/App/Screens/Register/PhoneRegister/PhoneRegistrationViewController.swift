@@ -56,6 +56,9 @@ class PhoneRegistrationViewController: UIViewController {
     private var phonePrefixField: BorderedTextFieldView?
     private var phoneField: BorderedTextFieldView?
     private var passwordField: BorderedTextFieldView?
+    private var firstNameField: BorderedTextFieldView?
+    private var lastNameField: BorderedTextFieldView?
+    private var birthDateField: BorderedTextFieldView?
     private var termsView: TermsAcceptanceView?
     private let createAccountButton: ButtonView
     
@@ -182,12 +185,30 @@ class PhoneRegistrationViewController: UIViewController {
             componentsStackView.addArrangedSubview(passwordField)
         }
 
+        if let firstNameFieldViewModel = viewModel.firstNameFieldViewModel {
+            let firstNameField = BorderedTextFieldView(viewModel: firstNameFieldViewModel)
+            self.firstNameField = firstNameField
+            componentsStackView.addArrangedSubview(firstNameField)
+        }
+
+        if let lastNameFieldViewModel = viewModel.lastNameFieldViewModel {
+            let lastNameField = BorderedTextFieldView(viewModel: lastNameFieldViewModel)
+            self.lastNameField = lastNameField
+            componentsStackView.addArrangedSubview(lastNameField)
+        }
+
+        if let birthDateFieldViewModel = viewModel.birthDateFieldViewModel {
+            let birthDateField = BorderedTextFieldView(viewModel: birthDateFieldViewModel)
+            self.birthDateField = birthDateField
+            componentsStackView.addArrangedSubview(birthDateField)
+        }
+
         if let termsViewModel = viewModel.termsViewModel {
             let termsView = TermsAcceptanceView(viewModel: termsViewModel)
             self.termsView = termsView
             termsView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(termsView)
-            
+
             NSLayoutConstraint.activate([
                 termsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
                 termsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),

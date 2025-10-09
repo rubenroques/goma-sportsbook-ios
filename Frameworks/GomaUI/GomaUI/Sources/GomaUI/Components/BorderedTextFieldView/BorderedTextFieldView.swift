@@ -92,8 +92,6 @@ final public class BorderedTextFieldView: UIView {
 
         // Floating label setup
         floatingLabel.translatesAutoresizingMaskIntoConstraints = false
-//        floatingLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-//        floatingLabel.textColor = StyleProvider.Color.highlightSecondary
         floatingLabel.backgroundColor = .clear
         containerView.addSubview(floatingLabel)
 
@@ -136,9 +134,8 @@ final public class BorderedTextFieldView: UIView {
         // Text field constraints (with padding for suffix button area)
         textFieldLeadingConstraint = textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding)
         textFieldLeadingConstraint.isActive = true
-        
+
         NSLayoutConstraint.activate([
-//            textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding),
             textField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             textField.heightAnchor.constraint(equalToConstant: 24),
             textField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -(Constants.horizontalPadding + Constants.suffixButtonSize + 8))
@@ -205,7 +202,6 @@ final public class BorderedTextFieldView: UIView {
         viewModel.placeholderPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] placeholder in
-//                self?.floatingLabel.text = placeholder
                 self?.updatePlaceholderWithHighlightedAsterisk(placeholder)
 
                 // Remove textField placeholder since floatingLabel handles both states
@@ -296,8 +292,6 @@ final public class BorderedTextFieldView: UIView {
         case .disabled:
             updateForDisabledState()
         }
-
-        updateAccessibilityForCurrentState()
     }
 
     private func updateForIdleState() {
@@ -311,7 +305,6 @@ final public class BorderedTextFieldView: UIView {
         textField.isEnabled = true
         alpha = 1.0
         isUserInteractionEnabled = true
-        
     }
 
     private func updateForFocusedState() {
@@ -510,25 +503,6 @@ final public class BorderedTextFieldView: UIView {
         
         if viewModel.prefixText != nil {
             prefixLabel.isHidden = true
-        }
-    }
-
-
-
-    private func updateAccessibilityForCurrentState() {
-        containerView.isAccessibilityElement = true
-        containerView.accessibilityLabel = floatingLabel.text
-
-        switch currentVisualState {
-        case .idle:
-            containerView.accessibilityTraits = [.none]
-        case .focused:
-            containerView.accessibilityTraits = [.selected]
-        case .error(let message):
-            containerView.accessibilityTraits = [.none]
-            containerView.accessibilityValue = "Error: \(message)"
-        case .disabled:
-            containerView.accessibilityTraits = [.notEnabled]
         }
     }
 

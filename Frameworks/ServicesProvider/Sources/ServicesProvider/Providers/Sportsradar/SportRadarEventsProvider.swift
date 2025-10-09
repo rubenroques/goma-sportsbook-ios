@@ -1322,6 +1322,9 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
+    func getBettingOfferReference(forOutcomeId outcomeId: String) -> AnyPublisher<OutcomeBettingOfferReference, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     func getEventLiveData(eventId: String) -> AnyPublisher<EventLiveData, ServiceProviderError> {
 

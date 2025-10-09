@@ -924,6 +924,16 @@ extension Client {
         
         return eventsProvider.getHighlightedLiveEvents(eventCount: eventCount, userId: userId)
     }
+    
+    public func getBettingOfferReference(forOutcomeId outcomeId: String) -> AnyPublisher<OutcomeBettingOfferReference, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return eventsProvider.getBettingOfferReference(forOutcomeId: outcomeId)
+    }
 }
 
 extension Client {
@@ -2049,7 +2059,7 @@ extension Client {
 
         return homeContentProvider.getTopCompetitions()
     }
-
+    
 }
 
 // Social endpoints

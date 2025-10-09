@@ -10,7 +10,7 @@ import Foundation
 enum EveryMatrixPlayerAPI {
     case login(username: String, password: String)
     case getRegistrationConfig
-    case registerStep(phoneText: String, password: String, mobilePrefix: String, registrationId: String)
+    case registerStep(form: PhoneSignUpForm)
     case register(registrationId: String)
     case getUserProfile(userId: String)
     case getUserBalance(userId: String)
@@ -170,22 +170,33 @@ extension EveryMatrixPlayerAPI: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             
             return data
-        case .registerStep(let phoneText, let password, let mobilePrefix, let registrationId):
-            let body = """
-                       {
-                        "Step": "Step1",
-                        "RegistrationId": "\(registrationId)",
-                        "RegisterUserDto": {
-                            "Mobile": "\(phoneText)",
-                            "MobilePrefix": "\(mobilePrefix)",
-                            "Password": "\(password)",
-                            "TermsAndConditions": true
-                        }
-                       }
-                       """
-            
-            let data = body.data(using: String.Encoding.utf8)!
-            
+        case .registerStep(let form):
+            var registerUserDto: [String: Any] = [
+                "Mobile": form.phone,
+                "MobilePrefix": form.phonePrefix,
+                "Password": form.password,
+                "TermsAndConditions": true
+            ]
+
+            // Add optional fields if present
+            if let firstName = form.firstName {
+                registerUserDto["FirstnameOnDocument"] = firstName
+            }
+            if let lastName = form.lastName {
+                registerUserDto["LastNameOnDocument"] = lastName
+            }
+            if let birthDate = form.birthDate {
+                registerUserDto["BirthDate"] = birthDate
+            }
+
+            let bodyDict: [String: Any] = [
+                "Step": "Step1",
+                "RegistrationId": form.registrationId,
+                "RegisterUserDto": registerUserDto
+            ]
+
+            let data = try! JSONSerialization.data(withJSONObject: bodyDict, options: [])
+
             return data
         case .register(let registrationId):
             let body = """

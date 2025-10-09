@@ -118,12 +118,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         
         switch formType {
         case .phone(let phoneSignUpForm):
-            let registerStepEndpoint = EveryMatrixPlayerAPI.registerStep(
-                        phoneText: phoneSignUpForm.phone,
-                        password: phoneSignUpForm.password,
-                        mobilePrefix: phoneSignUpForm.phonePrefix,
-                        registrationId: phoneSignUpForm.registrationId
-                    )
+            let registerStepEndpoint = EveryMatrixPlayerAPI.registerStep(form: phoneSignUpForm)
             
                     let registerStepPublisher: AnyPublisher<EveryMatrix.RegisterStepResponse, ServiceProviderError> = self.connector.request(registerStepEndpoint)
 
