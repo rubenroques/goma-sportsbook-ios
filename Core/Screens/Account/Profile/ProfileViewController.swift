@@ -391,22 +391,25 @@ class ProfileViewController: UIViewController {
         totalBalanceTitleLabel.font = AppFont.with(type: .bold, size: 21)
         totalBalanceLabel.font = AppFont.with(type: .bold, size: 21)
 
+        // Hide the info tooltip trigger
         totalBalanceInfoImageView.image = UIImage(named: "info_small_icon")
         totalBalanceInfoImageView.setImageColor(color: UIColor.App.iconSecondary)
+        totalBalanceInfoImageView.isHidden = true
         
-        let totalBalanceInfoTap = UITapGestureRecognizer(target: self, action: #selector(self.tapTotalBalanceInfo))
-        totalBalanceView.addGestureRecognizer(totalBalanceInfoTap)
-
-        self.view.addSubview(self.totalBalanceInfoDialogView)
-
-        NSLayoutConstraint.activate([
-
-            self.totalBalanceInfoDialogView.bottomAnchor.constraint(equalTo: self.totalBalanceInfoImageView.topAnchor, constant: -10),
-            self.totalBalanceInfoDialogView.trailingAnchor.constraint(equalTo: self.totalBalanceInfoImageView.trailingAnchor, constant: 8),
-            self.totalBalanceInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 150)
-        ])
-
-        self.totalBalanceInfoDialogView.alpha = 0
+        // Disable tooltip
+//        let totalBalanceInfoTap = UITapGestureRecognizer(target: self, action: #selector(self.tapTotalBalanceInfo))
+//        totalBalanceView.addGestureRecognizer(totalBalanceInfoTap)
+//
+//        self.view.addSubview(self.totalBalanceInfoDialogView)
+//
+//        NSLayoutConstraint.activate([
+//
+//            self.totalBalanceInfoDialogView.bottomAnchor.constraint(equalTo: self.totalBalanceInfoImageView.topAnchor, constant: -10),
+//            self.totalBalanceInfoDialogView.trailingAnchor.constraint(equalTo: self.totalBalanceInfoImageView.trailingAnchor, constant: 8),
+//            self.totalBalanceInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 150)
+//        ])
+//
+//        self.totalBalanceInfoDialogView.alpha = 0
 
         currentBalanceTitleLabel.text = localized("current_balance")
         currentBalanceTitleLabel.font = AppFont.with(type: .regular, size: 16)

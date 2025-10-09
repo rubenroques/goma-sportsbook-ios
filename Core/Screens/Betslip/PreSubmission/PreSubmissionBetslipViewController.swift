@@ -1065,11 +1065,23 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = true
                     self?.systemWinningsBaseView.isHidden = true
-                    self?.cashbackBaseView.isHidden = true
 
                     self?.mixMatchWinningsBaseView.isHidden = false
 
                     self?.betBuilderWarningView.isHidden = false
+                    
+                    if let cashbackEnabled = self?.isCashbackEnabled,
+                       cashbackEnabled {
+                        
+                        let cashbackValue = Env.userSessionStore.userCashbackBalance.value ?? 0.0
+                        let freeBetValue = Env.userSessionStore.userFreeBetBalance.value ?? 0.0
+                        
+                        if cashbackValue > 0 || freeBetValue > 0 {
+                            self?.cashbackBaseView.isHidden = false
+                        } else {
+                            self?.cashbackBaseView.isHidden = true
+                        }
+                    }
                 }
             })
             .store(in: &self.cancellables)
@@ -2743,9 +2755,15 @@ extension PreSubmissionBetslipViewController {
             return
         }
 
+        var isFreeBet = false
+
+        if self.isFreebetEnabled.value == true || self.isCashbackToggleOn.value == true {
+            isFreeBet = true
+        }
+
         let stake = self.betValueSubject.value
 
-        Env.betslipManager.placeBetBuilderBetValidTickets(stake: stake)
+        Env.betslipManager.placeBetBuilderBetValidTickets(stake: stake, useFreebetBalance: isFreeBet)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {
@@ -2764,7 +2782,18 @@ extension PreSubmissionBetslipViewController {
                 }
                 self?.isLoading = false
             } receiveValue: { [weak self] betPlacedDetails in
-                self?.betPlacedAction(betPlacedDetails, nil, false)
+                if let cashbackSelected = self?.isCashbackToggleOn.value {
+                    if !cashbackSelected {
+                        self?.betPlacedAction(betPlacedDetails, self?.cashbackResultValuePublisher.value, false)
+                    }
+                    else {
+                        self?.betPlacedAction(betPlacedDetails, nil, true)
+                    }
+                }
+                else {
+                    self?.betPlacedAction(betPlacedDetails, nil, false)
+                }
+                
             }
             .store(in: &cancellables)
     }

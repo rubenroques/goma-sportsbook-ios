@@ -1107,7 +1107,7 @@ extension BetslipManager {
             .eraseToAnyPublisher()
     }
 
-    func placeBetBuilderBetValidTickets(stake: Double) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+    func placeBetBuilderBetValidTickets(stake: Double, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         guard
             self.betBuilderProcessor.hasValidTickets
         else {
@@ -1116,10 +1116,10 @@ extension BetslipManager {
 
         let validTickets = self.betBuilderProcessor.validTickets
         let validOdd = self.betBuilderProcessor.calculatedOddForValidTickets
-        return self.placeBetBuilderBet(withTickets: validTickets, stake: stake, calculatedOdd: validOdd)
+        return self.placeBetBuilderBet(withTickets: validTickets, stake: stake, calculatedOdd: validOdd, useFreebetBalance: useFreebetBalance)
     }
 
-    func placeBetBuilderBet(withTickets tickets: [BettingTicket], stake: Double, calculatedOdd: Double) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+    func placeBetBuilderBet(withTickets tickets: [BettingTicket], stake: Double, calculatedOdd: Double, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
 
         let betTicketSelections = tickets.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
@@ -1137,7 +1137,7 @@ extension BetslipManager {
 
         let betTicket = BetTicket.init(tickets: betTicketSelections, stake: stake, betGroupingType: BetGroupingType.multiple(identifier: ""))
 
-        let publisher =  Env.servicesProvider.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
+        let publisher =  Env.servicesProvider.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd, useFreebetBalance: useFreebetBalance)
             .mapError({ error in
                 switch error {
                 case .forbidden:

@@ -382,8 +382,8 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
-    func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
-        let endpoint = BettingAPIClient.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
+    func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double, useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        let endpoint = BettingAPIClient.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd, useFreebetBalance: useFreebetBalance)
         let publisher: AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher

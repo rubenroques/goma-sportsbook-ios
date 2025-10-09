@@ -15,7 +15,7 @@ enum BettingAPIClient {
     case placeBets(betTickets: [BetTicket], useFreebetBalance: Bool)
     
     case calculateBetBuilderReturn(betTicket: BetTicket)
-    case placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double)
+    case placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double, useFreebetBalance: Bool)
     
     case confirmBoostedBet(identifier: String)
     case rejectBoostedBet(identifier: String)
@@ -312,14 +312,14 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
             
-        case .placeBetBuilderBet(let betTicket, let odd):
+        case .placeBetBuilderBet(let betTicket, let odd, let useFreebetBalance):
             let betAmount = (betTicket.globalStake ?? 0.0)
             let betTicketSelectionsIds = betTicket.tickets.map({ "\"" + $0.identifier + "\"" }).joined(separator: ",")
             let body = """
                        {
                          "idFOSelections": [\(betTicketSelectionsIds)],
                          "stakeAmount": \(betAmount),
-                         "free" : 0,
+                         "free" : \(useFreebetBalance),
                          "useAutoAcceptance" : true,
                          "calculatedOdds" : \(odd)
                        }

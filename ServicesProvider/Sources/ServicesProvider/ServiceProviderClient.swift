@@ -1067,13 +1067,13 @@ extension ServicesProviderClient {
         return bettingProvider.calculateBetBuilderPotentialReturn(forBetTicket: betTicket)
     }
 
-    public func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    public func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double, useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
-        return bettingProvider.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
+        return bettingProvider.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd, useFreebetBalance: useFreebetBalance)
     }
 
     //

@@ -25,7 +25,7 @@ protocol BettingProvider: Connector {
 
     // BetBuilder
     func calculateBetBuilderPotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetBuilderPotentialReturn, ServiceProviderError>
-    func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
+    func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double, useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
         
     func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError>
     func rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError>
