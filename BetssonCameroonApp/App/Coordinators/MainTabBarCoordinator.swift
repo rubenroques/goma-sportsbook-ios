@@ -656,6 +656,10 @@ class MainTabBarCoordinator: Coordinator {
                 self?.showBetDetail(for: bet)
             }
             
+            coordinator.onNavigateToBetslip = { [weak self] in
+                self?.showBetslip()
+            }
+            
             myBetsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()

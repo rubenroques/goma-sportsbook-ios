@@ -317,8 +317,8 @@ public class TicketBetInfoView: UIView {
         
         // Add tap gesture to entire view
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
-        tapGesture.cancelsTouchesInView = false // Allow subviews to receive touches
-        addGestureRecognizer(tapGesture)
+        
+        containerView.addGestureRecognizer(tapGesture)
         
     }
     

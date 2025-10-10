@@ -24,6 +24,7 @@ class MyBetsCoordinator: Coordinator {
     
     var onShowLogin: (() -> Void)?
     var onNavigateToBetDetail: ((MyBet) -> Void)?
+    var onNavigateToBetslip: (() -> Void)?
     
     // MARK: - Public Properties
     
@@ -54,6 +55,11 @@ class MyBetsCoordinator: Coordinator {
         // Setup bet detail navigation
         viewModel.onNavigateToBetDetail = { [weak self] bet in
             self?.onNavigateToBetDetail?(bet)
+        }
+        
+        // Setup betslip navigation
+        viewModel.onNavigateToBetslip = { [weak self] in
+            self?.onNavigateToBetslip?()
         }
         
         self.myBetsViewController = viewController

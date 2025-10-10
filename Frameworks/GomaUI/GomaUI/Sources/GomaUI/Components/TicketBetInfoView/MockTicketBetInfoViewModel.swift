@@ -21,9 +21,6 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             icon: "arrow.clockwise",
             layoutType: .iconLeft
         )
-        viewModel.onButtonTapped = { [weak self] in
-            self?.handleRebetTap()
-        }
         return viewModel
     }()
     
@@ -33,9 +30,6 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             icon: "dollarsign.circle",
             layoutType: .iconLeft
         )
-        viewModel.onButtonTapped = { [weak self] in
-            self?.handleCashoutTap()
-        }
         return viewModel
     }()
     
@@ -45,7 +39,21 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     public var onCashoutTap: (() -> Void)?
     
     // MARK: - Initialization
-    public init() {}
+    public init() {
+        
+        self.setupBindings()
+    }
+    
+    private func setupBindings() {
+        
+        rebetButtonViewModel.onButtonTapped = { [weak self] in
+            self?.handleRebetTap()
+        }
+        
+        cashoutButtonViewModel.onButtonTapped = { [weak self] in
+            self?.handleCashoutTap()
+        }
+    }
     
     // MARK: - Public Methods
     public func handleNavigationTap() {

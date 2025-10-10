@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 import GomaUI
 import ServicesProvider
 
@@ -22,6 +23,12 @@ struct BetListData {
     let currentPage: Int
     
     static let empty = BetListData(viewModels: [], hasMore: false, currentPage: 0)
+}
+
+struct SelectionReferenceResult {
+    let selectionIndex: Int
+    let selection: MyBetSelection
+    let reference: OutcomeBettingOfferReference
 }
 
 final class MyBetsViewModel {
@@ -335,6 +342,8 @@ final class MyBetsViewModel {
     // MARK: - Navigation Closures
     
     var onNavigateToBetDetail: ((MyBet) -> Void)?
+    var onRequestRebetConfirmation: ((@escaping (Bool) -> Void) -> Void)?
+    var onNavigateToBetslip: (() -> Void)?
     
     // MARK: - Action Handlers
     
@@ -345,9 +354,153 @@ final class MyBetsViewModel {
     
     private func handleRebetTap(_ bet: MyBet) {
         print("🔄 MyBetsViewModel: Rebet tapped for bet: \(bet.identifier)")
-        // TODO: Create new bet ticket from selections
-        // This would involve converting MyBetSelections back to BetTicketSelections
-        // and adding them to the betslip
+        print("🔄 MyBetsViewModel: Processing \(bet.selections.count) selections")
+        
+        // Create publishers for each selection that has an outcomeId
+        let publishers: [AnyPublisher<SelectionReferenceResult, ServiceProviderError>] = bet.selections.enumerated().compactMap { index, selection in
+            guard let outcomeId = selection.outcomeId else {
+                print("⚠️ MyBetsViewModel: Selection \(index + 1) has no outcomeId, skipping")
+                return nil
+            }
+            
+            return servicesProvider.getBettingOfferReference(forOutcomeId: outcomeId)
+                .map { reference in
+                    SelectionReferenceResult(
+                        selectionIndex: index,
+                        selection: selection,
+                        reference: reference
+                    )
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        guard !publishers.isEmpty else {
+            print("⚠️ MyBetsViewModel: No valid selections with outcomeId found")
+            return
+        }
+                
+        // Combine all publishers and wait for all to complete
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    if case .failure(let error) = completion {
+                        print("❌ MyBetsViewModel: Failed to get betting offer references")
+                        print("Error: \(error.localizedDescription)")
+                    }
+                },
+                receiveValue: { [weak self] results in
+                    self?.processBettingOfferReferences(results: results, originalBet: bet)
+                }
+            )
+            .store(in: &cancellables)
+    }
+    
+    private func processBettingOfferReferences(results: [SelectionReferenceResult], originalBet: MyBet) {
+        
+        // Create updated selections with new betting offer IDs
+        var updatedSelections = originalBet.selections
+        
+        for result in results {
+            let reference = result.reference
+            let index = result.selectionIndex
+            
+            // Update the selection with the new betting offer ID
+            if let newBettingOfferId = reference.bettingOfferIds.first {
+                let originalSelection = updatedSelections[index]
+                
+                // Create updated selection with new identifier
+                let updatedSelection = MyBetSelection(
+                    identifier: newBettingOfferId,  // Update with betting offer ID
+                    state: originalSelection.state,
+                    result: originalSelection.result,
+                    globalState: originalSelection.globalState,
+                    eventName: originalSelection.eventName,
+                    homeTeamName: originalSelection.homeTeamName,
+                    awayTeamName: originalSelection.awayTeamName,
+                    eventDate: originalSelection.eventDate,
+                    tournamentName: originalSelection.tournamentName,
+                    sport: originalSelection.sport,
+                    marketName: originalSelection.marketName,
+                    outcomeName: originalSelection.outcomeName,
+                    odd: originalSelection.odd,
+                    marketId: originalSelection.marketId,
+                    outcomeId: originalSelection.outcomeId,
+                    homeResult: originalSelection.homeResult,
+                    awayResult: originalSelection.awayResult,
+                    eventId: originalSelection.eventId,
+                    country: originalSelection.country
+                )
+                
+                updatedSelections[index] = updatedSelection
+                
+                print("✅ Updated identifier: \(originalSelection.identifier) → \(newBettingOfferId)")
+            } else {
+                print("⚠️ No betting offer ID found in response")
+            }
+        }
+        
+        // Create BettingTickets from updated selections
+        let bettingTickets: [BettingTicket] = updatedSelections.compactMap { selection in
+            guard let outcomeId = selection.outcomeId,
+                  let marketId = selection.marketId else {
+                print("⚠️ MyBetsViewModel: Cannot create betting ticket - missing outcomeId or marketId")
+                return nil
+            }
+            
+            // Create betting ticket
+            let ticket = BettingTicket(
+                id: selection.identifier,
+                outcomeId: outcomeId,
+                marketId: marketId,
+                matchId: selection.eventId,
+                isAvailable: true,
+                matchDescription: selection.eventName,
+                marketDescription: selection.marketName,
+                outcomeDescription: selection.outcomeName,
+                homeParticipantName: selection.homeTeamName,
+                awayParticipantName: selection.awayTeamName,
+                sport: selection.sport,
+                sportIdCode: selection.sport?.id,
+                venue: nil,  // Not available in MyBetSelection
+                competition: selection.tournamentName,
+                date: selection.eventDate,
+                odd: selection.odd,
+                isFromBetBuilderMarket: nil
+            )
+            
+            return ticket
+        }
+                
+        // Request confirmation from view controller
+        onRequestRebetConfirmation? { [weak self] shouldProceed in
+            if shouldProceed {
+                self?.addTicketsToBetslip(bettingTickets)
+            } else {
+                print("🚫 MyBetsViewModel: User cancelled rebet - no tickets added to betslip")
+            }
+        }
+    }
+    
+    
+    private func addTicketsToBetslip(_ bettingTickets: [BettingTicket]) {
+        print("🎫 MyBetsViewModel: Adding \(bettingTickets.count) tickets to betslip")
+        
+        // Clear current betslip as promised in the alert
+        Env.betslipManager.clearAllBettingTickets()
+        print("🧹 MyBetsViewModel: Cleared current betslip")
+        
+        // Add all tickets to betslip
+        for ticket in bettingTickets {
+            Env.betslipManager.addBettingTicket(ticket)
+            print("✅ Added ticket to betslip: \(ticket.id) - \(ticket.outcomeDescription)")
+        }
+        
+        print("🎯 MyBetsViewModel: Rebet complete - \(bettingTickets.count) selections added to betslip")
+        
+        // Navigate to betslip
+        onNavigateToBetslip?()
     }
     
     private func handleCashoutTap(_ bet: MyBet) {
