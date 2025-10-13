@@ -10,6 +10,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     private let currency: String
     
     // Child view models
+    public var oddsRowViewModel: BetSummaryRowViewModelProtocol
     public var potentialWinningsRowViewModel: BetSummaryRowViewModelProtocol
     public var winBonusRowViewModel: BetSummaryRowViewModelProtocol
     public var payoutRowViewModel: BetSummaryRowViewModelProtocol
@@ -33,6 +34,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     // MARK: - Initialization
     public init(
+        odds: String = "0.00",
         potentialWinnings: String = "0",
         winBonus: String = "0",
         payout: String = "0",
@@ -50,6 +52,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         let defaultPlaceBetAmount = "Place Bet \(currency) \(placeBetAmount)"
         
         let initialData = BetInfoSubmissionData(
+            odds: odds,
             potentialWinnings: defaultPotentialWinnings,
             winBonus: defaultWinBonus,
             payout: defaultPayout,
@@ -61,6 +64,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         self.dataSubject = CurrentValueSubject(initialData)
         
         // Initialize child view models
+        self.oddsRowViewModel = MockBetSummaryRowViewModel.oddsMock()
         self.potentialWinningsRowViewModel = MockBetSummaryRowViewModel.potentialWinningsMock()
         self.winBonusRowViewModel = MockBetSummaryRowViewModel.winBonusMock()
         self.payoutRowViewModel = MockBetSummaryRowViewModel.payoutMock()
@@ -97,6 +101,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     // MARK: - Protocol Methods
     public func updatePotentialWinnings(_ amount: String) {
         let newData = BetInfoSubmissionData(
+            odds: currentData.odds,
             potentialWinnings: amount,
             winBonus: currentData.winBonus,
             payout: currentData.payout,
@@ -113,6 +118,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     public func updateWinBonus(_ amount: String) {
         let newData = BetInfoSubmissionData(
+            odds: currentData.odds,
             potentialWinnings: currentData.potentialWinnings,
             winBonus: amount,
             payout: currentData.payout,
@@ -129,6 +135,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     public func updatePayout(_ amount: String) {
         let newData = BetInfoSubmissionData(
+            odds: currentData.odds,
             potentialWinnings: currentData.potentialWinnings,
             winBonus: currentData.winBonus,
             payout: amount,
@@ -145,6 +152,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     public func updateAmount(_ amount: String) {
         let newData = BetInfoSubmissionData(
+            odds: currentData.odds,
             potentialWinnings: currentData.potentialWinnings,
             winBonus: currentData.winBonus,
             payout: currentData.payout,
@@ -162,6 +170,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     public func updatePlaceBetAmount(_ amount: String) {
         let newData = BetInfoSubmissionData(
+            odds: currentData.odds,
             potentialWinnings: currentData.potentialWinnings,
             winBonus: currentData.winBonus,
             payout: currentData.payout,
@@ -178,6 +187,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     public func setEnabled(_ isEnabled: Bool) {
         let newData = BetInfoSubmissionData(
+            odds: currentData.odds,
             potentialWinnings: currentData.potentialWinnings,
             winBonus: currentData.winBonus,
             payout: currentData.payout,
@@ -189,6 +199,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         dataSubject.send(newData)
         
         // Update child view models
+        oddsRowViewModel.setEnabled(isEnabled)
         potentialWinningsRowViewModel.setEnabled(isEnabled)
         winBonusRowViewModel.setEnabled(isEnabled)
         payoutRowViewModel.setEnabled(isEnabled)
@@ -241,12 +252,28 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     }
     
     private func updateChildViewModels() {
+        oddsRowViewModel.updateValue(currentData.odds)
         potentialWinningsRowViewModel.updateValue(currentData.potentialWinnings)
         winBonusRowViewModel.updateValue(currentData.winBonus)
         payoutRowViewModel.updateValue(currentData.payout)
         amountTextFieldViewModel.updateText(currentData.amount)
         placeBetButtonViewModel.updateTitle(currentData.placeBetAmount)
         placeBetButtonViewModel.setEnabled(currentData.isEnabled)
+    }
+
+    public func updateOdds(_ odds: String) {
+        let newData = BetInfoSubmissionData(
+            odds: odds,
+            potentialWinnings: currentData.potentialWinnings,
+            winBonus: currentData.winBonus,
+            payout: currentData.payout,
+            amount: currentData.amount,
+            placeBetAmount: currentData.placeBetAmount,
+            isEnabled: currentData.isEnabled,
+            currency: currentData.currency
+        )
+        dataSubject.send(newData)
+        oddsRowViewModel.updateValue(odds)
     }
     
     private func updatePlaceBetButtonState() {

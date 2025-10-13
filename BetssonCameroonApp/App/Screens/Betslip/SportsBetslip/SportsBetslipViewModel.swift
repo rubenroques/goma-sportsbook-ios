@@ -40,6 +40,9 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     public var showPlacedBetState: ((BetPlacedState) -> Void)?
     public var showLoginScreen: (() -> Void)?
     
+    // MARK: - Recommended Matches
+    public var suggestedBetsViewModel: SuggestedBetsExpandedViewModelProtocol
+    
     // MARK: - Initialization
     init(environment: Environment) {
         self.environment = environment
@@ -69,8 +72,46 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                                                             ButtonData(id: "login", title: "Login", style: .solidBackground)
         )
         
+        // Initialize suggested bets view model
+        self.suggestedBetsViewModel = MockSuggestedBetsExpandedViewModel(
+            title: "Explore more bets",
+            isExpanded: false,
+            matchCardViewModels: []
+        )
+        
         // Setup real data subscription
         setupPublishers()
+        getRecommendedMatches()
+    }
+    
+    private func getRecommendedMatches() {
+                
+        let userId = environment.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
+        
+        environment.servicesProvider.getRecommendedMatch(userId: userId, isLive: false, limit: 5)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    print("RECOMMENDED ERROR: \(error)")
+//                    self?.isLoadingSubject.send(false)
+                }
+            }, receiveValue: { [weak self] events in
+                guard let self = self else { return }
+                let matches = ServiceProviderModelMapper.matches(fromEvents: events)
+                
+                let items: [TallOddsMatchCardViewModelProtocol] = matches.map { match in
+                    let tallOddsMatchCardViewModel = TallOddsMatchCardViewModel.create(from: match, relevantMarkets: match.markets, marketTypeId: match.markets.first?.typeId ?? "", matchCardContext: .search)
+                    return tallOddsMatchCardViewModel
+                }
+                
+                // Update suggested bets view model with matches
+                if let mockViewModel = self.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
+                    mockViewModel.updateMatches(items)
+                }
+                                
+                self.isLoadingSubject.send(false)
+            })
+            .store(in: &cancellables)
     }
     
     // MARK: - Public Methods
@@ -89,8 +130,16 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
                 self?.ticketsSubject.send(tickets)
+                // Recalculate odds
+                self?.calculateOdds()
                 // Recalculate potential winnings when tickets change
                 self?.calculatePotentialWinnings()
+
+                // Forward selected outcomes to suggested bets VM (for cell selection state)
+                if let mockSuggested = self?.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
+                    let selectedOutcomeIds = Set(tickets.map { String($0.outcomeId) })
+                    mockSuggested.updateSelectedOutcomeIds(selectedOutcomeIds)
+                }
             }
             .store(in: &cancellables)
         
@@ -204,6 +253,20 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         betInfoSubmissionViewModel.updatePotentialWinnings(formattedWinnings)
         
         print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
+    }
+    
+    private func calculateOdds() {
+        
+        // Calculate total odds by multiplying each odd value sequentially
+        var totalOdds = 1.0
+        for ticket in currentTickets {
+            totalOdds *= ticket.decimalOdd
+        }
+        
+        let formattedOdds = String(format: "%.2f", totalOdds)
+
+        betInfoSubmissionViewModel.updateOdds(formattedOdds)
+        
     }
     
     func convertToDouble(_ string: String) -> Double {

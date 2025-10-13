@@ -6,13 +6,16 @@ import GomaUI
 public struct BetslipData: Equatable {
     public let isEnabled: Bool
     public let tickets: [BettingTicket]
+    public let shouldShowTypeSelector: Bool
     
     public init(
         isEnabled: Bool = true,
-        tickets: [BettingTicket] = []
+        tickets: [BettingTicket] = [],
+        shouldShowTypeSelector: Bool = false
     ) {
         self.isEnabled = isEnabled
         self.tickets = tickets
+        self.shouldShowTypeSelector = shouldShowTypeSelector
     }
 }
 

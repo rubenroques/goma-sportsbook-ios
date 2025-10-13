@@ -231,49 +231,48 @@ final class ProfileWalletCoordinator: Coordinator {
             print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
             return
         }
-
-        // Create PromotionsViewModel
-        let promotionsViewModel = PromotionsViewModel(servicesProvider: servicesProvider)
-
-        // Create PromotionsViewController
-        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
-
-        // Setup ViewModel callbacks
-        promotionsViewModel.onNavigateBack = { [weak profileNavigationController] in
-            profileNavigationController?.popViewController(animated: true)
-        }
-
-        // Create TopBar ViewModel (handles all business logic)
-        let topBarViewModel = TopBarContainerViewModel(
-            userSessionStore: userSessionStore
+        
+        // Create and start PromotionsCoordinator
+        let promotionsCoordinator = PromotionsCoordinator(
+            navigationController: profileNavigationController,
+            environment: Env
         )
-
-        // Wrap in TopBarContainerController
-        let container = TopBarContainerController(
-            contentViewController: promotionsViewController,
-            viewModel: topBarViewModel
-        )
-
-        // Setup navigation callbacks on container
-        container.onLoginRequested = { // [weak self] in
-            // Profile wallet cannot be present if the user isn't logged in'
-            // self?.showLogin()
+        
+        // Setup TopBar container callbacks to delegate to ProfileWalletCoordinator
+        promotionsCoordinator.onLoginRequested = { [weak self] in
+            // Handle login request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Login requested from promotions")
         }
-
-        container.onRegistrationRequested = { // [weak self] in
-            // Profile wallet cannot be present if the user isn't logged in'
-            // self?.showRegistration()
+        
+        promotionsCoordinator.onRegistrationRequested = { [weak self] in
+            // Handle registration request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Registration requested from promotions")
         }
-
-        container.onProfileRequested = { // [weak self] in
-            // Already in profile flow, just pop to root
-            profileNavigationController.popToRootViewController(animated: true)
+        
+        promotionsCoordinator.onProfileRequested = { [weak self] in
+            // Handle profile request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Profile requested from promotions")
         }
-
-        // Push the container
-        profileNavigationController.pushViewController(container, animated: true)
-
-        print("🚀 ProfileWalletCoordinator: Presented promotions screen")
+        
+        promotionsCoordinator.onDepositRequested = { [weak self] in
+            // Delegate to parent coordinator
+            self?.onDepositRequested?()
+            self?.presentDepositFlow()
+        }
+        
+        promotionsCoordinator.onWithdrawRequested = { [weak self] in
+            // Delegate to parent coordinator
+            self?.onWithdrawRequested?()
+            self?.presentWithdrawFlow()
+        }
+        
+        // Add as child coordinator for proper lifecycle management
+        addChildCoordinator(promotionsCoordinator)
+        
+        // Start the coordinator (which will handle the entire promotions flow)
+        promotionsCoordinator.start()
+        
+        print("🚀 ProfileWalletCoordinator: Started PromotionsCoordinator")
     }
     
     private func showPlaceholderAlert(title: String, message: String) {

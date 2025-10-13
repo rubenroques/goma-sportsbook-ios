@@ -55,7 +55,7 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
     private var matchData: TallOddsMatchData
     
     // MARK: - Initialization
-    public init(matchData: TallOddsMatchData) {
+    public init(matchData: TallOddsMatchData, useSingleLineOutcomes: Bool = false) {
         self.matchData = matchData
         
         // Create initial display state
@@ -69,7 +69,15 @@ final public class MockTallOddsMatchCardViewModel: TallOddsMatchCardViewModelPro
         // Create child view models
         let headerViewModel = MockMatchHeaderViewModel(matchHeaderData: matchData.leagueInfo)
         let marketInfoViewModel = MockMarketInfoLineViewModel(marketInfoData: matchData.marketInfo)
-        let outcomesViewModel = MockMarketOutcomesMultiLineViewModel.overUnderMarketGroup // Use available mock for now
+        // Outcomes VM configuration (default: multi-line mock)
+        let outcomesViewModel: MarketOutcomesMultiLineViewModelProtocol = {
+            if useSingleLineOutcomes {
+                let singleLine = MockMarketOutcomesLineViewModel.threeWayMarket
+                return MockMarketOutcomesMultiLineViewModel(groupTitle: nil, lineViewModels: [singleLine])
+            } else {
+                return MockMarketOutcomesMultiLineViewModel.overUnderMarketGroup
+            }
+        }()
         
         // Create score view model for live matches
         let scoreViewModel: ScoreViewModelProtocol? = matchData.liveScoreData != nil ? 
@@ -146,6 +154,36 @@ extension MockTallOddsMatchCardViewModel {
         return MockTallOddsMatchCardViewModel(matchData: matchData)
     }
     
+    public static func premierLeagueMock(singleLineOutcomes: Bool) -> MockTallOddsMatchCardViewModel {
+        let marketIcons = [
+            MarketInfoIcon(type: .expressPickShort, isVisible: true),
+            MarketInfoIcon(type: .mostPopular, isVisible: true),
+            MarketInfoIcon(type: .statistics, isVisible: true)
+        ]
+        let marketInfoData = MarketInfoData(
+            marketName: "1X2 TR",
+            marketCount: 1235,
+            icons: marketIcons
+        )
+        let matchData = TallOddsMatchData(
+            matchId: "liverpool_arsenal_premier_league",
+            leagueInfo: MatchHeaderData(
+                id: "premier_league_match",
+                competitionName: "Premier League",
+                countryFlagImageName: "UK",
+                sportIconImageName: "sportscourt.fill",
+                isFavorite: false,
+                matchTime: "16 April, 18:00",
+                isLive: false
+            ),
+            homeParticipantName: "Liverpool F.C.",
+            awayParticipantName: "Arsenal F.C.",
+            marketInfo: marketInfoData,
+            outcomes: MarketGroupData(id: "premier_league_markets", marketLines: [])
+        )
+        return MockTallOddsMatchCardViewModel(matchData: matchData, useSingleLineOutcomes: singleLineOutcomes)
+    }
+    
     public static var compactMock: MockTallOddsMatchCardViewModel {
         let marketInfoData = MarketInfoData(
             marketName: "Match Winner",
@@ -165,6 +203,25 @@ extension MockTallOddsMatchCardViewModel {
         )
         
         return MockTallOddsMatchCardViewModel(matchData: matchData)
+    }
+    
+    public static func compactMock(singleLineOutcomes: Bool) -> MockTallOddsMatchCardViewModel {
+        let marketInfoData = MarketInfoData(
+            marketName: "Match Winner",
+            marketCount: 456,
+            icons: [
+                MarketInfoIcon(type: .mostPopular, isVisible: true)
+            ]
+        )
+        let matchData = TallOddsMatchData(
+            matchId: "barcelona_madrid_la_liga",
+            leagueInfo: MatchHeaderData(id: "la_liga_match", competitionName: "La Liga", matchTime: "Tomorrow, 20:30", isLive: false),
+            homeParticipantName: "FC Barcelona",
+            awayParticipantName: "Real Madrid",
+            marketInfo: marketInfoData,
+            outcomes: MarketGroupData(id: "la_liga_markets", marketLines: [])
+        )
+        return MockTallOddsMatchCardViewModel(matchData: matchData, useSingleLineOutcomes: singleLineOutcomes)
     }
     
     public static var bundesliegaMock: MockTallOddsMatchCardViewModel {
@@ -191,6 +248,29 @@ extension MockTallOddsMatchCardViewModel {
         )
         
         return MockTallOddsMatchCardViewModel(matchData: matchData)
+    }
+    
+    public static func bundesliegaMock(singleLineOutcomes: Bool) -> MockTallOddsMatchCardViewModel {
+        let marketIcons = [
+            MarketInfoIcon(type: .expressPickShort, isVisible: true),
+            MarketInfoIcon(type: .mostPopular, isVisible: true),
+            MarketInfoIcon(type: .statistics, isVisible: true),
+            MarketInfoIcon(type: .betBuilder, isVisible: true)
+        ]
+        let marketInfoData = MarketInfoData(
+            marketName: "Both Teams Score",
+            marketCount: 2847,
+            icons: marketIcons
+        )
+        let matchData = TallOddsMatchData(
+            matchId: "bayern_dortmund_bundesliga",
+            leagueInfo: MatchHeaderData(id: "bundesliga_match", competitionName: "Bundesliga", matchTime: "18 April, 15:30", isLive: false),
+            homeParticipantName: "Bayern Munich",
+            awayParticipantName: "Borussia Dortmund",
+            marketInfo: marketInfoData,
+            outcomes: MarketGroupData(id: "bundesliga_markets", marketLines: [])
+        )
+        return MockTallOddsMatchCardViewModel(matchData: matchData, useSingleLineOutcomes: singleLineOutcomes)
     }
     
     public static var liveMock: MockTallOddsMatchCardViewModel {
@@ -231,5 +311,40 @@ extension MockTallOddsMatchCardViewModel {
         )
         
         return MockTallOddsMatchCardViewModel(matchData: matchData)
+    }
+    
+    public static func liveMock(singleLineOutcomes: Bool) -> MockTallOddsMatchCardViewModel {
+        let marketIcons = [
+            MarketInfoIcon(type: .expressPickShort, isVisible: true),
+            MarketInfoIcon(type: .mostPopular, isVisible: true)
+        ]
+        let marketInfoData = MarketInfoData(
+            marketName: "1X2",
+            marketCount: 987,
+            icons: marketIcons
+        )
+        let liveScoreData = LiveScoreData(
+            scoreCells: [
+                ScoreDisplayData(id: "main", homeScore: "2", awayScore: "1", style: .simple)
+            ]
+        )
+        let matchData = TallOddsMatchData(
+            matchId: "chelsea_tottenham_live",
+            leagueInfo: MatchHeaderData(
+                id: "premier_league_live",
+                competitionName: "Premier League",
+                countryFlagImageName: "GB",
+                sportIconImageName: "1",
+                isFavorite: true,
+                matchTime: "2nd Half, 67 Min",
+                isLive: true
+            ),
+            homeParticipantName: "Chelsea F.C.",
+            awayParticipantName: "Tottenham Hotspur",
+            marketInfo: marketInfoData,
+            outcomes: MarketGroupData(id: "live_match_markets", marketLines: []),
+            liveScoreData: liveScoreData
+        )
+        return MockTallOddsMatchCardViewModel(matchData: matchData, useSingleLineOutcomes: singleLineOutcomes)
     }
 }

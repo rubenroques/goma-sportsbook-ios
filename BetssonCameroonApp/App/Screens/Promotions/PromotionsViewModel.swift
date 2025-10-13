@@ -25,6 +25,8 @@ class PromotionsViewModel {
     // MARK: - Navigation Callbacks
     var onNavigateBack: (() -> Void) = { }
     var onCategorySelected: ((String?) -> Void)?
+    var onPromotionDetailRequested: ((PromotionInfo) -> Void)?
+    var onPromotionURLRequested: ((String) -> Void)?
     
     let servicesProvider: ServicesProvider.Client
     
@@ -161,5 +163,13 @@ class PromotionsViewModel {
     
     func navigateBack() {
         onNavigateBack()
+    }
+    
+    func openPromotionDetail(promotion: PromotionInfo) {
+        onPromotionDetailRequested?(promotion)
+    }
+    
+    func openPromotionURL(urlString: String) {
+        onPromotionURLRequested?(urlString)
     }
 }

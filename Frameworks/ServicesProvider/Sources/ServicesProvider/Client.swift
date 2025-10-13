@@ -734,6 +734,16 @@ extension Client {
         return eventsProvider.getRecommendedMatch(userId: userId, isLive: isLive, limit: limit)
     }
     
+    public func getComboRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return eventsProvider.getComboRecommendedMatch(userId: userId, isLive: isLive, limit: limit)
+    }
+    
     //
     //
     public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
