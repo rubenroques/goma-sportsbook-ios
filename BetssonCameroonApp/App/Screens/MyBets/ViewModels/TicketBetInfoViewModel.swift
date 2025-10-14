@@ -104,8 +104,8 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     }
     
     private func canRebet(_ bet: MyBet) -> Bool {
-        // Can rebet if bet is settled (won, lost, or cashed out)
-        return bet.isSettled
+        // Can rebet if bet open
+        return !bet.isSettled
     }
     
     private func canCashout(_ bet: MyBet) -> Bool {
