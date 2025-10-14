@@ -202,7 +202,7 @@ final public class BorderedTextFieldView: UIView {
         viewModel.placeholderPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] placeholder in
-                self?.updatePlaceholderWithHighlightedAsterisk(placeholder)
+                self?.updatePlaceholder(placeholder)
 
                 // Remove textField placeholder since floatingLabel handles both states
                 self?.textField.placeholder = nil
@@ -360,20 +360,22 @@ final public class BorderedTextFieldView: UIView {
         }
     }
     
-    private func updatePlaceholderWithHighlightedAsterisk(_ placeholder: String) {
-        let attributedString = NSMutableAttributedString(string: placeholder)
-        
+    private func updatePlaceholder(_ placeholder: String) {
+        // Build display text: append " *" if field is required
+        let displayText = viewModel.isRequired ? "\(placeholder) *" : placeholder
+        let attributedString = NSMutableAttributedString(string: displayText)
+
         // Set base styling
-        let fullRange = NSRange(location: 0, length: placeholder.count)
+        let fullRange = NSRange(location: 0, length: displayText.count)
         attributedString.addAttribute(.font, value: StyleProvider.fontWith(type: .regular, size: 16), range: fullRange)
         attributedString.addAttribute(.foregroundColor, value: StyleProvider.Color.inputTextTitle, range: fullRange)
-        
-        // Find the asterisk and style it
-        if let asteriskRange = placeholder.range(of: "*") {
-            let nsRange = NSRange(asteriskRange, in: placeholder)
-            attributedString.addAttribute(.foregroundColor, value: StyleProvider.Color.highlightPrimary, range: nsRange)
+
+        // Highlight the asterisk if field is required
+        if viewModel.isRequired {
+            let asteriskRange = NSRange(location: displayText.count - 1, length: 1)
+            attributedString.addAttribute(.foregroundColor, value: StyleProvider.Color.highlightPrimary, range: asteriskRange)
         }
-        
+
         floatingLabel.attributedText = attributedString
     }
 

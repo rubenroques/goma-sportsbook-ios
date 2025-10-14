@@ -13,32 +13,32 @@ import ServicesProvider
 class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     let headerViewModel: PromotionalHeaderViewModelProtocol
     let highlightedTextViewModel: HighlightedTextViewModelProtocol
-
+    
     var phoneFieldViewModel: BorderedTextFieldViewModelProtocol?
     var passwordFieldViewModel: BorderedTextFieldViewModelProtocol?
     var firstNameFieldViewModel: BorderedTextFieldViewModelProtocol?
     var lastNameFieldViewModel: BorderedTextFieldViewModelProtocol?
     var birthDateFieldViewModel: BorderedTextFieldViewModelProtocol?
     var termsViewModel: TermsAcceptanceViewModelProtocol?
-
+    
     let buttonViewModel: ButtonViewModelProtocol
-
+    
     private var cancellables = Set<AnyCancellable>()
-
+    
     private let isLoadingConfigSubject = CurrentValueSubject<Bool, Never>(true)
     var isLoadingConfigPublisher: AnyPublisher<Bool, Never> { isLoadingConfigSubject.eraseToAnyPublisher() }
-
+    
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
     var isLoadingPublisher: AnyPublisher<Bool, Never> { isLoadingSubject.eraseToAnyPublisher() }
-
+    
     var isRegisterDataComplete: CurrentValueSubject<Bool, Never> = .init(false)
     var registerComplete: (() -> Void)?
     var registerError: ((String) -> Void)?
-
+    
     var registrationConfig: RegistrationConfigContent?
     var extractedTermsHTMLData: RegisterConfigHelper.ExtractedHTMLData?
-
-
+    
+    
     var phonePrefixText: String = ""
     var phoneText: String = ""
     var password: String = ""
@@ -47,7 +47,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     var birthDate: String = ""
     
     init() {
-                
+        
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "registerHeader",
                                                                                            icon: "key_icon",
                                                                                            title: "Get in on the action!",
@@ -82,7 +82,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
             }, receiveValue: { [weak self] registrationConfigResponse in
                 
                 let mappedRegistrationConfig = ServiceProviderModelMapper.registrationConfigResponse(fromInternalResponse: registrationConfigResponse)
-                                
+                
                 if let termsConfig = mappedRegistrationConfig.content.fields.first(where: {
                     $0.name == "TermsAndConditions"
                 }) {
@@ -100,7 +100,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         self.registrationConfig = config
         
         for field in config.fields {
-   
+            
             switch field.name {
             case "Mobile":
                 let phoneConfig = config.fields.first(where: {
@@ -108,30 +108,35 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 })
                 
                 phonePrefixText = phoneConfig?.defaultValue ?? "+237"
-                phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
-                                                                                           placeholder: "Mobile Phone Number *",
-                                                                                           prefix: phoneConfig?.defaultValue ?? "+237",
-                                                                                           isSecure: false,
-                                                                                           visualState: .idle,
-                                                                                           keyboardType: .phonePad,
-                                                                                           textContentType: .telephoneNumber))
+                phoneFieldViewModel = MockBorderedTextFieldViewModel(
+                    textFieldData: BorderedTextFieldData(id: "phone",
+                                                         placeholder: field.placeholder ?? "Mobile Phone Number",
+                                                         prefix: phoneConfig?.defaultValue ?? "+237",
+                                                         isSecure: false,
+                                                         isRequired: true,
+                                                         visualState: .idle,
+                                                         keyboardType: .phonePad,
+                                                         textContentType: .telephoneNumber))
             case "Password":
                 let passwordConfig = config.fields.first(where: {
                     $0.name == "Password"
                 })
                 
-                passwordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "password",
-                                                                                           placeholder: "Password (4 characters) *",
-                                                                                           isSecure: true,
-                                                                                           visualState: .idle,
-                                                                                           keyboardType: .default,
-                                                                                           textContentType: .password))
+                passwordFieldViewModel = MockBorderedTextFieldViewModel(
+                    textFieldData: BorderedTextFieldData(id: "password",
+                                                         placeholder: field.placeholder ?? "Password (4 characters)",
+                                                         isSecure: true,
+                                                         isRequired: true,
+                                                         visualState: .idle,
+                                                         keyboardType: .default,
+                                                         textContentType: .password))
             case "FirstnameOnDocument":
                 firstNameFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "firstName",
-                        placeholder: field.placeholder ?? "Enter your first name *",
+                        placeholder: field.placeholder ?? "Enter your first name",
                         isSecure: false,
+                        isRequired: true,
                         visualState: .idle,
                         keyboardType: .default,
                         textContentType: .givenName
@@ -141,8 +146,9 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 lastNameFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "lastName",
-                        placeholder: field.placeholder ?? "Enter your last name *",
+                        placeholder: field.placeholder ?? "Enter your last name",
                         isSecure: false,
+                        isRequired: true,
                         visualState: .idle,
                         keyboardType: .default,
                         textContentType: .familyName
@@ -152,8 +158,9 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 birthDateFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "birthDate",
-                        placeholder: field.placeholder ?? "yyyy-mm-dd *",
+                        placeholder: field.placeholder ?? "yyyy-mm-dd",
                         isSecure: false,
+                        isRequired: true,
                         visualState: .idle,
                         keyboardType: .numbersAndPunctuation,
                         textContentType: .none
@@ -161,26 +168,26 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 )
             case "TermsAndConditions":
                 let extractedTermsHTMLData = self.extractedTermsHTMLData
-
+                
                 // swiftlint:disable line_length
                 let fullText = extractedTermsHTMLData?.fullText ?? "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy"
-
+                
                 let termsData = extractedTermsHTMLData?.extractedLinks.first(where: {
                     $0.type == .terms
                 })
-
+                
                 let privacyData = extractedTermsHTMLData?.extractedLinks.first(where: {
                     $0.type == .privacyPolicy
                 })
-
+                
                 let cookiesData = extractedTermsHTMLData?.extractedLinks.first(where: {
                     $0.type == .cookies
                 })
-
+                
                 termsViewModel = MockTermsAcceptanceViewModel(data: TermsAcceptanceData(fullText: fullText,
-                                                                              termsText: termsData?.text ?? "Terms and Conditions",
-                                                                              privacyText: privacyData?.text ?? "Privacy Policy",
-                                                                              cookiesText: cookiesData?.text))
+                                                                                        termsText: termsData?.text ?? "Terms and Conditions",
+                                                                                        privacyText: privacyData?.text ?? "Privacy Policy",
+                                                                                        cookiesText: cookiesData?.text))
             default:
                 ()
             }
@@ -193,44 +200,44 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     }
     
     private func setupPublishers() {
-
+        
         guard let registrationConfig = registrationConfig,
               let phoneFieldViewModel = phoneFieldViewModel,
               let passwordFieldViewModel = passwordFieldViewModel,
               let termsViewModel = termsViewModel else {
             return
         }
-
+        
         // Create validity publishers for all fields
         let phoneNumberValidityPublisher = phoneFieldViewModel.textPublisher
             .map({ phoneNumber in
                 RegisterConfigHelper.isValidPhoneNumber(phoneText: phoneNumber, registrationConfig: registrationConfig).0
             })
-
+        
         let passwordValidityPublisher = passwordFieldViewModel.textPublisher
             .map({ password in
                 RegisterConfigHelper.isValidPassword(passwordText: password, registrationConfig: registrationConfig).0
             })
-
+        
         // Optional field validity publishers - default to true if field doesn't exist
         let firstNameValidityPublisher: AnyPublisher<Bool, Never> = firstNameFieldViewModel?.textPublisher
             .map({ firstName in
                 RegisterConfigHelper.isValidFirstName(text: firstName, registrationConfig: registrationConfig).0
             })
             .eraseToAnyPublisher() ?? Just(true).eraseToAnyPublisher()
-
+        
         let lastNameValidityPublisher: AnyPublisher<Bool, Never> = lastNameFieldViewModel?.textPublisher
             .map({ lastName in
                 RegisterConfigHelper.isValidLastName(text: lastName, registrationConfig: registrationConfig).0
             })
             .eraseToAnyPublisher() ?? Just(true).eraseToAnyPublisher()
-
+        
         let birthDateValidityPublisher: AnyPublisher<Bool, Never> = birthDateFieldViewModel?.textPublisher
             .map({ birthDate in
                 RegisterConfigHelper.isValidBirthDate(dateText: birthDate, registrationConfig: registrationConfig).0
             })
             .eraseToAnyPublisher() ?? Just(true).eraseToAnyPublisher()
-
+        
         // Combine all validity publishers
         Publishers.CombineLatest(
             Publishers.CombineLatest4(
@@ -255,15 +262,15 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
             self?.isRegisterDataComplete.send(isEnabled)
         }
         .store(in: &cancellables)
-
+        
         // Phone field text subscription
         phoneFieldViewModel.textPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] phoneText in
                 guard let self = self else { return }
-
+                
                 let isValidPhoneNumberData = RegisterConfigHelper.isValidPhoneNumber(phoneText: phoneText, registrationConfig: registrationConfig)
-
+                
                 if phoneText.isEmpty {
                     phoneFieldViewModel.clearError()
                 } else if !isValidPhoneNumberData.0 {
@@ -271,38 +278,38 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 } else {
                     phoneFieldViewModel.clearError()
                 }
-
+                
                 self.phoneText = phoneText
             }
             .store(in: &cancellables)
-
+        
         // Password field text subscription
         passwordFieldViewModel.textPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] passwordText in
-
+                
                 let isValidPasswordData = RegisterConfigHelper.isValidPassword(passwordText: passwordText, registrationConfig: registrationConfig)
-
+                
                 if !isValidPasswordData.0 && !passwordText.isEmpty {
                     passwordFieldViewModel.setError("\(isValidPasswordData.1)")
                 }
                 else {
                     passwordFieldViewModel.clearError()
                 }
-
+                
                 self?.password = passwordText
             })
             .store(in: &cancellables)
-
+        
         // First name field text subscription (if exists)
         if let firstNameFieldViewModel = firstNameFieldViewModel {
             firstNameFieldViewModel.textPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] firstNameText in
                     guard let self = self else { return }
-
+                    
                     let isValidFirstNameData = RegisterConfigHelper.isValidFirstName(text: firstNameText, registrationConfig: registrationConfig)
-
+                    
                     if firstNameText.isEmpty {
                         firstNameFieldViewModel.clearError()
                     } else if !isValidFirstNameData.0 {
@@ -310,21 +317,21 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     } else {
                         firstNameFieldViewModel.clearError()
                     }
-
+                    
                     self.firstName = firstNameText
                 }
                 .store(in: &cancellables)
         }
-
+        
         // Last name field text subscription (if exists)
         if let lastNameFieldViewModel = lastNameFieldViewModel {
             lastNameFieldViewModel.textPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] lastNameText in
                     guard let self = self else { return }
-
+                    
                     let isValidLastNameData = RegisterConfigHelper.isValidLastName(text: lastNameText, registrationConfig: registrationConfig)
-
+                    
                     if lastNameText.isEmpty {
                         lastNameFieldViewModel.clearError()
                     } else if !isValidLastNameData.0 {
@@ -332,21 +339,21 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     } else {
                         lastNameFieldViewModel.clearError()
                     }
-
+                    
                     self.lastName = lastNameText
                 }
                 .store(in: &cancellables)
         }
-
+        
         // Birth date field text subscription (if exists)
         if let birthDateFieldViewModel = birthDateFieldViewModel {
             birthDateFieldViewModel.textPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] birthDateText in
                     guard let self = self else { return }
-
+                    
                     let isValidBirthDateData = RegisterConfigHelper.isValidBirthDate(dateText: birthDateText, registrationConfig: registrationConfig)
-
+                    
                     if birthDateText.isEmpty {
                         birthDateFieldViewModel.clearError()
                     } else if !isValidBirthDateData.0 {
@@ -354,20 +361,20 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     } else {
                         birthDateFieldViewModel.clearError()
                     }
-
+                    
                     self.birthDate = birthDateText
                 }
                 .store(in: &cancellables)
         }
-
+        
     }
     
     func registerUser() {
         
         isLoadingSubject.send(true)
-
+        
         let registrationId = registrationConfig?.registrationID ?? ""
-
+        
         // Pass all fields to the sign-up form
         let signUpFormType = SignUpFormType.phone(PhoneSignUpForm(
             phone: self.phoneText,
@@ -395,11 +402,11 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     }
                     
                     self?.isLoadingSubject.send(false)
-
+                    
                 }
-
+                
             }, receiveValue: { [weak self] signUpResponse in
-                                
+                
                 self?.loginUserAfterRegister()
             })
             .store(in: &cancellables)
@@ -423,10 +430,10 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 }
                 
                 self?.isLoadingSubject.send(false)
-
+                
             }, receiveValue: { [weak self] _ in
                 self?.registerComplete?()
-
+                
             })
             .store(in: &cancellables)
     }
@@ -460,7 +467,7 @@ class RegisterConfigHelper {
                         let linkUrl = String(htmlString[url])
                         let linkText = String(htmlString[text])
                         let linkType = ExtractedLinkType(from: linkUrl)
-
+                        
                         // Add to links array
                         links.append(ExtractedLink(text: linkText, url: linkUrl, type: linkType))
                         
@@ -571,15 +578,15 @@ class RegisterConfigHelper {
             }
             
         }
-
+        
         return (true, "")
     }
-
+    
     static func isValidFirstName(text: String, registrationConfig: RegistrationConfigContent) -> (Bool, String) {
         if let firstNameRules = registrationConfig.fields.first(where: {
             $0.name == "FirstnameOnDocument"
         }) {
-
+            
             // Check regex rule from registration config
             if let regexRule = firstNameRules.validate.custom.first(where: {
                 $0.rule == "regex"
@@ -587,32 +594,32 @@ class RegisterConfigHelper {
                 if let regex = try? NSRegularExpression(pattern: regexRule.pattern ?? "") {
                     let range = NSRange(location: 0, length: text.utf16.count)
                     let isValid = regex.firstMatch(in: text, options: [], range: range) != nil
-
+                    
                     if !isValid {
                         return (false, regexRule.errorMessage)
                     }
                 }
             }
-
+            
             if let minLength = firstNameRules.validate.minLength,
                let maxLength = firstNameRules.validate.maxLength {
-
+                
                 let isValid = (text.count >= minLength) && (text.count <= maxLength)
-
+                
                 if !isValid {
                     return (false, "First name must be between \(minLength) and \(maxLength) characters")
                 }
             }
         }
-
+        
         return (true, "")
     }
-
+    
     static func isValidLastName(text: String, registrationConfig: RegistrationConfigContent) -> (Bool, String) {
         if let lastNameRules = registrationConfig.fields.first(where: {
             $0.name == "LastNameOnDocument"
         }) {
-
+            
             // Check regex rule from registration config
             if let regexRule = lastNameRules.validate.custom.first(where: {
                 $0.rule == "regex"
@@ -620,57 +627,57 @@ class RegisterConfigHelper {
                 if let regex = try? NSRegularExpression(pattern: regexRule.pattern ?? "") {
                     let range = NSRange(location: 0, length: text.utf16.count)
                     let isValid = regex.firstMatch(in: text, options: [], range: range) != nil
-
+                    
                     if !isValid {
                         return (false, regexRule.errorMessage)
                     }
                 }
             }
-
+            
             if let minLength = lastNameRules.validate.minLength,
                let maxLength = lastNameRules.validate.maxLength {
-
+                
                 let isValid = (text.count >= minLength) && (text.count <= maxLength)
-
+                
                 if !isValid {
                     return (false, "Last name must be between \(minLength) and \(maxLength) characters")
                 }
             }
         }
-
+        
         return (true, "")
     }
-
+    
     static func isValidBirthDate(dateText: String, registrationConfig: RegistrationConfigContent) -> (Bool, String) {
         if let birthDateRules = registrationConfig.fields.first(where: {
             $0.name == "BirthDate"
         }) {
-
+            
             // Date format validation (yyyy-MM-dd)
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-
+            
             guard let parsedDate = dateFormatter.date(from: dateText) else {
                 return (false, "Invalid date format. Use yyyy-mm-dd")
             }
-
+            
             // Check min/max dates from config
             if let minDateString = birthDateRules.validate.min,
                let maxDateString = birthDateRules.validate.max {
-
+                
                 let minDate = dateFormatter.date(from: minDateString)
                 let maxDate = dateFormatter.date(from: maxDateString)
-
+                
                 if let minDate = minDate, parsedDate < minDate {
                     return (false, "Date must be after \(minDateString)")
                 }
-
+                
                 if let maxDate = maxDate, parsedDate > maxDate {
                     return (false, "You must be at least 21 years old")
                 }
             }
-
+            
             // Check min-age custom validation rule
             if let minAgeRule = birthDateRules.validate.custom.first(where: {
                 $0.rule == "min-age"
@@ -679,27 +686,27 @@ class RegisterConfigHelper {
                 let calendar = Calendar.current
                 let now = Date()
                 let ageComponents = calendar.dateComponents([.year], from: parsedDate, to: now)
-
+                
                 if let age = ageComponents.year, age < 21 {
                     return (false, minAgeRule.errorMessage)
                 }
             }
         }
-
+        
         return (true, "")
     }
-
+    
     struct ExtractedHTMLData {
         let fullText: String
         let extractedLinks: [ExtractedLink]
     }
-
+    
     struct ExtractedLink {
         let text: String
         let url: String
         let type: ExtractedLinkType
     }
-
+    
     enum ExtractedLinkType {
         case terms
         case privacyPolicy
@@ -721,5 +728,5 @@ class RegisterConfigHelper {
             }
         }
     }
-
+    
 }

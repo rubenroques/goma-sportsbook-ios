@@ -16,6 +16,7 @@ public struct BorderedTextFieldData: Equatable, Hashable {
     public let placeholder: String
     public let prefix: String?
     public let isSecure: Bool
+    public let isRequired: Bool
     public let visualState: BorderedTextFieldVisualState
     public let keyboardType: UIKeyboardType
     public let textContentType: UITextContentType?
@@ -26,6 +27,7 @@ public struct BorderedTextFieldData: Equatable, Hashable {
         placeholder: String,
         prefix: String? = nil,
         isSecure: Bool = false,
+        isRequired: Bool = false,
         visualState: BorderedTextFieldVisualState = .idle,
         keyboardType: UIKeyboardType = .default,
         textContentType: UITextContentType? = nil
@@ -35,6 +37,7 @@ public struct BorderedTextFieldData: Equatable, Hashable {
         self.placeholder = placeholder
         self.prefix = prefix
         self.isSecure = isSecure
+        self.isRequired = isRequired
         self.visualState = visualState
         self.keyboardType = keyboardType
         self.textContentType = textContentType
@@ -85,7 +88,8 @@ public protocol BorderedTextFieldViewModelProtocol {
     func setError(_ errorMessage: String)
     func clearError()
     func setEnabled(_ enabled: Bool)
-    
+
     // Other options
     var prefixText: String? { get }
+    var isRequired: Bool { get }
 }

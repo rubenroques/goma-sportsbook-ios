@@ -34,25 +34,27 @@ class MockPhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
                                                                                           highlights: []))
         
         newPasswordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "new_password",
-                                                                                                  
-                                                                                                        placeholder: "New Password *",
-                                                                                                  
+
+                                                                                                        placeholder: "New Password",
+
                                                                                                         isSecure: true,
-                                                                                                  
+                                                                                                        isRequired: true,
+
                                                                                                         visualState: .idle,
                                                                                                         keyboardType: .default,
-                                                                                                  
+
                                                                                                         textContentType: .newPassword))
-        
+
         confirmNewPasswordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "new_password",
-                                                                                                  
-                                                                                                        placeholder: "Confirm New Password *",
-                                                                                                  
+
+                                                                                                        placeholder: "Confirm New Password",
+
                                                                                                         isSecure: true,
-                                                                                                  
+                                                                                                        isRequired: true,
+
                                                                                                         visualState: .idle,
                                                                                                         keyboardType: .default,
-                                                                                                  
+
                                                                                                                textContentType: .newPassword))
         
         buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "change_password",
