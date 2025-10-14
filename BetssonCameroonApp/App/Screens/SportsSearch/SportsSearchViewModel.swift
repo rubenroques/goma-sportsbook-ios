@@ -278,7 +278,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         isLoadingSubject.send(true)
         updateSearchResultsState(isLoading: true, results: 0)
         
-        Env.servicesProvider.getMultiSearchEvents(query: searchText, resultLimit: "5", page: "0")
+        Env.servicesProvider.getMultiSearchEvents(query: searchText, resultLimit: "10", page: "0")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

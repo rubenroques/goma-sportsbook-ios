@@ -642,7 +642,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         let include = ["BETTING_OFFERS", "EVENT_INFO"]
         let router = WAMPRouter.multiSearch(
             language: language,
-            limit: Int(resultLimit) ?? 20,
+            limit: Int(resultLimit) ?? 10,
             query: query,
             eventTypes: eventTypes,
             include: include
