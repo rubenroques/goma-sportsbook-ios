@@ -15,23 +15,9 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     }
     
     // MARK: - Button View Models
-    public lazy var rebetButtonViewModel: ButtonIconViewModelProtocol = {
-        let viewModel = MockButtonIconViewModel(
-            title: "Rebet",
-            icon: "arrow.clockwise",
-            layoutType: .iconLeft
-        )
-        return viewModel
-    }()
+    public var rebetButtonViewModel: ButtonIconViewModelProtocol
     
-    public lazy var cashoutButtonViewModel: ButtonIconViewModelProtocol = {
-        let viewModel = MockButtonIconViewModel(
-            title: "Cashout",
-            icon: "dollarsign.circle",
-            layoutType: .iconLeft
-        )
-        return viewModel
-    }()
+    public var cashoutButtonViewModel: ButtonIconViewModelProtocol
     
     // MARK: - Callbacks
     public var onNavigationTap: (() -> Void)?
@@ -40,6 +26,20 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     
     // MARK: - Initialization
     public init() {
+        
+        let rebetButtonViewModel = MockButtonIconViewModel(
+            title: "Rebet",
+            icon: "arrow.clockwise",
+            layoutType: .iconLeft
+        )
+        self.rebetButtonViewModel = rebetButtonViewModel
+        
+        let cashoutButtonViewModel = MockButtonIconViewModel(
+            title: "Cashout",
+            icon: "dollarsign.circle",
+            layoutType: .iconLeft
+        )
+        self.cashoutButtonViewModel = cashoutButtonViewModel
         
         self.setupBindings()
     }

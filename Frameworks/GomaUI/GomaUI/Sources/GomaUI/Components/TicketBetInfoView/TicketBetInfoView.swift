@@ -242,6 +242,9 @@ public class TicketBetInfoView: UIView {
         
         // Update view model reference
         self.viewModel = newViewModel
+        
+        // Update buttons with new viewModels
+        updateButtons(with: newViewModel)
 
         updateUI(with: newViewModel.currentBetInfo)
         
@@ -267,6 +270,13 @@ public class TicketBetInfoView: UIView {
         possibleWinningsValueLabel.text = ""
     }
     
+    // MARK: - Button Management
+    private func updateButtons(with newViewModel: TicketBetInfoViewModelProtocol) {
+        // Update button viewModels using their configure method
+        rebetButton.configure(with: newViewModel.rebetButtonViewModel)
+        cashoutButton.configure(with: newViewModel.cashoutButtonViewModel)
+    }
+    
     // MARK: - Setup
     private func setupView() {
         // Initialize bet status view
@@ -288,7 +298,9 @@ public class TicketBetInfoView: UIView {
         
         // Action buttons setup
         containerView.addSubview(actionButtonsStackView)
+        
         actionButtonsStackView.addArrangedSubview(rebetButton)
+        
         actionButtonsStackView.addArrangedSubview(cashoutButton)
         
         // Tickets setup

@@ -31,6 +31,12 @@ struct SelectionReferenceResult {
     let reference: OutcomeBettingOfferReference
 }
 
+struct RebetProcessingResult {
+    let successfulResults: [SelectionReferenceResult]
+    let hadFailures: Bool
+    let totalAttempted: Int
+}
+
 final class MyBetsViewModel {
     
     // MARK: - Tab Management
@@ -343,7 +349,8 @@ final class MyBetsViewModel {
     
     var onNavigateToBetDetail: ((MyBet) -> Void)?
     var onRequestRebetConfirmation: ((@escaping (Bool) -> Void) -> Void)?
-    var onNavigateToBetslip: (() -> Void)?
+    var onNavigateToBetslip: ((Int?, Int?) -> Void)? // (successCount?, failCount?) - nil if no partial failure
+    var onShowRebetAllFailedError: (() -> Void)?
     
     // MARK: - Action Handlers
     
@@ -353,23 +360,30 @@ final class MyBetsViewModel {
     }
     
     private func handleRebetTap(_ bet: MyBet) {
-        print("🔄 MyBetsViewModel: Rebet tapped for bet: \(bet.identifier)")
-        print("🔄 MyBetsViewModel: Processing \(bet.selections.count) selections")
+        
+        // Track total number of selections we're attempting to process
+        let totalAttempted = bet.selections.count
         
         // Create publishers for each selection that has an outcomeId
-        let publishers: [AnyPublisher<SelectionReferenceResult, ServiceProviderError>] = bet.selections.enumerated().compactMap { index, selection in
+        // Convert errors to nil so individual failures don't break the chain
+        let publishers: [AnyPublisher<SelectionReferenceResult?, Never>] = bet.selections.enumerated().compactMap { index, selection in
             guard let outcomeId = selection.outcomeId else {
                 print("⚠️ MyBetsViewModel: Selection \(index + 1) has no outcomeId, skipping")
                 return nil
             }
             
             return servicesProvider.getBettingOfferReference(forOutcomeId: outcomeId)
-                .map { reference in
-                    SelectionReferenceResult(
+                .map { reference -> SelectionReferenceResult? in
+                    print("✅ MyBetsViewModel: Successfully retrieved reference for selection \(index + 1)")
+                    return SelectionReferenceResult(
                         selectionIndex: index,
                         selection: selection,
                         reference: reference
                     )
+                }
+                .catch { error -> Just<SelectionReferenceResult?> in
+                    print("❌ MyBetsViewModel: Failed to get reference for selection \(index + 1): \(error.localizedDescription)")
+                    return Just(nil)
                 }
                 .eraseToAnyPublisher()
         }
@@ -383,32 +397,47 @@ final class MyBetsViewModel {
         Publishers.MergeMany(publishers)
             .collect()
             .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { completion in
-                    if case .failure(let error) = completion {
-                        print("❌ MyBetsViewModel: Failed to get betting offer references")
-                        print("Error: \(error.localizedDescription)")
-                    }
-                },
-                receiveValue: { [weak self] results in
-                    self?.processBettingOfferReferences(results: results, originalBet: bet)
-                }
-            )
+            .sink { [weak self] optionalResults in
+                // Filter out nil results (failures) and keep successful ones
+                let successfulResults = optionalResults.compactMap { $0 }
+                let hadFailures = successfulResults.count < optionalResults.count
+                
+                print("📊 MyBetsViewModel: Rebet processing complete")
+                print("   - Total selections attempted: \(totalAttempted)")
+                print("   - Successful retrievals: \(successfulResults.count)")
+                print("   - Failed retrievals: \(optionalResults.count - successfulResults.count)")
+                
+                let processingResult = RebetProcessingResult(
+                    successfulResults: successfulResults,
+                    hadFailures: hadFailures,
+                    totalAttempted: totalAttempted
+                )
+                
+                self?.processBettingOfferReferences(processingResult: processingResult, originalBet: bet)
+            }
             .store(in: &cancellables)
     }
     
-    private func processBettingOfferReferences(results: [SelectionReferenceResult], originalBet: MyBet) {
+    private func processBettingOfferReferences(processingResult: RebetProcessingResult, originalBet: MyBet) {
+        
+        // Check if we have any successful results
+        guard !processingResult.successfulResults.isEmpty else {
+            print("❌ MyBetsViewModel: All selections failed to retrieve betting offer references")
+            onShowRebetAllFailedError?()
+            return
+        }
         
         // Create updated selections with new betting offer IDs
-        var updatedSelections = originalBet.selections
+        // Only keep selections that were successfully updated
+        var successfullyUpdatedSelections: [MyBetSelection] = []
         
-        for result in results {
+        for result in processingResult.successfulResults {
             let reference = result.reference
             let index = result.selectionIndex
             
             // Update the selection with the new betting offer ID
             if let newBettingOfferId = reference.bettingOfferIds.first {
-                let originalSelection = updatedSelections[index]
+                let originalSelection = originalBet.selections[index]
                 
                 // Create updated selection with new identifier
                 let updatedSelection = MyBetSelection(
@@ -433,19 +462,18 @@ final class MyBetsViewModel {
                     country: originalSelection.country
                 )
                 
-                updatedSelections[index] = updatedSelection
+                successfullyUpdatedSelections.append(updatedSelection)
                 
                 print("✅ Updated identifier: \(originalSelection.identifier) → \(newBettingOfferId)")
             } else {
-                print("⚠️ No betting offer ID found in response")
+                print("⚠️ No betting offer ID found in response for selection \(index + 1) - skipping")
             }
         }
         
-        // Create BettingTickets from updated selections
-        let bettingTickets: [BettingTicket] = updatedSelections.compactMap { selection in
+        // Create BettingTickets ONLY from successfully updated selections
+        let bettingTickets: [BettingTicket] = successfullyUpdatedSelections.compactMap { selection in
             guard let outcomeId = selection.outcomeId,
                   let marketId = selection.marketId else {
-                print("⚠️ MyBetsViewModel: Cannot create betting ticket - missing outcomeId or marketId")
                 return nil
             }
             
@@ -472,35 +500,37 @@ final class MyBetsViewModel {
             
             return ticket
         }
-                
+        
+        // Determine if there were failures (including selections without betting offer IDs)
+        let actualSuccessCount = successfullyUpdatedSelections.count
+        let actualFailCount = processingResult.totalAttempted - actualSuccessCount
+        let hadFailures = actualFailCount > 0
+        
         // Request confirmation from view controller
         onRequestRebetConfirmation? { [weak self] shouldProceed in
             if shouldProceed {
+                
                 self?.addTicketsToBetslip(bettingTickets)
-            } else {
-                print("🚫 MyBetsViewModel: User cancelled rebet - no tickets added to betslip")
+                
+                if hadFailures {
+                    self?.onNavigateToBetslip?(actualSuccessCount, actualFailCount)
+                } else {
+                    self?.onNavigateToBetslip?(nil, nil)
+                }
             }
         }
     }
     
     
     private func addTicketsToBetslip(_ bettingTickets: [BettingTicket]) {
-        print("🎫 MyBetsViewModel: Adding \(bettingTickets.count) tickets to betslip")
         
-        // Clear current betslip as promised in the alert
         Env.betslipManager.clearAllBettingTickets()
-        print("🧹 MyBetsViewModel: Cleared current betslip")
         
         // Add all tickets to betslip
         for ticket in bettingTickets {
             Env.betslipManager.addBettingTicket(ticket)
-            print("✅ Added ticket to betslip: \(ticket.id) - \(ticket.outcomeDescription)")
         }
         
-        print("🎯 MyBetsViewModel: Rebet complete - \(bettingTickets.count) selections added to betslip")
-        
-        // Navigate to betslip
-        onNavigateToBetslip?()
     }
     
     private func handleCashoutTap(_ bet: MyBet) {

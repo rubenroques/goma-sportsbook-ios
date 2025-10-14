@@ -24,7 +24,7 @@ class MyBetsCoordinator: Coordinator {
     
     var onShowLogin: (() -> Void)?
     var onNavigateToBetDetail: ((MyBet) -> Void)?
-    var onNavigateToBetslip: (() -> Void)?
+    var onNavigateToBetslip: ((Int?, Int?) -> Void)? // (successCount?, failCount?)
     
     // MARK: - Public Properties
     
@@ -58,8 +58,8 @@ class MyBetsCoordinator: Coordinator {
         }
         
         // Setup betslip navigation
-        viewModel.onNavigateToBetslip = { [weak self] in
-            self?.onNavigateToBetslip?()
+        viewModel.onNavigateToBetslip = { [weak self] successCount, failCount in
+            self?.onNavigateToBetslip?(successCount, failCount)
         }
         
         self.myBetsViewController = viewController

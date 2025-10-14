@@ -475,7 +475,7 @@ class MainTabBarCoordinator: Coordinator {
         profileCoordinator.start()
     }
     
-    private func showBetslip() {
+    private func showBetslip(rebetSuccessCount: Int? = nil, rebetFailCount: Int? = nil) {
         if betslipCoordinator == nil {
             let coordinator = BetslipCoordinator(
                 navigationController: self.navigationController,
@@ -509,10 +509,34 @@ class MainTabBarCoordinator: Coordinator {
         }
         
         if let viewController = betslipCoordinator?.betslipViewController {
-            navigationController.present(viewController, animated: true)
+            navigationController.present(viewController, animated: true) { [weak self] in
+                // Show alert after betslip is presented if there were rebet failures
+                if let successCount = rebetSuccessCount, let failCount = rebetFailCount {
+                    self?.showRebetPartialFailureAlert(
+                        successCount: successCount,
+                        failCount: failCount,
+                        on: viewController
+                    )
+                }
+            }
         }
         
         print("🚀 MainCoordinator: Presented betslip modal")
+    }
+    
+    private func showRebetPartialFailureAlert(successCount: Int, failCount: Int, on viewController: UIViewController) {
+        let message = localized("partial_rebet_description")
+        
+        let alert = UIAlertController(
+            title: localized("partial_rebet"),
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(title: localized("ok"), style: .default)
+        alert.addAction(okAction)
+        
+        viewController.present(alert, animated: true)
     }
     
     // MARK: - Temporary Authentication Implementation
@@ -656,8 +680,8 @@ class MainTabBarCoordinator: Coordinator {
                 self?.showBetDetail(for: bet)
             }
             
-            coordinator.onNavigateToBetslip = { [weak self] in
-                self?.showBetslip()
+            coordinator.onNavigateToBetslip = { [weak self] successCount, failCount in
+                self?.showBetslip(rebetSuccessCount: successCount, rebetFailCount: failCount)
             }
             
             myBetsCoordinator = coordinator

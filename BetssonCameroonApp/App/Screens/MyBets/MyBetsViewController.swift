@@ -277,6 +277,11 @@ class MyBetsViewController: UIViewController {
         viewModel.onRequestRebetConfirmation = { [weak self] completion in
             self?.showRebetConfirmationAlert(completion: completion)
         }
+        
+        // Setup rebet all failed error
+        viewModel.onShowRebetAllFailedError = { [weak self] in
+            self?.showRebetAllFailedAlert()
+        }
     }
     
     private func handleBetsStateChange(_ state: MyBetsState) {
@@ -346,6 +351,43 @@ class MyBetsViewController: UIViewController {
         }
 
     }
+    
+    // MARK: - Alert Methods
+    private func showRebetConfirmationAlert(completion: @escaping (Bool) -> Void) {
+        let alert = UIAlertController(
+            title: "Replace Current Betslip",
+            message: "This will clear your current betslip and add the selections from this bet. Continue?",
+            preferredStyle: .alert
+        )
+        
+        // Cancel action
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            completion(false)
+        }
+        
+        // Continue action
+        let continueAction = UIAlertAction(title: "Continue", style: .default) { _ in
+            completion(true)
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(continueAction)
+        
+        present(alert, animated: true)
+    }
+    
+    private func showRebetAllFailedAlert() {
+        let alert = UIAlertController(
+            title: localized("rebet_failed"),
+            message: localized("rebet_failed_description"),
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(title: localized("ok"), style: .default)
+        alert.addAction(okAction)
+        
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -376,31 +418,6 @@ extension MyBetsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
-    }
-    
-    // MARK: - Alert Methods
-    
-    private func showRebetConfirmationAlert(completion: @escaping (Bool) -> Void) {
-        let alert = UIAlertController(
-            title: "Replace Current Betslip",
-            message: "This will clear your current betslip and add the selections from this bet. Continue?",
-            preferredStyle: .alert
-        )
-        
-        // Cancel action
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            completion(false)
-        }
-        
-        // Continue action
-        let continueAction = UIAlertAction(title: "Continue", style: .default) { _ in
-            completion(true)
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(continueAction)
-        
-        present(alert, animated: true)
     }
 }
 

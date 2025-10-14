@@ -7,7 +7,7 @@ import SwiftUI
 public final class ButtonIconView: UIView {
     
     // MARK: - Properties
-    private let viewModel: ButtonIconViewModelProtocol
+    private var viewModel: ButtonIconViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
@@ -158,6 +158,22 @@ public final class ButtonIconView: UIView {
             contentStackView.addArrangedSubview(titleLabel)
             contentStackView.addArrangedSubview(iconImageView)
         }
+    }
+    
+    // MARK: - Configuration
+    /// Configures the view with a new view model for efficient reuse
+    public func configure(with newViewModel: ButtonIconViewModelProtocol) {
+        // Clear previous bindings
+        cancellables.removeAll()
+        
+        // Update view model reference
+        self.viewModel = newViewModel
+        
+        // Render current state immediately
+        render(data: newViewModel.currentData)
+        
+        // Setup new bindings
+        setupBindings()
     }
     
     // MARK: - Actions
