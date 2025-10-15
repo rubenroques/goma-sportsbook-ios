@@ -37,8 +37,9 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     
     var registrationConfig: RegistrationConfigContent?
     var extractedTermsHTMLData: RegisterConfigHelper.ExtractedHTMLData?
-    
-    
+    var birthDateMinMax: (min: String, max: String)?
+
+
     var phonePrefixText: String = ""
     var phoneText: String = ""
     var password: String = ""
@@ -155,12 +156,19 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     )
                 )
             case "BirthDate":
+                // Store min/max dates for date picker configuration
+                if let minDateString = field.validate.min,
+                   let maxDateString = field.validate.max {
+                    self.birthDateMinMax = (min: minDateString, max: maxDateString)
+                }
+
                 birthDateFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "birthDate",
                         placeholder: field.placeholder ?? "yyyy-mm-dd",
                         isSecure: false,
                         isRequired: true,
+                        usesCustomInput: true,  // Use date picker instead of keyboard
                         visualState: .idle,
                         keyboardType: .numbersAndPunctuation,
                         textContentType: .none

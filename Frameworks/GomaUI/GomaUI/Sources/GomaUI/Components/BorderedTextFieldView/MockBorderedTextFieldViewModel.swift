@@ -52,6 +52,7 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
 
     public var prefixText: String?
     public var isRequired: Bool
+    public var usesCustomInput: Bool
 
     // MARK: - Initialization
     public init(textFieldData: BorderedTextFieldData) {
@@ -67,6 +68,7 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
 
         self.prefixText = textFieldData.prefix
         self.isRequired = textFieldData.isRequired
+        self.usesCustomInput = textFieldData.usesCustomInput
     }
 
     // MARK: - BorderedTextFieldViewModelProtocol

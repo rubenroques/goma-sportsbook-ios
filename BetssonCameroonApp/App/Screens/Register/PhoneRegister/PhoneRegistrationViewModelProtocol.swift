@@ -35,6 +35,7 @@ protocol PhoneRegistrationViewModelProtocol {
     var registerError: ((String) -> Void)? { get set }
 
     var extractedTermsHTMLData: RegisterConfigHelper.ExtractedHTMLData? { get }
+    var birthDateMinMax: (min: String, max: String)? { get }
 
     func registerUser()
 }

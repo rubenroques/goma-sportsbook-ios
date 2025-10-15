@@ -31,6 +31,7 @@ final public class BorderedTextFieldView: UIView {
     // MARK: - Public Properties
     public var onTextChanged: ((String) -> Void) = { _ in }
     public var onFocusChanged: ((Bool) -> Void) = { _ in }
+    public var onRequestCustomInput: (() -> Void)?
 
     // MARK: - Constants
     private enum Constants {
@@ -275,7 +276,14 @@ final public class BorderedTextFieldView: UIView {
     @objc private func containerTapped() {
         // Only become first responder if the field is enabled
         guard currentVisualState != .disabled else { return }
-        textField.becomeFirstResponder()
+
+        if viewModel.usesCustomInput {
+            // Delegate custom input handling to the view controller
+            onRequestCustomInput?()
+        } else {
+            // Standard keyboard input
+            textField.becomeFirstResponder()
+        }
     }
 
     // MARK: - Visual State Management
@@ -524,6 +532,15 @@ final public class BorderedTextFieldView: UIView {
 
     public override func resignFirstResponder() -> Bool {
         return textField.resignFirstResponder()
+    }
+
+    /// Sets a custom input view (e.g., UIDatePicker) instead of the standard keyboard
+    /// - Parameters:
+    ///   - inputView: The custom input view to display (e.g., UIDatePicker, UIPickerView)
+    ///   - accessoryView: Optional toolbar or accessory view to display above the input view
+    public func setCustomInputView(_ inputView: UIView?, accessoryView: UIView? = nil) {
+        textField.inputView = inputView
+        textField.inputAccessoryView = accessoryView
     }
 }
 

@@ -61,7 +61,10 @@ class PhoneRegistrationViewController: UIViewController {
     private var birthDateField: BorderedTextFieldView?
     private var termsView: TermsAcceptanceView?
     private let createAccountButton: ButtonView
-    
+
+    // Date picker for birth date input
+    private var birthDatePicker: UIDatePicker?
+
     private let loadingView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -200,6 +203,51 @@ class PhoneRegistrationViewController: UIViewController {
         if let birthDateFieldViewModel = viewModel.birthDateFieldViewModel {
             let birthDateField = BorderedTextFieldView(viewModel: birthDateFieldViewModel)
             self.birthDateField = birthDateField
+
+            // Setup date picker immediately (before field is added to view)
+            let datePicker = UIDatePicker()
+            datePicker.datePickerMode = .date
+            datePicker.preferredDatePickerStyle = .wheels
+            datePicker.maximumDate = Date() // Can't be in the future
+
+            // Set min/max dates from registration config
+            if let birthDateMinMax = viewModel.birthDateMinMax {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+
+                if let minDate = formatter.date(from: birthDateMinMax.min) {
+                    datePicker.minimumDate = minDate
+                }
+                if let maxDate = formatter.date(from: birthDateMinMax.max) {
+                    datePicker.maximumDate = maxDate
+                    // Set initial date to max date (youngest allowed age)
+                    datePicker.date = maxDate
+                }
+            }
+
+            // Add value changed handler
+            datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+
+            // Create toolbar with Done button
+            let toolbar = UIToolbar()
+            toolbar.sizeToFit()
+            toolbar.barStyle = .default
+            toolbar.isTranslucent = true
+
+            let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDone))
+            toolbar.items = [flexSpace, doneButton]
+
+            // Set custom input view BEFORE field is added to view hierarchy
+            birthDateField.setCustomInputView(datePicker, accessoryView: toolbar)
+            self.birthDatePicker = datePicker
+
+            // Simplified closure - just show the picker (inputView already set)
+            birthDateField.onRequestCustomInput = { [weak self] in
+                self?.birthDateField?.becomeFirstResponder()
+            }
+
             componentsStackView.addArrangedSubview(birthDateField)
         }
 
@@ -339,7 +387,24 @@ class PhoneRegistrationViewController: UIViewController {
             UIApplication.shared.open(url)
         }
     }
-    
+
+    // MARK: - Date Picker Handlers
+
+    @objc private func datePickerValueChanged(_ picker: UIDatePicker) {
+        // Update text field as user scrolls through dates
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+
+        let dateString = formatter.string(from: picker.date)
+        viewModel.birthDateFieldViewModel?.updateText(dateString)
+    }
+
+    @objc private func datePickerDone() {
+        // Dismiss date picker
+        birthDateField?.resignFirstResponder()
+    }
+
     // MARK: Actions
     @objc private func didTapCloseButton() {
         self.dismiss(animated: true)
