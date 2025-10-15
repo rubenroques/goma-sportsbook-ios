@@ -9,16 +9,21 @@ import Foundation
 import GomaUI
 
 public final class BetSuccessViewModel: BetSuccessViewModelProtocol {
-    
+
     // MARK: - Child View Models
     public let statusNotificationViewModel: StatusNotificationViewModelProtocol
-    
+
+    // MARK: - Properties
+    public let betId: String?
+
     // MARK: - Initialization
-    public init() {
+    public init(betId: String? = nil) {
+        self.betId = betId
+
         // Initialize status notification view model with success state
         let statusNotificationData = StatusNotificationData(type: .success, message: "Bet Placed", icon: "success_circle_icon")
-        
+
         self.statusNotificationViewModel = MockStatusNotificationViewModel(data: statusNotificationData)
-        
+
     }
 } 

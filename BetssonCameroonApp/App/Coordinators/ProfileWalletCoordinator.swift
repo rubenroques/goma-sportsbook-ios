@@ -113,7 +113,7 @@ final class ProfileWalletCoordinator: Coordinator {
         }
     }
     
-    private func handleMenuItemSelection(_ menuItem: ProfileMenuItem) {
+    private func handleMenuItemSelection(_ menuItem: ActionRowItem) {
         switch menuItem.action {
         case .logout:
             // Handle logout with confirmation
@@ -123,10 +123,10 @@ final class ProfileWalletCoordinator: Coordinator {
 //            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
 //                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
 //            }
-            
+
             // Open Extreme push inbox screen
             XPush.forceOpenInbox()
-            
+
         case .transactionHistory:
             // Navigate to transaction history
             showTransactionHistory()
@@ -144,6 +144,9 @@ final class ProfileWalletCoordinator: Coordinator {
             showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
         case .promotions:
             showPromotions()
+        case .custom:
+            // Custom actions are not used in profile menu context
+            print("⚠️ ProfileWalletCoordinator: Custom action not handled in profile menu")
         }
     }
     

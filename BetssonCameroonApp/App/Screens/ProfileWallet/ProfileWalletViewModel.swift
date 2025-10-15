@@ -42,11 +42,11 @@ final class ProfileWalletViewModel: ObservableObject {
     var themeSwitcherViewModel: ThemeSwitcherViewModelProtocol
     
     // MARK: - Navigation Callbacks
-    
+
     var onDismiss: (() -> Void)?
     var onDepositRequested: (() -> Void)?
     var onWithdrawRequested: (() -> Void)?
-    var onMenuItemSelected: ((ProfileMenuItem) -> Void)?
+    var onMenuItemSelected: ((ActionRowItem) -> Void)?
     
     // MARK: - Initialization
     

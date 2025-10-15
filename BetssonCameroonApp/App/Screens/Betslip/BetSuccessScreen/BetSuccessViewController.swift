@@ -26,17 +26,20 @@ class BetSuccessViewController: UIViewController {
         return button
     }()
 
-    private let statusNotificationView: StatusNotificationView
+    private let betPlacedRow: ActionRowView = ActionRowView()
+    private let openDetailsRow: ActionRowView = ActionRowView()
+    private let shareRow: ActionRowView = ActionRowView()
 
     private let viewModel: BetSuccessViewModelProtocol
-    
+
     // MARK: - Navigation Closures
     // Called when success flow completes - handled by coordinator
     var onContinueRequested: (() -> Void)?
+    var onOpenDetails: (() -> Void)?
+    var onShareBetslip: ((String) -> Void)?
 
     init(viewModel: BetSuccessViewModelProtocol) {
         self.viewModel = viewModel
-        self.statusNotificationView = StatusNotificationView(viewModel: viewModel.statusNotificationViewModel)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .overFullScreen
         modalTransitionStyle = .crossDissolve
@@ -49,22 +52,63 @@ class BetSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        setupActionRows()
         setupLayout()
         closeButton.addTarget(self, action: #selector(didTapClose), for: .touchUpInside)
+    }
+
+    private func setupActionRows() {
+        // 1. Green "Bet Placed" row - non-tappable
+        let betPlacedItem = ActionRowItem(
+            icon: "checkmark.circle.fill",
+            title: "Bet Placed",
+            type: .action,
+            action: .custom,
+            isTappable: false
+        )
+        betPlacedRow.customBackgroundColor = StyleProvider.Color.alertSuccess
+        betPlacedRow.configure(with: betPlacedItem) { _ in }
+        betPlacedRow.translatesAutoresizingMaskIntoConstraints = false
+
+        // 2. "Open Betslip Details" row - tappable with chevron
+        let openDetailsItem = ActionRowItem(
+            icon: "",
+            title: "Open Betslip Details",
+            type: .navigation,
+            action: .custom,
+            trailingIcon: "chevron.right"
+        )
+        openDetailsRow.configure(with: openDetailsItem) { [weak self] _ in
+            self?.onOpenDetails?()
+        }
+        openDetailsRow.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3. "Share your Betslip" row - tappable with share icon
+        let shareItem = ActionRowItem(
+            icon: "",
+            title: "Share your Betslip",
+            type: .action,
+            action: .custom,
+            trailingIcon: "square.and.arrow.up"
+        )
+        shareRow.configure(with: shareItem) { [weak self] _ in
+            guard let self = self, let betId = self.viewModel.betId else { return }
+            self.onShareBetslip?(betId)
+        }
+        shareRow.translatesAutoresizingMaskIntoConstraints = false
     }
 
     private func setupLayout() {
         view.addSubview(containerView)
         containerView.addSubview(closeButton)
-        containerView.addSubview(statusNotificationView)
 
-        let infoStack = UIStackView(arrangedSubviews: [statusNotificationView])
+        let infoStack = UIStackView(arrangedSubviews: [betPlacedRow, openDetailsRow, shareRow])
         infoStack.axis = .vertical
         infoStack.spacing = 10
         infoStack.alignment = .fill
         infoStack.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(infoStack)
-        
+
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),

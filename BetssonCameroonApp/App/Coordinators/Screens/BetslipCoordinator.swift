@@ -62,12 +62,12 @@ class BetslipCoordinator: Coordinator {
         
         viewModel.onPlaceBetTapped = { [weak self] betPlacedState in
             switch betPlacedState {
-            case .success:
-                self?.showBetslipSuccessScreen()
+            case .success(let betId):
+                self?.showBetslipSuccessScreen(betId: betId)
             case .error(let message):
                 self?.showBetslipErrorAlert(message: message)
             }
-            
+
         }
         
         
@@ -83,21 +83,59 @@ class BetslipCoordinator: Coordinator {
     }
     
     // MARK: - Public Methods
-    public func showBetslipSuccessScreen() {
-        
+    public func showBetslipSuccessScreen(betId: String?) {
+
         // Clear betslip
         Env.betslipManager.clearAllBettingTickets()
-        
-        let betSuccessViewModel = BetSuccessViewModel()
-        
+
+        let betSuccessViewModel = BetSuccessViewModel(betId: betId)
+
         let betSuccessViewController = BetSuccessViewController(viewModel: betSuccessViewModel)
-        
+
         self.betslipViewController?.present(betSuccessViewController, animated: true)
-        
+
+        // Setup navigation closures
         betSuccessViewController.onContinueRequested = { [weak self] in
             self?.finish()
             self?.onCloseBetslip?()
         }
+
+        betSuccessViewController.onOpenDetails = { [weak self] in
+            // TODO: Navigate to bet details screen
+            print("📋 Open Betslip Details tapped - betId: \(betId ?? "nil")")
+            // For now, just dismiss the success screen
+            betSuccessViewController.dismiss(animated: true) {
+                self?.finish()
+                self?.onCloseBetslip?()
+            }
+        }
+
+        betSuccessViewController.onShareBetslip = { [weak self] betIdToShare in
+            self?.shareBetslip(betId: betIdToShare, from: betSuccessViewController)
+        }
+    }
+
+    private func shareBetslip(betId: String, from viewController: UIViewController) {
+        let shareText = "Check out my bet! Booking Code: \(betId)"
+
+        let activityViewController = UIActivityViewController(
+            activityItems: [shareText],
+            applicationActivities: nil
+        )
+
+        // For iPad support
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.sourceView = viewController.view
+            popoverController.sourceRect = CGRect(
+                x: viewController.view.bounds.midX,
+                y: viewController.view.bounds.midY,
+                width: 0,
+                height: 0
+            )
+            popoverController.permittedArrowDirections = []
+        }
+
+        viewController.present(activityViewController, animated: true)
     }
     
     public func showBetslipErrorAlert(message: String) {

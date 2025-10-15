@@ -12,4 +12,7 @@ import GomaUI
 public protocol BetSuccessViewModelProtocol {
     /// Status notification view model for displaying success information
     var statusNotificationViewModel: StatusNotificationViewModelProtocol { get }
+
+    /// Bet ID (booking code) for sharing and viewing details
+    var betId: String? { get }
 } 

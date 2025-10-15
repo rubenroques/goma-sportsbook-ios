@@ -167,9 +167,10 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                 self?.isLoadingSubject.send(false)
                 
             }, receiveValue: { [weak self] betPlacedDetails in
-                
+
                 print("PLACE BET SUCCESS: \(betPlacedDetails)")
-                self?.showPlacedBetState?(.success)
+                let betId = betPlacedDetails.first?.response.betId
+                self?.showPlacedBetState?(.success(betId: betId))
 
             })
             .store(in: &cancellables)
@@ -226,6 +227,6 @@ public enum BetslipLoggedState {
 }
 
 public enum BetPlacedState {
-    case success
+    case success(betId: String?)
     case error(message: String)
 }
