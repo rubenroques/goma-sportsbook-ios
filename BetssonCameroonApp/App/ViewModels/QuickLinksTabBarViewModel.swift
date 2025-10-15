@@ -2,7 +2,7 @@
 //  QuickLinksTabBarViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude Code on 11/09/2025.
+//  Created  Code on 11/09/2025.
 //
 
 import UIKit

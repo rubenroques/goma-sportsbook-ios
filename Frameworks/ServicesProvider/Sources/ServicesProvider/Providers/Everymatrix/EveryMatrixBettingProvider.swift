@@ -31,29 +31,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         // Update connection state
         self.connectionStateSubject.send(.connected)
-        
-        // Subscribe to session token changes
-        self.sessionCoordinator.token(forKey: .playerSessionToken)
-            .sink { [weak self] launchToken in
-                if let launchTokenValue = launchToken  {
-                    self?.connector.saveSessionToken(launchTokenValue)
-                }
-                else {
-                    self?.connector.clearSessionToken()
-                }
-            }
-            .store(in: &cancellables)
-        
-        // Subscribe to user ID changes
-        self.sessionCoordinator.userId()
-            .sink { [weak self] userId in
-                if let userIdValue = userId {
-                    self?.connector.saveUserId(userIdValue)
-                } else {
-                    self?.connector.clearUserId()
-                }
-            }
-            .store(in: &cancellables)
+
     }
 
     // MARK: - BettingProvider Protocol Methods
@@ -168,11 +146,11 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
-    // MARK: - Cashout Methods
-    
+    // MARK: - Cashout Methods (Legacy)
+
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError> {
         let endpoint = EveryMatrixOddsMatrixAPI.calculateCashout(betId: betId, stakeValue: stakeValue)
-        
+
         return connector.request(endpoint)
             .map { (response: EveryMatrix.CashoutResponse) -> Cashout in
                 // Convert EveryMatrix response to Cashout model
@@ -186,10 +164,10 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             }
             .eraseToAnyPublisher()
     }
-    
+
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError> {
         let endpoint = EveryMatrixOddsMatrixAPI.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
-        
+
         return connector.request(endpoint)
             .map { (response: EveryMatrix.CashoutExecuteResponse) -> CashoutResult in
                 return CashoutResult(
@@ -203,9 +181,86 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             }
             .eraseToAnyPublisher()
     }
-    
+
     func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    // MARK: - NEW Cashout Methods (SSE-based)
+
+    func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
+        print("💰 EveryMatrixBettingProvider: Subscribing to cashout value for bet \(betId)")
+
+        let endpoint = EveryMatrixOddsMatrixAPI.getCashoutValueSSE(betId: betId)
+
+        return connector.requestSSE(endpoint, decodingType: EveryMatrix.CashoutValueSSEResponse.self)
+            .compactMap { sseEvent -> SubscribableContent<CashoutValue>? in
+                switch sseEvent {
+                case .connected:
+                    print("✅ SSE Connected - waiting for cashout value...")
+                    // Create simple subscription for SSE connection
+                    let subscription = Subscription(id: "sse-cashout-\(betId)")
+                    return .connected(subscription: subscription)
+
+                case .message(let response):
+                    // Log message type
+                    print("📨 SSE Message: type=\(response.messageType), code=\(response.details.code)")
+
+                    // Filter 1: Only process CASHOUT_VALUE messages (ignore AUTOCASHOUT_RULE)
+                    guard response.messageType == "CASHOUT_VALUE" else {
+                        print("⏭️ Skipping \(response.messageType) message")
+                        return nil
+                    }
+
+                    // Filter 2: Only emit messages with code 100 (ignore code 103)
+                    guard response.details.code == 100 else {
+                        print("⏳ Code 103 - still loading odds...")
+                        return nil
+                    }
+
+                    // Filter 3: Ensure cashout value is present
+                    guard response.cashoutValue != nil else {
+                        print("⚠️ Code 100 but no cashout value - skipping")
+                        return nil
+                    }
+
+                    print("✅ Cashout value ready: \(response.cashoutValue!)")
+
+                    // Map to public model
+                    let mappedValue = EveryMatrixModelMapper.cashoutValue(fromSSEResponse: response)
+                    return .contentUpdate(content: mappedValue)
+
+                case .disconnected:
+                    print("🔌 SSE Disconnected")
+                    return .disconnected
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError> {
+        print("💰 EveryMatrixBettingProvider: Executing cashout for bet \(request.betId)")
+        print("💰 Type: \(request.cashoutType), Value: \(request.cashoutValue)")
+
+        // Map public request to internal DTO
+        let internalRequest = EveryMatrixModelMapper.cashoutRequest(from: request)
+
+        // Create endpoint
+        let endpoint = EveryMatrixOddsMatrixAPI.executeCashoutV2(request: internalRequest)
+
+        // Execute request
+        return connector.request(endpoint)
+            .map { (response: EveryMatrix.NewCashoutResponse) -> CashoutResponse in
+                print("✅ Cashout executed: success=\(response.success), payout=\(response.cashoutPayout)")
+
+                // Map internal response to public model
+                return EveryMatrixModelMapper.cashoutResponse(fromInternalResponse: response)
+            }
+            .mapError { error in
+                print("❌ Cashout execution failed: \(error)")
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Cashback Methods
