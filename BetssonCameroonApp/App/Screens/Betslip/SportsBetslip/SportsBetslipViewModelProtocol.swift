@@ -31,6 +31,9 @@ public protocol SportsBetslipViewModelProtocol {
     var showLoginScreen: (() -> Void)? { get set }
 
     var isLoadingSubject: CurrentValueSubject<Bool, Never> { get set }
+    
+    // MARK: - Recommended Matches
+    var suggestedBetsViewModel: SuggestedBetsExpandedViewModelProtocol { get }
 
     /// Remove a specific ticket
     func removeTicket(_ ticket: BettingTicket)

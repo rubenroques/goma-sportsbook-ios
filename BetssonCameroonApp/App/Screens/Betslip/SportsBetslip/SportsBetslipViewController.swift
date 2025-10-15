@@ -70,6 +70,13 @@ class SportsBetslipViewController: UIViewController {
         return view
     }()
     
+    // Suggested bets expanded view
+    private lazy var suggestedBetsView: SuggestedBetsExpandedView = {
+        let view = SuggestedBetsExpandedView(viewModel: viewModel.suggestedBetsViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     // Code input view
     private lazy var codeInputView: CodeInputView = {
         let view = CodeInputView(viewModel: viewModel.codeInputViewModel)
@@ -78,10 +85,28 @@ class SportsBetslipViewController: UIViewController {
     }()
     
     // Login button
+    private lazy var loginButtonContainerView: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .clear
+        return container
+    }()
+    
     private lazy var loginButton: ButtonView = {
         let button = ButtonView(viewModel: viewModel.loginButtonViewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+    
+    // Bottom stack containing bet submission, code input and login button
+    private lazy var bottomActionsStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 0
+        stack.alignment = .fill
+        stack.distribution = .fill
+        return stack
     }()
     
     // Loading view overlay
@@ -124,9 +149,14 @@ class SportsBetslipViewController: UIViewController {
         view.addSubview(buttonBarView)
         view.addSubview(emptyStateView)
         view.addSubview(ticketsTableView)
-        view.addSubview(betInfoSubmissionView)
-        view.addSubview(codeInputView)
-        view.addSubview(loginButton) // Add login button
+        view.addSubview(suggestedBetsView)
+        view.addSubview(bottomActionsStackView)
+        
+        // Add arranged subviews to stack
+        bottomActionsStackView.addArrangedSubview(betInfoSubmissionView)
+        bottomActionsStackView.addArrangedSubview(codeInputView)
+        bottomActionsStackView.addArrangedSubview(loginButtonContainerView)
+        loginButtonContainerView.addSubview(loginButton)
         
         // Add loading view on top of everything
         view.addSubview(loadingView)
@@ -160,26 +190,30 @@ class SportsBetslipViewController: UIViewController {
             emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            // Tickets table view - fill remaining space above bet info submission
-            ticketsTableView.topAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: 8),
+            // Tickets table view - fill remaining space above suggested bets
+            ticketsTableView.topAnchor.constraint(equalTo: clearBetslipButton.bottomAnchor),
             ticketsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             ticketsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ticketsTableView.bottomAnchor.constraint(equalTo: betInfoSubmissionView.topAnchor, constant: -8),
+            ticketsTableView.bottomAnchor.constraint(equalTo: bottomActionsStackView.topAnchor, constant: -8),
+
+            // Suggested bets view - between tickets table and bet info submission
+            suggestedBetsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            suggestedBetsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            suggestedBetsView.bottomAnchor.constraint(equalTo: bottomActionsStackView.topAnchor),
             
-            // Bet info submission view - bottom of the view
-            betInfoSubmissionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            betInfoSubmissionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            betInfoSubmissionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            // Bottom actions stack - bottom of the view
+            bottomActionsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomActionsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomActionsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            // Code input view - bottom of the view
-            codeInputView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            codeInputView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            codeInputView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            // Login button - bottom of the view
-            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            loginButton.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        // Login button container internal padding
+        NSLayoutConstraint.activate([
+            loginButton.leadingAnchor.constraint(equalTo: loginButtonContainerView.leadingAnchor, constant: 16),
+            loginButton.trailingAnchor.constraint(equalTo: loginButtonContainerView.trailingAnchor, constant: -16),
+            loginButton.topAnchor.constraint(equalTo: loginButtonContainerView.topAnchor, constant: 16),
+            loginButton.bottomAnchor.constraint(equalTo: loginButtonContainerView.bottomAnchor, constant: -16)
         ])
         
         // Loading view constraints - covers the entire view
@@ -218,19 +252,19 @@ class SportsBetslipViewController: UIViewController {
             case .noTicketsLoggedOut:
                 self?.betInfoSubmissionView.isHidden = true
                 self?.codeInputView.isHidden = true
-                self?.loginButton.isHidden = true
+                self?.loginButtonContainerView.isHidden = true
             case .ticketsLoggedOut:
                 self?.betInfoSubmissionView.isHidden = true
                 self?.codeInputView.isHidden = true
-                self?.loginButton.isHidden = false
+                self?.loginButtonContainerView.isHidden = false
             case .noTicketsLoggedIn:
                 self?.betInfoSubmissionView.isHidden = true
                 self?.codeInputView.isHidden = false
-                self?.loginButton.isHidden = true
+                self?.loginButtonContainerView.isHidden = true
             case .ticketsLoggedIn:
                 self?.betInfoSubmissionView.isHidden = false
                 self?.codeInputView.isHidden = true
-                self?.loginButton.isHidden = true
+                self?.loginButtonContainerView.isHidden = true
                 
             }
         }
@@ -246,6 +280,14 @@ class SportsBetslipViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+        
+        // Setup suggested bets updates
+        viewModel.suggestedBetsViewModel.matchCardViewModelsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.toggleSuggestedBetsVisibility()
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Private Methods
@@ -260,6 +302,11 @@ class SportsBetslipViewController: UIViewController {
         if hasTickets {
             ticketsTableView.reloadData()
         }
+    }
+    
+    private func toggleSuggestedBetsVisibility() {
+        let hasMatches = !viewModel.suggestedBetsViewModel.matchCardViewModels.isEmpty
+        suggestedBetsView.isHidden = !hasMatches
     }
     
     private func handleClearBetslipTapped() {

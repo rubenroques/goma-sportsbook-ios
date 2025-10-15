@@ -86,6 +86,14 @@ public extension MockBetSummaryRowViewModel {
         )
     }
     
+    /// Creates a mock view model for odds
+    static func oddsMock() -> MockBetSummaryRowViewModel {
+        MockBetSummaryRowViewModel(
+            title: "ODDS",
+            value: "0.00"
+        )
+    }
+    
     /// Creates a mock view model for disabled state
     static func disabledMock() -> MockBetSummaryRowViewModel {
         MockBetSummaryRowViewModel(

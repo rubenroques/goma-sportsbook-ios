@@ -89,11 +89,25 @@ public final class EveryMatrixUnifiedConfiguration {
         }
     }
     
+    public var recsysComboAPIBaseURL: String {
+        switch environment {
+        case .production:
+            return "https://recsys-combo-api-gateway-test-bshwjrve.nw.gateway.dev"
+        case .staging, .development:
+            return "https://recsys-combo-api-gateway-test-bshwjrve.nw.gateway.dev"
+        }
+    }
+    
     public var recsysAPIKey: String {
         return "AIzaSyBE-HDs6eqAkiNXtfN1sZGHRaGppjLfCho"
 
     }
     
+    public var recsysComboAPIKey: String {
+        return "AIzaSyAQog-N-vXGDNWldHPfM9qzR5vOMeJDspE"
+
+    }
+
     // Virtual lobby (used in casino request to get virtual games)
     public var virtualsDataSource: String {
         switch environment {

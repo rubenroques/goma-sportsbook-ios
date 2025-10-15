@@ -193,9 +193,10 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 })
                 
                 termsViewModel = MockTermsAcceptanceViewModel(data: TermsAcceptanceData(fullText: fullText,
-                                                                                        termsText: termsData?.text ?? "Terms and Conditions",
-                                                                                        privacyText: privacyData?.text ?? "Privacy Policy",
-                                                                                        cookiesText: cookiesData?.text))
+                                                                              termsText: termsData?.text ?? "Terms and Conditions",
+                                                                              privacyText: privacyData?.text ?? "Privacy Policy",
+                                                                              cookiesText: cookiesData?.text,
+                                                                                        isAccepted: true))
             default:
                 ()
             }

@@ -37,6 +37,15 @@ class PhoneLoginViewController: UIViewController {
         return button
     }()
     
+    private let logoImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "betsson_logo")?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = StyleProvider.Color.highlightPrimary
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     private let headerView: PromotionalHeaderView
     private let highlightedTextView: HighlightedTextView
     private let phoneField: BorderedTextFieldView
@@ -116,6 +125,8 @@ class PhoneLoginViewController: UIViewController {
         navigationView.addSubview(navigationTitleLabel)
         navigationView.addSubview(closeButton)
 
+        view.addSubview(logoImageView)
+
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
         highlightedTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -152,9 +163,14 @@ class PhoneLoginViewController: UIViewController {
             closeButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
             closeButton.heightAnchor.constraint(equalToConstant: 40),
 
+            logoImageView.topAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: 18),
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 100),
+            logoImageView.heightAnchor.constraint(equalToConstant: 20),
+            
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            headerView.topAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: 18),
+            headerView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 18),
 
             highlightedTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             highlightedTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),

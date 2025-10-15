@@ -16,6 +16,51 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     private var environment: Environment
     
+    // MARK: - Configuration
+    private let betslipConfiguration: BetslipConfiguration = {
+        return BetslipConfiguration(
+            config: BetslipConfigMetadata(
+                name: "standard-betslip-container",
+                version: "1.0.0",
+                defaultLanguage: "en",
+                id: "standard-betslip-container"
+            ),
+            settings: [
+                BetslipSetting(
+                    id: "allow_no_odds_change",
+                    label: "allow_no_odds_change",
+                    value: "none",
+                    default: true
+                ),
+                BetslipSetting(
+                    id: "allow_higher_odds",
+                    label: "allow_higher_odds",
+                    value: "higher",
+                    default: false
+                )
+            ],
+            tabs: [
+                BetslipTab(
+                    id: "sports-betslip",
+                    label: "sports",
+                    component: "betslip",
+                    icon: "sports",
+                    default: true,
+                    betslipId: "sports-betslip"
+                )
+                // Uncomment to enable virtual betslip:
+                // BetslipTab(
+                //     id: "virtuals-betslip",
+                //     label: "virtuals",
+                //     component: "betslip",
+                //     icon: "virtuals",
+                //     default: false,
+                //     betslipId: "virtuals-betslip"
+                // )
+            ]
+        )
+    }()
+    
     // MARK: - Child View Models
     public var headerViewModel: BetslipHeaderViewModelProtocol
     public var betslipTypeSelectorViewModel: BetslipTypeSelectorViewModelProtocol
@@ -55,14 +100,25 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     // MARK: - Public Methods
     public func setEnabled(_ isEnabled: Bool) {
         var currentData = dataSubject.value
-        currentData = BetslipData(isEnabled: isEnabled, tickets: currentData.tickets)
+        currentData = BetslipData(
+            isEnabled: isEnabled,
+            tickets: currentData.tickets,
+            shouldShowTypeSelector: currentData.shouldShowTypeSelector
+        )
         dataSubject.send(currentData)
     }
     
     // MARK: - Private Methods
     private func setupInitialData() {
+        // Use betslip configuration to determine if type selector should be shown
+        let shouldShowTypeSelector = betslipConfiguration.shouldShowTypeSelector
+        
         // Start with empty betslip
-        let initialData = BetslipData(isEnabled: true, tickets: [])
+        let initialData = BetslipData(
+            isEnabled: true,
+            tickets: [],
+            shouldShowTypeSelector: shouldShowTypeSelector
+        )
         dataSubject.send(initialData)
     }
     
@@ -140,4 +196,5 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
         let notLoggedInState = BetslipHeaderState.notLoggedIn
         headerViewModel.updateState(notLoggedInState)
     }
+    
 }

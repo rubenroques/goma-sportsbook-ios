@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 import GomaUI
 import ServicesProvider
 
@@ -22,6 +23,18 @@ struct BetListData {
     let currentPage: Int
     
     static let empty = BetListData(viewModels: [], hasMore: false, currentPage: 0)
+}
+
+struct SelectionReferenceResult {
+    let selectionIndex: Int
+    let selection: MyBetSelection
+    let reference: OutcomeBettingOfferReference
+}
+
+struct RebetProcessingResult {
+    let successfulResults: [SelectionReferenceResult]
+    let hadFailures: Bool
+    let totalAttempted: Int
 }
 
 final class MyBetsViewModel {
@@ -335,6 +348,9 @@ final class MyBetsViewModel {
     // MARK: - Navigation Closures
     
     var onNavigateToBetDetail: ((MyBet) -> Void)?
+    var onRequestRebetConfirmation: ((@escaping (Bool) -> Void) -> Void)?
+    var onNavigateToBetslip: ((Int?, Int?) -> Void)? // (successCount?, failCount?) - nil if no partial failure
+    var onShowRebetAllFailedError: (() -> Void)?
     
     // MARK: - Action Handlers
     
@@ -344,10 +360,177 @@ final class MyBetsViewModel {
     }
     
     private func handleRebetTap(_ bet: MyBet) {
-        print("🔄 MyBetsViewModel: Rebet tapped for bet: \(bet.identifier)")
-        // TODO: Create new bet ticket from selections
-        // This would involve converting MyBetSelections back to BetTicketSelections
-        // and adding them to the betslip
+        
+        // Track total number of selections we're attempting to process
+        let totalAttempted = bet.selections.count
+        
+        // Create publishers for each selection that has an outcomeId
+        // Convert errors to nil so individual failures don't break the chain
+        let publishers: [AnyPublisher<SelectionReferenceResult?, Never>] = bet.selections.enumerated().compactMap { index, selection in
+            guard let outcomeId = selection.outcomeId else {
+                print("⚠️ MyBetsViewModel: Selection \(index + 1) has no outcomeId, skipping")
+                return nil
+            }
+            
+            return servicesProvider.getBettingOfferReference(forOutcomeId: outcomeId)
+                .map { reference -> SelectionReferenceResult? in
+                    print("✅ MyBetsViewModel: Successfully retrieved reference for selection \(index + 1)")
+                    return SelectionReferenceResult(
+                        selectionIndex: index,
+                        selection: selection,
+                        reference: reference
+                    )
+                }
+                .catch { error -> Just<SelectionReferenceResult?> in
+                    print("❌ MyBetsViewModel: Failed to get reference for selection \(index + 1): \(error.localizedDescription)")
+                    return Just(nil)
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        guard !publishers.isEmpty else {
+            print("⚠️ MyBetsViewModel: No valid selections with outcomeId found")
+            return
+        }
+                
+        // Combine all publishers and wait for all to complete
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] optionalResults in
+                // Filter out nil results (failures) and keep successful ones
+                let successfulResults = optionalResults.compactMap { $0 }
+                let hadFailures = successfulResults.count < optionalResults.count
+                
+                print("📊 MyBetsViewModel: Rebet processing complete")
+                print("   - Total selections attempted: \(totalAttempted)")
+                print("   - Successful retrievals: \(successfulResults.count)")
+                print("   - Failed retrievals: \(optionalResults.count - successfulResults.count)")
+                
+                let processingResult = RebetProcessingResult(
+                    successfulResults: successfulResults,
+                    hadFailures: hadFailures,
+                    totalAttempted: totalAttempted
+                )
+                
+                self?.processBettingOfferReferences(processingResult: processingResult, originalBet: bet)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func processBettingOfferReferences(processingResult: RebetProcessingResult, originalBet: MyBet) {
+        
+        // Check if we have any successful results
+        guard !processingResult.successfulResults.isEmpty else {
+            print("❌ MyBetsViewModel: All selections failed to retrieve betting offer references")
+            onShowRebetAllFailedError?()
+            return
+        }
+        
+        // Create updated selections with new betting offer IDs
+        // Only keep selections that were successfully updated
+        var successfullyUpdatedSelections: [MyBetSelection] = []
+        
+        for result in processingResult.successfulResults {
+            let reference = result.reference
+            let index = result.selectionIndex
+            
+            // Update the selection with the new betting offer ID
+            if let newBettingOfferId = reference.bettingOfferIds.first {
+                let originalSelection = originalBet.selections[index]
+                
+                // Create updated selection with new identifier
+                let updatedSelection = MyBetSelection(
+                    identifier: newBettingOfferId,  // Update with betting offer ID
+                    state: originalSelection.state,
+                    result: originalSelection.result,
+                    globalState: originalSelection.globalState,
+                    eventName: originalSelection.eventName,
+                    homeTeamName: originalSelection.homeTeamName,
+                    awayTeamName: originalSelection.awayTeamName,
+                    eventDate: originalSelection.eventDate,
+                    tournamentName: originalSelection.tournamentName,
+                    sport: originalSelection.sport,
+                    marketName: originalSelection.marketName,
+                    outcomeName: originalSelection.outcomeName,
+                    odd: originalSelection.odd,
+                    marketId: originalSelection.marketId,
+                    outcomeId: originalSelection.outcomeId,
+                    homeResult: originalSelection.homeResult,
+                    awayResult: originalSelection.awayResult,
+                    eventId: originalSelection.eventId,
+                    country: originalSelection.country
+                )
+                
+                successfullyUpdatedSelections.append(updatedSelection)
+                
+                print("✅ Updated identifier: \(originalSelection.identifier) → \(newBettingOfferId)")
+            } else {
+                print("⚠️ No betting offer ID found in response for selection \(index + 1) - skipping")
+            }
+        }
+        
+        // Create BettingTickets ONLY from successfully updated selections
+        let bettingTickets: [BettingTicket] = successfullyUpdatedSelections.compactMap { selection in
+            guard let outcomeId = selection.outcomeId,
+                  let marketId = selection.marketId else {
+                return nil
+            }
+            
+            // Create betting ticket
+            let ticket = BettingTicket(
+                id: selection.identifier,
+                outcomeId: outcomeId,
+                marketId: marketId,
+                matchId: selection.eventId,
+                isAvailable: true,
+                matchDescription: selection.eventName,
+                marketDescription: selection.marketName,
+                outcomeDescription: selection.outcomeName,
+                homeParticipantName: selection.homeTeamName,
+                awayParticipantName: selection.awayTeamName,
+                sport: selection.sport,
+                sportIdCode: selection.sport?.id,
+                venue: nil,  // Not available in MyBetSelection
+                competition: selection.tournamentName,
+                date: selection.eventDate,
+                odd: selection.odd,
+                isFromBetBuilderMarket: nil
+            )
+            
+            return ticket
+        }
+        
+        // Determine if there were failures (including selections without betting offer IDs)
+        let actualSuccessCount = successfullyUpdatedSelections.count
+        let actualFailCount = processingResult.totalAttempted - actualSuccessCount
+        let hadFailures = actualFailCount > 0
+        
+        // Request confirmation from view controller
+        onRequestRebetConfirmation? { [weak self] shouldProceed in
+            if shouldProceed {
+                
+                self?.addTicketsToBetslip(bettingTickets)
+                
+                if hadFailures {
+                    self?.onNavigateToBetslip?(actualSuccessCount, actualFailCount)
+                } else {
+                    self?.onNavigateToBetslip?(nil, nil)
+                }
+            }
+        }
+    }
+    
+    
+    private func addTicketsToBetslip(_ bettingTickets: [BettingTicket]) {
+        
+        Env.betslipManager.clearAllBettingTickets()
+        
+        // Add all tickets to betslip
+        for ticket in bettingTickets {
+            Env.betslipManager.addBettingTicket(ticket)
+        }
+        
     }
     
     private func handleCashoutTap(_ bet: MyBet) {

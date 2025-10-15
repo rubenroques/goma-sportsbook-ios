@@ -30,4 +30,5 @@ enum SportsbookTargetFeatures: Codable, CaseIterable {
     case userWalletBalance
     
     case featuredCompetitionInTabBar
+    case virtualBetslip
 }

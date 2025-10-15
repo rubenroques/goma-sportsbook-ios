@@ -180,4 +180,6 @@ protocol EventsProvider: Connector {
     
     // Recommendations
     func getRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError>
+    
+    func getComboRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError>
 }
