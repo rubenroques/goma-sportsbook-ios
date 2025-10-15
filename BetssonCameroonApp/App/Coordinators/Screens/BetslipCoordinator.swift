@@ -136,7 +136,7 @@ class BetslipCoordinator: Coordinator {
     ) {
         guard !bettingTickets.isEmpty else {
             print("[BET_PLACEMENT] ⚠️ No tickets to create booking code")
-            showBookingCodeError(from: viewController, message: "No betting tickets available")
+            showBookingCodeError(from: viewController)
             return
         }
 
@@ -170,7 +170,7 @@ class BetslipCoordinator: Coordinator {
                         print("[BET_PLACEMENT] ✅ Booking code request completed")
                     case .failure(let error):
                         print("[BET_PLACEMENT] ❌ Booking code creation failed: \(error)")
-                        self.showBookingCodeError(from: viewController, message: error.localizedDescription)
+                        self.showBookingCodeError(from: viewController)
                     }
                 },
                 receiveValue: { [weak self, weak viewController] response in
@@ -212,10 +212,10 @@ class BetslipCoordinator: Coordinator {
         viewController.present(activityViewController, animated: true)
     }
 
-    private func showBookingCodeError(from viewController: UIViewController, message: String) {
+    private func showBookingCodeError(from viewController: UIViewController) {
         let alert = UIAlertController(
             title: "Booking Code Error",
-            message: "Failed to create booking code: \(message)",
+            message: "Failed to create booking code",
             preferredStyle: .alert
         )
 
