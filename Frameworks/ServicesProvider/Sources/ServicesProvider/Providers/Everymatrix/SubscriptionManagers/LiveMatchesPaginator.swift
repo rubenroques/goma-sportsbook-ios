@@ -626,22 +626,22 @@ class LiveMatchesPaginator: UnsubscriptionController {
             case "1": // Score
 
                 // ═══════════════════════════════════════════════════════════════════════
-                print("🏆 [SCORE_LOG] ═══════════════════════════════════════════════════════")
-                print("🏆 [SCORE_LOG] Event: \(eventId)")
-                print("🏆 [SCORE_LOG] EventPartName: \(info.eventPartName ?? "nil")")
-                print("🏆 [SCORE_LOG] TypeName: \(info.typeName ?? "nil")")
-                print("🏆 [SCORE_LOG] ShortTypeName: \(info.shortTypeName ?? "nil")")
-                print("🏆 [SCORE_LOG] StatusId: \(info.statusId)")
-                print("🏆 [SCORE_LOG] EventPartId: \(info.eventPartId ?? "nil")")
-                print("🏆 [SCORE_LOG] Raw ParamFloat1: \(info.paramFloat1 ?? -1)")
-                print("🏆 [SCORE_LOG] Raw ParamFloat2: \(info.paramFloat2 ?? -1)")
+                // print("🏆 [SCORE_LOG] ═══════════════════════════════════════════════════════")
+                // print("🏆 [SCORE_LOG] Event: \(eventId)")
+                // print("🏆 [SCORE_LOG] EventPartName: \(info.eventPartName ?? "nil")")
+                // print("🏆 [SCORE_LOG] TypeName: \(info.typeName ?? "nil")")
+                // print("🏆 [SCORE_LOG] ShortTypeName: \(info.shortTypeName ?? "nil")")
+                // print("🏆 [SCORE_LOG] StatusId: \(info.statusId)")
+                // print("🏆 [SCORE_LOG] EventPartId: \(info.eventPartId ?? "nil")")
+                // print("🏆 [SCORE_LOG] Raw ParamFloat1: \(info.paramFloat1 ?? -1)")
+                // print("🏆 [SCORE_LOG] Raw ParamFloat2: \(info.paramFloat2 ?? -1)")
 
-                if let match = matchData {
-                    print("🏆 [SCORE_LOG] HomeParticipantName: \(match.homeParticipantName)")
-                    print("🏆 [SCORE_LOG] AwayParticipantName: \(match.awayParticipantName)")
-                } else {
-                    print("🏆 [SCORE_LOG] Match data: nil")
-                }
+//                if let match = matchData {
+//                    print("🏆 [SCORE_LOG] HomeParticipantName: \(match.homeParticipantName)")
+//                    print("🏆 [SCORE_LOG] AwayParticipantName: \(match.awayParticipantName)")
+//                } else {
+//                    print("🏆 [SCORE_LOG] Match data: nil")
+//                }
 
                 
                 if let eventPartName = info.eventPartName {
@@ -672,34 +672,34 @@ class LiveMatchesPaginator: UnsubscriptionController {
                     }
 
                     // Log the resolved mapping
-                    print("🏆 [SCORE_LOG] ───────────────────────────────────────────────────────")
-                    print("🏆 [SCORE_LOG] RESOLVED MAPPING:")
-                    if let match = matchData {
-                        if let pid1 = info.paramParticipantId1 {
-                            if pid1 == match.homeParticipantId {
-                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → HOME (\(match.homeParticipantName))")
-                            } else if pid1 == match.awayParticipantId {
-                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → AWAY (\(match.awayParticipantName))")
-                            } else {
-                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → UNKNOWN PARTICIPANT (\(pid1))")
-                            }
-                        }
-
-                        if let pid2 = info.paramParticipantId2 {
-                            if pid2 == match.homeParticipantId {
-                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → HOME (\(match.homeParticipantName))")
-                            } else if pid2 == match.awayParticipantId {
-                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → AWAY (\(match.awayParticipantName))")
-                            } else {
-                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → UNKNOWN PARTICIPANT (\(pid2))")
-                            }
-                        }
-                    } else {
-                        print("🏆 [SCORE_LOG] No match data - using fallback mapping:")
-                        print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → HOME (assumed)")
-                        print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → AWAY (assumed)")
-                    }
-                    
+//                    print("🏆 [SCORE_LOG] ───────────────────────────────────────────────────────")
+//                    print("🏆 [SCORE_LOG] RESOLVED MAPPING:")
+//                    if let match = matchData {
+//                        if let pid1 = info.paramParticipantId1 {
+//                            if pid1 == match.homeParticipantId {
+//                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → HOME (\(match.homeParticipantName))")
+//                            } else if pid1 == match.awayParticipantId {
+//                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → AWAY (\(match.awayParticipantName))")
+//                            } else {
+//                                print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → UNKNOWN PARTICIPANT (\(pid1))")
+//                            }
+//                        }
+//
+//                        if let pid2 = info.paramParticipantId2 {
+//                            if pid2 == match.homeParticipantId {
+//                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → HOME (\(match.homeParticipantName))")
+//                            } else if pid2 == match.awayParticipantId {
+//                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → AWAY (\(match.awayParticipantName))")
+//                            } else {
+//                                print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → UNKNOWN PARTICIPANT (\(pid2))")
+//                            }
+//                        }
+//                    } else {
+//                        print("🏆 [SCORE_LOG] No match data - using fallback mapping:")
+//                        print("🏆 [SCORE_LOG] ParamFloat1 (\(info.paramFloat1 ?? -1)) → HOME (assumed)")
+//                        print("🏆 [SCORE_LOG] ParamFloat2 (\(info.paramFloat2 ?? -1)) → AWAY (assumed)")
+//                    }
+//                    
                     
                     // Only proceed if we have at least one score value
                     if homeValue != nil || awayValue != nil {
@@ -757,16 +757,15 @@ class LiveMatchesPaginator: UnsubscriptionController {
                             // If we need to support more score types they need to be explicit in the top fields
                             score = nil // .gamePart(home: homeValue, away: awayValue)
                             
-                            print("🏆 [SCORE_LOG] fallback DETECTED ⛔️ eventPartId:\(info.eventPartId ?? "NOT_FOUND") ")
-                            print("🏆 [SCORE_LOG] fallback DETECTED ⛔️ eventPartName:\(eventPartName) ")
+                            // print("🏆 [SCORE_LOG] fallback DETECTED ⛔️ eventPartId:\(info.eventPartId ?? "NOT_FOUND") ")
+                            // print("🏆 [SCORE_LOG] fallback DETECTED ⛔️ eventPartName:\(eventPartName) ")
                         }
-
                     
                         // we do not support nil scores cases, no
                         if let scoreValue = score {
-                            print("🏆 [SCORE_LOG] Final HomeScore: \(homeValue?.description ?? "nil")")
-                            print("🏆 [SCORE_LOG] Final AwayScore: \(awayValue?.description ?? "nil")")
-                            print("🏆 [SCORE_LOG] ═══════════════════════════════════════════════════════ \n\n")
+                            // print("🏆 [SCORE_LOG] Final HomeScore: \(homeValue?.description ?? "nil")")
+                            // print("🏆 [SCORE_LOG] Final AwayScore: \(awayValue?.description ?? "nil")")
+                            // print("🏆 [SCORE_LOG] ═══════════════════════════════════════════════════════ \n\n")
                             
                             detailedScores[eventPartName] = scoreValue
                         }

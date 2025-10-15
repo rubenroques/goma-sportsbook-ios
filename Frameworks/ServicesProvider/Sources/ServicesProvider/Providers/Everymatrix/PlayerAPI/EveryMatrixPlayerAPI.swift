@@ -19,6 +19,10 @@ enum EveryMatrixPlayerAPI {
     case getBankingTransactions(userId: String, startDate: String, endDate: String, pageNumber: Int?)
     case getRecentlyPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
     case getMostPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
+
+    // Betting Offer Booking API endpoints
+    case createBookingCode(bettingOfferIds: [String], originalSelectionsLength: Int)
+    case getFromBookingCode(code: String)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -53,6 +57,10 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/\(playerId)/games/last-played"
         case .getMostPlayedGames(let playerId, _, _, _, _):
             return "/v1/player/\(playerId)/games/most-played"
+        case .createBookingCode:
+            return "/v2/sports/bets/book"
+        case .getFromBookingCode(let code):
+            return "/v2/sports/bets/book/\(code)"
         }
     }
     
@@ -154,6 +162,10 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return .get
         case .getMostPlayedGames:
             return .get
+        case .createBookingCode:
+            return .post
+        case .getFromBookingCode:
+            return .get
         }
     }
     
@@ -210,6 +222,10 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return data
         case .getBankingWebView(_, let parameters):
             return try? JSONEncoder().encode(parameters)
+        case .createBookingCode(let bettingOfferIds, let originalSelectionsLength):
+            let selections = bettingOfferIds.map { BookingSelection(bettingOfferId: $0) }
+            let request = BookingRequest(selections: selections, originalSelectionsLength: originalSelectionsLength)
+            return try? JSONEncoder().encode(request)
         default:
             return nil
         }

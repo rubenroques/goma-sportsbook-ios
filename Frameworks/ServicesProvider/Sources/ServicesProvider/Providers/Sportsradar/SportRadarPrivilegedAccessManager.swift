@@ -1544,6 +1544,13 @@ extension SportRadarPrivilegedAccessManager {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
+    func createBookingCode(bettingOfferIds: [String], originalSelectionsLength: Int) -> AnyPublisher<BookingCodeResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
 }
 

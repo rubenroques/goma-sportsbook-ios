@@ -615,5 +615,42 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
             }
             .eraseToAnyPublisher()
     }
-    
+
+    // MARK: - Betting Offer Booking Methods
+
+    func createBookingCode(bettingOfferIds: [String], originalSelectionsLength: Int) -> AnyPublisher<BookingCodeResponse, ServiceProviderError> {
+        print("[EveryMatrixPrivilegedAccessManager] 🔖 Creating booking code for \(bettingOfferIds.count) betting offers (original: \(originalSelectionsLength))")
+
+        let endpoint = EveryMatrixPlayerAPI.createBookingCode(bettingOfferIds: bettingOfferIds, originalSelectionsLength: originalSelectionsLength)
+
+        return connector.request(endpoint)
+            .map { (response: BookingCodeResponse) -> BookingCodeResponse in
+                print("[EveryMatrixPrivilegedAccessManager] ✅ Booking code created: \(response.code)")
+                return response
+            }
+            .mapError { error in
+                print("[EveryMatrixPrivilegedAccessManager] ❌ Failed to create booking code: \(error)")
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError> {
+        print("[EveryMatrixPrivilegedAccessManager] 🔍 Retrieving betting offers for booking code: \(bookingCode)")
+
+        let endpoint = EveryMatrixPlayerAPI.getFromBookingCode(code: bookingCode)
+
+        return connector.request(endpoint)
+            .map { (response: BookingRetrievalResponse) -> [String] in
+                let bettingOfferIds = response.selections.map { $0.bettingOfferId }
+                print("[EveryMatrixPrivilegedAccessManager] ✅ Retrieved \(bettingOfferIds.count) betting offer IDs")
+                return bettingOfferIds
+            }
+            .mapError { error in
+                print("[EveryMatrixPrivilegedAccessManager] ❌ Failed to retrieve booking code: \(error)")
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
 }

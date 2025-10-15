@@ -9,7 +9,7 @@ import Foundation
 
 enum EveryMatrixOddsMatrixAPI {
     case placeBet(betData: EveryMatrix.PlaceBetRequest)
-    
+
     // MyBets API endpoints
     case getOpenBets(limit: Int, placedBefore: String)
     case getSettledBets(limit: Int, placedBefore: String, betStatus: String?)

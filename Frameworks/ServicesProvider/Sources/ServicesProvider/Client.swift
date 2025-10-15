@@ -925,6 +925,8 @@ extension Client {
         return eventsProvider.getHighlightedLiveEvents(eventCount: eventCount, userId: userId)
     }
     
+    //
+    //
     public func getBettingOfferReference(forOutcomeId outcomeId: String) -> AnyPublisher<OutcomeBettingOfferReference, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -934,6 +936,9 @@ extension Client {
         
         return eventsProvider.getBettingOfferReference(forOutcomeId: outcomeId)
     }
+    
+    
+    
 }
 
 extension Client {
@@ -1456,6 +1461,24 @@ extension Client {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
         return bettingProvider.updateTicket(betId: betId, betTicket: betTicket)
+    }
+    
+    public func createBookingCode(bettingOfferIds: [String], originalSelectionsLength:Int) -> AnyPublisher<BookingCodeResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.createBookingCode(bettingOfferIds: bettingOfferIds, originalSelectionsLength: originalSelectionsLength)
+    }
+
+    public func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getBettingOfferIds(bookingCode: bookingCode)
     }
 
 }

@@ -30,13 +30,20 @@ class BetSuccessViewController: UIViewController {
     private let openDetailsRow: ActionRowView = ActionRowView()
     private let shareRow: ActionRowView = ActionRowView()
 
+    private let shareLoadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
     private let viewModel: BetSuccessViewModelProtocol
 
     // MARK: - Navigation Closures
     // Called when success flow completes - handled by coordinator
     var onContinueRequested: (() -> Void)?
     var onOpenDetails: (() -> Void)?
-    var onShareBetslip: ((String) -> Void)?
+    var onShareBetslip: (() -> Void)?
 
     init(viewModel: BetSuccessViewModelProtocol) {
         self.viewModel = viewModel
@@ -92,8 +99,7 @@ class BetSuccessViewController: UIViewController {
             trailingIcon: "square.and.arrow.up"
         )
         shareRow.configure(with: shareItem) { [weak self] _ in
-            guard let self = self, let betId = self.viewModel.betId else { return }
-            self.onShareBetslip?(betId)
+            self?.onShareBetslip?()
         }
         shareRow.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -109,6 +115,9 @@ class BetSuccessViewController: UIViewController {
         infoStack.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(infoStack)
 
+        // Add loading indicator to share row
+        shareRow.addSubview(shareLoadingIndicator)
+
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -123,9 +132,29 @@ class BetSuccessViewController: UIViewController {
             infoStack.topAnchor.constraint(equalTo: closeButton.bottomAnchor, constant: 12),
             infoStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             infoStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            infoStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20)
+            infoStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20),
+
+            // Position loading indicator on the right side of share row
+            shareLoadingIndicator.trailingAnchor.constraint(equalTo: shareRow.trailingAnchor, constant: -16),
+            shareLoadingIndicator.centerYAnchor.constraint(equalTo: shareRow.centerYAnchor)
         ])
     }
+
+    // MARK: - Public Methods
+
+    /// Shows or hides loading state on the share row
+    public func setShareLoading(_ isLoading: Bool) {
+        shareRow.isUserInteractionEnabled = !isLoading
+        shareRow.alpha = isLoading ? 0.6 : 1.0
+
+        if isLoading {
+            shareLoadingIndicator.startAnimating()
+        } else {
+            shareLoadingIndicator.stopAnimating()
+        }
+    }
+
+    // MARK: - Private Methods
 
     @objc private func didTapClose() {
         onContinueRequested?()

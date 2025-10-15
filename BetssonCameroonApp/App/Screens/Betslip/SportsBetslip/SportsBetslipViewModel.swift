@@ -144,33 +144,59 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     }
     
     private func placeBet() {
-        
+
         let stake = convertToDouble(betInfoSubmissionViewModel.currentData.amount)
-        
+
         let oddsValidationType = oddsAcceptanceViewModel.currentData.state == .accepted ? "ACCEPT_ANY" : "ACCEPT_HIGHER"
-        
+
+        // Capture current tickets before clearing
+        let placedTickets = currentTickets
+        print("[BET_PLACEMENT] 📋 Placing bet with \(placedTickets.count) tickets")
+        placedTickets.enumerated().forEach { index, ticket in
+            print("[BET_PLACEMENT]   [\(index+1)] \(ticket.matchDescription) - \(ticket.outcomeDescription) @ \(ticket.decimalOdd)")
+        }
+
         // Show loading state
         self.isLoadingSubject.send(true)
-        
+
         environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 // Hide loading state
                 switch completion {
                 case .finished:
-                    print("PLACE BET DONE!")
+                    print("[BET_PLACEMENT] ✅ Placement request completed")
                 case .failure(let error):
-                    print("PLACE BET ERROR: \(error)")
+                    print("[BET_PLACEMENT] ❌ Placement failed: \(error)")
                     self?.showPlacedBetState?(.error(message: "Bet couldn't be placed. Please try again later!"))
                 }
-                
-                self?.isLoadingSubject.send(false)
-                
-            }, receiveValue: { [weak self] betPlacedDetails in
 
-                print("PLACE BET SUCCESS: \(betPlacedDetails)")
-                let betId = betPlacedDetails.first?.response.betId
-                self?.showPlacedBetState?(.success(betId: betId))
+                self?.isLoadingSubject.send(false)
+
+            }, receiveValue: { [weak self] betPlacedDetails in
+                print("[BET_PLACEMENT] 🎉 Received response with \(betPlacedDetails.count) items")
+
+                // Debug full response
+                betPlacedDetails.enumerated().forEach { index, detail in
+                    let response = detail.response
+                    print("[BET_PLACEMENT]   Response[\(index)]:")
+                    print("[BET_PLACEMENT]     betId: \(response.betId ?? "nil")")
+                    print("[BET_PLACEMENT]     betslipId: \(response.betslipId ?? "nil")")
+                    print("[BET_PLACEMENT]     betSucceed: \(response.betSucceed?.description ?? "nil")")
+                    print("[BET_PLACEMENT]     selections count: \(response.selections?.count ?? 0)")
+                }
+
+                let firstResponse = betPlacedDetails.first?.response
+                let betId = firstResponse?.betId
+                let betslipId = firstResponse?.betslipId
+
+                print("[BET_PLACEMENT] 🏷️ Extracted IDs - betId: \(betId ?? "nil"), betslipId: \(betslipId ?? "nil")")
+
+                self?.showPlacedBetState?(.success(
+                    betId: betId,
+                    betslipId: betslipId,
+                    bettingTickets: placedTickets
+                ))
 
             })
             .store(in: &cancellables)
@@ -227,6 +253,6 @@ public enum BetslipLoggedState {
 }
 
 public enum BetPlacedState {
-    case success(betId: String?)
+    case success(betId: String?, betslipId: String?, bettingTickets: [BettingTicket])
     case error(message: String)
 }

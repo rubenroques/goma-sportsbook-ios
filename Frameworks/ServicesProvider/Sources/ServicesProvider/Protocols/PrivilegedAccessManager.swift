@@ -157,7 +157,29 @@ protocol PrivilegedAccessManagerProvider {
         platform: String?,
         pagination: CasinoPaginationParams
     ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
-    
+
+    // MARK: - Betting Offer Booking
+
+    /// Create a booking code from betting offer IDs.
+    ///
+    /// Stores the provided betting offer IDs and returns a short code that can be used
+    /// to retrieve them later. This enables sharing betslips or saving selections.
+    ///
+    /// - Parameters:
+    ///   - bettingOfferIds: Array of betting offer IDs to bookmark
+    ///   - originalSelectionsLength: Original number of selections before filtering
+    /// - Returns: Publisher emitting booking code response or error
+    func createBookingCode(bettingOfferIds: [String], originalSelectionsLength: Int) -> AnyPublisher<BookingCodeResponse, ServiceProviderError>
+
+    /// Retrieve betting offer IDs using a booking code.
+    ///
+    /// Retrieves the betting offer IDs that were previously stored using a booking code.
+    /// This allows restoring a betslip from a shared code.
+    ///
+    /// - Parameter bookingCode: The booking code to retrieve (e.g., "7YRLO2UQ")
+    /// - Returns: Publisher emitting array of betting offer IDs or error
+    func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError>
+
 }
 
 // MARK: - Domain-Specific Protocols

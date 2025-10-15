@@ -320,11 +320,11 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     private func defaultPlacedBeforeDate() -> String {
         let calendar = Calendar.current
         let sixMonthsFromNow = calendar.date(byAdding: .month, value: 6, to: Date()) ?? Date()
-        
+
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         formatter.timeZone = TimeZone(secondsFromGMT: 0) // Use UTC
-        
+
         return formatter.string(from: sixMonthsFromNow)
     }
 }
