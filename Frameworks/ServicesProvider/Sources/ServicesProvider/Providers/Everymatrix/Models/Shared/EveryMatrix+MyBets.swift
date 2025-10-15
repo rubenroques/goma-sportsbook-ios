@@ -15,6 +15,7 @@ extension EveryMatrix {
         let scoreDifference: Double?
     }
 
+    /*
     struct CashoutRequest: Codable {
         let betId: String
         let cashoutValue: Double
@@ -28,6 +29,7 @@ extension EveryMatrix {
             self.partialCashoutStake = partialCashoutStake
         }
     }
+    */
     
     // MARK: - MyBets Response Models
     

@@ -166,20 +166,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     }
 
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError> {
-        let endpoint = EveryMatrixOddsMatrixAPI.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
-
-        return connector.request(endpoint)
-            .map { (response: EveryMatrix.CashoutExecuteResponse) -> CashoutResult in
-                return CashoutResult(
-                    cashoutResult: response.success == true ? 1 : 0,
-                    cashoutReoffer: response.cashoutValue,
-                    message: response.errorMessage
-                )
-            }
-            .mapError { error in
-                ServiceProviderError.errorMessage(message: error.localizedDescription)
-            }
-            .eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
     func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError> {

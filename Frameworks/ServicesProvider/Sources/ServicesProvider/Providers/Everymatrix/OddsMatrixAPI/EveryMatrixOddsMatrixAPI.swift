@@ -15,6 +15,10 @@ enum EveryMatrixOddsMatrixAPI {
     case getSettledBets(limit: Int, placedBefore: String, betStatus: String?)
     case calculateCashout(betId: String, stakeValue: String?)
     case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?)
+
+    // New Cashout API (SSE + execution)
+    case getCashoutValueSSE(betId: String)
+    case executeCashoutV2(request: EveryMatrix.NewCashoutRequest)
 }
 
 extension EveryMatrixOddsMatrixAPI: Endpoint {
@@ -35,12 +39,16 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
             return "/bets-api/v1/\(domainId)/cashout-amount"
         case .cashoutBet:
             return "/bets-api/v1/\(domainId)/cashout"
+        case .getCashoutValueSSE(let betId):
+            return "/cashout/v1/cashout-value/\(betId)"
+        case .executeCashoutV2:
+            return "/cashout/v1/cashout"
         }
     }
     
     var query: [URLQueryItem]? {
         switch self {
-        case .placeBet, .cashoutBet:
+        case .placeBet, .cashoutBet, .getCashoutValueSSE, .executeCashoutV2:
             return nil
         case .getOpenBets(let limit, let placedBefore):
             return [
@@ -84,6 +92,21 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
                 "x-language": "en"
             ]
             return headers
+        case .getCashoutValueSSE:
+            // SSE cashout value requires text/event-stream
+            let headers = [
+                "Accept": "text/event-stream",
+                "X-OperatorId": domainId
+            ]
+            return headers
+        case .executeCashoutV2:
+            // New cashout execution API
+            let headers = [
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-OperatorId": domainId
+            ]
+            return headers
         }
     }
     
@@ -93,9 +116,9 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
     
     var method: HTTP.Method {
         switch self {
-        case .placeBet, .cashoutBet:
+        case .placeBet, .cashoutBet, .executeCashoutV2:
             return .post
-        case .getOpenBets, .getSettledBets, .calculateCashout:
+        case .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE:
             return .get
         }
     }
@@ -112,7 +135,9 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
                 partialCashoutStake: stakeValue
             )
             return try? JSONEncoder().encode(cashoutRequest)
-        case .getOpenBets, .getSettledBets, .calculateCashout:
+        case .executeCashoutV2(let request):
+            return try? JSONEncoder().encode(request)
+        case .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE:
             return nil
         }
     }
@@ -123,7 +148,7 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
     
     var requireSessionKey: Bool {
         switch self {
-        case .placeBet, .getOpenBets, .getSettledBets, .calculateCashout, .cashoutBet:
+        case .placeBet, .getOpenBets, .getSettledBets, .calculateCashout, .cashoutBet, .getCashoutValueSSE, .executeCashoutV2:
             return true
         }
     }
@@ -149,6 +174,14 @@ extension EveryMatrixOddsMatrixAPI: Endpoint {
                 return "x-session-id"  // With hyphen for MyBets APIs
             case .userId:
                 return "x-user-id"     // MyBets APIs need user ID
+            }
+        case .getCashoutValueSSE, .executeCashoutV2:
+            // New Cashout API uses capitalized headers
+            switch type {
+            case .sessionId:
+                return "X-SessionId"   // Capitalized for new cashout API
+            case .userId:
+                return "userId"        // No x- prefix for new cashout API
             }
         }
     }
