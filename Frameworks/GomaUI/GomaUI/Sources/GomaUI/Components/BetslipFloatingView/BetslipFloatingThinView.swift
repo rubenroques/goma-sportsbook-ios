@@ -3,8 +3,8 @@ import UIKit
 import Combine
 import SwiftUI
 
-/// A floating view that displays betslip status with two states: no tickets (circular button) and with tickets (detailed view)
-public final class BetslipFloatingView: UIView {
+/// A thin floating view that displays betslip status with two states: no tickets (circular button) and with tickets (compact horizontal detailed view)
+public final class BetslipFloatingThinView: UIView {
     
     // MARK: - UI Components
     
@@ -184,8 +184,8 @@ public final class BetslipFloatingView: UIView {
         stackView.spacing = 4
         return stackView
     }()
-    
-    private var progressSegments: [UIView] = []
+
+    private var progressSegments: [ProgressSegmentView] = []
     
     // MARK: - Properties
     private let viewModel: BetslipFloatingViewModelProtocol
@@ -345,30 +345,83 @@ public final class BetslipFloatingView: UIView {
         ])
     }
 
-    private func setupProgressSegments(ticketSelection: Int, totalEligibleCount: Int) {
-        
-        progressSegments.forEach { $0.removeFromSuperview() }
-        progressSegments.removeAll()
-        
-        for i in 0..<totalEligibleCount {
-            let segment = UIView()
-            segment.translatesAutoresizingMaskIntoConstraints = false
-            
-            if i < ticketSelection {
-                segment.backgroundColor = StyleProvider.Color.highlightSecondary
-            } else {
-                segment.backgroundColor = StyleProvider.Color.backgroundBorder
+    /// Updates progress segments with diff-based approach and animations
+    /// - Parameters:
+    ///   - filledCount: Number of segments that should be filled
+    ///   - totalCount: Total number of segments to display
+    ///   - animated: Whether to animate changes (default: true)
+    private func updateProgressSegments(filledCount: Int, totalCount: Int, animated: Bool = true) {
+        let currentCount = progressSegments.count
+
+        // 1. Add new segments if needed
+        if totalCount > currentCount {
+            let newSegments = (currentCount..<totalCount).map { _ -> ProgressSegmentView in
+                let segment = ProgressSegmentView()
+                NSLayoutConstraint.activate([
+                    segment.heightAnchor.constraint(equalToConstant: 8)
+                ])
+                return segment
             }
-            
-            segment.layer.cornerRadius = 4
-            
-            progressSegments.append(segment)
-            progressSegmentsStackView.addArrangedSubview(segment)
-            
-            // Add height constraint to make segments visible
-            NSLayoutConstraint.activate([
-                segment.heightAnchor.constraint(equalToConstant: 8)
-            ])
+
+            // Prepare for animation
+            if animated {
+                newSegments.forEach {
+                    $0.alpha = 0
+                    $0.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+                }
+            }
+
+            // Add to stack view and array
+            newSegments.forEach { progressSegmentsStackView.addArrangedSubview($0) }
+            progressSegments.append(contentsOf: newSegments)
+
+            // Animate in
+            if animated {
+                UIView.animate(
+                    withDuration: 0.3,
+                    delay: 0.1,
+                    options: [.curveEaseOut],
+                    animations: {
+                        newSegments.forEach {
+                            $0.alpha = 1.0
+                            $0.transform = .identity
+                        }
+                    }
+                )
+            }
+        }
+        // 2. Remove excess segments if needed
+        else if totalCount < currentCount {
+            let segmentsToRemove = progressSegments[totalCount...]
+
+            if animated {
+                UIView.animate(
+                    withDuration: 0.2,
+                    animations: {
+                        segmentsToRemove.forEach {
+                            $0.alpha = 0
+                            $0.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+                        }
+                    },
+                    completion: { _ in
+                        segmentsToRemove.forEach { $0.removeFromSuperview() }
+                        self.progressSegments.removeLast(currentCount - totalCount)
+                    }
+                )
+            } else {
+                segmentsToRemove.forEach { $0.removeFromSuperview() }
+                progressSegments.removeLast(currentCount - totalCount)
+            }
+        }
+
+        // 3. Update fill state of existing segments with staggered animation (wave effect)
+        for (index, segment) in progressSegments.enumerated() {
+            let shouldBeFilled = index < filledCount
+            let delay = animated ? Double(index) * 0.05 : 0 // 50ms stagger between segments
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                segment.setFilled(shouldBeFilled, animated: animated)
+            }
         }
     }
     
@@ -417,7 +470,7 @@ public final class BetslipFloatingView: UIView {
                 winBoostCapsuleView.isHidden = true
             }
 
-            setupProgressSegments(ticketSelection: selectionCount, totalEligibleCount: totalEligibleCount)
+            updateProgressSegments(filledCount: selectionCount, totalCount: totalEligibleCount, animated: true)
 
             // Show/hide bottom section based on totalEligibleCount
             if totalEligibleCount > 0 {
@@ -486,7 +539,7 @@ public final class BetslipFloatingView: UIView {
         let vc = UIViewController()
         vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-        let betslipView = BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .noTickets))
+        let betslipView = BetslipFloatingThinView(viewModel: MockBetslipFloatingViewModel(state: .noTickets))
         betslipView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(betslipView)
 
@@ -506,7 +559,7 @@ public final class BetslipFloatingView: UIView {
         let vc = UIViewController()
         vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-        let betslipView = BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 3, odds: "1.55", winBoostPercentage: "10%", totalEligibleCount: 6, nextTierPercentage: "15%")))
+        let betslipView = BetslipFloatingThinView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 3, odds: "1.55", winBoostPercentage: "10%", totalEligibleCount: 6, nextTierPercentage: "15%")))
         betslipView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(betslipView)
 
@@ -526,7 +579,7 @@ public final class BetslipFloatingView: UIView {
         let vc = UIViewController()
         vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-        let betslipView = BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 2, odds: "1.85", winBoostPercentage: nil, totalEligibleCount: 0, nextTierPercentage: nil)))
+        let betslipView = BetslipFloatingThinView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 2, odds: "1.85", winBoostPercentage: nil, totalEligibleCount: 0, nextTierPercentage: nil)))
         betslipView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(betslipView)
 
@@ -554,7 +607,7 @@ public final class BetslipFloatingView: UIView {
 private final class BetslipFloatingInteractivePreviewController: UIViewController {
 
     private let mockViewModel = MockBetslipFloatingViewModel(state: .noTickets)
-    private lazy var betslipView = BetslipFloatingView(viewModel: mockViewModel)
+    private lazy var betslipView = BetslipFloatingThinView(viewModel: mockViewModel)
 
     private lazy var segmentedControl: UISegmentedControl = {
         let items = ["No Tickets", "With Tickets", "Max Boost"]

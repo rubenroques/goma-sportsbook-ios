@@ -85,8 +85,8 @@ class MatchDetailsTextualViewController: UIViewController {
     }()
     
     // Betslip Floating View
-    private lazy var betslipFloatingView: BetslipFloatingView = {
-        let view = BetslipFloatingView(viewModel: viewModel.betslipFloatingViewModel)
+    private lazy var betslipFloatingView: BetslipFloatingThinView = {
+        let view = BetslipFloatingThinView(viewModel: viewModel.betslipFloatingViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

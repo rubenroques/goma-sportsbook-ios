@@ -28,7 +28,7 @@ class MainTabBarViewController: UIViewController {
     private var floatingOverlayView: FloatingOverlayView!
     
     // BetslipFloatingView
-    private var betslipFloatingView: BetslipFloatingView!
+    private var betslipFloatingView: BetslipFloatingThinView!
 
 
     // Authentication Views
@@ -102,7 +102,7 @@ class MainTabBarViewController: UIViewController {
         self.floatingOverlayView.translatesAutoresizingMaskIntoConstraints = false
         
         // Initialize betslipFloatingView with view model from RootTabBarViewModel
-        self.betslipFloatingView = BetslipFloatingView(viewModel: viewModel.betslipFloatingViewModel)
+        self.betslipFloatingView = BetslipFloatingThinView(viewModel: viewModel.betslipFloatingViewModel)
         self.betslipFloatingView.translatesAutoresizingMaskIntoConstraints = false
 
         super.init(nibName: nil, bundle: nil)

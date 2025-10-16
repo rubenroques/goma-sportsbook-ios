@@ -164,6 +164,20 @@ struct ComponentRegistry {
                 ticketBetInfoView.layer.cornerRadius = 8
                 return ticketBetInfoView
             }
+        ),
+        UIComponent(
+            title: "Betslip Odds Boost Header",
+            description: "Header view displaying odds boost promotion with progress tracking - designed for betslip header positioning",
+            viewController: BetslipOddsBoostHeaderViewController.self,
+            previewFactory: {
+                let viewModel = MockBetslipOddsBoostHeaderViewModel.activeMock(
+                    selectionCount: 1,
+                    totalEligibleCount: 3,
+                    nextTierPercentage: "3%"
+                )
+                let headerView = BetslipOddsBoostHeaderView(viewModel: viewModel)
+                return headerView
+            }
         )
     ]
     
