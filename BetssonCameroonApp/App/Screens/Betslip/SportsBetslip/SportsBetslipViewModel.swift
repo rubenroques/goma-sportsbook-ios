@@ -39,9 +39,11 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     public var betslipLoggedState: ((BetslipLoggedState) -> Void)?
     public var showPlacedBetState: ((BetPlacedState) -> Void)?
     public var showLoginScreen: (() -> Void)?
+    public var showToastMessage: ((String) -> Void)?
     
     // MARK: - Recommended Matches
     public var suggestedBetsViewModel: SuggestedBetsExpandedViewModelProtocol
+    public let toasterViewModel: ToasterViewModelProtocol
     
     // MARK: - Initialization
     init(environment: Environment) {
@@ -79,9 +81,17 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             matchCardViewModels: []
         )
         
+        // Toaster VM
+        self.toasterViewModel = AppToasterViewModel()
+        
         // Setup real data subscription
         setupPublishers()
         getRecommendedMatches()
+
+        // Wire CodeInputView submission to screen-level logic
+        self.codeInputViewModel.onSubmitRequested = { [weak self] code in
+            self?.getBettingTicketsFromCode(code: code)
+        }
     }
     
     private func getRecommendedMatches() {
@@ -111,6 +121,64 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                                 
                 self.isLoadingSubject.send(false)
             })
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Booking code loading
+    private func getBettingTicketsFromCode(code: String) {
+        // Trigger loading state in the component
+        codeInputViewModel.setLoading(true)
+
+        let trimmed = code.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            codeInputViewModel.setLoading(false)
+            codeInputViewModel.setError("Booking Code can't be found. It either doesn't exist or expired.")
+            return
+        }
+
+        // Call actual endpoint to resolve betting offer ids from booking code
+        environment.servicesProvider.getBettingOfferIds(bookingCode: trimmed)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    guard let self = self else { return }
+                    self.codeInputViewModel.setLoading(false)
+                    if case .failure(let error) = completion {
+                        self.codeInputViewModel.setError(error.localizedDescription)
+                    }
+                },
+                receiveValue: { [weak self] bettingOfferIds in
+                    guard let self = self else { return }
+                    self.codeInputViewModel.clearError()
+                    print("[BOOKING_CODE] Retrieved betting offer ids (\(bettingOfferIds.count)) for code: \(trimmed)")
+                    
+                    // TODO: Implement actual endpoint to create betting tickets
+                    if let first = bettingOfferIds.first {
+                        let ticket = BettingTicket(
+                            id: first,
+                            outcomeId: "outcome_\(first)",
+                            marketId: "market_\(first)",
+                            matchId: "match_\(first)",
+                            decimalOdd: 2.10,
+                            isAvailable: true,
+                            matchDescription: "Team A x Team B",
+                            marketDescription: "Match Winner",
+                            outcomeDescription: "Team A",
+                            homeParticipantName: "Team A",
+                            awayParticipantName: "Team B",
+                            sport: nil,
+                            sportIdCode: nil,
+                            venue: nil,
+                            competition: "Premier League",
+                            date: Date()
+                        )
+                        self.environment.betslipManager.addBettingTicket(ticket)
+                        
+                        self.codeInputViewModel.updateCode("")
+                        self.showToastMessage?("Booking Code Loaded")
+                    }
+                }
+            )
             .store(in: &cancellables)
     }
     

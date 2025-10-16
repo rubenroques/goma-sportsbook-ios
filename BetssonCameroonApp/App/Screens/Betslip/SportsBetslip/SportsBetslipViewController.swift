@@ -84,6 +84,14 @@ class SportsBetslipViewController: UIViewController {
         return view
     }()
     
+    // Toast view (hidden by default)
+    private lazy var toasterView: ToasterView = {
+        let view = ToasterView(viewModel: viewModel.toasterViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }()
+    
     // Login button
     private lazy var loginButtonContainerView: UIView = {
         let container = UIView()
@@ -151,6 +159,7 @@ class SportsBetslipViewController: UIViewController {
         view.addSubview(ticketsTableView)
         view.addSubview(suggestedBetsView)
         view.addSubview(bottomActionsStackView)
+        view.addSubview(toasterView)
         
         // Add arranged subviews to stack
         bottomActionsStackView.addArrangedSubview(betInfoSubmissionView)
@@ -205,6 +214,11 @@ class SportsBetslipViewController: UIViewController {
             bottomActionsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomActionsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomActionsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            // Toaster view at top
+            toasterView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            toasterView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            toasterView.bottomAnchor.constraint(equalTo: suggestedBetsView.topAnchor, constant: -20)
             
         ])
         
@@ -288,6 +302,11 @@ class SportsBetslipViewController: UIViewController {
                 self?.toggleSuggestedBetsVisibility()
             }
             .store(in: &cancellables)
+        
+        // Toast message callback
+        viewModel.showToastMessage = { [weak self] _ in
+            self?.showToast()
+        }
     }
     
     // MARK: - Private Methods
@@ -393,5 +412,24 @@ extension SportsBetslipViewController {
         formatter.dateFormat = "dd MMMM, HH:mm"
         
         return formatter.string(from: date)
+    }
+}
+
+// MARK: - Toast Handling
+private extension SportsBetslipViewController {
+    func showToast() {
+        toasterView.alpha = 0
+        toasterView.isHidden = false
+        UIView.animate(withDuration: 0.25, animations: {
+            self.toasterView.alpha = 1
+        }) { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.toasterView.alpha = 0
+                }) { _ in
+                    self.toasterView.isHidden = true
+                }
+            }
+        }
     }
 }

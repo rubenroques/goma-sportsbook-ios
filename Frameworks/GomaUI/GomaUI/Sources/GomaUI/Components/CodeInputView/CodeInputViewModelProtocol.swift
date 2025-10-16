@@ -55,9 +55,9 @@ public protocol CodeInputViewModelProtocol {
     /// Clear the error state (return to default)
     func clearError()
     
-    /// Handle code submission
-    func onSubmitCode()
-    
     /// Handle button tap
     func onButtonTapped()
+    
+    /// Callback for submit action; screen-level ViewModel should handle logic
+    var onSubmitRequested: ((String) -> Void)? { get set }
 } 
