@@ -307,7 +307,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
     func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-
+    
     func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
@@ -688,6 +688,12 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
     }
 
     func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    // Bonus stair 
+    func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
+    -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 }
@@ -1420,7 +1426,8 @@ extension GomaProvider: BettingProvider {
         }).eraseToAnyPublisher()
     }
 
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        // Note: ubsWalletId is not supported by Goma provider (ignored)
 
         let publishers = betTickets.map { betTicket in
             let endpoint = GomaAPISchema.placeBetTicket(betTicket: betTicket, useCashback: useFreebetBalance)

@@ -10,7 +10,7 @@ import Combine
 import SharedModels
 
 class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
-    
+
     var connector: EveryMatrixPlayerAPIConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
@@ -648,6 +648,62 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
             }
             .mapError { error in
                 print("[EveryMatrixPrivilegedAccessManager] ❌ Failed to retrieve booking code: \(error)")
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    // MARK: - Odds Boost / Bonus Wallet Methods
+
+    func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
+    -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
+
+        print("[EveryMatrixPrivilegedAccessManager] 🎁 Fetching odds boost stairs for currency: \(currency), selections: \(selections.count)")
+
+        let mappedSelections = selections.map { selection -> EveryMatrix.BetSelectionPointer in
+            return EveryMatrix.BetSelectionPointer(
+                outcomeId: selection.outcomeId,
+                eventId: selection.eventId
+            )
+        }
+
+        let combination = EveryMatrix.BetCombinationSelections(selection: mappedSelections)
+        
+        // Build request
+        let request = EveryMatrix.OddsBoostWalletRequest(
+            stakeCurrency: currency,
+            stakeAmount: stakeAmount,
+            includeVendorConfiguration: true,
+            includePotentialOddsBoostWallet: true,
+            terminalType: "mobile",
+            combination: [combination]
+        )
+
+        // Create endpoint
+        let endpoint = EveryMatrixPlayerAPI.getSportsBonusWallets(request: request)
+
+        // Make API call
+        let publisher: AnyPublisher<EveryMatrix.OddsBoostWalletResponse, ServiceProviderError> = connector.request(endpoint)
+
+        return publisher
+            .map { response -> OddsBoostStairsResponse? in
+                
+                print("[EveryMatrixPrivilegedAccessManager] ✅ Received bonus wallet response with \(response.items.count) items")
+
+                // Map internal response to domain model
+                let domainResponse = EveryMatrixModelMapper.oddsBoostStairsResponse(from: response)
+
+                if let domain = domainResponse {
+                    print("[EveryMatrixPrivilegedAccessManager] 🎁 Bonus available - Current tier: \(domain.currentStair?.minSelectionNumber ?? 0) selections, Next tier: \(domain.nextStair?.minSelectionNumber ?? 0) selections")
+                    print("[EveryMatrixPrivilegedAccessManager] 💰 UBS Wallet ID: \(domain.ubsWalletId) (REQUIRED for bet placement)")
+                } else {
+                    print("[EveryMatrixPrivilegedAccessManager] ⚠️ No bonus available for current configuration")
+                }
+
+                return domainResponse
+            }
+            .mapError { error in
+                print("[EveryMatrixPrivilegedAccessManager] ❌ Failed to fetch odds boost stairs: \(error)")
                 return ServiceProviderError.errorMessage(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()

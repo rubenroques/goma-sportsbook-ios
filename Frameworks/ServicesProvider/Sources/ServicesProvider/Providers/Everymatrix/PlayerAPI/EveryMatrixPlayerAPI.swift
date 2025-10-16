@@ -23,6 +23,9 @@ enum EveryMatrixPlayerAPI {
     // Betting Offer Booking API endpoints
     case createBookingCode(bettingOfferIds: [String], originalSelectionsLength: Int)
     case getFromBookingCode(code: String)
+
+    // Odds Boost / Bonus Wallet API
+    case getSportsBonusWallets(request: EveryMatrix.OddsBoostWalletRequest)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -61,6 +64,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v2/sports/bets/book"
         case .getFromBookingCode(let code):
             return "/v2/sports/bets/book/\(code)"
+        case .getSportsBonusWallets:
+            return "/v1/bonus/wallets/sports"
         }
     }
     
@@ -166,6 +171,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return .post
         case .getFromBookingCode:
             return .get
+        case .getSportsBonusWallets:
+            return .put
         }
     }
     
@@ -226,6 +233,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             let selections = bettingOfferIds.map { BookingSelection(bettingOfferId: $0) }
             let request = BookingRequest(selections: selections, originalSelectionsLength: originalSelectionsLength)
             return try? JSONEncoder().encode(request)
+        case .getSportsBonusWallets(let request):
+            return try? JSONEncoder().encode(request)
         default:
             return nil
         }
@@ -247,6 +256,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getWageringTransactions, .getBankingTransactions:
             return true
         case .getRecentlyPlayedGames:
+            return true
+        case .getSportsBonusWallets:
             return true
         default:
             return false

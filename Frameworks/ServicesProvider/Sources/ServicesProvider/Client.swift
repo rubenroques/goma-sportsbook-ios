@@ -1301,13 +1301,13 @@ extension Client {
         return bettingProvider.calculatePotentialReturn(forBetTicket: betTicket)
     }
 
-    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String? = nil, userId: String? = nil, oddsValidationType: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String? = nil, userId: String? = nil, oddsValidationType: String? = nil, ubsWalletId: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
-        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType)
+        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
     }
 
     public func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
@@ -1727,7 +1727,23 @@ extension Client {
 
         return privilegedAccessManager.optOutBonus(partyId: partyId, code: code)
     }
-
+    
+    // Stairs bonus for odds boost
+    public func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
+    -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getOddsBoostStairs(currency: currency, stakeAmount: stakeAmount, selections: selections)
+    }
+    
+    
+    //
+    // Legacy cashout without SSEvents
+    //
     public func calculateCashout(betId: String, stakeValue: String? = nil) -> AnyPublisher<Cashout, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
@@ -1748,7 +1764,6 @@ extension Client {
         return bettingProvider.allowedCashoutBetIds()
     }
 
-    // Legacy cashout without SSEvents 
     public func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double? = nil) -> AnyPublisher<CashoutResult, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider

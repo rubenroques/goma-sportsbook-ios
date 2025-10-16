@@ -282,10 +282,6 @@ final public class MarketOutcomesLineView: UIView {
         } else {
             onOutcomeDeselected(outcomeId, type)
         }
-
-        // Provide haptic feedback
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
     }
 
     // MARK: - Corner Radius Logic

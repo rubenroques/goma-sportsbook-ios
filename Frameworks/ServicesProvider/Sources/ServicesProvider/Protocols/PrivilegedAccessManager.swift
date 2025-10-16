@@ -180,6 +180,44 @@ protocol PrivilegedAccessManagerProvider {
     /// - Returns: Publisher emitting array of betting offer IDs or error
     func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError>
 
+    // MARK: - Odds Boost / Bonus Wallet
+
+    /// Calculate odds boost tiers based on current betslip state.
+    ///
+    /// This method fetches the available bonus tiers (stairs) for the user's current betslip configuration.
+    /// Call this when the user modifies their betslip (changes stake or adds/removes selections) to display
+    /// potential bonus information and motivate progression to higher tiers.
+    ///
+    /// **IMPORTANT**: The returned `ubsWalletId` MUST be passed in the bet placement request to apply the bonus.
+    ///
+    /// **Usage Pattern:**
+    /// 1. Call when betslip is initialized
+    /// 2. Call when user adds/removes selections
+    /// 3. Call when user changes stake amount
+    /// 4. Store the `ubsWalletId` from response
+    /// 5. Pass `ubsWalletId` to bet placement
+    ///
+    /// **Response Scenarios:**
+    /// - Returns `nil` if user has no bonus wallet configured
+    /// - Returns `nil` if selections don't qualify for any tier
+    /// - Returns response with `currentStair` when user qualifies
+    /// - Returns response with `nextStair == nil` when max tier reached
+    ///
+    /// **Calculation Formula:**
+    /// ```
+    /// bonusAmount = min(potentialWinnings × percentage, capAmount)
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - currency: User's betting currency (e.g., "XAF", "EUR")
+    ///   - stakeAmount: Current stake amount (optional - can be nil)
+    ///   - selections: Betslip selections for odds boost calculation
+    /// - Returns: Publisher emitting odds boost stairs response or nil if no bonus available
+    ///
+    /// - Requires: User must be logged in (authenticated)
+    func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
+    -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError>
+
 }
 
 /// Protocol for customer support features

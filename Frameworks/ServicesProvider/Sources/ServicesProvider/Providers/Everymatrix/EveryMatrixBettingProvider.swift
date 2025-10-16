@@ -109,9 +109,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Place Bets Implementation
     
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?, oddsValidationType: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Convert BetTickets to PlaceBetRequest
-        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType)
+        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
 
         // Create the API endpoint
         let endpoint = EveryMatrixOddsMatrixAPI.placeBet(betData: placeBetRequest)
@@ -304,7 +304,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Private Helper Methods
     
-    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?) -> EveryMatrix.PlaceBetRequest {
+    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> EveryMatrix.PlaceBetRequest {
         let selections = betTickets.flatMap { betTicket in
             betTicket.tickets.map { selection in
                 EveryMatrix.BetSelectionInfo(
@@ -331,7 +331,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             amount: String(format: "%.2f", totalAmount),
             oddsValidationType: oddsValidationType ?? "ACCEPT_ANY",
             terminalType: "SSBT",
-            ubsWalletId: nil,
+            ubsWalletId: ubsWalletId,
             freeBet: nil
         )
     }
