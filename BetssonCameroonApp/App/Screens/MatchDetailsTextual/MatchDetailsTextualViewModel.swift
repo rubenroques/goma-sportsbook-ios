@@ -14,6 +14,7 @@ class MatchDetailsTextualViewModel: ObservableObject {
     
     // MARK: - Navigation Closures for MainTabBarCoordinator
     var onNavigateBack: (() -> Void) = { }
+    var onBetslipRequested: (() -> Void)?
     
     // MARK: - Private Properties
     
@@ -72,8 +73,13 @@ class MatchDetailsTextualViewModel: ObservableObject {
         self.matchHeaderCompactViewModel = MatchHeaderCompactViewModel(match: match)
         self.statisticsWidgetViewModel = MockStatisticsWidgetViewModel.footballMatch
         self.marketGroupSelectorTabViewModel = MatchDetailsMarketGroupSelectorTabViewModel(match: match)
-        self.betslipFloatingViewModel = MockBetslipFloatingViewModel.noTicketsMock()
-        
+        self.betslipFloatingViewModel = BetslipFloatingViewModel()
+
+        // Setup betslip tap callback
+        self.betslipFloatingViewModel.onBetslipTapped = { [weak self] in
+            self?.onBetslipRequested?()
+        }
+
         commonInit()
         setupAuthenticationState()
     }
@@ -205,25 +211,24 @@ class MatchDetailsTextualViewModel: ObservableObject {
     }
     
     // MARK: - Private Methods
-    
+
     private func setupBindings() {
         // Setup communication between child ViewModels
-        
+
         // Wire up MatchHeaderCompactView statistics button to toggle StatisticsWidgetView
         matchHeaderCompactViewModel.onStatisticsTapped = { [weak self] in
             self?.toggleStatistics()
         }
-        
-        // Setup betslip binding
-        setupBetslipBinding()
-        
+
+        // Production BetslipFloatingViewModel handles its own bindings automatically
+
         // Setup loading coordination with market groups
         // Subscribe to market groups data changes to know when they load
         marketGroupsSubscription = marketGroupSelectorTabViewModel.marketGroupsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] marketGroups in
                 guard let self = self else { return }
-                
+
                 // Mark market groups as loaded when we receive data
                 if !marketGroups.isEmpty {
                     self.isMarketGroupsLoaded = true
@@ -231,42 +236,7 @@ class MatchDetailsTextualViewModel: ObservableObject {
                 }
             }
     }
-    
-    // MARK: - Betslip Binding
-    private func setupBetslipBinding() {
-        // Subscribe to betslip manager tickets to update floating view state
-        Env.betslipManager.bettingTicketsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] tickets in
-                self?.updateBetslipFloatingState(tickets: tickets)
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func updateBetslipFloatingState(tickets: [BettingTicket]) {
-        if tickets.isEmpty {
-            betslipFloatingViewModel.updateState(.noTickets)
-        } else {
-            // Calculate total odds and other betslip data
-            let selectionCount = tickets.count
-            let totalOdds = calculateTotalOdds(from: tickets)
-            let totalEligibleCount = 0
-            
-            betslipFloatingViewModel.updateState(.withTickets(
-                selectionCount: selectionCount,
-                odds: String(format: "%.2f", totalOdds),
-                winBoostPercentage: nil, // TODO: Implement win boost calculation
-                totalEligibleCount: totalEligibleCount
-            ))
-        }
-    }
-    
-    private func calculateTotalOdds(from tickets: [BettingTicket]) -> Double {
-        return tickets.reduce(1.0) { total, ticket in
-            total * ticket.decimalOdd
-        }
-    }
-    
+
     // MARK: - Loading Coordination
     
     private func checkLoadingCompletion() {

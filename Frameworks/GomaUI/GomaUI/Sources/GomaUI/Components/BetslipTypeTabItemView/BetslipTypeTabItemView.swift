@@ -155,38 +155,86 @@ public class BetslipTypeTabItemView: UIView {
 
 @available(iOS 17.0, *)
 #Preview("Sports Selected") {
-    PreviewUIView {
-        BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.sportsSelectedMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let tabItemView = BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.sportsSelectedMock())
+        tabItemView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabItemView)
+
+        NSLayoutConstraint.activate([
+            tabItemView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            tabItemView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            tabItemView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            tabItemView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        return vc
     }
-    .frame(height: 50)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Sports Unselected") {
-    PreviewUIView {
-        BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.sportsUnselectedMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let tabItemView = BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.sportsUnselectedMock())
+        tabItemView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabItemView)
+
+        NSLayoutConstraint.activate([
+            tabItemView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            tabItemView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            tabItemView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            tabItemView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        return vc
     }
-    .frame(height: 50)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Virtuals Selected") {
-    PreviewUIView {
-        BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.virtualsSelectedMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let tabItemView = BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.virtualsSelectedMock())
+        tabItemView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabItemView)
+
+        NSLayoutConstraint.activate([
+            tabItemView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            tabItemView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            tabItemView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            tabItemView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        return vc
     }
-    .frame(height: 50)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Virtuals Unselected") {
-    PreviewUIView {
-        BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.virtualsUnselectedMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let tabItemView = BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.virtualsUnselectedMock())
+        tabItemView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(tabItemView)
+
+        NSLayoutConstraint.activate([
+            tabItemView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            tabItemView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            tabItemView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            tabItemView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        return vc
     }
-    .frame(height: 50)
-    .padding()
 }
 
 #endif 

@@ -11,14 +11,17 @@ import GomaUI
 
 /// Production implementation of BetslipFloatingViewModelProtocol
 final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
-    
+
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<BetslipFloatingData, Never>
     private var cancellables = Set<AnyCancellable>()
-    
+
     // MARK: - Dependencies
     private let betslipManager: BetslipManager
-    
+
+    // MARK: - State
+    private var oddsBoostState: OddsBoostStairsState?
+
     // MARK: - Callback closures
     public var onBetslipTapped: (() -> Void)?
     
@@ -42,13 +45,17 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
     
     // MARK: - Private Methods
     private func setupBindings() {
-        // Subscribe to betting tickets changes
-        Env.betslipManager.bettingTicketsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] tickets in
-                self?.updateBetslipState(with: tickets)
-            }
-            .store(in: &cancellables)
+        // Combine both publishers to automatically sync tickets and odds boost data
+        Publishers.CombineLatest(
+            Env.betslipManager.bettingTicketsPublisher,
+            Env.betslipManager.oddsBoostStairsPublisher
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] (tickets, oddsBoostState) in
+            self?.oddsBoostState = oddsBoostState
+            self?.updateBetslipState(with: tickets)
+        }
+        .store(in: &cancellables)
     }
     
     private func updateBetslipState(with tickets: [BettingTicket]) {
@@ -57,16 +64,20 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
         } else {
             let selectionCount = tickets.count
             let totalOdds = calculateTotalOdds(from: tickets)
-            let winBoostPercentage = calculateWinBoostPercentage(for: selectionCount)
-            let totalEligibleCount = 0
-            
+
+            // Extract real odds boost data from API response
+            let (winBoostPercentage, totalEligibleCount, nextTierPercentage) = extractOddsBoostData(
+                selectionCount: selectionCount
+            )
+
             let state = BetslipFloatingState.withTickets(
                 selectionCount: selectionCount,
                 odds: formatOdds(totalOdds),
                 winBoostPercentage: winBoostPercentage,
-                totalEligibleCount: totalEligibleCount
+                totalEligibleCount: totalEligibleCount,
+                nextTierPercentage: nextTierPercentage
             )
-            
+
             updateState(state)
         }
     }
@@ -80,13 +91,29 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
     private func formatOdds(_ odds: Double) -> String {
         return String(format: "%.2f", odds)
     }
-    
-    private func calculateWinBoostPercentage(for selectionCount: Int) -> String? {
-        // Win boost is available when user has 6 or more selections
-        if selectionCount >= 6 {
-            return "11%" // Standard win boost percentage
+
+    /// Extracts odds boost UI data from current state
+    /// - Parameter selectionCount: Current number of selections in betslip
+    /// - Returns: Tuple of (currentTierPercentage, totalEligibleCount, nextTierPercentage) for UI display
+    private func extractOddsBoostData(selectionCount: Int) -> (String?, Int, String?) {
+        guard let oddsBoostState = self.oddsBoostState else {
+            // No odds boost available (not logged in, no bonus configured, or API error)
+            return (nil, 0, nil)
         }
-        return nil
+
+        // Extract current tier percentage for display in win boost capsule
+        let currentPercentage: String? = oddsBoostState.currentTier.map { tier in
+            return "\(Int(tier.percentage * 100))%"
+        }
+
+        // Extract next tier data for progress bar and call-to-action
+        // If nextTier is nil, user has reached max tier, use 0/nil to hide progress
+        let totalEligibleCount: Int = oddsBoostState.nextTier?.minSelections ?? 0
+        let nextTierPercentage: String? = oddsBoostState.nextTier.map { tier in
+            return "\(Int(tier.percentage * 100))%"
+        }
+
+        return (currentPercentage, totalEligibleCount, nextTierPercentage)
     }
     
     // MARK: - Protocol Methods

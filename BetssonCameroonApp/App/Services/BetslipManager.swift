@@ -322,11 +322,11 @@ extension BetslipManager {
         .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { completion in
             if case .failure(let error) = completion {
-                print("[ODDS_BOOST] ❌ Failed: \(error)")
+                print("[ODDS_BOOST]  Failed: \(error)")
             }
         }, receiveValue: { [weak self] spResponse in
             guard let spResponse = spResponse else {
-                print("[ODDS_BOOST] ⚠️ No bonus available")
+                print("[ODDS_BOOST]  No bonus available")
                 self?.oddsBoostStairsSubject.send(nil)
                 return
             }
@@ -338,17 +338,17 @@ extension BetslipManager {
 
             let currentPercentage = appState.currentTier?.percentage ?? 0
             let nextPercentage = appState.nextTier?.percentage ?? 0
-            print("[ODDS_BOOST] ✅ Current: \(currentPercentage * 100)% | Next: \(nextPercentage * 100)%")
-            print("[ODDS_BOOST] 💰 UBS Wallet ID: \(appState.ubsWalletId)")
+            print("[ODDS_BOOST] Current: \(currentPercentage * 100)% | Next: \(nextPercentage * 100)%")
+            print("[ODDS_BOOST] UBS Wallet ID: \(appState.ubsWalletId)")
 
             if let nextTier = appState.nextTier {
                 let selectionsNeeded = max(0, nextTier.minSelections - oddsBoostSelections.count)
                 if selectionsNeeded > 0 {
                     let qualifier = selectionsNeeded == 1 ? "event" : "events"
-                    print("[ODDS_BOOST] 📊 Add \(selectionsNeeded) more qualifying \(qualifier) to get a \(Int(nextPercentage * 100))% win boost")
+                    print("[ODDS_BOOST] Add \(selectionsNeeded) more qualifying \(qualifier) to get a \(Int(nextPercentage * 100))% win boost")
                 }
             } else if appState.currentTier != nil {
-                print("[ODDS_BOOST] 🏆 Maximum boost reached!")
+                print("[ODDS_BOOST] Maximum boost reached!")
             }
 
             self?.oddsBoostStairsSubject.send(appState)

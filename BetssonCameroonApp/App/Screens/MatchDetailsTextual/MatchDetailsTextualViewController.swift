@@ -20,8 +20,6 @@ class MatchDetailsTextualViewController: UIViewController {
     // Closure called when betslip is requested - handled by coordinator
     var onBetslipRequested: (() -> Void)?
     
-    
-    
     // MARK: - UI Components
     
     private let mainStackView = UIStackView()
@@ -372,13 +370,12 @@ class MatchDetailsTextualViewController: UIViewController {
     }
     
     private func setupBindings() {
-        
-        // Setup betslip callback
-        viewModel.betslipFloatingViewModel.onBetslipTapped = { [weak self] in
+
+        // Wire ViewModel's betslip callback to Coordinator
+        viewModel.onBetslipRequested = { [weak self] in
             self?.onBetslipRequested?()
         }
-        
-        
+
         // Bind loading state
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)

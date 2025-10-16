@@ -46,7 +46,7 @@ class MainTabBarViewModel: ObservableObject {
     init(userSessionStore: UserSessionStore,
          adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
          floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel(),
-         betslipFloatingViewModel: BetslipFloatingViewModelProtocol = MockBetslipFloatingViewModel(state: .noTickets))
+         betslipFloatingViewModel: BetslipFloatingViewModelProtocol = BetslipFloatingViewModel())
     {
         self.userSessionStore = userSessionStore
 
@@ -54,8 +54,13 @@ class MainTabBarViewModel: ObservableObject {
         self.floatingOverlayViewModel = floatingOverlayViewModel
         self.betslipFloatingViewModel = betslipFloatingViewModel
 
+        // Setup betslip tap callback
+        self.betslipFloatingViewModel.onBetslipTapped = { [weak self] in
+            self?.onBetslipRequested?()
+        }
+
         setupTabBarBinding()
-        setupBetslipBinding()
+
     }
     
     func logoutUser() {
@@ -95,45 +100,7 @@ class MainTabBarViewModel: ObservableObject {
     }
 
     // MARK: - Private Methods
-    private func setupBetslipBinding() {
-        // Setup betslip callback
-        betslipFloatingViewModel.onBetslipTapped = { [weak self] in
-            self?.onBetslipRequested?()
-        }
-        
-        // Subscribe to betslip manager tickets to update floating view state
-        Env.betslipManager.bettingTicketsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] tickets in
-                self?.updateBetslipFloatingState(tickets: tickets)
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func updateBetslipFloatingState(tickets: [BettingTicket]) {
-        if tickets.isEmpty {
-            betslipFloatingViewModel.updateState(.noTickets)
-        } else {
-            // Calculate total odds and other betslip data
-            let selectionCount = tickets.count
-            let totalOdds = calculateTotalOdds(from: tickets)
-            let totalEligibleCount = 0
-            
-            betslipFloatingViewModel.updateState(.withTickets(
-                selectionCount: selectionCount,
-                odds: String(format: "%.2f", totalOdds),
-                winBoostPercentage: nil, // TODO: Implement win boost calculation
-                totalEligibleCount: totalEligibleCount
-            ))
-        }
-    }
-    
-    private func calculateTotalOdds(from tickets: [BettingTicket]) -> Double {
-        return tickets.reduce(1.0) { total, ticket in
-            total * ticket.decimalOdd
-        }
-    }
-    
+
     private func setupTabBarBinding() {
         // Listen to tab bar active bar id changes
         adaptiveTabBarViewModel.displayStatePublisher

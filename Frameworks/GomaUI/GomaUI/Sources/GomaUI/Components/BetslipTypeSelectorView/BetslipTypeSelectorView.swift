@@ -142,20 +142,44 @@ public class BetslipTypeSelectorView: UIView {
 
 @available(iOS 17.0, *)
 #Preview("Sports Selected") {
-    PreviewUIView {
-        BetslipTypeSelectorView(viewModel: MockBetslipTypeSelectorViewModel.sportsSelectedMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let selectorView = BetslipTypeSelectorView(viewModel: MockBetslipTypeSelectorViewModel.sportsSelectedMock())
+        selectorView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(selectorView)
+
+        NSLayoutConstraint.activate([
+            selectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            selectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            selectorView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            selectorView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        return vc
     }
-    .frame(height: 50)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Virtuals Selected") {
-    PreviewUIView {
-        BetslipTypeSelectorView(viewModel: MockBetslipTypeSelectorViewModel.virtualsSelectedMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let selectorView = BetslipTypeSelectorView(viewModel: MockBetslipTypeSelectorViewModel.virtualsSelectedMock())
+        selectorView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(selectorView)
+
+        NSLayoutConstraint.activate([
+            selectorView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            selectorView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            selectorView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            selectorView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        return vc
     }
-    .frame(height: 50)
-    .padding()
 }
 
 #endif 

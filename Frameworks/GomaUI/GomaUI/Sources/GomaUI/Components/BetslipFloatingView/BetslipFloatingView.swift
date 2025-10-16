@@ -33,7 +33,7 @@ public final class BetslipFloatingView: UIView {
     private lazy var betslipLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Betslip"
+        label.text = "Betslip" // TODO: localization
         label.font = StyleProvider.fontWith(type: .bold, size: 10)
         label.textColor = StyleProvider.Color.highlightSecondaryContrast
         label.textAlignment = .center
@@ -139,7 +139,7 @@ public final class BetslipFloatingView: UIView {
     private lazy var openBetslipButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Open Betslip", for: .normal)
+        button.setTitle("Open Betslip", for: .normal) // TODO: localization
         button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 12)
         
@@ -400,40 +400,38 @@ public final class BetslipFloatingView: UIView {
             circularButton.isHidden = false
             detailedContainerView.isHidden = true
             bottomSectionView.isHidden = true
-        case .withTickets(let selectionCount, let odds, let winBoostPercentage, let totalEligibleCount):
+        case .withTickets(let selectionCount, let odds, let winBoostPercentage, let totalEligibleCount, let nextTierPercentage):
             circularButton.isHidden = true
             detailedContainerView.isHidden = false
-            
+
             selectionCountLabel.text = "\(selectionCount)"
-            
-            oddsLabel.text = "Odds:"
+
+            oddsLabel.text = "Odds:" // TODO: localization
             oddsValueLabel.text = "\(odds)"
-            
+
             if let winBoost = winBoostPercentage {
-                winBoostLabel.text = "Win Boost:"
+                winBoostLabel.text = "Win Boost:" // TODO: localization
                 winBoostValueLabel.text = winBoost
-                // TODO: Enable when data is available
-                winBoostCapsuleView.isHidden = true
+                winBoostCapsuleView.isHidden = false
             } else {
-                winBoostLabel.text = "Win Boost:"
-                winBoostValueLabel.text = "-"
                 winBoostCapsuleView.isHidden = true
             }
-            
+
             setupProgressSegments(ticketSelection: selectionCount, totalEligibleCount: totalEligibleCount)
-            
+
             // Show/hide bottom section based on totalEligibleCount
             if totalEligibleCount > 0 {
                 bottomSectionView.isHidden = false
-                
+
                 // Deactivate the topBarStackView bottom constraint when bottom section is visible
                 topBarStackViewBottomConstraint?.isActive = false
-                
+
                 let remainingSelections = max(0, totalEligibleCount - selectionCount)
                 if remainingSelections > 0 {
-                    callToActionLabel.text = "Add \(remainingSelections) more qualifying events to get a 11% win boost"
+                    let boostText = nextTierPercentage ?? "bonus"
+                    callToActionLabel.text = "Add \(remainingSelections) more qualifying selection to get a \(boostText) win boost" // TODO: localization
                 } else {
-                    callToActionLabel.text = "Win boost activated!"
+                    callToActionLabel.text = "Max win boost activated!" // TODO: localization
                 }
             } else {
                 bottomSectionView.isHidden = true
@@ -484,26 +482,259 @@ public final class BetslipFloatingView: UIView {
 
 @available(iOS 17.0, *)
 #Preview("No Tickets") {
-    PreviewUIView {
-        BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .noTickets))
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let betslipView = BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .noTickets))
+        betslipView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(betslipView)
+
+        NSLayoutConstraint.activate([
+            betslipView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            betslipView.bottomAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            betslipView.heightAnchor.constraint(equalToConstant: 56)
+        ])
+
+        return vc
     }
-    .frame(height: 56)
 }
 
 @available(iOS 17.0, *)
 #Preview("With Tickets") {
-    PreviewUIView {
-        BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 3, odds: "1.55", winBoostPercentage: "3%", totalEligibleCount: 6)))
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let betslipView = BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 3, odds: "1.55", winBoostPercentage: "10%", totalEligibleCount: 6, nextTierPercentage: "15%")))
+        betslipView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(betslipView)
+
+        NSLayoutConstraint.activate([
+            betslipView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            betslipView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            betslipView.bottomAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+        ])
+
+        return vc
     }
-    .frame(height: 120)
 }
 
 @available(iOS 17.0, *)
-#Preview("With Tickets (No Bottom Section)") {
-    PreviewUIView {
-        BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 2, odds: "1.85", winBoostPercentage: nil, totalEligibleCount: 0)))
+#Preview("With Tickets (No Boost)") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let betslipView = BetslipFloatingView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 2, odds: "1.85", winBoostPercentage: nil, totalEligibleCount: 0, nextTierPercentage: nil)))
+        betslipView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(betslipView)
+
+        NSLayoutConstraint.activate([
+            betslipView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            betslipView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            betslipView.bottomAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+        ])
+
+        return vc
     }
-    .frame(height: 80)
+}
+
+// MARK: - Interactive Preview
+
+@available(iOS 17.0, *)
+#Preview("Interactive States") {
+    PreviewUIViewController {
+        BetslipFloatingInteractivePreviewController()
+    }
+}
+
+/// Interactive preview controller for testing betslip state transitions
+@available(iOS 17.0, *)
+private final class BetslipFloatingInteractivePreviewController: UIViewController {
+
+    private let mockViewModel = MockBetslipFloatingViewModel(state: .noTickets)
+    private lazy var betslipView = BetslipFloatingView(viewModel: mockViewModel)
+
+    private lazy var segmentedControl: UISegmentedControl = {
+        let items = ["No Tickets", "With Tickets", "Max Boost"]
+        let control = UISegmentedControl(items: items)
+        control.selectedSegmentIndex = 0
+        control.translatesAutoresizingMaskIntoConstraints = false
+        control.addTarget(self, action: #selector(stateChanged), for: .valueChanged)
+        return control
+    }()
+
+    private lazy var enabledToggle: UISwitch = {
+        let toggle = UISwitch()
+        toggle.isOn = true
+        toggle.translatesAutoresizingMaskIntoConstraints = false
+        toggle.addTarget(self, action: #selector(enabledToggled), for: .valueChanged)
+        return toggle
+    }()
+
+    private lazy var enabledLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Enabled"
+        label.font = StyleProvider.fontWith(type: .medium, size: 14)
+        label.textColor = StyleProvider.Color.textPrimary
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private lazy var infoLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = StyleProvider.fontWith(type: .regular, size: 12)
+        label.textColor = StyleProvider.Color.textSecondary
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private lazy var tapButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Simulate Tap (Check Console)", for: .normal)
+        button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
+        button.backgroundColor = StyleProvider.Color.highlightPrimary
+        button.setTitleColor(StyleProvider.Color.buttonTextPrimary, for: .normal)
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(testTap), for: .touchUpInside)
+        return button
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        updateInfoLabel()
+
+        // Set up tap callback
+        mockViewModel.onBetslipTapped = { [weak self] in
+            print("🎯 Betslip tapped! Current state: \(self?.mockViewModel.currentData.state ?? .noTickets)")
+            self?.showTapFeedback()
+        }
+    }
+
+    private func setupUI() {
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        // Add betslip view
+        betslipView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(betslipView)
+
+        // Add controls container
+        let controlsStack = UIStackView(arrangedSubviews: [enabledLabel, enabledToggle])
+        controlsStack.axis = .horizontal
+        controlsStack.spacing = 8
+        controlsStack.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(segmentedControl)
+        view.addSubview(controlsStack)
+        view.addSubview(infoLabel)
+        view.addSubview(tapButton)
+
+        NSLayoutConstraint.activate([
+            // Segmented control at top
+            segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            segmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+
+            // Controls stack
+            controlsStack.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
+            controlsStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            // Info label
+            infoLabel.topAnchor.constraint(equalTo: controlsStack.bottomAnchor, constant: 20),
+            infoLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            infoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+
+            // Test tap button
+            tapButton.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: 20),
+            tapButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            tapButton.widthAnchor.constraint(equalToConstant: 250),
+            tapButton.heightAnchor.constraint(equalToConstant: 44),
+
+            // Betslip view at bottom
+            betslipView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            betslipView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            betslipView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+        ])
+    }
+
+    @objc private func stateChanged() {
+        let newState: BetslipFloatingState
+
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            newState = .noTickets
+        case 1:
+            newState = .withTickets(selectionCount: 2, odds: "2.40", winBoostPercentage: nil, totalEligibleCount: 0, nextTierPercentage: nil)
+        case 2:
+            newState = .withTickets(selectionCount: 4, odds: "5.75", winBoostPercentage: "15%", totalEligibleCount: 6, nextTierPercentage: "20%")
+        default:
+            newState = .noTickets
+        }
+
+        mockViewModel.updateState(newState)
+        updateInfoLabel()
+    }
+
+    @objc private func enabledToggled() {
+        mockViewModel.setEnabled(enabledToggle.isOn)
+        updateInfoLabel()
+    }
+
+    @objc private func testTap() {
+        // Manually trigger the tap callback
+        mockViewModel.onBetslipTapped?()
+    }
+
+    private func updateInfoLabel() {
+        let data = mockViewModel.currentData
+        let stateDescription: String
+
+        switch data.state {
+        case .noTickets:
+            stateDescription = "State: No Tickets\nCircular button visible"
+        case .withTickets(let count, let odds, let boost, let eligible,  let nextBoost):
+            var desc = "State: With Tickets\nSelections: \(count) | Odds: \(odds)"
+            if let boost = boost {
+                desc += "\nWin Boost: \(boost) (Progress: \(count)/\(eligible)) - next: \(nextBoost)"
+            }
+            stateDescription = desc
+        }
+
+        let enabledStatus = data.isEnabled ? "Enabled ✓" : "Disabled"
+        infoLabel.text = "\(stateDescription)\n\nStatus: \(enabledStatus)"
+    }
+
+    private func showTapFeedback() {
+        // Visual feedback for tap
+        let feedbackLabel = UILabel()
+        feedbackLabel.text = "👆 Tapped!"
+        feedbackLabel.font = StyleProvider.fontWith(type: .bold, size: 20)
+        feedbackLabel.textColor = StyleProvider.Color.highlightPrimary
+        feedbackLabel.alpha = 0
+        feedbackLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(feedbackLabel)
+
+        NSLayoutConstraint.activate([
+            feedbackLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            feedbackLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+
+        UIView.animate(withDuration: 0.3, animations: {
+            feedbackLabel.alpha = 1
+            feedbackLabel.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        }) { _ in
+            UIView.animate(withDuration: 0.3, delay: 0.3, animations: {
+                feedbackLabel.alpha = 0
+            }) { _ in
+                feedbackLabel.removeFromSuperview()
+            }
+        }
+    }
 }
 
 #endif
