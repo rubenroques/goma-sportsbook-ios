@@ -180,6 +180,11 @@ protocol PrivilegedAccessManagerProvider {
     /// - Returns: Publisher emitting array of betting offer IDs or error
     func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError>
 
+    func getResetPasswordTokenId(mobileNumber: String, mobilePrefix: String) -> AnyPublisher<ResetPasswordTokenResponse, ServiceProviderError>
+    
+    func validateResetPasswordCode(tokenId: String, validationCode: String) -> AnyPublisher<ValidateResetPasswordCodeResponse, ServiceProviderError>
+    
+    func resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool) -> AnyPublisher<ResetPasswordByHashKeyResponse, ServiceProviderError>
 }
 
 // MARK: - Domain-Specific Protocols

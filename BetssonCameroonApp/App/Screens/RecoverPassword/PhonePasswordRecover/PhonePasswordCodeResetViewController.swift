@@ -67,7 +67,7 @@ class PhonePasswordCodeResetViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(viewModel: PhonePasswordCodeResetViewModelProtocol = MockPhonePasswordCodeResetViewModel()) {
+    init(viewModel: PhonePasswordCodeResetViewModelProtocol) {
         self.viewModel = viewModel
         self.headerView = PromotionalHeaderView(viewModel: viewModel.headerViewModel)
         self.highlightedTextView = HighlightedTextView(viewModel: viewModel.highlightedTextViewModel)
@@ -160,16 +160,32 @@ class PhonePasswordCodeResetViewController: UIViewController {
         
         viewModel.shouldVerifyCode
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.presentPasswordCodeVerificationScreen()
+            .sink { [weak self] tokenId in
+                self?.presentPasswordCodeVerificationScreen(tokenId: tokenId)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.showError
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] errorMessage in
+                self?.showErrorAlert(message: errorMessage)
             }
             .store(in: &cancellables)
     }
     
-    private func presentPasswordCodeVerificationScreen() {
-        let passwordCodeVerificationViewController = PhonePasswordCodeVerificationViewController()
+    private func presentPasswordCodeVerificationScreen(tokenId: String) {
+        let phoneNumber = "\(viewModel.phoneFieldViewModel.prefixText ?? "")\(viewModel.phoneNumber)"
+        let passwordCodeVerificationViewModel = PhonePasswordCodeVerificationViewModel(tokenId: tokenId, phoneNumber: phoneNumber, resetPasswordType: .forgot)
+        
+        let passwordCodeVerificationViewController = PhonePasswordCodeVerificationViewController(viewModel: passwordCodeVerificationViewModel)
         
         self.navigationController?.pushViewController(passwordCodeVerificationViewController, animated: true)
+    }
+    
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: localized("error"), message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        present(alert, animated: true)
     }
     
     private func showLoading() {

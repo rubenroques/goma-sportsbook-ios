@@ -65,16 +65,24 @@ class PhoneForgotPasswordViewController: UIViewController {
     }()
 
     private let viewModel: PhoneForgotPasswordViewModelProtocol
-
+    
     private var cancellables = Set<AnyCancellable>()
 
-    init(viewModel: PhoneForgotPasswordViewModelProtocol = MockPhoneForgotPasswordViewModel()) {
+    init(viewModel: PhoneForgotPasswordViewModelProtocol) {
         self.viewModel = viewModel
         self.headerView = PromotionalHeaderView(viewModel: viewModel.headerViewModel)
         self.highlightedTextView = HighlightedTextView(viewModel: viewModel.highlightedTextViewModel)
         self.newPasswordField = BorderedTextFieldView(viewModel: viewModel.newPasswordFieldViewModel)
         self.confirmNewPasswordField = BorderedTextFieldView(viewModel: viewModel.confirmNewPasswordFieldViewModel)
         self.changePasswordButton = ButtonView(viewModel: viewModel.buttonViewModel)
+                
+        switch viewModel.resetPasswordType {
+        case .forgot:
+            self.navigationTitleLabel.text = "Forgot Password"
+        case .change:
+            self.navigationTitleLabel.text = "Change Password"
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -172,12 +180,27 @@ class PhoneForgotPasswordViewController: UIViewController {
                 self?.presentPasswordChangedSuccessScreen()
             }
             .store(in: &cancellables)
+        
+        viewModel.showError
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] errorMessage in
+                self?.showErrorAlert(message: errorMessage)
+            }
+            .store(in: &cancellables)
     }
     
     private func presentPasswordChangedSuccessScreen() {
-        let phoneForgotPasswordSuccessViewController = PhoneForgotPasswordSuccessViewController()
+        let phoneForgotPasswordSuccessViewModel = PhoneForgotPasswordSuccessViewModel(resetPasswordType: viewModel.resetPasswordType)
+        
+        let phoneForgotPasswordSuccessViewController = PhoneForgotPasswordSuccessViewController(viewModel: phoneForgotPasswordSuccessViewModel)
         
         self.navigationController?.pushViewController(phoneForgotPasswordSuccessViewController, animated: true)
+    }
+    
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: localized("error"), message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        present(alert, animated: true)
     }
     
     private func showLoading() {

@@ -653,4 +653,48 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
             .eraseToAnyPublisher()
     }
 
+    // MARK: - Password Reset Methods
+
+    func getResetPasswordTokenId(mobileNumber: String, mobilePrefix: String) -> AnyPublisher<ResetPasswordTokenResponse, ServiceProviderError> {
+        let endpoint = EveryMatrixPlayerAPI.getResetPasswordTokenId(mobileNumber: mobileNumber, mobilePrefix: mobilePrefix)
+        let publisher: AnyPublisher<EveryMatrix.ResetPasswordTokenResponse, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { internalResponse in
+                EveryMatrixModelMapper.resetPasswordTokenResponse(from: internalResponse)
+            }
+            .mapError { error in
+                ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func validateResetPasswordCode(tokenId: String, validationCode: String) -> AnyPublisher<ValidateResetPasswordCodeResponse, ServiceProviderError> {
+        let endpoint = EveryMatrixPlayerAPI.validateResetPasswordCode(tokenId: tokenId, validationCode: validationCode)
+        let publisher: AnyPublisher<EveryMatrix.ValidateResetPasswordCodeResponse, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { internalResponse in
+                EveryMatrixModelMapper.validateResetPasswordCodeResponse(from: internalResponse)
+            }
+            .mapError { error in
+                return error
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool) -> AnyPublisher<ResetPasswordByHashKeyResponse, ServiceProviderError> {
+        let endpoint = EveryMatrixPlayerAPI.resetPasswordWithHashKey(hashKey: hashKey, plainTextPassword: plainTextPassword, isUserHash: isUserHash)
+        let publisher: AnyPublisher<EveryMatrix.ResetPasswordByHashKeyResponse, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { internalResponse in
+                EveryMatrixModelMapper.resetPasswordByHashKeyResponse(from: internalResponse)
+            }
+            .mapError { error in
+                return error
+            }
+            .eraseToAnyPublisher()
+    }
+
 }

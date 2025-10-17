@@ -1,5 +1,5 @@
 //
-//  MockPhonePasswordCodeVerificationViewModel.swift
+//  PhonePasswordCodeVerificationViewModel.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 26/06/2025.
@@ -8,8 +8,12 @@
 import Foundation
 import GomaUI
 import Combine
+import ServicesProvider
 
-class MockPhonePasswordCodeVerificationViewModel: PhonePasswordCodeVerificationViewModelProtocol {
+class PhonePasswordCodeVerificationViewModel: PhonePasswordCodeVerificationViewModelProtocol {
+    let tokenId: String
+    let phoneNumber: String
+    let resetPasswordType: ResetPasswordType
     let headerViewModel: PromotionalHeaderViewModelProtocol
     let highlightedTextViewModel: HighlightedTextViewModelProtocol
     let pinEntryViewModel: PinDigitEntryViewModelProtocol
@@ -18,19 +22,24 @@ class MockPhonePasswordCodeVerificationViewModel: PhonePasswordCodeVerificationV
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
     var isLoadingPublisher: AnyPublisher<Bool, Never> { isLoadingSubject.eraseToAnyPublisher() }
     
-    let shouldPasswordChange = PassthroughSubject<Void, Never>()
+    let shouldPasswordChange = PassthroughSubject<String, Never>()
+    let showError = PassthroughSubject<String, Never>()
 
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
-       
+    init(tokenId: String, phoneNumber: String, resetPasswordType: ResetPasswordType) {
+        
+        self.tokenId = tokenId
+        self.phoneNumber = phoneNumber
+        self.resetPasswordType = resetPasswordType
+        
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "header",
                                                                                            icon: "phone_verify_icon",
                                                                                            title: "Verifying it’s really you",
                                                                                            subtitle: nil))
         
-        let fullText = "Please enter the verification code we have sent to +237 7 12345678"
-        let phoneNumber = "+237 7 12345678"
+        let fullText = "Please enter the verification code we have sent to \(phoneNumber)"
+        let phoneNumber = phoneNumber
         let phoneRanges = HighlightedTextView.findRanges(of: phoneNumber, in: fullText)
 
         highlightedTextViewModel = MockHighlightedTextViewModel(data: HighlightedTextData(fullText: fullText,
@@ -42,7 +51,7 @@ class MockPhonePasswordCodeVerificationViewModel: PhonePasswordCodeVerificationV
         
         resendCodeCountdownViewModel = MockResendCodeCountdownViewModel(startSeconds: 60)
         
-        buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "veirfy", title: "Verify", style: .solidBackground, isEnabled: false))
+        buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "verify", title: "Verify", style: .solidBackground, isEnabled: false))
         
         setupPublishers()
 
@@ -61,11 +70,34 @@ class MockPhonePasswordCodeVerificationViewModel: PhonePasswordCodeVerificationV
     
     func requestPasswordChange() {
         isLoadingSubject.send(true)
-        // Simulate endpoint delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            self?.isLoadingSubject.send(false)
-            
-            self?.shouldPasswordChange.send()
-        }
+        
+        // Get the validation code from the PIN entry
+        let validationCode = pinEntryViewModel.data.currentPin
+        
+        // Call the API to validate the reset password code
+        Env.servicesProvider
+            .validateResetPasswordCode(tokenId: tokenId, validationCode: validationCode)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
+                self.isLoadingSubject.send(false)
+                
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    switch error {
+                    case .errorMessage(let message):
+                        self.showError.send(message)
+                    default:
+                        self.showError.send(error.localizedDescription)
+                    }
+                }
+            }, receiveValue: { [weak self] response in
+                guard let self = self else { return }
+                // Send the hashKey to the next screen
+                self.shouldPasswordChange.send(response.hashKey)
+            })
+            .store(in: &cancellables)
     }
 }

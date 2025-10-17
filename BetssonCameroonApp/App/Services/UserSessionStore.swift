@@ -63,6 +63,7 @@ class UserSessionStore {
     }
     
     var loginFlowSuccess: CurrentValueSubject<Bool, Never> = .init(false)
+    var passwordChanged: PassthroughSubject<Void, Never> = .init()
     
     var shouldAuthenticateUser = true
     var shouldRecordUserSession = true
@@ -230,6 +231,10 @@ class UserSessionStore {
 
     }
 
+    func logoutOnPasswordChanged() {
+        self.logout()
+        self.passwordChanged.send()
+    }
 
 }
 

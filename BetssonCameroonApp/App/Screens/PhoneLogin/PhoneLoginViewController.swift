@@ -241,7 +241,9 @@ class PhoneLoginViewController: UIViewController {
     }
 
     @objc private func didTapForgotPassword() {
-        let phonePasswordRecoverViewController = PhonePasswordCodeResetViewController()
+        let phonePasswordRecoverViewModel = PhonePasswordCodeResetViewModel()
+        
+        let phonePasswordRecoverViewController = PhonePasswordCodeResetViewController(viewModel: phonePasswordRecoverViewModel)
         
         self.navigationController?.pushViewController(phonePasswordRecoverViewController, animated: true)
     }

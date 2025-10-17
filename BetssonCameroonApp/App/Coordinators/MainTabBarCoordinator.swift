@@ -51,6 +51,8 @@ class MainTabBarCoordinator: Coordinator {
 
     private var betslipCoordinator: BetslipCoordinator?
     
+    private var cancellables = Set<AnyCancellable>()
+    
     //
     // MARK: - Initialization
     
@@ -110,6 +112,13 @@ class MainTabBarCoordinator: Coordinator {
 
         self.mainTabBarViewController = mainTabBarViewController
         navigationController.setViewControllers([container], animated: false)
+        
+        environment.userSessionStore.passwordChanged
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.presentAuthenticationDirectly(isLogin: true)
+            })
+            .store(in: &cancellables)
         
         // Show default screen on startup (NextUpEvents)
         self.showNextUpEventsScreen()

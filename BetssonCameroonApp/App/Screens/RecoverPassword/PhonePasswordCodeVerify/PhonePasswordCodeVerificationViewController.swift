@@ -75,16 +75,25 @@ class PhonePasswordCodeVerificationViewController: UIViewController {
     }()
     
     private let viewModel: PhonePasswordCodeVerificationViewModelProtocol
-
+    
     private var cancellables = Set<AnyCancellable>()
 
-    init(viewModel: PhonePasswordCodeVerificationViewModelProtocol = MockPhonePasswordCodeVerificationViewModel()) {
+    init(viewModel: PhonePasswordCodeVerificationViewModelProtocol) {
         self.viewModel = viewModel
         self.headerView = PromotionalHeaderView(viewModel: viewModel.headerViewModel)
         self.highlightedTextView = HighlightedTextView(viewModel: viewModel.highlightedTextViewModel)
         self.pinEntryView = PinDigitEntryView(viewModel: viewModel.pinEntryViewModel)
         self.resendCodeCountdownView = ResendCodeCountdownView(viewModel: viewModel.resendCodeCountdownViewModel)
         self.verifyButton = ButtonView(viewModel: viewModel.buttonViewModel)
+        
+        
+        switch viewModel.resetPasswordType {
+        case .forgot:
+            self.navigationTitleLabel.text = "Forgot Password"
+        case .change:
+            self.navigationTitleLabel.text = "Change Password"
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -190,16 +199,31 @@ class PhonePasswordCodeVerificationViewController: UIViewController {
         
         viewModel.shouldPasswordChange
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.presentPasswordChangeScreen()
+            .sink { [weak self] hashKey in
+                self?.presentPasswordChangeScreen(hashKey: hashKey)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.showError
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] errorMessage in
+                self?.showErrorAlert(message: errorMessage)
             }
             .store(in: &cancellables)
     }
     
-    private func presentPasswordChangeScreen() {
-        let forgotPasswordViewController = PhoneForgotPasswordViewController()
+    private func presentPasswordChangeScreen(hashKey: String) {
+        let forgotPasswordViewModel = PhoneForgotPasswordViewModel(hashKey: hashKey, resetPasswordType: viewModel.resetPasswordType)
+        
+        let forgotPasswordViewController = PhoneForgotPasswordViewController(viewModel: forgotPasswordViewModel)
         
         self.navigationController?.pushViewController(forgotPasswordViewController, animated: true)
+    }
+    
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: localized("error"), message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        present(alert, animated: true)
     }
     
     private func showLoading() {
@@ -243,4 +267,9 @@ class PhonePasswordCodeVerificationViewController: UIViewController {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
+}
+
+enum ResetPasswordType {
+    case forgot
+    case change
 }

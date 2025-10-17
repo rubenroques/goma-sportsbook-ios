@@ -17,6 +17,9 @@ protocol PhoneForgotPasswordViewModelProtocol {
     var buttonViewModel: ButtonViewModelProtocol { get }
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var passwordChanged: PassthroughSubject<Void, Never> { get }
+    var showError: PassthroughSubject<String, Never> { get }
+
+    var resetPasswordType: ResetPasswordType { get }
 
     func requestPasswordChange()
 }
