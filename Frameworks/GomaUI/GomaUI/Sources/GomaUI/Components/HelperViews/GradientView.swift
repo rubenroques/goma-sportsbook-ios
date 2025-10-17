@@ -184,7 +184,7 @@ public enum GradientDirection {
 #Preview("GradientView") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false

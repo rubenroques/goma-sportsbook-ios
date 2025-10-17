@@ -130,7 +130,7 @@ public final class InfoRowView: UIView {
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         // Title label
         let titleLabel = UILabel()

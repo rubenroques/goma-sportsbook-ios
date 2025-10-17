@@ -293,7 +293,7 @@ import SwiftUI
 #Preview("CasinoGameSearchedView - States") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let searchedView = CasinoGameSearchedView(viewModel: MockCasinoGameSearchedViewModel.normal)
         searchedView.translatesAutoresizingMaskIntoConstraints = false

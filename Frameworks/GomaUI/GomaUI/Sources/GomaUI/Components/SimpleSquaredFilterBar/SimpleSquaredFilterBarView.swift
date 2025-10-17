@@ -139,7 +139,7 @@ public final class SimpleSquaredFilterBarView: UIView {
 #Preview("Simple Squared Filter Bar - Time Filters") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let timeFilters = SimpleSquaredFilterBarData(
             items: [
@@ -173,7 +173,7 @@ public final class SimpleSquaredFilterBarView: UIView {
 #Preview("Simple Squared Filter Bar - Status Filters") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let statusFilters = SimpleSquaredFilterBarData(
             items: [
@@ -206,7 +206,7 @@ public final class SimpleSquaredFilterBarView: UIView {
 #Preview("Simple Squared Filter Bar - Multiple States") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false

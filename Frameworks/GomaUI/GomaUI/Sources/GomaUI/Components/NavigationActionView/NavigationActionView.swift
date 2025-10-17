@@ -128,7 +128,7 @@ public final class NavigationActionView: UIView {
 #Preview("NavigationActionView") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let stackView = UIStackView()
         stackView.axis = .vertical

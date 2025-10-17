@@ -237,7 +237,7 @@ extension ShareChannelButtonView {
 #Preview("All Channels") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let channels = ShareChannel.allChannels()
         let stackView = UIStackView()

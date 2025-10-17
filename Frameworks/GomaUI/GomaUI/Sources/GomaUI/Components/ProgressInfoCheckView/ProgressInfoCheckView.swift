@@ -289,7 +289,7 @@ public final class ProgressInfoCheckView: UIView {
 #Preview("ProgressInfoCheckView") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let stackView = UIStackView()
         stackView.axis = .vertical

@@ -477,7 +477,7 @@ public final class BetslipFloatingThinView: UIView {
 #Preview("No Tickets") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let betslipView = BetslipFloatingThinView(viewModel: MockBetslipFloatingViewModel(state: .noTickets))
         betslipView.translatesAutoresizingMaskIntoConstraints = false
@@ -497,7 +497,7 @@ public final class BetslipFloatingThinView: UIView {
 #Preview("With Tickets") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let betslipView = BetslipFloatingThinView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 3, odds: "1.55", winBoostPercentage: "10%", totalEligibleCount: 6, nextTierPercentage: "15%")))
         betslipView.translatesAutoresizingMaskIntoConstraints = false
@@ -517,7 +517,7 @@ public final class BetslipFloatingThinView: UIView {
 #Preview("With Tickets (No Boost)") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let betslipView = BetslipFloatingThinView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 2, odds: "1.85", winBoostPercentage: nil, totalEligibleCount: 0, nextTierPercentage: nil)))
         betslipView.translatesAutoresizingMaskIntoConstraints = false

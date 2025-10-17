@@ -258,7 +258,7 @@ public final class BetslipFloatingTallView: UIView {
 #Preview("Tall - With Boost Progress") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let betslipView = BetslipFloatingTallView(viewModel: MockBetslipFloatingViewModel(state: .withTickets(selectionCount: 1, odds: "5.71", winBoostPercentage: nil, totalEligibleCount: 3, nextTierPercentage: "3%")))
         betslipView.translatesAutoresizingMaskIntoConstraints = false

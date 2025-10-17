@@ -394,7 +394,7 @@ public final class BetslipTicketView: UIView {
 #Preview("Typical") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.typicalMock())
         ticketView.translatesAutoresizingMaskIntoConstraints = false
@@ -415,7 +415,7 @@ public final class BetslipTicketView: UIView {
 #Preview("Increased Odds") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.increasedOddsMock())
         ticketView.translatesAutoresizingMaskIntoConstraints = false
@@ -436,7 +436,7 @@ public final class BetslipTicketView: UIView {
 #Preview("Decreased Odds") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.decreasedOddsMock())
         ticketView.translatesAutoresizingMaskIntoConstraints = false
@@ -457,7 +457,7 @@ public final class BetslipTicketView: UIView {
 #Preview("Disabled") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.disabledMock())
         ticketView.translatesAutoresizingMaskIntoConstraints = false

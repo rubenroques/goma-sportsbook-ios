@@ -174,7 +174,7 @@ public final class StatusNotificationView: UIView {
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let successView = StatusNotificationView(viewModel: MockStatusNotificationViewModel.successMock)
         successView.translatesAutoresizingMaskIntoConstraints = false

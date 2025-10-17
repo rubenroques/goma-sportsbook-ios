@@ -157,7 +157,7 @@ public class BetslipTypeTabItemView: UIView {
 #Preview("Sports Selected") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let tabItemView = BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.sportsSelectedMock())
         tabItemView.translatesAutoresizingMaskIntoConstraints = false
@@ -178,7 +178,7 @@ public class BetslipTypeTabItemView: UIView {
 #Preview("Sports Unselected") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let tabItemView = BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.sportsUnselectedMock())
         tabItemView.translatesAutoresizingMaskIntoConstraints = false
@@ -199,7 +199,7 @@ public class BetslipTypeTabItemView: UIView {
 #Preview("Virtuals Selected") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let tabItemView = BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.virtualsSelectedMock())
         tabItemView.translatesAutoresizingMaskIntoConstraints = false
@@ -220,7 +220,7 @@ public class BetslipTypeTabItemView: UIView {
 #Preview("Virtuals Unselected") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let tabItemView = BetslipTypeTabItemView(viewModel: MockBetslipTypeTabItemViewModel.virtualsUnselectedMock())
         tabItemView.translatesAutoresizingMaskIntoConstraints = false

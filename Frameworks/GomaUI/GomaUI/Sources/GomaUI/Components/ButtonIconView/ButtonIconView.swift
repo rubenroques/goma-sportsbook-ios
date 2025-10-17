@@ -189,7 +189,7 @@ public final class ButtonIconView: UIView {
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         // 1. TITLE LABEL
         let titleLabel = UILabel()

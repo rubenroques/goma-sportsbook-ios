@@ -245,7 +245,7 @@ public final class BetslipOddsBoostHeaderView: UIView {
 #Preview("Header - Progress 1/3") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let headerView = BetslipOddsBoostHeaderView(
             viewModel: MockBetslipOddsBoostHeaderViewModel.activeMock(
@@ -271,7 +271,7 @@ public final class BetslipOddsBoostHeaderView: UIView {
 #Preview("Header - Progress 2/3") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let headerView = BetslipOddsBoostHeaderView(
             viewModel: MockBetslipOddsBoostHeaderViewModel.activeMock(
@@ -297,7 +297,7 @@ public final class BetslipOddsBoostHeaderView: UIView {
 #Preview("Header - Max Boost Reached") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let headerView = BetslipOddsBoostHeaderView(
             viewModel: MockBetslipOddsBoostHeaderViewModel.maxBoostMock()

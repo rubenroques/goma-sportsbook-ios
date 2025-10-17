@@ -108,7 +108,7 @@ private extension WalletDetailBalanceLineView {
 #Preview("White Balance Lines on Orange") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.highlightPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         // Create container stack view for all lines
         let containerStack = UIStackView()

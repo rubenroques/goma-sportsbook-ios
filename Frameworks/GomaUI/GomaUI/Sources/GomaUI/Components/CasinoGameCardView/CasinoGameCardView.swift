@@ -399,7 +399,7 @@ final public class CasinoGameCardView: UIView {
 #Preview("Casino Game Card - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let gameCardView = CasinoGameCardView() // No viewModel - placeholder state
         gameCardView.translatesAutoresizingMaskIntoConstraints = false

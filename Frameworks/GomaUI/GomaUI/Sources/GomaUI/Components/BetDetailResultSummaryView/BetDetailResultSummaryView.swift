@@ -210,7 +210,7 @@ public class BetDetailResultSummaryView: UIView {
 #Preview("Bet Result Summary - Lost State") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let resultSummaryView = BetDetailResultSummaryView(viewModel: MockBetDetailResultSummaryViewModel.lostMock())
         resultSummaryView.translatesAutoresizingMaskIntoConstraints = false
@@ -231,7 +231,7 @@ public class BetDetailResultSummaryView: UIView {
 #Preview("Bet Result Summary - Won State") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let resultSummaryView = BetDetailResultSummaryView(viewModel: MockBetDetailResultSummaryViewModel.wonMock())
         resultSummaryView.translatesAutoresizingMaskIntoConstraints = false
@@ -252,7 +252,7 @@ public class BetDetailResultSummaryView: UIView {
 #Preview("Bet Result Summary - Draw State") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let resultSummaryView = BetDetailResultSummaryView(viewModel: MockBetDetailResultSummaryViewModel.drawMock())
         resultSummaryView.translatesAutoresizingMaskIntoConstraints = false

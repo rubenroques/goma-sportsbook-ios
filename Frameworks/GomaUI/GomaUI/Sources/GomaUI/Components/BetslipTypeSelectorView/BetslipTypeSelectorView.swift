@@ -144,7 +144,7 @@ public class BetslipTypeSelectorView: UIView {
 #Preview("Sports Selected") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let selectorView = BetslipTypeSelectorView(viewModel: MockBetslipTypeSelectorViewModel.sportsSelectedMock())
         selectorView.translatesAutoresizingMaskIntoConstraints = false
@@ -165,7 +165,7 @@ public class BetslipTypeSelectorView: UIView {
 #Preview("Virtuals Selected") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let selectorView = BetslipTypeSelectorView(viewModel: MockBetslipTypeSelectorViewModel.virtualsSelectedMock())
         selectorView.translatesAutoresizingMaskIntoConstraints = false

@@ -185,7 +185,7 @@ extension CasinoCategorySectionView: UICollectionViewDelegate {
 #Preview("Casino Category Section - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let categorySectionView = CasinoCategorySectionView() // No viewModel - placeholder state
         categorySectionView.translatesAutoresizingMaskIntoConstraints = false

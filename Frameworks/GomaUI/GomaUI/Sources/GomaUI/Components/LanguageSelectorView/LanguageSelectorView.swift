@@ -198,7 +198,7 @@ extension LanguageSelectorView {
 #Preview("LanguageSelectorView") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.backgroundColor = .backgroundTestColor
 
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false

@@ -125,7 +125,7 @@ public final class StepInstructionView: UIView {
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = UIColor.systemGray5
+        vc.view.backgroundColor = .backgroundTestColor
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

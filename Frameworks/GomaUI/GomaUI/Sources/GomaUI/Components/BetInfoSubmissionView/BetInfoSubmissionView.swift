@@ -197,7 +197,7 @@ public final class BetInfoSubmissionView: UIView {
 #Preview("Default") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundCards
+        vc.view.backgroundColor = .backgroundTestColor
         
         let view = BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.defaultMock(currency: "XAF"))
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -217,7 +217,7 @@ public final class BetInfoSubmissionView: UIView {
 #Preview("Sample Data") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundCards
+        vc.view.backgroundColor = .backgroundTestColor
         
         let view = BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.withAmountsMock(currency: "XAF"))
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -237,7 +237,7 @@ public final class BetInfoSubmissionView: UIView {
 #Preview("Disabled") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundCards
+        vc.view.backgroundColor = .backgroundTestColor
         
         let view = BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.disabledMock(currency: "XAF"))
         view.translatesAutoresizingMaskIntoConstraints = false
