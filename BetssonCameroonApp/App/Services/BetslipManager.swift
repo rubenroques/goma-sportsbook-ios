@@ -108,6 +108,29 @@ class BetslipManager: NSObject {
             })
             .store(in: &self.cancellables)
 
+        // Track wallet changes to handle auto-login race condition
+        // When user auto-logs in (FaceID), profile loads first but wallet loads slightly later
+        // This subscription ensures we fetch odds boost once wallet becomes available
+        Env.userSessionStore.userWalletPublisher
+            .removeDuplicates()
+            .sink(receiveValue: { [weak self] wallet in
+                guard let self = self else { return }
+
+                // Only fetch when all conditions are met:
+                // 1. Wallet just became available (currency is present)
+                // 2. User has tickets in betslip
+                // 3. User is logged in
+                guard wallet?.currency != nil,
+                      !self.bettingTicketsPublisher.value.isEmpty,
+                      Env.userSessionStore.userProfilePublisher.value != nil else {
+                    return
+                }
+
+                print("[ODDS_BOOST] 💳 Wallet loaded, fetching odds boost for auto-login scenario")
+                self.fetchOddsBoostStairs()
+            })
+            .store(in: &self.cancellables)
+
     }
     
     func addBettingTicket(_ bettingTicket: BettingTicket) {

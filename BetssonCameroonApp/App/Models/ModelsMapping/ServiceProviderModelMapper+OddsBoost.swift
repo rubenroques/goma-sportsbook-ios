@@ -35,12 +35,22 @@ extension ServiceProviderModelMapper {
             )
         }
 
+        // Map all available tiers
+        let allTiers: [OddsBoostTier] = spResponse.allStairs.map { spStair in
+            OddsBoostTier(
+                minSelections: spStair.minSelectionNumber,
+                percentage: spStair.percentage,
+                capAmount: spStair.capAmount
+            )
+        }
+
         return OddsBoostStairsState(
             currentTier: currentTier,
             nextTier: nextTier,
             eligibleEventIds: spResponse.eligibleEventIds,
             ubsWalletId: spResponse.ubsWalletId,
-            currency: spResponse.currency
+            currency: spResponse.currency,
+            allTiers: allTiers
         )
     }
 }

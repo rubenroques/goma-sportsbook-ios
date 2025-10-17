@@ -57,13 +57,27 @@ extension EveryMatrixModelMapper {
         // Extract eligible event IDs
         let eligibleEventIds = oddsBoostInfo.eligibleEventID
 
+        // Extract all available stairs from bonus configuration
+        // This provides the complete tier progression (e.g., 3→10%, 4→15%, 5→20%)
+        let allStairs: [OddsBoostStair] = firstItem.bonusExtension.bonus.wallet.oddsBoost?.sportsBoostStairs.compactMap { stair in
+            guard let capAmount = stair.capAmount[firstItem.currency] else {
+                return nil
+            }
+            return OddsBoostStair(
+                minSelectionNumber: stair.minSelectionNumber,
+                percentage: stair.percentage,
+                capAmount: capAmount
+            )
+        } ?? []
+
         // Build domain response
         return OddsBoostStairsResponse(
             currentStair: currentStair,
             nextStair: nextStair,
             eligibleEventIds: eligibleEventIds,
             ubsWalletId: ubsWalletId,
-            currency: firstItem.currency
+            currency: firstItem.currency,
+            allStairs: allStairs
         )
     }
 }

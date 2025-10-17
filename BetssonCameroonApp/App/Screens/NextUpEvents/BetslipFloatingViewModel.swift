@@ -62,16 +62,16 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
         if tickets.isEmpty {
             updateState(.noTickets)
         } else {
-            let selectionCount = tickets.count
+            // CRITICAL: Use API's eligibleEventIds.count for selection count
+            // This correctly handles duplicate events (multiple selections from same event)
+            let eligibleEventsCount = oddsBoostState?.eligibleEventIds.count ?? tickets.count
             let totalOdds = calculateTotalOdds(from: tickets)
 
             // Extract real odds boost data from API response
-            let (winBoostPercentage, totalEligibleCount, nextTierPercentage) = extractOddsBoostData(
-                selectionCount: selectionCount
-            )
+            let (winBoostPercentage, totalEligibleCount, nextTierPercentage) = extractOddsBoostData()
 
             let state = BetslipFloatingState.withTickets(
-                selectionCount: selectionCount,
+                selectionCount: eligibleEventsCount,  // From API, not betslip tickets
                 odds: formatOdds(totalOdds),
                 winBoostPercentage: winBoostPercentage,
                 totalEligibleCount: totalEligibleCount,
@@ -93,9 +93,8 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
     }
 
     /// Extracts odds boost UI data from current state
-    /// - Parameter selectionCount: Current number of selections in betslip
     /// - Returns: Tuple of (currentTierPercentage, totalEligibleCount, nextTierPercentage) for UI display
-    private func extractOddsBoostData(selectionCount: Int) -> (String?, Int, String?) {
+    private func extractOddsBoostData() -> (String?, Int, String?) {
         guard let oddsBoostState = self.oddsBoostState else {
             // No odds boost available (not logged in, no bonus configured, or API error)
             return (nil, 0, nil)
@@ -107,8 +106,10 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
         }
 
         // Extract next tier data for progress bar and call-to-action
-        // If nextTier is nil, user has reached max tier, use 0/nil to hide progress
-        let totalEligibleCount: Int = oddsBoostState.nextTier?.minSelections ?? 0
+        // If nextTier is nil, user has reached max tier - use currentTier to show all segments filled
+        let totalEligibleCount: Int = oddsBoostState.nextTier?.minSelections
+            ?? oddsBoostState.currentTier?.minSelections
+            ?? 0
         let nextTierPercentage: String? = oddsBoostState.nextTier.map { tier in
             return "\(Int(tier.percentage * 100))%"
         }

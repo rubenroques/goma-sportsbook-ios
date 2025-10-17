@@ -59,24 +59,24 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
             betslipManager.oddsBoostStairsPublisher
         )
         .receive(on: DispatchQueue.main)
-        .sink { [weak self] (tickets, oddsBoostState) in
+        .sink { [weak self] (_, oddsBoostState) in
             self?.oddsBoostState = oddsBoostState
-            self?.updateHeaderState(with: tickets)
+            self?.updateHeaderState()
         }
         .store(in: &cancellables)
     }
 
-    private func updateHeaderState(with tickets: [BettingTicket]) {
-        let selectionCount = tickets.count
+    private func updateHeaderState() {
+        // CRITICAL: Use API's eligibleEventIds.count as source of truth
+        // This correctly handles duplicate events (multiple selections from same event)
+        let eligibleEventsCount = oddsBoostState?.eligibleEventIds.count ?? 0
 
         // Extract real odds boost data from API response
-        let (currentBoostPercentage, totalEligibleCount, nextTierPercentage) = extractOddsBoostData(
-            selectionCount: selectionCount
-        )
+        let (currentBoostPercentage, totalEligibleCount, nextTierPercentage) = extractOddsBoostData()
 
         // Create new state
         let state = BetslipOddsBoostHeaderState(
-            selectionCount: selectionCount,
+            selectionCount: eligibleEventsCount,  // From API, not betslip tickets
             totalEligibleCount: totalEligibleCount,
             nextTierPercentage: nextTierPercentage,
             currentBoostPercentage: currentBoostPercentage
@@ -91,9 +91,8 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
     }
 
     /// Extracts odds boost UI data from current state
-    /// - Parameter selectionCount: Current number of selections in betslip
     /// - Returns: Tuple of (currentTierPercentage, totalEligibleCount, nextTierPercentage) for UI display
-    private func extractOddsBoostData(selectionCount: Int) -> (String?, Int, String?) {
+    private func extractOddsBoostData() -> (String?, Int, String?) {
         guard let oddsBoostState = self.oddsBoostState else {
             // No odds boost available (not logged in, no bonus configured, or API error)
             return (nil, 0, nil)
@@ -105,8 +104,10 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
         }
 
         // Extract next tier data for progress bar and call-to-action
-        // If nextTier is nil, user has reached max tier
-        let totalEligibleCount: Int = oddsBoostState.nextTier?.minSelections ?? 0
+        // If nextTier is nil, user has reached max tier - use currentTier to show all segments filled
+        let totalEligibleCount: Int = oddsBoostState.nextTier?.minSelections
+            ?? oddsBoostState.currentTier?.minSelections
+            ?? 0
         let nextTierPercentage: String? = oddsBoostState.nextTier.map { tier in
             return "\(Int(tier.percentage * 100))%"
         }

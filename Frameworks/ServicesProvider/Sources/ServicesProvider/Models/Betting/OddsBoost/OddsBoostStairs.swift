@@ -28,18 +28,25 @@ public struct OddsBoostStairsResponse: Equatable {
     /// Currency for which this bonus applies
     public let currency: String
 
+    /// All available bonus tiers/stairs in the progression
+    /// Used to display the complete boost ladder to users
+    /// Example: [3→10%, 4→15%, 5→20%]
+    public let allStairs: [OddsBoostStair]
+
     public init(
         currentStair: OddsBoostStair?,
         nextStair: OddsBoostStair?,
         eligibleEventIds: [String],
         ubsWalletId: String,
-        currency: String
+        currency: String,
+        allStairs: [OddsBoostStair]
     ) {
         self.currentStair = currentStair
         self.nextStair = nextStair
         self.eligibleEventIds = eligibleEventIds
         self.ubsWalletId = ubsWalletId
         self.currency = currency
+        self.allStairs = allStairs
     }
 
     /// Whether user has reached maximum bonus tier

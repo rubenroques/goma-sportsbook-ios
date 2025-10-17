@@ -25,6 +25,10 @@ struct OddsBoostStairsState: Equatable {
 
     /// Currency for this bonus
     let currency: String
+
+    /// All available bonus tiers in the progression
+    /// Used to show complete boost ladder to users
+    let allTiers: [OddsBoostTier]
 }
 
 /// App model representing a single bonus tier/stair
