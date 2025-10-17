@@ -82,39 +82,66 @@ public final class QuickAddButtonView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Amount 100") {
-    PreviewUIView {
-        QuickAddButtonView(viewModel: MockQuickAddButtonViewModel.amount100Mock())
-    }
-    .frame(width: 50, height: 50)
-    .padding()
-}
+#Preview("QuickAddButtonView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Amount 250") {
-    PreviewUIView {
-        QuickAddButtonView(viewModel: MockQuickAddButtonViewModel.amount250Mock())
-    }
-    .frame(width: 50, height: 50)
-    .padding()
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Amount 500") {
-    PreviewUIView {
-        QuickAddButtonView(viewModel: MockQuickAddButtonViewModel.amount500Mock())
-    }
-    .frame(width: 50, height: 50)
-    .padding()
-}
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "QuickAddButtonView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Disabled") {
-    PreviewUIView {
-        QuickAddButtonView(viewModel: MockQuickAddButtonViewModel.disabledMock())
+        // Amount 100
+        let amount100View = QuickAddButtonView(viewModel: MockQuickAddButtonViewModel.amount100Mock())
+        amount100View.translatesAutoresizingMaskIntoConstraints = false
+
+        // Amount 250
+        let amount250View = QuickAddButtonView(viewModel: MockQuickAddButtonViewModel.amount250Mock())
+        amount250View.translatesAutoresizingMaskIntoConstraints = false
+
+        // Amount 500
+        let amount500View = QuickAddButtonView(viewModel: MockQuickAddButtonViewModel.amount500Mock())
+        amount500View.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled
+        let disabledView = QuickAddButtonView(viewModel: MockQuickAddButtonViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(amount100View)
+        stackView.addArrangedSubview(amount250View)
+        stackView.addArrangedSubview(amount500View)
+        stackView.addArrangedSubview(disabledView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+
+            // Fixed size for buttons
+            amount100View.widthAnchor.constraint(equalToConstant: 50),
+            amount100View.heightAnchor.constraint(equalToConstant: 50),
+            amount250View.widthAnchor.constraint(equalToConstant: 50),
+            amount250View.heightAnchor.constraint(equalToConstant: 50),
+            amount500View.widthAnchor.constraint(equalToConstant: 50),
+            amount500View.heightAnchor.constraint(equalToConstant: 50),
+            disabledView.widthAnchor.constraint(equalToConstant: 50),
+            disabledView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        return vc
     }
-    .frame(width: 50, height: 50)
-    .padding()
 }
 
 #endif 

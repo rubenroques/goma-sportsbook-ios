@@ -89,18 +89,68 @@ final public class AmountPillView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Amount Pill - Diferent States") {
-    PreviewUIView {
-        AmountPillView(viewModel: MockAmountPillViewModel.defaultMock)
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        // 1. TITLE LABEL
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "AmountPillView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+
+        // 2. VERTICAL STACK with ALL states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3. ADD ALL COMPONENT INSTANCES
+        // Unselected state
+        let unselectedPillData = AmountPillData(id: "500", amount: "500", isSelected: false)
+        let unselectedPill = AmountPillView(viewModel: MockAmountPillViewModel(pillData: unselectedPillData))
+        unselectedPill.translatesAutoresizingMaskIntoConstraints = false
+
+        // Selected state
+        let selectedPillData = AmountPillData(id: "1000", amount: "1000", isSelected: true)
+        let selectedPill = AmountPillView(viewModel: MockAmountPillViewModel(pillData: selectedPillData))
+        selectedPill.translatesAutoresizingMaskIntoConstraints = false
+
+        // Large amount
+        let largePillData = AmountPillData(id: "50000", amount: "50000", isSelected: false)
+        let largePill = AmountPillView(viewModel: MockAmountPillViewModel(pillData: largePillData))
+        largePill.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add all states to stack
+        stackView.addArrangedSubview(unselectedPill)
+        stackView.addArrangedSubview(selectedPill)
+        stackView.addArrangedSubview(largePill)
+
+        // 4. ADD TO VIEW HIERARCHY
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // 5. CONSTRAINTS
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            unselectedPill.heightAnchor.constraint(equalToConstant: 32),
+            selectedPill.heightAnchor.constraint(equalToConstant: 32),
+            largePill.heightAnchor.constraint(equalToConstant: 32)
+        ])
+
+        return vc
     }
-    .frame(height: 32)
-    .padding()
-    
-    PreviewUIView {
-        AmountPillView(viewModel: MockAmountPillViewModel.selectedMock)
-    }
-    .frame(height: 32)
-    .padding()
 }
 
 #endif

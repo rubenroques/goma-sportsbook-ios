@@ -186,30 +186,65 @@ public final class ButtonIconView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Icon Left") {
-    PreviewUIView {
-        ButtonIconView(viewModel: MockButtonIconViewModel.bookingCodeMock())
-    }
-    .frame(height: 44)
-    .padding()
-}
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Icon Right") {
-    PreviewUIView {
-        ButtonIconView(viewModel: MockButtonIconViewModel.clearBetslipMock())
-    }
-    .frame(height: 44)
-    .padding()
-}
+        // 1. TITLE LABEL
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "ButtonIconView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
 
-@available(iOS 17.0, *)
-#Preview("Disabled") {
-    PreviewUIView {
-        ButtonIconView(viewModel: MockButtonIconViewModel.disabledMock())
+        // 2. VERTICAL STACK with ALL states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3. ADD ALL COMPONENT INSTANCES
+        // Icon Left state
+        let iconLeftView = ButtonIconView(viewModel: MockButtonIconViewModel.bookingCodeMock())
+        iconLeftView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Icon Right state
+        let iconRightView = ButtonIconView(viewModel: MockButtonIconViewModel.clearBetslipMock())
+        iconRightView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled state
+        let disabledView = ButtonIconView(viewModel: MockButtonIconViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add all states to stack
+        stackView.addArrangedSubview(iconLeftView)
+        stackView.addArrangedSubview(iconRightView)
+        stackView.addArrangedSubview(disabledView)
+
+        // 4. ADD TO VIEW HIERARCHY
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // 5. CONSTRAINTS
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            iconLeftView.heightAnchor.constraint(equalToConstant: 44),
+            iconRightView.heightAnchor.constraint(equalToConstant: 44),
+            disabledView.heightAnchor.constraint(equalToConstant: 44)
+        ])
+
+        return vc
     }
-    .frame(height: 44)
-    .padding()
 }
 
 #endif 

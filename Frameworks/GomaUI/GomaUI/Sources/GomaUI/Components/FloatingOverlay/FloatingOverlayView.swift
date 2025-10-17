@@ -213,34 +213,59 @@ extension FloatingOverlayView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Sportsbook Mode") {
-    PreviewUIView {
-        let viewModel = MockFloatingOverlayViewModel.sportsbookMode
-        let overlay = FloatingOverlayView(viewModel: viewModel)
-        
-        // Simulate showing the overlay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            viewModel.show(mode: .sportsbook, duration: 3)
-        }
-        
-        return overlay
-    }
-    .frame(height: 60)
-}
+#Preview("FloatingOverlayView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Casino Mode") {
-    PreviewUIView {
-        let viewModel = MockFloatingOverlayViewModel.casinoMode
-        let overlay = FloatingOverlayView(viewModel: viewModel)
-        
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "FloatingOverlayView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Sportsbook Mode
+        let sportsbookViewModel = MockFloatingOverlayViewModel.sportsbookMode
+        let sportsbookOverlay = FloatingOverlayView(viewModel: sportsbookViewModel)
+        sportsbookOverlay.translatesAutoresizingMaskIntoConstraints = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            viewModel.show(mode: .casino, duration: nil)
+            sportsbookViewModel.show(mode: .sportsbook, duration: 3)
         }
-        
-        return overlay
+
+        // Casino Mode
+        let casinoViewModel = MockFloatingOverlayViewModel.casinoMode
+        let casinoOverlay = FloatingOverlayView(viewModel: casinoViewModel)
+        casinoOverlay.translatesAutoresizingMaskIntoConstraints = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            casinoViewModel.show(mode: .casino, duration: nil)
+        }
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(sportsbookOverlay)
+        stackView.addArrangedSubview(casinoOverlay)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            // Fixed heights for overlays
+            sportsbookOverlay.heightAnchor.constraint(equalToConstant: 60),
+            casinoOverlay.heightAnchor.constraint(equalToConstant: 60)
+        ])
+
+        return vc
     }
-    .frame(height: 60)
 }
 
 #endif

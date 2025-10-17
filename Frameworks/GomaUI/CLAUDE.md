@@ -361,4 +361,26 @@ class ComplexComponentView: UIView {
 }
 ```
 
+### High Customization Pattern
+
+For components requiring extensive visual customization (colors, borders, backgrounds) across different states (selected/unselected, enabled/disabled), use the **dual-configuration pattern** demonstrated by **PillItemView** (`Components/PillItemView/`). This pattern separates style definitions into individual state configurations wrapped in a parent customization struct, enabling complete control over appearance while maintaining clean initialization:
+
+```swift
+// PillItemStyle.swift - Individual state configuration
+public struct PillItemStyle: Equatable {
+    public let textColor: UIColor
+    public let backgroundColor: UIColor
+    public let borderColor: UIColor
+    public let borderWidth: CGFloat
+}
+
+// PillItemCustomization.swift - Container for state-specific styles
+public struct PillItemCustomization: Equatable {
+    public let selectedStyle: PillItemStyle
+    public let unselectedStyle: PillItemStyle
+}
+```
+
+This pattern allows consumers to configure everything at initialization while keeping the component's interface clean. Use this approach when components need more than 3-4 customizable visual properties per state.
+
 This framework prioritizes reusability, proper organization, and comprehensive testing through its demo app architecture.

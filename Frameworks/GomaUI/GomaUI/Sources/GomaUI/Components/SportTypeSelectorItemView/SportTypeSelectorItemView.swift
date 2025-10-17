@@ -110,39 +110,56 @@ final public class SportTypeSelectorItemView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Default") {
-    PreviewUIView {
-        SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.footballMock)
-    }
-    .frame(width: 150, height: 56)
-}
+#Preview("SportTypeSelectorItemView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Multiple Sports") {
-    VStack(spacing: 8) {
-        HStack(spacing: 8) {
-            PreviewUIView {
-                SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.footballMock)
-            }
-            .frame(width: 150, height: 56)
-            
-            PreviewUIView {
-                SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.basketballMock)
-            }
-            .frame(width: 150, height: 56)
-        }
-        
-        HStack(spacing: 8) {
-            PreviewUIView {
-                SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.tennisMock)
-            }
-            .frame(width: 150, height: 56)
-            
-            PreviewUIView {
-                SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.baseballMock)
-            }
-            .frame(width: 150, height: 56)
-        }
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "SportTypeSelectorItemView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Football
+        let footballView = SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.footballMock)
+        footballView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Basketball
+        let basketballView = SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.basketballMock)
+        basketballView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Tennis
+        let tennisView = SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.tennisMock)
+        tennisView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Baseball
+        let baseballView = SportTypeSelectorItemView(viewModel: MockSportTypeSelectorItemViewModel.baseballMock)
+        baseballView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(footballView)
+        stackView.addArrangedSubview(basketballView)
+        stackView.addArrangedSubview(tennisView)
+        stackView.addArrangedSubview(baseballView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
 }
 

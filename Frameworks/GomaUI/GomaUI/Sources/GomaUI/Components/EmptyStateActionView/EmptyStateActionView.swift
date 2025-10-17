@@ -164,23 +164,63 @@ public final class EmptyStateActionView: UIView {
     }
 }
 
-// MARK: - Preview Provider
+// MARK: - SwiftUI Preview
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Logged Out") {
-    PreviewUIView {
-        EmptyStateActionView(viewModel: MockEmptyStateActionViewModel.loggedOutMock())
-    }
-    .frame(height: 250)
-}
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Logged In") {
-    PreviewUIView {
-        EmptyStateActionView(viewModel: MockEmptyStateActionViewModel.loggedInMock())
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "EmptyStateActionView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+
+        // Vertical stack with all states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Logged out state (with action button)
+        let loggedOutView = EmptyStateActionView(viewModel: MockEmptyStateActionViewModel.loggedOutMock())
+        loggedOutView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Logged in state (no action button)
+        let loggedInView = EmptyStateActionView(viewModel: MockEmptyStateActionViewModel.loggedInMock())
+        loggedInView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled state
+        let disabledView = EmptyStateActionView(viewModel: MockEmptyStateActionViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(loggedOutView)
+        stackView.addArrangedSubview(loggedInView)
+        stackView.addArrangedSubview(disabledView)
+
+        // Add to view hierarchy
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // Constraints
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(height: 170)
 }
 
 #endif 

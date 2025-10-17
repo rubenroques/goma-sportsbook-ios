@@ -125,40 +125,52 @@ public final class NavigationActionView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Open Betslip Details") {
-    ZStack {
-        VStack(spacing: 8) {
-            PreviewUIView {
-                NavigationActionView(viewModel: MockNavigationActionViewModel.openBetslipDetailsMock())
-            }
-        }
-    }
-    .frame(height: 60)
-    .padding()
-}
+#Preview("NavigationActionView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Share Bet") {
-    ZStack {
-        VStack(spacing: 8) {
-            PreviewUIView {
-                NavigationActionView(viewModel: MockNavigationActionViewModel.shareBetslipMock())
-            }
-        }
-    }
-    .frame(height: 60)
-    .padding()
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Disabled") {
-    ZStack {
-        PreviewUIView {
-            NavigationActionView(viewModel: MockNavigationActionViewModel.disabledMock())
-        }
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "NavigationActionView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Open Betslip Details
+        let openBetslipView = NavigationActionView(viewModel: MockNavigationActionViewModel.openBetslipDetailsMock())
+        openBetslipView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Share Bet
+        let shareBetView = NavigationActionView(viewModel: MockNavigationActionViewModel.shareBetslipMock())
+        shareBetView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled
+        let disabledView = NavigationActionView(viewModel: MockNavigationActionViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(openBetslipView)
+        stackView.addArrangedSubview(shareBetView)
+        stackView.addArrangedSubview(disabledView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(height: 60)
-    .padding()
 }
 
 #endif 

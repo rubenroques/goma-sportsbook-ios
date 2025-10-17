@@ -25,6 +25,7 @@ public protocol SportsBetslipViewModelProtocol {
     var oddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol { get set }
     var codeInputViewModel: CodeInputViewModelProtocol { get set }
     var loginButtonViewModel: ButtonViewModelProtocol { get set }
+    var betslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProtocol { get }
     
     var betslipLoggedState: ((BetslipLoggedState) -> Void)? { get set }
     var showPlacedBetState: ((BetPlacedState) -> Void)? { get set }
@@ -34,6 +35,9 @@ public protocol SportsBetslipViewModelProtocol {
     
     // MARK: - Recommended Matches
     var suggestedBetsViewModel: SuggestedBetsExpandedViewModelProtocol { get }
+
+    // MARK: - Odds Boost Header Visibility
+    var oddsBoostHeaderVisibilityPublisher: AnyPublisher<Bool, Never> { get }
 
     /// Remove a specific ticket
     func removeTicket(_ ticket: BettingTicket)

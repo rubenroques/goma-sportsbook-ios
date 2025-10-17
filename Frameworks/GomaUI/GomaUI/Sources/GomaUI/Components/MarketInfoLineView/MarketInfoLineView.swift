@@ -201,30 +201,58 @@ extension MarketInfoLineView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
-#Preview("Default") {
-    PreviewUIView {
-        MarketInfoLineView(viewModel: MockMarketInfoLineViewModel.defaultMock)
-    }
-    .frame(height: 40)
-    .padding(.horizontal, 16)
-}
 
 @available(iOS 17.0, *)
-#Preview("Many Icons") {
-    PreviewUIView {
-        MarketInfoLineView(viewModel: MockMarketInfoLineViewModel.manyIconsMock)
-    }
-    .frame(height: 40)
-    .padding(.horizontal, 16)
-}
+#Preview("MarketInfoLineView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Long Market Name") {
-    PreviewUIView {
-        MarketInfoLineView(viewModel: MockMarketInfoLineViewModel.longMarketNameMock)
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "MarketInfoLineView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default
+        let defaultView = MarketInfoLineView(viewModel: MockMarketInfoLineViewModel.defaultMock)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Many Icons
+        let manyIconsView = MarketInfoLineView(viewModel: MockMarketInfoLineViewModel.manyIconsMock)
+        manyIconsView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Long Market Name
+        let longNameView = MarketInfoLineView(viewModel: MockMarketInfoLineViewModel.longMarketNameMock)
+        longNameView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(manyIconsView)
+        stackView.addArrangedSubview(longNameView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            // Fixed heights
+            defaultView.heightAnchor.constraint(equalToConstant: 40),
+            manyIconsView.heightAnchor.constraint(equalToConstant: 40),
+            longNameView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+
+        return vc
     }
-    .frame(height: 40)
-    .padding(.horizontal, 16)
 }
 #endif

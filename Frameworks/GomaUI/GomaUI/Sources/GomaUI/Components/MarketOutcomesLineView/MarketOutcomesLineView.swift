@@ -398,47 +398,61 @@ extension MarketOutcomesLineView {
     }
 }
 
-// MARK: - Preview Provider
+// MARK: - SwiftUI Preview
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Two Way Market") {
-    PreviewUIView {
-        MarketOutcomesLineView(viewModel: MockMarketOutcomesLineViewModel.twoWayMarket)
-    }
-    .frame(height: 50)
-    .padding()
-    .background(Color(UIColor.systemGray6))
-}
+#Preview("MarketOutcomesLineView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .gray
 
-@available(iOS 17.0, *)
-#Preview("Three Way Market") {
-    PreviewUIView {
-        MarketOutcomesLineView(viewModel: MockMarketOutcomesLineViewModel.threeWayMarket)
-    }
-    .frame(height: 50)
-    .padding()
-    .background(Color(UIColor.systemGray6))
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Suspended Market") {
-    PreviewUIView {
-        MarketOutcomesLineView(viewModel: MockMarketOutcomesLineViewModel.suspendedMarket)
-    }
-    .frame(height: 50)
-    .padding()
-    .background(Color(UIColor.systemGray6))
-}
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "MarketOutcomesLineView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("See All Market") {
-    PreviewUIView {
-        MarketOutcomesLineView(viewModel: MockMarketOutcomesLineViewModel.seeAllMarket)
+        // Two Way Market
+        let twoWayView = MarketOutcomesLineView(viewModel: MockMarketOutcomesLineViewModel.twoWayMarket)
+        twoWayView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Three Way Market
+        let threeWayView = MarketOutcomesLineView(viewModel: MockMarketOutcomesLineViewModel.threeWayMarket)
+        threeWayView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Suspended Market
+        let suspendedView = MarketOutcomesLineView(viewModel: MockMarketOutcomesLineViewModel.suspendedMarket)
+        suspendedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // See All Market
+        let seeAllView = MarketOutcomesLineView(viewModel: MockMarketOutcomesLineViewModel.seeAllMarket)
+        seeAllView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(twoWayView)
+        stackView.addArrangedSubview(threeWayView)
+        stackView.addArrangedSubview(suspendedView)
+        stackView.addArrangedSubview(seeAllView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(height: 50)
-    .padding()
-    .background(Color(UIColor.systemGray6))
 }
 
 #endif

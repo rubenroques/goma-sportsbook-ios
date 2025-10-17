@@ -286,29 +286,51 @@ public final class ProgressInfoCheckView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Win Boost Progress") {
-    PreviewUIView {
-        ProgressInfoCheckView(viewModel: MockProgressInfoCheckViewModel.winBoostMock())
-    }
-    .frame(height: 130)
-    .background(Color.gray.opacity(0.1))
-}
+#Preview("ProgressInfoCheckView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Complete State") {
-    PreviewUIView {
-        ProgressInfoCheckView(viewModel: MockProgressInfoCheckViewModel.completeMock())
-    }
-    .frame(height: 140)
-    .background(Color.gray.opacity(0.1))
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Disabled State") {
-    PreviewUIView {
-        ProgressInfoCheckView(viewModel: MockProgressInfoCheckViewModel.disabledMock())
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "ProgressInfoCheckView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Win Boost Progress state
+        let winBoostView = ProgressInfoCheckView(viewModel: MockProgressInfoCheckViewModel.winBoostMock())
+        winBoostView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Complete state
+        let completeView = ProgressInfoCheckView(viewModel: MockProgressInfoCheckViewModel.completeMock())
+        completeView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled state
+        let disabledView = ProgressInfoCheckView(viewModel: MockProgressInfoCheckViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(winBoostView)
+        stackView.addArrangedSubview(completeView)
+        stackView.addArrangedSubview(disabledView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(height: 140)
-    .background(Color.gray.opacity(0.1))
 }
 #endif 

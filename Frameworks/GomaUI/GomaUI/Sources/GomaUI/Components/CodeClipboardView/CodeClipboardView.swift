@@ -214,47 +214,57 @@ public final class CodeClipboardView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Default State") {
-    ZStack {
-        PreviewUIView {
-            CodeClipboardView(viewModel: MockCodeClipboardViewModel.defaultMock())
-        }
-    }
-    .frame(height: 80)
-    .padding()
-}
+#Preview("CodeClipboardView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Copied State") {
-    ZStack {
-        PreviewUIView {
-            CodeClipboardView(viewModel: MockCodeClipboardViewModel.copiedMock())
-        }
-    }
-    .frame(height: 80)
-    .padding()
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Custom Code") {
-    ZStack {
-        PreviewUIView {
-            CodeClipboardView(viewModel: MockCodeClipboardViewModel.withCustomCodeMock())
-        }
-    }
-    .frame(height: 80)
-    .padding()
-}
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "CodeClipboardView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Disabled State") {
-    ZStack {
-        PreviewUIView {
-            CodeClipboardView(viewModel: MockCodeClipboardViewModel.disabledMock())
-        }
+        // Default state
+        let defaultView = CodeClipboardView(viewModel: MockCodeClipboardViewModel.defaultMock())
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Copied state
+        let copiedView = CodeClipboardView(viewModel: MockCodeClipboardViewModel.copiedMock())
+        copiedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Custom code
+        let customCodeView = CodeClipboardView(viewModel: MockCodeClipboardViewModel.withCustomCodeMock())
+        customCodeView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled state
+        let disabledView = CodeClipboardView(viewModel: MockCodeClipboardViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(copiedView)
+        stackView.addArrangedSubview(customCodeView)
+        stackView.addArrangedSubview(disabledView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(height: 80)
-    .padding()
 }
 
 #endif 

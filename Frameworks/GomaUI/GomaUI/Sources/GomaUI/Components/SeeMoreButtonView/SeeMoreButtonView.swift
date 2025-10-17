@@ -215,39 +215,71 @@ final public class SeeMoreButtonView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Default State") {
-    PreviewUIView {
-        SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.defaultMock)
-    }
-    .frame(height: 44)
-    .padding(.horizontal, 16)
-}
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Loading State") {
-    PreviewUIView {
-        SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.loadingMock)
-    }
-    .frame(height: 44)
-    .padding(.horizontal, 16)
-}
+        // 1. TITLE LABEL
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "SeeMoreButtonView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
 
-@available(iOS 17.0, *)
-#Preview("With Count") {
-    PreviewUIView {
-        SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.withCountMock)
-    }
-    .frame(height: 44)
-    .padding(.horizontal, 16)
-}
+        // 2. VERTICAL STACK with ALL states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Disabled State") {
-    PreviewUIView {
-        SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.disabledMock)
+        // 3. ADD ALL COMPONENT INSTANCES
+        // Default State
+        let defaultView = SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.defaultMock)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Loading State
+        let loadingView = SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.loadingMock)
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+
+        // With Count
+        let withCountView = SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.withCountMock)
+        withCountView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled State
+        let disabledView = SeeMoreButtonView(viewModel: MockSeeMoreButtonViewModel.disabledMock)
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add all states to stack
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(loadingView)
+        stackView.addArrangedSubview(withCountView)
+        stackView.addArrangedSubview(disabledView)
+
+        // 4. ADD TO VIEW HIERARCHY
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // 5. CONSTRAINTS
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            defaultView.heightAnchor.constraint(equalToConstant: 44),
+            loadingView.heightAnchor.constraint(equalToConstant: 44),
+            withCountView.heightAnchor.constraint(equalToConstant: 44),
+            disabledView.heightAnchor.constraint(equalToConstant: 44)
+        ])
+
+        return vc
     }
-    .frame(height: 44)
-    .padding(.horizontal, 16)
 }
 
 #endif

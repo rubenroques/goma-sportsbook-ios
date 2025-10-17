@@ -16,7 +16,36 @@ class SportsBetslipViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    
+
+    // Top section stack (button bar + odds boost header only)
+    private lazy var topSectionStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = true  // Frame-based sizing for tableHeaderView
+        stack.axis = .vertical
+        stack.spacing = 0
+        stack.alignment = .fill
+        stack.distribution = .fill
+        return stack
+    }()
+
+    // Odds boost header container (with padding)
+    private lazy var oddsBoostHeaderContainer: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .clear
+        container.isHidden = true // Initially hidden
+        return container
+    }()
+
+    // Odds boost header view
+    private lazy var betslipOddsBoostHeaderView: BetslipOddsBoostHeaderView = {
+        let view = BetslipOddsBoostHeaderView(
+            viewModel: viewModel.betslipOddsBoostHeaderViewModel
+        )
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     // Button bar view (Booking Code + Clear Betslip)
     private lazy var buttonBarView: UIView = {
         let view = UIView()
@@ -60,6 +89,10 @@ class SportsBetslipViewController: UIViewController {
         tableView.delegate = self
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableView.automaticDimension
+        
+        tableView.contentInset.bottom = 32
+        tableView.verticalScrollIndicatorInsets.bottom = 32
+        
         return tableView
     }()
     
@@ -139,73 +172,132 @@ class SportsBetslipViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSubviews()
+        setupTableHeaderView()
         setupConstraints()
         setupBindings()
         updateUI()
     }
-    
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // Recalculate header size when view bounds change (rotation, split screen, etc.)
+        updateTableHeaderViewHeight()
+
+        // Round top corners of suggested bets view
+        suggestedBetsView.layer.cornerRadius = 6
+        suggestedBetsView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        suggestedBetsView.clipsToBounds = true
+
+    }
+
     // MARK: - Setup Methods
     private func setupSubviews() {
-        view.addSubview(buttonBarView)
-        view.addSubview(emptyStateView)
+        // Setup top section stack (will be assigned as tableHeaderView)
+        // DO NOT add topSectionStackView to view - it will be the table header
+
+        // Add only button bar and odds boost header to stack
+        topSectionStackView.addArrangedSubview(oddsBoostHeaderContainer)
+        topSectionStackView.addArrangedSubview(buttonBarView)
+        
+        // Add odds boost header to its container
+        oddsBoostHeaderContainer.addSubview(betslipOddsBoostHeaderView)
+
+        // Add other views directly to view (NOT in stack)
         view.addSubview(ticketsTableView)
         view.addSubview(suggestedBetsView)
         view.addSubview(bottomActionsStackView)
-        
-        // Add arranged subviews to stack
+
+        // EmptyStateView overlays everything
+        view.addSubview(emptyStateView)
+
+        // Keep existing bottom actions stack setup
         bottomActionsStackView.addArrangedSubview(betInfoSubmissionView)
         bottomActionsStackView.addArrangedSubview(codeInputView)
         bottomActionsStackView.addArrangedSubview(loginButtonContainerView)
         loginButtonContainerView.addSubview(loginButton)
-        
-        // Add loading view on top of everything
+
+        // Add loading view on top
         view.addSubview(loadingView)
         loadingView.addSubview(loadingActivityIndicator)
-        
+
+        // Button bar internal subviews
         buttonBarView.addSubview(bookingCodeButton)
         buttonBarView.addSubview(clearBetslipButton)
     }
-    
+
+    private func setupTableHeaderView() {
+        // Use table view width for proper sizing (fallback to view width if not available yet)
+        let headerWidth = ticketsTableView.bounds.width > 0 ? ticketsTableView.bounds.width : view.bounds.width
+
+        // Set initial frame with estimated height
+        topSectionStackView.frame = CGRect(x: 0, y: 0, width: headerWidth, height: 50)
+
+        // Assign as table header
+        ticketsTableView.tableHeaderView = topSectionStackView
+
+        // Force layout and calculate actual required size
+        topSectionStackView.setNeedsLayout()
+        topSectionStackView.layoutIfNeeded()
+
+        // Calculate compressed size with proper width constraint
+        let fittingSize = topSectionStackView.systemLayoutSizeFitting(
+            CGSize(width: headerWidth, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+
+        // Update frame with calculated height
+        topSectionStackView.frame.size = CGSize(width: headerWidth, height: fittingSize.height)
+
+        // Reassign to trigger table view layout update
+        ticketsTableView.tableHeaderView = topSectionStackView
+    }
+
     private func setupConstraints() {
-        
+
         NSLayoutConstraint.activate([
-            // Button bar view - top of the view with content inset
-            buttonBarView.topAnchor.constraint(equalTo: view.topAnchor),
-            buttonBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            buttonBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            // No constraints for topSectionStackView - it's now the tableHeaderView
+
+            // Button bar height (needed for stack height calculation)
             buttonBarView.heightAnchor.constraint(equalToConstant: 50),
-            
-            // Booking Code button
+
+            // Booking Code button (internal to button bar)
             bookingCodeButton.topAnchor.constraint(equalTo: buttonBarView.topAnchor, constant: 8),
             bookingCodeButton.leadingAnchor.constraint(equalTo: buttonBarView.leadingAnchor, constant: 16),
             bookingCodeButton.bottomAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: -8),
-            
-            // Clear Betslip button
+
+            // Clear Betslip button (internal to button bar)
             clearBetslipButton.topAnchor.constraint(equalTo: buttonBarView.topAnchor, constant: 8),
             clearBetslipButton.trailingAnchor.constraint(equalTo: buttonBarView.trailingAnchor, constant: -16),
             clearBetslipButton.bottomAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: -8),
-            
+
+            // Odds boost header inside container with padding
+            betslipOddsBoostHeaderView.topAnchor.constraint(equalTo: oddsBoostHeaderContainer.topAnchor, constant: 0),
+            betslipOddsBoostHeaderView.leadingAnchor.constraint(equalTo: oddsBoostHeaderContainer.leadingAnchor, constant: 0),
+            betslipOddsBoostHeaderView.trailingAnchor.constraint(equalTo: oddsBoostHeaderContainer.trailingAnchor, constant: 0),
+            betslipOddsBoostHeaderView.bottomAnchor.constraint(equalTo: oddsBoostHeaderContainer.bottomAnchor, constant: 0),
+
+            // Tickets table view - starts at top, extends 30px behind suggested bets
+            ticketsTableView.topAnchor.constraint(equalTo: view.topAnchor),
+            ticketsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            ticketsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ticketsTableView.bottomAnchor.constraint(equalTo: suggestedBetsView.topAnchor, constant: 30),
+
+            // Suggested bets view - positioned above bottom actions
+            suggestedBetsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            suggestedBetsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            suggestedBetsView.bottomAnchor.constraint(equalTo: bottomActionsStackView.topAnchor),
+
+            // Bottom actions stack - fixed at bottom
+            bottomActionsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomActionsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomActionsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
             // Empty state view - fill remaining space above bet info submission
             emptyStateView.topAnchor.constraint(equalTo: view.topAnchor),
             emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            // Tickets table view - fill remaining space above suggested bets
-            ticketsTableView.topAnchor.constraint(equalTo: clearBetslipButton.bottomAnchor),
-            ticketsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            ticketsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ticketsTableView.bottomAnchor.constraint(equalTo: bottomActionsStackView.topAnchor, constant: -8),
 
-            // Suggested bets view - between tickets table and bet info submission
-            suggestedBetsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            suggestedBetsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            suggestedBetsView.bottomAnchor.constraint(equalTo: bottomActionsStackView.topAnchor),
-            
-            // Bottom actions stack - bottom of the view
-            bottomActionsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomActionsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomActionsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
         ])
         
         // Login button container internal padding
@@ -288,6 +380,14 @@ class SportsBetslipViewController: UIViewController {
                 self?.toggleSuggestedBetsVisibility()
             }
             .store(in: &cancellables)
+
+        // Subscribe to odds boost header visibility
+        viewModel.oddsBoostHeaderVisibilityPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] shouldShow in
+                self?.updateOddsBoostHeaderVisibility(shouldShow)
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Private Methods
@@ -307,8 +407,48 @@ class SportsBetslipViewController: UIViewController {
     private func toggleSuggestedBetsVisibility() {
         let hasMatches = !viewModel.suggestedBetsViewModel.matchCardViewModels.isEmpty
         suggestedBetsView.isHidden = !hasMatches
+
     }
-    
+
+    private func updateOddsBoostHeaderVisibility(_ shouldShow: Bool) {
+        guard oddsBoostHeaderContainer.isHidden != !shouldShow else { return }
+
+        UIView.animate(withDuration: 0.3) {
+            self.oddsBoostHeaderContainer.isHidden = !shouldShow
+            self.oddsBoostHeaderContainer.alpha = shouldShow ? 1.0 : 0.0
+
+            // Recalculate header height when visibility changes
+            self.updateTableHeaderViewHeight()
+        }
+    }
+
+    private func updateTableHeaderViewHeight() {
+        guard let headerView = ticketsTableView.tableHeaderView else { return }
+
+        let width = ticketsTableView.bounds.width
+        guard width > 0 else { return }  // Skip if table view hasn't been laid out yet
+
+        // Set width on frame first (critical for proper sizing)
+        headerView.frame.size.width = width
+
+        // Force layout with new width
+        headerView.setNeedsLayout()
+        headerView.layoutIfNeeded()
+
+        // Calculate proper height with width constraint
+        let fittingSize = headerView.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+
+        // Only update if size actually changed (prevents layout loops)
+        if headerView.frame.size != fittingSize {
+            headerView.frame.size = fittingSize
+            ticketsTableView.tableHeaderView = headerView  // Reassign to trigger table view layout
+        }
+    }
+
     private func handleClearBetslipTapped() {
         viewModel.clearAllTickets()
     }

@@ -145,23 +145,51 @@ final public class DepositBonusInfoView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Default Deposit Bonus Balance") {
-    PreviewUIView {
-        let viewModel = MockDepositBonusInfoViewModel.defaultMock
-        
-        return DepositBonusInfoView(viewModel: viewModel)
-    }
-    .frame(height: 60)
-    .padding()
-}
+#Preview("DepositBonusInfoView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Different Currency Balance") {
-    PreviewUIView {
-        DepositBonusInfoView(viewModel: MockDepositBonusInfoViewModel.usdMock)
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "DepositBonusInfoView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default Deposit Bonus
+        let defaultView = DepositBonusInfoView(viewModel: MockDepositBonusInfoViewModel.defaultMock)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Different Currency (USD)
+        let usdView = DepositBonusInfoView(viewModel: MockDepositBonusInfoViewModel.usdMock)
+        usdView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(usdView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            // Fixed heights
+            defaultView.heightAnchor.constraint(equalToConstant: 60),
+            usdView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+
+        return vc
     }
-    .frame(height: 60)
-    .padding()
 }
 
 #endif

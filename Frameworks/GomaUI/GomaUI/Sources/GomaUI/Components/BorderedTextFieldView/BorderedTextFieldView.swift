@@ -557,46 +557,87 @@ private extension Optional where Wrapped == String {
     }
 }
 
-// MARK: - Preview Provider
+// MARK: - SwiftUI Preview
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Phone Number Field") {
-    PreviewUIView {
-        let mockViewModel = MockBorderedTextFieldViewModel(
-            textFieldData: BorderedTextFieldData(
-                id: "phone",
-                text: "712345678",
-                placeholder: "Phone number",
-                prefix: "+237",
-                visualState: .idle,
-                keyboardType: .phonePad,
-                textContentType: .telephoneNumber
-            )
-        )
-        return BorderedTextFieldView(viewModel: mockViewModel)
-    }
-    .frame(height: 80)
-    .padding()
-}
+#Preview("BorderedTextFieldView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Password Field") {
-    PreviewUIView {
-        let mockViewModel = MockBorderedTextFieldViewModel(
-            textFieldData: BorderedTextFieldData(
-                id: "password",
-                text: "secret123",
-                placeholder: "Password",
-                isSecure: true,
-                visualState: .focused,
-                textContentType: .password
-            )
-        )
-        return BorderedTextFieldView(viewModel: mockViewModel)
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "BorderedTextFieldView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Phone Number Field
+        let phoneView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.phoneNumberField)
+        phoneView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Password Field
+        let passwordView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.passwordField)
+        passwordView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Email Field
+        let emailView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.emailField)
+        emailView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Name Field
+        let nameView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.nameField)
+        nameView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Error Field
+        let errorView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.errorField)
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled Field
+        let disabledView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.disabledField)
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Focused Field
+        let focusedView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.focusedField)
+        focusedView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(phoneView)
+        stackView.addArrangedSubview(passwordView)
+        stackView.addArrangedSubview(emailView)
+        stackView.addArrangedSubview(nameView)
+        stackView.addArrangedSubview(errorView)
+        stackView.addArrangedSubview(disabledView)
+        stackView.addArrangedSubview(focusedView)
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
+        ])
+
+        return vc
     }
-    .frame(height: 80)
-    .padding()
 }
 
 #endif

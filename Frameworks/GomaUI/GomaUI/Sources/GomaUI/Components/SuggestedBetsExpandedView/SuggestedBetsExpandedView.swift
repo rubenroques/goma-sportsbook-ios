@@ -45,28 +45,28 @@ final public class SuggestedBetsExpandedView: UIView {
 // MARK: - Setup
 extension SuggestedBetsExpandedView {
     private static func createContainerView() -> GradientView {
-        
+
         let gradient = GradientView()
         gradient.translatesAutoresizingMaskIntoConstraints = false
         gradient.colors = [
             (StyleProvider.Color.backgroundGradient1, 0.3345),
             (StyleProvider.Color.backgroundGradient2, 1.0)
         ]
-        gradient.startPoint = CGPoint(x: 0.0, y: 0.1)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0.9)
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
         return gradient
     }
 
     private static func createHeaderContainerView() -> GradientView {
-        
+
         let gradient = GradientView()
         gradient.translatesAutoresizingMaskIntoConstraints = false
         gradient.colors = [
-            (StyleProvider.Color.backgroundGradient1, 0.2749),
+            (StyleProvider.Color.allWhite, 0.2749),
             (StyleProvider.Color.backgroundGradient2, 0.959)
         ]
-        gradient.startPoint = CGPoint(x: 0.1, y: 0.0)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0.9)
+        gradient.startPoint = CGPoint(x: 0.1, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
         return gradient
     }
 
@@ -97,12 +97,18 @@ extension SuggestedBetsExpandedView {
     private static func createChevronImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        let symbolConfig = UIImage.SymbolConfiguration(weight: .bold)
+
         if let customImage = UIImage(named: "chevron_down_icon") {
             imageView.image = customImage.withRenderingMode(.alwaysTemplate)
         }
         else {
-            imageView.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
+            
         }
+        
+        imageView.image = UIImage(systemName: "chevron.down", withConfiguration: symbolConfig)?.withRenderingMode(.alwaysTemplate)
+        
         imageView.tintColor = StyleProvider.Color.highlightPrimary
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -169,7 +175,7 @@ extension SuggestedBetsExpandedView {
 
             chevronImageView.centerYAnchor.constraint(equalTo: headerContainerView.centerYAnchor),
             chevronImageView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -8),
-            chevronImageView.widthAnchor.constraint(equalToConstant: 14),
+            chevronImageView.widthAnchor.constraint(equalToConstant: 18),
             chevronImageView.heightAnchor.constraint(equalTo: chevronImageView.widthAnchor),
 
             titleLabel.leadingAnchor.constraint(equalTo: leftIconImageView.trailingAnchor, constant: 8),
@@ -257,14 +263,14 @@ extension SuggestedBetsExpandedView {
     
     
     private func setCollapsedIconState(isExpanded: Bool) {
-        
+        let symbolConfig = UIImage.SymbolConfiguration(weight: .bold)
+
         if isExpanded {
-            
             if let customImage = UIImage(named: "chevron_up_icon") {
                 chevronImageView.image = customImage.withRenderingMode(.alwaysTemplate)
             }
             else {
-                chevronImageView.image = UIImage(systemName: "chevron.up")?.withRenderingMode(.alwaysTemplate)
+                chevronImageView.image = UIImage(systemName: "chevron.up", withConfiguration: symbolConfig)?.withRenderingMode(.alwaysTemplate)
             }
         }
         else {
@@ -272,10 +278,9 @@ extension SuggestedBetsExpandedView {
                 chevronImageView.image = customImage.withRenderingMode(.alwaysTemplate)
             }
             else {
-                chevronImageView.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
+                chevronImageView.image = UIImage(systemName: "chevron.down", withConfiguration: symbolConfig)?.withRenderingMode(.alwaysTemplate)
             }
         }
-        
     }
 
     @objc private func toggleExpandedTapped() {

@@ -39,7 +39,17 @@
       "Bash(git mv:*)",
       "Bash(cat:*)",
       "Read(//Users/rroques/Desktop/GOMA/Web/sportsbook-frontend/sportsbook-frontend-demo/**)",
-      "mcp__figma-dev-mode-mcp-server__get_design_context"
+      "mcp__figma-dev-mode-mcp-server__get_design_context",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__wait_for",
+      "mcp__chrome-devtools__fill_form",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__evaluate_script",
+      "WebSearch",
+      "WebFetch(domain:medium.com)"
     ],
     "deny": []
   },

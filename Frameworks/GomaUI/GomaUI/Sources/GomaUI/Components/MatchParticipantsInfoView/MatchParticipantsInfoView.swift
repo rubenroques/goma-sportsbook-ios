@@ -467,27 +467,58 @@ extension MatchParticipantsInfoView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
-#Preview("Horizontal Mode - Pre-Live") {
-    PreviewUIView {
-        MatchParticipantsInfoView(viewModel: MockMatchParticipantsInfoViewModel.horizontalPreLive)
-    }
-    .frame(height: 70)
-}
 
 @available(iOS 17.0, *)
-#Preview("Horizontal Mode - Live") {
-    PreviewUIView {
-        MatchParticipantsInfoView(viewModel: MockMatchParticipantsInfoViewModel.horizontalLive)
-    }
-    .frame(height: 70)
-}
+#Preview("MatchParticipantsInfoView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Vertical Mode - Tennis Live") {
-    PreviewUIView {
-        MatchParticipantsInfoView(viewModel: MockMatchParticipantsInfoViewModel.verticalTennisLive)
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "MatchParticipantsInfoView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Horizontal Pre-Live
+        let horizontalPreLiveView = MatchParticipantsInfoView(viewModel: MockMatchParticipantsInfoViewModel.horizontalPreLive)
+        horizontalPreLiveView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Horizontal Live
+        let horizontalLiveView = MatchParticipantsInfoView(viewModel: MockMatchParticipantsInfoViewModel.horizontalLive)
+        horizontalLiveView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Vertical Tennis Live
+        let verticalTennisView = MatchParticipantsInfoView(viewModel: MockMatchParticipantsInfoViewModel.verticalTennisLive)
+        verticalTennisView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(horizontalPreLiveView)
+        stackView.addArrangedSubview(horizontalLiveView)
+        stackView.addArrangedSubview(verticalTennisView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            // Fixed heights for match views
+            horizontalPreLiveView.heightAnchor.constraint(equalToConstant: 70),
+            horizontalLiveView.heightAnchor.constraint(equalToConstant: 70),
+            verticalTennisView.heightAnchor.constraint(equalToConstant: 80)
+        ])
+
+        return vc
     }
-    .frame(height: 80)
 }
 #endif

@@ -293,103 +293,33 @@ extension ActionRowView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Navigation Item") {
-    PreviewUIViewController {
-        let vc = UIViewController()
-        let item = ActionRowItem(
-            icon: "bell",
-            title: "Notifications",
-            type: .navigation,
-            action: .notifications
-        )
-        let actionRow = ActionRowView()
-        actionRow.configure(with: item) { item in
-            print("Tapped: \(item.title)")
-        }
-        actionRow.translatesAutoresizingMaskIntoConstraints = false
-
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
-        vc.view.addSubview(actionRow)
-
-        NSLayoutConstraint.activate([
-            actionRow.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
-            actionRow.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
-            actionRow.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
-        ])
-
-        return vc
-    }
-}
-
-@available(iOS 17.0, *)
-#Preview("Custom Background (Green)") {
-    PreviewUIViewController {
-        let vc = UIViewController()
-        let item = ActionRowItem(
-            icon: "checkmark.circle.fill",
-            title: "Bet Placed",
-            type: .action,
-            action: .custom,
-            isTappable: false
-        )
-        let actionRow = ActionRowView()
-        actionRow.customBackgroundColor = StyleProvider.Color.alertSuccess
-        actionRow.configure(with: item) { item in
-            print("Tapped: \(item.title)")
-        }
-        actionRow.translatesAutoresizingMaskIntoConstraints = false
-
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
-        vc.view.addSubview(actionRow)
-
-        NSLayoutConstraint.activate([
-            actionRow.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
-            actionRow.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
-            actionRow.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
-        ])
-
-        return vc
-    }
-}
-
-@available(iOS 17.0, *)
-#Preview("Custom Trailing Icon (Share)") {
-    PreviewUIViewController {
-        let vc = UIViewController()
-        let item = ActionRowItem(
-            icon: "",
-            title: "Share your Betslip",
-            type: .action,
-            action: .custom,
-            trailingIcon: "square.and.arrow.up"
-        )
-        let actionRow = ActionRowView()
-        actionRow.configure(with: item) { item in
-            print("Tapped: \(item.title)")
-        }
-        actionRow.translatesAutoresizingMaskIntoConstraints = false
-
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
-        vc.view.addSubview(actionRow)
-
-        NSLayoutConstraint.activate([
-            actionRow.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
-            actionRow.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
-            actionRow.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
-        ])
-
-        return vc
-    }
-}
-
-@available(iOS 17.0, *)
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()
         vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-        // Green "Bet Placed" - non-tappable
-        let betPlaced = ActionRowItem(
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 12
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Navigation with icon - bell + "Notifications" + chevron
+        let notificationsItem = ActionRowItem(
+            icon: "bell",
+            title: "Notifications",
+            type: .navigation,
+            action: .notifications
+        )
+        let notificationsRow = ActionRowView()
+        notificationsRow.configure(with: notificationsItem) { item in
+            print("Tapped: \(item.title)")
+        }
+        notificationsRow.translatesAutoresizingMaskIntoConstraints = false
+
+        // Custom background success - green + checkmark + "Bet Placed" (non-tappable)
+        let betPlacedItem = ActionRowItem(
             icon: "checkmark.circle.fill",
             title: "Bet Placed",
             type: .action,
@@ -398,25 +328,11 @@ extension ActionRowView {
         )
         let betPlacedRow = ActionRowView()
         betPlacedRow.customBackgroundColor = StyleProvider.Color.alertSuccess
-        betPlacedRow.configure(with: betPlaced) { _ in }
+        betPlacedRow.configure(with: betPlacedItem) { _ in }
         betPlacedRow.translatesAutoresizingMaskIntoConstraints = false
 
-        // "Open Details" - chevron
-        let openDetails = ActionRowItem(
-            icon: "",
-            title: "Open Betslip Details",
-            type: .navigation,
-            action: .custom,
-            trailingIcon: "chevron.right"
-        )
-        let openDetailsRow = ActionRowView()
-        openDetailsRow.configure(with: openDetails) { item in
-            print("Tapped: \(item.title)")
-        }
-        openDetailsRow.translatesAutoresizingMaskIntoConstraints = false
-
-        // "Share" - share icon
-        let share = ActionRowItem(
+        // Custom trailing icon - "Share your Betslip" + share icon
+        let shareItem = ActionRowItem(
             icon: "",
             title: "Share your Betslip",
             type: .action,
@@ -424,30 +340,37 @@ extension ActionRowView {
             trailingIcon: "square.and.arrow.up"
         )
         let shareRow = ActionRowView()
-        shareRow.configure(with: share) { item in
+        shareRow.configure(with: shareItem) { item in
             print("Tapped: \(item.title)")
         }
         shareRow.translatesAutoresizingMaskIntoConstraints = false
 
-        vc.view.addSubview(betPlacedRow)
-        vc.view.addSubview(openDetailsRow)
-        vc.view.addSubview(shareRow)
+        // With subtitle - demonstrate valueLabel feature
+        let profileItem = ActionRowItem(
+            icon: "person.circle",
+            title: "My Account",
+            subtitle: "user@example.com",
+            type: .navigation,
+            action: .custom
+        )
+        let profileRow = ActionRowView()
+        profileRow.configure(with: profileItem) { item in
+            print("Tapped: \(item.title)")
+        }
+        profileRow.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(notificationsRow)
+        stackView.addArrangedSubview(betPlacedRow)
+        stackView.addArrangedSubview(shareRow)
+        stackView.addArrangedSubview(profileRow)
+
+        vc.view.addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            // Bet Placed
-            betPlacedRow.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
-            betPlacedRow.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
-            betPlacedRow.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-
-            // Open Details
-            openDetailsRow.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
-            openDetailsRow.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
-            openDetailsRow.topAnchor.constraint(equalTo: betPlacedRow.bottomAnchor, constant: 12),
-
-            // Share
-            shareRow.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
-            shareRow.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
-            shareRow.topAnchor.constraint(equalTo: openDetailsRow.bottomAnchor, constant: 12)
+            stackView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
         ])
 
         return vc

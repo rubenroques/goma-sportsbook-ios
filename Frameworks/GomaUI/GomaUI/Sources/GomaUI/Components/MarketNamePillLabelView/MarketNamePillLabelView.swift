@@ -214,44 +214,58 @@ extension MarketNamePillLabelView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
-#Preview("Standard Pill") {
-    PreviewUIView {
-        MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.standardPill)
-    }
-    .frame(height: 30)
-}
 
 @available(iOS 17.0, *)
-#Preview("Highlighted Pill") {
-    PreviewUIView {
-        MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.highlightedPill)
-    }
-    .frame(height: 30)
-}
+#Preview("MarketNamePillLabelView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Multiple Pills") {
-    VStack(spacing: 16) {
-        PreviewUIView {
-            MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.standardPill)
-        }
-        .frame(height: 30)
-        
-        PreviewUIView {
-            MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.highlightedPill)
-        }
-        .frame(height: 30)
-        
-        PreviewUIView {
-            MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.disabledPill)
-        }
-        .frame(height: 30)
-        
-        PreviewUIView {
-            MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.interactivePill)
-        }
-        .frame(height: 30)
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "MarketNamePillLabelView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Standard Pill
+        let standardView = MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.standardPill)
+        standardView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Highlighted Pill
+        let highlightedView = MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.highlightedPill)
+        highlightedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled Pill
+        let disabledView = MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.disabledPill)
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Interactive Pill
+        let interactiveView = MarketNamePillLabelView(viewModel: MockMarketNamePillLabelViewModel.interactivePill)
+        interactiveView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(standardView)
+        stackView.addArrangedSubview(highlightedView)
+        stackView.addArrangedSubview(disabledView)
+        stackView.addArrangedSubview(interactiveView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
 }
 #endif

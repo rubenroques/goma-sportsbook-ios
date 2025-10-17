@@ -56,29 +56,42 @@ public class ResendCodeCountdownView: UIView {
 import SwiftUI
 
 @available(iOS 17.0, *)
-struct ResendCodeCountdownView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            PreviewUIView {
-                let viewModel = MockResendCodeCountdownViewModel(startSeconds: 60)
-                let view = ResendCodeCountdownView(viewModel: viewModel)
-                viewModel.startCountdown()
-                return view
-            }
-            .frame(height: 30)
-            .previewDisplayName("Default Countdown")
-            
-            PreviewUIView {
-                let viewModel = MockResendCodeCountdownViewModel(startSeconds: 5)
-                let view = ResendCodeCountdownView(viewModel: viewModel)
-                viewModel.startCountdown()
-                return view
-            }
-            .frame(height: 30)
-            .previewDisplayName("Short Countdown")
-        }
-        .padding()
-        .frame(maxHeight: 100)
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 60-second countdown
+        let longCountdownViewModel = MockResendCodeCountdownViewModel(startSeconds: 60)
+        let longCountdownView = ResendCodeCountdownView(viewModel: longCountdownViewModel)
+        longCountdownView.translatesAutoresizingMaskIntoConstraints = false
+        longCountdownViewModel.startCountdown()
+
+        // 5-second countdown
+        let shortCountdownViewModel = MockResendCodeCountdownViewModel(startSeconds: 5)
+        let shortCountdownView = ResendCodeCountdownView(viewModel: shortCountdownViewModel)
+        shortCountdownView.translatesAutoresizingMaskIntoConstraints = false
+        shortCountdownViewModel.startCountdown()
+
+        stackView.addArrangedSubview(longCountdownView)
+        stackView.addArrangedSubview(shortCountdownView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
 }
 #endif

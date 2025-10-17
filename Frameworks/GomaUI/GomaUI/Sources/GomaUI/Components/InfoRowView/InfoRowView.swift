@@ -127,29 +127,58 @@ public final class InfoRowView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-struct InfoRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 12) {
-            PreviewUIView {
-                InfoRowView(viewModel: MockInfoRowViewModel.defaultMock)
-            }
-            .frame(height: 60)
-            .previewDisplayName("Your Deposit")
-            
-            PreviewUIView {
-                InfoRowView(viewModel: MockInfoRowViewModel.balanceMock)
-            }
-            .frame(height: 60)
-            .previewDisplayName("Account Balance")
-            
-            PreviewUIView {
-                InfoRowView(viewModel: MockInfoRowViewModel.customBackgroundMock)
-            }
-            .frame(height: 60)
-            .previewDisplayName("Custom Colors")
-        }
-        .padding()
-        .frame(maxHeight: 250)
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "InfoRowView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+
+        // Vertical stack with all states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default state - Your Deposit
+        let defaultView = InfoRowView(viewModel: MockInfoRowViewModel.defaultMock)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Balance state - Account Balance
+        let balanceView = InfoRowView(viewModel: MockInfoRowViewModel.balanceMock)
+        balanceView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Custom colors state - Bonus Balance
+        let customColorsView = InfoRowView(viewModel: MockInfoRowViewModel.customBackgroundMock)
+        customColorsView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(balanceView)
+        stackView.addArrangedSubview(customColorsView)
+
+        // Add to view hierarchy
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // Constraints
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
 }
 #endif

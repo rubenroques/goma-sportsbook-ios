@@ -92,17 +92,13 @@ public final class BetslipFloatingTallView: UIView {
 
     // MARK: - Section 3: Progress Segments
 
-    private lazy var progressSegmentsStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.alignment = .center
-        stackView.spacing = 2  // 2px gap between segments
-        return stackView
+    private lazy var progressSegmentsContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
-    private var progressSegments: [ProgressSegmentView] = []
+    private let segmentCoordinator = ProgressSegmentCoordinator()
 
     // MARK: - Properties
     private let viewModel: BetslipFloatingViewModelProtocol
@@ -128,7 +124,7 @@ public final class BetslipFloatingTallView: UIView {
         // Add sections to main stack
         mainStackView.addArrangedSubview(titleLabel)
         mainStackView.addArrangedSubview(contentHorizontalContainer)
-        mainStackView.addArrangedSubview(progressSegmentsStackView)
+        mainStackView.addArrangedSubview(progressSegmentsContainer)
 
         // Setup content horizontal container (icon + text stack)
         contentHorizontalContainer.addSubview(boostIconImageView)
@@ -168,89 +164,23 @@ public final class BetslipFloatingTallView: UIView {
             textStackView.topAnchor.constraint(equalTo: contentHorizontalContainer.topAnchor),
             textStackView.bottomAnchor.constraint(equalTo: contentHorizontalContainer.bottomAnchor),
 
-            // Progress segments (8px height)
-            progressSegmentsStackView.heightAnchor.constraint(equalToConstant: 8)
+            // Progress segments container (8px height)
+            progressSegmentsContainer.heightAnchor.constraint(equalToConstant: 8)
         ])
     }
 
-    /// Updates progress segments with diff-based approach and animations
+    /// Updates progress segments with diff-based approach and coordinated width animations
     /// - Parameters:
     ///   - filledCount: Number of segments that should be filled
     ///   - totalCount: Total number of segments to display
     ///   - animated: Whether to animate changes (default: true)
     private func updateProgressSegments(filledCount: Int, totalCount: Int, animated: Bool = true) {
-        let currentCount = progressSegments.count
-
-        // 1. Add new segments if needed
-        if totalCount > currentCount {
-            let newSegments = (currentCount..<totalCount).map { _ -> ProgressSegmentView in
-                let segment = ProgressSegmentView()
-                NSLayoutConstraint.activate([
-                    segment.heightAnchor.constraint(equalToConstant: 8)
-                ])
-                return segment
-            }
-
-            // Prepare for animation
-            if animated {
-                newSegments.forEach {
-                    $0.alpha = 0
-                    $0.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
-                }
-            }
-
-            // Add to stack view and array
-            newSegments.forEach { progressSegmentsStackView.addArrangedSubview($0) }
-            progressSegments.append(contentsOf: newSegments)
-
-            // Animate in
-            if animated {
-                UIView.animate(
-                    withDuration: 0.3,
-                    delay: 0.1,
-                    options: [.curveEaseOut],
-                    animations: {
-                        newSegments.forEach {
-                            $0.alpha = 1.0
-                            $0.transform = .identity
-                        }
-                    }
-                )
-            }
-        }
-        // 2. Remove excess segments if needed
-        else if totalCount < currentCount {
-            let segmentsToRemove = progressSegments[totalCount...]
-
-            if animated {
-                UIView.animate(
-                    withDuration: 0.2,
-                    animations: {
-                        segmentsToRemove.forEach {
-                            $0.alpha = 0
-                            $0.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
-                        }
-                    },
-                    completion: { _ in
-                        segmentsToRemove.forEach { $0.removeFromSuperview() }
-                        self.progressSegments.removeLast(currentCount - totalCount)
-                    }
-                )
-            } else {
-                segmentsToRemove.forEach { $0.removeFromSuperview() }
-                progressSegments.removeLast(currentCount - totalCount)
-            }
-        }
-
-        // 3. Update fill state of existing segments with staggered animation (wave effect)
-        for (index, segment) in progressSegments.enumerated() {
-            let shouldBeFilled = index < filledCount
-            let delay = animated ? Double(index) * 0.05 : 0 // 50ms stagger between segments
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                segment.setFilled(shouldBeFilled, animated: animated)
-            }
-        }
+        segmentCoordinator.updateSegments(
+            filledCount: filledCount,
+            totalCount: totalCount,
+            in: progressSegmentsContainer,
+            animated: animated
+        )
     }
 
     private func setupGestures() {
@@ -265,6 +195,16 @@ public final class BetslipFloatingTallView: UIView {
                 self?.render(data: data)
             }
             .store(in: &cancellables)
+    }
+
+    // MARK: - Layout
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Recalculate segment widths when container resizes (e.g., rotation, dynamic layout)
+        segmentCoordinator.handleLayoutUpdate(
+            containerWidth: progressSegmentsContainer.bounds.width
+        )
     }
 
     // MARK: - Rendering

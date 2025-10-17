@@ -24,6 +24,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     public var oddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol
     public var codeInputViewModel: CodeInputViewModelProtocol
     public var loginButtonViewModel: ButtonViewModelProtocol
+    public var betslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProtocol
     
     // MARK: - Publishers
     public var ticketsPublisher: AnyPublisher<[BettingTicket], Never> {
@@ -35,13 +36,20 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     }
     
     public var isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
-    
+
     public var betslipLoggedState: ((BetslipLoggedState) -> Void)?
     public var showPlacedBetState: ((BetPlacedState) -> Void)?
     public var showLoginScreen: (() -> Void)?
-    
+
     // MARK: - Recommended Matches
     public var suggestedBetsViewModel: SuggestedBetsExpandedViewModelProtocol
+
+    // MARK: - Odds Boost Header Visibility
+    private let oddsBoostHeaderVisibilitySubject = CurrentValueSubject<Bool, Never>(false)
+
+    public var oddsBoostHeaderVisibilityPublisher: AnyPublisher<Bool, Never> {
+        return oddsBoostHeaderVisibilitySubject.eraseToAnyPublisher()
+    }
     
     // MARK: - Initialization
     init(environment: Environment) {
@@ -78,7 +86,10 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             isExpanded: false,
             matchCardViewModels: []
         )
-        
+
+        // Initialize odds boost header view model
+        self.betslipOddsBoostHeaderViewModel = BetslipOddsBoostHeaderViewModel()
+
         // Setup real data subscription
         setupPublishers()
         getRecommendedMatches()
@@ -157,7 +168,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         Publishers.CombineLatest(environment.betslipManager.bettingTicketsPublisher, environment.userSessionStore.userProfilePublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] tickets, userProfile in
-                
+
                 if userProfile == nil {
                     if tickets.isEmpty {
                         self?.betslipLoggedState?(.noTicketsLoggedOut)
@@ -174,9 +185,27 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                         self?.betslipLoggedState?(.ticketsLoggedIn)
                     }
                 }
-                
+
             })
             .store(in: &cancellables)
+
+        // Subscribe to odds boost header visibility requirements
+        Publishers.CombineLatest3(
+            environment.betslipManager.bettingTicketsPublisher,
+            environment.userSessionStore.userProfilePublisher,
+            environment.betslipManager.oddsBoostStairsPublisher
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] tickets, userProfile, oddsBoostState in
+            let hasTickets = !tickets.isEmpty
+            let isLoggedIn = userProfile != nil
+            let hasOddsBoost = oddsBoostState != nil
+
+            // Show header when: has tickets + logged in + odds boost available
+            let shouldShow = hasTickets && isLoggedIn && hasOddsBoost
+            self?.oddsBoostHeaderVisibilitySubject.send(shouldShow)
+        }
+        .store(in: &cancellables)
         
         betInfoSubmissionViewModel.onPlaceBetTapped = { [weak self] in
             self?.placeBet()

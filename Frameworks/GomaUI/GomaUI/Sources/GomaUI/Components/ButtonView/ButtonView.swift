@@ -213,42 +213,78 @@ final public class ButtonView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("All Button States") {
-    VStack(spacing: 20) {
-        PreviewUIView {
-            ButtonView(viewModel: MockButtonViewModel.solidBackgroundMock)
-        }
-        .frame(height: 50)
-        
-        PreviewUIView {
-            ButtonView(viewModel: MockButtonViewModel.solidBackgroundDisabledMock)
-        }
-        .frame(height: 50)
-        
-        PreviewUIView {
-            ButtonView(viewModel: MockButtonViewModel.borderedMock)
-        }
-        .frame(height: 50)
-        
-        PreviewUIView {
-            ButtonView(viewModel: MockButtonViewModel.borderedDisabledMock)
-        }
-        .frame(height: 50)
-        
-        PreviewUIView {
-            ButtonView(viewModel: MockButtonViewModel.transparentMock)
-        }
-        .frame(height: 50)
-        .background(Color.cyan)
-        
-        PreviewUIView {
-            ButtonView(viewModel: MockButtonViewModel.transparentDisabledMock)
-        }
-        .frame(height: 50)
-        .background(Color.cyan)
+#Preview("ButtonView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "ButtonView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Solid Background (enabled)
+        let solidBackgroundView = ButtonView(viewModel: MockButtonViewModel.solidBackgroundMock)
+        solidBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Solid Background (disabled)
+        let solidBackgroundDisabledView = ButtonView(viewModel: MockButtonViewModel.solidBackgroundDisabledMock)
+        solidBackgroundDisabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Bordered (enabled)
+        let borderedView = ButtonView(viewModel: MockButtonViewModel.borderedMock)
+        borderedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Bordered (disabled)
+        let borderedDisabledView = ButtonView(viewModel: MockButtonViewModel.borderedDisabledMock)
+        borderedDisabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Transparent (enabled)
+        let transparentView = ButtonView(viewModel: MockButtonViewModel.transparentMock)
+        transparentView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Transparent (disabled)
+        let transparentDisabledView = ButtonView(viewModel: MockButtonViewModel.transparentDisabledMock)
+        transparentDisabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(solidBackgroundView)
+        stackView.addArrangedSubview(solidBackgroundDisabledView)
+        stackView.addArrangedSubview(borderedView)
+        stackView.addArrangedSubview(borderedDisabledView)
+        stackView.addArrangedSubview(transparentView)
+        stackView.addArrangedSubview(transparentDisabledView)
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
+        ])
+
+        return vc
     }
-    .padding()
 }
 
 @available(iOS 17.0, *)

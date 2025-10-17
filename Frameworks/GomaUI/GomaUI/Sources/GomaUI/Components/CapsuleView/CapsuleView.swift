@@ -192,37 +192,52 @@ public final class CapsuleView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-public struct CapsuleView_Previews: PreviewProvider {
-    public static var previews: some View {
-        VStack(spacing: 16) {
-            PreviewUIView {
-                let viewModel = MockCapsuleViewModel.liveBadge
-                return CapsuleView(viewModel: viewModel)
-            }
-            .previewDisplayName("Live Badge")
-            
-            PreviewUIView {
-                let viewModel = MockCapsuleViewModel.countBadge
-                return CapsuleView(viewModel: viewModel)
-            }
-            .previewDisplayName("Count Badge")
-            
-            PreviewUIView {
-                let viewModel = MockCapsuleViewModel.tagStyle
-                return CapsuleView(viewModel: viewModel)
-            }
-            .previewDisplayName("Tag Style")
-            
-            PreviewUIView {
-                return CapsuleView(
-                    text: "Custom",
-                    backgroundColor: .systemPurple,
-                    textColor: .white
-                )
-            }
-            .previewDisplayName("Convenience Init")
-        }
-        .padding()
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Live Badge
+        let liveBadgeView = CapsuleView(viewModel: MockCapsuleViewModel.liveBadge)
+        liveBadgeView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Count Badge
+        let countBadgeView = CapsuleView(viewModel: MockCapsuleViewModel.countBadge)
+        countBadgeView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Tag Style
+        let tagStyleView = CapsuleView(viewModel: MockCapsuleViewModel.tagStyle)
+        tagStyleView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Convenience Init - Custom Purple
+        let customView = CapsuleView(
+            text: "Custom",
+            backgroundColor: .systemPurple,
+            textColor: .white
+        )
+        customView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(liveBadgeView)
+        stackView.addArrangedSubview(countBadgeView)
+        stackView.addArrangedSubview(tagStyleView)
+        stackView.addArrangedSubview(customView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+
+        return vc
     }
 }
+
 #endif

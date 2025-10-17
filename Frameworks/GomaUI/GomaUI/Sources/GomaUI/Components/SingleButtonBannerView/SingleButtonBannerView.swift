@@ -223,27 +223,57 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Default Banner") {
-    PreviewUIView {
-        SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.defaultMock)
-    }
-    .frame(height: 200)
-}
+#Preview("SingleButtonBannerView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
-@available(iOS 17.0, *)
-#Preview("Banner without Button") {
-    PreviewUIView {
-        SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.noButtonMock)
-    }
-    .frame(height: 200)
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Custom Styled Banner") {
-    PreviewUIView {
-        SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.customStyledMock)
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "SingleButtonBannerView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default Banner
+        let defaultBanner = SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.defaultMock)
+        defaultBanner.translatesAutoresizingMaskIntoConstraints = false
+
+        // Banner without Button
+        let noButtonBanner = SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.noButtonMock)
+        noButtonBanner.translatesAutoresizingMaskIntoConstraints = false
+
+        // Custom Styled Banner
+        let customBanner = SingleButtonBannerView(viewModel: MockSingleButtonBannerViewModel.customStyledMock)
+        customBanner.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultBanner)
+        stackView.addArrangedSubview(noButtonBanner)
+        stackView.addArrangedSubview(customBanner)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            // Fixed heights for banners
+            defaultBanner.heightAnchor.constraint(equalToConstant: 200),
+            noButtonBanner.heightAnchor.constraint(equalToConstant: 200),
+            customBanner.heightAnchor.constraint(equalToConstant: 200)
+        ])
+
+        return vc
     }
-    .frame(height: 200)
 }
 
 #endif

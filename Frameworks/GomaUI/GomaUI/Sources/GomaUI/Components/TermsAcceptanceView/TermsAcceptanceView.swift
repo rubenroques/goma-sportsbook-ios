@@ -222,29 +222,57 @@ public final class TermsAcceptanceView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-struct TermsAcceptanceView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            PreviewUIView {
-                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.defaultMock)
-            }
-            .frame(height: 80)
-            .previewDisplayName("Unchecked")
-            
-            PreviewUIView {
-                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.acceptedMock)
-            }
-            .frame(height: 80)
-            .previewDisplayName("Accepted")
-            
-            PreviewUIView {
-                TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.shortTextMock)
-            }
-            .frame(height: 60)
-            .previewDisplayName("Short Text")
-        }
-        .padding()
-        .frame(maxHeight: 300)
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+
+        // 1. TITLE LABEL
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "TermsAcceptanceView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+
+        // 2. VERTICAL STACK with ALL states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3. ADD ALL COMPONENT INSTANCES
+        let uncheckedView = TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.defaultMock)
+        uncheckedView.translatesAutoresizingMaskIntoConstraints = false
+
+        let acceptedView = TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.acceptedMock)
+        acceptedView.translatesAutoresizingMaskIntoConstraints = false
+
+        let shortTextView = TermsAcceptanceView(viewModel: MockTermsAcceptanceViewModel.shortTextMock)
+        shortTextView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add all states to stack
+        stackView.addArrangedSubview(uncheckedView)
+        stackView.addArrangedSubview(acceptedView)
+        stackView.addArrangedSubview(shortTextView)
+
+        // 4. ADD TO VIEW HIERARCHY
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // 5. CONSTRAINTS
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
 }
 #endif
