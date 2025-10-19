@@ -183,7 +183,11 @@ final class ProgressSegmentCoordinator {
                     completion: { _ in
                         // Remove segments and their constraints after animation
                         segmentsToRemove.forEach { $0.removeFromSuperview() }
-                        self.segments.removeLast(currentCount - totalCount)
+
+                        // Use segmentsToRemove.count to avoid race conditions with multiple rapid calls
+                        let countToRemove = min(segmentsToRemove.count, self.segments.count)
+                        guard countToRemove > 0 else { return }
+                        self.segments.removeLast(countToRemove)
 
                         // Rebuild constraints for remaining segments
                         self.layoutSegments(in: container)
@@ -191,7 +195,12 @@ final class ProgressSegmentCoordinator {
                 )
             } else {
                 segmentsToRemove.forEach { $0.removeFromSuperview() }
-                segments.removeLast(currentCount - totalCount)
+
+                // Use segmentsToRemove.count to avoid race conditions
+                let countToRemove = min(segmentsToRemove.count, segments.count)
+                guard countToRemove > 0 else { return }
+                segments.removeLast(countToRemove)
+
                 layoutSegments(in: container)
             }
         }

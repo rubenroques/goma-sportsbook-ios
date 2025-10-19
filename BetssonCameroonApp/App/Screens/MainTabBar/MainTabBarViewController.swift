@@ -22,7 +22,7 @@ class MainTabBarViewController: UIViewController {
     private var adaptiveTabBarView: AdaptiveTabBarView!
 
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
-    private var combinedTabBarBlurView: UIVisualEffectView?
+    private lazy var combinedTabBarBlurView: UIVisualEffectView = Self.createCombinedTabBarBlurView()
 
     // FloatingOverlay
     private var floatingOverlayView: FloatingOverlayView!
@@ -246,10 +246,12 @@ class MainTabBarViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.setupCombinedTabBarBlur()
-        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+        // Clear backgrounds for tab bar and bottom safe area (blur view provides the background)
+        self.tabBarView.backgroundColor = .clear
+        self.bottomSafeAreaView.backgroundColor = .clear
 
-        // Tab bar background is handled by setupCombinedTabBarBlur()
+        // Container view should be transparent to allow blur effect to work properly
+        self.containerView.backgroundColor = .clear
         self.mainContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
         //
@@ -262,34 +264,6 @@ class MainTabBarViewController: UIViewController {
         self.cancelUnlockAppButton.backgroundColor = .systemGray
         self.cancelUnlockAppButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
-
-    private func setupCombinedTabBarBlur() {
-        // Clear backgrounds for both tab bar and bottom safe area
-        self.tabBarView.backgroundColor = .clear
-        self.bottomSafeAreaView.backgroundColor = .clear
-        
-        // Remove existing blur if any
-        self.combinedTabBarBlurView?.removeFromSuperview()
-        
-        // Create blur effect - using thin material for subtle effect
-        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Store reference and add to container view
-        self.combinedTabBarBlurView = blurEffectView
-        self.containerView.insertSubview(blurEffectView, belowSubview: tabBarView)
-        
-        // Constrain blur view to span from tab bar top to bottom safe area bottom
-        NSLayoutConstraint.activate([
-            blurEffectView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            blurEffectView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            blurEffectView.topAnchor.constraint(equalTo: tabBarView.topAnchor),
-            blurEffectView.bottomAnchor.constraint(equalTo: bottomSafeAreaView.bottomAnchor)
-        ])
-    }
-
-    //
 
     // MARK: - Reactive Bindings for Screen Management
     private func setupScreenBindings() {
@@ -761,6 +735,12 @@ extension MainTabBarViewController {
         return view
     }
 
+    private static func createCombinedTabBarBlurView() -> UIVisualEffectView {
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
     private static func createLocalAuthenticationBaseView() -> UIView {
         let view = UIView()
@@ -843,6 +823,9 @@ extension MainTabBarViewController {
         // Setup tab bar
         containerView.addSubview(tabBarView)
 
+        // Add combined blur view below tab bar for translucent effect
+        containerView.insertSubview(combinedTabBarBlurView, belowSubview: tabBarView)
+
         localAuthenticationBaseView.addSubview(unlockAppButton)
         localAuthenticationBaseView.addSubview(cancelUnlockAppButton)
         localAuthenticationBaseView.addSubview(isLoadingUserSessionView)
@@ -875,7 +858,7 @@ extension MainTabBarViewController {
             self.mainContainerView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.mainContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.mainContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.mainContainerView.bottomAnchor.constraint(equalTo: self.tabBarView.topAnchor),
+            self.mainContainerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             // Next Up Events Base View
             self.nextUpEventsBaseView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
@@ -935,6 +918,12 @@ extension MainTabBarViewController {
             self.adaptiveTabBarView.trailingAnchor.constraint(equalTo: self.tabBarView.trailingAnchor),
             self.adaptiveTabBarView.bottomAnchor.constraint(equalTo: self.tabBarView.bottomAnchor),
             self.adaptiveTabBarView.topAnchor.constraint(equalTo: self.tabBarView.topAnchor),
+
+            // Combined Tab Bar Blur (spans tab bar + bottom safe area)
+            self.combinedTabBarBlurView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.combinedTabBarBlurView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.combinedTabBarBlurView.topAnchor.constraint(equalTo: self.tabBarView.topAnchor),
+            self.combinedTabBarBlurView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.bottomAnchor),
 
             // Bottom Safe Area
             self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
