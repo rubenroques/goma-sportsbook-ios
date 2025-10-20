@@ -17,11 +17,13 @@ class CasinoCoordinator: Coordinator {
     
     // MARK: - Navigation Closures for MainTabBarCoordinator
     var onShowGamePlay: ((String) -> Void) = { _ in }
+    var onShowSportsQuickLinkScreen: ((QuickLinkType) -> Void)?
     
     // MARK: - Properties
     private let environment: Environment
     private let lobbyType: CasinoLobbyType
     private var casinoCategoriesListViewController: CasinoCategoriesListViewController?
+    var casinoCategoriesListViewModel: CasinoCategoriesListViewModel?
     private var casinoCategoryGamesListViewController: CasinoCategoryGamesListViewController?
     private var casinoGamePrePlayViewController: CasinoGamePrePlayViewController?
     private var casinoGamePlayViewController: CasinoGamePlayViewController?
@@ -40,7 +42,7 @@ class CasinoCoordinator: Coordinator {
     
     // MARK: - Navigation Methods
     
-    private func showCategoryGamesList(categoryId: String, categoryTitle: String) {
+    func showCategoryGamesList(categoryId: String, categoryTitle: String) {
         
         // Create category games list view model
         let categoryGamesViewModel = CasinoCategoryGamesListViewModel(
@@ -49,7 +51,7 @@ class CasinoCoordinator: Coordinator {
             servicesProvider: environment.servicesProvider,
             lobbyType: lobbyType.serviceProviderType
         )
-        
+                
         // Setup navigation closures
         categoryGamesViewModel.onGameSelected = { [weak self] gameId in
             self?.showGamePrePlay(gameId: gameId)
@@ -81,7 +83,18 @@ class CasinoCoordinator: Coordinator {
         self.navigationController.pushViewController(container, animated: true)
     }
     
-    private func showGamePrePlay(gameId: String) {
+    func showAviatorGame() {
+        
+        let aviatorGame = casinoCategoriesListViewModel?.categorySections
+            .flatMap { $0.sectionData.games }
+            .first(where: { $0.name == "Aviator" })
+        
+        if let aviatorGameId = aviatorGame?.id {
+            self.showGamePrePlay(gameId: aviatorGameId)
+        }
+    }
+    
+    func showGamePrePlay(gameId: String) {
         // Create game pre-play view model
         let gamePrePlayViewModel = CasinoGamePrePlayViewModel(
             gameId: gameId,
@@ -172,6 +185,8 @@ class CasinoCoordinator: Coordinator {
             lobbyType: lobbyType
         )
         
+        self.casinoCategoriesListViewModel = viewModel
+        
         // Setup MVVM-C navigation closures - ViewModels signal navigation intent
         viewModel.onCategorySelected = { [weak self] categoryId, categoryTitle in
             self?.showCategoryGamesList(categoryId: categoryId, categoryTitle: categoryTitle)
@@ -188,6 +203,10 @@ class CasinoCoordinator: Coordinator {
 
         viewModel.onBannerURLSelected = { [weak self] url in
             self?.openExternalURL(url: url)
+        }
+        
+        viewModel.onSportsQuickLinkSelected = { [weak self] quickLink in
+            self?.onShowSportsQuickLinkScreen?(quickLink)
         }
         
         // Create view controller

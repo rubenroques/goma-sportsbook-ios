@@ -310,7 +310,10 @@ class MainTabBarViewController: UIViewController {
     
     // MARK: - Coordinator Integration API
     // Methods for MainCoordinator to show specific screens
-    func showNextUpEventsScreen(with viewController: UIViewController) {
+    func showNextUpEventsScreen(with viewController: UIViewController, withContextChange: Bool = false) {
+        if withContextChange {
+            viewModel.adaptiveTabBarViewModel.selectTab(itemID: .nextUpEvents, inTabBarID: .home)
+        }
         hideAllScreens()
         embedViewControllerIfNeeded(viewController, in: nextUpEventsBaseView, loadedFlag: &nextUpEventsViewControllerLoaded)
         nextUpEventsBaseView.isHidden = false
@@ -319,10 +322,16 @@ class MainTabBarViewController: UIViewController {
 
     }
     
-    func showInPlayEventsScreen(with viewController: UIViewController) {
+    func showInPlayEventsScreen(with viewController: UIViewController, withContextChange: Bool = false) {
+        if withContextChange {
+            viewModel.adaptiveTabBarViewModel.selectTab(itemID: .inPlayEvents, inTabBarID: .home)
+        }
         hideAllScreens()
         embedViewControllerIfNeeded(viewController, in: inPlayEventsBaseView, loadedFlag: &inPlayEventsViewControllerLoaded)
         inPlayEventsBaseView.isHidden = false
+        
+        betslipFloatingView.isHidden = false
+
     }
     
     func showMyBetsScreen(with viewController: UIViewController) {
@@ -347,15 +356,31 @@ class MainTabBarViewController: UIViewController {
     }
     
     func showCasinoVirtualSportsScreen(with viewController: UIViewController) {
+        viewModel.adaptiveTabBarViewModel.selectTab(itemID: .casinoVirtualSports, inTabBarID: .casino)
         hideAllScreens()
         embedViewControllerIfNeeded(viewController, in: casinoTablesBaseView, loadedFlag: &casinoTablesViewControllerLoaded)
         casinoTablesBaseView.isHidden = false
     }
     
     func showCasinoAviatorGameScreen(with viewController: UIViewController) {
+        viewModel.adaptiveTabBarViewModel.selectTab(itemID: .casinoHome, inTabBarID: .casino)
         hideAllScreens()
-        embedViewControllerIfNeeded(viewController, in: casinoJackpotsBaseView, loadedFlag: &casinoJackpotsViewControllerLoaded)
-        casinoJackpotsBaseView.isHidden = false
+        embedViewControllerIfNeeded(viewController, in: casinoHomeBaseView, loadedFlag: &casinoHomeViewControllerLoaded)
+        casinoHomeBaseView.isHidden = false
+    }
+    
+    func showCasinoSlotsGamesScreen(with viewController: UIViewController) {
+        viewModel.adaptiveTabBarViewModel.selectTab(itemID: .casinoHome, inTabBarID: .casino)
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: casinoHomeBaseView, loadedFlag: &casinoHomeViewControllerLoaded)
+        casinoHomeBaseView.isHidden = false
+    }
+    
+    func showCasinoCrashGamesScreen(with viewController: UIViewController) {
+        viewModel.adaptiveTabBarViewModel.selectTab(itemID: .casinoHome, inTabBarID: .casino)
+        hideAllScreens()
+        embedViewControllerIfNeeded(viewController, in: casinoHomeBaseView, loadedFlag: &casinoHomeViewControllerLoaded)
+        casinoHomeBaseView.isHidden = false
     }
     
     func showCasinoSearchScreen(with viewController: UIViewController) {

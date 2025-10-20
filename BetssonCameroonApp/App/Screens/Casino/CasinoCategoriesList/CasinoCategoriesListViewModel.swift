@@ -17,7 +17,8 @@ class CasinoCategoriesListViewModel: ObservableObject {
     var onGameSelected: ((String) -> Void) = { _ in }
     var onBannerGameSelected: ((String) -> Void) = { _ in }
     var onBannerURLSelected: ((String) -> Void) = { _ in }
-
+    var onSportsQuickLinkSelected: ((QuickLinkType) -> Void)?
+    
     private static let gamesPlatform = "PC"
 
     // MARK: - Lobby Configuration
@@ -30,7 +31,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     @Published private(set) var errorMessage: String?
     
     // MARK: - Child ViewModels
-    let quickLinksTabBarViewModel: MockQuickLinksTabBarViewModel
+    let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
     let topBannerSliderViewModel: TopBannerSliderViewModelProtocol?
     private(set) var recentlyPlayedGamesViewModel: MockRecentlyPlayedGamesViewModel
     
@@ -43,7 +44,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
         self.servicesProvider = servicesProvider
         self.lobbyType = lobbyType
         self.showTopBanner = showTopBanner ?? (lobbyType == .casino)
-        self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
+        self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forCasinoScreens()
 
         // Initialize production casino banner viewModel only if banners are enabled
         if self.showTopBanner {
@@ -245,9 +246,8 @@ class CasinoCategoriesListViewModel: ObservableObject {
 
     private func setupChildViewModelCallbacks() {
         // QuickLinks tab bar callbacks
-        quickLinksTabBarViewModel.onTabSelected = { tabId in
-            print("Casino Categories: Tab selected: \(tabId)")
-            // Handle tab switching if needed
+        quickLinksTabBarViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
+            self?.onSportsQuickLinkSelected?(quickLinkType)
         }
 
         // Casino banner callbacks - only setup if banner is enabled
