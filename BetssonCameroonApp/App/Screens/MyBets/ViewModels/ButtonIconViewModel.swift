@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import GomaUI
+import UIKit
 
 final class ButtonIconViewModel: ButtonIconViewModelProtocol {
     
@@ -24,12 +25,15 @@ final class ButtonIconViewModel: ButtonIconViewModelProtocol {
     
     // MARK: - Initialization
     
-    init(title: String, icon: String?, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true) {
+    init(title: String, icon: String?, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true, backgroundColor: UIColor? = nil, cornerRadius: CGFloat? = nil, iconColor: UIColor? = nil) {
         let initialData = ButtonIconData(
             title: title,
             icon: icon,
             layoutType: layoutType,
-            isEnabled: isEnabled
+            isEnabled: isEnabled,
+            backgroundColor: backgroundColor,
+            cornerRadius: cornerRadius,
+            iconColor: iconColor
         )
         self.dataSubject = CurrentValueSubject(initialData)
     }
@@ -42,7 +46,10 @@ final class ButtonIconViewModel: ButtonIconViewModelProtocol {
             title: title,
             icon: currentData.icon,
             layoutType: currentData.layoutType,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: currentData.iconColor
         )
         dataSubject.send(newData)
     }
@@ -53,7 +60,10 @@ final class ButtonIconViewModel: ButtonIconViewModelProtocol {
             title: currentData.title,
             icon: icon,
             layoutType: currentData.layoutType,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: currentData.iconColor
         )
         dataSubject.send(newData)
     }
@@ -64,7 +74,10 @@ final class ButtonIconViewModel: ButtonIconViewModelProtocol {
             title: currentData.title,
             icon: currentData.icon,
             layoutType: layoutType,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: currentData.iconColor
         )
         dataSubject.send(newData)
     }
@@ -75,7 +88,52 @@ final class ButtonIconViewModel: ButtonIconViewModelProtocol {
             title: currentData.title,
             icon: currentData.icon,
             layoutType: currentData.layoutType,
-            isEnabled: isEnabled
+            isEnabled: isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: currentData.iconColor
+        )
+        dataSubject.send(newData)
+    }
+
+    func updateBackgroundColor(_ color: UIColor?) {
+        let currentData = dataSubject.value
+        let newData = ButtonIconData(
+            title: currentData.title,
+            icon: currentData.icon,
+            layoutType: currentData.layoutType,
+            isEnabled: currentData.isEnabled,
+            backgroundColor: color,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: currentData.iconColor
+        )
+        dataSubject.send(newData)
+    }
+
+    func updateCornerRadius(_ radius: CGFloat?) {
+        let currentData = dataSubject.value
+        let newData = ButtonIconData(
+            title: currentData.title,
+            icon: currentData.icon,
+            layoutType: currentData.layoutType,
+            isEnabled: currentData.isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: radius,
+            iconColor: currentData.iconColor
+        )
+        dataSubject.send(newData)
+    }
+
+    func updateIconColor(_ color: UIColor?) {
+        let currentData = dataSubject.value
+        let newData = ButtonIconData(
+            title: currentData.title,
+            icon: currentData.icon,
+            layoutType: currentData.layoutType,
+            isEnabled: currentData.isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: color
         )
         dataSubject.send(newData)
     }

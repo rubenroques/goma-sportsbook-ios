@@ -9,6 +9,7 @@ import UIKit
 import ServicesProvider
 import GomaUI
 import XPush
+import Combine
 
 // Removed ProfileWalletCoordinatorDelegate - using closure-based pattern for consistency with other coordinators
 
@@ -32,6 +33,8 @@ final class ProfileWalletCoordinator: Coordinator {
     var onProfileDismiss: (() -> Void)?
     var onDepositRequested: (() -> Void)?
     var onWithdrawRequested: (() -> Void)?
+    
+    var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     
@@ -107,13 +110,17 @@ final class ProfileWalletCoordinator: Coordinator {
         }
         
         // Menu item selection callback
-        viewModel.onMenuItemSelected = { [weak self] menuItem in
+        viewModel.onMenuItemSelected = { [weak self] menuItem, actionResponse in
             guard let self = self else { return }
-            self.handleMenuItemSelection(menuItem)
+            self.handleMenuItemSelection(menuItem, actionResponse)
+        }
+        
+        viewModel.showErrorAlert = { [weak self] error in
+            self?.showChangePasswordErrorAlert(error: error)
         }
     }
     
-    private func handleMenuItemSelection(_ menuItem: ActionRowItem) {
+    private func handleMenuItemSelection(_ menuItem: ActionRowItem, _ actionResponse: String? = nil) {
         switch menuItem.action {
         case .logout:
             // Handle logout with confirmation
@@ -140,8 +147,8 @@ final class ProfileWalletCoordinator: Coordinator {
             // TODO: Navigate to help center
             showPlaceholderAlert(title: "Help Center", message: "Feature coming soon")
         case .changePassword:
-            // TODO: Navigate to change password
-            showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
+//            showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
+            self.showChangePasswordScreen(tokenId: actionResponse ?? "")
         case .promotions:
             showPromotions()
         case .custom:
@@ -393,5 +400,28 @@ final class ProfileWalletCoordinator: Coordinator {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         
         presentingViewController.present(alert, animated: true)
+    }
+    
+    private func showChangePasswordErrorAlert(error: String) {
+        guard let presentingViewController = profileNavigationController else { return }
+        
+        let alert = UIAlertController(
+            title: "Change Password Error",
+            message: error,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        
+        presentingViewController.present(alert, animated: true)
+    }
+    
+    private func showChangePasswordScreen(tokenId: String) {
+        let phoneNumber = userSessionStore.userProfilePublisher.value?.username ?? ""
+        
+        let passwordCodeVerificationViewModel = PhonePasswordCodeVerificationViewModel(tokenId: tokenId, phoneNumber: phoneNumber, resetPasswordType: .change)
+        
+        let passwordCodeVerificationViewController = PhonePasswordCodeVerificationViewController(viewModel: passwordCodeVerificationViewModel)
+        
+        self.profileNavigationController?.pushViewController(passwordCodeVerificationViewController, animated: true)
     }
 }

@@ -229,7 +229,12 @@ class EveryMatrixBaseConnector: Connector {
                 switch httpResponse.statusCode {
                 case 200...299:
                     return result.data
-
+                case 400:
+                    if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
+                        let errorMessage = apiError.thirdPartyResponse?.message ?? "Invalid Request"
+                        throw ServiceProviderError.errorMessage(message: errorMessage)
+                    }
+                    throw ServiceProviderError.badRequest
                 case 401:
                     print("[EveryMatrix-\(self.apiIdentifier)] Received 401 Unauthorized")
                     throw ServiceProviderError.unauthorized
@@ -252,7 +257,13 @@ class EveryMatrixBaseConnector: Connector {
                         throw ServiceProviderError.errorMessage(message: errorMessage)
                     }
                     throw ServiceProviderError.errorMessage(message: "Bet already placed or validation error")
-
+                case 424:
+                    // Try to decode error message
+                    if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
+                        let errorMessage = apiError.error ?? "Server Error"
+                        throw ServiceProviderError.errorMessage(message: errorMessage)
+                    }
+                    throw ServiceProviderError.errorMessage(message: "Token invalid")
                 case 429:
                     throw ServiceProviderError.rateLimitExceeded
 

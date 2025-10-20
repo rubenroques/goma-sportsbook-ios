@@ -17,24 +17,24 @@ public final class MockButtonIconViewModel: ButtonIconViewModelProtocol {
     }
     
     // MARK: - Initialization
-    public init(title: String = "Button", icon: String? = nil, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true) {
-        let initialData = ButtonIconData(title: title, icon: icon, layoutType: layoutType, isEnabled: isEnabled)
+    public init(title: String = "Button", icon: String? = nil, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true, backgroundColor: UIColor? = nil, cornerRadius: CGFloat? = nil, iconColor: UIColor? = nil) {
+        let initialData = ButtonIconData(title: title, icon: icon, layoutType: layoutType, isEnabled: isEnabled, backgroundColor: backgroundColor, cornerRadius: cornerRadius, iconColor: iconColor)
         self.dataSubject = CurrentValueSubject(initialData)
     }
     
     // MARK: - Protocol Methods
     public func updateTitle(_ title: String) {
-        let newData = ButtonIconData(title: title, icon: currentData.icon, layoutType: currentData.layoutType, isEnabled: currentData.isEnabled)
+        let newData = ButtonIconData(title: title, icon: currentData.icon, layoutType: currentData.layoutType, isEnabled: currentData.isEnabled, backgroundColor: currentData.backgroundColor, cornerRadius: currentData.cornerRadius, iconColor: currentData.iconColor)
         dataSubject.send(newData)
     }
     
     public func updateIcon(_ icon: String?) {
-        let newData = ButtonIconData(title: currentData.title, icon: icon, layoutType: currentData.layoutType, isEnabled: currentData.isEnabled)
+        let newData = ButtonIconData(title: currentData.title, icon: icon, layoutType: currentData.layoutType, isEnabled: currentData.isEnabled, backgroundColor: currentData.backgroundColor, cornerRadius: currentData.cornerRadius, iconColor: currentData.iconColor)
         dataSubject.send(newData)
     }
     
     public func updateLayoutType(_ layoutType: ButtonIconLayoutType) {
-        let newData = ButtonIconData(title: currentData.title, icon: currentData.icon, layoutType: layoutType, isEnabled: currentData.isEnabled)
+        let newData = ButtonIconData(title: currentData.title, icon: currentData.icon, layoutType: layoutType, isEnabled: currentData.isEnabled, backgroundColor: currentData.backgroundColor, cornerRadius: currentData.cornerRadius, iconColor: currentData.iconColor)
         dataSubject.send(newData)
     }
     
@@ -43,7 +43,46 @@ public final class MockButtonIconViewModel: ButtonIconViewModelProtocol {
             title: currentData.title,
             icon: currentData.icon,
             layoutType: currentData.layoutType,
-            isEnabled: isEnabled
+            isEnabled: isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: currentData.iconColor
+        ))
+    }
+
+    public func updateBackgroundColor(_ color: UIColor?) {
+        dataSubject.send(ButtonIconData(
+            title: currentData.title,
+            icon: currentData.icon,
+            layoutType: currentData.layoutType,
+            isEnabled: currentData.isEnabled,
+            backgroundColor: color,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: currentData.iconColor
+        ))
+    }
+
+    public func updateCornerRadius(_ radius: CGFloat?) {
+        dataSubject.send(ButtonIconData(
+            title: currentData.title,
+            icon: currentData.icon,
+            layoutType: currentData.layoutType,
+            isEnabled: currentData.isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: radius,
+            iconColor: currentData.iconColor
+        ))
+    }
+    
+    public func updateIconColor(_ color: UIColor?) {
+        dataSubject.send(ButtonIconData(
+            title: currentData.title,
+            icon: currentData.icon,
+            layoutType: currentData.layoutType,
+            isEnabled: currentData.isEnabled,
+            backgroundColor: currentData.backgroundColor,
+            cornerRadius: currentData.cornerRadius,
+            iconColor: color
         ))
     }
     

@@ -22,7 +22,7 @@ class PhoneForgotPasswordSuccessViewController: UIViewController {
     private let statusInfoView: StatusInfoView
     private let proceedButton: ButtonView
 
-    init(viewModel: PhoneForgotPasswordSuccessViewModelProtocol = MockPasswordChangeSuccessScreenViewModel()) {
+    init(viewModel: PhoneForgotPasswordSuccessViewModelProtocol) {
         self.viewModel = viewModel
         self.statusInfoView = StatusInfoView(viewModel: viewModel.statusInfoViewModel)
         self.proceedButton = ButtonView(viewModel: viewModel.buttonViewModel)
@@ -67,11 +67,23 @@ class PhoneForgotPasswordSuccessViewController: UIViewController {
     private func setupBindings() {
         
         proceedButton.onButtonTapped = { [weak self] in
-            self?.navigationController?.popToRootViewController(animated: true)
+            guard let self = self else { return }
+            switch self.viewModel.resetPasswordType {
+            case .forgot:
+                self.navigationController?.popToRootViewController(animated: true)
+            case .change:
+                Env.userSessionStore.logoutOnPasswordChanged()
+                self.dismiss(animated: true)
+            }
         }
     }
 
     @objc private func didTapClose() {
+        
+        if self.viewModel.resetPasswordType == .change {
+            Env.userSessionStore.logoutOnPasswordChanged()
+        }
+        
         self.dismiss(animated: true)
     }
 }

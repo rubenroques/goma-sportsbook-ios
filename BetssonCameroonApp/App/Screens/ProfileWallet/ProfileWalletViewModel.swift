@@ -46,7 +46,10 @@ final class ProfileWalletViewModel: ObservableObject {
     var onDismiss: (() -> Void)?
     var onDepositRequested: (() -> Void)?
     var onWithdrawRequested: (() -> Void)?
-    var onMenuItemSelected: ((ActionRowItem) -> Void)?
+    var onMenuItemSelected: ((ActionRowItem, String?) -> Void)?
+    var showErrorAlert: ((String) -> Void)?
+    
+    var isActionLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     
     // MARK: - Initialization
     
@@ -112,7 +115,12 @@ final class ProfileWalletViewModel: ObservableObject {
     private func setupProfileMenuCallbacks() {
         // Set up callback for ProfileMenuListViewModel
         profileMenuListViewModel.onItemSelected = { [weak self] menuItem in
-            self?.onMenuItemSelected?(menuItem)
+            if menuItem.action == .changePassword {
+                self?.getChangePasswordToken(menuItem: menuItem)
+            }
+            else {
+                self?.onMenuItemSelected?(menuItem, nil)
+            }
         }
     }
     
@@ -125,6 +133,33 @@ final class ProfileWalletViewModel: ObservableObject {
                 print("ProfileWalletViewModel: Theme changed to \(theme.rawValue)")
                 // Add any additional handling here if needed (e.g., analytics)
             }
+            .store(in: &cancellables)
+    }
+    
+    private func getChangePasswordToken(menuItem: ActionRowItem) {
+        self.isActionLoadingPublisher.send(true)
+        
+        let userMobilePrefix = userSessionStore.userProfilePublisher.value?.mobileCountryCode ?? ""
+        let userMobilePhoneNumber = userSessionStore.userProfilePublisher.value?.mobilePhone ?? ""
+        
+        Env.servicesProvider
+            .getResetPasswordTokenId(mobileNumber: userMobilePhoneNumber, mobilePrefix: userMobilePrefix)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
+                
+                self.isActionLoadingPublisher.send(false)
+
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self.showErrorAlert?("Can't proceed with change password at the moment. Please try again later")
+                }
+            }, receiveValue: { [weak self] response in
+                guard let self = self else { return }
+                self.onMenuItemSelected?(menuItem, response.tokenId)
+            })
             .store(in: &cancellables)
     }
 }

@@ -96,7 +96,7 @@ class BetSuccessViewController: UIViewController {
             title: "Share your Betslip",
             type: .action,
             action: .custom,
-            trailingIcon: "square.and.arrow.up"
+            trailingIcon: "share_icon"
         )
         shareRow.configure(with: shareItem) { [weak self] _ in
             self?.onShareBetslip?()
