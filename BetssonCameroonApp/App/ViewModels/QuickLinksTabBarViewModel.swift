@@ -37,13 +37,6 @@ final class QuickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol {
     public func didTapQuickLink(type: QuickLinkType) {
         print("🎯 QuickLinksTabBarViewModel: Quick link tapped - \(type.rawValue)")
         
-        // Trigger navigation for casino-related links
-//        if Self.isCasinoQuickLink(type) {
-//            onQuickLinkSelected?(type)
-//        } else {
-//            // For non-casino links, we could handle other navigation types here
-//            print("🎯 QuickLinksTabBarViewModel: Non-casino link tapped - \(type.rawValue)")
-//        }
         onQuickLinkSelected?(type)
         
         // Maintain backward compatibility with onTabSelected

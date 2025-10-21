@@ -799,7 +799,6 @@ class MainTabBarCoordinator: Coordinator {
             }
             
             coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
-                
                 self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
             }
 
@@ -831,6 +830,10 @@ class MainTabBarCoordinator: Coordinator {
                 print("Virtual Sports: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
+            
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
 
             virtualSportsCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
@@ -860,6 +863,10 @@ class MainTabBarCoordinator: Coordinator {
             coordinator.onShowGamePlay = { [weak self] gameId in
                 print(" Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
+            }
+            
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
             }
 
             traditionalCasinoCoordinator = coordinator
@@ -913,14 +920,19 @@ class MainTabBarCoordinator: Coordinator {
                 print(" Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
+            
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
 
             traditionalCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
-            coordinator.showCategoryGamesList(categoryId: "Lobby1$videoslots", categoryTitle: "videoslots")
+//            coordinator.showCategoryGamesList(categoryId: "Lobby1$videoslots", categoryTitle: "videoslots")
+            coordinator.showSlotsGames()
         }
         else {
-            traditionalCasinoCoordinator?.showCategoryGamesList(categoryId: "Lobby1$videoslots", categoryTitle: "videoslots")
+            traditionalCasinoCoordinator?.showSlotsGames()
         }
 
         // Show the screen through MainTabBarViewController
@@ -946,14 +958,19 @@ class MainTabBarCoordinator: Coordinator {
                 print(" Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
+            
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
 
             traditionalCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
-            coordinator.showCategoryGamesList(categoryId: "Lobby1$crashgames", categoryTitle: "CRASHGAMES")
+//            coordinator.showCategoryGamesList(categoryId: "Lobby1$crashgames", categoryTitle: "CRASHGAMES")
+            coordinator.showCrashGames()
         }
         else {
-            traditionalCasinoCoordinator?.showCategoryGamesList(categoryId: "Lobby1$crashgames", categoryTitle: "CRASHGAMES")
+            traditionalCasinoCoordinator?.showCrashGames()
         }
 
         // Show the screen through MainTabBarViewController

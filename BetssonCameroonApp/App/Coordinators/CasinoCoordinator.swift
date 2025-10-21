@@ -8,6 +8,7 @@
 import UIKit
 import ServicesProvider
 import GomaUI
+import Combine
 
 class CasinoCoordinator: Coordinator {
     
@@ -32,6 +33,8 @@ class CasinoCoordinator: Coordinator {
     var viewController: UIViewController? {
         return casinoCategoriesListViewController
     }
+    
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     init(navigationController: UINavigationController, environment: Environment, lobbyType: CasinoLobbyType = .casino) {
@@ -61,6 +64,11 @@ class CasinoCoordinator: Coordinator {
             self?.navigationController.popViewController(animated: true)
         }
         
+        categoryGamesViewModel.onSportsQuickLinkSelected = { [weak self] quickLinkType in
+            self?.onShowSportsQuickLinkScreen?(quickLinkType)
+            self?.navigationController.popViewController(animated: true)
+        }
+        
         // Create the clean CasinoCategoryGamesListViewController (no top bar code)
         let categoryGamesViewController = CasinoCategoryGamesListViewController(viewModel: categoryGamesViewModel)
         self.casinoCategoryGamesListViewController = categoryGamesViewController
@@ -85,13 +93,63 @@ class CasinoCoordinator: Coordinator {
     
     func showAviatorGame() {
         
-        let aviatorGame = casinoCategoriesListViewModel?.categorySections
-            .flatMap { $0.sectionData.games }
-            .first(where: { $0.name == "Aviator" })
+        casinoCategoriesListViewModel?.$categorySections
+            .first(where: { !$0.isEmpty })
+            .sink { [weak self] sections in
+                // Check if Aviator game exists
+                if let aviatorGame = sections
+                    .flatMap({ $0.sectionData.games })
+                    .first(where: { $0.name == "Aviator" }) {
+                    
+                    // Game found - do something with it
+                    print("Found Aviator: \(aviatorGame)")
+                    self?.showGamePrePlay(gameId: aviatorGame.id)
+                } else {
+                    // Game not found
+                    print("Aviator game not found")
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func showSlotsGames() {
         
-        if let aviatorGameId = aviatorGame?.id {
-            self.showGamePrePlay(gameId: aviatorGameId)
-        }
+        casinoCategoriesListViewModel?.$categorySections
+            .first(where: { !$0.isEmpty })
+            .sink { [weak self] sections in
+                // Check if Aviator game exists
+                if let slotsCategory = sections
+                    .first(where: { $0.sectionData.id.lowercased().contains("slots") }) {
+                    
+                    // Game found - do something with it
+                    print("Found Slots Games section: \(slotsCategory)")
+                    self?.showCategoryGamesList(categoryId: slotsCategory.sectionData.id, categoryTitle: slotsCategory.sectionData.categoryTitle)
+                } else {
+                    // Game not found
+                    print("Slots Games section not found")
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func showCrashGames() {
+        
+        casinoCategoriesListViewModel?.$categorySections
+            .first(where: { !$0.isEmpty })
+            .sink { [weak self] sections in
+                // Check if Aviator game exists
+                if let slotsCategory = sections
+                    .first(where: { $0.sectionData.id.lowercased().contains("crash") }) {
+                    
+                    // Game found - do something with it
+                    print("Found Crash Games section: \(slotsCategory)")
+                    self?.showCategoryGamesList(categoryId: slotsCategory.sectionData.id, categoryTitle: slotsCategory.sectionData.categoryTitle)
+                } else {
+                    // Game not found
+                    print("Crash Games section not found")
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func showGamePrePlay(gameId: String) {
@@ -229,48 +287,4 @@ class CasinoCoordinator: Coordinator {
         casinoCategoriesListViewController?.viewModel.reloadCategories()
     }
     
-    // MARK: - QuickLinks Deep Navigation
-    
-    /// Navigate to specific casino category based on QuickLinkType
-    func navigateToGameCategory(type: QuickLinkType) {
-        print("🎰 CasinoCoordinator: Navigating to game category - \(type.rawValue)")
-        
-        // Map QuickLinkType to casino category IDs and actions
-        switch type {
-        case .aviator:
-            // Navigate directly to Aviator game
-            navigateToSpecificGame(gameId: "aviator", categoryId: "crash", categoryTitle: "Crash Games")
-            
-        case .virtual:
-            // Navigate to Virtual Sports category
-            showCategoryGamesList(categoryId: "virtual", categoryTitle: "Virtual Sports")
-            
-        case .slots:
-            // Navigate to Slots category
-            showCategoryGamesList(categoryId: "slots", categoryTitle: "Slots")
-            
-        case .crash:
-            // Navigate to Crash Games category
-            showCategoryGamesList(categoryId: "crash", categoryTitle: "Crash Games")
-            
-        case .promos:
-            // For promotions, we could show a promotions-filtered view
-            // For now, just show the main casino screen with a log
-            print("🎰 CasinoCoordinator: Promotions not implemented - showing main casino")
-            
-        default:
-            // For non-casino QuickLinks, just show main casino
-            print("🎰 CasinoCoordinator: Non-casino QuickLink - showing main casino")
-        }
-    }
-    
-    private func navigateToSpecificGame(gameId: String, categoryId: String, categoryTitle: String) {
-        // First navigate to category, then to specific game
-        showCategoryGamesList(categoryId: categoryId, categoryTitle: categoryTitle)
-        
-        // After a brief delay, navigate to the specific game
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.showGamePrePlay(gameId: gameId)
-        }
-    }
 }
