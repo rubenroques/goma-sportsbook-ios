@@ -192,8 +192,9 @@ class MarketGroupCardsViewController: UIViewController {
     func updateContentInset(headerHeight: CGFloat) {
         let wasAtTop = tableView.contentOffset.y <= -tableView.contentInset.top + 10
 
-        tableView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 54, right: 0)
-        tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: 60, right: 0)
+        // Bottom inset accounts for: betslip floating view (100pt from bottom) + betslip max height (~60pt) = 160pt
+        tableView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 160, right: 0)
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: 166, right: 0)
 
         tableView.contentOffset = CGPoint(x: 0, y: -headerHeight)
 

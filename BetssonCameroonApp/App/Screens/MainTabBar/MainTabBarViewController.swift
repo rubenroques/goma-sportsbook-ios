@@ -854,7 +854,7 @@ extension MainTabBarViewController {
             self.containerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
-            // Main Container View - extend behind tab bar for blur effect
+            // Main Container View - extend behind tab bar and betslip for glass effect
             self.mainContainerView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.mainContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.mainContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
