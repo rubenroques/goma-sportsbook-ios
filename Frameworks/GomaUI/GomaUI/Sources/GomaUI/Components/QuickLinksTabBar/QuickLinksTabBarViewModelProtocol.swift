@@ -11,8 +11,11 @@ public enum QuickLinkType: String, Hashable {
     case slots 
     case crash
     case promos
+    case lite
     
     // Sports related links
+    case sports
+    case live
     case football
     case basketball
     case tennis
@@ -23,6 +26,7 @@ public enum QuickLinkType: String, Hashable {
     case withdraw
     case help
     case settings
+    case favourites
     
     //Filter related links
     case mainFilter

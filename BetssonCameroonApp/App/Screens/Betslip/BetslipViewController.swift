@@ -243,4 +243,4 @@ extension BetslipViewController: UIPageViewControllerDelegate {
             }
         }
     }
-} 
+}

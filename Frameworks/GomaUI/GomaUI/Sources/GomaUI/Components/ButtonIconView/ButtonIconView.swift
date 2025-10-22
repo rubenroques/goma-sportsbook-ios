@@ -47,8 +47,6 @@ public final class ButtonIconView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = StyleProvider.Color.highlightPrimary
-        imageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         return imageView
     }()
     
@@ -104,7 +102,10 @@ public final class ButtonIconView: UIView {
             contentStackView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             contentStackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             contentStackView.leadingAnchor.constraint(greaterThanOrEqualTo: containerView.leadingAnchor, constant: 8),
-            contentStackView.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -8)
+            contentStackView.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -8),
+            
+            iconImageView.widthAnchor.constraint(equalToConstant: 16),
+            iconImageView.heightAnchor.constraint(equalToConstant: 16)
         ])
     }
     
@@ -127,11 +128,16 @@ public final class ButtonIconView: UIView {
         titleLabel.text = data.title
         
         // Update icon
-        if let customImage = UIImage(named: data.icon ?? "") {
+        if let customImage = UIImage(named: data.icon ?? "")?.withRenderingMode(.alwaysTemplate) {
             iconImageView.image = customImage
         }
         else if let systemImage = UIImage(systemName: data.icon ?? "") {
             iconImageView.image = systemImage
+        }
+        if let tint = data.iconColor {
+            iconImageView.tintColor = tint
+        } else {
+            iconImageView.tintColor = StyleProvider.Color.highlightPrimary
         }
         
         // Update layout
@@ -141,6 +147,20 @@ public final class ButtonIconView: UIView {
         alpha = data.isEnabled ? 1.0 : 0.5
         isUserInteractionEnabled = data.isEnabled
         button.isEnabled = data.isEnabled
+
+        // Apply styling customizations if provided
+        if let backgroundColor = data.backgroundColor {
+            containerView.backgroundColor = backgroundColor
+        } else {
+            containerView.backgroundColor = .clear
+        }
+        if let radius = data.cornerRadius {
+            containerView.layer.cornerRadius = radius
+            containerView.layer.masksToBounds = true
+        } else {
+            containerView.layer.cornerRadius = 0
+            containerView.layer.masksToBounds = false
+        }
     }
     
     private func updateLayout(for layoutType: ButtonIconLayoutType) {

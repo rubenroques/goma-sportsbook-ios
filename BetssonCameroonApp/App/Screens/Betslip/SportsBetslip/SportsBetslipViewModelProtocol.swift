@@ -30,11 +30,13 @@ public protocol SportsBetslipViewModelProtocol {
     var betslipLoggedState: ((BetslipLoggedState) -> Void)? { get set }
     var showPlacedBetState: ((BetPlacedState) -> Void)? { get set }
     var showLoginScreen: (() -> Void)? { get set }
+    var showToastMessage: ((String) -> Void)? { get set }
 
     var isLoadingSubject: CurrentValueSubject<Bool, Never> { get set }
     
     // MARK: - Recommended Matches
     var suggestedBetsViewModel: SuggestedBetsExpandedViewModelProtocol { get }
+    var toasterViewModel: ToasterViewModelProtocol { get }
 
     // MARK: - Odds Boost Header Visibility
     var oddsBoostHeaderVisibilityPublisher: AnyPublisher<Bool, Never> { get }

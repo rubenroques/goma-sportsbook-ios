@@ -625,11 +625,10 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
         return connector.request(endpoint)
             .map { (response: BookingCodeResponse) -> BookingCodeResponse in
-                print("[EveryMatrixPrivilegedAccessManager] ✅ Booking code created: \(response.code)")
                 return response
             }
             .mapError { error in
-                print("[EveryMatrixPrivilegedAccessManager] ❌ Failed to create booking code: \(error)")
+                print("[EveryMatrixPrivilegedAccessManager] Failed to create booking code: \(error)")
                 return ServiceProviderError.errorMessage(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
@@ -643,11 +642,10 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         return connector.request(endpoint)
             .map { (response: BookingRetrievalResponse) -> [String] in
                 let bettingOfferIds = response.selections.map { $0.bettingOfferId }
-                print("[EveryMatrixPrivilegedAccessManager] ✅ Retrieved \(bettingOfferIds.count) betting offer IDs")
                 return bettingOfferIds
             }
             .mapError { error in
-                print("[EveryMatrixPrivilegedAccessManager] ❌ Failed to retrieve booking code: \(error)")
+                print("[EveryMatrixPrivilegedAccessManager] Failed to retrieve booking code: \(error)")
                 return ServiceProviderError.errorMessage(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
@@ -658,7 +656,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
     -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
 
-        print("[EveryMatrixPrivilegedAccessManager] 🎁 Fetching odds boost stairs for currency: \(currency), selections: \(selections.count)")
+        print("[EveryMatrixPrivilegedAccessManager] Fetching odds boost stairs for currency: \(currency), selections: \(selections.count)")
 
         let mappedSelections = selections.map { selection -> EveryMatrix.BetSelectionPointer in
             return EveryMatrix.BetSelectionPointer(
@@ -688,23 +686,56 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         return publisher
             .map { response -> OddsBoostStairsResponse? in
                 
-                print("[EveryMatrixPrivilegedAccessManager] ✅ Received bonus wallet response with \(response.items.count) items")
-
                 // Map internal response to domain model
                 let domainResponse = EveryMatrixModelMapper.oddsBoostStairsResponse(from: response)
-
-                if let domain = domainResponse {
-                    print("[EveryMatrixPrivilegedAccessManager] 🎁 Bonus available - Current tier: \(domain.currentStair?.minSelectionNumber ?? 0) selections, Next tier: \(domain.nextStair?.minSelectionNumber ?? 0) selections")
-                    print("[EveryMatrixPrivilegedAccessManager] 💰 UBS Wallet ID: \(domain.ubsWalletId) (REQUIRED for bet placement)")
-                } else {
-                    print("[EveryMatrixPrivilegedAccessManager] ⚠️ No bonus available for current configuration")
-                }
-
                 return domainResponse
             }
             .mapError { error in
-                print("[EveryMatrixPrivilegedAccessManager] ❌ Failed to fetch odds boost stairs: \(error)")
+                print("[EveryMatrixPrivilegedAccessManager] Failed to fetch odds boost stairs: \(error)")
                 return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    // MARK: - Password Reset Methods
+    func getResetPasswordTokenId(mobileNumber: String, mobilePrefix: String) -> AnyPublisher<ResetPasswordTokenResponse, ServiceProviderError> {
+        let endpoint = EveryMatrixPlayerAPI.getResetPasswordTokenId(mobileNumber: mobileNumber, mobilePrefix: mobilePrefix)
+        let publisher: AnyPublisher<EveryMatrix.ResetPasswordTokenResponse, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { internalResponse in
+                EveryMatrixModelMapper.resetPasswordTokenResponse(from: internalResponse)
+            }
+            .mapError { error in
+                ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func validateResetPasswordCode(tokenId: String, validationCode: String) -> AnyPublisher<ValidateResetPasswordCodeResponse, ServiceProviderError> {
+        let endpoint = EveryMatrixPlayerAPI.validateResetPasswordCode(tokenId: tokenId, validationCode: validationCode)
+        let publisher: AnyPublisher<EveryMatrix.ValidateResetPasswordCodeResponse, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { internalResponse in
+                EveryMatrixModelMapper.validateResetPasswordCodeResponse(from: internalResponse)
+            }
+            .mapError { error in
+                return error
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool) -> AnyPublisher<ResetPasswordByHashKeyResponse, ServiceProviderError> {
+        let endpoint = EveryMatrixPlayerAPI.resetPasswordWithHashKey(hashKey: hashKey, plainTextPassword: plainTextPassword, isUserHash: isUserHash)
+        let publisher: AnyPublisher<EveryMatrix.ResetPasswordByHashKeyResponse, ServiceProviderError> = connector.request(endpoint)
+        
+        return publisher
+            .map { internalResponse in
+                EveryMatrixModelMapper.resetPasswordByHashKeyResponse(from: internalResponse)
+            }
+            .mapError { error in
+                return error
             }
             .eraseToAnyPublisher()
     }

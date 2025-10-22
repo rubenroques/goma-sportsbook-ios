@@ -1,5 +1,5 @@
 //
-//  MockPhoneForgotPasswordViewModel.swift
+//  PhoneForgotPasswordViewModel.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 27/06/2025.
@@ -8,8 +8,12 @@
 import Foundation
 import GomaUI
 import Combine
+import ServicesProvider
 
-class MockPhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
+class PhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
+    let hashKey: String
+    var newPassword: String = ""
+    let resetPasswordType: ResetPasswordType
     let headerViewModel: PromotionalHeaderViewModelProtocol
     let highlightedTextViewModel: HighlightedTextViewModelProtocol
     let newPasswordFieldViewModel: BorderedTextFieldViewModelProtocol
@@ -20,10 +24,14 @@ class MockPhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { isLoadingSubject.eraseToAnyPublisher() }
     
     let passwordChanged = PassthroughSubject<Void, Never>()
+    let showError = PassthroughSubject<String, Never>()
 
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
+    init(hashKey: String, resetPasswordType: ResetPasswordType) {
+        
+        self.hashKey = hashKey
+        self.resetPasswordType = resetPasswordType
         
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "header",
                                                                                            icon: "key_icon",
@@ -74,6 +82,8 @@ class MockPhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
                 var isNewPasswordValid = false
                 var isConfirmNewPasswordValid = false
                 
+                self?.newPassword = newPassword
+                
                 if newPassword.count < 4 && newPassword.isNotEmpty {
                     isNewPasswordValid = false
                     self?.newPasswordFieldViewModel.setError("Password too small")
@@ -113,11 +123,33 @@ class MockPhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
     
     func requestPasswordChange() {
         isLoadingSubject.send(true)
-        // Simulate endpoint delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            self?.isLoadingSubject.send(false)
-            
-            self?.passwordChanged.send()
-        }
+        
+        // Get the new password from the text field
+        let newPassword = newPassword
+        
+        // Call the API to reset the password with the hashKey
+        Env.servicesProvider
+            .resetPasswordWithHashKey(hashKey: hashKey, plainTextPassword: newPassword, isUserHash: true)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
+                self.isLoadingSubject.send(false)
+                
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    switch error {
+                    case .errorMessage(let message):
+                        self.showError.send(message)
+                    default:
+                        self.showError.send(error.localizedDescription)
+                    }
+                }
+            }, receiveValue: { [weak self] response in
+                guard let self = self else { return }
+                self.passwordChanged.send()
+            })
+            .store(in: &cancellables)
     }
 }

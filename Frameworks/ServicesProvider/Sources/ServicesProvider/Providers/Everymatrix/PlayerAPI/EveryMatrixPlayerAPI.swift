@@ -26,6 +26,11 @@ enum EveryMatrixPlayerAPI {
 
     // Odds Boost / Bonus Wallet API
     case getSportsBonusWallets(request: EveryMatrix.OddsBoostWalletRequest)
+    
+    // Password Reset endpoints
+    case getResetPasswordTokenId(mobileNumber: String, mobilePrefix: String)
+    case validateResetPasswordCode(tokenId: String, validationCode: String)
+    case resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -64,8 +69,16 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v2/sports/bets/book"
         case .getFromBookingCode(let code):
             return "/v2/sports/bets/book/\(code)"
+        
         case .getSportsBonusWallets:
             return "/v1/bonus/wallets/sports"
+
+        case .getResetPasswordTokenId:
+            return "/v1/player/resetPasswordByMobilePhone"
+        case .validateResetPasswordCode:
+            return "/v1/player/resetPasswordByMobilePhone/validate"
+        case .resetPasswordWithHashKey:
+            return "/v1/player/ResetPasswordByHashKey"
         }
     }
     
@@ -113,6 +126,16 @@ extension EveryMatrixPlayerAPI: Endpoint {
                 URLQueryItem(name: "hasGameModel", value: "true"),
                 URLQueryItem(name: "order", value: "DESCENDING")
             ]
+        case .getResetPasswordTokenId(let mobileNumber, let mobilePrefix):
+            return [
+                URLQueryItem(name: "mobileNumber", value: mobileNumber),
+                URLQueryItem(name: "mobilePrefix", value: mobilePrefix)
+            ]
+        case .validateResetPasswordCode(let tokenId, let validationCode):
+            return [
+                URLQueryItem(name: "tokenId", value: tokenId),
+                URLQueryItem(name: "validationCode", value: validationCode)
+            ]
         default:
             return nil
         }
@@ -130,6 +153,11 @@ extension EveryMatrixPlayerAPI: Endpoint {
             ]
             return headers
         case .getBankingWebView:
+            return [
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            ]
+        case .resetPasswordWithHashKey:
             return [
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -159,20 +187,31 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return .get
         case .getUserBalance:
             return .get
+        
         case .getBankingWebView:
             return .post
         case .getWageringTransactions, .getBankingTransactions:
             return .get
+        
         case .getRecentlyPlayedGames:
             return .get
         case .getMostPlayedGames:
             return .get
+        
         case .createBookingCode:
             return .post
         case .getFromBookingCode:
             return .get
+        
         case .getSportsBonusWallets:
             return .put
+
+        case .getResetPasswordTokenId:
+            return .post
+        case .validateResetPasswordCode:
+            return .post
+        case .resetPasswordWithHashKey:
+            return .post
         }
     }
     
@@ -233,8 +272,17 @@ extension EveryMatrixPlayerAPI: Endpoint {
             let selections = bettingOfferIds.map { BookingSelection(bettingOfferId: $0) }
             let request = BookingRequest(selections: selections, originalSelectionsLength: originalSelectionsLength)
             return try? JSONEncoder().encode(request)
+        
         case .getSportsBonusWallets(let request):
             return try? JSONEncoder().encode(request)
+
+        case .resetPasswordWithHashKey(let hashKey, let plainTextPassword, let isUserHash):
+            let bodyDict: [String: Any] = [
+                "hashKey": hashKey,
+                "plainTextPassword": plainTextPassword,
+                "isUserHash": isUserHash
+            ]
+            return try? JSONSerialization.data(withJSONObject: bodyDict, options: [])
         default:
             return nil
         }

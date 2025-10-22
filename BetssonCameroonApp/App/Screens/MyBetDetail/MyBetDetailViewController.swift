@@ -21,7 +21,8 @@ final class MyBetDetailViewController: UIViewController {
     private lazy var customNavigationView: UIView = Self.createCustomNavigationView()
     private lazy var betDetailsTitleLabel: UILabel = Self.createBetDetailsTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
-    
+    private lazy var shareButton: UIButton = Self.createShareButton()
+
     // Content scroll view and stack view
     private lazy var contentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -132,6 +133,7 @@ final class MyBetDetailViewController: UIViewController {
         
         customNavigationView.addSubview(betDetailsTitleLabel)
         customNavigationView.addSubview(backButton)
+        customNavigationView.addSubview(shareButton)
     }
     
     private func setupSelectionsStackView() {
@@ -164,6 +166,11 @@ final class MyBetDetailViewController: UIViewController {
             backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
             backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
             
+            shareButton.trailingAnchor.constraint(equalTo: customNavigationView.trailingAnchor, constant: -16),
+            shareButton.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
+            shareButton.widthAnchor.constraint(equalToConstant: 24),
+            shareButton.heightAnchor.constraint(equalToConstant: 24),
+            
             // Content Scroll View (below navigation)
             contentScrollView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -182,13 +189,29 @@ final class MyBetDetailViewController: UIViewController {
     }
     
     private func setupBindings() {
-        // No binding needed - content is immediately available
-        // Content is already visible since we removed loading states
-        
+        // Share booking code presentation
+        viewModel.onShareBookingCodeRequested = { [weak self] code in
+            let shareBookingCodeViewModel = ShareBookingCodeViewModel(bookingCode: code)
+            let shareBookingCodeViewController = ShareBookingCodeViewController(viewModel: shareBookingCodeViewModel)
+            self?.present(shareBookingCodeViewController, animated: true)
+        }
+
+        // Booking code failure alert
+        viewModel.onShareBookingCodeFailed = { [weak self] message in
+            let alert = UIAlertController(
+                title: "Booking Code Error",
+                message: "Failed to create booking code: \(message)",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            self?.present(alert, animated: true)
+        }
     }
     
     private func setupActions() {
         backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
+        
+        shareButton.addTarget(self, action: #selector(didTapShare), for: .primaryActionTriggered)
     }
     
     
@@ -200,6 +223,10 @@ final class MyBetDetailViewController: UIViewController {
     
     @objc private func didTapBack() {
         viewModel.handleBackTap()
+    }
+    
+    @objc private func didTapShare() {
+        viewModel.handleShareTap()
     }
     
     // No retry needed - data is immediately available
@@ -251,6 +278,15 @@ extension MyBetDetailViewController {
         button.setImage(backImage, for: .normal)
         button.tintColor = StyleProvider.Color.highlightPrimary
         
+        return button
+    }
+    
+    private static func createShareButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(named: "share_icon")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.tintColor = StyleProvider.Color.iconPrimary
         return button
     }
     

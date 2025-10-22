@@ -21,7 +21,8 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     // MARK: - Navigation Closures for CasinoCoordinator
     var onGameSelected: ((String) -> Void) = { _ in }
     var onNavigateBack: (() -> Void) = { }
-    
+    var onSportsQuickLinkSelected: ((QuickLinkType) -> Void)?
+
     private static let gamesPlatform = "PC"
     
     // MARK: - Published Properties
@@ -43,7 +44,7 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     var isAnyLoading: Bool { loadingState != .idle }
     
     // MARK: - Child ViewModels
-    let quickLinksTabBarViewModel: MockQuickLinksTabBarViewModel
+    let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
     // multiWidgetToolbarViewModel is now managed by TopBarContainerController
     
     // MARK: - Properties
@@ -58,7 +59,7 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
         self.categoryTitle = categoryTitle
         self.servicesProvider = servicesProvider
         self.lobbyType = lobbyType
-        self.quickLinksTabBarViewModel = MockQuickLinksTabBarViewModel.gamingMockViewModel
+        self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forCasinoScreens()
         // multiWidgetToolbarViewModel is now managed by TopBarContainerController
         
         setupChildViewModelCallbacks()
@@ -200,9 +201,8 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     
     private func setupChildViewModelCallbacks() {
         // QuickLinks tab bar callbacks
-        quickLinksTabBarViewModel.onTabSelected = { tabId in
-            print("Casino Category Games: Tab selected: \(tabId)")
-            // Handle tab switching if needed
+        quickLinksTabBarViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
+            self?.onSportsQuickLinkSelected?(quickLinkType)
         }
     }
 }

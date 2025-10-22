@@ -25,7 +25,7 @@ final class QuickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol {
     
     // Navigation closure for handling QuickLink selections
     public var onQuickLinkSelected: ((QuickLinkType) -> Void)?
-    
+
     // MARK: - Initialization
     public init(quickLinks: [QuickLinkItem]? = nil) {
         // Use provided quick links or default to gaming links for sports screens
@@ -37,13 +37,7 @@ final class QuickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol {
     public func didTapQuickLink(type: QuickLinkType) {
         print("🎯 QuickLinksTabBarViewModel: Quick link tapped - \(type.rawValue)")
         
-        // Trigger navigation for casino-related links
-        if Self.isCasinoQuickLink(type) {
-            onQuickLinkSelected?(type)
-        } else {
-            // For non-casino links, we could handle other navigation types here
-            print("🎯 QuickLinksTabBarViewModel: Non-casino link tapped - \(type.rawValue)")
-        }
+        onQuickLinkSelected?(type)
         
         // Maintain backward compatibility with onTabSelected
         onTabSelected(type.rawValue)
@@ -81,6 +75,18 @@ extension QuickLinksTabBarViewModel {
     /// Creates a ViewModel for sports screens with gaming quick links
     static func forSportsScreens() -> QuickLinksTabBarViewModel {
         return QuickLinksTabBarViewModel()
+    }
+    
+    static func forCasinoScreens() -> QuickLinksTabBarViewModel {
+        let casinoQuickLinks = [
+            QuickLinkItem(type: .sports, title: "Sports", icon: UIImage(named: "sports_quick_link_icon")),
+            QuickLinkItem(type: .live, title: "Live", icon: UIImage(named: "live_quick_link_icon")),
+            QuickLinkItem(type: .favourites, title: "Favourites", icon: UIImage(named: "favourites_quick_link_icon")),
+            QuickLinkItem(type: .lite, title: "Lite", icon: UIImage(named: "casino_quick_link_icon")),
+            QuickLinkItem(type: .promos, title: "Promos", icon: UIImage(named: "promos_quick_link_icon"))
+        ]
+        
+        return QuickLinksTabBarViewModel(quickLinks: casinoQuickLinks)
     }
     
     /// Creates a ViewModel with sports-specific quick links

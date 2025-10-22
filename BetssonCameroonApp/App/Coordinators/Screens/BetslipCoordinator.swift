@@ -189,27 +189,10 @@ class BetslipCoordinator: Coordinator {
     }
 
     private func shareBetslip(code: String, from viewController: UIViewController) {
-        print("[BET_PLACEMENT] 📤 Sharing betslip - code: \(code)")
-        let shareText = "Booking Code: \(code)"
-
-        let activityViewController = UIActivityViewController(
-            activityItems: [shareText],
-            applicationActivities: nil
-        )
-
-        // For iPad support
-        if let popoverController = activityViewController.popoverPresentationController {
-            popoverController.sourceView = viewController.view
-            popoverController.sourceRect = CGRect(
-                x: viewController.view.bounds.midX,
-                y: viewController.view.bounds.midY,
-                width: 0,
-                height: 0
-            )
-            popoverController.permittedArrowDirections = []
-        }
-
-        viewController.present(activityViewController, animated: true)
+        // Present the ShareBookingCodeView instead of immediate share sheet
+        let shareViewModel = ShareBookingCodeViewModel(bookingCode: code)
+        let shareViewController = ShareBookingCodeViewController(viewModel: shareViewModel)
+        viewController.present(shareViewController, animated: true)
     }
 
     private func showBookingCodeError(from viewController: UIViewController) {

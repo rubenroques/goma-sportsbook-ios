@@ -33,6 +33,22 @@ final class ProfileWalletViewController: UIViewController {
     private lazy var loadingView: UIView = Self.createLoadingView()
     private lazy var errorView: UIView = Self.createErrorView()
     
+    private let actionLoadingView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        view.isHidden = true
+
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.startAnimating()
+        view.addSubview(indicator)
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        return view
+    }()
     // MARK: - Initialization
     
     init(viewModel: ProfileWalletViewModel) {
@@ -102,7 +118,8 @@ final class ProfileWalletViewController: UIViewController {
         view.addSubview(scrollView)
         view.addSubview(loadingView)
         view.addSubview(errorView)
-        
+        view.addSubview(actionLoadingView)
+
         customNavigationView.addSubview(profileTitleLabel)
         customNavigationView.addSubview(closeButton)
         
@@ -168,7 +185,13 @@ final class ProfileWalletViewController: UIViewController {
             errorView.topAnchor.constraint(equalTo: view.topAnchor),
             errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            // Action Loading View
+            actionLoadingView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
+            actionLoadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            actionLoadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            actionLoadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -191,6 +214,13 @@ final class ProfileWalletViewController: UIViewController {
                 self?.dismiss(animated: true)
             }
         }
+        
+        viewModel.isActionLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.actionLoadingView.isHidden = !isLoading
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Rendering
