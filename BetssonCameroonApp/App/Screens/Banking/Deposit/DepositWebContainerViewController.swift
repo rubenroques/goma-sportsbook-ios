@@ -23,10 +23,11 @@ final class DepositWebContainerViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    
+
     private lazy var customNavigationView: UIView = Self.createCustomNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var cancelButton: UIButton = Self.createCancelButton()
+    private lazy var logoImageView: UIImageView = Self.createLogoImageView()
     
     // MARK: - Callbacks
     
@@ -82,7 +83,10 @@ final class DepositWebContainerViewController: UIViewController {
         customNavigationView.addSubview(titleLabel)
         customNavigationView.addSubview(cancelButton)
         customNavigationView.backgroundColor = UIColor.App.backgroundPrimary
-        
+
+        // Add logo
+        view.addSubview(logoImageView)
+
         // Add WebView
         view.addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -104,23 +108,29 @@ final class DepositWebContainerViewController: UIViewController {
             customNavigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             customNavigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             customNavigationView.heightAnchor.constraint(equalToConstant: 56),
-            
+
             // Title Label
             titleLabel.centerXAnchor.constraint(equalTo: customNavigationView.centerXAnchor),
             titleLabel.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
-            
+
             // Cancel Button
             cancelButton.trailingAnchor.constraint(equalTo: customNavigationView.trailingAnchor, constant: -16),
             cancelButton.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
             cancelButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
             cancelButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
-            
+
+            // Logo constraints
+            logoImageView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor, constant: 18),
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 100),
+            logoImageView.heightAnchor.constraint(equalToConstant: 20),
+
             // WebView constraints
-            webView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
+            webView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 18),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
+
             // Loading view constraints
             loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
@@ -286,5 +296,14 @@ extension DepositWebContainerViewController {
         button.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
+    }
+
+    private static func createLogoImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "betsson_logo")?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = UIColor.App.highlightPrimary
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }
 }
