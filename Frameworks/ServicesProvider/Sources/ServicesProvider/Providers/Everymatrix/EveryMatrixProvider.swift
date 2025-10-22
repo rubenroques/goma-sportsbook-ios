@@ -16,6 +16,9 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     var connector: EveryMatrixConnector
+    
+    var privilegedAccessManager: PrivilegedAccessManagerProvider?
+    
     private let recsysConnector: EveryMatrixRecsysAPIConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
@@ -39,10 +42,15 @@ class EveryMatrixEventsProvider: EventsProvider {
     // MARK: - Balanced Market Managers (for betslip)
     private var balancedMarketManagers: [String: EventWithBalancedMarketSubscriptionManager] = [:]
 
-    init(connector: EveryMatrixConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
+    init(connector: EveryMatrixConnector,
+         sessionCoordinator: EveryMatrixSessionCoordinator,
+         privilegedAccessManager: PrivilegedAccessManagerProvider? = nil)
+    {
         self.connector = connector
         self.sessionCoordinator = sessionCoordinator
         self.recsysConnector = EveryMatrixRecsysAPIConnector(sessionCoordinator: sessionCoordinator)
+        
+        self.privilegedAccessManager = privilegedAccessManager
     }
 
     deinit {
@@ -789,6 +797,57 @@ class EveryMatrixEventsProvider: EventsProvider {
                     return serviceError
                 }
                 return ServiceProviderError.decodingError(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func getEventWithSingleOutcome(bettingOfferId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        let language = "en"
+        let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()
+
+        let router = WAMPRouter.getBettingOffer(
+            operatorId: operatorId,
+            language: language,
+            bettingOfferId: bettingOfferId
+        )
+
+        return connector.request(router)
+            .tryMap { (response: EveryMatrix.AggregatorResponse) -> Event in
+                guard let event = self.buildEvent(from: response, expectedMatchId: nil) else {
+                    throw ServiceProviderError.decodingError(message: "Failed to build event with single outcome for betting offer \(bettingOfferId)")
+                }
+                return event
+            }
+            .mapError { error -> ServiceProviderError in
+                if let serviceError = error as? ServiceProviderError {
+                    return serviceError
+                }
+                return ServiceProviderError.decodingError(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func loadEventsFromBookingCode(bookingCode: String) -> AnyPublisher<[Event], ServiceProviderError> {
+        // Step 1: Get betting offer IDs from booking code via PrivilegedAccessManager
+        guard let privilegedAccessManager = self.privilegedAccessManager else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getBettingOfferIds(bookingCode: bookingCode)
+            .flatMap { [weak self] bettingOfferIds -> AnyPublisher<[Event], ServiceProviderError> in
+                guard let self = self else {
+                    return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
+                }
+
+                // Step 2: Fetch Event for each betting offer ID in parallel
+                let eventPublishers = bettingOfferIds.map { bettingOfferId in
+                    self.getEventWithSingleOutcome(bettingOfferId: bettingOfferId)
+                }
+
+                // Step 3: Collect all Events into array
+                return Publishers.MergeMany(eventPublishers)
+                    .collect()
+                    .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
     }

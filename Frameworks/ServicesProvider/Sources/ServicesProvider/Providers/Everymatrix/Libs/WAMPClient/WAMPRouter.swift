@@ -32,6 +32,9 @@ enum WAMPRouter {
     // Betting Offer Reference (for Rebet)
     case getBettingOfferReference(outcomeId: String)
 
+    // Betting Offer (for single outcome fetch)
+    case getBettingOffer(operatorId: String, language: String, bettingOfferId: String)
+
     // Shared Bets
     case getSharedBetTokens(betId: String)
     case getSharedBetData(betToken: String)
@@ -135,6 +138,8 @@ enum WAMPRouter {
             return "/sports#odds"
         case .getBettingOfferReference:
             return "/sports#oddsByOutcomes"
+        case .getBettingOffer:
+            return "/sports#initialDump"
         case .searchV2:
             return "/sports#searchV2"
         case .multiSearch:
@@ -302,6 +307,10 @@ enum WAMPRouter {
         case .getBettingOfferReference(let outcomeId):
             return ["lang": "en",
                     "outcomeIds": [outcomeId]]
+
+        case .getBettingOffer(let operatorId, let language, let bettingOfferId):
+            let topic = "/sports/\(operatorId)/\(language)/bettingOffers/\(bettingOfferId)"
+            return ["topic": topic]
 
         case .searchV2(let language, let limit, let query, let eventStatuses, let eventTypes, let include, let bettingTypeIds, let dataWithoutOdds):
             return ["lang": language,

@@ -89,9 +89,6 @@ public class Client {
                 }).store(in: &self.cancellables)
             
             
-            let everyMatrixEventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector, sessionCoordinator: sessionCoordinator)
-            self.eventsProvider = everyMatrixEventsProvider
-            
             // Player API for privilegedAccessManager
             let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector(sessionCoordinator: sessionCoordinator)
             
@@ -99,9 +96,17 @@ public class Client {
                 connector: everyMatrixPlayerAPIConnector,
                 sessionCoordinator: sessionCoordinator
             )
-
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
             
+            //
+            // Events Provider (uses wamp socket)
+            let everyMatrixEventsProvider = EveryMatrixEventsProvider(
+                connector: everyMatrixConnector,
+                sessionCoordinator: sessionCoordinator,
+                privilegedAccessManager: everyMatrixPrivilegedAccessManager)
+            self.eventsProvider = everyMatrixEventsProvider
+            
+            //
             // Casino API
             let everyMatrixCasinoConnector = EveryMatrixCasinoConnector(sessionCoordinator: sessionCoordinator)
             let everyMatrixCasinoProvider = EveryMatrixCasinoProvider(connector: everyMatrixCasinoConnector)
@@ -903,6 +908,26 @@ extension Client {
         }
 
         return eventsProvider.subscribeToEventWithSingleOutcome(eventId: eventId, outcomeId: outcomeId)
+    }
+
+    public func getEventWithSingleOutcome(bettingOfferId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getEventWithSingleOutcome(bettingOfferId: bettingOfferId)
+    }
+
+    public func loadEventsFromBookingCode(bookingCode: String) -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.loadEventsFromBookingCode(bookingCode: bookingCode)
     }
 
     public func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError> {
