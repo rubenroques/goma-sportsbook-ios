@@ -13,8 +13,8 @@ import GomaUI
 class Bootstrap {
 
     private let window: UIWindow
-    private var appCoordinator: AppCoordinator?
     private var appStateManager: AppStateManager?
+    var appCoordinator: AppCoordinator?
 
     init(window: UIWindow) {
         self.window = window

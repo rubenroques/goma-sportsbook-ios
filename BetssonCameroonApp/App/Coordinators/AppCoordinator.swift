@@ -230,4 +230,100 @@ class AppCoordinator: Coordinator {
         updateCoordinator = nil
         mainTabBarCoordinator = nil
     }
+    
+    func openSharedRoute(_ route: Route) {
+        print("BA ROUTE: \(route)")
+        
+        Publishers.CombineLatest3(environment.servicesProvider.eventsConnectionStatePublisher, environment.userSessionStore.isLoadingUserSessionPublisher, appStateManager.currentStatePublisher)
+            .filter({ connection, isLoading, state in
+                connection == .connected && isLoading == false && state == .ready
+            })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+//                self?.appSharedState = .inactiveApp
+                self?.openRoute(route)
+            })
+            .store(in: &cancellables)
+    }
+    
+    func openRoute(_ route: Route) {
+        
+        switch route {
+        case .register:
+            self.showRegister()
+            break
+        case .login:
+            self.showLogin()
+        case .sportsHome:
+            self.showSportsHome()
+        case .liveGames:
+            self.showLiveGames()
+        case .myBets:
+            self.showMyBets()
+        case .sportsSearch:
+            self.showSportsSearch()
+        case .casinoHome:
+            self.showCasinoHome()
+        case .casinoVirtuals:
+            self.showCasinoVirtual()
+        case .casinoGame(let gameId):
+            self.showCasinoGame(gameId: gameId)
+        case .none:
+            break
+        default:
+            break
+        }
+    }
+    
+    // Universal links routes show screens
+    private func showRegister() {
+        
+        self.mainTabBarCoordinator?.showRegistration()
+    }
+    
+    private func showLogin() {
+        self.mainTabBarCoordinator?.showLogin()
+    }
+    
+    private func showSportsHome() {
+        self.mainTabBarCoordinator?.showNextUpEventsScreen()
+    }
+    
+    private func showLiveGames() {
+        self.mainTabBarCoordinator?.showInPlayEventsScreen()
+    }
+    
+    private func showMyBets() {
+        self.mainTabBarCoordinator?.showMyBetsScreen()
+    }
+    
+    private func showSportsSearch() {
+        self.mainTabBarCoordinator?.showSearchScreen()
+    }
+    
+    private func showCasinoHome() {
+        self.mainTabBarCoordinator?.showCasinoHomeScreen()
+    }
+    
+    private func showCasinoVirtual() {
+        self.mainTabBarCoordinator?.showCasinoVirtualSportsScreen()
+    }
+    
+    private func showCasinoGame(gameId: String) {
+        if gameId == "32430" {
+            self.mainTabBarCoordinator?.showCasinoAviatorGameScreen()
+        }
+        else {
+            // TODO: Open specific games
+        }
+    }
+    
+    private func showCasinoSearch() {
+        self.mainTabBarCoordinator?.showCasinoSearchScreen()
+    }
+    
+    private func showDeposit() {
+        self.mainTabBarCoordinator?.presentDepositFlow()
+    }
 }

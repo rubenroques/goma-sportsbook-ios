@@ -172,7 +172,7 @@ class MainTabBarCoordinator: Coordinator {
     
     // MARK: - Lazy Screen Loading
     
-    private func showNextUpEventsScreen(withContextChange: Bool = false) {
+    func showNextUpEventsScreen(withContextChange: Bool = false) {
         // Lazy loading: only create coordinator when needed
         if nextUpEventsCoordinator == nil {
             let coordinator = NextUpEventsCoordinator(
@@ -218,7 +218,7 @@ class MainTabBarCoordinator: Coordinator {
         nextUpEventsCoordinator?.refresh()
     }
     
-    private func showInPlayEventsScreen(withContextChange: Bool = false) {
+    func showInPlayEventsScreen(withContextChange: Bool = false) {
         // Lazy loading: only create coordinator when needed
         if inPlayEventsCoordinator == nil {
             let coordinator = InPlayEventsCoordinator(
@@ -438,7 +438,7 @@ class MainTabBarCoordinator: Coordinator {
         navigationController.present(combinedFiltersViewController, animated: true)
     }
     
-    private func showLogin() {
+    func showLogin() {
         if let onShowLogin = onShowLogin {
             onShowLogin()
         } else {
@@ -449,7 +449,7 @@ class MainTabBarCoordinator: Coordinator {
         print("🚀 RootTabBarCoordinator: Login requested")
     }
     
-    private func showRegistration() {
+    func showRegistration() {
         if let onShowRegistration = onShowRegistration {
             onShowRegistration()
         } else {
@@ -676,7 +676,7 @@ class MainTabBarCoordinator: Coordinator {
         sportsSearchCoordinator?.updateFilters(filterSelection)
     }
         
-    private func showMyBetsScreen() {
+    func showMyBetsScreen() {
         // Lazy loading: only create coordinator when needed
         if myBetsCoordinator == nil {
             let coordinator = MyBetsCoordinator(
@@ -711,7 +711,7 @@ class MainTabBarCoordinator: Coordinator {
         myBetsCoordinator?.refresh()
     }
     
-    private func showSearchScreen() {
+    func showSearchScreen() {
         // Lazy loading: only create coordinator when needed
         if sportsSearchCoordinator == nil {
             let coordinator = SportsSearchCoordinator(
@@ -746,7 +746,7 @@ class MainTabBarCoordinator: Coordinator {
         sportsSearchCoordinator?.refresh()
     }
     
-    private func showPromotionsScreen() {
+    func showPromotionsScreen() {
         // Create and start PromotionsCoordinator
         let promotionsCoordinator = PromotionsCoordinator(
             navigationController: navigationController,
@@ -783,7 +783,7 @@ class MainTabBarCoordinator: Coordinator {
         print("🚀 MainTabBarCoordinator: Started PromotionsCoordinator")
     }
     
-    private func showCasinoHomeScreen() {
+    func showCasinoHomeScreen() {
         // Lazy loading: only create coordinator when needed
         if traditionalCasinoCoordinator == nil {
             let coordinator = CasinoCoordinator(
@@ -816,7 +816,7 @@ class MainTabBarCoordinator: Coordinator {
         traditionalCasinoCoordinator?.refresh()
     }
     
-    private func showCasinoVirtualSportsScreen() {
+    func showCasinoVirtualSportsScreen() {
         // Lazy loading: only create coordinator when needed
         if virtualSportsCasinoCoordinator == nil {
             let coordinator = CasinoCoordinator(
@@ -850,7 +850,7 @@ class MainTabBarCoordinator: Coordinator {
         print("🎯 MainTabBarCoordinator: Showed virtual sports screen")
     }
     
-    private func showCasinoAviatorGameScreen() {
+    func showCasinoAviatorGameScreen() {
 
         if traditionalCasinoCoordinator == nil {
             let coordinator = CasinoCoordinator(
@@ -887,7 +887,7 @@ class MainTabBarCoordinator: Coordinator {
         traditionalCasinoCoordinator?.refresh()
     }
     
-    private func showCasinoSearchScreen() {
+    func showCasinoSearchScreen() {
         // Lazy loading: only create coordinator when needed
         if casinoSearchCoordinator == nil {
             let coordinator = CasinoSearchCoordinator(
@@ -984,7 +984,7 @@ class MainTabBarCoordinator: Coordinator {
     
     // MARK: - Banking Flow Methods
     
-    private func presentDepositFlow() {
+    func presentDepositFlow() {
         let bankingCoordinator = BankingCoordinator.forDeposit(
             navigationController: navigationController,
             client: environment.servicesProvider
