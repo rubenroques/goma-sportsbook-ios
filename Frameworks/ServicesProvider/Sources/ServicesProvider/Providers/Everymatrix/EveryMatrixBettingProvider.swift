@@ -48,7 +48,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         print("🔍 EveryMatrixBettingProvider: getOpenBetsHistory called with pageIndex=\(pageIndex), limit=\(limit), placedBefore=\(placedBefore)")
         
-        let endpoint = EveryMatrixOddsMatrixAPI.getOpenBets(limit: limit, placedBefore: placedBefore)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getOpenBets(limit: limit, placedBefore: placedBefore)
         
         return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
@@ -68,7 +68,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let limit = 20
         let placedBefore = endDate ?? defaultPlacedBeforeDate()
         
-        let endpoint = EveryMatrixOddsMatrixAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: nil)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: nil)
         
         return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
@@ -84,7 +84,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let limit = 20
         let placedBefore = endDate ?? defaultPlacedBeforeDate()
         
-        let endpoint = EveryMatrixOddsMatrixAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: "WON")
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: "WON")
         
         return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
@@ -111,7 +111,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
 
         // Create the API endpoint
-        let endpoint = EveryMatrixOddsMatrixAPI.placeBet(betData: placeBetRequest)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.placeBet(betData: placeBetRequest)
 
         // Make the API call
         return restConnector.request(endpoint)
@@ -146,7 +146,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     // MARK: - Cashout Methods (Legacy)
 
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError> {
-        let endpoint = EveryMatrixOddsMatrixAPI.calculateCashout(betId: betId, stakeValue: stakeValue)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.calculateCashout(betId: betId, stakeValue: stakeValue)
 
         return restConnector.request(endpoint)
             .map { (response: EveryMatrix.CashoutResponse) -> Cashout in
@@ -175,7 +175,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
         print("💰 EveryMatrixBettingProvider: Subscribing to cashout value for bet \(betId)")
 
-        let endpoint = EveryMatrixOddsMatrixAPI.getCashoutValueSSE(betId: betId)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getCashoutValueSSE(betId: betId)
 
         return self.sseConnector.request(endpoint, decodingType: EveryMatrix.CashoutValueSSEResponse.self)
             .compactMap { sseEvent -> SubscribableContent<CashoutValue>? in
@@ -230,7 +230,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let internalRequest = EveryMatrixModelMapper.cashoutRequest(from: request)
 
         // Create endpoint
-        let endpoint = EveryMatrixOddsMatrixAPI.executeCashoutV2(request: internalRequest)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.executeCashoutV2(request: internalRequest)
 
         // Execute request
         return restConnector.request(endpoint)
@@ -315,7 +315,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
 
         let type = selections.count > 1 ? "MULTIPLE" : "SINGLE"
 
-        let domainId = EveryMatrixUnifiedConfiguration.shared.domainId
+        let domainId = EveryMatrixUnifiedConfiguration.shared.operatorId
         let operatorId = Int(domainId) ?? 4093
 
         return EveryMatrix.PlaceBetRequest(

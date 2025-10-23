@@ -222,6 +222,8 @@ PlacedBetsResponse (domain model)
 
 In-memory relational database **exclusively for WebSocket DTOs** with reactive observation capabilities.
 
+**Location:** `APIs/OddsMatrixSocketAPI/Store/EntityStore.swift`
+
 **Critical**: EntityStore is ONLY used for WebSocket data. REST API responses are never stored here.
 
 ### Key Features
@@ -276,6 +278,8 @@ Handles dynamic property updates without knowing entity structure at compile tim
 ### Purpose
 
 Encapsulate multi-step subscription logic that's too complex for simple provider methods.
+
+**Location:** `APIs/OddsMatrixSocketAPI/SubscriptionManagers/`
 
 ### When to Use Managers
 
@@ -396,7 +400,7 @@ Managers own their subscriptions and EntityStores. They must be:
 **Key Properties**:
 - Base URLs for all 4 REST APIs
 - WAMP WebSocket configuration
-- Domain ID (e.g., "4093")
+- Domain ID (e.g., "4093") // EveryMatrixUnifiedConfiguration.shared.operatorId
 - Default language, timeout, platform
 
 **Note**: Set once at app startup in `Client.swift`, don't change mid-session
@@ -437,51 +441,104 @@ See `Documentation/TokenRefreshArchitecture.md` for complete implementation deta
 
 ```
 Everymatrix/
-├── Libs/
-│   ├── WAMPClient/           # WAMP protocol implementation (WebSocket)
-│   └── SSEClient/            # Server-Sent Events (cashout streaming)
+├── APIs/                              # ✨ API-specific code (organized by API)
+│   ├── OddsMatrixSocketAPI/           # Sports betting WebSocket (WAMP)
+│   │   ├── Builders/                  # DTO → Hierarchical transformation
+│   │   ├── Protocols/                 # Entity, HierarchicalBuilder
+│   │   ├── Store/                     # EntityStore (WebSocket DTOs only)
+│   │   ├── SubscriptionManagers/      # WAMP subscription orchestration
+│   │   ├── WAMPManager.swift          # WAMP connection manager
+│   │   ├── WAMPRouter.swift           # WAMP endpoint definitions
+│   │   └── WAMPSocketParams.swift     # WAMP connection parameters
+│   ├── OddsMatrixWebAPI/              # Sports betting REST API
+│   │   └── EveryMatrixOddsMatrixWebAPI.swift
+│   ├── CasinoAPI/                     # Casino REST API
+│   │   ├── EveryMatrixCasinoAPI.swift
+│   │   └── EveryMatrixCasinoConnector.swift   # Casino-specific connector
+│   ├── PlayerAPI/                     # Authentication/Profile REST API
+│   │   └── [endpoint definitions]
+│   └── RecsysAPI/                     # Recommendations REST API
+│       └── [endpoint definitions]
 │
-├── Store/
-│   └── EntityStore.swift     # In-memory reactive entity storage
+├── Models/                            # Data models (organized by protocol)
+│   ├── WebSocket/                     # ✨ WAMP WebSocket models ONLY
+│   │   ├── DTOs/                      # Layer 1: Flat normalized entities
+│   │   │   ├── BettingOfferDTO.swift
+│   │   │   ├── MarketDTO.swift
+│   │   │   ├── MatchDTO.swift
+│   │   │   ├── OutcomeDTO.swift
+│   │   │   └── ...                    # 14 DTO types total
+│   │   ├── Hierarchical/              # Layer 2: Composed hierarchical models
+│   │   │   ├── BettingOffer.swift
+│   │   │   ├── Market.swift
+│   │   │   ├── Match.swift
+│   │   │   ├── Outcome.swift
+│   │   │   └── ...                    # 8 types total
+│   │   └── Response/                  # WebSocket response wrappers
+│   ├── REST/                          # ✨ REST API models ONLY (NO DTO suffix)
+│   │   ├── Casino/
+│   │   │   ├── CasinoGame.swift       # REST model (NO DTO suffix)
+│   │   │   ├── CasinoCategory.swift
+│   │   │   └── CasinoRecentlyPlayed.swift
+│   │   ├── Cashout/
+│   │   │   ├── CashoutValueSSEResponse.swift
+│   │   │   ├── NewCashoutRequest.swift
+│   │   │   └── NewCashoutResponse.swift
+│   │   ├── EveryMatrix+PlaceBet.swift
+│   │   ├── EveryMatrix+MyBets.swift
+│   │   ├── EveryMatrix+Cashier.swift
+│   │   ├── EveryMatrix+PhoneLogin.swift
+│   │   ├── EveryMatrix+OddsBoost.swift
+│   │   └── ...
+│   └── ModelMappers/                  # WebSocket/REST → Domain models
+│       ├── EveryMatrixModelMapper.swift
+│       ├── EveryMatrixModelMapper+Events.swift
+│       ├── EveryMatrixModelMapper+Casino.swift
+│       ├── EveryMatrixModelMapper+CashoutSSE.swift
+│       └── ...
 │
-├── Models/
-│   ├── DataTransferObjects/  # Layer 1: Flat DTOs matching WebSocket format
-│   ├── Composed/             # Layer 2: Hierarchical internal models
-│   ├── Response/             # WebSocket response wrappers
-│   ├── Shared/               # HTTP request/response models
-│   └── Mappers/              # Layer 3: Domain model transformations
+├── Connectors/                        # Protocol-specific connectors
+│   ├── EveryMatrixSocketConnector.swift   # WAMP WebSocket
+│   ├── EveryMatrixRESTConnector.swift     # HTTP REST
+│   └── EveryMatrixSSEConnector.swift      # Server-Sent Events
 │
-├── Builders/                 # DTO → Internal model transformation
-│   ├── MatchBuilder.swift
-│   ├── MarketBuilder.swift
-│   └── ...                   # 8 builders total
+├── Libs/                              # Third-party protocol implementations
+│   ├── WAMPClient/                    # WAMP protocol library
+│   └── SSEClient/                     # Server-Sent Events library
 │
-├── SubscriptionManagers/     # Complex subscription orchestration
-│   ├── MatchDetailsManager.swift
-│   ├── LiveMatchesPaginator.swift
-│   └── ...                   # 9 managers total
+├── Documentation/                     # API documentation & examples
+│   ├── everymatrix_docs.md
+│   ├── websocket-message-analysis.md
+│   ├── granular-updates-implementation.md
+│   └── WAMPExampleResponses/
 │
-├── OddsMatrixAPI/            # Sports betting REST API endpoint definitions
-│   └── EveryMatrixOddsMatrixAPIConnector.swift  # [COMMENTED OUT - consolidated]
-├── PlayerAPI/                # Authentication REST API endpoint definitions
-│   └── EveryMatrixPlayerAPIConnector.swift      # [COMMENTED OUT - consolidated]
-├── CasinoAPI/                # Casino games REST API
-│   ├── EveryMatrixCasinoAPI.swift               # Endpoint definitions
-│   └── EveryMatrixCasinoConnector.swift         # Specialized connector with pre-parse
-├── RecsysAPI/                # Recommendations REST API
-│   └── EveryMatrixRecsysAPI.swift               # Endpoint definitions (connector deleted)
-│
-├── EveryMatrixProvider.swift              # EventsProvider (WAMP)
+├── EveryMatrixEventsProvider.swift        # EventsProvider (WAMP)
 ├── EveryMatrixBettingProvider.swift       # BettingProvider (REST + SSE)
-├── EveryMatrixPrivilegedAccessManager.swift # Auth/Profile (PlayerAPI REST)
-├── EveryMatrixCasinoProvider.swift        # Casino (REST)
-├── EveryMatrixSocketConnector.swift       # ACTIVE: WAMP WebSocket connector (real-time sports data)
-├── EveryMatrixBaseConnector.swift         # ACTIVE: HTTP REST connector (transactions, auth)
-├── EveryMatrixSSEConnector.swift          # ACTIVE: Server-Sent Events connector (cashout streaming)
-├── EveryMatrixCasinoConnector.swift       # ACTIVE: Casino HTTP connector with pre-parse error detection
+├── EveryMatrixCasinoProvider.swift        # Casino provider (REST)
+├── EveryMatrixPAMProvider.swift           # Privileged Access Management
+├── EveryMatrixManagedContentProvider.swift
+├── EveryMatrixPromotionalCampaignsProvider.swift
 ├── EveryMatrixSessionCoordinator.swift    # Session/token management
-└── EveryMatrixUnifiedConfiguration.swift  # Configuration singleton
+├── EveryMatrixUnifiedConfiguration.swift  # Configuration singleton
+└── EveryMatrixNamespace.swift             # Namespace for internal types
 ```
+
+### Key Organizational Principles
+
+**1. API-Centric Organization (`APIs/`)**
+- Each API has its own directory containing ALL related code
+- OddsMatrixSocketAPI: Contains WAMP-specific infrastructure (Builders, Store, SubscriptionManagers)
+- REST APIs (OddsMatrixWebAPI, CasinoAPI, PlayerAPI): Contain endpoint definitions and API-specific connectors
+
+**2. Protocol-Based Model Organization (`Models/`)**
+- **WebSocket/**: WAMP models ONLY - uses DTO suffix, needs Builders
+- **REST/**: HTTP REST models ONLY - NO DTO suffix, already hierarchical
+- **ModelMappers/**: Transform internal models → Domain models
+
+**3. Shared Infrastructure**
+- **Connectors/**: Protocol-specific connectors (Socket, REST, SSE)
+- **Libs/**: Third-party protocol implementations
+- **Providers**: Top-level providers at root (not in subdirectories)
 
 ### Connector Consolidation History
 
@@ -491,21 +548,25 @@ Everymatrix/
 - Each connector only added `apiIdentifier` parameter to BaseConnector
 - Code duplication across connector classes
 
-**Current Architecture (Post-Consolidation + SSE Extraction):**
-- **EveryMatrixBaseConnector**: HTTP REST connector (used by BettingProvider and PrivilegedAccessManager)
+**Current Architecture (Post-Consolidation + SSE Extraction + Organization):**
+- **EveryMatrixRESTConnector** (was BaseConnector): HTTP REST connector (shared by BettingProvider and PrivilegedAccessManager)
 - **EveryMatrixSSEConnector**: Server-Sent Events streaming connector (used only by BettingProvider for cashout)
-- **EveryMatrixCasinoConnector**: Specialized REST connector with pre-parse error detection (Casino API only)
 - **EveryMatrixSocketConnector**: WAMP WebSocket connector (used by EveryMatrixProvider and subscription managers)
+- **EveryMatrixCasinoConnector**: Specialized REST connector with pre-parse error detection (Casino API only, lives in CasinoAPI/)
+- All shared connectors organized in `Connectors/` directory
 - Old REST API connector files (OddsMatrix, PlayerAPI) remain but are commented out for reference
 
-**Why Consolidation + SSE Extraction Happened:**
+**Why Consolidation + SSE Extraction + Rename Happened:**
 1. **Eliminated Duplication**: OddsMatrix/PlayerAPI connectors were nearly identical thin wrappers
-2. **Simplified Maintenance**: Single BaseConnector for token refresh logic
+2. **Simplified Maintenance**: Single RESTConnector for token refresh logic
 3. **Protocol Separation**: Socket ≠ REST ≠ SSE - each connector handles one protocol
 4. **Casino Special Case**: CasinoAPI needed specialized pre-parse logic for error 4004 handling
 5. **SSE Isolation**: Server-Sent Events extracted to dedicated connector (October 2025)
    - Removed unused SSEManager from CasinoConnector
-   - BettingProvider now uses both BaseConnector (REST) and SSEConnector (streaming)
+   - BettingProvider now uses both RESTConnector and SSEConnector
+6. **Clarity**: Renamed BaseConnector → RESTConnector (October 2025)
+   - "Base" was ambiguous - it's specifically for HTTP REST
+   - Organized shared connectors into `Connectors/` directory
 
 **Migration Path:**
 ```swift
@@ -516,9 +577,13 @@ private let playerConnector: EveryMatrixPlayerAPIConnector
 // After Consolidation (Early October 2025)
 private let connector: EveryMatrixBaseConnector  // Shared REST + SSE
 
-// After SSE Extraction (Late October 2025)
+// After SSE Extraction (Mid October 2025)
 private let connector: EveryMatrixBaseConnector     // REST only
 private let sseConnector: EveryMatrixSSEConnector   // SSE only
+
+// After Rename + Organization (Late October 2025)
+private let restConnector: EveryMatrixRESTConnector     // In Connectors/
+private let sseConnector: EveryMatrixSSEConnector       // In Connectors/
 ```
 
 ---

@@ -105,12 +105,11 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Use sportType ID, fallback to "1" (football) if not available
         let sportId = sportType.numericId ?? "1"
 
-        // Create new paginator with custom configuration if provided
-        let numberOfEvents = eventCount ?? 10
-        let numberOfMarkets = 5 // Default value, could be made configurable
-
+        let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+        
         prelivePaginator = PreLiveMatchesPaginator(
             connector: socketConnector,
+            operatorId: operatorId,
             sportId: sportId
         )
 
@@ -135,8 +134,11 @@ class EveryMatrixEventsProvider: EventsProvider {
         let initialEventLimit = 10  // Default initial page size
         let numberOfMarkets = 5     // Default value, could be made configurable
 
+        let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+        
         prelivePaginator = PreLiveMatchesPaginator(
             connector: socketConnector,
+            operatorId: operatorId,
             sportId: filters.sportId,
             initialEventLimit: initialEventLimit,
             numberOfMarkets: numberOfMarkets,
@@ -203,8 +205,14 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Clean up any existing match details manager
         matchDetailsManager?.unsubscribe()
         
+        //
+        let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+        
         // Create new match details manager
-        matchDetailsManager = MatchDetailsManager(connector: socketConnector, matchId: eventId)
+        matchDetailsManager = MatchDetailsManager(
+            connector: socketConnector,
+            operatorId: operatorId,
+            matchId: eventId)
         
         return matchDetailsManager!.subscribeEventDetails()
     }
@@ -263,10 +271,11 @@ class EveryMatrixEventsProvider: EventsProvider {
                 print("🏥 EveryMatrixProvider: OperatorInfo health check successful")
                 
                 // Extract and store UCS operator ID from response
-                // let operatorId = response.operatorIdString
-                // print("🏥 EveryMatrixProvider: Found UCS operator ID: \(operatorId)")
-                self?.sessionCoordinator.saveCID(response.CID) 
-                self?.sessionCoordinator.saveOperatorId("4093")
+                self?.sessionCoordinator.saveCID(response.CID)
+                
+                let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+                
+                self?.sessionCoordinator.saveOperatorId(operatorId) // TODO: WAMP socket is failling us in the Operator ID response
 
                 return true
             }
@@ -284,8 +293,10 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
+        
         // First check if we have an active match details manager for this event
         if let matchDetailsManager = self.matchDetailsManager {
+            // TODO: subscribeToLiveDataUpdates no live data events in match details
             // Use the match details manager to observe live data
 //            return matchDetailsManager.observeEventInfosForEvent(eventId: id)
 //                .map { eventLiveData in
@@ -425,9 +436,12 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Use sportType ID, fallback to "1" (football) if not available
         let sportId = sportType.numericId ?? "1"
         
+        let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+        
         // Create new manager
         popularTournamentsManager = PopularTournamentsManager(
             connector: socketConnector,
+            operatorId: operatorId,
             sportId: sportId,
             tournamentsCount: tournamentsCount
         )
@@ -442,10 +456,13 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Use sportType ID, fallback to "1" (football) if not available
         let sportId = sportType.numericId ?? "1"
         
+        let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+
         // Create new manager
         sportTournamentsManager = SportTournamentsManager(
             connector: socketConnector,
-            sportId: sportId
+            sportId: sportId,
+            operatorId: operatorId
         )
         
         return sportTournamentsManager!.subscribe()
@@ -679,6 +696,7 @@ class EveryMatrixEventsProvider: EventsProvider {
                     EveryMatrix.MatchBuilder.build(from: dto, store: store)
                 }
                 
+                // TODO: Missing main markets order ? unused ?
                 let mainMarketsStored = store.getAllInOrder(EveryMatrix.MainMarketDTO.self)
 
                 // 3) Aggregate available markets across all matches to build the MainMarkets list
@@ -876,9 +894,12 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Clean up existing manager for this outcome if any
         singleOutcomeManagers[managerKey]?.unsubscribe()
 
+        let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+        
         // Create new manager for this specific outcome
         let manager = SingleOutcomeSubscriptionManager(
             connector: socketConnector,
+            operatorId: operatorId,
             eventId: eventId,
             outcomeId: outcomeId
         )
@@ -900,12 +921,15 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Clean up existing manager for this market if any
         balancedMarketManagers[managerKey]?.unsubscribe()
 
+        let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+        
         // Create new manager for this specific balanced market
         let manager = EventWithBalancedMarketSubscriptionManager(
             connector: socketConnector,
             eventId: eventId,
             bettingTypeId: bettingTypeId,
-            eventPartId: eventPartId
+            eventPartId: eventPartId,
+            operatorId: operatorId
         )
 
         balancedMarketManagers[managerKey] = manager
@@ -1112,8 +1136,13 @@ extension EveryMatrixEventsProvider {
             // Clean up existing manager
             locationsManager?.unsubscribe()
 
+            let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+
             // Create new manager for the specified sport
-            locationsManager = LocationsManager(connector: socketConnector, sportId: sportType.numericId ?? "1")
+            locationsManager = LocationsManager(
+                connector: socketConnector,
+                sportId: sportType.numericId ?? "1",
+                operatorId: operatorId)
             currentSportType = sportType
         }
 

@@ -193,7 +193,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
 
         let gameLaunchBaseURL = EveryMatrixUnifiedConfiguration.shared.gameLaunchBaseURL
         
-        var urlString = "\(gameLaunchBaseURL)/Loader/Start/\(EveryMatrixUnifiedConfiguration.shared.domainId)/\(game.slug)"
+        var urlString = "\(gameLaunchBaseURL)/Loader/Start/\(EveryMatrixUnifiedConfiguration.shared.operatorId)/\(game.slug)"
         
         var queryParams: [String] = []
         

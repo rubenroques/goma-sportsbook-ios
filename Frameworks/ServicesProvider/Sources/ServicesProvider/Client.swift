@@ -97,7 +97,7 @@ public class Client {
                 }).store(in: &self.cancellables)
             
             //
-            let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(
+            let everyMatrixPrivilegedAccessManager = EveryMatrixPAMProvider(
                 restConnector: everyMatrixRESTConnector,
                 sessionCoordinator: sessionCoordinator
             )

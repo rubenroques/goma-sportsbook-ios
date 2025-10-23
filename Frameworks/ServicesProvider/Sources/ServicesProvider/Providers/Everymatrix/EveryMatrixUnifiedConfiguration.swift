@@ -120,8 +120,8 @@ public final class EveryMatrixUnifiedConfiguration {
     
     // MARK: - Shared Configuration
     
-    /// Domain ID for all APIs
-    public var domainId: String {
+    /// Operator ID ( some apis call it Domain ID) for all APIs
+    public var operatorId: String {
         switch environment {
         case .production:
             return "4093" // TODO: Verify production domain ID

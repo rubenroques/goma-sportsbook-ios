@@ -122,7 +122,8 @@ public class EveryMatrixSessionCoordinator {
     }
     
     public func getOperatorIdOrDefault() -> String {
-        return getCurrentOperatorId() ?? "4093" // Fallback to default
+        let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
+        return getCurrentOperatorId() ?? operatorId // Fallback to default
     }
     
     // MARK: - cid / CID / socket client ID - Management
