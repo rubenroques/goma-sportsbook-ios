@@ -29,7 +29,7 @@ public final class EveryMatrixUnifiedConfiguration {
     public var playerAPIBaseURL: String {
         switch environment {
         case .production:
-            return ""
+            return "https://betsson-api.norway.everymatrix.com"
         case .staging, .development:
             return "https://betsson-api.stage.norway.everymatrix.com"
         }
@@ -41,7 +41,7 @@ public final class EveryMatrixUnifiedConfiguration {
     public var oddsMatrixBaseURL: String {
         switch environment {
         case .production:
-            return ""
+            return "https://sports-api.everymatrix.com"
         case .staging, .development:
             return "https://sports-api-stage.everymatrix.com"
         }

@@ -11,7 +11,7 @@ import Combine
 class EveryMatrixBettingProvider: BettingProvider, Connector {
 
     var sessionCoordinator: EveryMatrixSessionCoordinator
-    private var connector: EveryMatrixBaseConnector
+    private var restConnector: EveryMatrixRESTConnector
     private let sseConnector: EveryMatrixSSEConnector
     private var cancellables: Set<AnyCancellable> = []
 
@@ -21,10 +21,10 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     private var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
 
     init(sessionCoordinator: EveryMatrixSessionCoordinator,
-         connector: EveryMatrixBaseConnector,
+         restConnector: EveryMatrixRESTConnector,
          sseConnector: EveryMatrixSSEConnector) {
         self.sessionCoordinator = sessionCoordinator
-        self.connector = connector
+        self.restConnector = restConnector
         self.sseConnector = sseConnector
 
         // Update connection state
@@ -50,7 +50,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         let endpoint = EveryMatrixOddsMatrixAPI.getOpenBets(limit: limit, placedBefore: placedBefore)
         
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
                 print("🔄 EveryMatrixBettingProvider: Mapping \(bets.count) EveryMatrix bets to internal format")
                 let bettingHistory = EveryMatrixModelMapper.bettingHistory(fromBets: bets)
@@ -70,7 +70,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         let endpoint = EveryMatrixOddsMatrixAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: nil)
         
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
                 return EveryMatrixModelMapper.bettingHistory(fromBets: bets)
             }
@@ -86,7 +86,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         let endpoint = EveryMatrixOddsMatrixAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: "WON")
         
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
                 return EveryMatrixModelMapper.bettingHistory(fromBets: bets)
             }
@@ -114,7 +114,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let endpoint = EveryMatrixOddsMatrixAPI.placeBet(betData: placeBetRequest)
 
         // Make the API call
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .flatMap { (response: EveryMatrix.PlaceBetResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
                 // Convert the response to PlacedBetsResponse
                 let placedBetsResponse = self.convertResponseToPlacedBetsResponse(response, originalTickets: betTickets)
@@ -148,7 +148,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError> {
         let endpoint = EveryMatrixOddsMatrixAPI.calculateCashout(betId: betId, stakeValue: stakeValue)
 
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (response: EveryMatrix.CashoutResponse) -> Cashout in
                 // Convert EveryMatrix response to Cashout model
                 return Cashout(
@@ -177,7 +177,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
 
         let endpoint = EveryMatrixOddsMatrixAPI.getCashoutValueSSE(betId: betId)
 
-        return sseConnector.request(endpoint, decodingType: EveryMatrix.CashoutValueSSEResponse.self)
+        return self.sseConnector.request(endpoint, decodingType: EveryMatrix.CashoutValueSSEResponse.self)
             .compactMap { sseEvent -> SubscribableContent<CashoutValue>? in
                 switch sseEvent {
                 case .connected:
@@ -233,7 +233,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let endpoint = EveryMatrixOddsMatrixAPI.executeCashoutV2(request: internalRequest)
 
         // Execute request
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (response: EveryMatrix.NewCashoutResponse) -> CashoutResponse in
                 print("✅ Cashout executed: success=\(response.success), payout=\(response.cashoutPayout)")
 

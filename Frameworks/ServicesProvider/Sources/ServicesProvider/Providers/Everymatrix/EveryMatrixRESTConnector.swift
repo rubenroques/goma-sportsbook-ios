@@ -3,7 +3,7 @@ import Combine
 
 /// Base connector for all EveryMatrix API clients
 /// Provides transparent token refresh on 401/403 errors
-class EveryMatrixBaseConnector: Connector {
+class EveryMatrixRESTConnector: Connector {
     
     // MARK: - Properties
     

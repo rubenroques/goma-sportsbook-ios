@@ -11,7 +11,7 @@ import SharedModels
 
 class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
-    var connector: EveryMatrixBaseConnector
+    var restConnector: EveryMatrixRESTConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
     // Publishers
@@ -28,8 +28,8 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     // Internal state
     private var cancellables: Set<AnyCancellable> = []
 
-    init(connector: EveryMatrixBaseConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
-        self.connector = connector
+    init(restConnector: EveryMatrixRESTConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
+        self.restConnector = restConnector
         self.sessionCoordinator = sessionCoordinator
     }
     
@@ -37,7 +37,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> {
 
         let endpoint = EveryMatrixPlayerAPI.getRegistrationConfig
-        let publisher: AnyPublisher<EveryMatrix.RegistrationConfigResponse, ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.RegistrationConfigResponse, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return publisher.flatMap({ registrationConfigResponse -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> in
             
@@ -52,7 +52,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     // Implement all required methods from PrivilegedAccessManagerProvider
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
         let endpoint = EveryMatrixPlayerAPI.login(username: username, password: password)
-        let publisher: AnyPublisher<EveryMatrix.PhoneLoginResponse, ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.PhoneLoginResponse, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return publisher
             .flatMap { [weak self] phoneLoginResponse -> AnyPublisher<UserProfile, ServiceProviderError> in
@@ -79,7 +79,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                 
                 let getUserProfileEndpoint = EveryMatrixPlayerAPI.getUserProfile(userId: String(phoneLoginResponse.userId))
                 
-                return self.connector.request(getUserProfileEndpoint)
+                return self.restConnector.request(getUserProfileEndpoint)
                     .map { (playerProfile: EveryMatrix.PlayerProfile) in
                         // Map to your app's UserProfile model if needed
                         let mappedUserProfile = EveryMatrixModelMapper.userProfile(fromInternalPlayerProfile: playerProfile)
@@ -117,7 +117,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         case .phone(let phoneSignUpForm):
             let registerStepEndpoint = EveryMatrixPlayerAPI.registerStep(form: phoneSignUpForm)
             
-                    let registerStepPublisher: AnyPublisher<EveryMatrix.RegisterStepResponse, ServiceProviderError> = self.connector.request(registerStepEndpoint)
+                    let registerStepPublisher: AnyPublisher<EveryMatrix.RegisterStepResponse, ServiceProviderError> = self.restConnector.request(registerStepEndpoint)
 
                     return registerStepPublisher
                         .flatMap { registerStepResponse -> AnyPublisher<EveryMatrix.RegisterResponse, ServiceProviderError> in
@@ -125,7 +125,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                             let registrationId = registerStepResponse.registrationId
                             let registerEndpoint = EveryMatrixPlayerAPI.register(registrationId: registrationId)
                             // Call the second endpoint
-                            return self.connector.request(registerEndpoint)
+                            return self.restConnector.request(registerEndpoint)
                         }
                         .map { registerResponse in
                             // Map the final response to your SignUpResponse
@@ -207,7 +207,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         let currentUserId = sessionCoordinator.currentUserId ?? ""
 
         let endpoint = EveryMatrixPlayerAPI.getUserBalance(userId: currentUserId)
-        let publisher: AnyPublisher<EveryMatrix.WalletBalance, ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.WalletBalance, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return publisher
             .flatMap { walletResponse -> AnyPublisher<UserWallet, ServiceProviderError> in
@@ -277,7 +277,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         let endpoint = EveryMatrixPlayerAPI.getBankingWebView(userId: currentUserId, parameters: request)
         
         // Make request and map internal response to domain model
-        let publisher: AnyPublisher<EveryMatrix.GetPaymentSessionResponse, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.GetPaymentSessionResponse, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher
             .map { response in
@@ -472,7 +472,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         let currentUserId = sessionCoordinator.currentUserId ?? ""
 
         let endpoint = EveryMatrixPlayerAPI.getBankingTransactions(userId: currentUserId, startDate: startDate, endDate: endDate, pageNumber: pageNumber)
-        let publisher: AnyPublisher<EveryMatrix.BankingTransactionsResponse, ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.BankingTransactionsResponse, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return publisher
             .map { internalResponse in
@@ -485,7 +485,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         let currentUserId = sessionCoordinator.currentUserId ?? ""
 
         let endpoint = EveryMatrixPlayerAPI.getWageringTransactions(userId: currentUserId, startDate: startDate, endDate: endDate, pageNumber: pageNumber)
-        let publisher: AnyPublisher<EveryMatrix.WageringTransactionsResponse, ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.WageringTransactionsResponse, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return publisher
             .map { internalResponse in
@@ -537,7 +537,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     // Games
     func getRecentlyPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         
-        guard connector.sessionToken != nil else {
+        guard restConnector.sessionToken != nil else {
             return Just(CasinoGamesResponse(
                 count: 0,
                 total: 0,
@@ -556,7 +556,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
             limit: pagination.limit
         )
         
-        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher
             .map { response in
@@ -576,7 +576,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     
     func getMostPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         
-        guard connector.sessionToken != nil else {
+        guard restConnector.sessionToken != nil else {
             return Just(CasinoGamesResponse(
                 count: 0,
                 total: 0,
@@ -595,7 +595,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
             limit: pagination.limit
         )
         
-        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher
             .map { response in
@@ -616,11 +616,9 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     // MARK: - Betting Offer Booking Methods
 
     func createBookingCode(bettingOfferIds: [String], originalSelectionsLength: Int) -> AnyPublisher<BookingCodeResponse, ServiceProviderError> {
-        print("[EveryMatrixPrivilegedAccessManager] 🔖 Creating booking code for \(bettingOfferIds.count) betting offers (original: \(originalSelectionsLength))")
-
         let endpoint = EveryMatrixPlayerAPI.createBookingCode(bettingOfferIds: bettingOfferIds, originalSelectionsLength: originalSelectionsLength)
 
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (response: BookingCodeResponse) -> BookingCodeResponse in
                 return response
             }
@@ -636,7 +634,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
         let endpoint = EveryMatrixPlayerAPI.getFromBookingCode(code: bookingCode)
 
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (response: BookingRetrievalResponse) -> [String] in
                 let bettingOfferIds = response.selections.map { $0.bettingOfferId }
                 return bettingOfferIds
@@ -652,8 +650,6 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
     func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
     -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
-
-        print("[EveryMatrixPrivilegedAccessManager] Fetching odds boost stairs for currency: \(currency), selections: \(selections.count)")
 
         let mappedSelections = selections.map { selection -> EveryMatrix.BetSelectionPointer in
             return EveryMatrix.BetSelectionPointer(
@@ -678,7 +674,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         let endpoint = EveryMatrixPlayerAPI.getSportsBonusWallets(request: request)
 
         // Make API call
-        let publisher: AnyPublisher<EveryMatrix.OddsBoostWalletResponse, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.OddsBoostWalletResponse, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return publisher
             .map { response -> OddsBoostStairsResponse? in
@@ -697,7 +693,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     // MARK: - Password Reset Methods
     func getResetPasswordTokenId(mobileNumber: String, mobilePrefix: String) -> AnyPublisher<ResetPasswordTokenResponse, ServiceProviderError> {
         let endpoint = EveryMatrixPlayerAPI.getResetPasswordTokenId(mobileNumber: mobileNumber, mobilePrefix: mobilePrefix)
-        let publisher: AnyPublisher<EveryMatrix.ResetPasswordTokenResponse, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.ResetPasswordTokenResponse, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher
             .map { internalResponse in
@@ -711,7 +707,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
     func validateResetPasswordCode(tokenId: String, validationCode: String) -> AnyPublisher<ValidateResetPasswordCodeResponse, ServiceProviderError> {
         let endpoint = EveryMatrixPlayerAPI.validateResetPasswordCode(tokenId: tokenId, validationCode: validationCode)
-        let publisher: AnyPublisher<EveryMatrix.ValidateResetPasswordCodeResponse, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.ValidateResetPasswordCodeResponse, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher
             .map { internalResponse in
@@ -725,7 +721,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
     func resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool) -> AnyPublisher<ResetPasswordByHashKeyResponse, ServiceProviderError> {
         let endpoint = EveryMatrixPlayerAPI.resetPasswordWithHashKey(hashKey: hashKey, plainTextPassword: plainTextPassword, isUserHash: isUserHash)
-        let publisher: AnyPublisher<EveryMatrix.ResetPasswordByHashKeyResponse, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.ResetPasswordByHashKeyResponse, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher
             .map { internalResponse in

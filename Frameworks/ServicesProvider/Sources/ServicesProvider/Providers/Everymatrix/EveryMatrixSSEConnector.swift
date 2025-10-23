@@ -44,10 +44,8 @@ class EveryMatrixSSEConnector: Connector {
     ///   - endpoint: The endpoint to stream from
     ///   - decodingType: The type to decode SSE messages to
     /// - Returns: Publisher emitting SSE events or error
-    func request<T: Decodable>(
-        _ endpoint: Endpoint,
-        decodingType: T.Type
-    ) -> AnyPublisher<SSEEvent<T>, ServiceProviderError> {
+    func request<T: Decodable>(_ endpoint: Endpoint, decodingType: T.Type) -> AnyPublisher<SSEEvent<T>, ServiceProviderError> {
+        
         print("[EveryMatrix-SSE] Preparing SSE request for endpoint: \(endpoint.endpoint)")
 
         // Build URL components

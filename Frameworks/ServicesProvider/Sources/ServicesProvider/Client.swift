@@ -83,7 +83,7 @@ public class Client {
             let everyMatrixSocketConnector = EveryMatrixSocketConnector(wampManager: wampConnectionManaget)
                         
             // rest (shared by player api, recsys, ...)
-            let everyMatrixRESTConnector = EveryMatrixBaseConnector(sessionCoordinator: sessionCoordinator)
+            let everyMatrixRESTConnector = EveryMatrixRESTConnector(sessionCoordinator: sessionCoordinator)
 
             // sse (for cashout streaming)
             let everyMatrixSSEConnector = EveryMatrixSSEConnector(sessionCoordinator: sessionCoordinator)
@@ -98,7 +98,7 @@ public class Client {
             
             //
             let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(
-                connector: everyMatrixRESTConnector,
+                restConnector: everyMatrixRESTConnector,
                 sessionCoordinator: sessionCoordinator
             )
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
@@ -121,7 +121,7 @@ public class Client {
             // Betting API
             let everyMatrixBettingProvider = EveryMatrixBettingProvider(
                 sessionCoordinator: sessionCoordinator,
-                connector: everyMatrixRESTConnector,
+                restConnector: everyMatrixRESTConnector,
                 sseConnector: everyMatrixSSEConnector
             )
             self.bettingProvider = everyMatrixBettingProvider

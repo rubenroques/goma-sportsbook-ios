@@ -19,7 +19,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     
     var privilegedAccessManager: PrivilegedAccessManagerProvider?
     
-    private let restConnector: EveryMatrixBaseConnector
+    private let restConnector: EveryMatrixRESTConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
     // MARK: - Managers for different subscription types
@@ -43,7 +43,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     private var balancedMarketManagers: [String: EventWithBalancedMarketSubscriptionManager] = [:]
 
     init(socketConnector: EveryMatrixSocketConnector,
-         restConnector: EveryMatrixBaseConnector,
+         restConnector: EveryMatrixRESTConnector,
          sessionCoordinator: EveryMatrixSessionCoordinator,
          privilegedAccessManager: PrivilegedAccessManagerProvider? = nil)
     {
