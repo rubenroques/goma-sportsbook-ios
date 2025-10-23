@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-class EveryMatrixConnector: Connector {
+class EveryMatrixSocketConnector: Connector {
     // MARK: - Properties
     private let wampManager: WAMPManager
     

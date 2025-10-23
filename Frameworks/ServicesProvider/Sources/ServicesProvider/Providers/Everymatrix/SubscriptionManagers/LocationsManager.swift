@@ -12,7 +12,7 @@ import SharedModels
 class LocationsManager {
     
     // MARK: - Dependencies
-    private let connector: EveryMatrixConnector
+    private let connector: EveryMatrixSocketConnector
     private let operatorId: String
     private let language: String
     private let sportId: String
@@ -24,7 +24,7 @@ class LocationsManager {
     
     // MARK: - Initialization
     
-    init(connector: EveryMatrixConnector, sportId: String, operatorId: String = "4093", language: String = "en") {
+    init(connector: EveryMatrixSocketConnector, sportId: String, operatorId: String = "4093", language: String = "en") {
         self.connector = connector
         self.sportId = sportId
         self.operatorId = operatorId

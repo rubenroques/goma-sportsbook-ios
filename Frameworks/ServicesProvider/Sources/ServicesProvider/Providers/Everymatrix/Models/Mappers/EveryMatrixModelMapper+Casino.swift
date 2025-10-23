@@ -39,7 +39,7 @@ extension EveryMatrixModelMapper {
     
     /// Maps EveryMatrix casino games response to public model
     static func casinoGames(from dto: EveryMatrix.CasinoGamesResponseDTO) -> CasinoGamesResponse {
-        let games = dto.items.compactMap { failableGameDTO in
+        let games = (dto.items ?? []).compactMap { failableGameDTO in
             failableGameDTO.content.map { gameDTO in
                 casinoGame(from: gameDTO)
             }

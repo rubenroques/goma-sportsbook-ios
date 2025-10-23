@@ -77,23 +77,28 @@ public class Client {
             // Session Coordinator
             let sessionCoordinator = EveryMatrixSessionCoordinator()
             
-            // This will trigger the connection to the EM WAMP socket
+            // Create both connectors
+            // socket
             let wampConnectionManaget = WAMPManager()
-            let everyMatrixConnector = EveryMatrixConnector(wampManager: wampConnectionManaget)
+            let everyMatrixSocketConnector = EveryMatrixSocketConnector(wampManager: wampConnectionManaget)
                         
-            everyMatrixConnector.connectionStatePublisher
+            // rest (shared by player api, recsys, ...)
+            let everyMatrixRESTConnector = EveryMatrixBaseConnector(sessionCoordinator: sessionCoordinator)
+
+            // sse (for cashout streaming)
+            let everyMatrixSSEConnector = EveryMatrixSSEConnector(sessionCoordinator: sessionCoordinator)
+
+            //
+            everyMatrixSocketConnector.connectionStatePublisher
                 .sink(receiveCompletion: { completion in
 
                 }, receiveValue: { [weak self] connectorState in
                     self?.eventsConnectionStateSubject.send(connectorState)
                 }).store(in: &self.cancellables)
             
-            
-            // Player API for privilegedAccessManager
-            let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector(sessionCoordinator: sessionCoordinator)
-            
+            //
             let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(
-                connector: everyMatrixPlayerAPIConnector,
+                connector: everyMatrixRESTConnector,
                 sessionCoordinator: sessionCoordinator
             )
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
@@ -101,7 +106,8 @@ public class Client {
             //
             // Events Provider (uses wamp socket)
             let everyMatrixEventsProvider = EveryMatrixEventsProvider(
-                connector: everyMatrixConnector,
+                socketConnector: everyMatrixSocketConnector,
+                restConnector: everyMatrixRESTConnector,
                 sessionCoordinator: sessionCoordinator,
                 privilegedAccessManager: everyMatrixPrivilegedAccessManager)
             self.eventsProvider = everyMatrixEventsProvider
@@ -113,7 +119,11 @@ public class Client {
             self.casinoProvider = everyMatrixCasinoProvider
             
             // Betting API
-            let everyMatrixBettingProvider = EveryMatrixBettingProvider(sessionCoordinator: sessionCoordinator)
+            let everyMatrixBettingProvider = EveryMatrixBettingProvider(
+                sessionCoordinator: sessionCoordinator,
+                connector: everyMatrixRESTConnector,
+                sseConnector: everyMatrixSSEConnector
+            )
             self.bettingProvider = everyMatrixBettingProvider
 
             // CMS/HomeContent Provider - uses Goma CMS

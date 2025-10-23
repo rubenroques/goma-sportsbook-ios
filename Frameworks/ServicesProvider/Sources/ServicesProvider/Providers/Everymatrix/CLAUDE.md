@@ -65,8 +65,8 @@ EveryMatrix uses WAMP for sports data because it efficiently delivers real-time 
 3. **CasinoAPI** (`/CasinoAPI/`)
    - Base URL: `https://betsson-api.stage.norway.everymatrix.com` (same as PlayerAPI)
    - **Operations**: Game catalog, search, recommendations, game launch URLs
-   - **Authentication**: Cookie header (not session token)
-   - **Note**: Different auth mechanism than other APIs
+   - **Authentication**: `X-SessionId` + `X-Session-Type: others` headers (same as PlayerAPI)
+   - **Note**: Uses specialized CasinoConnector with pre-parse error detection for API error responses
 
 4. **RecsysAPI** (`/RecsysAPI/`)
    - Base URL: `https://recsys-api-gateway-test-bshwjrve.ew.gateway.dev`
@@ -376,7 +376,7 @@ Managers own their subscriptions and EntityStores. They must be:
 - `searchGames()`: Search by name
 - `buildGameLaunchUrl()`: Generate game launch URL
 
-**Note**: Uses Cookie authentication instead of session token headers
+**Note**: Uses specialized CasinoConnector with pre-parse error detection (see CasinoAPI section above for auth details)
 
 ---
 
@@ -461,19 +461,64 @@ Everymatrix/
 │   ├── LiveMatchesPaginator.swift
 │   └── ...                   # 9 managers total
 │
-├── OddsMatrixAPI/            # Sports betting REST API
-├── PlayerAPI/                # Authentication REST API
+├── OddsMatrixAPI/            # Sports betting REST API endpoint definitions
+│   └── EveryMatrixOddsMatrixAPIConnector.swift  # [COMMENTED OUT - consolidated]
+├── PlayerAPI/                # Authentication REST API endpoint definitions
+│   └── EveryMatrixPlayerAPIConnector.swift      # [COMMENTED OUT - consolidated]
 ├── CasinoAPI/                # Casino games REST API
+│   ├── EveryMatrixCasinoAPI.swift               # Endpoint definitions
+│   └── EveryMatrixCasinoConnector.swift         # Specialized connector with pre-parse
 ├── RecsysAPI/                # Recommendations REST API
+│   └── EveryMatrixRecsysAPI.swift               # Endpoint definitions (connector deleted)
 │
 ├── EveryMatrixProvider.swift              # EventsProvider (WAMP)
-├── EveryMatrixBettingProvider.swift       # BettingProvider (REST)
-├── EveryMatrixPrivilegedAccessManager.swift # Auth/Profile (REST)
+├── EveryMatrixBettingProvider.swift       # BettingProvider (REST + SSE)
+├── EveryMatrixPrivilegedAccessManager.swift # Auth/Profile (PlayerAPI REST)
 ├── EveryMatrixCasinoProvider.swift        # Casino (REST)
-├── EveryMatrixConnector.swift             # WAMP abstraction
-├── EveryMatrixBaseConnector.swift         # HTTP base with auto-retry
+├── EveryMatrixSocketConnector.swift       # ACTIVE: WAMP WebSocket connector (real-time sports data)
+├── EveryMatrixBaseConnector.swift         # ACTIVE: HTTP REST connector (transactions, auth)
+├── EveryMatrixSSEConnector.swift          # ACTIVE: Server-Sent Events connector (cashout streaming)
+├── EveryMatrixCasinoConnector.swift       # ACTIVE: Casino HTTP connector with pre-parse error detection
 ├── EveryMatrixSessionCoordinator.swift    # Session/token management
 └── EveryMatrixUnifiedConfiguration.swift  # Configuration singleton
+```
+
+### Connector Consolidation History
+
+**Previous Architecture (Pre-October 2025):**
+- Each REST API had its own dedicated connector class
+- OddsMatrixAPIConnector, PlayerAPIConnector, RecsysAPIConnector all extended BaseConnector
+- Each connector only added `apiIdentifier` parameter to BaseConnector
+- Code duplication across connector classes
+
+**Current Architecture (Post-Consolidation + SSE Extraction):**
+- **EveryMatrixBaseConnector**: HTTP REST connector (used by BettingProvider and PrivilegedAccessManager)
+- **EveryMatrixSSEConnector**: Server-Sent Events streaming connector (used only by BettingProvider for cashout)
+- **EveryMatrixCasinoConnector**: Specialized REST connector with pre-parse error detection (Casino API only)
+- **EveryMatrixSocketConnector**: WAMP WebSocket connector (used by EveryMatrixProvider and subscription managers)
+- Old REST API connector files (OddsMatrix, PlayerAPI) remain but are commented out for reference
+
+**Why Consolidation + SSE Extraction Happened:**
+1. **Eliminated Duplication**: OddsMatrix/PlayerAPI connectors were nearly identical thin wrappers
+2. **Simplified Maintenance**: Single BaseConnector for token refresh logic
+3. **Protocol Separation**: Socket ≠ REST ≠ SSE - each connector handles one protocol
+4. **Casino Special Case**: CasinoAPI needed specialized pre-parse logic for error 4004 handling
+5. **SSE Isolation**: Server-Sent Events extracted to dedicated connector (October 2025)
+   - Removed unused SSEManager from CasinoConnector
+   - BettingProvider now uses both BaseConnector (REST) and SSEConnector (streaming)
+
+**Migration Path:**
+```swift
+// Before Consolidation (Pre-October 2025)
+private let oddsMatrixConnector: EveryMatrixOddsMatrixAPIConnector
+private let playerConnector: EveryMatrixPlayerAPIConnector
+
+// After Consolidation (Early October 2025)
+private let connector: EveryMatrixBaseConnector  // Shared REST + SSE
+
+// After SSE Extraction (Late October 2025)
+private let connector: EveryMatrixBaseConnector     // REST only
+private let sseConnector: EveryMatrixSSEConnector   // SSE only
 ```
 
 ---

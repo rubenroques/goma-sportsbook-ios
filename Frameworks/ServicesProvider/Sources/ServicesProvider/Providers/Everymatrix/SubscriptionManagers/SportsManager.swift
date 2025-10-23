@@ -11,7 +11,7 @@ import Combine
 class SportsManager {
 
     // MARK: - Dependencies
-    private let connector: EveryMatrixConnector
+    private let connector: EveryMatrixSocketConnector
     private let operatorId: String
 
     // MARK: - State Management
@@ -24,7 +24,7 @@ class SportsManager {
 
     // MARK: - Initialization
 
-    init(connector: EveryMatrixConnector, operatorId: String) {
+    init(connector: EveryMatrixSocketConnector, operatorId: String) {
         self.connector = connector
         self.operatorId = operatorId
     }

@@ -11,7 +11,8 @@ import Combine
 class EveryMatrixBettingProvider: BettingProvider, Connector {
 
     var sessionCoordinator: EveryMatrixSessionCoordinator
-    private var connector: EveryMatrixOddsMatrixAPIConnector
+    private var connector: EveryMatrixBaseConnector
+    private let sseConnector: EveryMatrixSSEConnector
     private var cancellables: Set<AnyCancellable> = []
 
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
@@ -19,19 +20,15 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     }
     private var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
 
-    init(sessionCoordinator: EveryMatrixSessionCoordinator, connector: EveryMatrixOddsMatrixAPIConnector? = nil) {
+    init(sessionCoordinator: EveryMatrixSessionCoordinator,
+         connector: EveryMatrixBaseConnector,
+         sseConnector: EveryMatrixSSEConnector) {
         self.sessionCoordinator = sessionCoordinator
-        
-        // Create connector with session coordinator if not provided
-        if let providedConnector = connector {
-            self.connector = providedConnector
-        } else {
-            self.connector = EveryMatrixOddsMatrixAPIConnector(sessionCoordinator: sessionCoordinator)
-        }
-        
+        self.connector = connector
+        self.sseConnector = sseConnector
+
         // Update connection state
         self.connectionStateSubject.send(.connected)
-
     }
 
     // MARK: - BettingProvider Protocol Methods
@@ -180,7 +177,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
 
         let endpoint = EveryMatrixOddsMatrixAPI.getCashoutValueSSE(betId: betId)
 
-        return connector.requestSSE(endpoint, decodingType: EveryMatrix.CashoutValueSSEResponse.self)
+        return sseConnector.request(endpoint, decodingType: EveryMatrix.CashoutValueSSEResponse.self)
             .compactMap { sseEvent -> SubscribableContent<CashoutValue>? in
                 switch sseEvent {
                 case .connected:

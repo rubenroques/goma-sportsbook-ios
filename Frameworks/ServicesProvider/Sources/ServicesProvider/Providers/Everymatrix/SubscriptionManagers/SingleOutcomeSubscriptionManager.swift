@@ -20,7 +20,7 @@ import SharedModels
 class SingleOutcomeSubscriptionManager {
 
     // MARK: - Dependencies
-    private let connector: EveryMatrixConnector
+    private let connector: EveryMatrixSocketConnector
     private let operatorId: String
     private let language: String
 
@@ -35,7 +35,7 @@ class SingleOutcomeSubscriptionManager {
 
     // MARK: - Initialization
 
-    init(connector: EveryMatrixConnector,
+    init(connector: EveryMatrixSocketConnector,
          eventId: String,
          outcomeId: String,
          operatorId: String = "4093",

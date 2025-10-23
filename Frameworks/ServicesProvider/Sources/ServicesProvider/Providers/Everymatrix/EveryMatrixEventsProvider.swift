@@ -12,14 +12,14 @@ import SharedModels
 class EveryMatrixEventsProvider: EventsProvider {
     
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
-        return self.connector.connectionStatePublisher.eraseToAnyPublisher()
+        return self.socketConnector.connectionStatePublisher.eraseToAnyPublisher()
     }
 
-    var connector: EveryMatrixConnector
+    var socketConnector: EveryMatrixSocketConnector
     
     var privilegedAccessManager: PrivilegedAccessManagerProvider?
     
-    private let recsysConnector: EveryMatrixRecsysAPIConnector
+    private let restConnector: EveryMatrixBaseConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
     // MARK: - Managers for different subscription types
@@ -42,13 +42,14 @@ class EveryMatrixEventsProvider: EventsProvider {
     // MARK: - Balanced Market Managers (for betslip)
     private var balancedMarketManagers: [String: EventWithBalancedMarketSubscriptionManager] = [:]
 
-    init(connector: EveryMatrixConnector,
+    init(socketConnector: EveryMatrixSocketConnector,
+         restConnector: EveryMatrixBaseConnector,
          sessionCoordinator: EveryMatrixSessionCoordinator,
          privilegedAccessManager: PrivilegedAccessManagerProvider? = nil)
     {
-        self.connector = connector
+        self.socketConnector = socketConnector
         self.sessionCoordinator = sessionCoordinator
-        self.recsysConnector = EveryMatrixRecsysAPIConnector(sessionCoordinator: sessionCoordinator)
+        self.restConnector = restConnector
         
         self.privilegedAccessManager = privilegedAccessManager
     }
@@ -65,7 +66,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func reconnectIfNeeded() {
-        self.connector.forceReconnect()
+        self.socketConnector.forceReconnect()
     }
 
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
@@ -80,7 +81,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         let numberOfMarkets = 5 // Default value, could be made configurable
 
         livePaginator = LiveMatchesPaginator(
-            connector: connector,
+            connector: socketConnector,
             sportId: sportId,
             initialEventLimit: initialEventLimit,
             numberOfMarkets: numberOfMarkets
@@ -109,7 +110,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         let numberOfMarkets = 5 // Default value, could be made configurable
 
         prelivePaginator = PreLiveMatchesPaginator(
-            connector: connector,
+            connector: socketConnector,
             sportId: sportId
         )
 
@@ -135,7 +136,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         let numberOfMarkets = 5     // Default value, could be made configurable
 
         prelivePaginator = PreLiveMatchesPaginator(
-            connector: connector,
+            connector: socketConnector,
             sportId: filters.sportId,
             initialEventLimit: initialEventLimit,
             numberOfMarkets: numberOfMarkets,
@@ -154,7 +155,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         let numberOfMarkets = 5 // Default value, could be made configurable
 
         livePaginator = LiveMatchesPaginator(
-            connector: connector,
+            connector: socketConnector,
             sportId: filters.sportId,
             initialEventLimit: initialEventLimit,
             numberOfMarkets: numberOfMarkets,
@@ -203,7 +204,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         matchDetailsManager?.unsubscribe()
         
         // Create new match details manager
-        matchDetailsManager = MatchDetailsManager(connector: connector, matchId: eventId)
+        matchDetailsManager = MatchDetailsManager(connector: socketConnector, matchId: eventId)
         
         return matchDetailsManager!.subscribeEventDetails()
     }
@@ -247,7 +248,7 @@ class EveryMatrixEventsProvider: EventsProvider {
 
         // Create new sports manager with dynamic operator ID
         let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()
-        sportsManager = SportsManager(connector: connector, operatorId: operatorId)
+        sportsManager = SportsManager(connector: socketConnector, operatorId: operatorId)
 
         return sportsManager!.subscribe()
     }
@@ -256,7 +257,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         // Back to operatorInfo but with enhanced logging
         let router = WAMPRouter.getClientIdentity
         
-        return connector.request(router)
+        return socketConnector.request(router)
             .print("checkServicesHealth-operatorInfo")
             .map { [weak self] (response: EveryMatrix.ClientIdentityResponse) -> Bool in
                 print("🏥 EveryMatrixProvider: OperatorInfo health check successful")
@@ -426,7 +427,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         // Create new manager
         popularTournamentsManager = PopularTournamentsManager(
-            connector: connector,
+            connector: socketConnector,
             sportId: sportId,
             tournamentsCount: tournamentsCount
         )
@@ -443,7 +444,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         // Create new manager
         sportTournamentsManager = SportTournamentsManager(
-            connector: connector,
+            connector: socketConnector,
             sportId: sportId
         )
         
@@ -459,7 +460,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         let router = WAMPRouter.getPopularTournaments(language: language, sportId: sportId, maxResults: tournamentsCount)
         
-        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = connector.request(router)
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = socketConnector.request(router)
         return rpcResponsePublisher
             .map { [weak self] rpcResponse in
                 return self?.processTournamentsFromRPCResponse(rpcResponse) ?? []
@@ -474,7 +475,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         
         let router = WAMPRouter.getTournaments(language: language, sportId: sportId)
         
-        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = connector.request(router)
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = socketConnector.request(router)
         return rpcResponsePublisher
             .map { [weak self] rpcResponse in
                 return self?.processTournamentsFromRPCResponse(rpcResponse) ?? []
@@ -593,7 +594,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         )
 
         // Request the RPC search response
-        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCBasicResponse, ServiceProviderError> = connector.request(router)
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCBasicResponse, ServiceProviderError> = socketConnector.request(router)
 
         // Map RPC response to EventsGroup by populating an EntityStore and building matches with markets/outcomes
         return rpcResponsePublisher
@@ -657,7 +658,7 @@ class EveryMatrixEventsProvider: EventsProvider {
         )
 
         // Request the RPC multiSearch response (RPCBasicResponse under MATCH)
-        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCMultiSearchResponse, ServiceProviderError> = connector.request(router)
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCMultiSearchResponse, ServiceProviderError> = socketConnector.request(router)
 
         return rpcResponsePublisher
             .map { rpcMultiResponse in
@@ -752,7 +753,7 @@ class EveryMatrixEventsProvider: EventsProvider {
 
         let router = WAMPRouter.getBettingOfferReference(outcomeId: outcomeId)
 
-        let rpcResponsePublisher: AnyPublisher<EveryMatrix.BettingOfferReferenceResponse, ServiceProviderError> = connector.request(router)
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.BettingOfferReferenceResponse, ServiceProviderError> = socketConnector.request(router)
 
         return rpcResponsePublisher
             .tryMap { response in
@@ -785,7 +786,7 @@ class EveryMatrixEventsProvider: EventsProvider {
             mainMarketsCount: mainMarketsCount
         )
 
-        return connector.request(router)
+        return socketConnector.request(router)
             .tryMap { (response: EveryMatrix.AggregatorResponse) -> Event in
                 guard let event = self.buildEvent(from: response, expectedMatchId: eventId) else {
                     throw ServiceProviderError.decodingError(message: "Failed to build event with main markets for \(eventId)")
@@ -811,7 +812,7 @@ class EveryMatrixEventsProvider: EventsProvider {
             bettingOfferId: bettingOfferId
         )
 
-        return connector.request(router)
+        return socketConnector.request(router)
             .tryMap { (response: EveryMatrix.AggregatorResponse) -> Event in
                 guard let event = self.buildEvent(from: response, expectedMatchId: nil) else {
                     throw ServiceProviderError.decodingError(message: "Failed to build event with single outcome for betting offer \(bettingOfferId)")
@@ -877,7 +878,7 @@ class EveryMatrixEventsProvider: EventsProvider {
 
         // Create new manager for this specific outcome
         let manager = SingleOutcomeSubscriptionManager(
-            connector: connector,
+            connector: socketConnector,
             eventId: eventId,
             outcomeId: outcomeId
         )
@@ -901,7 +902,7 @@ class EveryMatrixEventsProvider: EventsProvider {
 
         // Create new manager for this specific balanced market
         let manager = EventWithBalancedMarketSubscriptionManager(
-            connector: connector,
+            connector: socketConnector,
             eventId: eventId,
             bettingTypeId: bettingTypeId,
             eventPartId: eventPartId
@@ -985,7 +986,7 @@ class EveryMatrixEventsProvider: EventsProvider {
             terminalType: terminalType
         )
 
-        return recsysConnector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (response: EveryMatrix.RecommendationResponse) in
                 Array(response.recommendationsList.prefix(limit)).map { $0.eventId }
             }
@@ -1025,7 +1026,7 @@ class EveryMatrixEventsProvider: EventsProvider {
             terminalType: terminalType
         )
 
-        return recsysConnector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (response: EveryMatrix.RecommendationResponse) in
                 Array(response.recommendationsList.prefix(limit)).map { $0.eventId }
             }
@@ -1112,7 +1113,7 @@ extension EveryMatrixEventsProvider {
             locationsManager?.unsubscribe()
 
             // Create new manager for the specified sport
-            locationsManager = LocationsManager(connector: connector, sportId: sportType.numericId ?? "1")
+            locationsManager = LocationsManager(connector: socketConnector, sportId: sportType.numericId ?? "1")
             currentSportType = sportType
         }
 

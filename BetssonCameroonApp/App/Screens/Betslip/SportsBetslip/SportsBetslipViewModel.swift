@@ -148,47 +148,45 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             return
         }
 
-        // Call actual endpoint to resolve betting offer ids from booking code
-        environment.servicesProvider.getBettingOfferIds(bookingCode: trimmed)
+        // Call loadEventsFromBookingCode to get full Events with markets and outcomes
+        environment.servicesProvider.loadEventsFromBookingCode(bookingCode: trimmed)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
                     guard let self = self else { return }
                     self.codeInputViewModel.setLoading(false)
                     if case .failure(let error) = completion {
-                        self.codeInputViewModel.setError(error.localizedDescription)
+                        self.codeInputViewModel.setError("Booking Code can't be found. It either doesn't exist or expired.")
+                        print("[BOOKING_CODE] Error loading events: \(error.localizedDescription)")
                     }
                 },
-                receiveValue: { [weak self] bettingOfferIds in
+                receiveValue: { [weak self] events in
                     guard let self = self else { return }
                     self.codeInputViewModel.clearError()
-                    print("[BOOKING_CODE] Retrieved betting offer ids (\(bettingOfferIds.count)) for code: \(trimmed)")
-                    
-                    // TODO: Implement actual endpoint to create betting tickets
-                    if let first = bettingOfferIds.first {
-                        let ticket = BettingTicket(
-                            id: first,
-                            outcomeId: "outcome_\(first)",
-                            marketId: "market_\(first)",
-                            matchId: "match_\(first)",
-                            decimalOdd: 2.10,
-                            isAvailable: true,
-                            matchDescription: "Team A x Team B",
-                            marketDescription: "Match Winner",
-                            outcomeDescription: "Team A",
-                            homeParticipantName: "Team A",
-                            awayParticipantName: "Team B",
-                            sport: nil,
-                            sportIdCode: nil,
-                            venue: nil,
-                            competition: "Premier League",
-                            date: Date()
-                        )
+                    print("[BOOKING_CODE] Retrieved \(events.count) events for code: \(trimmed)")
+
+                    // Convert Events to Matches using ServiceProviderModelMapper
+                    let matches = ServiceProviderModelMapper.matches(fromEvents: events)
+                    print("[BOOKING_CODE] Converted to \(matches.count) matches")
+
+                    // Create BettingTickets from each match's first market's first outcome
+                    var addedTicketsCount = 0
+                    for match in matches {
+                        // Each Event should have one market with one outcome (single betting offer)
+                        guard let market = match.markets.first,
+                              let outcome = market.outcomes.first else {
+                            print("[BOOKING_CODE] Warning: Match \(match.id) has no market/outcome")
+                            continue
+                        }
+
+                        let ticket = BettingTicket(match: match, market: market, outcome: outcome)
                         self.environment.betslipManager.addBettingTicket(ticket)
-                        
-                        self.codeInputViewModel.updateCode("")
-                        self.showToastMessage?("Booking Code Loaded")
+                        addedTicketsCount += 1
+                        print("[BOOKING_CODE] Added ticket: \(match.homeParticipant.name) vs \(match.awayParticipant.name) - \(outcome.translatedName) @ \(outcome.bettingOffer.decimalOdd)")
                     }
+
+                    self.codeInputViewModel.updateCode("")
+                    self.showToastMessage?("Booking Code Loaded (\(addedTicketsCount) selections)")
                 }
             )
             .store(in: &cancellables)

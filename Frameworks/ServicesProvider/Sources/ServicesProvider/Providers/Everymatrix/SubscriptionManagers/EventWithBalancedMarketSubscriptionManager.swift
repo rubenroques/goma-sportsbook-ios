@@ -20,7 +20,7 @@ import SharedModels
 class EventWithBalancedMarketSubscriptionManager: EventWithBalancedMarketSubscriptionManagerProtocol {
 
     // MARK: - Dependencies (Full DI)
-    private let connector: EveryMatrixConnector
+    private let connector: EveryMatrixSocketConnector
     private let eventId: String
     private let bettingTypeId: String
     private let eventPartId: String
@@ -35,7 +35,7 @@ class EventWithBalancedMarketSubscriptionManager: EventWithBalancedMarketSubscri
     // MARK: - Initialization
 
     init(
-        connector: EveryMatrixConnector,
+        connector: EveryMatrixSocketConnector,
         eventId: String,
         bettingTypeId: String,
         eventPartId: String,

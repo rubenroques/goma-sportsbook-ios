@@ -68,8 +68,11 @@ extension EveryMatrix {
     struct CasinoGamesResponseDTO: Codable {
         let count: Int
         let total: Int
-        let items: [FailableDecodable<CasinoGameDTO>]
+        let items: [FailableDecodable<CasinoGameDTO>]?
         let pages: CasinoPagesDTO?
+        let success: Bool?
+        let errorMessage: String?
+        let errorCode: Int?
     }
     
     /// DTO for game vendor information (v2 only has href)

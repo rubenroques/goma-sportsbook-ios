@@ -21,12 +21,6 @@ class EveryMatrixBaseConnector: Connector {
     
     /// JSON decoder
     private let decoder: JSONDecoder
-
-    /// API type identifier for logging
-    private let apiIdentifier: String
-
-    /// SSE manager for streaming requests
-    private let sseManager: SSEManager
     
     // MARK: - Helpers
     
@@ -49,14 +43,11 @@ class EveryMatrixBaseConnector: Connector {
     // MARK: - Initialization
     
     init(sessionCoordinator: EveryMatrixSessionCoordinator,
-         apiIdentifier: String,
          session: URLSession = .shared,
          decoder: JSONDecoder = JSONDecoder()) {
         self.sessionCoordinator = sessionCoordinator
-        self.apiIdentifier = apiIdentifier
         self.session = session
         self.decoder = decoder
-        self.sseManager = SSEManager(session: session, decoder: decoder)
     }
     
     // MARK: - Public Methods
@@ -65,7 +56,7 @@ class EveryMatrixBaseConnector: Connector {
     /// - Parameter endpoint: The endpoint to request
     /// - Returns: Publisher emitting decoded response or error
     func request<T: Decodable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
-        print("[EveryMatrix-\(apiIdentifier)] Preparing request for endpoint: \(endpoint.endpoint)")
+        print("[EveryMatrix-REST api] Preparing request for endpoint: \(endpoint.endpoint)")
         
         // Build base request
         guard var request = endpoint.request() else {
@@ -84,7 +75,7 @@ class EveryMatrixBaseConnector: Connector {
                         return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
                     }
                     
-                    print("[EveryMatrix-\(self.apiIdentifier)] Using session token for authenticated request")
+                    print("[EveryMatrix-REST api] Using session token for authenticated request")
                     
                     // Add authentication headers
                     var authenticatedRequest = request
@@ -98,7 +89,7 @@ class EveryMatrixBaseConnector: Connector {
                         throw ServiceProviderError.unknown
                     }
                     
-                    print("[EveryMatrix-\(self.apiIdentifier)] Error encountered: \(error)")
+                    print("[EveryMatrix-REST api] Error encountered: \(error)")
                     
                     // Check if error is auth-related (401 or 403)
                     guard let serviceError = error as? ServiceProviderError,
@@ -107,12 +98,12 @@ class EveryMatrixBaseConnector: Connector {
                         throw error
                     }
                     
-                    print("[EveryMatrix-\(self.apiIdentifier)] Auth error detected, attempting token refresh...")
+                    print("[EveryMatrix-REST api] Auth error detected, attempting token refresh...")
                     
                     // Force token refresh and retry
                     return self.sessionCoordinator.publisherWithValidToken(forceRefresh: true)
                         .flatMap { session -> AnyPublisher<Data, Error> in
-                            print("[EveryMatrix-\(self.apiIdentifier)] Token refreshed, retrying request")
+                            print("[EveryMatrix-REST api] Token refreshed, retrying request")
                             
                             // Add new authentication headers
                             var retriedRequest = request
@@ -128,13 +119,13 @@ class EveryMatrixBaseConnector: Connector {
                         throw ServiceProviderError.unknown
                     }
                     
-                    print("[EveryMatrix-\(self.apiIdentifier)] Decoding response data...")
+                    print("[EveryMatrix-REST api] Decoding response data...")
                     
                     do {
                         return try self.decoder.decode(T.self, from: data)
                     } catch let decodingError {
-                        print("[EveryMatrix-\(self.apiIdentifier)] Decoding error: \(decodingError)")
-                        print("[EveryMatrix-\(self.apiIdentifier)] Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
+                        print("[EveryMatrix-REST api] Decoding error: \(decodingError)")
+                        print("[EveryMatrix-REST api] Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
                         throw ServiceProviderError.decodingError(message: decodingError.localizedDescription)
                     }
                 }
@@ -147,7 +138,7 @@ class EveryMatrixBaseConnector: Connector {
                 .eraseToAnyPublisher()
         } else {
             // No authentication required, make direct request
-            print("[EveryMatrix-\(apiIdentifier)] Making unauthenticated request")
+            print("[EveryMatrix-REST api] Making unauthenticated request")
             
             return performRequest(request)
                 .tryMap { [weak self] data in
@@ -172,109 +163,6 @@ class EveryMatrixBaseConnector: Connector {
     ///   - endpoint: The endpoint to request
     ///   - decodingType: Type to decode from SSE JSON data
     /// - Returns: Publisher emitting SSE events or error
-    func requestSSE<T: Decodable>(
-        _ endpoint: Endpoint,
-        decodingType: T.Type
-    ) -> AnyPublisher<SSEEvent<T>, ServiceProviderError> {
-        print("[EveryMatrix-\(apiIdentifier)] Preparing SSE request for endpoint: \(endpoint.endpoint)")
-
-        // Build URL components
-        guard var components = URLComponents(string: endpoint.url + endpoint.endpoint) else {
-            return Fail(error: ServiceProviderError.errorMessage(message: "Invalid URL")).eraseToAnyPublisher()
-        }
-
-        // Add query parameters
-        components.queryItems = endpoint.query
-
-        guard let url = components.url else {
-            return Fail(error: ServiceProviderError.errorMessage(message: "Invalid URL")).eraseToAnyPublisher()
-        }
-
-        // Build base headers
-        var headers = endpoint.headers ?? [:]
-
-        // Check if endpoint requires authentication
-        if endpoint.requireSessionKey {
-            // Get valid token and make SSE request with retry logic
-            return sessionCoordinator.publisherWithValidToken()
-                .flatMap { [weak self] session -> AnyPublisher<SSEEvent<T>, Error> in
-                    guard let self = self else {
-                        return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
-                    }
-
-                    print("[EveryMatrix-\(self.apiIdentifier)] Using session token for authenticated SSE request")
-
-                    // Add authentication headers
-                    var authenticatedHeaders = headers
-                    self.addAuthenticationHeadersToDict(&authenticatedHeaders, session: session, endpoint: endpoint)
-
-                    print("📡 SSE Request: \(url.absoluteString)")
-                    print("📡 SSE Headers: \(authenticatedHeaders)")
-
-                    // Make SSE request via SSEManager
-                    return self.sseManager.subscribe(
-                        url: url,
-                        headers: authenticatedHeaders,
-                        decodingType: decodingType,
-                        timeout: endpoint.timeout
-                    )
-                    .mapError { error -> Error in
-                        // Map EveryMatrix.APIError to Error
-                        switch error {
-                        case .requestError(let value):
-                            return ServiceProviderError.errorMessage(message: value)
-                        case .decodingError(let value):
-                            return ServiceProviderError.decodingError(message: value)
-                        case .notConnected:
-                            return ServiceProviderError.errorMessage(message: "Not connected")
-                        case .noResultsReceived:
-                            return ServiceProviderError.errorMessage(message: "No results received")
-                        default:
-                            return ServiceProviderError.errorMessage(message: error.localizedDescription)
-                        }
-                    }
-                    .eraseToAnyPublisher()
-                }
-                .mapError { error -> ServiceProviderError in
-                    // Convert Error to ServiceProviderError
-                    if let serviceError = error as? ServiceProviderError {
-                        return serviceError
-                    }
-                    return ServiceProviderError.errorMessage(message: error.localizedDescription)
-                }
-                .eraseToAnyPublisher()
-        } else {
-            // No authentication required, make direct SSE request
-            print("[EveryMatrix-\(apiIdentifier)] Making unauthenticated SSE request")
-
-            print("📡 SSE Request: \(url.absoluteString)")
-            print("📡 SSE Headers: \(headers)")
-
-            return sseManager.subscribe(
-                url: url,
-                headers: headers,
-                decodingType: decodingType,
-                timeout: endpoint.timeout
-            )
-            .mapError { error -> ServiceProviderError in
-                // Map EveryMatrix.APIError to ServiceProviderError
-                switch error {
-                case .requestError(let value):
-                    return ServiceProviderError.errorMessage(message: value)
-                case .decodingError(let value):
-                    return ServiceProviderError.decodingError(message: value)
-                case .notConnected:
-                    return ServiceProviderError.errorMessage(message: "Not connected")
-                case .noResultsReceived:
-                    return ServiceProviderError.errorMessage(message: "No results received")
-                default:
-                    return ServiceProviderError.errorMessage(message: error.localizedDescription)
-                }
-            }
-            .eraseToAnyPublisher()
-        }
-    }
-
     // MARK: - Private Methods
     
     /// Add authentication headers to request
@@ -284,7 +172,7 @@ class EveryMatrixBaseConnector: Connector {
         // Add session token header
         if let sessionIdKey = endpoint.authHeaderKey(for: .sessionId) {
             request.setValue(session.sessionId, forHTTPHeaderField: sessionIdKey)
-            print("[EveryMatrix-\(apiIdentifier)] Added session token with key: \(sessionIdKey)")
+            print("[EveryMatrix-REST api] Added session token with key: \(sessionIdKey)")
         } else {
             // Default header for session token
             request.setValue(session.sessionId, forHTTPHeaderField: "X-SessionId")
@@ -293,14 +181,19 @@ class EveryMatrixBaseConnector: Connector {
         // Add user ID header if needed
         if let userIdKey = endpoint.authHeaderKey(for: .userId) {
             request.setValue(session.userId, forHTTPHeaderField: userIdKey)
-            print("[EveryMatrix-\(apiIdentifier)] Added user ID with key: \(userIdKey)")
+            print("[EveryMatrix-REST api] Added user ID with key: \(userIdKey)")
         }
         
+        /*
+         needs to be moved to the casino own connector
+         
         // Special handling for Casino API (uses Cookie header)
         if apiIdentifier == "Casino" {
             request.setValue("sessionId=\(session.sessionId)", forHTTPHeaderField: "Cookie")
-            print("[EveryMatrix-\(apiIdentifier)] Added session as Cookie header")
+            print("[EveryMatrix-REST api] Added session as Cookie header")
         }
+        */
+        
     }
 
     /// Add authentication headers to dictionary (for SSE requests)
@@ -310,7 +203,7 @@ class EveryMatrixBaseConnector: Connector {
         // Add session token header
         if let sessionIdKey = endpoint.authHeaderKey(for: .sessionId) {
             headers[sessionIdKey] = session.sessionId
-            print("[EveryMatrix-\(apiIdentifier)] Added session token with key: \(sessionIdKey)")
+            print("[EveryMatrix-REST api] Added session token with key: \(sessionIdKey)")
         } else {
             // Default header for session token
             headers["X-SessionId"] = session.sessionId
@@ -319,49 +212,49 @@ class EveryMatrixBaseConnector: Connector {
         // Add user ID header if needed
         if let userIdKey = endpoint.authHeaderKey(for: .userId) {
             headers[userIdKey] = session.userId
-            print("[EveryMatrix-\(apiIdentifier)] Added user ID with key: \(userIdKey)")
+            print("[EveryMatrix-REST api] Added user ID with key: \(userIdKey)")
         }
 
+        /*
+         needs to be moved to the casino own connector
         // Special handling for Casino API (uses Cookie header)
         if apiIdentifier == "Casino" {
             headers["Cookie"] = "sessionId=\(session.sessionId)"
-            print("[EveryMatrix-\(apiIdentifier)] Added session as Cookie header")
+            print("[EveryMatrix-REST api] Added session as Cookie header")
         }
+         */
     }
 
     /// Perform HTTP request and handle response
     private func performRequest(_ request: URLRequest) -> AnyPublisher<Data, Error> {
-        print("[EveryMatrix-\(apiIdentifier)] Performing request: \(request.url?.absoluteString ?? "unknown")")
+        print("[EveryMatrix-REST api] Performing request: \(request.url?.absoluteString ?? "unknown")")
 
         // Log request body for debugging
         if let body = request.httpBody, let bodyString = String(data: body, encoding: .utf8) {
-            print("[EveryMatrix-\(apiIdentifier)] 📤 Request body: \(bodyString)")
+            print("[EveryMatrix-REST api] 📤 Request body: \(bodyString)")
         }
 
         // Log headers for debugging
         if let headers = request.allHTTPHeaderFields {
-            print("[EveryMatrix-\(apiIdentifier)] 📋 Request headers: \(headers)")
+            print("[EveryMatrix-REST api] 📋 Request headers: \(headers)")
         }
 
-        print("============ \n [EveryMatrix-\(apiIdentifier)] cURL Command:")
+        print("============ \n [EveryMatrix-REST api] cURL Command:")
         print(request.cURL(pretty: true))
         print("============\n")
         
         return session.dataTaskPublisher(for: request)
             .tryMap { [weak self] result in
-                guard let self = self else {
-                    throw ServiceProviderError.unknown
-                }
-
+                
                 guard let httpResponse = result.response as? HTTPURLResponse else {
                     throw ServiceProviderError.invalidResponse
                 }
 
-                print("[EveryMatrix-\(self.apiIdentifier)] Response status code: \(httpResponse.statusCode)")
+                print("[EveryMatrix-REST api] Response status code: \(httpResponse.statusCode)")
 
                 // Log response body for debugging
                 if let responseString = String(data: result.data, encoding: .utf8) {
-                    print("[EveryMatrix-\(self.apiIdentifier)] 📥 Response body: \(responseString)")
+                    print("[EveryMatrix-REST api] 📥 Response body: \(responseString)")
                 }
 
                 switch httpResponse.statusCode {
@@ -374,24 +267,24 @@ class EveryMatrixBaseConnector: Connector {
                     }
                     throw ServiceProviderError.badRequest
                 case 401:
-                    print("[EveryMatrix-\(self.apiIdentifier)] Received 401 Unauthorized")
+                    print("[EveryMatrix-REST api] Received 401 Unauthorized")
                     throw ServiceProviderError.unauthorized
 
                 case 403:
                     // EveryMatrix often returns 403 for expired sessions
-                    print("[EveryMatrix-\(self.apiIdentifier)] Received 403 Forbidden (likely expired session)")
+                    print("[EveryMatrix-REST api] Received 403 Forbidden (likely expired session)")
                     throw ServiceProviderError.forbidden
 
                 case 404:
-                    print("[EveryMatrix-\(self.apiIdentifier)] ❌ 404 Not Found")
+                    print("[EveryMatrix-REST api] ❌ 404 Not Found")
                     throw ServiceProviderError.notFound
 
                 case 409:
                     // 409 Conflict - usually duplicate bet or validation error
-                    print("[EveryMatrix-\(self.apiIdentifier)] ⚠️ 409 Conflict - Possible duplicate bet or validation error")
+                    print("[EveryMatrix-REST api] ⚠️ 409 Conflict - Possible duplicate bet or validation error")
                     if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
                         let errorMessage = apiError.thirdPartyResponse?.message ?? apiError.error ?? "Conflict Error"
-                        print("[EveryMatrix-\(self.apiIdentifier)] 409 Error message: \(errorMessage)")
+                        print("[EveryMatrix-REST api] 409 Error message: \(errorMessage)")
                         throw ServiceProviderError.errorMessage(message: errorMessage)
                     }
                     throw ServiceProviderError.errorMessage(message: "Bet already placed or validation error")
@@ -414,7 +307,7 @@ class EveryMatrixBaseConnector: Connector {
                     throw ServiceProviderError.internalServerError
 
                 default:
-                    print("[EveryMatrix-\(self.apiIdentifier)] ❌ Unexpected status code: \(httpResponse.statusCode)")
+                    print("[EveryMatrix-REST api] ❌ Unexpected status code: \(httpResponse.statusCode)")
                     throw ServiceProviderError.unknown
                 }
             }

@@ -12,7 +12,7 @@ import SharedModels
 class PopularTournamentsManager {
     
     // MARK: - Dependencies
-    private let connector: EveryMatrixConnector
+    private let connector: EveryMatrixSocketConnector
     private let operatorId: String
     private let language: String
     private let sportId: String
@@ -28,7 +28,7 @@ class PopularTournamentsManager {
     
     // MARK: - Initialization
     
-    init(connector: EveryMatrixConnector, sportId: String, tournamentsCount: Int = 10, operatorId: String = "4093", language: String = "en") {
+    init(connector: EveryMatrixSocketConnector, sportId: String, tournamentsCount: Int = 10, operatorId: String = "4093", language: String = "en") {
         self.connector = connector
         self.sportId = sportId
         self.tournamentsCount = tournamentsCount

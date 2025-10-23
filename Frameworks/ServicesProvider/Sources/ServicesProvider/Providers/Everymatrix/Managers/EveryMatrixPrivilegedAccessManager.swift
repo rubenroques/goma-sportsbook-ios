@@ -11,7 +11,7 @@ import SharedModels
 
 class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
-    var connector: EveryMatrixPlayerAPIConnector
+    var connector: EveryMatrixBaseConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
 
     // Publishers
@@ -28,7 +28,7 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     // Internal state
     private var cancellables: Set<AnyCancellable> = []
 
-    init(connector: EveryMatrixPlayerAPIConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
+    init(connector: EveryMatrixBaseConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
         self.connector = connector
         self.sessionCoordinator = sessionCoordinator
     }
@@ -70,9 +70,6 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
                     userId: String(phoneLoginResponse.userId)
                 )
                 self.sessionCoordinator.updateSession(session)
-                
-                // Store the session token in the connector (for backward compatibility)
-                self.connector.updateSessionToken(sessionId: phoneLoginResponse.sessionId, userId: phoneLoginResponse.userId)
                 
                 // Save the session token to the session coordinator for other APIs to access
                 self.sessionCoordinator.saveToken(phoneLoginResponse.sessionId, withKey: .playerSessionToken)

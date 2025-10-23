@@ -22,7 +22,7 @@ struct SimpleSubscription: EndpointPublisherIdentifiable {
 class PreLiveMatchesPaginator: UnsubscriptionController {
 
     // MARK: - Dependencies
-    private let connector: EveryMatrixConnector
+    private let connector: EveryMatrixSocketConnector
     private let store: EveryMatrix.EntityStore
 
     // MARK: - Public Access
@@ -61,7 +61,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     private var paginationResponseSubject: PassthroughSubject<Bool, ServiceProviderError>?
 
     // MARK: - Initialization
-    init(connector: EveryMatrixConnector,
+    init(connector: EveryMatrixSocketConnector,
          sportId: String,
          initialEventLimit: Int = 10,         // Renamed parameter
          numberOfMarkets: Int = 5,

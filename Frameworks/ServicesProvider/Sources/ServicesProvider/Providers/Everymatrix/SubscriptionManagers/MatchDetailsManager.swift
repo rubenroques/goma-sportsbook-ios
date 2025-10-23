@@ -17,7 +17,7 @@ import SharedModels
 class MatchDetailsManager {
     
     // MARK: - Dependencies
-    private let connector: EveryMatrixConnector
+    private let connector: EveryMatrixSocketConnector
     private let operatorId: String
     private let language: String
     
@@ -42,7 +42,7 @@ class MatchDetailsManager {
     
     // MARK: - Initialization
     
-    init(connector: EveryMatrixConnector,
+    init(connector: EveryMatrixSocketConnector,
          matchId: String,
          operatorId: String = "4093",
          language: String = "en") {

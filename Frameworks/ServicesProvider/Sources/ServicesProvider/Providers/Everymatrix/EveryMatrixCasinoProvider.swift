@@ -67,21 +67,30 @@ class EveryMatrixCasinoProvider: CasinoProvider {
         )
         
         let publisher: AnyPublisher<EveryMatrix.CasinoGroupResponseDTO, ServiceProviderError> = connector.request(endpoint)
-        
+
         return publisher
-            .map { response in
-                // Note: games are now under response.games.items
-                let games = response.games.items.compactMap(\.content).map { 
+            .tryMap { response in
+                guard let gamesData = response.games else {
+                    throw ServiceProviderError.errorMessage(message: "No games data in response")
+                }
+
+                let games = gamesData.items.compactMap(\.content).map {
                     EveryMatrixModelMapper.casinoGame(from: $0)
                 }
                 return CasinoGamesResponse(
                     count: games.count,
-                    total: response.games.total,
+                    total: gamesData.total,
                     games: games,
-                    pagination: response.games.pages.map { 
-                        EveryMatrixModelMapper.casinoPaginationInfo(from: $0) 
+                    pagination: gamesData.pages.map {
+                        EveryMatrixModelMapper.casinoPaginationInfo(from: $0)
                     }
                 )
+            }
+            .mapError { error in
+                if let serviceError = error as? ServiceProviderError {
+                    return serviceError
+                }
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
     }
@@ -100,7 +109,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
 
         return publisher
             .tryMap { response -> CasinoGame in
-                guard let firstGame = response.items.compactMap(\.content).first else {
+                guard let firstGame = (response.items ?? []).compactMap(\.content).first else {
                     throw ServiceProviderError.resourceNotFound
                 }
                 return EveryMatrixModelMapper.casinoGame(from: firstGame)
@@ -117,19 +126,18 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     func searchGames(language: String?, platform: String?, name: String) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         let finalLanguage = language ?? getDefaultLanguage()
         let finalPlatform = platform ?? getDefaultCasinoPlatform()
-        
+
         let endpoint = EveryMatrixCasinoAPI.searchGames(
             language: finalLanguage,
             platform: finalPlatform,
             name: name
         )
-        
+
         let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
-        
+
         return publisher
             .map { response in
-                // Note: games are now under response.games.items
-                let games = response.items.compactMap(\.content).map {
+                let games = (response.items ?? []).compactMap(\.content).map {
                     EveryMatrixModelMapper.casinoGame(from: $0)
                 }
                 return CasinoGamesResponse(
@@ -161,12 +169,12 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             language: language ?? "en",
             platform: platform ?? "iPhone"
         )
-        
+
         let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
-        
+
         return publisher
             .map { response in
-                let games = response.items.compactMap(\.content).map {
+                let games = (response.items ?? []).compactMap(\.content).map {
                     EveryMatrixModelMapper.casinoGame(from: $0)
                 }
                 return CasinoGamesResponse(
