@@ -2497,12 +2497,12 @@ extension Client {
         return casinoProvider.getRecommendedGames(language: language, platform: platform)
     }
     
-    public func buildCasinoGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String? = nil, language: String? = nil) -> String? {
+    public func buildCasinoGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, language: String? = nil) -> String? {
         guard let casinoProvider = self.casinoProvider else {
             return nil
         }
         
-        return casinoProvider.buildGameLaunchUrl(for: game, mode: mode, sessionId: sessionId, language: language)
+        return casinoProvider.buildGameLaunchUrl(for: game, mode: mode, language: language)
     }
 
 }

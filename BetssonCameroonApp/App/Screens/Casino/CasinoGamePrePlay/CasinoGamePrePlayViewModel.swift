@@ -238,30 +238,6 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
     }
     
     private func determineButtonConfiguration() -> [CasinoGamePlayModeButton] {
-        // TODO: In real implementation, check user authentication and balance
-        // For now, we'll simulate different states based on game ID
-        
-        //
-        return [
-            CasinoGamePlayModeButton(
-                id: "login",
-                type: .primary,
-                title: "Login to Play",
-                state: .enabled,
-                style: .filled
-            ),
-            CasinoGamePlayModeButton(
-                id: "practice",
-                type: .secondary,
-                title: "Pratice Play",
-                state: .enabled,
-                style: .outlined
-            )
-        ]
-        
-        //
-        //
-        
         let isUserLoggedIn = checkUserLoginStatus()
         
         if !isUserLoggedIn {
@@ -277,64 +253,34 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
                 CasinoGamePlayModeButton(
                     id: "practice",
                     type: .secondary,
-                    title: "Pratice Play",
+                    title: "Practice Play",
                     state: .enabled,
                     style: .outlined
                 )
             ]
         } else {
-            let hasInsufficientFunds = checkInsufficientFunds()
-            
-            if hasInsufficientFunds {
-                // Insufficient funds configuration
-                return [
-                    CasinoGamePlayModeButton(
-                        id: "deposit",
-                        type: .primary,
-                        title: "DEPOSIT_TO_PLAY",
-                        state: .enabled,
-                        style: .filled
-                    ),
-                    CasinoGamePlayModeButton(
-                        id: "practice",
-                        type: .secondary,
-                        title: "PRACTICE_PLAY",
-                        state: .enabled,
-                        style: .outlined
-                    )
-                ]
-            } else {
-                // Logged-in with funds configuration
-                return [
-                    CasinoGamePlayModeButton(
-                        id: "play",
-                        type: .primary,
-                        title: "PLAY_NOW",
-                        state: .enabled,
-                        style: .filled
-                    ),
-                    CasinoGamePlayModeButton(
-                        id: "practice",
-                        type: .secondary,
-                        title: "PRACTICE_MODE",
-                        state: .enabled,
-                        style: .outlined
-                    )
-                ]
-            }
+            // Logged-in user configuration (skip funds check)
+            return [
+                CasinoGamePlayModeButton(
+                    id: "play",
+                    type: .primary,
+                    title: "PLAY_NOW",
+                    state: .enabled,
+                    style: .filled
+                ),
+                CasinoGamePlayModeButton(
+                    id: "practice",
+                    type: .secondary,
+                    title: "PRACTICE_MODE",
+                    state: .enabled,
+                    style: .outlined
+                )
+            ]
         }
     }
     
     private func checkUserLoginStatus() -> Bool {
-        // TODO: Implement real user authentication check
-        // For demo purposes, we'll simulate logged-out state for certain games
-        return !gameId.contains("demo")
-    }
-    
-    private func checkInsufficientFunds() -> Bool {
-        // TODO: Implement real balance check against minimum stake
-        // For demo purposes, we'll simulate insufficient funds for high-stake games
-        return gameId.contains("high") || gameId.contains("premium")
+        return Env.userSessionStore.isUserLogged()
     }
     
     private func mapRatingToVolatility(_ rating: Double) -> String {

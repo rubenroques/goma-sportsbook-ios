@@ -38,14 +38,14 @@ class CasinoGamePlayViewModel: ObservableObject {
     }
     
     // MARK: - Initialization
-    
-    /// Initialize with CasinoGame object (preferred - uses real launchUrl)
-    init(casinoGame: CasinoGame, servicesProvider: ServicesProvider.Client) {
+
+    /// Initialize with CasinoGame object and mode
+    init(casinoGame: CasinoGame, mode: CasinoGamePlayMode, servicesProvider: ServicesProvider.Client) {
         self.gameId = casinoGame.id
         self.servicesProvider = servicesProvider
         self.casinoGame = casinoGame
-        
-        loadGameDataFromObject()
+
+        loadGameDataWithMode(mode: mode)
     }
     
     /// Initialize with gameId only (fallback - uses mock URLs)
@@ -58,14 +58,7 @@ class CasinoGamePlayViewModel: ObservableObject {
     }
     
     // MARK: - Public Methods
-    func reloadGame() {
-        if let casinoGame = casinoGame {
-            loadGameDataFromObject()
-        } else {
-            loadGameData()
-        }
-    }
-    
+
     func goBack() {
         webView?.goBack()
     }
@@ -108,26 +101,52 @@ class CasinoGamePlayViewModel: ObservableObject {
         }
     }
     
-    /// Load game data from CasinoGame object (uses real launchUrl)
-    private func loadGameDataFromObject() {
+    /// Load game data with proper session injection
+    private func loadGameDataWithMode(mode: CasinoGamePlayMode) {
         guard let casinoGame = casinoGame else {
             errorMessage = "No game data available"
             return
         }
-        
+
         isLoading = true
         errorMessage = nil
-        
-        // Use real game data from CasinoGame object
+
+        print("[🎰 VIEWMODEL] ═══════════════════════════════════════")
+        print("[🎰 VIEWMODEL] Loading game: \(casinoGame.name)")
+        print("[🎰 VIEWMODEL] Play mode: \(mode)")
+
         gameTitle = casinoGame.name
-        
-        // Use real launchUrl from the API
-        if let url = URL(string: casinoGame.launchUrl), !casinoGame.launchUrl.isEmpty {
-            gameURL = url
-        } else {
-            errorMessage = "Invalid game URL from server"
+
+        // Convert CasinoGamePlayMode to CasinoGameMode
+        let casinoGameMode: CasinoGameMode
+        let isUserLoggedIn = Env.userSessionStore.isUserLogged()
+        print("[🎰 VIEWMODEL] User logged in: \(isUserLoggedIn)")
+
+        switch mode {
+        case .practice:
+            casinoGameMode = isUserLoggedIn ? .funLoggedIn : .funGuest
+            print("[🎰 VIEWMODEL] Practice mode → \(casinoGameMode)")
+        case .realMoney:
+            casinoGameMode = .realMoney
+            print("[🎰 VIEWMODEL] Real money mode → \(casinoGameMode)")
         }
-        
+
+        // ✅ Use buildCasinoGameLaunchUrl to inject session parameters
+        print("[🎰 VIEWMODEL] Calling buildCasinoGameLaunchUrl()")
+        if
+            let urlString = servicesProvider.buildCasinoGameLaunchUrl(for: casinoGame, mode: casinoGameMode, language: "en"),
+            let url = URL(string: urlString)
+        {
+            gameURL = url
+            print("[🎰 VIEWMODEL] ✅ Final URL set")
+        }
+        else {
+            errorMessage = "Failed to build game launch URL"
+            print("[🎰 VIEWMODEL] ❌ buildCasinoGameLaunchUrl returned nil")
+        }
+
+        print("[🎰 VIEWMODEL] ═══════════════════════════════════════")
+
         isLoading = false
     }
     

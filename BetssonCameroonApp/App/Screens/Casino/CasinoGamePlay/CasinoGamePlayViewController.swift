@@ -354,7 +354,7 @@ class CasinoGamePlayViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
-            self?.viewModel.reloadGame()
+            self?.viewModel.refresh()
         })
         
         present(alert, animated: true)

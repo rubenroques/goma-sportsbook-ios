@@ -192,14 +192,21 @@ class CasinoCoordinator: Coordinator {
     }
     
     private func showGamePlay(gameId: String, casinoGame: CasinoGame?, mode: CasinoGamePlayMode) {
+        print("[🎰 COORDINATOR] ═══════════════════════════════════════")
+        print("[🎰 COORDINATOR] showGamePlay called")
+        print("[🎰 COORDINATOR] Mode: \(mode)")
+        print("[🎰 COORDINATOR] User logged in: \(environment.userSessionStore.isUserLogged())")
+
         // Create game play view model with CasinoGame object if available
         let gamePlayViewModel: CasinoGamePlayViewModel
         if let casinoGame = casinoGame {
-            gamePlayViewModel = CasinoGamePlayViewModel(casinoGame: casinoGame, servicesProvider: environment.servicesProvider)
+            gamePlayViewModel = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: mode, servicesProvider: environment.servicesProvider)
         } else {
             // Fallback to gameId-based initialization
             gamePlayViewModel = CasinoGamePlayViewModel(gameId: gameId, servicesProvider: environment.servicesProvider)
         }
+
+        print("[🎰 COORDINATOR] ═══════════════════════════════════════")
         
         // Setup navigation closures
         gamePlayViewModel.onNavigateBack = { [weak self] in

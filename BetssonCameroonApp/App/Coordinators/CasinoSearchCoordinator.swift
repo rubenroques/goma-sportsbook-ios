@@ -87,7 +87,7 @@ private extension CasinoSearchCoordinator {
         gamePrePlayViewModel.onStartGame = { [weak self] mode, casinoGame in
             let vm: CasinoGamePlayViewModel
             if let casinoGame = casinoGame {
-                vm = CasinoGamePlayViewModel(casinoGame: casinoGame, servicesProvider: self?.environment.servicesProvider ?? Env.servicesProvider)
+                vm = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: CasinoGamePlayMode.realMoney, servicesProvider: self?.environment.servicesProvider ?? Env.servicesProvider)
             } else {
                 vm = CasinoGamePlayViewModel(gameId: gameId, servicesProvider: self?.environment.servicesProvider ?? Env.servicesProvider)
             }

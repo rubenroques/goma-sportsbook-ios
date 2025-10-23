@@ -23,13 +23,7 @@ public protocol CasinoProvider: Connector {
     ///   - lobbyType: Lobby type specifier - optional, provider will use default (.casino)
     ///   - pagination: Pagination parameters
     /// - Returns: Publisher with paginated games response
-    func getGamesByCategory(
-        categoryId: String,
-        language: String?,
-        platform: String?,
-        lobbyType: CasinoLobbyType?,
-        pagination: CasinoPaginationParams
-    ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
+    func getGamesByCategory(categoryId: String, language: String?, platform: String?, lobbyType: CasinoLobbyType?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
     
     /// Retrieve detailed information for a specific game
     /// - Parameters:
@@ -37,22 +31,11 @@ public protocol CasinoProvider: Connector {
     ///   - language: Language code - optional, provider will use default
     ///   - platform: Platform identifier - optional, provider will use default
     /// - Returns: Publisher with game details or error if not found
-    func getGameDetails(
-        gameId: String,
-        language: String?,
-        platform: String?
-    ) -> AnyPublisher<CasinoGame, ServiceProviderError>
+    func getGameDetails(gameId: String, language: String?, platform: String?) -> AnyPublisher<CasinoGame, ServiceProviderError>
     
-    func searchGames(
-        language: String?,
-        platform: String?,
-        name: String
-    ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
+    func searchGames(language: String?, platform: String?, name: String) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
     
-    func getRecommendedGames(
-        language: String?,
-        platform: String?
-    ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
+    func getRecommendedGames(language: String?, platform: String?) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError>
     
     // MARK: - Game Launch Methods
     
@@ -66,7 +49,6 @@ public protocol CasinoProvider: Connector {
     func buildGameLaunchUrl(
         for game: CasinoGame,
         mode: CasinoGameMode,
-        sessionId: String?,
         language: String?
     ) -> String?
 

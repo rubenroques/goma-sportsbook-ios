@@ -14,22 +14,6 @@ extension EveryMatrix {
     struct EarlySettlementOption: Codable {
         let scoreDifference: Double?
     }
-
-    /*
-    struct CashoutRequest: Codable {
-        let betId: String
-        let cashoutValue: Double
-        let cashoutType: String
-        let partialCashoutStake: Double?
-        
-        init(betId: String, cashoutValue: Double, cashoutType: String, partialCashoutStake: Double? = nil) {
-            self.betId = betId
-            self.cashoutValue = cashoutValue
-            self.cashoutType = cashoutType
-            self.partialCashoutStake = partialCashoutStake
-        }
-    }
-    */
     
     // MARK: - MyBets Response Models
     
@@ -256,32 +240,5 @@ extension EveryMatrix {
             case shortBetName
         }
     }
-    
-    struct CashoutResponse: Codable {
-        let cashoutValue: Double?
-        let currency: String?
-        let success: Bool?
-        let errorMessage: String?
-        
-        enum CodingKeys: String, CodingKey {
-            case cashoutValue
-            case currency
-            case success
-            case errorMessage
-        }
-    }
-    
-    struct CashoutExecuteResponse: Codable {
-        let success: Bool?
-        let cashoutValue: Double?
-        let errorMessage: String?
-        let transactionId: String?
-        
-        enum CodingKeys: String, CodingKey {
-            case success
-            case cashoutValue
-            case errorMessage
-            case transactionId
-        }
-    }
+
 }

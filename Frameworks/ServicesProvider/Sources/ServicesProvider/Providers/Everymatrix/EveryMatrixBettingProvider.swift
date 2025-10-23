@@ -146,20 +146,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     // MARK: - Cashout Methods (Legacy)
 
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError> {
-        let endpoint = EveryMatrixOddsMatrixWebAPI.calculateCashout(betId: betId, stakeValue: stakeValue)
-
-        return restConnector.request(endpoint)
-            .map { (response: EveryMatrix.CashoutResponse) -> Cashout in
-                // Convert EveryMatrix response to Cashout model
-                return Cashout(
-                    cashoutValue: response.cashoutValue ?? 0.0,
-                    partialCashoutAvailable: stakeValue != nil
-                )
-            }
-            .mapError { error in
-                ServiceProviderError.errorMessage(message: error.localizedDescription)
-            }
-            .eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError> {
@@ -234,7 +221,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
 
         // Execute request
         return restConnector.request(endpoint)
-            .map { (response: EveryMatrix.NewCashoutResponse) -> CashoutResponse in
+            .map { (response: EveryMatrix.CashoutResponse) -> CashoutResponse in
                 print("✅ Cashout executed: success=\(response.success), payout=\(response.cashoutPayout)")
 
                 // Map internal response to public model

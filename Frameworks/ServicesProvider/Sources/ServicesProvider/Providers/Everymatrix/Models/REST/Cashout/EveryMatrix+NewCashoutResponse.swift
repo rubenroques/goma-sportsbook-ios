@@ -1,5 +1,5 @@
 //
-//  NewCashoutResponseDTO.swift
+//  CashoutResponse.swift
 //  ServicesProvider
 //
 //  Created on 15/10/2025.
@@ -11,7 +11,7 @@ extension EveryMatrix {
 
     /// Internal REST API model for new cashout API execution response
     /// Matches EveryMatrix POST /cashout/v1/cashout endpoint response format
-    struct NewCashoutResponse: Decodable {
+    struct CashoutResponse: Decodable {
 
         /// Whether cashout was successful
         let success: Bool

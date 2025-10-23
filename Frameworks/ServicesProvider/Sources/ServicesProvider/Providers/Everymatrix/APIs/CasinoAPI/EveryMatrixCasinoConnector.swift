@@ -193,10 +193,6 @@ class EveryMatrixCasinoConnector {
             request.setValue(session.userId, forHTTPHeaderField: userIdKey)
             print("[EveryMatrix-Casino] Added user ID with key: \(userIdKey)")
         }
-        
-        // Special handling for Casino API (uses Cookie header)
-        request.setValue("sessionId=\(session.sessionId)", forHTTPHeaderField: "Cookie")
-        print("[EveryMatrix-Casino] Added session as Cookie header")
     }
     
     /// Perform HTTP request and handle response

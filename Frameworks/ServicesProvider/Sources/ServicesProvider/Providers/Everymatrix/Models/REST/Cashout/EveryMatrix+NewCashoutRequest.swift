@@ -8,10 +8,10 @@
 import Foundation
 
 extension EveryMatrix {
-
+    
     /// Internal REST API model for new cashout API execution request
     /// Matches EveryMatrix POST /cashout/v1/cashout endpoint format
-    struct NewCashoutRequest: Encodable {
+    struct CashoutRequest: Encodable {
 
         /// Bet identifier
         let betId: String

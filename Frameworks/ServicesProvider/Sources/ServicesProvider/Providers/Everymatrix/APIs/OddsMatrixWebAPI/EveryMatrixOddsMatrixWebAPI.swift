@@ -12,7 +12,7 @@ enum EveryMatrixOddsMatrixWebAPI {
     
     // New Cashout API (SSE + execution)
     case getCashoutValueSSE(betId: String)
-    case executeCashoutV2(request: EveryMatrix.NewCashoutRequest)
+    case executeCashoutV2(request: EveryMatrix.CashoutRequest)
     
 }
 
