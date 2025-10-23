@@ -550,7 +550,7 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
             limit: pagination.limit
         )
         
-        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = self.restConnector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponse, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher
             .map { response in
@@ -589,7 +589,7 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
             limit: pagination.limit
         )
         
-        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponseDTO, ServiceProviderError> = self.restConnector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoRecentlyPlayedResponse, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher
             .map { response in

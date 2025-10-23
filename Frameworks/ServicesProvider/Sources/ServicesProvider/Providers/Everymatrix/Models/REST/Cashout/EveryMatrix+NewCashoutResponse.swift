@@ -9,7 +9,7 @@ import Foundation
 
 extension EveryMatrix {
 
-    /// Internal DTO for new cashout API execution response
+    /// Internal REST API model for new cashout API execution response
     /// Matches EveryMatrix POST /cashout/v1/cashout endpoint response format
     struct NewCashoutResponse: Decodable {
 

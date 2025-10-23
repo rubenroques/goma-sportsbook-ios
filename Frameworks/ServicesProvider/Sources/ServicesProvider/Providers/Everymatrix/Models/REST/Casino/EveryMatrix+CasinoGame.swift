@@ -1,5 +1,5 @@
 //
-//  CasinoGameDTO.swift
+//  CasinoGame.swift
 //  ServicesProvider
 //
 //  Created by Ruben Roques on 29/01/2025.
@@ -8,9 +8,9 @@
 import Foundation
 
 extension EveryMatrix {
-    
-    /// DTO for casino game API response
-    struct CasinoGameDTO: Codable {
+
+    /// REST API model for casino game response
+    struct CasinoGame: Codable {
         let href: String
         let id: String
         let name: String
@@ -32,22 +32,22 @@ extension EveryMatrix {
         let slug: String?
         let theoreticalPayOut: Double?
         let platform: [FailableDecodable<String>]?
-        let maxBetRestriction: CasinoGameBetRestrictionDTO?
-        let vendor: CasinoGameVendorDTO?  // Optional - v2 only has href, not displayed in UI
-        let tags: CasinoGameTagsDTO?
+        let maxBetRestriction: CasinoGameBetRestriction?
+        let vendor: CasinoGameVendor?  // Optional - v2 only has href, not displayed in UI
+        let tags: CasinoGameTags?
         
-        let categories: CasinoGameCategoriesDTO?
-        let jackpots: CasinoGameJackpotsDTO?
+        let categories: CasinoGameCategories?
+        let jackpots: CasinoGameJackpots?
         
         let htmlDescription: String?
         let description: String?
-        let promo: CasinoGamePromoDTO?
-        let exclusive: CasinoGameExclusiveDTO?
+        let promo: CasinoGamePromo?
+        let exclusive: CasinoGameExclusive?
         let gameCode: String?
         let helpUrl: String?
         let languages: [FailableDecodable<String>]?
         let currencies: [FailableDecodable<String>]?
-        let realMode: CasinoGameRealModeDTO?
+        let realMode: CasinoGameRealMode?
         let license: String?
         let minHitFrequency: Double?
         let maxHitFrequency: Double?
@@ -61,99 +61,99 @@ extension EveryMatrix {
         let icons: [String: String]?
         let volatility: String?
         let position: String?
-        let groups: CasinoGameGroupsDTO?
-        let groupInfos: CasinoGameGroupInfosDTO?
+        let groups: CasinoGameGroups?
+        let groupInfos: CasinoGameGroupInfos?
         let lobby: [FailableDecodable<String>]?
     }
     
-    /// DTO for casino games response
-    struct CasinoGamesResponseDTO: Codable {
+    /// REST API model for casino games response
+    struct CasinoGamesResponse: Codable {
         let count: Int
         let total: Int
-        let items: [FailableDecodable<CasinoGameDTO>]?
-        let pages: CasinoPagesDTO?
+        let items: [FailableDecodable<CasinoGame>]?
+        let pages: CasinoPages?
         let success: Bool?
         let errorMessage: String?
         let errorCode: Int?
     }
     
-    /// DTO for game vendor information (v2 only has href)
-    struct CasinoGameVendorDTO: Codable {
+    /// REST API model for game vendor information (v2 only has href)
+    struct CasinoGameVendor: Codable {
         let href: String?
     }
     
-    /// DTO for game tags
-    struct CasinoGameTagsDTO: Codable {
+    /// REST API model for game tags
+    struct CasinoGameTags: Codable {
         let count: Int
         let total: Int
-        let items: [FailableDecodable<CasinoGameTagItemDTO>]
-        let pagination: CasinoPagesDTO?
+        let items: [FailableDecodable<CasinoGameTagItem>]
+        let pagination: CasinoPages?
     }
     
-    /// DTO for individual tag item
-    struct CasinoGameTagItemDTO: Codable {
+    /// REST API model for individual tag item
+    struct CasinoGameTagItem: Codable {
         let href: String
     }
     
-    /// DTO for game categories
-    struct CasinoGameCategoriesDTO: Codable {
+    /// REST API model for game categories
+    struct CasinoGameCategories: Codable {
         let count: Int
         let total: Int
-        let items: [FailableDecodable<CasinoGameCategoryItemDTO>]
-        let pagination: CasinoPagesDTO?
+        let items: [FailableDecodable<CasinoGameCategoryItem>]
+        let pagination: CasinoPages?
     }
     
-    /// DTO for individual category item
-    struct CasinoGameCategoryItemDTO: Codable {
+    /// REST API model for individual category item
+    struct CasinoGameCategoryItem: Codable {
         let href: String
     }
     
-    /// DTO for game jackpots
-    struct CasinoGameJackpotsDTO: Codable {
+    /// REST API model for game jackpots
+    struct CasinoGameJackpots: Codable {
         let count: Int
         let total: Int
         let items: [FailableDecodable<String>]?
-        let pagination: CasinoPagesDTO?
+        let pagination: CasinoPages?
     }
     
-    /// DTO for bet restrictions
-    struct CasinoGameBetRestrictionDTO: Codable {
+    /// REST API model for bet restrictions
+    struct CasinoGameBetRestriction: Codable {
         let defaultMaxBet: [String: Double]?
         let defaultMaxWin: [String: Double]?
         let defaultMaxMultiplier: Double?
     }
     
-    /// DTO for real mode settings
-    struct CasinoGameRealModeDTO: Codable {
+    /// REST API model for real mode settings
+    struct CasinoGameRealMode: Codable {
         let fun: Bool?
         let anonymity: Bool?
         let realMoney: Bool?
     }
     
-    /// DTO for promotional settings
-    struct CasinoGamePromoDTO: Codable {
+    /// REST API model for promotional settings
+    struct CasinoGamePromo: Codable {
         let effective: Bool
     }
     
-    /// DTO for exclusive settings
-    struct CasinoGameExclusiveDTO: Codable {
+    /// REST API model for exclusive settings
+    struct CasinoGameExclusive: Codable {
         let effective: Bool
     }
     
-    /// DTO for game groups
-    struct CasinoGameGroupsDTO: Codable {
+    /// REST API model for game groups
+    struct CasinoGameGroups: Codable {
         let count: Int
         let items: [FailableDecodable<String>]
     }
     
-    /// DTO for group infos
-    struct CasinoGameGroupInfosDTO: Codable {
+    /// REST API model for group infos
+    struct CasinoGameGroupInfos: Codable {
         let count: Int
-        let items: [String: FailableDecodable<CasinoGameGroupInfoItemDTO>]
+        let items: [String: FailableDecodable<CasinoGameGroupInfoItem>]
     }
     
-    /// DTO for individual group info item
-    struct CasinoGameGroupInfoItemDTO: Codable {
+    /// REST API model for individual group info item
+    struct CasinoGameGroupInfoItem: Codable {
         let position: String?
         let thumbnail: String?
     }

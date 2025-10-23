@@ -35,7 +35,7 @@ extension EveryMatrixModelMapper {
     /// Convert public CashoutRequest to EveryMatrix internal request DTO
     ///
     /// - Parameter publicRequest: Public cashout request
-    /// - Returns: Internal request DTO for EveryMatrix API
+    /// - Returns: Internal request REST API model for EveryMatrix API
     static func cashoutRequest(from publicRequest: CashoutRequest) -> EveryMatrix.NewCashoutRequest {
         return EveryMatrix.NewCashoutRequest(
             betId: publicRequest.betId,

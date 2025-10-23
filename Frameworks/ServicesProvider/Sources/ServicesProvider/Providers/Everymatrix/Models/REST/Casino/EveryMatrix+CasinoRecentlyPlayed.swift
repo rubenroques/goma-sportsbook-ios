@@ -3,22 +3,22 @@ import Foundation
 
 extension EveryMatrix {
     
-    /// DTO for recently played games API response
-    struct CasinoRecentlyPlayedResponseDTO: Codable {
+    /// REST API model for recently played games API response
+    struct CasinoRecentlyPlayedResponse: Codable {
         let count: Int
         let total: Int?
-        let items: [FailableDecodable<CasinoRecentlyPlayedItemDTO>]
-        let pagination: CasinoPaginationDTO?
-        let pages: CasinoPagesDTO?
+        let items: [FailableDecodable<CasinoRecentlyPlayedItem>]
+        let pagination: CasinoPagination?
+        let pages: CasinoPages?
     }
     
-    /// DTO for individual recently played item
-    struct CasinoRecentlyPlayedItemDTO: Codable {
-        let gameModel: FailableDecodable<CasinoGameDTO>?
+    /// REST API model for individual recently played item
+    struct CasinoRecentlyPlayedItem: Codable {
+        let gameModel: FailableDecodable<CasinoGame>?
     }
     
-    /// DTO for pagination information in recently played response
-    struct CasinoPaginationDTO: Codable {
+    /// REST API model for pagination information in recently played response
+    struct CasinoPagination: Codable {
         let total: Int?
         let offset: Int?
         let limit: Int?

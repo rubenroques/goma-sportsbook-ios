@@ -6,7 +6,7 @@ extension EveryMatrixModelMapper {
     // MARK: - Casino Category Mapping
     
     /// Maps EveryMatrix casino categories response to public model
-    static func casinoCategories(from dto: EveryMatrix.CasinoCategoriesResponseDTO) -> CasinoCategoriesResponse {
+    static func casinoCategories(from dto: EveryMatrix.CasinoCategoriesResponse) -> CasinoCategoriesResponse {
         let categories = dto.items.compactMap { failableCategoryDTO in
             failableCategoryDTO.content.map { categoryDTO in
                 casinoCategory(from: categoryDTO)
@@ -26,7 +26,7 @@ extension EveryMatrixModelMapper {
     }
     
     /// Maps EveryMatrix casino category DTO to public model
-    static func casinoCategory(from dto: EveryMatrix.CasinoCategoryDTO) -> CasinoCategory {
+    static func casinoCategory(from dto: EveryMatrix.CasinoCategory) -> CasinoCategory {
         return CasinoCategory(
             id: dto.id,
             name: dto.name,
@@ -38,7 +38,7 @@ extension EveryMatrixModelMapper {
     // MARK: - Casino Game Mapping
     
     /// Maps EveryMatrix casino games response to public model
-    static func casinoGames(from dto: EveryMatrix.CasinoGamesResponseDTO) -> CasinoGamesResponse {
+    static func casinoGames(from dto: EveryMatrix.CasinoGamesResponse) -> CasinoGamesResponse {
         let games = (dto.items ?? []).compactMap { failableGameDTO in
             failableGameDTO.content.map { gameDTO in
                 casinoGame(from: gameDTO)
@@ -58,7 +58,7 @@ extension EveryMatrixModelMapper {
     }
     
     /// Maps EveryMatrix casino game DTO to public model
-    static func casinoGame(from dto: EveryMatrix.CasinoGameDTO) -> CasinoGame {
+    static func casinoGame(from dto: EveryMatrix.CasinoGame) -> CasinoGame {
         // Vendor is not displayed in UI anymore, set to nil
         let vendor: CasinoGameVendor? = nil
         
@@ -118,7 +118,7 @@ extension EveryMatrixModelMapper {
     // MARK: - Recently Played Mapping
     
     /// Maps EveryMatrix recently played response to public model
-    static func casinoRecentlyPlayed(from dto: EveryMatrix.CasinoRecentlyPlayedResponseDTO) -> CasinoGamesResponse {
+    static func casinoRecentlyPlayed(from dto: EveryMatrix.CasinoRecentlyPlayedResponse) -> CasinoGamesResponse {
         let games = dto.items.compactMap { failableItem in
             // Extract game from nested FailableDecodable structure
             failableItem.content?.gameModel?.content.map { gameDTO in
@@ -141,7 +141,7 @@ extension EveryMatrixModelMapper {
     // MARK: - Pagination Mapping
     
     /// Maps EveryMatrix pages DTO to public pagination model
-    static func casinoPaginationInfo(from dto: EveryMatrix.CasinoPagesDTO) -> CasinoPaginationInfo {
+    static func casinoPaginationInfo(from dto: EveryMatrix.CasinoPages) -> CasinoPaginationInfo {
         return CasinoPaginationInfo(
             first: dto.first,
             next: dto.next,

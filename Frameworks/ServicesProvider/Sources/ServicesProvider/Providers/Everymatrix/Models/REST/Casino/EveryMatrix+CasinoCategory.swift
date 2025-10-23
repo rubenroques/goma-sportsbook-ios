@@ -1,5 +1,5 @@
 //
-//  CasinoCategoryDTO.swift
+//  CasinoCategory.swift
 //  ServicesProvider
 //
 //  Created by Ruben Roques on 29/01/2025.
@@ -9,52 +9,52 @@ import Foundation
 
 extension EveryMatrix {
     
-    /// DTO for casino category API response
-    struct CasinoCategoryDTO: Codable {
+    /// REST API model for casino category API response
+    struct CasinoCategory: Codable {
         let id: String
         let name: String
-        let games: CasinoCategoryGamesDTO
+        let games: CasinoCategoryGames
     }
     
-    /// DTO for games information within a category
-    struct CasinoCategoryGamesDTO: Codable {
+    /// REST API model for games information within a category
+    struct CasinoCategoryGames: Codable {
         let count: Int
         let total: Int
-        let items: [FailableDecodable<CasinoGameDTO>]
-        let pages: CasinoPagesDTO?
+        let items: [FailableDecodable<CasinoGame>]
+        let pages: CasinoPages?
     }
     
-    /// DTO for casino categories response
-    struct CasinoCategoriesResponseDTO: Codable {
+    /// REST API model for casino categories response
+    struct CasinoCategoriesResponse: Codable {
         let count: Int
         let total: Int
-        let items: [FailableDecodable<CasinoCategoryDTO>]
-        let pages: CasinoPagesDTO?
+        let items: [FailableDecodable<CasinoCategory>]
+        let pages: CasinoPages?
     }
     
-    /// DTO for pagination pages information
-    struct CasinoPagesDTO: Codable {
+    /// REST API model for pagination pages information
+    struct CasinoPages: Codable {
         let first: String?
         let next: String?
         let previous: String?
         let last: String?
     }
     
-    /// DTO for casino group response (v2 games endpoint)
-    struct CasinoGroupResponseDTO: Codable {
+    /// REST API model for casino group response (v2 games endpoint)
+    struct CasinoGroupResponse: Codable {
         let id: String?
         let name: String?
-        let games: CasinoGamesNestedDTO?
+        let games: CasinoGamesNested?
         let success: Bool?
         let errorMessage: String?
         let errorCode: Int?
     }
 
-    /// DTO for nested games structure in v2 response
-    struct CasinoGamesNestedDTO: Codable {
+    /// REST API model for nested games structure in v2 response
+    struct CasinoGamesNested: Codable {
         let count: Int
         let total: Int
-        let items: [FailableDecodable<CasinoGameDTO>]
-        let pages: CasinoPagesDTO?
+        let items: [FailableDecodable<CasinoGame>]
+        let pages: CasinoPages?
     }
 }

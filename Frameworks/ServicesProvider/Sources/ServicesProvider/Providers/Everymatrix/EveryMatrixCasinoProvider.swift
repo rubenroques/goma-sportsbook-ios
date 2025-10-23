@@ -39,7 +39,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             platform: finalPlatform
         )
         
-        let publisher: AnyPublisher<EveryMatrix.CasinoCategoriesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoCategoriesResponse, ServiceProviderError> = connector.request(endpoint)
         
         return publisher
             .map { response in
@@ -66,7 +66,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             limit: pagination.limit
         )
         
-        let publisher: AnyPublisher<EveryMatrix.CasinoGroupResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoGroupResponse, ServiceProviderError> = connector.request(endpoint)
 
         return publisher
             .tryMap { response in
@@ -105,7 +105,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             platform: finalPlatform
         )
 
-        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponse, ServiceProviderError> = connector.request(endpoint)
 
         return publisher
             .tryMap { response -> CasinoGame in
@@ -133,7 +133,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             name: name
         )
 
-        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponse, ServiceProviderError> = connector.request(endpoint)
 
         return publisher
             .map { response in
@@ -170,7 +170,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
             platform: platform ?? "iPhone"
         )
 
-        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponseDTO, ServiceProviderError> = connector.request(endpoint)
+        let publisher: AnyPublisher<EveryMatrix.CasinoGamesResponse, ServiceProviderError> = connector.request(endpoint)
 
         return publisher
             .map { response in

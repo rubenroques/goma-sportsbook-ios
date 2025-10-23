@@ -9,7 +9,7 @@ import Foundation
 
 extension EveryMatrix {
 
-    /// Internal DTO for SSE cashout value streaming response
+    /// Internal REST API model for SSE cashout value streaming response
     /// Matches EveryMatrix SSE JSON format exactly
     struct CashoutValueSSEResponse: Decodable {
 
