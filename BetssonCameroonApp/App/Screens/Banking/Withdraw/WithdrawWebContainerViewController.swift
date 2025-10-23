@@ -301,9 +301,9 @@ extension WithdrawWebContainerViewController {
     private static func createLogoImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betsson_logo")?.withRenderingMode(.alwaysTemplate)
-        // Force dark color for logo since webview background is always white
-        imageView.tintColor = UIColor.App.textPrimary.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+        // Force light mode variant since webview background is always white
+        let lightModeTraits = UITraitCollection(userInterfaceStyle: .light)
+        imageView.image = UIImage(named: "betsson_logo", in: nil, compatibleWith: lightModeTraits)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
