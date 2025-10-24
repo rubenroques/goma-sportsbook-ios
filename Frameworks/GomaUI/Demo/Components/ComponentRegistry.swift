@@ -682,6 +682,18 @@ struct ComponentRegistry {
             }
         ),
         UIComponent(
+            title: "Bonus Card",
+            description: "A bonus offer card with image, tag, title, description, CTA button and terms text. Terms can be clickable when URL is provided.",
+            viewController: BonusCardViewController.self,
+            previewFactory: {
+                let viewModel = MockBonusCardViewModel.defaultMock
+                let cardView = BonusCardView(viewModel: viewModel)
+                cardView.backgroundColor = StyleProvider.Color.backgroundColor
+                cardView.layer.cornerRadius = 8
+                return cardView
+            }
+        ),
+        UIComponent(
             title: "Promotion Item",
             description: "A pill-shaped button component for promotion category selection with selection states and animations.",
             viewController: PromotionItemViewController.self,

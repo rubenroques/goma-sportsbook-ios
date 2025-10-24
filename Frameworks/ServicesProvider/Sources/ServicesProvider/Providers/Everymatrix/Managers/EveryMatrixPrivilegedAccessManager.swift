@@ -322,7 +322,14 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     }
     
     func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        let endpoint = EveryMatrixPlayerAPI.getGrantedBonus
+        let publisher: AnyPublisher<EveryMatrix.GrantedBonusResponse, ServiceProviderError> = self.connector.request(endpoint)
+        
+        return publisher.flatMap { grantedBonusResponse -> AnyPublisher<[GrantedBonus], ServiceProviderError> in
+            let mappedBonuses = EveryMatrixModelMapper.grantedBonuses(fromInternalResponse: grantedBonusResponse)
+            return Just(mappedBonuses).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
     
     func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError> {
@@ -330,7 +337,14 @@ class EveryMatrixPrivilegedAccessManager: PrivilegedAccessManagerProvider {
     }
     
     func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        let endpoint = EveryMatrixPlayerAPI.getAvailableBonus
+        let publisher: AnyPublisher<EveryMatrix.BonusResponse, ServiceProviderError> = self.connector.request(endpoint)
+        
+        return publisher.flatMap { bonusResponse -> AnyPublisher<[AvailableBonus], ServiceProviderError> in
+            let mappedBonuses = EveryMatrixModelMapper.availableBonuses(fromInternalResponse: bonusResponse)
+            return Just(mappedBonuses).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
     
     func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {

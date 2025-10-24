@@ -260,7 +260,7 @@ extension PromotionsViewController {
     private static func createBackLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 12)
+        label.font = StyleProvider.fontWith(type: .bold, size: 12)
         label.textAlignment = .left
         label.text = localized("Back")
         return label
@@ -308,7 +308,7 @@ extension PromotionsViewController {
     private static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = AppFont.with(type: .bold, size: 22)
+        label.font = StyleProvider.fontWith(type: .bold, size: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "No promotions available"
         label.textAlignment = .center

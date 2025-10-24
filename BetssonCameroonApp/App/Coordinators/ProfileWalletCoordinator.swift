@@ -151,6 +151,8 @@ final class ProfileWalletCoordinator: Coordinator {
             self.showChangePasswordScreen(tokenId: actionResponse ?? "")
         case .promotions:
             showPromotions()
+        case .bonus:
+            showBonus()
         case .custom:
             // Custom actions are not used in profile menu context
             print("⚠️ ProfileWalletCoordinator: Custom action not handled in profile menu")
@@ -283,6 +285,31 @@ final class ProfileWalletCoordinator: Coordinator {
         promotionsCoordinator.start()
         
         print("🚀 ProfileWalletCoordinator: Started PromotionsCoordinator")
+    }
+    
+    private func showBonus() {
+        
+        guard let profileNavigationController = profileNavigationController else {
+            print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
+            return
+        }
+        
+        let bonusViewModel = BonusViewModel(servicesProvider: servicesProvider, displayType: .register)
+        
+        let bonusViewController = BonusViewController(viewModel: bonusViewModel)
+        
+        bonusViewModel.onNavigateBack = { [weak self] in
+            bonusViewController.dismiss(animated: true)
+        }
+        
+        bonusViewModel.onDepositWithoutBonus = { [weak self] in
+            bonusViewController.dismiss(animated: true)
+            self?.presentDepositFlow()
+        }
+        
+//        profileNavigationController.pushViewController(bonusViewController, animated: true)
+        profileNavigationController.present(bonusViewController, animated: true)
+
     }
     
     private func showPlaceholderAlert(title: String, message: String) {

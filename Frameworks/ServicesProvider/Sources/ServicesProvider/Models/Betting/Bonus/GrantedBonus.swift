@@ -28,14 +28,16 @@ public struct GrantedBonus: Codable {
         case amountWagered = "amountWagered"
     }
     
-    init(id: Int,
-         name: String,
-         status: String,
-         amount: String,
-         triggerDate: Date?,
-         expiryDate: Date?,
-         wagerRequirement: String? = nil,
-         amountWagered: String? = nil) {
+    public init(
+        id: Int,
+        name: String,
+        status: String,
+        amount: String,
+        triggerDate: Date?,
+        expiryDate: Date?,
+        wagerRequirement: String? = nil,
+        amountWagered: String? = nil
+    ) {
         self.id = id
         self.name = name
         self.status = status

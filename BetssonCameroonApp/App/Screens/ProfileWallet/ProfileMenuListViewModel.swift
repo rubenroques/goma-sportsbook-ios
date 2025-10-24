@@ -78,10 +78,18 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "promotions",
                 icon: "promotion_icon",
-                title: "Promotions and Bonuses",
+                title: "Promotions",
                 subtitle: nil,
                 type: .navigation,
                 action: .promotions
+            ),
+            ActionRowItem(
+                id: "promotions",
+                icon: "promotion_icon",
+                title: "Bonuses",
+                subtitle: nil,
+                type: .navigation,
+                action: .bonus
             ),
             ActionRowItem(
                 id: "notifications",

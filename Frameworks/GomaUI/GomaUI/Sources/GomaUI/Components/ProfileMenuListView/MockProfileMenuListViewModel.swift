@@ -201,6 +201,8 @@ extension MockProfileMenuListViewModel {
                 print("🚪 Would show logout confirmation")
             case .promotions:
                 print("🚪 Would open promotions screen")
+            case .bonus:
+                print("🚪 Would open bonus screen")
             case .custom:
                 print("⚡ Custom action triggered")
             }
