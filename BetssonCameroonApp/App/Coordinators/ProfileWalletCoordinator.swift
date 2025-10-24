@@ -294,7 +294,7 @@ final class ProfileWalletCoordinator: Coordinator {
             return
         }
         
-        let bonusViewModel = BonusViewModel(servicesProvider: servicesProvider, displayType: .register)
+        let bonusViewModel = BonusViewModel(servicesProvider: servicesProvider, displayType: .history)
         
         let bonusViewController = BonusViewController(viewModel: bonusViewModel)
         
@@ -306,7 +306,7 @@ final class ProfileWalletCoordinator: Coordinator {
             bonusViewController.dismiss(animated: true)
             self?.presentDepositFlow()
         }
-        
+                
 //        profileNavigationController.pushViewController(bonusViewController, animated: true)
         profileNavigationController.present(bonusViewController, animated: true)
 

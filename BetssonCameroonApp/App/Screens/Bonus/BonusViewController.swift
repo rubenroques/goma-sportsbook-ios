@@ -35,11 +35,20 @@ class BonusViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var containerView: UIView = Self.createContainerView()
+    private lazy var innerContainerView: UIView = Self.createInnerContainerView()
     private lazy var stackView: UIStackView = Self.createStackView()
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    
+    private lazy var emptyStateView: UIView = Self.createEmptyStateView()
+    private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
+    private lazy var refreshButton: ButtonView = {
+        let button = ButtonView(viewModel: viewModel.refreshButtonViewModel)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     private var viewModel: BonusViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -98,8 +107,12 @@ class BonusViewController: UIViewController {
         
         self.scrollView.backgroundColor = .clear
         self.containerView.backgroundColor = .clear
-        
+        self.innerContainerView.backgroundColor = StyleProvider.Color.backgroundPrimary
+
         self.loadingBaseView.backgroundColor = StyleProvider.Color.backgroundPrimary
+        
+        self.emptyStateView.backgroundColor = .clear
+        self.emptyStateLabel.textColor = StyleProvider.Color.textSecondary
 
     }
     
@@ -124,8 +137,11 @@ class BonusViewController: UIViewController {
         viewModel.onBonusTabSelected = { [weak self] tab in
             self?.updateBonusesList()
         }
+        
+        viewModel.onTermsURLRequested = { [weak self] actionUrl in
+            self?.openExternalURL(url: actionUrl ?? "")
+        }
     }
-
     
     // MARK: Functions
     private func showLoading() {
@@ -141,6 +157,16 @@ class BonusViewController: UIViewController {
     private func setupButtonActions() {
         // Setup close button action
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+    }
+    
+    private func openExternalURL(url: String) {
+        
+        if let url = URL(string: url) {
+            UIApplication.shared.open(url)
+        }
+        else {
+            print("Invalid url: \(url)")
+        }
     }
     
     // MARK: Actions
@@ -162,31 +188,58 @@ extension BonusViewController {
         // Get count based on display type and selected tab
         let count = self.viewModel.getBonusCount()
         
+        // Show/hide empty state
+        if count == 0 {
+            self.emptyStateView.isHidden = false
+            self.stackView.isHidden = true
+            return
+        } else {
+            self.emptyStateView.isHidden = true
+            self.stackView.isHidden = false
+        }
+        
+        // Determine if we're showing granted bonuses
+        let showingGrantedBonuses = viewModel.displayType == .history && 
+                                    viewModel.getBonusTabSelection() == .granted
+        
         // Add bonus card views
         for index in 0..<count {
-            guard let cardViewModel = self.viewModel.cardViewModel(forIndex: index) else {
-                continue
+            if showingGrantedBonuses {
+                // Create BonusInfoCardView for granted bonuses
+                guard let cardViewModel = self.viewModel.grantedCardViewModel(forIndex: index) else {
+                    continue
+                }
+                
+                let cardView = BonusInfoCardView(viewModel: cardViewModel)
+                cardView.translatesAutoresizingMaskIntoConstraints = false
+                self.stackView.addArrangedSubview(cardView)
+                
+            } else {
+                // Create BonusCardView for available bonuses
+                guard let cardViewModel = self.viewModel.cardViewModel(forIndex: index) else {
+                    continue
+                }
+                
+                // Setup callbacks for button actions
+                if let mockCardViewModel = cardViewModel as? MockBonusCardViewModel {
+                    
+                    mockCardViewModel.onCTATapped = { [weak self] ctaUrl in
+                        self?.viewModel.openBonusURL(urlString: ctaUrl)
+                    }
+                    
+                    mockCardViewModel.onTermsTapped = { [weak self] termsUrl in
+                        self?.viewModel.openTermsURL(urlString: termsUrl)
+                    }
+                    
+                    mockCardViewModel.onCardTapped = { [weak self] in
+                        // Handle card tap if needed
+                    }
+                }
+                
+                let cardView = BonusCardView(viewModel: cardViewModel)
+                cardView.translatesAutoresizingMaskIntoConstraints = false
+                self.stackView.addArrangedSubview(cardView)
             }
-            
-            // Setup callbacks for button actions
-            if let mockCardViewModel = cardViewModel as? MockBonusCardViewModel {
-                
-                mockCardViewModel.onCTATapped = { [weak self] ctaUrl in
-                    self?.viewModel.openBonusURL(urlString: ctaUrl)
-                }
-                
-                mockCardViewModel.onTermsTapped = { [weak self] termsUrl in
-                    self?.viewModel.openTermsURL(urlString: termsUrl)
-                }
-                
-                mockCardViewModel.onCardTapped = { [weak self] in
-                    // Handle card tap if needed
-                }
-            }
-            
-            let cardView = BonusCardView(viewModel: cardViewModel)
-            cardView.translatesAutoresizingMaskIntoConstraints = false
-            self.stackView.addArrangedSubview(cardView)
         }
     }
 }
@@ -236,6 +289,12 @@ extension BonusViewController {
         return view
     }
     
+    private static func createInnerContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 8
+        return view
+    }
     
     private static func createStackView() -> UIStackView {
         let stackView = UIStackView()
@@ -266,6 +325,23 @@ extension BonusViewController {
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
     }
+    
+    private static func createEmptyStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }
+    
+    private static func createEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .regular, size: 16)
+        label.textAlignment = .center
+        label.text = localized("no_bonuses_found")
+        label.numberOfLines = 0
+        return label
+    }
 
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
@@ -285,7 +361,13 @@ extension BonusViewController {
         
         self.view.addSubview(self.scrollView)
         self.scrollView.addSubview(self.containerView)
-        self.containerView.addSubview(self.stackView)
+        self.containerView.addSubview(self.innerContainerView)
+        self.innerContainerView.addSubview(self.stackView)
+        
+        // Add empty state view
+        self.innerContainerView.addSubview(self.emptyStateView)
+        self.emptyStateView.addSubview(self.emptyStateLabel)
+        self.emptyStateView.addSubview(self.refreshButton)
 
         self.view.addSubview(self.bottomSafeAreaView)
         self.view.addSubview(self.loadingBaseView)
@@ -362,10 +444,15 @@ extension BonusViewController {
             self.containerView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor),
             self.containerView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor),
             
-            self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16),
-            self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
-            self.stackView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16)
+            self.innerContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16),
+            self.innerContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
+            self.innerContainerView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 16),
+            self.innerContainerView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16),
+            
+            self.stackView.leadingAnchor.constraint(equalTo: self.innerContainerView.leadingAnchor, constant: 8),
+            self.stackView.trailingAnchor.constraint(equalTo: self.innerContainerView.trailingAnchor, constant: -8),
+            self.stackView.topAnchor.constraint(equalTo: self.innerContainerView.topAnchor, constant: 8),
+            self.stackView.bottomAnchor.constraint(equalTo: self.innerContainerView.bottomAnchor, constant: -8)
         ])
         
         NSLayoutConstraint.activate([
@@ -376,6 +463,26 @@ extension BonusViewController {
             self.view.trailingAnchor.constraint(equalTo: self.loadingBaseView.trailingAnchor),
             self.navigationView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
             self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
+        ])
+        
+        // Empty state view constraints
+        NSLayoutConstraint.activate([
+            self.emptyStateView.leadingAnchor.constraint(equalTo: self.innerContainerView.leadingAnchor),
+            self.emptyStateView.trailingAnchor.constraint(equalTo: self.innerContainerView.trailingAnchor),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.innerContainerView.topAnchor, constant: 40),
+            self.emptyStateView.bottomAnchor.constraint(equalTo: self.innerContainerView.bottomAnchor, constant: -40),
+            
+            // Empty state label
+            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 30),
+            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -30),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 20),
+            
+            // Refresh button
+            self.refreshButton.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),
+            self.refreshButton.topAnchor.constraint(equalTo: self.emptyStateLabel.bottomAnchor, constant: 15),
+            self.refreshButton.bottomAnchor.constraint(equalTo: self.emptyStateView.bottomAnchor, constant: -20),
+            self.refreshButton.heightAnchor.constraint(equalToConstant: 36),
+            self.refreshButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 80)
         ])
 
     }

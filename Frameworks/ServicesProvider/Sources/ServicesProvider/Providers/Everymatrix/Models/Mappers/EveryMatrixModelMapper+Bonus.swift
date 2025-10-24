@@ -29,25 +29,33 @@ extension EveryMatrixModelMapper {
     
     static func grantedBonuses(fromInternalResponse response: EveryMatrix.GrantedBonusResponse) -> [GrantedBonus] {
         return response.items.compactMap { bonusItem in
-            // Convert string ID to Int, skip if conversion fails
-            guard let intId = Int(bonusItem.id) else {
-                print("⚠️ Failed to convert granted bonus ID '\(bonusItem.id)' to Int, skipping")
-                return nil
-            }
             
             let triggerDate = parseDate(from: bonusItem.grantedDate)
             
             let expiryDate = parseDate(from: bonusItem.expiryDate)
             
+            var imageUrl: String? = nil
+            
+            if let bonusAsset = bonusItem.assets {
+                imageUrl = "https:\(bonusAsset)"
+            }
+            
+            let remainingWagerRequirementAmount = bonusItem.remainingWagerRequirementAmount >= 0 ? bonusItem.remainingWagerRequirementAmount : 0
+            
             return GrantedBonus(
-                id: intId,
+                id: Int(bonusItem.id) ?? 0,
                 name: bonusItem.name,
                 status: bonusItem.status,
-                amount: "\(bonusItem.remainingAmount) \(bonusItem.currency)",
+                type: bonusItem.type,
+                amount: "\(bonusItem.remainingAmount)",
+                remainingAmount: "\(bonusItem.remainingAmount)",
                 triggerDate: triggerDate,
                 expiryDate: expiryDate,
-                wagerRequirement: "\(bonusItem.remainingWagerRequirementAmount) \(bonusItem.currency)",
-                amountWagered: nil
+                wagerRequirement: "\(bonusItem.initialWagerRequirementAmount)",
+                amountWagered: "\(remainingWagerRequirementAmount)",
+                currency: bonusItem.currency,
+                imageUrl: imageUrl,
+                linkUrl: bonusItem.url
             )
         }
     }

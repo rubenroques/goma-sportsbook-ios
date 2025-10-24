@@ -59,6 +59,7 @@ extension EveryMatrix {
         public let bonusWalletID: String
         public let endTime: String
         public let bonusCode: String
+        public let assets: String?
         
         enum CodingKeys: String, CodingKey {
             case linkedFunds
@@ -90,6 +91,7 @@ extension EveryMatrix {
             case bonusWalletID
             case endTime
             case bonusCode
+            case assets
         }
     }
 }

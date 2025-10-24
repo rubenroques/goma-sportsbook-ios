@@ -15,7 +15,7 @@ class BonusViewModel {
     var bonuses: [AvailableBonus] = []
     var grantedBonuses: [GrantedBonus] = []
     var bonusesCacheCardViewModel: [Int: BonusCardViewModelProtocol] = [:]
-    var grantedBonusesCacheCardViewModel: [String: BonusCardViewModelProtocol] = [:]
+    var grantedBonusesCacheCardViewModel: [String: BonusInfoCardViewModelProtocol] = [:]
     
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     
@@ -30,6 +30,7 @@ class BonusViewModel {
     // MARK: - ViewModels
     var bonusSelectorBarViewModel: PromotionSelectorBarViewModelProtocol?
     var depositWithoutBonusButtonViewModel: ButtonViewModelProtocol
+    var refreshButtonViewModel: ButtonViewModelProtocol
     
     // MARK: - Navigation Callbacks
     var onNavigateBack: (() -> Void) = { }
@@ -56,6 +57,16 @@ class BonusViewModel {
             isEnabled: true
         )
         self.depositWithoutBonusButtonViewModel = MockButtonViewModel(buttonData: depositButtonData)
+        
+        // Initialize refresh button ViewModel
+        let refreshButtonData = ButtonData(
+            id: "refresh_bonuses",
+            title: localized("refresh"),
+            style: .solidBackground,
+            backgroundColor: StyleProvider.Color.highlightPrimary,
+            isEnabled: true
+        )
+        self.refreshButtonViewModel = MockButtonViewModel(buttonData: refreshButtonData)
         
         // Setup selector bar for history type
         if displayType == .history {
@@ -107,6 +118,10 @@ class BonusViewModel {
         }
     }
     
+    func refreshBonuses() {
+        loadBonuses()
+    }
+    
     private func loadAllBonuses() {
         self.isLoadingPublisher.send(true)
         
@@ -156,9 +171,13 @@ class BonusViewModel {
             case .available:
                 return availableBonusCardViewModel(forIndex: index)
             case .granted:
-                return grantedBonusCardViewModel(forIndex: index)
+                return nil // Granted bonuses use different view model type
             }
         }
+    }
+    
+    func grantedCardViewModel(forIndex index: Int) -> BonusInfoCardViewModelProtocol? {
+        return grantedBonusInfoCardViewModel(forIndex: index)
     }
     
     func getBonusCount() -> Int {
@@ -173,6 +192,10 @@ class BonusViewModel {
                 return grantedBonuses.count
             }
         }
+    }
+    
+    func getBonusTabSelection() -> BonusTab {
+        return selectedBonusTab
     }
     
     private func availableBonusCardViewModel(forIndex index: Int) -> BonusCardViewModelProtocol? {
@@ -201,7 +224,7 @@ class BonusViewModel {
         }
     }
     
-    private func grantedBonusCardViewModel(forIndex index: Int) -> BonusCardViewModelProtocol? {
+    private func grantedBonusInfoCardViewModel(forIndex index: Int) -> BonusInfoCardViewModelProtocol? {
         guard let grantedBonus = self.grantedBonuses[safe: index] else {
             return nil
         }
@@ -210,32 +233,67 @@ class BonusViewModel {
         if let cachedCardViewModel = self.grantedBonusesCacheCardViewModel[bonusIdString] {
             return cachedCardViewModel
         } else {
-            // Build description with available information
-            var descriptionParts: [String] = []
-            if !grantedBonus.amount.isEmpty {
-                descriptionParts.append("Amount: \(grantedBonus.amount)")
-            }
-            if let wagerReq = grantedBonus.wagerRequirement, !wagerReq.isEmpty {
-                descriptionParts.append("Wager: \(wagerReq)")
-            }
-            let description = descriptionParts.isEmpty ? "Active bonus" : descriptionParts.joined(separator: " • ")
+            // Parse amounts from strings
+            let bonusAmount = parseAmount(grantedBonus.amount)
+            let remainingAmount = parseAmount(grantedBonus.remainingAmount ?? "0")
+            let wagerRequirement = parseAmount(grantedBonus.wagerRequirement ?? "0")
+            let remainingToWager = parseAmount(grantedBonus.amountWagered ?? "0")
             
-            let cardData = BonusCardData(
+            let currency = grantedBonus.currency
+            
+            // Determine status
+            let status: BonusStatus = grantedBonus.status.lowercased() == "released" ? .released : .active
+            
+            // Format expiry date
+            let expiryText = formatExpiryDate(grantedBonus.expiryDate)
+            
+            let cardData = BonusInfoCardData(
                 id: bonusIdString,
                 title: grantedBonus.name,
-                description: description,
-                imageURL: "",
-                tag: grantedBonus.triggerDate?.toString(),
-                ctaText: grantedBonus.name,
-                ctaURL: nil,
-                termsText: "Status: \(grantedBonus.status)",
-                termsURL: nil
+                subtitle: grantedBonus.type,
+                status: status,
+                headerImageURL: grantedBonus.imageUrl,
+                bonusAmountType: .simple,
+                bonusAmount: bonusAmount,
+                remainingAmount: remainingAmount,
+                currency: currency ?? (Env.userSessionStore.userProfilePublisher.value?.currency ?? ""),
+                initialWagerAmount: wagerRequirement,
+                remainingToWagerAmount: remainingToWager,
+                expiryText: expiryText,
+                actionUrl: grantedBonus.linkUrl
             )
             
-            let cardViewModel = MockBonusCardViewModel(cardData: cardData)
+            let cardViewModel = MockBonusInfoCardViewModel(cardData: cardData)
+            
+            // Setup callback for terms button
+            cardViewModel.onTermsTapped = { [weak self] actionUrl in
+                print("Terms tapped for granted bonus: \(grantedBonus.name)")
+                self?.onTermsURLRequested?(actionUrl)
+            }
+            
             self.grantedBonusesCacheCardViewModel[bonusIdString] = cardViewModel
             return cardViewModel
         }
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func parseAmount(_ amountString: String) -> Double {
+        // Remove currency symbols and spaces, then parse
+        let cleanString = amountString
+            .replacingOccurrences(of: "[^0-9.,]", with: "", options: .regularExpression)
+            .replacingOccurrences(of: ",", with: ".")
+        return Double(cleanString) ?? 0.0
+    }
+    
+    private func formatExpiryDate(_ date: Date?) -> String {
+        guard let date = date else {
+            return "No expiry"
+        }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE dd/MM - HH:mm"
+        return formatter.string(from: date)
     }
     
     func navigateBack() {
@@ -259,6 +317,11 @@ class BonusViewModel {
         // Setup deposit without bonus button callback
         depositWithoutBonusButtonViewModel.onButtonTapped = { [weak self] in
             self?.depositWithoutBonus()
+        }
+        
+        // Setup refresh button callback
+        refreshButtonViewModel.onButtonTapped = { [weak self] in
+            self?.refreshBonuses()
         }
     }
 }
