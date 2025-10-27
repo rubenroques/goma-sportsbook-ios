@@ -571,7 +571,7 @@ class MainTabBarCoordinator: Coordinator {
         var phoneRegistrationViewModel: PhoneRegistrationViewModelProtocol = PhoneRegistrationViewModel()
         
         // Setup registration success callback to trigger first deposit flow
-        phoneRegistrationViewModel.registerComplete = { [weak self] in
+        phoneRegistrationViewModel.showBonusOnRegister = { [weak self] in
             self?.showFirstDepositPromotionsAfterRegistration()
         }
         
@@ -590,27 +590,47 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     private func presentFirstDepositPromotionsFlow() {
-        let firstDepositCoordinator = FirstDepositPromotionsCoordinator(
+        
+        // Create and start BonusCoordinator
+        let bonusCoordinator = BonusCoordinator(
             navigationController: navigationController,
-            environment: environment
+            servicesProvider: environment.servicesProvider,
+            displayType: .register
         )
         
-        // Setup completion callbacks
-        firstDepositCoordinator.onFirstDepositComplete = { [weak self] in
-            self?.handleFirstDepositComplete()
+        // Setup callbacks
+        bonusCoordinator.onDepositComplete = { [weak self] in
+            print("🏦 ProfileWalletCoordinator: Deposit completed from bonus")
+            // Refresh user wallet after deposit
+            self?.environment.userSessionStore.refreshUserWallet()
         }
         
-        firstDepositCoordinator.onFirstDepositSkipped = { [weak self] in
-            self?.handleFirstDepositSkipped()
+        bonusCoordinator.onTermsURLRequested = { urlString in
+            print("📄 ProfileWalletCoordinator: Terms URL requested: \(urlString)")
+            // URL is already opened in the coordinator
+        }
+        
+        bonusCoordinator.onBonusDismiss = { [weak self] in
+            self?.removeChildCoordinator(bonusCoordinator)
+        }
+        
+        bonusCoordinator.onDepositBonusRequested = { [weak self] bonusCode in
+            self?.removeChildCoordinator(bonusCoordinator)
+            self?.presentDepositFlow(bonusCode: bonusCode)
+        }
+        
+        bonusCoordinator.onDepositBonusSkipRequested = { [weak self] in
+            self?.removeChildCoordinator(bonusCoordinator)
+            self?.presentDepositFlow()
         }
         
         // Add as child coordinator
-        addChildCoordinator(firstDepositCoordinator)
+        addChildCoordinator(bonusCoordinator)
         
-        // Start the first deposit flow
-        firstDepositCoordinator.startFromRegistration()
+        // Start the coordinator
+        bonusCoordinator.start()
         
-        print("🎁 RootTabBarCoordinator: Started first deposit promotions flow after registration")
+        print("🎁 RootTabBarCoordinator: Started BonusCoordinator")
     }
     
     private func handleFirstDepositComplete() {
@@ -984,11 +1004,13 @@ class MainTabBarCoordinator: Coordinator {
     
     // MARK: - Banking Flow Methods
     
-    func presentDepositFlow() {
+    func presentDepositFlow(bonusCode: String? = nil) {
         let bankingCoordinator = BankingCoordinator.forDeposit(
             navigationController: navigationController,
             client: environment.servicesProvider
         )
+        
+        bankingCoordinator.bonusCode = bonusCode
         
         setupBankingCoordinatorCallbacks(bankingCoordinator)
         addChildCoordinator(bankingCoordinator)

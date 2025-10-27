@@ -34,6 +34,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     var isRegisterDataComplete: CurrentValueSubject<Bool, Never> = .init(false)
     var registerComplete: (() -> Void)?
     var registerError: ((String) -> Void)?
+    var showBonusOnRegister: (() -> Void)?
     
     var registrationConfig: RegistrationConfigContent?
     var extractedTermsHTMLData: RegisterConfigHelper.ExtractedHTMLData?

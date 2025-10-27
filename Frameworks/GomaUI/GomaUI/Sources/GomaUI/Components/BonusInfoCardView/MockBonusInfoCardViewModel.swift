@@ -43,7 +43,7 @@ public class MockBonusInfoCardViewModel: BonusInfoCardViewModelProtocol {
     // MARK: - Actions
     public func didTapTermsAndConditions() {
         let currentState = displayStateSubject.value
-        print("📄 Terms & Conditions tapped for: \(currentState.title)")
+        
         onTermsTapped?(currentState.cardData.actionUrl ?? "")
     }
     
@@ -68,7 +68,8 @@ public class MockBonusInfoCardViewModel: BonusInfoCardViewModelProtocol {
             currency: "XAF",
             initialWagerAmount: 4500.00,
             remainingToWagerAmount: 1500.00,
-            expiryText: "Sun 01/01 - 18:59"
+            expiryText: "Sun 01/01 - 18:59",
+            actionUrl: nil
         ))
     }
     

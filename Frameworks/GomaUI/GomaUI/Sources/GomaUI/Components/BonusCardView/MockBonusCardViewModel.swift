@@ -30,8 +30,8 @@ public class MockBonusCardViewModel: BonusCardViewModelProtocol {
     }
     
     // MARK: - Button ViewModels
-    public let ctaButtonViewModel: ButtonViewModelProtocol
-    public let termsButtonViewModel: ButtonViewModelProtocol
+    public var ctaButtonViewModel: ButtonViewModelProtocol
+    public var termsButtonViewModel: ButtonViewModelProtocol
     
     // MARK: - Callbacks
     public var onCTATapped: ((String?) -> Void)?
@@ -109,17 +109,13 @@ public class MockBonusCardViewModel: BonusCardViewModelProtocol {
     // MARK: - Private Methods
     private func setupButtonCallbacks() {
         // Setup CTA button callback
-        if let ctaButtonViewModel = self.ctaButtonViewModel as? MockButtonViewModel {
-            ctaButtonViewModel.onButtonTapped = { [weak self] in
-                self?.didTapCTAButton()
-            }
+        ctaButtonViewModel.onButtonTapped = { [weak self] in
+            self?.didTapCTAButton()
         }
         
         // Setup Terms button callback
-        if let termsButtonViewModel = self.termsButtonViewModel as? MockButtonViewModel {
-            termsButtonViewModel.onButtonTapped = { [weak self] in
-                self?.didTapTerms()
-            }
+        termsButtonViewModel.onButtonTapped = { [weak self] in
+            self?.didTapTerms()
         }
     }
 }

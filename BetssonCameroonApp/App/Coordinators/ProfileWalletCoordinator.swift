@@ -288,28 +288,51 @@ final class ProfileWalletCoordinator: Coordinator {
     }
     
     private func showBonus() {
-        
         guard let profileNavigationController = profileNavigationController else {
             print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
             return
         }
         
-        let bonusViewModel = BonusViewModel(servicesProvider: servicesProvider, displayType: .history)
+        // Create and start BonusCoordinator
+        let bonusCoordinator = BonusCoordinator(
+            navigationController: profileNavigationController,
+            servicesProvider: servicesProvider,
+            displayType: .history
+        )
         
-        let bonusViewController = BonusViewController(viewModel: bonusViewModel)
-        
-        bonusViewModel.onNavigateBack = { [weak self] in
-            bonusViewController.dismiss(animated: true)
+        // Setup callbacks
+        bonusCoordinator.onDepositComplete = { [weak self] in
+            print("🏦 ProfileWalletCoordinator: Deposit completed from bonus")
+            // Refresh user wallet after deposit
+            self?.userSessionStore.refreshUserWallet()
         }
         
-        bonusViewModel.onDepositWithoutBonus = { [weak self] in
-            bonusViewController.dismiss(animated: true)
+        bonusCoordinator.onTermsURLRequested = { urlString in
+            print("📄 ProfileWalletCoordinator: Terms URL requested: \(urlString)")
+            // URL is already opened in the coordinator
+        }
+        
+        bonusCoordinator.onBonusDismiss = { [weak self] in
+            self?.removeChildCoordinator(bonusCoordinator)
+        }
+        
+        bonusCoordinator.onDepositBonusRequested = { [weak self] bonusCode in
+            self?.removeChildCoordinator(bonusCoordinator)
+            self?.presentDepositFlow(bonusCode: bonusCode)
+        }
+        
+        bonusCoordinator.onDepositBonusSkipRequested = { [weak self] in
+            self?.removeChildCoordinator(bonusCoordinator)
             self?.presentDepositFlow()
         }
-                
-//        profileNavigationController.pushViewController(bonusViewController, animated: true)
-        profileNavigationController.present(bonusViewController, animated: true)
-
+        
+        // Add as child coordinator
+        addChildCoordinator(bonusCoordinator)
+        
+        // Start the coordinator
+        bonusCoordinator.start()
+        
+        print("🎁 ProfileWalletCoordinator: Started BonusCoordinator")
     }
     
     private func showPlaceholderAlert(title: String, message: String) {
@@ -341,13 +364,15 @@ final class ProfileWalletCoordinator: Coordinator {
     
     // MARK: - Banking Flow Methods
     
-    private func presentDepositFlow() {
+    private func presentDepositFlow(bonusCode: String? = nil) {
         guard let profileNavigationController = profileNavigationController else { return }
         
         let bankingCoordinator = BankingCoordinator.forDeposit(
             navigationController: profileNavigationController,
             client: servicesProvider
         )
+        
+        bankingCoordinator.bonusCode = bonusCode
         
         // Set up banking coordinator closures
         setupBankingCoordinatorCallbacks(bankingCoordinator)

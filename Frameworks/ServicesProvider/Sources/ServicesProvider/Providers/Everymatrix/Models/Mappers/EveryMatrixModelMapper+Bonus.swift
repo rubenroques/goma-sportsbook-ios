@@ -22,7 +22,8 @@ extension EveryMatrixModelMapper {
                 expiryDate: parseDate(from: bonusItem.trigger.endTime),
                 wagerRequirement: nil,
                 imageUrl: "https:\(bonusItem.presentation.assets.content)",
-                actionUrl: bonusItem.presentation.url.content
+                actionUrl: bonusItem.presentation.url.content,
+                code: bonusItem.code
             )
         }
     }

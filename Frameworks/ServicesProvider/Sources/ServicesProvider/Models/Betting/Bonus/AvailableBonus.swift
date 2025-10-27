@@ -19,6 +19,7 @@ public struct AvailableBonus: Codable {
     public var wagerRequirement: Double?
     public var imageUrl: String?
     public var actionUrl: String?
+    public var code: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "optInId"
@@ -44,7 +45,8 @@ public struct AvailableBonus: Codable {
         expiryDate: Date? = nil,
         wagerRequirement: Double? = nil,
         imageUrl: String? = nil,
-        actionUrl: String? = nil
+        actionUrl: String? = nil,
+        code: String? = nil
     ) {
         self.id = id
         self.bonusPlanId = bonusPlanId
@@ -57,5 +59,6 @@ public struct AvailableBonus: Codable {
         self.wagerRequirement = wagerRequirement
         self.imageUrl = imageUrl
         self.actionUrl = actionUrl
+        self.code = code
     }
 }

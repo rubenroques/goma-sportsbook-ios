@@ -21,13 +21,15 @@ final class DepositWebContainerViewModel: ObservableObject {
     
     private let client: ServicesProvider.Client
     private var cancellables = Set<AnyCancellable>()
+    private var bonusCode: String?
     
     // MARK: - Initialization
     
     /// Initialize deposit WebView ViewModel
     /// - Parameter client: Services provider client for deposit operations
-    init(client: ServicesProvider.Client) {
+    init(client: ServicesProvider.Client, bonusCode: String? = nil) {
         self.client = client
+        self.bonusCode = bonusCode
     }
     
     // MARK: - Public Methods
@@ -43,7 +45,7 @@ final class DepositWebContainerViewModel: ObservableObject {
         let parameters = CashierParameters.forDeposit(
             language: language,
             currency: currency,
-            bonusCode: bonusCode
+            bonusCode: self.bonusCode != nil ? self.bonusCode : bonusCode
         )
         
         client.getBankingWebView(parameters: parameters)

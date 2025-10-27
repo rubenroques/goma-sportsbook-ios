@@ -141,6 +141,7 @@ class BonusViewController: UIViewController {
         viewModel.onTermsURLRequested = { [weak self] actionUrl in
             self?.openExternalURL(url: actionUrl ?? "")
         }
+        
     }
     
     // MARK: Functions
@@ -218,22 +219,6 @@ extension BonusViewController {
                 // Create BonusCardView for available bonuses
                 guard let cardViewModel = self.viewModel.cardViewModel(forIndex: index) else {
                     continue
-                }
-                
-                // Setup callbacks for button actions
-                if let mockCardViewModel = cardViewModel as? MockBonusCardViewModel {
-                    
-                    mockCardViewModel.onCTATapped = { [weak self] ctaUrl in
-                        self?.viewModel.openBonusURL(urlString: ctaUrl)
-                    }
-                    
-                    mockCardViewModel.onTermsTapped = { [weak self] termsUrl in
-                        self?.viewModel.openTermsURL(urlString: termsUrl)
-                    }
-                    
-                    mockCardViewModel.onCardTapped = { [weak self] in
-                        // Handle card tap if needed
-                    }
                 }
                 
                 let cardView = BonusCardView(viewModel: cardViewModel)

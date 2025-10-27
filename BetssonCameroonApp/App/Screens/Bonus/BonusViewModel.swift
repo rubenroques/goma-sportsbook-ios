@@ -38,6 +38,7 @@ class BonusViewModel {
     var onTermsURLRequested: ((String?) -> Void)?
     var onDepositWithoutBonus: (() -> Void)?
     var onBonusTabSelected: ((BonusTab) -> Void)?
+    var onDepositBonus: ((String) -> Void)?
     
     let servicesProvider: ServicesProvider.Client
     
@@ -203,9 +204,13 @@ class BonusViewModel {
             return nil
         }
 
+        // Check cache first
         if let cachedCardViewModel = self.bonusesCacheCardViewModel[bonus.bonusPlanId] {
+            // Setup callbacks for cached view model
             return cachedCardViewModel
-        } else {
+        }
+        else {
+            // Create new view model
             let cardData = BonusCardData(
                 id: bonus.id,
                 title: bonus.name,
@@ -213,12 +218,21 @@ class BonusViewModel {
                 imageURL: bonus.imageUrl ?? "",
                 tag: bonus.type,
                 ctaText: localized("opt_in_and_deposit"),
-                ctaURL: nil,
+                ctaURL: bonus.code,
                 termsText: localized("terms_and_conditions"),
                 termsURL: bonus.actionUrl
             )
             
             let cardViewModel = MockBonusCardViewModel(cardData: cardData)
+            
+            cardViewModel.onCTATapped = { [weak self] actionString in
+                self?.onDepositBonus?(actionString ?? "")
+            }
+            
+            cardViewModel.onTermsTapped = { [weak self] termsString in
+                self?.onBonusURLOpened?(termsString)
+            }
+            
             self.bonusesCacheCardViewModel[bonus.bonusPlanId] = cardViewModel
             return cardViewModel
         }
@@ -232,7 +246,8 @@ class BonusViewModel {
         let bonusIdString = String(grantedBonus.id)
         if let cachedCardViewModel = self.grantedBonusesCacheCardViewModel[bonusIdString] {
             return cachedCardViewModel
-        } else {
+        }
+        else {
             // Parse amounts from strings
             let bonusAmount = parseAmount(grantedBonus.amount)
             let remainingAmount = parseAmount(grantedBonus.remainingAmount ?? "0")
@@ -267,7 +282,6 @@ class BonusViewModel {
             
             // Setup callback for terms button
             cardViewModel.onTermsTapped = { [weak self] actionUrl in
-                print("Terms tapped for granted bonus: \(grantedBonus.name)")
                 self?.onTermsURLRequested?(actionUrl)
             }
             
