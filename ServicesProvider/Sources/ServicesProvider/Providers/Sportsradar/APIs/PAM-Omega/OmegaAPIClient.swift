@@ -24,6 +24,11 @@ import Foundation
  https://ps.omegasys.eu/ps/ips/updatePassword
  */
 
+// MARK: - Multipart Boundary
+// Hardcoded boundary for multipart/form-data requests (used for login endpoint)
+// See body and headers properties for login case - temporary workaround for server bug
+private let omegaLoginBoundary = "iOSFormBoundary7MA4YWxkTrZu0gW"
+
 enum OmegaAPIClient {
     case login(username: String, password: String)
     case openSession
@@ -333,9 +338,7 @@ extension OmegaAPIClient: Endpoint {
     
     var query: [URLQueryItem]? {
         switch self {
-        case .login(let username, let password):
-            //            return [URLQueryItem(name: "username", value: username),
-            //                    URLQueryItem(name: "password", value: password)]
+        case .login:
             return nil
         case .openSession:
             return [URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
@@ -983,6 +986,30 @@ extension OmegaAPIClient: Endpoint {
         switch self {
         case .login(let username, let password):
 
+            // The Omega server fails to properly decode percent-encoded special characters
+            // (e.g., & becomes %26, @ becomes %40) in application/x-www-form-urlencoded format.
+            // Browser uses multipart/form-data which works correctly.
+            // REVERT TO URL-ENCODED when server decoding is fixed (see commented code below).
+            // Tested working: ivotestsrna1065 / testes&doIvo1@
+
+            var body = Data()
+
+            // Username field
+            body.append("--\(omegaLoginBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"username\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(username)\r\n".data(using: .utf8)!)
+
+            // Password field
+            body.append("--\(omegaLoginBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"password\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(password)\r\n".data(using: .utf8)!)
+
+            // Closing boundary
+            body.append("--\(omegaLoginBoundary)--\r\n".data(using: .utf8)!)
+
+            return body
+
+            /* ORIGINAL URL-ENCODED CODE
             let parameters = [
                 "username": username,
                 "password": password
@@ -996,6 +1023,7 @@ extension OmegaAPIClient: Endpoint {
                 return "\(encodedKey)=\(encodedValue)"
             }.joined(separator: "&")
             return formBodyString.data(using: String.Encoding.utf8)
+            */
 
         case .uploadUserDocument( _, _, let body, _):
             return body
@@ -1141,13 +1169,17 @@ extension OmegaAPIClient: Endpoint {
     var headers: HTTP.Headers? {
         switch self {
         case .login:
+            // TODO: TEMPORARY WORKAROUND - See body property for full explanation
+            // Using multipart/form-data due to server bug with URL-encoded password decoding
+            // REVERT TO URL-ENCODED when server is fixed (see commented code below)
             let headers = [
                 "Accept-Encoding": "gzip, deflate",
-                "Content-Type": "application/x-www-form-urlencoded",
+                "Content-Type": "multipart/form-data; boundary=\(omegaLoginBoundary)",
                 "Accept": "*/*",
                 "app-origin": "ios",
             ]
             return headers
+
         case .uploadUserDocument( _, _, _, let header):
             let customHeaders = [
                 "Content-Type": header,
