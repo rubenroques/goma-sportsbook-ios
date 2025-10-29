@@ -28,13 +28,6 @@ final class BetSuccessViewModel: BetSuccessViewModelProtocol {
         self.betslipId = betslipId
         self.bettingTickets = bettingTickets
 
-        print("[BET_PLACEMENT] 📱 Success ViewModel created - betId: \(betId ?? "nil"), betslipId: \(betslipId ?? "nil"), tickets: \(bettingTickets.count)")
-        if bettingTickets.count > 0 {
-            bettingTickets.enumerated().forEach { index, ticket in
-                print("[BET_PLACEMENT]   [\(index+1)] \(ticket.matchDescription) - \(ticket.outcomeDescription)")
-            }
-        }
-
         // Initialize status notification view model with success state
         let statusNotificationData = StatusNotificationData(type: .success, message: "Bet Placed", icon: "success_circle_icon")
 

@@ -16,7 +16,11 @@ class CasinoGamePlayViewController: UIViewController {
     private var webView: WKWebView!
     private let topSafeAreaView = UIView()
     private let bottomBarView = UIView()
-    
+
+    // Bottom bar section containers
+    private let exitContainer = UIView()
+    private let depositContainer = UIView()
+
     // New bottom bar components
     private let exitButton = UIButton(type: .system)
     private let exitLabel = UILabel()
@@ -156,37 +160,51 @@ class CasinoGamePlayViewController: UIViewController {
     }
     
     private func setupExitSection() {
-        // Exit button
+        // Exit container
+        exitContainer.isUserInteractionEnabled = true
+        exitContainer.translatesAutoresizingMaskIntoConstraints = false
+        let exitTap = UITapGestureRecognizer(target: self, action: #selector(exitButtonTapped))
+        exitContainer.addGestureRecognizer(exitTap)
+        bottomBarView.addSubview(exitContainer)
+
+        // Exit button (icon) - add to container
         exitButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         exitButton.tintColor = Constants.textColor
-        exitButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
+        exitButton.isUserInteractionEnabled = false  // Let container handle taps
         exitButton.translatesAutoresizingMaskIntoConstraints = false
-        bottomBarView.addSubview(exitButton)
-        
-        // Exit label
+        exitContainer.addSubview(exitButton)
+
+        // Exit label - add to container
         exitLabel.text = "Exit"
         exitLabel.textColor = Constants.textColor
         exitLabel.font = UIFont.systemFont(ofSize: Constants.fontSize, weight: .regular)
         exitLabel.textAlignment = .center
         exitLabel.translatesAutoresizingMaskIntoConstraints = false
-        bottomBarView.addSubview(exitLabel)
+        exitContainer.addSubview(exitLabel)
     }
     
     private func setupDepositSection() {
-        // Deposit button
+        // Deposit container
+        depositContainer.isUserInteractionEnabled = true
+        depositContainer.translatesAutoresizingMaskIntoConstraints = false
+        let depositTap = UITapGestureRecognizer(target: self, action: #selector(depositButtonTapped))
+        depositContainer.addGestureRecognizer(depositTap)
+        bottomBarView.addSubview(depositContainer)
+
+        // Deposit button (icon) - add to container
         depositButton.setImage(UIImage(systemName: "plus.circle"), for: .normal)
         depositButton.tintColor = Constants.textColor
-        depositButton.addTarget(self, action: #selector(depositButtonTapped), for: .touchUpInside)
+        depositButton.isUserInteractionEnabled = false  // Let container handle taps
         depositButton.translatesAutoresizingMaskIntoConstraints = false
-        bottomBarView.addSubview(depositButton)
-        
-        // Deposit label
+        depositContainer.addSubview(depositButton)
+
+        // Deposit label - add to container
         depositLabel.text = "Deposit"
         depositLabel.textColor = Constants.textColor
         depositLabel.font = UIFont.systemFont(ofSize: Constants.fontSize, weight: .regular)
         depositLabel.textAlignment = .center
         depositLabel.translatesAutoresizingMaskIntoConstraints = false
-        bottomBarView.addSubview(depositLabel)
+        depositContainer.addSubview(depositLabel)
     }
     
     private func setupTimerSection() {
@@ -232,25 +250,35 @@ class CasinoGamePlayViewController: UIViewController {
             bottomBarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             bottomBarView.heightAnchor.constraint(equalToConstant: Constants.bottomBarHeight),
             
-            // Exit Section (Left)
-            exitButton.leadingAnchor.constraint(equalTo: bottomBarView.leadingAnchor, constant: Constants.horizontalPadding),
-            exitButton.topAnchor.constraint(equalTo: bottomBarView.topAnchor, constant: 4),
+            // Exit Container (Left)
+            exitContainer.leadingAnchor.constraint(equalTo: bottomBarView.leadingAnchor, constant: Constants.horizontalPadding),
+            exitContainer.centerYAnchor.constraint(equalTo: bottomBarView.centerYAnchor),
+            exitContainer.widthAnchor.constraint(equalToConstant: Constants.timerWidth),
+
+            // Exit button/label within container
+            exitButton.centerXAnchor.constraint(equalTo: exitContainer.centerXAnchor),
+            exitButton.topAnchor.constraint(equalTo: exitContainer.topAnchor),
             exitButton.widthAnchor.constraint(equalToConstant: Constants.iconSize),
             exitButton.heightAnchor.constraint(equalToConstant: Constants.iconSize),
-            
-            exitLabel.centerXAnchor.constraint(equalTo: exitButton.centerXAnchor),
+
+            exitLabel.centerXAnchor.constraint(equalTo: exitContainer.centerXAnchor),
             exitLabel.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 2),
-            exitLabel.widthAnchor.constraint(equalToConstant: Constants.timerWidth),
-            
-            // Deposit Section (Center)
-            depositButton.centerXAnchor.constraint(equalTo: bottomBarView.centerXAnchor),
-            depositButton.topAnchor.constraint(equalTo: bottomBarView.topAnchor, constant: 4),
+            exitLabel.bottomAnchor.constraint(equalTo: exitContainer.bottomAnchor),
+
+            // Deposit Container (Center)
+            depositContainer.centerXAnchor.constraint(equalTo: bottomBarView.centerXAnchor),
+            depositContainer.centerYAnchor.constraint(equalTo: bottomBarView.centerYAnchor),
+            depositContainer.widthAnchor.constraint(equalToConstant: Constants.timerWidth),
+
+            // Deposit button/label within container
+            depositButton.centerXAnchor.constraint(equalTo: depositContainer.centerXAnchor),
+            depositButton.topAnchor.constraint(equalTo: depositContainer.topAnchor),
             depositButton.widthAnchor.constraint(equalToConstant: Constants.iconSize),
             depositButton.heightAnchor.constraint(equalToConstant: Constants.iconSize),
-            
-            depositLabel.centerXAnchor.constraint(equalTo: depositButton.centerXAnchor),
+
+            depositLabel.centerXAnchor.constraint(equalTo: depositContainer.centerXAnchor),
             depositLabel.topAnchor.constraint(equalTo: depositButton.bottomAnchor, constant: 2),
-            depositLabel.widthAnchor.constraint(equalToConstant: Constants.timerWidth),
+            depositLabel.bottomAnchor.constraint(equalTo: depositContainer.bottomAnchor),
             
             // Timer Section (Right)
             timerContainer.trailingAnchor.constraint(equalTo: bottomBarView.trailingAnchor, constant: -Constants.horizontalPadding),
@@ -304,8 +332,7 @@ class CasinoGamePlayViewController: UIViewController {
     }
     
     @objc private func depositButtonTapped() {
-        // TODO: Implement deposit functionality
-        print("Deposit button tapped")
+        viewModel.onDepositRequested()
     }
     
     // MARK: - Timer Management

@@ -14,6 +14,7 @@ class CasinoGamePlayViewModel: ObservableObject {
     
     // MARK: - Navigation Closures for CasinoCoordinator
     var onNavigateBack: (() -> Void) = { }
+    var onDepositRequested: (() -> Void) = { }
     
     // MARK: - Published Properties
     @Published private(set) var gameURL: URL?

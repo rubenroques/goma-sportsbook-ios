@@ -19,6 +19,7 @@ class CasinoCoordinator: Coordinator {
     // MARK: - Navigation Closures for MainTabBarCoordinator
     var onShowGamePlay: ((String) -> Void) = { _ in }
     var onShowSportsQuickLinkScreen: ((QuickLinkType) -> Void)?
+    var onDepositRequested: (() -> Void)?
     
     // MARK: - Properties
     private let environment: Environment
@@ -170,8 +171,7 @@ class CasinoCoordinator: Coordinator {
         }
         
         gamePrePlayViewModel.onDepositRequested = { [weak self] in
-            // TODO: Navigate to deposit screen
-            print("CasinoCoordinator: Deposit requested") 
+            self?.onDepositRequested?()
         }
         
         gamePrePlayViewModel.onStartGame = { [weak self] mode, casinoGame in
@@ -212,7 +212,11 @@ class CasinoCoordinator: Coordinator {
         gamePlayViewModel.onNavigateBack = { [weak self] in
             self?.navigationController.popViewController(animated: true)
         }
-        
+
+        gamePlayViewModel.onDepositRequested = { [weak self] in
+            self?.onDepositRequested?()
+        }
+
         // Create view controller
         let gamePlayViewController = CasinoGamePlayViewController(viewModel: gamePlayViewModel)
         self.casinoGamePlayViewController = gamePlayViewController

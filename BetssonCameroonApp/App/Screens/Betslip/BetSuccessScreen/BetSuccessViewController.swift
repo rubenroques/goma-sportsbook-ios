@@ -68,7 +68,7 @@ class BetSuccessViewController: UIViewController {
         // 1. Green "Bet Placed" row - non-tappable
         let betPlacedItem = ActionRowItem(
             icon: "checkmark.circle.fill",
-            title: "Bet Placed",
+            title: "Bet Placed", // TODO: Localization
             type: .action,
             action: .custom,
             isTappable: false
@@ -80,7 +80,7 @@ class BetSuccessViewController: UIViewController {
         // 2. "Open Betslip Details" row - tappable with chevron
         let openDetailsItem = ActionRowItem(
             icon: "",
-            title: "Open Betslip Details",
+            title: "Open Betslip Details", // TODO: Localization
             type: .navigation,
             action: .custom,
             trailingIcon: "chevron.right"
@@ -93,7 +93,7 @@ class BetSuccessViewController: UIViewController {
         // 3. "Share your Betslip" row - tappable with share icon
         let shareItem = ActionRowItem(
             icon: "",
-            title: "Share your Betslip",
+            title: "Share your Betslip", // TODO: Localization
             type: .action,
             action: .custom,
             trailingIcon: "share_icon"

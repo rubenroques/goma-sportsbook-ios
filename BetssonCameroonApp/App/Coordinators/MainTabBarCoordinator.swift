@@ -797,9 +797,13 @@ class MainTabBarCoordinator: Coordinator {
                 print(" Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
-            
+
             coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
                 self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
             }
 
             traditionalCasinoCoordinator = coordinator
@@ -830,9 +834,13 @@ class MainTabBarCoordinator: Coordinator {
                 print("Virtual Sports: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
-            
+
             coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
                 self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
             }
 
             virtualSportsCasinoCoordinator = coordinator
@@ -864,9 +872,13 @@ class MainTabBarCoordinator: Coordinator {
                 print(" Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
-            
+
             coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
                 self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
             }
 
             traditionalCasinoCoordinator = coordinator
@@ -907,7 +919,7 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     private func showCasinoSlotsGamesScreen() {
-        
+
         if traditionalCasinoCoordinator == nil {
             let coordinator = CasinoCoordinator(
                 navigationController: self.navigationController,
@@ -920,9 +932,13 @@ class MainTabBarCoordinator: Coordinator {
                 print(" Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
-            
+
             coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
                 self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
             }
 
             traditionalCasinoCoordinator = coordinator
@@ -945,7 +961,7 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     private func showCasinoCrashGamesScreen() {
-        
+
         if traditionalCasinoCoordinator == nil {
             let coordinator = CasinoCoordinator(
                 navigationController: self.navigationController,
@@ -958,9 +974,13 @@ class MainTabBarCoordinator: Coordinator {
                 print(" Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
             }
-            
+
             coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
                 self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
             }
 
             traditionalCasinoCoordinator = coordinator

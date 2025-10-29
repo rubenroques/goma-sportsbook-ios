@@ -150,7 +150,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             case .sessionId:
                 return "x-sessionid"  // No hyphen for place bet
             case .userId:
-                return nil  // Place bet doesn't need user ID
+                return "userid"  // User ID header for place bet
             }
         case .getOpenBets, .getSettledBets, .calculateCashout:
             // MyBets APIs use standard format
