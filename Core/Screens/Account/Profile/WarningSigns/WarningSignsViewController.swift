@@ -39,10 +39,12 @@ class WarningSignsViewController: UIViewController {
     private lazy var parentalControlImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createImageViewFixedHeightConstraint()
     private lazy var parentalControlImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createImageViewDynamicHeightConstraint()
     
-    private var aspectRatio: CGFloat = 1.0
+    // MARK: - ViewModel
+    private let viewModel: WarningSignsViewModel
 
     // MARK: - Lifetime and Cycle
-    init() {
+    init(viewModel: WarningSignsViewModel = WarningSignsViewModel()) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -63,6 +65,10 @@ class WarningSignsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        if let bannerImage = self.bannerImageView.image {
+            self.viewModel.aspectRatio = bannerImage.size.width / bannerImage.size.height
+        }
+
         self.resizeImageView(
             imageView: self.bannerImageView,
             fixedHeightConstraint: &self.bannerImageViewFixedHeightConstraint,
@@ -358,11 +364,11 @@ extension WarningSignsViewController {
 
             self.minorsImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.minorsImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.minorsImageView.topAnchor.constraint(equalTo: self.excessiveGamingImageView.bottomAnchor, constant: 20),
+            self.minorsImageView.topAnchor.constraint(equalTo: self.excessiveGamingImageView.bottomAnchor, constant: 30),
 
             self.parentalControlImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.parentalControlImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.parentalControlImageView.topAnchor.constraint(equalTo: self.minorsImageView.bottomAnchor, constant: 20),
+            self.parentalControlImageView.topAnchor.constraint(equalTo: self.minorsImageView.bottomAnchor, constant: 30),
             self.parentalControlImageView.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
         ])
         
@@ -382,7 +388,7 @@ extension WarningSignsViewController {
                            relatedBy: .equal,
                            toItem: self.bannerImageView,
                            attribute: .width,
-                           multiplier: 1 / self.aspectRatio,
+                           multiplier: 1 / self.viewModel.aspectRatio,
                            constant: 0)
         self.bannerImageViewDynamicHeightConstraint.isActive = false
         

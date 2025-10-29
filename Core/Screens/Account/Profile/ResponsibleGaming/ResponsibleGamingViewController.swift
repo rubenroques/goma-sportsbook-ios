@@ -64,7 +64,7 @@ class ResponsibleGamingViewController: UIViewController {
         responsibleGameInfoView.addGestureRecognizer(responsibleGameInfoTap)
         
         let warningSignsView = NavigationCardView()
-        warningSignsView.setupView(title: localized("warning_signs_title"), iconTitle: "casual_gambling_icon")
+        warningSignsView.setupView(title: localized("warning_signs_title"), iconTitle: "traffic_sign_icon")
         let warningSignsTap = UITapGestureRecognizer(target: self, action: #selector(didTapWarningSigns(sender:)))
         warningSignsView.addGestureRecognizer(warningSignsTap)
 
@@ -74,7 +74,7 @@ class ResponsibleGamingViewController: UIViewController {
         stayInControlView.addGestureRecognizer(stayInControlTap)
         
         let needSupportControlView = NavigationCardView()
-        needSupportControlView.setupView(title: localized("responsible_gaming_page_cta_3"), iconTitle: "responsible_gaming_icon")
+        needSupportControlView.setupView(title: localized("responsible_gaming_page_cta_3"), iconTitle: "handshake_icon")
         let needSupportControlTap = UITapGestureRecognizer(target: self, action: #selector(didTapNeedSupportControl(sender:)))
         needSupportControlView.addGestureRecognizer(needSupportControlTap)
         

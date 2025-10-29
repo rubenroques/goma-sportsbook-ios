@@ -20,14 +20,43 @@ class NeedSupportViewController: UIViewController {
     private lazy var mainTitleLabel: UILabel = Self.createMainTitleLabel()
     private lazy var mainDescriptionLabel: UILabel = Self.createMainDescriptionLabel()
     
+    private lazy var highlightDescriptionView: HighlightDescriptionView = Self.createHighlightDescriptionView()
+    private lazy var logoDescriptionView: LogoDescriptionView = Self.createLogoDescriptionView()
+    private lazy var highlightTextSectionView: HighlightTextSectionView = Self.createHighlightTextSectionView()
+    
+    private lazy var contactButton: UIButton = Self.createContactButton()
+    private lazy var contactMottoLabel: UILabel = Self.createContactMottoLabel()
+    private lazy var highlightTextSectionView2: HighlightTextSectionView = Self.createHighlightTextSectionView2()
+    
+    private lazy var contactFinalDescriptionLabel: UILabel = Self.createContactFinalDescriptionLabel()
+    private lazy var aidOrganisationTitleLabel: UILabel = Self.createAidOrganisationTitleLabel()
+    
+    private lazy var sosLogoActionDescriptionView: LogoActionDescriptionView = Self.createSosLogoActionDescriptionView()
+    private lazy var playerInfoLogoActionDescriptionView: LogoActionDescriptionView = Self.createPlayerInfoLogoActionDescriptionView()
+    private lazy var gambanLogoActionDescriptionView: LogoActionDescriptionView = Self.createGambanLogoActionDescriptionView()
+    
+    private lazy var gameInterdictionImageView: UIImageView = Self.createGameInterdictionImageView()
+    private lazy var gameInterdictionDescriptionLabel: UILabel = Self.createGameInterdictionDescriptionLabel()
+    private lazy var gameInterdictionStepsLabel: UILabel = Self.createGameInterdictionStepsLabel()
+    private lazy var anjLabel: UILabel = Self.createAnjLabel()
+    private lazy var anjImageView: UIImageView = Self.createAnjImageView()
+    
     // Constraints
     private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
     
-    private var aspectRatio: CGFloat = 1.0
+    private lazy var gameInterdictionImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createImageViewFixedHeightConstraint()
+    private lazy var gameInterdictionImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createImageViewDynamicHeightConstraint()
+    
+    private lazy var anjImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createImageViewFixedHeightConstraint()
+    private lazy var anjImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createImageViewDynamicHeightConstraint()
+    
+    // MARK: - ViewModel
+    private let viewModel: NeedSupportViewModel
 
     // MARK: - Lifetime and Cycle
-    init() {
+    init(viewModel: NeedSupportViewModel = NeedSupportViewModel()) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -43,15 +72,58 @@ class NeedSupportViewController: UIViewController {
         self.setupWithTheme()
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        self.contactButton.addTarget(self, action: #selector(didTapContactButton), for: .touchUpInside)
+        
+        self.setupCallbacks()
+        
+        let anjTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnjImageView))
+        self.anjImageView.isUserInteractionEnabled = true
+        self.anjImageView.addGestureRecognizer(anjTapGesture)
+    }
+    
+    private func setupCallbacks() {
+        self.sosLogoActionDescriptionView.didTapLogo = { [weak self] url in
+            if let url = URL(string: url) {
+                UIApplication.shared.open(url)
+            }
+        }
+        
+        self.playerInfoLogoActionDescriptionView.didTapLogo = { [weak self] url in
+            if let url = URL(string: url) {
+                UIApplication.shared.open(url)
+            }
+        }
+        
+        self.gambanLogoActionDescriptionView.didTapLogo = { [weak self] url in
+            if let url = URL(string: url) {
+                UIApplication.shared.open(url)
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        if let bannerImage = self.bannerImageView.image {
+            self.viewModel.aspectRatio = bannerImage.size.width / bannerImage.size.height
+        }
+        
         self.resizeImageView(
             imageView: self.bannerImageView,
             fixedHeightConstraint: &self.bannerImageViewFixedHeightConstraint,
             dynamicHeightConstraint: &self.bannerImageViewDynamicHeightConstraint
+        )
+        
+        self.resizeImageView(
+            imageView: self.gameInterdictionImageView,
+            fixedHeightConstraint: &self.gameInterdictionImageViewFixedHeightConstraint,
+            dynamicHeightConstraint: &self.gameInterdictionImageViewDynamicHeightConstraint
+        )
+        
+        self.resizeImageView(
+            imageView: self.anjImageView,
+            fixedHeightConstraint: &self.anjImageViewFixedHeightConstraint,
+            dynamicHeightConstraint: &self.anjImageViewDynamicHeightConstraint
         )
     }
 
@@ -82,6 +154,24 @@ class NeedSupportViewController: UIViewController {
         self.mainTitleLabel.textColor = UIColor.App.highlightPrimary
         
         self.mainDescriptionLabel.textColor = UIColor.App.textPrimary
+        
+        StyleHelper.styleButton(button: self.contactButton)
+        
+        self.contactMottoLabel.textColor = UIColor.App.textPrimary
+        
+        self.contactFinalDescriptionLabel.textColor = UIColor.App.textPrimary
+        
+        self.aidOrganisationTitleLabel.textColor = UIColor.App.highlightPrimary
+        
+        self.gameInterdictionImageView.backgroundColor = .clear
+        
+        self.gameInterdictionDescriptionLabel.textColor = UIColor.App.textPrimary
+        
+        self.gameInterdictionStepsLabel.textColor = UIColor.App.textPrimary
+        
+        self.anjLabel.textColor = UIColor.App.textPrimary
+        
+        self.anjImageView.backgroundColor = .clear
     }
     
     // MARK: - Functions
@@ -112,6 +202,18 @@ class NeedSupportViewController: UIViewController {
     // MARK: - Actions
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func didTapContactButton() {
+        if let url = URL(string: self.viewModel.contactButtonUrl) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapAnjImageView() {
+        if let url = URL(string: self.viewModel.anjImageViewUrl) {
+            UIApplication.shared.open(url)
+        }
     }
 }
 
@@ -164,6 +266,16 @@ extension NeedSupportViewController {
         return imageView
     }
 
+    private static func createMainDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("need_support_page_description_1")
+        label.font = AppFont.with(type: .semibold, size: 16)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
     private static func createMainTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -174,14 +286,170 @@ extension NeedSupportViewController {
         return label
     }
 
-    private static func createMainDescriptionLabel() -> UILabel {
+    private static func createHighlightDescriptionView() -> HighlightDescriptionView {
+        let view = HighlightDescriptionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(texts: [
+            HighlightedText(text: localized("need_support_page_description_2_part_3"), isHighlighted: false),
+            HighlightedText(text: localized("need_support_page_description_2_part_4"), isHighlighted: true),
+            HighlightedText(text: localized("need_support_page_description_2_part_5"), isHighlighted: false)
+        ])
+        return view
+    }
+
+    private static func createLogoDescriptionView() -> LogoDescriptionView {
+        let view = LogoDescriptionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(
+            logoImage: "arpej_logo",
+            titleText: localized("need_support_page_description_2"),
+            titleFont: AppFont.with(type: .semibold, size: 16),
+            titleColor: UIColor.App.textPrimary,
+            descriptionText: localized("need_support_page_description_2_part_2"),
+            descriptionFont: AppFont.with(type: .semibold, size: 16),
+            descriptionColor: UIColor.App.textPrimary
+        )
+        return view
+    }
+
+    private static func createHighlightTextSectionView() -> HighlightTextSectionView {
+        let view = HighlightTextSectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(
+            title: localized("need_support_page_title_3"),
+            description: localized("need_support_page_description_3")
+        )
+        return view
+    }
+
+    private static func createContactButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("need_support_page_cta_1"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        button.layer.cornerRadius = 8
+        button.contentEdgeInsets = UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 20)
+        return button
+    }
+
+    private static func createContactMottoLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("need_support_page_description_1")
-        label.font = AppFont.with(type: .regular, size: 16)
+        label.text = localized("need_support_page_description_3_part_2")
+        label.font = AppFont.with(type: .regular, size: 14)
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
+    }
+
+    private static func createHighlightTextSectionView2() -> HighlightTextSectionView {
+        let view = HighlightTextSectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(
+            title: localized("need_support_page_title_4"),
+            description: localized("need_support_page_description_4"),
+            descriptionFont: AppFont.with(type: .semibold, size: 16)
+        )
+        return view
+    }
+
+    private static func createContactFinalDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("need_support_page_description_4_part_2")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createAidOrganisationTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("need_support_page_title_5")
+        label.font = AppFont.with(type: .bold, size: 24)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createSosLogoActionDescriptionView() -> LogoActionDescriptionView {
+        let view = LogoActionDescriptionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(
+            logoImage: "sos_logo",
+            descriptionText: localized("need_support_page_description_5_sos"),
+            url: "https://www.sosjoueurs.org/"
+        )
+        return view
+    }
+
+    private static func createPlayerInfoLogoActionDescriptionView() -> LogoActionDescriptionView {
+        let view = LogoActionDescriptionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(
+            logoImage: "player_info_logo",
+            descriptionText: localized("need_support_page_description_5_joueurs"),
+            url: "https://www.joueurs-info-service.fr/"
+        )
+        return view
+    }
+
+    private static func createGambanLogoActionDescriptionView() -> LogoActionDescriptionView {
+        let view = LogoActionDescriptionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(
+            logoImage: "gamban_logo",
+            descriptionText: localized("need_support_page_description_5_gamban"),
+            url: ""
+        )
+        return view
+    }
+
+    private static func createGameInterdictionImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "game_interdiction_image")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createGameInterdictionDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("need_support_page_description_6")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createGameInterdictionStepsLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("need_support_page_description_6_part_2")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createAnjLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("need_support_page_title_6")
+        label.font = AppFont.with(type: .bold, size: 24)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createAnjImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "anj_logo")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }
     
     // Constraints
@@ -191,6 +459,16 @@ extension NeedSupportViewController {
     }
 
     private static func createBannerImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createImageViewFixedHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -208,6 +486,26 @@ extension NeedSupportViewController {
         self.scrollContainerView.addSubview(self.bannerImageView)
         self.scrollContainerView.addSubview(self.mainTitleLabel)
         self.scrollContainerView.addSubview(self.mainDescriptionLabel)
+        self.scrollContainerView.addSubview(self.highlightDescriptionView)
+        self.scrollContainerView.addSubview(self.logoDescriptionView)
+        self.scrollContainerView.addSubview(self.highlightTextSectionView)
+        
+        self.scrollContainerView.addSubview(self.contactButton)
+        self.scrollContainerView.addSubview(self.contactMottoLabel)
+        self.scrollContainerView.addSubview(self.highlightTextSectionView2)
+        
+        self.scrollContainerView.addSubview(self.contactFinalDescriptionLabel)
+        self.scrollContainerView.addSubview(self.aidOrganisationTitleLabel)
+        
+        self.scrollContainerView.addSubview(self.sosLogoActionDescriptionView)
+        self.scrollContainerView.addSubview(self.playerInfoLogoActionDescriptionView)
+        self.scrollContainerView.addSubview(self.gambanLogoActionDescriptionView)
+        
+        self.scrollContainerView.addSubview(self.gameInterdictionImageView)
+        self.scrollContainerView.addSubview(self.gameInterdictionDescriptionLabel)
+        self.scrollContainerView.addSubview(self.gameInterdictionStepsLabel)
+        self.scrollContainerView.addSubview(self.anjLabel)
+        self.scrollContainerView.addSubview(self.anjImageView)
 
         self.initConstraints()
     }
@@ -258,7 +556,70 @@ extension NeedSupportViewController {
             self.mainTitleLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
             self.mainTitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
             self.mainTitleLabel.topAnchor.constraint(equalTo: self.mainDescriptionLabel.bottomAnchor, constant: 20),
-            self.mainTitleLabel.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
+
+            self.logoDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.logoDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.logoDescriptionView.topAnchor.constraint(equalTo: self.mainTitleLabel.bottomAnchor, constant: 20),
+
+            self.highlightDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.highlightDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.highlightDescriptionView.topAnchor.constraint(equalTo: self.logoDescriptionView.bottomAnchor, constant: 10),
+
+            self.highlightTextSectionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.highlightTextSectionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.highlightTextSectionView.topAnchor.constraint(equalTo: self.highlightDescriptionView.bottomAnchor, constant: 0),
+
+            self.contactButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.contactButton.topAnchor.constraint(equalTo: self.highlightTextSectionView.bottomAnchor, constant: 10),
+
+            self.contactMottoLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
+            self.contactMottoLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
+            self.contactMottoLabel.topAnchor.constraint(equalTo: self.contactButton.bottomAnchor, constant: 20),
+
+            self.highlightTextSectionView2.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.highlightTextSectionView2.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.highlightTextSectionView2.topAnchor.constraint(equalTo: self.contactMottoLabel.bottomAnchor, constant: 0),
+
+            self.contactFinalDescriptionLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
+            self.contactFinalDescriptionLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
+            self.contactFinalDescriptionLabel.topAnchor.constraint(equalTo: self.highlightTextSectionView2.bottomAnchor, constant: 0),
+
+            self.aidOrganisationTitleLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
+            self.aidOrganisationTitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
+            self.aidOrganisationTitleLabel.topAnchor.constraint(equalTo: self.contactFinalDescriptionLabel.bottomAnchor, constant: 30),
+
+            self.sosLogoActionDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.sosLogoActionDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.sosLogoActionDescriptionView.topAnchor.constraint(equalTo: self.aidOrganisationTitleLabel.bottomAnchor, constant: 20),
+
+            self.playerInfoLogoActionDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.playerInfoLogoActionDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.playerInfoLogoActionDescriptionView.topAnchor.constraint(equalTo: self.sosLogoActionDescriptionView.bottomAnchor, constant: 20),
+
+            self.gambanLogoActionDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.gambanLogoActionDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.gambanLogoActionDescriptionView.topAnchor.constraint(equalTo: self.playerInfoLogoActionDescriptionView.bottomAnchor, constant: 20),
+
+            self.gameInterdictionImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.gameInterdictionImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.gameInterdictionImageView.topAnchor.constraint(equalTo: self.gambanLogoActionDescriptionView.bottomAnchor, constant: 30),
+
+            self.gameInterdictionDescriptionLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
+            self.gameInterdictionDescriptionLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
+            self.gameInterdictionDescriptionLabel.topAnchor.constraint(equalTo: self.gameInterdictionImageView.bottomAnchor, constant: 20),
+
+            self.gameInterdictionStepsLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
+            self.gameInterdictionStepsLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
+            self.gameInterdictionStepsLabel.topAnchor.constraint(equalTo: self.gameInterdictionDescriptionLabel.bottomAnchor, constant: 30),
+
+            self.anjLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
+            self.anjLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
+            self.anjLabel.topAnchor.constraint(equalTo: self.gameInterdictionStepsLabel.bottomAnchor, constant: 20),
+
+            self.anjImageView.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.anjImageView.topAnchor.constraint(equalTo: self.anjLabel.bottomAnchor, constant: 20),
+            self.anjImageView.widthAnchor.constraint(equalToConstant: 160),
+            self.anjImageView.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
         ])
         
         self.bannerImageViewFixedHeightConstraint =
@@ -277,8 +638,50 @@ extension NeedSupportViewController {
                            relatedBy: .equal,
                            toItem: self.bannerImageView,
                            attribute: .width,
-                           multiplier: 1 / self.aspectRatio,
+                           multiplier: 1 / self.viewModel.aspectRatio,
                            constant: 0)
         self.bannerImageViewDynamicHeightConstraint.isActive = false
+        
+        // Game Interdiction ImageView constraints
+        self.gameInterdictionImageViewFixedHeightConstraint =
+        NSLayoutConstraint(item: self.gameInterdictionImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 165)
+        self.gameInterdictionImageViewFixedHeightConstraint.isActive = true
+        
+        self.gameInterdictionImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.gameInterdictionImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.gameInterdictionImageView,
+                           attribute: .width,
+                           multiplier: 1,
+                           constant: 0)
+        self.gameInterdictionImageViewDynamicHeightConstraint.isActive = false
+        
+        // ANJ ImageView constraints
+        self.anjImageViewFixedHeightConstraint =
+        NSLayoutConstraint(item: self.anjImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 160)
+        self.anjImageViewFixedHeightConstraint.isActive = true
+        
+        self.anjImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.anjImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.anjImageView,
+                           attribute: .width,
+                           multiplier: 1,
+                           constant: 0)
+        self.anjImageViewDynamicHeightConstraint.isActive = false
     }
 }

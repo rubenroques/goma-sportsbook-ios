@@ -68,7 +68,7 @@ class NavigationCardView: UIView {
         self.iconBaseView.backgroundColor = UIColor.App.backgroundBorder
 
         self.iconImageView.backgroundColor = .clear
-
+        self.iconImageView.setTintColor(color: UIColor.App.iconPrimary)
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.notificationView.backgroundColor = UIColor.App.bubblesPrimary
@@ -79,7 +79,7 @@ class NavigationCardView: UIView {
     func setupView(title: String, iconTitle: String) {
         self.titleLabel.text = title
 
-        self.iconImageView.image = UIImage(named: iconTitle)
+        self.iconImageView.image = UIImage(named: iconTitle)?.withRenderingMode(.alwaysTemplate)
 
         if self.hasNotifications {
 

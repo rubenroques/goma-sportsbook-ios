@@ -36,10 +36,12 @@ class StayInControlViewController: UIViewController {
     private lazy var actsImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createImageViewFixedHeightConstraint()
     private lazy var actsImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createImageViewDynamicHeightConstraint()
     
-    private var aspectRatio: CGFloat = 1.0
+    // MARK: - ViewModel
+    private let viewModel: StayInControlViewModel
 
     // MARK: - Lifetime and Cycle
-    init() {
+    init(viewModel: StayInControlViewModel = StayInControlViewModel()) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -59,6 +61,10 @@ class StayInControlViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        if let bannerImage = self.bannerImageView.image {
+            self.viewModel.aspectRatio = bannerImage.size.width / bannerImage.size.height
+        }
         
         self.resizeImageView(
             imageView: self.bannerImageView,
@@ -316,15 +322,15 @@ extension StayInControlViewController {
 
             self.advicesImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.advicesImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.advicesImageView.topAnchor.constraint(equalTo: self.highlightTextSectionView.bottomAnchor, constant: 30),
+            self.advicesImageView.topAnchor.constraint(equalTo: self.highlightTextSectionView.bottomAnchor, constant: 10),
 
             self.gameModeratorsImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.gameModeratorsImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.gameModeratorsImageView.topAnchor.constraint(equalTo: self.advicesImageView.bottomAnchor, constant: 20),
+            self.gameModeratorsImageView.topAnchor.constraint(equalTo: self.advicesImageView.bottomAnchor, constant: 30),
 
             self.actsImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.actsImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.actsImageView.topAnchor.constraint(equalTo: self.gameModeratorsImageView.bottomAnchor, constant: 20),
+            self.actsImageView.topAnchor.constraint(equalTo: self.gameModeratorsImageView.bottomAnchor, constant: 30),
             self.actsImageView.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
         ])
         
@@ -344,7 +350,7 @@ extension StayInControlViewController {
                            relatedBy: .equal,
                            toItem: self.bannerImageView,
                            attribute: .width,
-                           multiplier: 1 / self.aspectRatio,
+                           multiplier: 1 / self.viewModel.aspectRatio,
                            constant: 0)
         self.bannerImageViewDynamicHeightConstraint.isActive = false
         

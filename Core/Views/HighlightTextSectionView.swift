@@ -47,13 +47,25 @@ class HighlightTextSectionView: UIView {
         self.titleLabel.textColor = UIColor.App.highlightPrimary
         
         // Description in light gray
-        self.descriptionLabel.textColor = UIColor.App.textSecondary
+        self.descriptionLabel.textColor = UIColor.App.textPrimary
     }
 
     // MARK: - Functions
-    func configure(title: String, description: String) {
+    func configure(
+        title: String,
+        titleFont: UIFont = AppFont.with(type: .bold, size: 16),
+        titleColor: UIColor = UIColor.App.highlightPrimary,
+        description: String,
+        descriptionFont: UIFont = AppFont.with(type: .regular, size: 14),
+        descriptionColor: UIColor = UIColor.App.textPrimary
+    ) {
         self.titleLabel.text = title
+        self.titleLabel.font = titleFont
+        self.titleLabel.textColor = titleColor
+        
         self.descriptionLabel.text = description
+        self.descriptionLabel.font = descriptionFont
+        self.descriptionLabel.textColor = descriptionColor
     }
 }
 

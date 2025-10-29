@@ -26,18 +26,20 @@ class ResponsibleGameInfoViewController: UIViewController {
     private lazy var mottoLabel: UILabel = Self.createMottoLabel()
     
     private lazy var buttonsStackView: UIStackView = Self.createButtonsStackView()
-    private lazy var button1: UIButton = Self.createButton1()
-    private lazy var button2: UIButton = Self.createButton2()
-    private lazy var button3: UIButton = Self.createButton3()
+    private lazy var warningSignsButton: UIButton = Self.createWarningSignsButton()
+    private lazy var stayInControlButton: UIButton = Self.createStayInControlButton()
+    private lazy var needSupportButton: UIButton = Self.createNeedSupportButton()
     
     // Constraints
     private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
     
-    private var aspectRatio: CGFloat = 1.0
+    // MARK: - ViewModel
+    private let viewModel: ResponsibleGameInfoViewModel
 
     // MARK: - Lifetime and Cycle
-    init() {
+    init(viewModel: ResponsibleGameInfoViewModel = ResponsibleGameInfoViewModel()) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -54,9 +56,9 @@ class ResponsibleGameInfoViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         
-        self.button1.addTarget(self, action: #selector(didTapButton1), for: .touchUpInside)
-        self.button2.addTarget(self, action: #selector(didTapButton2), for: .touchUpInside)
-        self.button3.addTarget(self, action: #selector(didTapButton3), for: .touchUpInside)
+        self.warningSignsButton.addTarget(self, action: #selector(didTapButton1), for: .touchUpInside)
+        self.stayInControlButton.addTarget(self, action: #selector(didTapButton2), for: .touchUpInside)
+        self.needSupportButton.addTarget(self, action: #selector(didTapButton3), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -98,12 +100,9 @@ class ResponsibleGameInfoViewController: UIViewController {
         
         self.buttonsStackView.backgroundColor = .clear
         
-//        self.button1.backgroundColor = UIColor.App.highlightPrimary
-//        self.button1.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        
-        StyleHelper.styleButton(button: button1)
-        StyleHelper.styleButton(button: button2)
-        StyleHelper.styleButton(button: button3)
+        StyleHelper.styleButton(button: warningSignsButton)
+        StyleHelper.styleButton(button: stayInControlButton)
+        StyleHelper.styleButton(button: needSupportButton)
 
     }
     
@@ -112,7 +111,7 @@ class ResponsibleGameInfoViewController: UIViewController {
 
         if let bannerImage = self.bannerImageView.image {
 
-            self.aspectRatio = bannerImage.size.width/bannerImage.size.height
+            self.viewModel.aspectRatio = bannerImage.size.width/bannerImage.size.height
 
             self.bannerImageViewFixedHeightConstraint.isActive = false
 
@@ -122,7 +121,7 @@ class ResponsibleGameInfoViewController: UIViewController {
                                relatedBy: .equal,
                                toItem: self.bannerImageView,
                                attribute: .width,
-                               multiplier: 1/self.aspectRatio,
+                               multiplier: 1/self.viewModel.aspectRatio,
                                constant: 0)
 
             self.bannerImageViewDynamicHeightConstraint.isActive = true
@@ -272,7 +271,7 @@ extension ResponsibleGameInfoViewController {
         return stackView
     }
 
-    private static func createButton1() -> UIButton {
+    private static func createWarningSignsButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("responsible_gaming_page_cta_1"), for: .normal)
@@ -284,7 +283,7 @@ extension ResponsibleGameInfoViewController {
         return button
     }
 
-    private static func createButton2() -> UIButton {
+    private static func createStayInControlButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("responsible_gaming_page_cta_2"), for: .normal)
@@ -296,7 +295,7 @@ extension ResponsibleGameInfoViewController {
         return button
     }
 
-    private static func createButton3() -> UIButton {
+    private static func createNeedSupportButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("responsible_gaming_page_cta_3"), for: .normal)
@@ -340,9 +339,9 @@ extension ResponsibleGameInfoViewController {
         
         self.scrollContainerView.addSubview(self.buttonsStackView)
         
-        self.buttonsStackView.addArrangedSubview(self.button1)
-        self.buttonsStackView.addArrangedSubview(self.button2)
-        self.buttonsStackView.addArrangedSubview(self.button3)
+        self.buttonsStackView.addArrangedSubview(self.warningSignsButton)
+        self.buttonsStackView.addArrangedSubview(self.stayInControlButton)
+        self.buttonsStackView.addArrangedSubview(self.needSupportButton)
 
         self.initConstraints()
     }
@@ -415,11 +414,11 @@ extension ResponsibleGameInfoViewController {
             self.buttonsStackView.topAnchor.constraint(equalTo: self.mottoLabel.bottomAnchor, constant: 30),
             self.buttonsStackView.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30),
             
-            self.button1.heightAnchor.constraint(equalToConstant: 50),
+            self.warningSignsButton.heightAnchor.constraint(equalToConstant: 50),
             
-            self.button2.heightAnchor.constraint(equalToConstant: 50),
+            self.stayInControlButton.heightAnchor.constraint(equalToConstant: 50),
             
-            self.button3.heightAnchor.constraint(equalToConstant: 50),
+            self.needSupportButton.heightAnchor.constraint(equalToConstant: 50),
 
         ])
         
@@ -439,7 +438,7 @@ extension ResponsibleGameInfoViewController {
                            relatedBy: .equal,
                            toItem: self.bannerImageView,
                            attribute: .width,
-                           multiplier: 1/self.aspectRatio,
+                           multiplier: 1/self.viewModel.aspectRatio,
                            constant: 0)
         self.bannerImageViewDynamicHeightConstraint.isActive = false
     }
