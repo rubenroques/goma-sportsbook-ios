@@ -53,15 +53,30 @@ class ResponsibleGamingViewController: UIViewController {
 
     // MARK: Functions
     private func setupStackView() {
-        let casualGamblingView = NavigationCardView()
-        casualGamblingView.setupView(title: localized("casual_pathologic_gambling"), iconTitle: "casual_gambling_icon")
-        let casualGamblingTap = UITapGestureRecognizer(target: self, action: #selector(didTapCasualGambling(sender:)))
-        casualGamblingView.addGestureRecognizer(casualGamblingTap)
+//        let casualGamblingView = NavigationCardView()
+//        casualGamblingView.setupView(title: localized("casual_pathologic_gambling"), iconTitle: "casual_gambling_icon")
+//        let casualGamblingTap = UITapGestureRecognizer(target: self, action: #selector(didTapCasualGambling(sender:)))
+//        casualGamblingView.addGestureRecognizer(casualGamblingTap)
+        
+        let responsibleGameInfoView = NavigationCardView()
+        responsibleGameInfoView.setupView(title: localized("responsible_game_title"), iconTitle: "casual_gambling_icon")
+        let responsibleGameInfoTap = UITapGestureRecognizer(target: self, action: #selector(didTapResponsibleGameInfo(sender:)))
+        responsibleGameInfoView.addGestureRecognizer(responsibleGameInfoTap)
+        
+        let warningSignsView = NavigationCardView()
+        warningSignsView.setupView(title: localized("warning_signs_title"), iconTitle: "casual_gambling_icon")
+        let warningSignsTap = UITapGestureRecognizer(target: self, action: #selector(didTapWarningSigns(sender:)))
+        warningSignsView.addGestureRecognizer(warningSignsTap)
 
-        let tipsControlView = NavigationCardView()
-        tipsControlView.setupView(title: localized("tips_to_keep_control"), iconTitle: "responsible_gaming_icon")
-        let tipsControlTap = UITapGestureRecognizer(target: self, action: #selector(didTapTipsControl(sender:)))
-        tipsControlView.addGestureRecognizer(tipsControlTap)
+        let stayInControlView = NavigationCardView()
+        stayInControlView.setupView(title: localized("responsible_gaming_page_cta_2"), iconTitle: "responsible_gaming_icon")
+        let stayInControlTap = UITapGestureRecognizer(target: self, action: #selector(didTapStayInControl(sender:)))
+        stayInControlView.addGestureRecognizer(stayInControlTap)
+        
+        let needSupportControlView = NavigationCardView()
+        needSupportControlView.setupView(title: localized("responsible_gaming_page_cta_3"), iconTitle: "responsible_gaming_icon")
+        let needSupportControlTap = UITapGestureRecognizer(target: self, action: #selector(didTapNeedSupportControl(sender:)))
+        needSupportControlView.addGestureRecognizer(needSupportControlTap)
         
         let bettingPracticesView = NavigationCardView()
         bettingPracticesView.setupView(title: localized("betting_questionnaire"), iconTitle: "check_profile_icon")
@@ -83,8 +98,10 @@ class ResponsibleGamingViewController: UIViewController {
         let closeAccountTap = UITapGestureRecognizer(target: self, action: #selector(didTapCloseAccount(sender:)))
         closeAccountView.addGestureRecognizer(closeAccountTap)
 
-        self.stackView.addArrangedSubview(casualGamblingView)
-        self.stackView.addArrangedSubview(tipsControlView)
+        self.stackView.addArrangedSubview(responsibleGameInfoView)
+        self.stackView.addArrangedSubview(warningSignsView)
+        self.stackView.addArrangedSubview(stayInControlView)
+        self.stackView.addArrangedSubview(needSupportControlView)
 
         if Env.userSessionStore.isUserLogged() {
             
@@ -111,12 +128,32 @@ extension ResponsibleGamingViewController {
 
         self.navigationController?.pushViewController(casualGamblingViewController, animated: true)
     }
+    
+    @objc private func didTapResponsibleGameInfo(sender: UITapGestureRecognizer) {
+        let responsibleGameInfoViewController = ResponsibleGameInfoViewController()
 
-    @objc private func didTapTipsControl(sender: UITapGestureRecognizer) {
+        self.navigationController?.pushViewController(responsibleGameInfoViewController, animated: true)
+    }
+    
+    @objc private func didTapWarningSigns(sender: UITapGestureRecognizer) {
+        let warningSignsViewController = WarningSignsViewController()
 
-        let tipsControlViewController = TipsControlViewController()
+        self.navigationController?.pushViewController(warningSignsViewController, animated: true)
+    }
+    
+    @objc private func didTapStayInControl(sender: UITapGestureRecognizer) {
 
-        self.navigationController?.pushViewController(tipsControlViewController, animated: true)
+        let stayInControlViewController = StayInControlViewController()
+
+        self.navigationController?.pushViewController(stayInControlViewController, animated: true)
+
+    }
+    
+    @objc private func didTapNeedSupportControl(sender: UITapGestureRecognizer) {
+
+        let needSupportViewController = NeedSupportViewController()
+
+        self.navigationController?.pushViewController(needSupportViewController, animated: true)
 
     }
     
