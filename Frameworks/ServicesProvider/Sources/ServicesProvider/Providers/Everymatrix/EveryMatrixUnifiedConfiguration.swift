@@ -41,7 +41,7 @@ public final class EveryMatrixUnifiedConfiguration {
     public var oddsMatrixBaseURL: String {
         switch environment {
         case .production:
-            return "https://sportsapi.betssonem.com"  // Updated from sports-api.everymatrix.com
+            return "https://sports-api.everymatrix.com"
         case .staging, .development:
             return "https://sports-api-stage.everymatrix.com"
         }
@@ -51,9 +51,19 @@ public final class EveryMatrixUnifiedConfiguration {
     public var oddsMatrixWebSocketURL: String {
         switch environment {
         case .production:
-            return "wss://sportsapi.betssonem.com/v2"  // New production WebSocket URL
+            return "wss://sportsapi.betssonem.com"  // New production WebSocket URL
         case .staging, .development:
-            return "wss://sportsapi-betsson-stage.everymatrix.com/v2"
+            return "wss://sportsapi-betsson-stage.everymatrix.com"
+        }
+    }
+    
+    /// WebSocket Version for OddsMatrix WAMP protocol
+    public var oddsMatrixWebSocketVersion: String {
+        switch environment {
+        case .production:
+            return "v2"  // New production WebSocket URL
+        case .staging, .development:
+            return "v2"
         }
     }
 

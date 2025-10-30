@@ -18,7 +18,9 @@ struct WAMPSocketParams {
     /// Staging: wss://sportsapi-betsson-stage.everymatrix.com/v2
     /// Production: wss://sportsapi.betssonem.com/v2
     static var wsEndPoint: String {
-        return EveryMatrixUnifiedConfiguration.shared.oddsMatrixWebSocketURL
+        let host = EveryMatrixUnifiedConfiguration.shared.oddsMatrixWebSocketURL
+        let version = EveryMatrixUnifiedConfiguration.shared.oddsMatrixWebSocketVersion
+        return "\(host)/\(version)"
     }
 
     /// WebSocket origin header - environment-dependent
