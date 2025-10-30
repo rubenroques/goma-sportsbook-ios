@@ -7,11 +7,6 @@
 
 import UIKit
 
-struct HighlightedText {
-    let text: String
-    let isHighlighted: Bool
-}
-
 class HighlightDescriptionView: UIView {
 
     // MARK: - Private Properties
@@ -19,29 +14,25 @@ class HighlightDescriptionView: UIView {
     private lazy var stackView: UIStackView = Self.createStackView()
     
     private var labels: [UILabel] = []
+    
+    private let viewModel: HighlightDescriptionViewModelProtocol
 
     // MARK: - Lifetime and Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
+    init(viewModel: HighlightDescriptionViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
+        
         self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.setupSubviews()
-        self.commonInit()
-        self.setupWithTheme()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func commonInit() {
+        self.bind(toViewModel: self.viewModel)
     }
 
     // MARK: - Layout and Theme
@@ -52,24 +43,32 @@ class HighlightDescriptionView: UIView {
     }
 
     // MARK: - Functions
-    func configure(texts: [HighlightedText]) {
+    private func bind(toViewModel viewModel: HighlightDescriptionViewModelProtocol) {
+        // Set spacing
+        self.stackView.spacing = viewModel.spacing ?? 22
+        
         // Clear existing labels
         self.labels.forEach { $0.removeFromSuperview() }
         self.labels.removeAll()
         
+        let regularFont = viewModel.regularFont ?? AppFont.with(type: .regular, size: 14)
+        let regularColor = viewModel.regularColor ?? UIColor.App.textPrimary
+        let highlightColor = viewModel.highlightColor ?? UIColor.App.highlightPrimary
+        
         // Create labels for each text
-        for highlightedText in texts {
+        for highlightedText in viewModel.texts {
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
             label.text = highlightedText.text
-            label.font = AppFont.with(type: .regular, size: 14)
+            label.font = regularFont
             label.numberOfLines = 0
             label.textAlignment = .left
             
             if highlightedText.isHighlighted {
-                label.textColor = UIColor.App.highlightPrimary
-            } else {
-                label.textColor = UIColor.App.textPrimary
+                label.textColor = highlightColor
+            }
+            else {
+                label.textColor = regularColor
             }
             
             self.stackView.addArrangedSubview(label)

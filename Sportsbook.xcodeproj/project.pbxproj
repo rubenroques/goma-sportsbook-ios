@@ -5465,6 +5465,86 @@
 		6574B1482EB294A1005F39B9 /* NeedSupportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1402EB294A1005F39B9 /* NeedSupportViewModel.swift */; };
 		6574B1492EB294A1005F39B9 /* NeedSupportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1402EB294A1005F39B9 /* NeedSupportViewModel.swift */; };
 		6574B14A2EB294A1005F39B9 /* NeedSupportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1402EB294A1005F39B9 /* NeedSupportViewModel.swift */; };
+		6574B14D2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B14E2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B14F2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B1502EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B1512EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B1522EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B1532EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B1542EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B1552EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B1562EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */; };
+		6574B1582EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B1592EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B15A2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B15B2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B15C2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B15D2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B15E2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B15F2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B1602EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B1612EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */; };
+		6574B1642EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B1652EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B1662EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B1672EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B1682EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B1692EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B16A2EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B16B2EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B16C2EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B16D2EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */; };
+		6574B16F2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1702EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1712EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1722EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1732EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1742EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1752EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1762EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1772EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B1782EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */; };
+		6574B17B2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B17C2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B17D2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B17E2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B17F2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B1802EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B1812EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B1822EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B1832EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B1842EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */; };
+		6574B1862EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B1872EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B1882EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B1892EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B18A2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B18B2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B18C2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B18D2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B18E2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B18F2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */; };
+		6574B1922EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B1932EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B1942EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B1952EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B1962EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B1972EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B1982EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B1992EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B19A2EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B19B2EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */; };
+		6574B19D2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B19E2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B19F2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B1A02EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B1A12EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B1A22EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B1A32EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B1A42EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B1A52EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
+		6574B1A62EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */; };
 		6584F8FE2BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
 		6584F8FF2BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
 		6584F9002BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
@@ -10055,6 +10135,14 @@
 		6574B12A2EB291BC005F39B9 /* WarningSignsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningSignsViewModel.swift; sourceTree = "<group>"; };
 		6574B1352EB29297005F39B9 /* StayInControlViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StayInControlViewModel.swift; sourceTree = "<group>"; };
 		6574B1402EB294A1005F39B9 /* NeedSupportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeedSupportViewModel.swift; sourceTree = "<group>"; };
+		6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoActionDescriptionViewModel.swift; sourceTree = "<group>"; };
+		6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoActionDescriptionViewModelProtocol.swift; sourceTree = "<group>"; };
+		6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoDescriptionViewModel.swift; sourceTree = "<group>"; };
+		6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoDescriptionViewModelProtocol.swift; sourceTree = "<group>"; };
+		6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightDescriptionViewModel.swift; sourceTree = "<group>"; };
+		6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightDescriptionViewModelProtocol.swift; sourceTree = "<group>"; };
+		6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightTextSectionViewModel.swift; sourceTree = "<group>"; };
+		6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightTextSectionViewModelProtocol.swift; sourceTree = "<group>"; };
 		6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyReferralView.swift; sourceTree = "<group>"; };
 		658A4CB52B9F6C4800F73772 /* Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referrals.swift; sourceTree = "<group>"; };
 		658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Referrals.swift"; sourceTree = "<group>"; };
@@ -12154,6 +12242,10 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6574B1902EB389CB005F39B9 /* HighlightTextSectionView */,
+				6574B1792EB38812005F39B9 /* HighlightDescriptionView */,
+				6574B1622EB38359005F39B9 /* LogoDescriptionView */,
+				6574B14B2EB381DC005F39B9 /* LogoActionDescriptionView */,
 				CEE7E4692E3798D4003AB610 /* CustomShareButton.swift */,
 				CEE7E41C2E3453FF003AB610 /* BrandedTicketShareView */,
 				CE0C6C912D56327E00EAD26B /* SmallToolTipView */,
@@ -12210,17 +12302,14 @@
 				457BD61627BBAF6100E5612E /* ContainerViewController.swift */,
 				459EF2812BBF39610098A7F6 /* FadingView.swift */,
 				459EF2932BC01AD20098A7F6 /* ScoreView.swift */,
-				6574B0CF2EB0E4A1005F39B9 /* HighlightTextSectionView.swift */,
 				A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */,
 				454F73B4299152C100437460 /* GradientView.swift */,
 				459EF28A2BC00C610098A7F6 /* PillLabelView.swift */,
 				450FC3FD2A2B2588000DB866 /* BoostedArrowView.swift */,
-				6574B1092EB26233005F39B9 /* HighlightDescriptionView.swift */,
 				457C9F2E2A17D72500022C53 /* GradientBorderView */,
 				A9A603662A15293A00B06DF1 /* OptionRadioView.swift */,
 				A9BA04172A30EA3B007880FC /* CardOptionRadioView.swift */,
 				A9527C1B2A98FA66006F4E37 /* SuggestedCompetitionsView.swift */,
-				6574B1142EB273E0005F39B9 /* LogoActionDescriptionView.swift */,
 				A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */,
 				655E20092B28A14700C95337 /* TextSectionView.swift */,
 				655E20122B29CB7E00C95337 /* TextSubsectionView.swift */,
@@ -12228,7 +12317,6 @@
 				65ABC4792DD4A3920043051C /* InfoActionDialogView.swift */,
 				65ABC4842DD4D03A0043051C /* WinBoostInfoView.swift */,
 				65721C022E69FE64008B2F3B /* SquareDottedLineView.swift */,
-				6574B0FE2EB227E1005F39B9 /* LogoDescriptionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -13037,6 +13125,46 @@
 				6574B1402EB294A1005F39B9 /* NeedSupportViewModel.swift */,
 			);
 			path = NeedSupport;
+			sourceTree = "<group>";
+		};
+		6574B14B2EB381DC005F39B9 /* LogoActionDescriptionView */ = {
+			isa = PBXGroup;
+			children = (
+				6574B1572EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift */,
+				6574B14C2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift */,
+				6574B1142EB273E0005F39B9 /* LogoActionDescriptionView.swift */,
+			);
+			path = LogoActionDescriptionView;
+			sourceTree = "<group>";
+		};
+		6574B1622EB38359005F39B9 /* LogoDescriptionView */ = {
+			isa = PBXGroup;
+			children = (
+				6574B16E2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift */,
+				6574B1632EB385C8005F39B9 /* LogoDescriptionViewModel.swift */,
+				6574B0FE2EB227E1005F39B9 /* LogoDescriptionView.swift */,
+			);
+			path = LogoDescriptionView;
+			sourceTree = "<group>";
+		};
+		6574B1792EB38812005F39B9 /* HighlightDescriptionView */ = {
+			isa = PBXGroup;
+			children = (
+				6574B1852EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift */,
+				6574B17A2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift */,
+				6574B1092EB26233005F39B9 /* HighlightDescriptionView.swift */,
+			);
+			path = HighlightDescriptionView;
+			sourceTree = "<group>";
+		};
+		6574B1902EB389CB005F39B9 /* HighlightTextSectionView */ = {
+			isa = PBXGroup;
+			children = (
+				6574B19C2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift */,
+				6574B1912EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift */,
+				6574B0CF2EB0E4A1005F39B9 /* HighlightTextSectionView.swift */,
+			);
+			path = HighlightTextSectionView;
 			sourceTree = "<group>";
 		};
 		65F884262C1C439F00A56983 /* Cells */ = {
@@ -17182,6 +17310,7 @@
 				A96FAED92981912100A0751F /* UploadDocuments.swift in Sources */,
 				450B786E28F58574009229E3 /* GeoLocationManager.swift in Sources */,
 				A9A43CA72A4C9368008FB399 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
+				6574B16C2EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				450B787028F58574009229E3 /* PersonalInfoViewController.swift in Sources */,
 				A9A1B2C82A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				450B787128F58574009229E3 /* SharedBetData.swift in Sources */,
@@ -17219,6 +17348,7 @@
 				450B788928F58574009229E3 /* MessagesViewController.swift in Sources */,
 				450B788A28F58574009229E3 /* LoadableContent.swift in Sources */,
 				6574B0D02EB0E4A1005F39B9 /* HighlightTextSectionView.swift in Sources */,
+				6574B1932EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				450B788B28F58574009229E3 /* ShareTicketChoiceViewController.swift in Sources */,
 				450B788C28F58574009229E3 /* CollapsibleView.swift in Sources */,
 				450B788D28F58574009229E3 /* SelectFriendTableViewCell.swift in Sources */,
@@ -17266,8 +17396,10 @@
 				45F2530A2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45ECD7572A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				450B78AB28F58574009229E3 /* RankingTypeTableHeaderView.swift in Sources */,
+				6574B1522EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				450B78AD28F58574009229E3 /* CollapsibleGroupView.swift in Sources */,
 				450B78AE28F58574009229E3 /* BetOutcome.swift in Sources */,
+				6574B15B2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				450B78AF28F58574009229E3 /* UIImageView+Extensions.swift in Sources */,
 				450B78B028F58574009229E3 /* EnabledAccessViewController.swift in Sources */,
 				450B78B128F58574009229E3 /* UserProfileViewController.swift in Sources */,
@@ -17315,6 +17447,7 @@
 				450B78DC28F58574009229E3 /* TransactionsTableViewCell.swift in Sources */,
 				450B78DD28F58574009229E3 /* UserRegisterForm.swift in Sources */,
 				450B78DE28F58574009229E3 /* SportsAggregatorRepository.swift in Sources */,
+				6574B17D2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				450B78DF28F58574009229E3 /* FunctionalUtils.swift in Sources */,
 				450B78E028F58574009229E3 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				450FC3DE2A2A3899000DB866 /* MatchWidgetContainerTableViewCell.swift in Sources */,
@@ -17596,6 +17729,7 @@
 				450B79BC28F58574009229E3 /* OddsFormat.swift in Sources */,
 				A9C9C39A2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				450B79BD28F58574009229E3 /* MarketOutcomeRelation.swift in Sources */,
+				6574B1772EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				450B79BE28F58574009229E3 /* EveryMatrixModel.swift in Sources */,
 				450B79BF28F58574009229E3 /* OutrightMarketDetailsViewController.swift in Sources */,
 				450B79C028F58574009229E3 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
@@ -17746,6 +17880,7 @@
 				A9A1B2BF2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				450B7A3728F58574009229E3 /* Aggregator.swift in Sources */,
 				CE25A5FE2D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
+				6574B1872EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				6574B0EC2EB116C4005F39B9 /* StayInControlViewController.swift in Sources */,
 				450B7A3828F58574009229E3 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				459874B92A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
@@ -17759,6 +17894,7 @@
 				450B7A3D28F58574009229E3 /* FilterCollapseView.swift in Sources */,
 				450B7A3E28F58574009229E3 /* Delayed.swift in Sources */,
 				A92547FF2A28AB300056F832 /* DocumentsRootViewController.swift in Sources */,
+				6574B19F2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				450B7A3F28F58574009229E3 /* MyAccountViewController.swift in Sources */,
 				450B7A4028F58574009229E3 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				450B7A4128F58574009229E3 /* MarketGroupDetailsViewController.swift in Sources */,
@@ -18076,6 +18212,7 @@
 				6561B6162C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				457CBA11282D27D000ED0F00 /* BonusProgressViewModel.swift in Sources */,
 				457CBA12282D27D000ED0F00 /* SportSelectionViewController.swift in Sources */,
+				6574B1652EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				457CBA13282D27D000ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				4542DFEE2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				457CBA14282D27D000ED0F00 /* RadioButton.swift in Sources */,
@@ -18113,6 +18250,7 @@
 				45372F6029D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				A9958C7C2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
 				6574B0D62EB0E4A1005F39B9 /* HighlightTextSectionView.swift in Sources */,
+				6574B1982EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				459EF2912BC00C610098A7F6 /* PillLabelView.swift in Sources */,
 				457CBA28282D27D000ED0F00 /* Environment.swift in Sources */,
 				457CBA29282D27D000ED0F00 /* SegmentControlView.swift in Sources */,
@@ -18160,8 +18298,10 @@
 				457CBA41282D27D000ED0F00 /* Cashout.swift in Sources */,
 				451B0A49286AFDC700005FA5 /* SupportTicketResponse.swift in Sources */,
 				A91A644C2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */,
+				6574B1532EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				A90C373D29C38EB9007B8AEC /* ServicesProviderModelMapper+Bonus.swift in Sources */,
 				457CBA43282D27D000ED0F00 /* SuggestedBetViewModel.swift in Sources */,
+				6574B15E2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				A9BA040B2A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
 				457CBA45282D27D000ED0F00 /* Authenticator.swift in Sources */,
 				457CBA46282D27D000ED0F00 /* ChatSettingsViewController.swift in Sources */,
@@ -18209,6 +18349,7 @@
 				457CBA62282D27D000ED0F00 /* SportsAggregatorRepository.swift in Sources */,
 				A9DF8E5228E7071B0083BF56 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				459EEBE02BEE309C001B2FD6 /* MatchLineTableCellViewModel.swift in Sources */,
+				6574B1822EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				457CBA63282D27D000ED0F00 /* FunctionalUtils.swift in Sources */,
 				457CBA64282D27D000ED0F00 /* MarketGroup.swift in Sources */,
 				457CBA65282D27D000ED0F00 /* MarketGroupDetailsStore.swift in Sources */,
@@ -18490,6 +18631,7 @@
 				457CBB13282D27D000ED0F00 /* FriendsListViewController.swift in Sources */,
 				457CBB14282D27D000ED0F00 /* Observable.swift in Sources */,
 				45B6E214283F7D1F001B570C /* SharedBetTicket.swift in Sources */,
+				6574B1782EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				457CBB16282D27D000ED0F00 /* OddsFormat.swift in Sources */,
 				457CBB17282D27D000ED0F00 /* MarketOutcomeRelation.swift in Sources */,
 				457CBB18282D27D000ED0F00 /* EveryMatrixModel.swift in Sources */,
@@ -18640,6 +18782,7 @@
 				A9C9C39E2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				457CBB78282D27D000ED0F00 /* CompetitionFilterHeaderView.swift in Sources */,
 				457CBB79282D27D000ED0F00 /* CashoutSubmission.swift in Sources */,
+				6574B18B2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				6574B0EE2EB116C4005F39B9 /* StayInControlViewController.swift in Sources */,
 				457CBB7A282D27D000ED0F00 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				A91A645C2A7A5CB3002A6984 /* MyGamesRootViewController.swift in Sources */,
@@ -18653,6 +18796,7 @@
 				457CBB82282D27D000ED0F00 /* DebugViewController.swift in Sources */,
 				457CBB83282D27D000ED0F00 /* UIViewController+Extensions.swift in Sources */,
 				457CBB84282D27D000ED0F00 /* CompetitionsFiltersView.swift in Sources */,
+				6574B1A42EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				457CBB85282D27D000ED0F00 /* PreviewChatTableViewCell.swift in Sources */,
 				45B6E229283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
 				457CBB86282D27D000ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
@@ -18790,6 +18934,7 @@
 				457CBC94282D2CD100ED0F00 /* HomeAwayCardStatsView.swift in Sources */,
 				457CBC95282D2CD100ED0F00 /* MarketGroupOrganizer.swift in Sources */,
 				451B0A3D286AFD7300005FA5 /* SupportPageViewController.swift in Sources */,
+				6574B19A2EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				457CBC97282D2CD100ED0F00 /* UIApplication+Extensions.swift in Sources */,
 				457CBC98282D2CD100ED0F00 /* SuggestedBetLineViewModel.swift in Sources */,
 				457CBC99282D2CD100ED0F00 /* BannerMatchCollectionViewCell.swift in Sources */,
@@ -18812,6 +18957,7 @@
 				A90FB80929B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
 				457CBCA4282D2CD100ED0F00 /* SuggestedBetSummary.swift in Sources */,
 				457CBCA5282D2CD100ED0F00 /* Bundle+Extensions.swift in Sources */,
+				6574B19D2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				CEE7E48D2E37D3E8003AB610 /* LinkPresentationItemSource.swift in Sources */,
 				A9C04C112A7BB0C90025A6DA /* FilterFavoritesViewController.swift in Sources */,
 				457CBCA6282D2CD100ED0F00 /* FullRegisterDocumentsViewController.swift in Sources */,
@@ -18948,6 +19094,7 @@
 				CE0C6CA22D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
 				CE0C6CA32D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				457CBCFA282D2CD100ED0F00 /* SportsAggregator.swift in Sources */,
+				6574B1812EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				A9FB6D5728C645C800E3FE58 /* RankingsViewController.swift in Sources */,
 				A98295AA283BA1420014066A /* BetSelectionCellViewModel.swift in Sources */,
 				457CBCFC282D2CD100ED0F00 /* TournamentTableViewHeader.swift in Sources */,
@@ -19042,6 +19189,7 @@
 				A9BDD4F8292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				A9C9C3A72AA5E13D00DD3A03 /* SearchSportHeaderView.swift in Sources */,
 				457CBD36282D2CD100ED0F00 /* AppModels.swift in Sources */,
+				6574B1712EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				A99CC2F62A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				A9863ED0286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				CEE7E41A2E344F66003AB610 /* MyTicketCardView.swift in Sources */,
@@ -19140,6 +19288,7 @@
 				A90FB7CD29AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
 				457CBD74282D2CD100ED0F00 /* XcodePreviewViewController.swift in Sources */,
 				457CBD75282D2CD100ED0F00 /* AutoLayoutDSL.swift in Sources */,
+				6574B14F2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				457CBD76282D2CD100ED0F00 /* UIColor+Extensions.swift in Sources */,
 				4587353C2AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				457CBD77282D2CD100ED0F00 /* ConversationsViewModel.swift in Sources */,
@@ -19183,6 +19332,7 @@
 				A9FB6D4F28C642AD00E3FE58 /* TipsViewController.swift in Sources */,
 				457CBD8E282D2CD100ED0F00 /* ProfileViewController.swift in Sources */,
 				CE16F2832D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
+				6574B1602EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				45B9F97D2A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				457CBD8F282D2CD100ED0F00 /* BonusViewController.swift in Sources */,
 				457CBD90282D2CD100ED0F00 /* ChatMessageView.swift in Sources */,
@@ -19323,6 +19473,7 @@
 				A9A43C752A4B2A33008FB399 /* IdentificationDocsViewModel.swift in Sources */,
 				457CBDE7282D2CD100ED0F00 /* AddContactViewModel.swift in Sources */,
 				457CBDE8282D2CD100ED0F00 /* TabularBarDelegate.swift in Sources */,
+				6574B18C2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				457CBDE9282D2CD100ED0F00 /* OddDoubleCollectionViewCell.swift in Sources */,
 				457CBDEA282D2CD100ED0F00 /* BonusActiveDataSource.swift in Sources */,
 				A9A1B2CD2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
@@ -19368,6 +19519,7 @@
 				45CE4DD52B04DDB8005C2414 /* SecundaryMarketDetails.swift in Sources */,
 				457CBE02282D2CD100ED0F00 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				A98708C828DA278F00F27348 /* UserProfileInfoViewController.swift in Sources */,
+				6574B1642EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				45D1ED6028A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				457CBE04282D2CD100ED0F00 /* NSObject+Extension.swift in Sources */,
 				457CBE05282D2CD100ED0F00 /* Logger.swift in Sources */,
@@ -19602,6 +19754,7 @@
 				A96FAED82981912100A0751F /* UploadDocuments.swift in Sources */,
 				4589C793282024E400243547 /* GeoLocationManager.swift in Sources */,
 				A9A43CA82A4C9368008FB399 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
+				6574B1672EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				4589C795282024E400243547 /* PersonalInfoViewController.swift in Sources */,
 				A9A1B2C92A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				4589C796282024E400243547 /* SharedBetData.swift in Sources */,
@@ -19639,6 +19792,7 @@
 				A9B331BC288EF21300D097F0 /* MessagesViewController.swift in Sources */,
 				4589C7AB282024E400243547 /* LoadableContent.swift in Sources */,
 				6574B0D82EB0E4A1005F39B9 /* HighlightTextSectionView.swift in Sources */,
+				6574B1922EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				A9863ED5286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
 				4589C7AC282024E400243547 /* CollapsibleView.swift in Sources */,
 				45B6E24728415269001B570C /* SelectFriendTableViewCell.swift in Sources */,
@@ -19686,8 +19840,10 @@
 				45F2530B2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45ECD7582A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45E8E29F28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */,
+				6574B14E2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				4589C7C3282024E400243547 /* CollapsibleGroupView.swift in Sources */,
 				4589C7C4282024E400243547 /* BetOutcome.swift in Sources */,
+				6574B15C2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				4589C7C5282024E400243547 /* UIImageView+Extensions.swift in Sources */,
 				4589C7C6282024E400243547 /* EnabledAccessViewController.swift in Sources */,
 				A98708BD28DA014800F27348 /* UserProfileViewController.swift in Sources */,
@@ -19735,6 +19891,7 @@
 				4589C7ED282024E400243547 /* UserRegisterForm.swift in Sources */,
 				4589C7EE282024E400243547 /* SportsAggregatorRepository.swift in Sources */,
 				4589C7EF282024E400243547 /* FunctionalUtils.swift in Sources */,
+				6574B17E2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				A9DF8E5028E7071B0083BF56 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				4589C7F0282024E400243547 /* MarketGroup.swift in Sources */,
 				450FC3DF2A2A3899000DB866 /* MatchWidgetContainerTableViewCell.swift in Sources */,
@@ -20016,6 +20173,7 @@
 				4589C899282024E400243547 /* OddsFormat.swift in Sources */,
 				A9C9C39B2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				4589C89A282024E400243547 /* MarketOutcomeRelation.swift in Sources */,
+				6574B1762EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				4589C89B282024E400243547 /* EveryMatrixModel.swift in Sources */,
 				4589C89C282024E400243547 /* OutrightMarketDetailsViewController.swift in Sources */,
 				4589C89D282024E400243547 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
@@ -20166,6 +20324,7 @@
 				A9A1B2C02A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				4589C8F8282024E400243547 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CE25A5FD2D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
+				6574B18E2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				6574B0E82EB116C4005F39B9 /* StayInControlViewController.swift in Sources */,
 				4589C8F9282024E400243547 /* BonusActiveCellViewModel.swift in Sources */,
 				459874BA2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
@@ -20179,6 +20338,7 @@
 				4589C8FE282024E400243547 /* Delayed.swift in Sources */,
 				4589C8FF282024E400243547 /* MyAccountViewController.swift in Sources */,
 				A92548002A28AB300056F832 /* DocumentsRootViewController.swift in Sources */,
+				6574B1A22EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				4589C900282024E400243547 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				4589C901282024E400243547 /* MarketGroupDetailsViewController.swift in Sources */,
 				A9A207DC283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */,
@@ -20366,6 +20526,7 @@
 				45A3307F298976BA008181E9 /* UploadDocuments.swift in Sources */,
 				45A33080298976BA008181E9 /* GeoLocationManager.swift in Sources */,
 				A9A43CA62A4C9368008FB399 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
+				6574B16A2EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				45A33082298976BA008181E9 /* PersonalInfoViewController.swift in Sources */,
 				A9A1B2C72A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				45A33083298976BA008181E9 /* SharedBetData.swift in Sources */,
@@ -20403,6 +20564,7 @@
 				45A33099298976BA008181E9 /* MessagesViewController.swift in Sources */,
 				45A3309A298976BA008181E9 /* LoadableContent.swift in Sources */,
 				6574B0D52EB0E4A1005F39B9 /* HighlightTextSectionView.swift in Sources */,
+				6574B1942EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				45A3309B298976BA008181E9 /* ShareTicketChoiceViewController.swift in Sources */,
 				45A3309C298976BA008181E9 /* CollapsibleView.swift in Sources */,
 				45A3309D298976BA008181E9 /* SelectFriendTableViewCell.swift in Sources */,
@@ -20450,8 +20612,10 @@
 				45F253082C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45ECD7562A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45A330BE298976BA008181E9 /* RankingTypeTableHeaderView.swift in Sources */,
+				6574B1502EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				45A330C0298976BA008181E9 /* CollapsibleGroupView.swift in Sources */,
 				45A330C1298976BA008181E9 /* BetOutcome.swift in Sources */,
+				6574B1582EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				45A330C2298976BA008181E9 /* UIImageView+Extensions.swift in Sources */,
 				45A330C3298976BA008181E9 /* EnabledAccessViewController.swift in Sources */,
 				45A330C4298976BA008181E9 /* UserProfileViewController.swift in Sources */,
@@ -20499,6 +20663,7 @@
 				45A330F0298976BA008181E9 /* UserRegisterForm.swift in Sources */,
 				45A330F1298976BA008181E9 /* SportsAggregatorRepository.swift in Sources */,
 				45A330F2298976BA008181E9 /* FunctionalUtils.swift in Sources */,
+				6574B17B2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				45A330F3298976BA008181E9 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				45A330F4298976BA008181E9 /* MarketGroup.swift in Sources */,
 				450FC3DD2A2A3899000DB866 /* MatchWidgetContainerTableViewCell.swift in Sources */,
@@ -20780,6 +20945,7 @@
 				45A331D7298976BA008181E9 /* Observable.swift in Sources */,
 				A9C9C3992A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				45A331D9298976BA008181E9 /* OddsFormat.swift in Sources */,
+				6574B1732EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				45A331DA298976BA008181E9 /* MarketOutcomeRelation.swift in Sources */,
 				45A331DB298976BA008181E9 /* EveryMatrixModel.swift in Sources */,
 				45A331DC298976BA008181E9 /* OutrightMarketDetailsViewController.swift in Sources */,
@@ -20930,6 +21096,7 @@
 				45A33256298976BA008181E9 /* HomeFilterOptions.swift in Sources */,
 				A9A1B2BE2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				CE25A6042D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
+				6574B18D2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				6574B0EB2EB116C4005F39B9 /* StayInControlViewController.swift in Sources */,
 				45A33257298976BA008181E9 /* Aggregator.swift in Sources */,
 				45A33258298976BA008181E9 /* OutrightMarketDetailsViewModel.swift in Sources */,
@@ -20943,6 +21110,7 @@
 				45A3325C298976BA008181E9 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				45A3325D298976BA008181E9 /* FilterCollapseView.swift in Sources */,
 				45A3325E298976BA008181E9 /* Delayed.swift in Sources */,
+				6574B1A32EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				A92547FE2A28AB300056F832 /* DocumentsRootViewController.swift in Sources */,
 				45A3325F298976BA008181E9 /* MyAccountViewController.swift in Sources */,
 				45A33260298976BA008181E9 /* FullRegisterPersonalInfoViewController.swift in Sources */,
@@ -21130,6 +21298,7 @@
 				45B6E1FD283E3EFC001B570C /* NewMessageViewModel.swift in Sources */,
 				45A6BE3828246AFA00D9B416 /* TargetVariables.swift in Sources */,
 				45A6BBDF28246A7500D9B416 /* BettingNotificationsViewController.swift in Sources */,
+				6574B1692EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				45A6BBE028246A7500D9B416 /* GeoLocationManager.swift in Sources */,
 				45A6BBE228246A7500D9B416 /* PersonalInfoViewController.swift in Sources */,
 				A93FE2082A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
@@ -21167,6 +21336,7 @@
 				45A6BBFA28246A7500D9B416 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				4542DFE42C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				6574B0D12EB0E4A1005F39B9 /* HighlightTextSectionView.swift in Sources */,
+				6574B1972EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				45A6BBFB28246A7500D9B416 /* CompetitionSectionViewModel.swift in Sources */,
 				45A6BBFC28246A7500D9B416 /* ResultsHeaderFooterView.swift in Sources */,
 				45A6BBFD28246A7500D9B416 /* EMMatch.swift in Sources */,
@@ -21214,8 +21384,10 @@
 				45A6BC1828246A7500D9B416 /* SearchV2Response.swift in Sources */,
 				451B0A48286AFDC700005FA5 /* SupportTicketResponse.swift in Sources */,
 				45ECD77B2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
+				6574B1512EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				45A6BC1928246A7500D9B416 /* MultiSlider+Internal.swift in Sources */,
 				45A6BC1A28246A7500D9B416 /* Cashout.swift in Sources */,
+				6574B15D2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				45A6BC1C28246A7500D9B416 /* SuggestedBetViewModel.swift in Sources */,
 				45A6BC1E28246A7500D9B416 /* Authenticator.swift in Sources */,
 				45A6BC2028246A7500D9B416 /* ChatSettingsViewController.swift in Sources */,
@@ -21263,6 +21435,7 @@
 				A9D5BB8C290AD0E1001B0E13 /* CodeVerificationViewController.swift in Sources */,
 				A9DF8E5928E7447E0083BF56 /* ListActionHeaderFooterView.swift in Sources */,
 				45A6BC4128246A7500D9B416 /* BetslipViewController.swift in Sources */,
+				6574B1842EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				45A6BC4228246A7500D9B416 /* PasswordUpdateViewModel.swift in Sources */,
 				A9527C202A98FA66006F4E37 /* SuggestedCompetitionsView.swift in Sources */,
 				45A6BC4428246A7500D9B416 /* NetworkManager.swift in Sources */,
@@ -21544,6 +21717,7 @@
 				45A6BCFA28246A7500D9B416 /* AddFriendViewModel.swift in Sources */,
 				A996B3F629893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
 				A9FB6D5E28C657CE00E3FE58 /* TipsListViewController.swift in Sources */,
+				6574B1742EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				65F8842D2C1C43D300A56983 /* BannerTournamentTableViewHeader.swift in Sources */,
 				45A6BCFC28246A7500D9B416 /* UIView+Extensions.swift in Sources */,
 				45A6BCFE28246A7500D9B416 /* HistoryRootViewController.swift in Sources */,
@@ -21694,6 +21868,7 @@
 				45A6BD4728246A7500D9B416 /* MyFavoritesViewController.swift in Sources */,
 				A9B331C6288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */,
 				45A6BD4928246A7500D9B416 /* PreSubmissionBetslipViewController.swift in Sources */,
+				6574B18A2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				6574B0E92EB116C4005F39B9 /* StayInControlViewController.swift in Sources */,
 				45A6BD4A28246A7500D9B416 /* DropDownSelectionView.swift in Sources */,
 				CE25A6012D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
@@ -21707,6 +21882,7 @@
 				45A6BD5128246A7500D9B416 /* CompetitionFilterHeaderView.swift in Sources */,
 				45A6BD5228246A7500D9B416 /* CashoutSubmission.swift in Sources */,
 				45A6BD5328246A7500D9B416 /* ProfileLimitsManagementViewModel.swift in Sources */,
+				6574B1A52EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				45A6BD5428246A7500D9B416 /* FilterCollapseView.swift in Sources */,
 				45A6BD5528246A7500D9B416 /* Delayed.swift in Sources */,
 				A9DD89E82A56E40B00D3A5FE /* TopCompetitionsDataSource.swift in Sources */,
@@ -21894,6 +22070,7 @@
 				45F6BB122AB3732C00C81DE1 /* UploadDocuments.swift in Sources */,
 				45F6BB132AB3732C00C81DE1 /* GeoLocationManager.swift in Sources */,
 				45F6BB142AB3732C00C81DE1 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
+				6574B1682EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				45F6BB152AB3732C00C81DE1 /* PersonalInfoViewController.swift in Sources */,
 				45F6BB162AB3732C00C81DE1 /* UserConsentStatus.swift in Sources */,
 				45F6BB172AB3732C00C81DE1 /* SharedBetData.swift in Sources */,
@@ -21931,6 +22108,7 @@
 				45F6BB342AB3732C00C81DE1 /* MessagesViewController.swift in Sources */,
 				45F6BB352AB3732C00C81DE1 /* LoadableContent.swift in Sources */,
 				6574B0D72EB0E4A1005F39B9 /* HighlightTextSectionView.swift in Sources */,
+				6574B1962EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				45F6BB362AB3732C00C81DE1 /* ShareTicketChoiceViewController.swift in Sources */,
 				45F6BB372AB3732C00C81DE1 /* CollapsibleView.swift in Sources */,
 				45F6BB382AB3732C00C81DE1 /* SelectFriendTableViewCell.swift in Sources */,
@@ -21978,8 +22156,10 @@
 				45F253092C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45F6BB5D2AB3732C00C81DE1 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45F6BB5E2AB3732C00C81DE1 /* RankingTypeTableHeaderView.swift in Sources */,
+				6574B1542EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				45F6BB5F2AB3732C00C81DE1 /* CollapsibleGroupView.swift in Sources */,
 				45F6BB602AB3732C00C81DE1 /* BetOutcome.swift in Sources */,
+				6574B1592EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				45F6BB612AB3732C00C81DE1 /* UIImageView+Extensions.swift in Sources */,
 				45F6BB622AB3732C00C81DE1 /* EnabledAccessViewController.swift in Sources */,
 				45F6BB632AB3732C00C81DE1 /* UserProfileViewController.swift in Sources */,
@@ -22027,6 +22207,7 @@
 				45F6BB8B2AB3732C00C81DE1 /* UserRegisterForm.swift in Sources */,
 				45F6BB8C2AB3732C00C81DE1 /* SportsAggregatorRepository.swift in Sources */,
 				45F6BB8D2AB3732C00C81DE1 /* FunctionalUtils.swift in Sources */,
+				6574B1802EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				45F6BB8E2AB3732C00C81DE1 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				45F6BB8F2AB3732C00C81DE1 /* MarketGroup.swift in Sources */,
 				45F6BB902AB3732C00C81DE1 /* MatchWidgetContainerTableViewCell.swift in Sources */,
@@ -22308,6 +22489,7 @@
 				45F6BC8A2AB3732C00C81DE1 /* Observable.swift in Sources */,
 				45F6BC8C2AB3732C00C81DE1 /* GenericAvatarWarningViewController.swift in Sources */,
 				45F6BC8D2AB3732C00C81DE1 /* OddsFormat.swift in Sources */,
+				6574B1752EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				45F6BC8E2AB3732C00C81DE1 /* MarketOutcomeRelation.swift in Sources */,
 				45F6BC8F2AB3732C00C81DE1 /* EveryMatrixModel.swift in Sources */,
 				45F6BC902AB3732C00C81DE1 /* OutrightMarketDetailsViewController.swift in Sources */,
@@ -22458,6 +22640,7 @@
 				45F6BD0C2AB3732C00C81DE1 /* HomeFilterOptions.swift in Sources */,
 				45F6BD0D2AB3732C00C81DE1 /* UserConsentType.swift in Sources */,
 				CE25A6032D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
+				6574B1862EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				6574B0EF2EB116C4005F39B9 /* StayInControlViewController.swift in Sources */,
 				45F6BD0E2AB3732C00C81DE1 /* Aggregator.swift in Sources */,
 				45F6BD0F2AB3732C00C81DE1 /* OutrightMarketDetailsViewModel.swift in Sources */,
@@ -22471,6 +22654,7 @@
 				45F6BD152AB3732C00C81DE1 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				45F6BD162AB3732C00C81DE1 /* FilterCollapseView.swift in Sources */,
 				45F6BD172AB3732C00C81DE1 /* Delayed.swift in Sources */,
+				6574B1A02EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				45F6BD182AB3732C00C81DE1 /* DocumentsRootViewController.swift in Sources */,
 				45F6BD192AB3732C00C81DE1 /* MyAccountViewController.swift in Sources */,
 				45F6BD1A2AB3732C00C81DE1 /* FullRegisterPersonalInfoViewController.swift in Sources */,
@@ -22616,6 +22800,7 @@
 				A9C340A728F9A74A0055360B /* HomeAwayCardStatsView.swift in Sources */,
 				A9C340A828F9A74A0055360B /* MarketGroupOrganizer.swift in Sources */,
 				A9C340A928F9A74A0055360B /* SupportPageViewController.swift in Sources */,
+				6574B1992EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				658A4CBA2B9F6C4800F73772 /* Referrals.swift in Sources */,
 				A9C340AB28F9A74A0055360B /* UIApplication+Extensions.swift in Sources */,
 				A9C719142A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */,
@@ -22638,6 +22823,7 @@
 				A9C340B528F9A74A0055360B /* MatchDetailsViewController.swift in Sources */,
 				A9C340B628F9A74A0055360B /* HomeViewTemplateDatasource.swift in Sources */,
 				A9A6517A2A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
+				6574B1A12EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				CEE7E4942E37D3E8003AB610 /* LinkPresentationItemSource.swift in Sources */,
 				A9C340B728F9A74A0055360B /* SplashViewController.swift in Sources */,
 				A91A64522A7965D9002A6984 /* MyGamesViewController.swift in Sources */,
@@ -22774,6 +22960,7 @@
 				CE0C6C942D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
 				CE0C6C952D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				A9C3411828F9A74A0055360B /* Changeable.swift in Sources */,
+				6574B17F2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				A9C3411928F9A74A0055360B /* HomeFilterViewController.swift in Sources */,
 				A9C3411A28F9A74A0055360B /* Bootstrap.swift in Sources */,
 				A9C3411C28F9A74A0055360B /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
@@ -22868,6 +23055,7 @@
 				A9C3416028F9A74A0055360B /* BetSelectionStateTableViewCell.swift in Sources */,
 				A9C3416128F9A74A0055360B /* CALayer+Shift.swift in Sources */,
 				A9C3416228F9A74A0055360B /* ChatNotificationsViewModel.swift in Sources */,
+				6574B16F2EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				A9C3416328F9A74A0055360B /* RequestLocationAccessViewController.swift in Sources */,
 				A9C3416428F9A74A0055360B /* Market.swift in Sources */,
 				CEE7E40A2E344F66003AB610 /* MyTicketCardView.swift in Sources */,
@@ -22966,6 +23154,7 @@
 				A9C341AD28F9A74A0055360B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				A9C341AE28F9A74A0055360B /* SearchViewModel.swift in Sources */,
 				A99CC2FB2A262ABB0035BA3D /* ScreenState.swift in Sources */,
+				6574B1552EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				A9C341B028F9A74A0055360B /* DepositResponse.swift in Sources */,
 				45065D312922E46700E0A205 /* Loadable.swift in Sources */,
 				A9C341B128F9A74A0055360B /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -23009,6 +23198,7 @@
 				A9C341D128F9A74A0055360B /* ViewState.swift in Sources */,
 				A9C341D228F9A74A0055360B /* BonusAvailableDataSource.swift in Sources */,
 				CE16F2852D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
+				6574B15A2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				A9C341D328F9A74A0055360B /* LoginViewController.swift in Sources */,
 				A9C341D428F9A74A0055360B /* GroupUserManagementTableViewCell.swift in Sources */,
 				A9C341D528F9A74A0055360B /* HomeViewModel.swift in Sources */,
@@ -23149,6 +23339,7 @@
 				A92BDD032A1CFF4400E9B045 /* BonusState.swift in Sources */,
 				A9C3424428F9A74A0055360B /* Location.swift in Sources */,
 				A9C3424628F9A74A0055360B /* WithdrawWebViewController.swift in Sources */,
+				6574B18F2EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				451ABD6929CB3B1D0062641F /* Match.swift in Sources */,
 				A9C3424728F9A74A0055360B /* MarketDetailCollectionViewCell.swift in Sources */,
 				45CE914C2A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift in Sources */,
@@ -23194,6 +23385,7 @@
 				A9C3426628F9A74A0055360B /* RealtimeSocketClient.swift in Sources */,
 				A9C3426728F9A74A0055360B /* AddFriendTableViewCell.swift in Sources */,
 				A9C3426828F9A74A0055360B /* Discipline.swift in Sources */,
+				6574B16D2EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				A9C3426928F9A74A0055360B /* CenterCellCollectionViewFlowLayout.swift in Sources */,
 				A9C3426A28F9A74A0055360B /* WithdrawViewModel.swift in Sources */,
 				A9C3426B28F9A74A0055360B /* EditGroupViewController.swift in Sources */,
@@ -23428,6 +23620,7 @@
 				CE12A16F2D31347E0022BDF7 /* UploadDocuments.swift in Sources */,
 				CE12A1702D31347E0022BDF7 /* GeoLocationManager.swift in Sources */,
 				CE12A1712D31347E0022BDF7 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
+				6574B16B2EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				CE12A1722D31347E0022BDF7 /* PersonalInfoViewController.swift in Sources */,
 				CE12A1732D31347E0022BDF7 /* UserConsentStatus.swift in Sources */,
 				CE12A1742D31347E0022BDF7 /* SharedBetData.swift in Sources */,
@@ -23465,6 +23658,7 @@
 				CE12A1932D31347E0022BDF7 /* MessagesViewController.swift in Sources */,
 				CE12A1942D31347E0022BDF7 /* LoadableContent.swift in Sources */,
 				6574B0D22EB0E4A1005F39B9 /* HighlightTextSectionView.swift in Sources */,
+				6574B1952EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				CE12A1952D31347E0022BDF7 /* ShareTicketChoiceViewController.swift in Sources */,
 				CE12A1962D31347E0022BDF7 /* CollapsibleView.swift in Sources */,
 				CE12A1972D31347E0022BDF7 /* SelectFriendTableViewCell.swift in Sources */,
@@ -23512,8 +23706,10 @@
 				CE12A1C02D31347E0022BDF7 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				CE12A1C12D31347E0022BDF7 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				CE12A1C22D31347E0022BDF7 /* RankingTypeTableHeaderView.swift in Sources */,
+				6574B14D2EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				CE12A1C32D31347E0022BDF7 /* CollapsibleGroupView.swift in Sources */,
 				CE12A1C42D31347E0022BDF7 /* BetOutcome.swift in Sources */,
+				6574B15F2EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				CE12A1C52D31347E0022BDF7 /* UIImageView+Extensions.swift in Sources */,
 				CE12A1C62D31347E0022BDF7 /* EnabledAccessViewController.swift in Sources */,
 				CE12A1C72D31347E0022BDF7 /* UserProfileViewController.swift in Sources */,
@@ -23561,6 +23757,7 @@
 				CE12A1F22D31347E0022BDF7 /* UserRegisterForm.swift in Sources */,
 				CE12A1F32D31347E0022BDF7 /* SportsAggregatorRepository.swift in Sources */,
 				CE12A1F42D31347E0022BDF7 /* FunctionalUtils.swift in Sources */,
+				6574B17C2EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				CE12A1F52D31347E0022BDF7 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				CE12A1F62D31347E0022BDF7 /* MatchWidgetContainerTableViewCell.swift in Sources */,
 				CE12A1F72D31347E0022BDF7 /* MarketGroup.swift in Sources */,
@@ -23842,6 +24039,7 @@
 				CE12A2FE2D31347E0022BDF7 /* GenericAvatarWarningViewController.swift in Sources */,
 				CE12A2FF2D31347E0022BDF7 /* MarketOutcomeRelation.swift in Sources */,
 				CE12A3002D31347E0022BDF7 /* EveryMatrixModel.swift in Sources */,
+				6574B1722EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				CE12A3012D31347E0022BDF7 /* OutrightMarketDetailsViewController.swift in Sources */,
 				CE12A3022D31347E0022BDF7 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				CE12A3032D31347E0022BDF7 /* FilterFavoritesViewController.swift in Sources */,
@@ -23992,6 +24190,7 @@
 				CE12A3882D31347E0022BDF7 /* Aggregator.swift in Sources */,
 				CE12A3892D31347E0022BDF7 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CE25A6022D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
+				6574B1892EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				6574B0F02EB116C4005F39B9 /* StayInControlViewController.swift in Sources */,
 				CE12A38A2D31347E0022BDF7 /* CardsCollectionViewLayout.swift in Sources */,
 				CE12A38B2D31347E0022BDF7 /* RePlayFeatureHelper.swift in Sources */,
@@ -24005,6 +24204,7 @@
 				CE12A3932D31347E0022BDF7 /* Delayed.swift in Sources */,
 				CE12A3942D31347E0022BDF7 /* DocumentsRootViewController.swift in Sources */,
 				CE12A3952D31347E0022BDF7 /* MyAccountViewController.swift in Sources */,
+				6574B1A62EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				CE12A3962D31347E0022BDF7 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				CE12A3972D31347E0022BDF7 /* MarketGroupDetailsViewController.swift in Sources */,
 				CE12A3982D31347E0022BDF7 /* ConversationBetSelectionViewModel.swift in Sources */,
@@ -24192,6 +24392,7 @@
 				CEA566372D5A58D800696793 /* NewMessageViewModel.swift in Sources */,
 				CEA566392D5A58D800696793 /* BettingNotificationsViewController.swift in Sources */,
 				CEA5663A2D5A58D800696793 /* GeoLocationManager.swift in Sources */,
+				6574B1662EB385C8005F39B9 /* LogoDescriptionViewModel.swift in Sources */,
 				CEA5663B2D5A58D800696793 /* PersonalInfoViewController.swift in Sources */,
 				CEA5663C2D5A58D800696793 /* GenericSuccessViewController.swift in Sources */,
 				CEA5663D2D5A58D800696793 /* CashbackInfoViewController.swift in Sources */,
@@ -24229,6 +24430,7 @@
 				CEA5665C2D5A58D800696793 /* TabularScrollView.swift in Sources */,
 				CEA5665D2D5A58D800696793 /* CompetitionSectionViewModel.swift in Sources */,
 				6574B0D42EB0E4A1005F39B9 /* HighlightTextSectionView.swift in Sources */,
+				6574B19B2EB38ADB005F39B9 /* HighlightTextSectionViewModel.swift in Sources */,
 				CEA5665E2D5A58D800696793 /* ResultsHeaderFooterView.swift in Sources */,
 				CEA5665F2D5A58D800696793 /* EMMatch.swift in Sources */,
 				CEA566602D5A58D800696793 /* RecentSearchRowView.swift in Sources */,
@@ -24276,8 +24478,10 @@
 				CEA566892D5A58D800696793 /* SupportTicketResponse.swift in Sources */,
 				CEA5668A2D5A58D800696793 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				CEA5668B2D5A58D800696793 /* MultiSlider+Internal.swift in Sources */,
+				6574B1562EB3821C005F39B9 /* LogoActionDescriptionViewModel.swift in Sources */,
 				CEA5668C2D5A58D800696793 /* Cashout.swift in Sources */,
 				CEA5668D2D5A58D800696793 /* SuggestedBetViewModel.swift in Sources */,
+				6574B1612EB38222005F39B9 /* LogoActionDescriptionViewModelProtocol.swift in Sources */,
 				CEA5668E2D5A58D800696793 /* Authenticator.swift in Sources */,
 				CEA5668F2D5A58D800696793 /* ChatSettingsViewController.swift in Sources */,
 				CEA566902D5A58D800696793 /* Changeable.swift in Sources */,
@@ -24325,6 +24529,7 @@
 				CEA566BA2D5A58D800696793 /* ListActionHeaderFooterView.swift in Sources */,
 				CEA566BB2D5A58D800696793 /* BetslipViewController.swift in Sources */,
 				CEA566BC2D5A58D800696793 /* PasswordUpdateViewModel.swift in Sources */,
+				6574B1832EB388B2005F39B9 /* HighlightDescriptionViewModel.swift in Sources */,
 				CEA566BD2D5A58D800696793 /* SuggestedCompetitionsView.swift in Sources */,
 				CEA566BE2D5A58D800696793 /* NetworkManager.swift in Sources */,
 				CEA566BF2D5A58D800696793 /* SystemBetResponse.swift in Sources */,
@@ -24606,6 +24811,7 @@
 				CEA567CA2D5A58D800696793 /* TipsListViewController.swift in Sources */,
 				CEA567CB2D5A58D800696793 /* BannerTournamentTableViewHeader.swift in Sources */,
 				CEA567CC2D5A58D800696793 /* UIView+Extensions.swift in Sources */,
+				6574B1702EB385CD005F39B9 /* LogoDescriptionViewModelProtocol.swift in Sources */,
 				CEA567CD2D5A58D800696793 /* HistoryRootViewController.swift in Sources */,
 				CEA567CE2D5A58D800696793 /* TransactionHistory.swift in Sources */,
 				CEA567CF2D5A58D800696793 /* EnvironmentType.swift in Sources */,
@@ -24756,6 +24962,7 @@
 				CEA568582D5A58D800696793 /* PreSubmissionBetslipViewController.swift in Sources */,
 				CEA568592D5A58D800696793 /* DropDownSelectionView.swift in Sources */,
 				CEA5685A2D5A58D800696793 /* ChipCollectionViewCell.swift in Sources */,
+				6574B1882EB388B7005F39B9 /* HighlightDescriptionViewModelProtocol.swift in Sources */,
 				6574B0ED2EB116C4005F39B9 /* StayInControlViewController.swift in Sources */,
 				CEA5685B2D5A58D800696793 /* PaymentStatus.swift in Sources */,
 				CEA5685C2D5A58D800696793 /* MatchLineTableCellViewModel.swift in Sources */,
@@ -24769,6 +24976,7 @@
 				CEA568642D5A58D800696793 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				CEA568652D5A58D800696793 /* FilterCollapseView.swift in Sources */,
 				CEA568662D5A58D800696793 /* Delayed.swift in Sources */,
+				6574B19E2EB38AE1005F39B9 /* HighlightTextSectionViewModelProtocol.swift in Sources */,
 				CEA568672D5A58D800696793 /* TopCompetitionsDataSource.swift in Sources */,
 				CEA568682D5A58D800696793 /* MyAccountViewController.swift in Sources */,
 				CEA568692D5A58D800696793 /* FullRegisterPersonalInfoViewController.swift in Sources */,

@@ -17,7 +17,12 @@ class WarningSignsViewController: UIViewController {
     private lazy var scrollContainerView: UIView = Self.createScrollContainerView()
     
     private lazy var bannerImageView: UIImageView = Self.createBannerImageView()
-    private lazy var highlightTextSectionView: HighlightTextSectionView = Self.createHighlightTextSectionView()
+    
+    private lazy var highlightTextSectionView: HighlightTextSectionView = {
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private lazy var warningSignsDescriptionLabel: UILabel = Self.createWarningSignsDescriptionLabel()
     private lazy var mottoLabel: UILabel = Self.createMottoLabel()
@@ -207,16 +212,6 @@ extension WarningSignsViewController {
         imageView.image = UIImage(named: "warning_signs_banner")
         imageView.contentMode = .scaleAspectFit
         return imageView
-    }
-
-    private static func createHighlightTextSectionView() -> HighlightTextSectionView {
-        let view = HighlightTextSectionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            title: localized("warning_signs_page_title_1"),
-            description: localized("warning_signs_page_subtitle_1")
-        )
-        return view
     }
 
     private static func createWarningSignsDescriptionLabel() -> UILabel {

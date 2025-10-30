@@ -20,22 +20,21 @@ class LogoDescriptionView: UIView {
     private lazy var logoImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createLogoImageViewDynamicHeightConstraint()
     
     private var aspectRatio: CGFloat = 1.0
+    
+    private let viewModel: LogoDescriptionViewModelProtocol
 
     // MARK: - Lifetime and Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
+    init(viewModel: LogoDescriptionViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
+        
         self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.setupSubviews()
-        self.commonInit()
-        self.setupWithTheme()
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func layoutSubviews() {
@@ -45,6 +44,7 @@ class LogoDescriptionView: UIView {
     }
     
     private func commonInit() {
+        self.bind(toViewModel: self.viewModel)
     }
 
     // MARK: - Layout and Theme
@@ -60,24 +60,16 @@ class LogoDescriptionView: UIView {
     }
 
     // MARK: - Functions
-    func configure(
-        logoImage: String,
-        titleText: String,
-        titleFont: UIFont,
-        titleColor: UIColor,
-        descriptionText: String,
-        descriptionFont: UIFont,
-        descriptionColor: UIColor
-    ) {
-        self.logoImageView.image = UIImage(named: logoImage)
+    private func bind(toViewModel viewModel: LogoDescriptionViewModelProtocol) {
+        self.logoImageView.image = UIImage(named: viewModel.logoImageName)
         
-        self.titleLabel.text = titleText
-        self.titleLabel.font = titleFont
-        self.titleLabel.textColor = titleColor
+        self.titleLabel.text = viewModel.titleText
+        self.titleLabel.font = viewModel.titleFont ?? AppFont.with(type: .bold, size: 16)
+        self.titleLabel.textColor = viewModel.titleColor ?? UIColor.App.textPrimary
         
-        self.descriptionLabel.text = descriptionText
-        self.descriptionLabel.font = descriptionFont
-        self.descriptionLabel.textColor = descriptionColor
+        self.descriptionLabel.text = viewModel.descriptionText
+        self.descriptionLabel.font = viewModel.descriptionFont ?? AppFont.with(type: .regular, size: 14)
+        self.descriptionLabel.textColor = viewModel.descriptionColor ?? UIColor.App.textSecondary
         
         self.setNeedsLayout()
     }

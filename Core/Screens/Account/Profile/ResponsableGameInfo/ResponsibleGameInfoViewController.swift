@@ -17,9 +17,24 @@ class ResponsibleGameInfoViewController: UIViewController {
     private lazy var scrollContainerView: UIView = Self.createScrollContainerView()
     
     private lazy var bannerImageView: UIImageView = Self.createBannerImageView()
-    private lazy var highlightTextSectionView: HighlightTextSectionView = Self.createHighlightTextSectionView()
-    private lazy var highlightTextSectionView2: HighlightTextSectionView = Self.createHighlightTextSectionView2()
-    private lazy var highlightTextSectionView3: HighlightTextSectionView = Self.createHighlightTextSectionView3()
+    
+    private lazy var highlightTextSectionView: HighlightTextSectionView = {
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var highlightTextSectionView2: HighlightTextSectionView = {
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel2)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var highlightTextSectionView3: HighlightTextSectionView = {
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel3)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private lazy var statisticsLabel: UILabel = Self.createStatisticsLabel()
     private lazy var informationLabel: UILabel = Self.createInformationLabel()
@@ -199,36 +214,6 @@ extension ResponsibleGameInfoViewController {
         imageView.image = UIImage(named: "responsible_game_info_banner")
         imageView.contentMode = .scaleAspectFit
         return imageView
-    }
-
-    private static func createHighlightTextSectionView() -> HighlightTextSectionView {
-        let view = HighlightTextSectionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            title: localized("responsible_gaming_page_title_1"),
-            description: localized("responsible_gaming_page_description_1")
-        )
-        return view
-    }
-
-    private static func createHighlightTextSectionView2() -> HighlightTextSectionView {
-        let view = HighlightTextSectionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            title: localized("responsible_gaming_page_title_2"),
-            description: localized("responsible_gaming_page_description_2")
-        )
-        return view
-    }
-
-    private static func createHighlightTextSectionView3() -> HighlightTextSectionView {
-        let view = HighlightTextSectionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            title: localized("responsible_gaming_page_title_3"),
-            description: localized("responsible_gaming_page_description_3")
-        )
-        return view
     }
 
     private static func createStatisticsLabel() -> UILabel {

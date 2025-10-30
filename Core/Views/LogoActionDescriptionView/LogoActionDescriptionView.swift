@@ -20,25 +20,23 @@ class LogoActionDescriptionView: UIView {
     
     private var aspectRatio: CGFloat = 1.0
     
+    private let viewModel: LogoActionDescriptionViewModelProtocol
+    
     // MARK: - Public Properties
-    var url: String?
     var didTapLogo: ((String) -> Void)?
 
     // MARK: - Lifetime and Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
+    init(viewModel: LogoActionDescriptionViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
+        
         self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.setupSubviews()
-        self.commonInit()
-        self.setupWithTheme()
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func layoutSubviews() {
@@ -51,6 +49,8 @@ class LogoActionDescriptionView: UIView {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLogoImageView))
         self.logoImageView.isUserInteractionEnabled = true
         self.logoImageView.addGestureRecognizer(tapGesture)
+        
+        self.bind(toViewModel: self.viewModel)
     }
 
     // MARK: - Layout and Theme
@@ -64,20 +64,12 @@ class LogoActionDescriptionView: UIView {
     }
 
     // MARK: - Functions
-    func configure(
-        logoImage: String,
-        descriptionText: String,
-        descriptionFont: UIFont = AppFont.with(type: .regular, size: 16),
-        descriptionColor: UIColor = UIColor.App.textPrimary,
-        url: String
-    ) {
-        self.logoImageView.image = UIImage(named: logoImage)
+    private func bind(toViewModel viewModel: LogoActionDescriptionViewModelProtocol) {
+        self.logoImageView.image = UIImage(named: viewModel.logoImageName)
         
-        self.descriptionLabel.text = descriptionText
-        self.descriptionLabel.font = descriptionFont
-        self.descriptionLabel.textColor = descriptionColor
-        
-        self.url = url
+        self.descriptionLabel.text = viewModel.descriptionText
+        self.descriptionLabel.font = AppFont.with(type: .regular, size: 16)
+        self.descriptionLabel.textColor = UIColor.App.textPrimary
         
         self.setNeedsLayout()
     }
@@ -104,7 +96,7 @@ class LogoActionDescriptionView: UIView {
     
     // MARK: - Actions
     @objc private func didTapLogoImageView() {
-        guard let url = self.url else { return }
+        guard let url = self.viewModel.actionUrl else { return }
         self.didTapLogo?(url)
     }
 }
@@ -200,4 +192,3 @@ extension LogoActionDescriptionView {
         self.logoImageViewDynamicHeightConstraint.isActive = false
     }
 }
-

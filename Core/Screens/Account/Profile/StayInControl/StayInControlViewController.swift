@@ -17,7 +17,12 @@ class StayInControlViewController: UIViewController {
     private lazy var scrollContainerView: UIView = Self.createScrollContainerView()
     
     private lazy var bannerImageView: UIImageView = Self.createBannerImageView()
-    private lazy var highlightTextSectionView: HighlightTextSectionView = Self.createHighlightTextSectionView()
+    
+    private lazy var highlightTextSectionView: HighlightTextSectionView = {
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private lazy var advicesImageView: UIImageView = Self.createAdvicesImageView()
     private lazy var gameModeratorsImageView: UIImageView = Self.createGameModeratorsImageView()
@@ -200,16 +205,6 @@ extension StayInControlViewController {
         imageView.image = UIImage(named: "stay_in_control_banner")
         imageView.contentMode = .scaleAspectFit
         return imageView
-    }
-
-    private static func createHighlightTextSectionView() -> HighlightTextSectionView {
-        let view = HighlightTextSectionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            title: localized("stay_in_control_page_title_1"),
-            description: localized("stay_in_control_page_description_1")
-        )
-        return view
     }
 
     private static func createAdvicesImageView() -> UIImageView {

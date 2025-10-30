@@ -13,29 +13,25 @@ class HighlightTextSectionView: UIView {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var descriptionLabel: UILabel = Self.createDescriptionLabel()
+    
+    private let viewModel: HighlightTextSectionViewModelProtocol
 
     // MARK: - Lifetime and Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
+    init(viewModel: HighlightTextSectionViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
+        
         self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.setupSubviews()
-        self.commonInit()
-        self.setupWithTheme()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func commonInit() {
+        self.bind(toViewModel: self.viewModel)
     }
 
     // MARK: - Layout and Theme
@@ -51,21 +47,14 @@ class HighlightTextSectionView: UIView {
     }
 
     // MARK: - Functions
-    func configure(
-        title: String,
-        titleFont: UIFont = AppFont.with(type: .bold, size: 16),
-        titleColor: UIColor = UIColor.App.highlightPrimary,
-        description: String,
-        descriptionFont: UIFont = AppFont.with(type: .regular, size: 14),
-        descriptionColor: UIColor = UIColor.App.textPrimary
-    ) {
-        self.titleLabel.text = title
-        self.titleLabel.font = titleFont
-        self.titleLabel.textColor = titleColor
+    private func bind(toViewModel viewModel: HighlightTextSectionViewModelProtocol) {
+        self.titleLabel.text = viewModel.title
+        self.titleLabel.font = viewModel.titleFont ?? AppFont.with(type: .bold, size: 16)
+        self.titleLabel.textColor = viewModel.titleColor ?? UIColor.App.highlightPrimary
         
-        self.descriptionLabel.text = description
-        self.descriptionLabel.font = descriptionFont
-        self.descriptionLabel.textColor = descriptionColor
+        self.descriptionLabel.text = viewModel.description
+        self.descriptionLabel.font = viewModel.descriptionFont ?? AppFont.with(type: .regular, size: 14)
+        self.descriptionLabel.textColor = viewModel.descriptionColor ?? UIColor.App.textPrimary
     }
 }
 

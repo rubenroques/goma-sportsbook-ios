@@ -20,20 +20,53 @@ class NeedSupportViewController: UIViewController {
     private lazy var mainTitleLabel: UILabel = Self.createMainTitleLabel()
     private lazy var mainDescriptionLabel: UILabel = Self.createMainDescriptionLabel()
     
-    private lazy var highlightDescriptionView: HighlightDescriptionView = Self.createHighlightDescriptionView()
-    private lazy var logoDescriptionView: LogoDescriptionView = Self.createLogoDescriptionView()
-    private lazy var highlightTextSectionView: HighlightTextSectionView = Self.createHighlightTextSectionView()
+    private lazy var highlightDescriptionView: HighlightDescriptionView = {
+        let view = HighlightDescriptionView(viewModel: self.viewModel.highlightDescriptionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var logoDescriptionView: LogoDescriptionView = {
+        let view = LogoDescriptionView(viewModel: self.viewModel.logoDescriptionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var highlightTextSectionView: HighlightTextSectionView = {
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private lazy var contactButton: UIButton = Self.createContactButton()
     private lazy var contactMottoLabel: UILabel = Self.createContactMottoLabel()
-    private lazy var highlightTextSectionView2: HighlightTextSectionView = Self.createHighlightTextSectionView2()
+    
+    private lazy var highlightTextSectionView2: HighlightTextSectionView = {
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel2)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private lazy var contactFinalDescriptionLabel: UILabel = Self.createContactFinalDescriptionLabel()
     private lazy var aidOrganisationTitleLabel: UILabel = Self.createAidOrganisationTitleLabel()
     
-    private lazy var sosLogoActionDescriptionView: LogoActionDescriptionView = Self.createSosLogoActionDescriptionView()
-    private lazy var playerInfoLogoActionDescriptionView: LogoActionDescriptionView = Self.createPlayerInfoLogoActionDescriptionView()
-    private lazy var gambanLogoActionDescriptionView: LogoActionDescriptionView = Self.createGambanLogoActionDescriptionView()
+    private lazy var sosLogoActionDescriptionView: LogoActionDescriptionView = {
+        let view = LogoActionDescriptionView(viewModel: self.viewModel.sosLogoViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var playerInfoLogoActionDescriptionView: LogoActionDescriptionView = {
+        let view = LogoActionDescriptionView(viewModel: self.viewModel.playerInfoLogoViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var gambanLogoActionDescriptionView: LogoActionDescriptionView = {
+        let view = LogoActionDescriptionView(viewModel: self.viewModel.gambanLogoViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private lazy var gameInterdictionImageView: UIImageView = Self.createGameInterdictionImageView()
     private lazy var gameInterdictionDescriptionLabel: UILabel = Self.createGameInterdictionDescriptionLabel()
@@ -286,42 +319,6 @@ extension NeedSupportViewController {
         return label
     }
 
-    private static func createHighlightDescriptionView() -> HighlightDescriptionView {
-        let view = HighlightDescriptionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(texts: [
-            HighlightedText(text: localized("need_support_page_description_2_part_3"), isHighlighted: false),
-            HighlightedText(text: localized("need_support_page_description_2_part_4"), isHighlighted: true),
-            HighlightedText(text: localized("need_support_page_description_2_part_5"), isHighlighted: false)
-        ])
-        return view
-    }
-
-    private static func createLogoDescriptionView() -> LogoDescriptionView {
-        let view = LogoDescriptionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            logoImage: "arpej_logo",
-            titleText: localized("need_support_page_description_2"),
-            titleFont: AppFont.with(type: .semibold, size: 16),
-            titleColor: UIColor.App.textPrimary,
-            descriptionText: localized("need_support_page_description_2_part_2"),
-            descriptionFont: AppFont.with(type: .semibold, size: 16),
-            descriptionColor: UIColor.App.textPrimary
-        )
-        return view
-    }
-
-    private static func createHighlightTextSectionView() -> HighlightTextSectionView {
-        let view = HighlightTextSectionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            title: localized("need_support_page_title_3"),
-            description: localized("need_support_page_description_3")
-        )
-        return view
-    }
-
     private static func createContactButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -340,17 +337,6 @@ extension NeedSupportViewController {
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
-    }
-
-    private static func createHighlightTextSectionView2() -> HighlightTextSectionView {
-        let view = HighlightTextSectionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            title: localized("need_support_page_title_4"),
-            description: localized("need_support_page_description_4"),
-            descriptionFont: AppFont.with(type: .semibold, size: 16)
-        )
-        return view
     }
 
     private static func createContactFinalDescriptionLabel() -> UILabel {
@@ -373,38 +359,6 @@ extension NeedSupportViewController {
         return label
     }
 
-    private static func createSosLogoActionDescriptionView() -> LogoActionDescriptionView {
-        let view = LogoActionDescriptionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            logoImage: "sos_logo",
-            descriptionText: localized("need_support_page_description_5_sos"),
-            url: "https://www.sosjoueurs.org/"
-        )
-        return view
-    }
-
-    private static func createPlayerInfoLogoActionDescriptionView() -> LogoActionDescriptionView {
-        let view = LogoActionDescriptionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            logoImage: "player_info_logo",
-            descriptionText: localized("need_support_page_description_5_joueurs"),
-            url: "https://www.joueurs-info-service.fr/"
-        )
-        return view
-    }
-
-    private static func createGambanLogoActionDescriptionView() -> LogoActionDescriptionView {
-        let view = LogoActionDescriptionView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            logoImage: "gamban_logo",
-            descriptionText: localized("need_support_page_description_5_gamban"),
-            url: ""
-        )
-        return view
-    }
 
     private static func createGameInterdictionImageView() -> UIImageView {
         let imageView = UIImageView()
@@ -563,11 +517,11 @@ extension NeedSupportViewController {
 
             self.highlightDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.highlightDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.highlightDescriptionView.topAnchor.constraint(equalTo: self.logoDescriptionView.bottomAnchor, constant: 10),
+            self.highlightDescriptionView.topAnchor.constraint(equalTo: self.logoDescriptionView.bottomAnchor),
 
             self.highlightTextSectionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.highlightTextSectionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.highlightTextSectionView.topAnchor.constraint(equalTo: self.highlightDescriptionView.bottomAnchor, constant: 0),
+            self.highlightTextSectionView.topAnchor.constraint(equalTo: self.highlightDescriptionView.bottomAnchor),
 
             self.contactButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
             self.contactButton.topAnchor.constraint(equalTo: self.highlightTextSectionView.bottomAnchor, constant: 10),
@@ -590,7 +544,7 @@ extension NeedSupportViewController {
 
             self.sosLogoActionDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.sosLogoActionDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.sosLogoActionDescriptionView.topAnchor.constraint(equalTo: self.aidOrganisationTitleLabel.bottomAnchor, constant: 20),
+            self.sosLogoActionDescriptionView.topAnchor.constraint(equalTo: self.aidOrganisationTitleLabel.bottomAnchor),
 
             self.playerInfoLogoActionDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.playerInfoLogoActionDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
