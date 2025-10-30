@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.gomagaming.betssoncm.dev</string>
+	<string>com.gomagaming.betssoncm.stg</string>
 	<key>PROJECT_ID</key>
 	<string>goma-sportsbook</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,7 +25,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:844144342615:ios:1f5cbea36a31d1638a9512</string>
+	<string>1:844144342615:ios:1fbd8347dfdc4e1c8a9512</string>
 	<key>DATABASE_URL</key>
 	<string>https://goma-sportsbook-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

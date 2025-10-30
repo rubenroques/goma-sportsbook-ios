@@ -8,19 +8,59 @@
 import Foundation
 
 struct TargetVariables: SportsbookTarget {
-    
-    static var environmentType: EnvironmentType = .prod
-    
+
+    // MARK: - Build Environment
+    enum BuildEnvironment: String {
+        case staging = "Staging"
+        case production = "Production"
+
+        /// Reads current environment from Info.plist (set by APP_ENVIRONMENT build setting)
+        static var current: BuildEnvironment {
+            let envString = Bundle.main.object(forInfoDictionaryKey: "AppEnvironment") as? String ?? ""
+
+            switch envString {
+            case "Staging":
+                return .staging
+            case "Production":
+                return .production
+            default:
+                // Default to production for safety if value is invalid/missing
+                return .production
+            }
+        }
+    }
+
+    // MARK: - Environment Configuration
+
+    static var environmentType: EnvironmentType {
+        switch BuildEnvironment.current {
+        case .staging:
+            return .dev
+        case .production:
+            return .prod
+        }
+    }
+
     static var firebaseDatabaseURL: String {
+        return "https://goma-sportsbook-betsson-cm-ios.europe-west1.firebasedatabase.app/"
+        return "https://goma-sportsbook-betsson-cm-prod.europe-west1.firebasedatabase.app"
+    }
+
+    static var appStoreURL: String {
         return "https://goma-sportsbook-betsson-cm-ios.europe-west1.firebasedatabase.app/"
     }
     
     static var supportedThemes: [AppearanceMode] {
         return AppearanceMode.allCases
     }
-    
+
     static var serviceProviderEnvironment: EnvironmentType {
-        return .dev
+        switch BuildEnvironment.current {
+        case .staging:
+            return .staging
+        case .production:
+            return .prod
+        }
     }
 
     static var supportedLanguages: [SportsbookSupportedLanguage] {
@@ -42,58 +82,6 @@ struct TargetVariables: SportsbookTarget {
 
     static var cmsClientBusinessUnit: CMSClientBusinessUnit {
         return .betssonCameroon
-    }
-
-    // MARK: - URLEndpointProvider Implementation
-    static var links: URLEndpoint.Links {
-        URLEndpoint.Links(
-            api: URLEndpoint.APIs(
-                gomaGaming: "https://sportsbook-stage.gomagaming.com/",
-                sportsbook: "https://sportsbook.betsson.fr/",
-                firebase: "https://betsson-fr.firebaseapp.com/",
-                casino: "",
-                promotions: "https://promotions.betsson.fr/",
-                affiliateSystem: "http://www.partenaire-betsson.fr/",
-                secundaryMarketSpecsUrl: "https://betsson.fr/secondary_markets_config.json"
-            ),
-            support: URLEndpoint.Support(
-                helpCenter: "https://support.betsson.fr/hc/fr",
-                zendesk: "https://betssonfrance.zendesk.com/hc/fr",
-                customerSupport: "https://support.betsson.fr/hc/fr/requests/new"
-            ),
-            responsibleGaming: URLEndpoint.ResponsibleGaming(
-                gamblingAddictionHelpline: "https://sosjoueurs.org/", // used
-                gamblingBlockingSoftware: "https://gamban.com/fr/", // used
-                gamblingBehaviorSelfAssessment: "https://www.evalujeu.fr/",
-                gamblingBehaviorSelfAssessmentQuiz: "https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent", // used
-                timeManagementApp: "https://www.bettor-time.com/",
-                gamblingAddictionSupport: "https://www.joueurs-info-service.fr/", // used
-                gamblingAuthority: "https://anj.fr/",
-                gamblingAuthorityTerms: "https://anj.fr/ts",
-                parentalControl: "https://e-enfance.org/informer/controle-parental/", // used
-                addictionTreatmentCenter: "https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html", // used
-                selfExclusionService: "https://interdictiondejeux.anj.fr",
-                gamblingHabitsApp: "https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1" // used
-            ),
-
-            socialMedia: URLEndpoint.SocialMedia(
-                facebook: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR",
-                twitter: "https://twitter.com/BetssonFrance",
-                youtube: "https://www.youtube.com/@betssonfrance",
-                instagram: "https://www.instagram.com/betsson_france/"
-            ),
-            legalAndInfo: URLEndpoint.LegalAndInfo(
-                responsibleGambling: "https://betsson.fr/fr/jeu-responsable",
-                privacyPolicy: "https://betsson.fr/fr/politique-de-confidentialite",
-                cookiePolicy: "https://betsson.fr/fr/politique-de-confidentialite/#cookies",
-                sportsBettingRules: "https://betsson.fr/betting-rules.pdf",
-                termsAndConditions: "https://betsson.fr/terms-and-conditions.pdf",
-                bonusRules: "https://betsson.fr/bonus_TC.pdf",
-                partners: "https://betsson.fr/fr/nos-partenaires",
-                about: "https://betsson.fr/fr/about",
-                appStoreUrl: "https://apps.apple.com/fr/app/betsson/id6463237718"
-            )
-        )
     }
     
 }
@@ -219,9 +207,4 @@ struct TargetVariables: SportsbookTarget {
 
 }
 
-
-extension TargetVariables {
-
-    
-}
 */

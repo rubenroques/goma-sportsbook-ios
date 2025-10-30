@@ -107,7 +107,7 @@ class VersionUpdateViewController: UIViewController {
     }
 
     @IBAction private func updateAction(_ sender: UIButton) {
-        if let url = URL(string: TargetVariables.links.legalAndInfo.appStoreUrl) {
+        if let url = URL(string: TargetVariables.appStoreURL) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }

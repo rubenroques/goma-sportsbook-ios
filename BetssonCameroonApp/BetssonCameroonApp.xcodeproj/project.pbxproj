@@ -40,7 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CE74A14C2E2E8D9400DDE78D /* BetssonCameroonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BetssonCameroonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE74A14C2E2E8D9400DDE78D /* Betsson CM Stg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Betsson CM Stg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE74A1622E2E8D9500DDE78D /* BetssonCameroonAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetssonCameroonAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE74A16C2E2E8D9500DDE78D /* BetssonCameroonAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetssonCameroonAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -49,9 +49,11 @@
 		CE394B982E2FD45200715418 /* Exceptions for "App" folder in "BetssonCameroonApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"SupportingFiles/Misc-Dev/BetssonCM-Dev-Info.plist",
+				"SupportingFiles/Misc-Dev/BetssonCM-DEV-Info.plist",
+				"SupportingFiles/Misc-Dev/GoogleService-Info.plist",
 				"SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist",
 				"SupportingFiles/Misc-Prod/GoogleService-Info.plist",
+				"SupportingFiles/Misc-Stg/GoogleService-Info.plist",
 			);
 			target = CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */;
 		};
@@ -130,7 +132,7 @@
 		CE74A14D2E2E8D9400DDE78D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CE74A14C2E2E8D9400DDE78D /* BetssonCameroonApp.app */,
+				CE74A14C2E2E8D9400DDE78D /* Betsson CM Stg.app */,
 				CE74A1622E2E8D9500DDE78D /* BetssonCameroonAppTests.xctest */,
 				CE74A16C2E2E8D9500DDE78D /* BetssonCameroonAppUITests.xctest */,
 			);
@@ -153,6 +155,7 @@
 			buildPhases = (
 				CE74A1482E2E8D9400DDE78D /* Sources */,
 				CE74A1492E2E8D9400DDE78D /* Frameworks */,
+				CE41A9282EB33FD200B2DC28 /* Run Script - Copy Firebase Config File */,
 				CE74A14A2E2E8D9400DDE78D /* Resources */,
 			);
 			buildRules = (
@@ -179,7 +182,7 @@
 				CEC736C62E6839670084368A /* XPush */,
 			);
 			productName = BetssonCameroonApp;
-			productReference = CE74A14C2E2E8D9400DDE78D /* BetssonCameroonApp.app */;
+			productReference = CE74A14C2E2E8D9400DDE78D /* Betsson CM Stg.app */;
 			productType = "com.apple.product-type.application";
 		};
 		CE74A1612E2E8D9500DDE78D /* BetssonCameroonAppTests */ = {
@@ -303,6 +306,30 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CE41A9282EB33FD200B2DC28 /* Run Script - Copy Firebase Config File */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(PROJECT_DIR)/App/SupportingFiles/Misc-Stg/GoogleService-Info.plist",
+				"$(PROJECT_DIR)/App/SupportingFiles/Misc-Prod/GoogleService-Info.plist",
+			);
+			name = "Run Script - Copy Firebase Config File";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(PRODUCT_NAME).app/GoogleService-Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Copy the appropriate GoogleService-Info.plist based on configuration\nGOOGLE_SERVICE_INFO_PLIST=\"GoogleService-Info.plist\"\n\ncase \"${CONFIGURATION}\" in\n  \"Debug-Staging\")\n      SOURCE_PATH=\"${PROJECT_DIR}/App/SupportingFiles/Misc-Stg/${GOOGLE_SERVICE_INFO_PLIST}\"\n      ;;\n  \"Release-Staging\")\n      SOURCE_PATH=\"${PROJECT_DIR}/App/SupportingFiles/Misc-Stg/${GOOGLE_SERVICE_INFO_PLIST}\"\n      ;;\n  \"Debug-Production\")\n      SOURCE_PATH=\"${PROJECT_DIR}/App/SupportingFiles/Misc-Prod/${GOOGLE_SERVICE_INFO_PLIST}\"\n      ;;\n  \"Release-Production\")\n      SOURCE_PATH=\"${PROJECT_DIR}/App/SupportingFiles/Misc-Prod/${GOOGLE_SERVICE_INFO_PLIST}\"\n      ;;\n  *)\n      echo \"error: Unknown configuration ${CONFIGURATION}\"\n      exit 1\n      ;;\nesac\n\nDEST_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/${GOOGLE_SERVICE_INFO_PLIST}\"\n\necho \"Copying Firebase config from: ${SOURCE_PATH}\"\necho \"To: ${DEST_PATH}\"\n\ncp \"${SOURCE_PATH}\" \"${DEST_PATH}\"\n\nif [ $? -eq 0 ]; then\n  echo \"✅ Successfully copied Firebase config for ${CONFIGURATION}\"\nelse\n  echo \"error: Failed to copy Firebase config\"\n  exit 1\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CE74A1482E2E8D9400DDE78D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -341,75 +368,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		CE74A1762E2E8D9500DDE78D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 01921;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "App/SupportingFiles/Misc-Dev/BetssonCM-Dev-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = BetssonCM;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		CE74A1772E2E8D9500DDE78D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 01921;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "App/SupportingFiles/Misc-Dev/BetssonCM-Dev-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = BetssonCM;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		CE74A1782E2E8D9500DDE78D /* Debug */ = {
+		CE41A9292EB3478C00B2DC28 /* Debug-Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -471,9 +430,81 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Debug;
+			name = "Debug-Production";
 		};
-		CE74A1792E2E8D9500DDE78D /* Release */ = {
+		CE41A92A2EB3478C00B2DC28 /* Debug-Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_ENVIRONMENT = Production;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 01921;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = BetssonCM;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.9;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
+				PRODUCT_NAME = "Betsson CM Prod";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Debug-Production";
+		};
+		CE41A92B2EB3478C00B2DC28 /* Debug-Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+			};
+			name = "Debug-Production";
+		};
+		CE41A92C2EB3478C00B2DC28 /* Debug-Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = BetssonCameroonApp;
+			};
+			name = "Debug-Production";
+		};
+		CE41A92D2EB347B400B2DC28 /* Release-Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -528,9 +559,46 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = "Release-Production";
 		};
-		CE74A17B2E2E8D9500DDE78D /* Debug */ = {
+		CE41A92E2EB347B400B2DC28 /* Release-Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_ENVIRONMENT = Production;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 01921;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = BetssonCM;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.9;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
+				PRODUCT_NAME = "Betsson CM Prod";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Release-Production";
+		};
+		CE41A92F2EB347B400B2DC28 /* Release-Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -547,9 +615,220 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
 			};
-			name = Debug;
+			name = "Release-Production";
 		};
-		CE74A17C2E2E8D9500DDE78D /* Release */ = {
+		CE41A9302EB347B400B2DC28 /* Release-Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = BetssonCameroonApp;
+			};
+			name = "Release-Production";
+		};
+		CE74A1762E2E8D9500DDE78D /* Debug-Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_ENVIRONMENT = Staging;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 01921;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/SupportingFiles/Misc-Stg/BetssonCM-STG-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "BetssonCM STG";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.9;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
+				PRODUCT_NAME = "Betsson CM Stg";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Debug-Staging";
+		};
+		CE74A1772E2E8D9500DDE78D /* Release-Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_ENVIRONMENT = Staging;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 01921;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/SupportingFiles/Misc-Stg/BetssonCM-STG-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "BetssonCM STG";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.9;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
+				PRODUCT_NAME = "Betsson CM Stg";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Release-Staging";
+		};
+		CE74A1782E2E8D9500DDE78D /* Debug-Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug-Staging";
+		};
+		CE74A1792E2E8D9500DDE78D /* Release-Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-Staging";
+		};
+		CE74A17B2E2E8D9500DDE78D /* Debug-Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -566,9 +845,28 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
 			};
-			name = Release;
+			name = "Debug-Staging";
 		};
-		CE74A17E2E2E8D9500DDE78D /* Debug */ = {
+		CE74A17C2E2E8D9500DDE78D /* Release-Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+			};
+			name = "Release-Staging";
+		};
+		CE74A17E2E2E8D9500DDE78D /* Debug-Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -583,9 +881,9 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = BetssonCameroonApp;
 			};
-			name = Debug;
+			name = "Debug-Staging";
 		};
-		CE74A17F2E2E8D9500DDE78D /* Release */ = {
+		CE74A17F2E2E8D9500DDE78D /* Release-Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -600,7 +898,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = BetssonCameroonApp;
 			};
-			name = Release;
+			name = "Release-Staging";
 		};
 /* End XCBuildConfiguration section */
 
@@ -608,38 +906,46 @@
 		CE74A1472E2E8D9400DDE78D /* Build configuration list for PBXProject "BetssonCameroonApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CE74A1782E2E8D9500DDE78D /* Debug */,
-				CE74A1792E2E8D9500DDE78D /* Release */,
+				CE74A1782E2E8D9500DDE78D /* Debug-Staging */,
+				CE41A9292EB3478C00B2DC28 /* Debug-Production */,
+				CE74A1792E2E8D9500DDE78D /* Release-Staging */,
+				CE41A92D2EB347B400B2DC28 /* Release-Production */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-Staging";
 		};
 		CE74A1752E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CE74A1762E2E8D9500DDE78D /* Debug */,
-				CE74A1772E2E8D9500DDE78D /* Release */,
+				CE74A1762E2E8D9500DDE78D /* Debug-Staging */,
+				CE41A92A2EB3478C00B2DC28 /* Debug-Production */,
+				CE74A1772E2E8D9500DDE78D /* Release-Staging */,
+				CE41A92E2EB347B400B2DC28 /* Release-Production */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-Staging";
 		};
 		CE74A17A2E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonAppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CE74A17B2E2E8D9500DDE78D /* Debug */,
-				CE74A17C2E2E8D9500DDE78D /* Release */,
+				CE74A17B2E2E8D9500DDE78D /* Debug-Staging */,
+				CE41A92B2EB3478C00B2DC28 /* Debug-Production */,
+				CE74A17C2E2E8D9500DDE78D /* Release-Staging */,
+				CE41A92F2EB347B400B2DC28 /* Release-Production */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-Staging";
 		};
 		CE74A17D2E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonAppUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CE74A17E2E2E8D9500DDE78D /* Debug */,
-				CE74A17F2E2E8D9500DDE78D /* Release */,
+				CE74A17E2E2E8D9500DDE78D /* Debug-Staging */,
+				CE41A92C2EB3478C00B2DC28 /* Debug-Production */,
+				CE74A17F2E2E8D9500DDE78D /* Release-Staging */,
+				CE41A9302EB347B400B2DC28 /* Release-Production */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-Staging";
 		};
 /* End XCConfigurationList section */
 
