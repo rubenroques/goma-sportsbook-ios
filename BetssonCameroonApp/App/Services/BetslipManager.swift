@@ -432,7 +432,7 @@ extension BetslipManager {
         Env.servicesProvider.calculateUnifiedBettingOptions(
             betType: betGroupingType,
             selections: betSelections,
-            stakeAmount: 12.50 //  stakeAmount
+            stakeAmount: stakeAmount
         )
         .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { [weak self] completion in
