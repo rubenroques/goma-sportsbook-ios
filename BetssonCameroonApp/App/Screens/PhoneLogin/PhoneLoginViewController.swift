@@ -303,21 +303,21 @@ class PhoneLoginViewController: UIViewController {
                 if phone.isEmpty {
                     // First tap: Fill with the provided credentials
                     phoneToSet = "699198921"
-                    passwordToSet = "4050"
+                    passwordToSet = "1234"
                 }
                 else if phone == "666999005" {
                     // Second tap: Alternative test account
-                    phoneToSet = "+237123456789"
+                    phoneToSet = "123456789"
                     passwordToSet = "test123"
                 }
-                else if phone == "+237123456789" {
+                else if phone == "123456789" {
                     // Third tap: Another test account
                     phoneToSet = "+237987654321"
                     passwordToSet = "debug123"
                 }
                 else {
                     // Reset to first credentials
-                    phoneToSet = "+237666999005"
+                    phoneToSet = "666999005"
                     passwordToSet = "4050"
                 }
                 

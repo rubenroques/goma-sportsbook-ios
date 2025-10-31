@@ -301,9 +301,7 @@ extension DepositWebContainerViewController {
     private static func createLogoImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        // Force light mode variant since webview background is always white
-        let lightModeTraits = UITraitCollection(userInterfaceStyle: .light)
-        imageView.image = UIImage(named: "betsson_logo", in: nil, compatibleWith: lightModeTraits)
+        imageView.image = UIImage(named: "betsson_logo_orange")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
