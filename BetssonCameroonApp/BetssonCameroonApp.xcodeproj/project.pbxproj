@@ -40,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		653069782EA7DC3D0053DA92 /* BetssonCameroonAppDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BetssonCameroonAppDebug.entitlements; sourceTree = "<group>"; };
 		CE74A14C2E2E8D9400DDE78D /* BetssonCameroonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BetssonCameroonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE74A1622E2E8D9500DDE78D /* BetssonCameroonAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetssonCameroonAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE74A16C2E2E8D9500DDE78D /* BetssonCameroonAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetssonCameroonAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,6 +120,7 @@
 		CE74A1432E2E8D9400DDE78D = {
 			isa = PBXGroup;
 			children = (
+				653069782EA7DC3D0053DA92 /* BetssonCameroonAppDebug.entitlements */,
 				CE74A14E2E2E8D9400DDE78D /* App */,
 				CE74A1652E2E8D9500DDE78D /* Tests */,
 				CE74A16F2E2E8D9500DDE78D /* UITests */,
@@ -346,7 +348,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
+				CODE_SIGN_ENTITLEMENTS = BetssonCameroonAppDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 01921;
 				DEVELOPMENT_TEAM = 422GNXXZJR;

@@ -32,6 +32,7 @@ final class BankingCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
+    var bonusCode: String?
     
     // MARK: - Private Properties
     
@@ -87,7 +88,7 @@ final class BankingCoordinator: Coordinator {
     // MARK: - Navigation Logic (Coordinator's responsibility)
     
     private func presentDepositFlow() {
-        let viewModel = DepositWebContainerViewModel(client: client)
+        let viewModel = DepositWebContainerViewModel(client: client, bonusCode: bonusCode)
         let viewController = DepositWebContainerViewController(viewModel: viewModel)
         
         setupDepositCallbacks(viewController)

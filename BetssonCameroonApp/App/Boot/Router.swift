@@ -113,50 +113,50 @@ class Router {
 
     func openRoute(_ route: Route) {
 
-        switch route {
-        case .openBet(_):
-            // self.showMyTickets(ticketType: MyTicketsType.opened, ticketId: id)
-            break
-        case .resolvedBet(_):
-            // self.showMyTickets(ticketType: MyTicketsType.resolved, ticketId: id)
-            break
-        case .event(let id):
-            self.showMatchDetailScreen(matchId: id)
-        case .ticket(let id):
-            self.showBetslipWithTicket(token: id)
-        case .chatMessage(_):
-            // self.showChatDetails(withId: id)
-            break
-        case .chatNotifications:
-            // self.showChatNotifications()
-            break
-        case .competition(_):
-            // self.showCompetitionDetailsScreen(competitionId: id)
-            break
-        case .contactSettings:
-            self.showContactSettings()
-        case .betSwipe:
-            break
-        case .deposit:
-            self.showDeposit()
-        case .bonus:
-            self.showBonus()
-        case .documents:
-            self.showDocuments()
-        case .customerSupport:
-            self.showCustomerSupport()
-        case .favorites:
-            self.showFavorites()
-        case .promotions:
-            self.showPromotions()
-        case .referral(let code):
-            self.showRegisterWithCode(code: code)
-        case .responsibleForm:
-            self.showResponsibleForm()
-        case .none:
-            break
-        
-        }
+//        switch route {
+//        case .openBet(_):
+//            // self.showMyTickets(ticketType: MyTicketsType.opened, ticketId: id)
+//            break
+//        case .resolvedBet(_):
+//            // self.showMyTickets(ticketType: MyTicketsType.resolved, ticketId: id)
+//            break
+//        case .event(let id):
+//            self.showMatchDetailScreen(matchId: id)
+//        case .ticket(let id):
+//            self.showBetslipWithTicket(token: id)
+//        case .chatMessage(_):
+//            // self.showChatDetails(withId: id)
+//            break
+//        case .chatNotifications:
+//            // self.showChatNotifications()
+//            break
+//        case .competition(_):
+//            // self.showCompetitionDetailsScreen(competitionId: id)
+//            break
+//        case .contactSettings:
+//            self.showContactSettings()
+//        case .betSwipe:
+//            break
+//        case .deposit:
+//            self.showDeposit()
+//        case .bonus:
+//            self.showBonus()
+//        case .documents:
+//            self.showDocuments()
+//        case .customerSupport:
+//            self.showCustomerSupport()
+//        case .favorites:
+//            self.showFavorites()
+//        case .promotions:
+//            self.showPromotions()
+//        case .referral(let code):
+//            self.showRegisterWithCode(code: code)
+//        case .responsibleForm:
+//            self.showResponsibleForm()
+//        case .none:
+//            break
+//        
+//        }
     }
 
     // MaintenanceScreen

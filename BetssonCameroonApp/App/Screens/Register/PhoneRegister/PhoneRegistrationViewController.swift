@@ -354,6 +354,7 @@ class PhoneRegistrationViewController: UIViewController {
         ) { [weak self] _ in
             
             self?.dismiss(animated: true)
+            self?.viewModel.showBonusOnRegister?()
         }
         
         alert.addAction(okAction)

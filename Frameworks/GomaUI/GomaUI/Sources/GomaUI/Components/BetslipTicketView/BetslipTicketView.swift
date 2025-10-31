@@ -143,6 +143,29 @@ public final class BetslipTicketView: UIView {
         return imageView
     }()
     
+    // Disabled overlay view
+    private lazy var disabledView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = StyleProvider.Color.backgroundSecondary.withAlphaComponent(0.7)
+        view.isHidden = true
+        return view
+    }()
+    
+    // Disabled label
+    private lazy var disabledLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .semibold, size: 14)
+        label.textColor = StyleProvider.Color.textPrimary
+        label.text = "Invalid selection"
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.isHidden = true
+        return label
+    }()
+
+    
     // MARK: - Initialization
     public init(viewModel: BetslipTicketViewModelProtocol) {
         self.viewModel = viewModel
@@ -173,6 +196,10 @@ public final class BetslipTicketView: UIView {
         containerView.addSubview(oddsValueLabel)
         containerView.addSubview(upArrowImageView)
         containerView.addSubview(downArrowImageView)
+        
+        // Add disabled overlay
+        containerView.addSubview(disabledView)
+        disabledView.addSubview(disabledLabel)
     }
     
     private func setupConstraints() {
@@ -233,7 +260,17 @@ public final class BetslipTicketView: UIView {
             downArrowImageView.trailingAnchor.constraint(equalTo: oddsValueLabel.leadingAnchor, constant: -4),
             downArrowImageView.centerYAnchor.constraint(equalTo: oddsValueLabel.centerYAnchor),
             downArrowImageView.widthAnchor.constraint(equalToConstant: 12),
-            downArrowImageView.heightAnchor.constraint(equalToConstant: 12)
+            downArrowImageView.heightAnchor.constraint(equalToConstant: 12),
+            
+            // Disabled overlay
+            disabledView.leadingAnchor.constraint(equalTo: leftStripView.trailingAnchor),
+            disabledView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            disabledView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            disabledView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            // Disabled label
+            disabledLabel.centerXAnchor.constraint(equalTo: disabledView.centerXAnchor),
+            disabledLabel.centerYAnchor.constraint(equalTo: disabledView.centerYAnchor)
         ])
     }
     
@@ -270,10 +307,9 @@ public final class BetslipTicketView: UIView {
         // Update odds change state
         updateOddsChangeIndicator(data.oddsChangeState)
         
-        // Update enabled state
-        alpha = data.isEnabled ? 1.0 : 0.5
-        isUserInteractionEnabled = data.isEnabled
-        closeButton.isEnabled = data.isEnabled
+        // Update enabled state - show/hide disabled overlay
+//        disabledView.isHidden = data.isEnabled
+        containerView.alpha = data.isEnabled ? 1.0 : 0.5
         
         // Force layout update to ensure proper sizing
         setNeedsLayout()
@@ -378,6 +414,7 @@ public final class BetslipTicketView: UIView {
     
     // MARK: - Actions
     @objc private func handleCloseTapped() {
+        print("Close tapped!")
         viewModel.onCloseTapped?()
     }
     

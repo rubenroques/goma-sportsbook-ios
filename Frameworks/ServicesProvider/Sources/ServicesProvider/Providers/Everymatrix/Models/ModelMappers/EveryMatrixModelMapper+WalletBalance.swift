@@ -17,7 +17,7 @@ extension EveryMatrixModelMapper {
         let currency = walletBalance.totalAmount.currency
         
         // Map the amounts
-        let total = walletBalance.totalAmount.amount
+        let total = walletBalance.totalCashAmount.amount
         let withdrawable = walletBalance.totalWithdrawableAmount.amount
         let bonus = walletBalance.totalBonusAmount.amount
         

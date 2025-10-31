@@ -33,6 +33,7 @@ protocol PhoneRegistrationViewModelProtocol {
     var isLoadingConfigPublisher: AnyPublisher<Bool, Never> { get }
     var registerComplete: (() -> Void)? { get set }
     var registerError: ((String) -> Void)? { get set }
+    var showBonusOnRegister: (() -> Void)? { get set }
 
     var extractedTermsHTMLData: RegisterConfigHelper.ExtractedHTMLData? { get }
     var birthDateMinMax: (min: String, max: String)? { get }

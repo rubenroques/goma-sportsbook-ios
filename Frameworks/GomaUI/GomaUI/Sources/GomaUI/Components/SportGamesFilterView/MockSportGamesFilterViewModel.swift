@@ -5,12 +5,13 @@ public class MockSportGamesFilterViewModel: SportGamesFilterViewModelProtocol {
     public var title: String
     public var sportFilters: [SportFilter] = []
     public var selectedId: CurrentValueSubject<String, Never>
-    public var sportFilterState: CurrentValueSubject<SportGamesFilterStateType, Never> = .init(.expanded)
+    public var sportFilterState: CurrentValueSubject<SportGamesFilterStateType, Never>
     
-    public init(title: String, sportFilters: [SportFilter], selectedId: String = "1") {
+    public init(title: String, sportFilters: [SportFilter], selectedId: String = "1", sportFilterState: SportGamesFilterStateType = .expanded) {
         self.title = title
         self.sportFilters = sportFilters
         self.selectedId = .init(selectedId)
+        self.sportFilterState = .init(sportFilterState)
     }
     
     public func selectOption(withId id: String) {
