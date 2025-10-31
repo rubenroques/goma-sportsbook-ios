@@ -12,9 +12,6 @@ import ServicesProvider
 
 class BetslipManager: NSObject {
 
-    var allowedBetTypesPublisher = CurrentValueSubject< LoadableContent<[ServicesProvider.BetType]>, Never>.init( .idle )
-
-    var allBetTypes = [ServicesProvider.BetType]()
     var newBetsPlacedPublisher = PassthroughSubject<Void, Never>.init()
     var bettingTicketsPublisher: CurrentValueSubject<[BettingTicket], Never>
 
