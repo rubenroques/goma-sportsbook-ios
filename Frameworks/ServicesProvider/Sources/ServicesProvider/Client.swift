@@ -120,6 +120,7 @@ public class Client {
             
             // Betting API
             let everyMatrixBettingProvider = EveryMatrixBettingProvider(
+                socketConnector: everyMatrixSocketConnector,
                 sessionCoordinator: sessionCoordinator,
                 restConnector: everyMatrixRESTConnector,
                 sseConnector: everyMatrixSSEConnector
@@ -1335,6 +1336,17 @@ extension Client {
         }
         return bettingProvider.calculatePotentialReturn(forBetTicket: betTicket)
     }
+    
+    public func calculateUnifiedBettingOptions(betType: BetGroupingType, selections: [BettingOptionsCalculateSelection], stakeAmount: Double?)
+    -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.calculateUnifiedBettingOptions(betType: betType, selections: selections, stakeAmount: stakeAmount)
+    }
+    
 
     public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String? = nil, userId: String? = nil, oddsValidationType: String? = nil, ubsWalletId: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard

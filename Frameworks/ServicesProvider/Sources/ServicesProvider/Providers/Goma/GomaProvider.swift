@@ -1446,6 +1446,14 @@ extension GomaProvider: BettingProvider {
             return betslipPotentialReturn
         }).eraseToAnyPublisher()
     }
+    
+    func calculateUnifiedBettingOptions(
+        betType: BetGroupingType,
+        selections: [BettingOptionsCalculateSelection],
+        stakeAmount: Double?
+    ) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Note: ubsWalletId is not supported by Goma provider (ignored)
@@ -1492,7 +1500,10 @@ extension GomaProvider: BettingProvider {
             })
             .eraseToAnyPublisher()
     }
-
+    
+    
+    //
+    //
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

@@ -52,6 +52,7 @@
 				"SupportingFiles/Misc-Dev/BetssonCM-DEV-Info.plist",
 				"SupportingFiles/Misc-Dev/GoogleService-Info.plist",
 				"SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist",
+				"SupportingFiles/Misc-Stg/BetssonCM-STG-Info.plist",
 				"SupportingFiles/Misc-Stg/GoogleService-Info.plist",
 			);
 			target = CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */;
@@ -154,7 +155,6 @@
 			buildPhases = (
 				CE74A1482E2E8D9400DDE78D /* Sources */,
 				CE74A1492E2E8D9400DDE78D /* Frameworks */,
-				CE41A9282EB33FD200B2DC28 /* Run Script - Copy Firebase Config File */,
 				CE74A14A2E2E8D9400DDE78D /* Resources */,
 			);
 			buildRules = (
@@ -304,30 +304,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		CE41A9282EB33FD200B2DC28 /* Run Script - Copy Firebase Config File */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(PROJECT_DIR)/App/SupportingFiles/Misc-Stg/GoogleService-Info.plist",
-				"$(PROJECT_DIR)/App/SupportingFiles/Misc-Prod/GoogleService-Info.plist",
-			);
-			name = "Run Script - Copy Firebase Config File";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(PRODUCT_NAME).app/GoogleService-Info.plist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# # Copy the appropriate GoogleService-Info.plist based on configuration\n# GOOGLE_SERVICE_INFO_PLIST=\"GoogleService-Info.plist\"\n# \n# case \"${CONFIGURATION}\" in\n#   \"Debug-Staging\")\n#       SOURCE_PATH=\"${PROJECT_DIR}/App/SupportingFiles/Misc-Stg/${GOOGLE_SERVICE_INFO_PLIST}\"\n#       ;;\n#   \"Release-Staging\")\n#       SOURCE_PATH=\"${PROJECT_DIR}/App/SupportingFiles/Misc-Stg/${GOOGLE_SERVICE_INFO_PLIST}\"\n#       ;;\n#   \"Debug-Production\")\n#       SOURCE_PATH=\"${PROJECT_DIR}/App/SupportingFiles/Misc-Prod/${GOOGLE_SERVICE_INFO_PLIST}\"\n#       ;;\n#   \"Release-Production\")\n#       SOURCE_PATH=\"${PROJECT_DIR}/App/SupportingFiles/Misc-Prod/${GOOGLE_SERVICE_INFO_PLIST}\"\n#       ;;\n#   *)\n#       echo \"error: Unknown configuration ${CONFIGURATION}\"\n#       exit 1\n#       ;;\n# esac\n# \n# DEST_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/${GOOGLE_SERVICE_INFO_PLIST}\"\n# \n# echo \"Copying Firebase config from: ${SOURCE_PATH}\"\n# echo \"To: ${DEST_PATH}\"\n# \n# cp \"${SOURCE_PATH}\" \"${DEST_PATH}\"\n# \n# if [ $? -eq 0 ]; then\n#   echo \"✅ Successfully copied Firebase config for ${CONFIGURATION}\"\n# else\n#   echo \"error: Failed to copy Firebase config\"\n#   exit 1\n# fi\n# \n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CE74A1482E2E8D9400DDE78D /* Sources */ = {

@@ -35,6 +35,9 @@ enum WAMPRouter {
     // Betting Offer (for single outcome fetch)
     case getBettingOffer(operatorId: String, language: String, bettingOfferId: String)
 
+    // Betting Options V2 (validate bet selections and get constraints)
+    case getBettingOptionsV2(type: BetGroupingType, selections: [EveryMatrix.BettingOptionsCalculateSelection], stakeAmount: Double?, language: String)
+
     // Shared Bets
     case getSharedBetTokens(betId: String)
     case getSharedBetData(betToken: String)
@@ -144,6 +147,8 @@ enum WAMPRouter {
             return "/sports#searchV2"
         case .multiSearch:
             return "/sports#multiSearch"
+        case .getBettingOptionsV2:
+            return "/sports#bettingOptionsV2"
         case .getSharedBetTokens:
             return "/sports#sharedBetTokens"
         case .getSharedBetData:
@@ -334,6 +339,36 @@ enum WAMPRouter {
                 ]
             ],
                     "lang": language
+            ]
+
+        case .getBettingOptionsV2(let type, let selections, let stakeAmount, let language):
+            // Convert BetGroupingType to String
+            let typeString: String
+            switch type {
+            case .single:
+                typeString = "SINGLE"
+            case .multiple:
+                typeString = "MULTIPLE"
+            case .system:
+                typeString = "SYSTEM"
+            }
+
+            // Convert selections to [[String: Any]]
+            let selectionsArray = selections.map { selection -> [String: Any] in
+                return [
+                    "bettingOfferId": selection.bettingOfferId,
+                    "priceValue": selection.priceValue
+                ]
+            }
+
+            return [
+                "type": typeString,
+                "systemBetType": NSNull(),
+                "eachWay": false,
+                "selections": selectionsArray,
+                "stakeAmount": stakeAmount ?? NSNull(),
+                "terminalType": "DESKTOP",
+                "lang": language
             ]
 
         case .getSharedBetTokens(let betId):
