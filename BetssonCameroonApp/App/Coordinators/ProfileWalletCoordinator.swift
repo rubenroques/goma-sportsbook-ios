@@ -126,14 +126,13 @@ final class ProfileWalletCoordinator: Coordinator {
             // Handle logout with confirmation
             showLogoutConfirmation()
         case .notifications:
-            // Open iPhone Settings app directly to notification settings
-//            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-//                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
-//            }
-
-            // Open Extreme push inbox screen
+            // Open XPush inbox screen to view notifications
             XPush.forceOpenInbox()
-
+        case .notificationSettings:
+            // Open iPhone Settings app directly to notification settings
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+            }
         case .transactionHistory:
             // Navigate to transaction history
             showTransactionHistory()
