@@ -195,61 +195,64 @@ extension LanguageSelectorView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Language Selector") {
+#Preview("LanguageSelectorView") {
     PreviewUIViewController {
         let vc = UIViewController()
-        let mockViewModel = MockLanguageSelectorViewModel.defaultMock
-        let languageSelector = LanguageSelectorView(viewModel: mockViewModel)
-        languageSelector.translatesAutoresizingMaskIntoConstraints = false
-        
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        vc.view.addSubview(languageSelector)
-        
-        NSLayoutConstraint.activate([
-            languageSelector.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
-            languageSelector.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
-            languageSelector.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
-        ])
-        
-        return vc
-    }
-}
+        vc.view.backgroundColor = .backgroundTestColor
 
-@available(iOS 17.0, *)
-#Preview("Language Selector - Two Languages") {
-    PreviewUIViewController {
-        let vc = UIViewController()
-        let mockViewModel = MockLanguageSelectorViewModel.twoLanguagesMock
-        let languageSelector = LanguageSelectorView(viewModel: mockViewModel)
-        languageSelector.translatesAutoresizingMaskIntoConstraints = false
-        
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        vc.view.addSubview(languageSelector)
-        
-        NSLayoutConstraint.activate([
-            languageSelector.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
-            languageSelector.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
-            languageSelector.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
-        ])
-        
-        return vc
-    }
-}
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
 
-@available(iOS 17.0, *)
-#Preview("Language Selector - Many Languages") {
-    VStack {
-        Text("Language Selection")
-            .font(.title2)
-            .padding()
-        
-        PreviewUIView {
-            let mockViewModel = MockLanguageSelectorViewModel.manyLanguagesMock
-            return LanguageSelectorView(viewModel: mockViewModel)
-        }
-        .padding(.horizontal, 16)
-        
-        Spacer()
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Component name label
+        let titleLabel = UILabel()
+        titleLabel.text = "LanguageSelectorView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Two languages (English selected)
+        let twoLanguagesView = LanguageSelectorView(viewModel: MockLanguageSelectorViewModel.twoLanguagesMock)
+        twoLanguagesView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default - 4 languages (English selected)
+        let defaultView = LanguageSelectorView(viewModel: MockLanguageSelectorViewModel.defaultMock)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Many languages (French selected) - scrollable
+        let manyLanguagesView = LanguageSelectorView(viewModel: MockLanguageSelectorViewModel.manyLanguagesMock)
+        manyLanguagesView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(twoLanguagesView)
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(manyLanguagesView)
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
+        ])
+
+        return vc
     }
 }
 

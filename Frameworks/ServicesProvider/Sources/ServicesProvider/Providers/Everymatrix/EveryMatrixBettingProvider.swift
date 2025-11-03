@@ -11,7 +11,9 @@ import Combine
 class EveryMatrixBettingProvider: BettingProvider, Connector {
 
     var sessionCoordinator: EveryMatrixSessionCoordinator
-    private var connector: EveryMatrixOddsMatrixAPIConnector
+    private var socketConnector: EveryMatrixSocketConnector
+    private var restConnector: EveryMatrixRESTConnector
+    private let sseConnector: EveryMatrixSSEConnector
     private var cancellables: Set<AnyCancellable> = []
 
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
@@ -19,41 +21,17 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     }
     private var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
 
-    init(sessionCoordinator: EveryMatrixSessionCoordinator, connector: EveryMatrixOddsMatrixAPIConnector? = nil) {
+    init(socketConnector: EveryMatrixSocketConnector,
+         sessionCoordinator: EveryMatrixSessionCoordinator,
+         restConnector: EveryMatrixRESTConnector,
+         sseConnector: EveryMatrixSSEConnector) {
+        self.socketConnector = socketConnector
         self.sessionCoordinator = sessionCoordinator
-        
-        // Create connector with session coordinator if not provided
-        if let providedConnector = connector {
-            self.connector = providedConnector
-        } else {
-            self.connector = EveryMatrixOddsMatrixAPIConnector(sessionCoordinator: sessionCoordinator)
-        }
-        
+        self.restConnector = restConnector
+        self.sseConnector = sseConnector
+
         // Update connection state
         self.connectionStateSubject.send(.connected)
-        
-        // Subscribe to session token changes
-        self.sessionCoordinator.token(forKey: .playerSessionToken)
-            .sink { [weak self] launchToken in
-                if let launchTokenValue = launchToken  {
-                    self?.connector.saveSessionToken(launchTokenValue)
-                }
-                else {
-                    self?.connector.clearSessionToken()
-                }
-            }
-            .store(in: &cancellables)
-        
-        // Subscribe to user ID changes
-        self.sessionCoordinator.userId()
-            .sink { [weak self] userId in
-                if let userIdValue = userId {
-                    self?.connector.saveUserId(userIdValue)
-                } else {
-                    self?.connector.clearUserId()
-                }
-            }
-            .store(in: &cancellables)
     }
 
     // MARK: - BettingProvider Protocol Methods
@@ -73,9 +51,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         
         print("🔍 EveryMatrixBettingProvider: getOpenBetsHistory called with pageIndex=\(pageIndex), limit=\(limit), placedBefore=\(placedBefore)")
         
-        let endpoint = EveryMatrixOddsMatrixAPI.getOpenBets(limit: limit, placedBefore: placedBefore)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getOpenBets(limit: limit, placedBefore: placedBefore)
         
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
                 print("🔄 EveryMatrixBettingProvider: Mapping \(bets.count) EveryMatrix bets to internal format")
                 let bettingHistory = EveryMatrixModelMapper.bettingHistory(fromBets: bets)
@@ -93,9 +71,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let limit = 20
         let placedBefore = endDate ?? defaultPlacedBeforeDate()
         
-        let endpoint = EveryMatrixOddsMatrixAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: nil)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: nil)
         
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
                 return EveryMatrixModelMapper.bettingHistory(fromBets: bets)
             }
@@ -109,9 +87,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let limit = 20
         let placedBefore = endDate ?? defaultPlacedBeforeDate()
         
-        let endpoint = EveryMatrixOddsMatrixAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: "WON")
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: "WON")
         
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
                 return EveryMatrixModelMapper.bettingHistory(fromBets: bets)
             }
@@ -131,15 +109,15 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Place Bets Implementation
     
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?, oddsValidationType: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Convert BetTickets to PlaceBetRequest
-        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType)
+        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
 
         // Create the API endpoint
-        let endpoint = EveryMatrixOddsMatrixAPI.placeBet(betData: placeBetRequest)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.placeBet(betData: placeBetRequest)
 
         // Make the API call
-        return connector.request(endpoint)
+        return restConnector.request(endpoint)
             .flatMap { (response: EveryMatrix.PlaceBetResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
                 // Convert the response to PlacedBetsResponse
                 let placedBetsResponse = self.convertResponseToPlacedBetsResponse(response, originalTickets: betTickets)
@@ -168,44 +146,95 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
-    // MARK: - Cashout Methods
-    
+    // MARK: - Cashout Methods (Legacy)
+
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError> {
-        let endpoint = EveryMatrixOddsMatrixAPI.calculateCashout(betId: betId, stakeValue: stakeValue)
-        
-        return connector.request(endpoint)
-            .map { (response: EveryMatrix.CashoutResponse) -> Cashout in
-                // Convert EveryMatrix response to Cashout model
-                return Cashout(
-                    cashoutValue: response.cashoutValue ?? 0.0,
-                    partialCashoutAvailable: stakeValue != nil
-                )
-            }
-            .mapError { error in
-                ServiceProviderError.errorMessage(message: error.localizedDescription)
-            }
-            .eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError> {
-        let endpoint = EveryMatrixOddsMatrixAPI.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
-        
-        return connector.request(endpoint)
-            .map { (response: EveryMatrix.CashoutExecuteResponse) -> CashoutResult in
-                return CashoutResult(
-                    cashoutResult: response.success == true ? 1 : 0,
-                    cashoutReoffer: response.cashoutValue,
-                    message: response.errorMessage
-                )
-            }
-            .mapError { error in
-                ServiceProviderError.errorMessage(message: error.localizedDescription)
-            }
-            .eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    // MARK: - NEW Cashout Methods (SSE-based)
+
+    func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
+        print("💰 EveryMatrixBettingProvider: Subscribing to cashout value for bet \(betId)")
+
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getCashoutValueSSE(betId: betId)
+
+        return self.sseConnector.request(endpoint, decodingType: EveryMatrix.CashoutValueSSEResponse.self)
+            .compactMap { sseEvent -> SubscribableContent<CashoutValue>? in
+                switch sseEvent {
+                case .connected:
+                    print("✅ SSE Connected - waiting for cashout value...")
+                    // Create simple subscription for SSE connection
+                    let subscription = Subscription(id: "sse-cashout-\(betId)")
+                    return .connected(subscription: subscription)
+
+                case .message(let response):
+                    // Log message type
+                    print("📨 SSE Message: type=\(response.messageType), code=\(response.details.code)")
+
+                    // Filter 1: Only process CASHOUT_VALUE messages (ignore AUTOCASHOUT_RULE)
+                    guard response.messageType == "CASHOUT_VALUE" else {
+                        print("⏭️ Skipping \(response.messageType) message")
+                        return nil
+                    }
+
+                    // Filter 2: Only emit messages with code 100 (ignore code 103)
+                    guard response.details.code == 100 else {
+                        print("⏳ Code 103 - still loading odds...")
+                        return nil
+                    }
+
+                    // Filter 3: Ensure cashout value is present
+                    guard response.cashoutValue != nil else {
+                        print("⚠️ Code 100 but no cashout value - skipping")
+                        return nil
+                    }
+
+                    print("✅ Cashout value ready: \(response.cashoutValue!)")
+
+                    // Map to public model
+                    let mappedValue = EveryMatrixModelMapper.cashoutValue(fromSSEResponse: response)
+                    return .contentUpdate(content: mappedValue)
+
+                case .disconnected:
+                    print("🔌 SSE Disconnected")
+                    return .disconnected
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError> {
+        print("💰 EveryMatrixBettingProvider: Executing cashout for bet \(request.betId)")
+        print("💰 Type: \(request.cashoutType), Value: \(request.cashoutValue)")
+
+        // Map public request to internal DTO
+        let internalRequest = EveryMatrixModelMapper.cashoutRequest(from: request)
+
+        // Create endpoint
+        let endpoint = EveryMatrixOddsMatrixWebAPI.executeCashoutV2(request: internalRequest)
+
+        // Execute request
+        return restConnector.request(endpoint)
+            .map { (response: EveryMatrix.CashoutResponse) -> CashoutResponse in
+                print("✅ Cashout executed: success=\(response.success), payout=\(response.cashoutPayout)")
+
+                // Map internal response to public model
+                return EveryMatrixModelMapper.cashoutResponse(fromInternalResponse: response)
+            }
+            .mapError { error in
+                print("❌ Cashout execution failed: \(error)")
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Cashback Methods
@@ -262,7 +291,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Private Helper Methods
     
-    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?) -> EveryMatrix.PlaceBetRequest {
+    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> EveryMatrix.PlaceBetRequest {
         let selections = betTickets.flatMap { betTicket in
             betTicket.tickets.map { selection in
                 EveryMatrix.BetSelectionInfo(
@@ -276,14 +305,21 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
 
         let type = selections.count > 1 ? "MULTIPLE" : "SINGLE"
 
+        let domainId = EveryMatrixUnifiedConfiguration.shared.operatorId
+        let operatorId = Int(domainId) ?? 4093
+
         return EveryMatrix.PlaceBetRequest(
+            ucsOperatorId: operatorId,
+            userId: userId ?? "",
+            username: username ?? "",
+            currency: currency ?? "EUR",
             type: type,
-            systemBetType: nil,
-            eachWay: false,
             selections: selections,
-            stakeAmount: totalAmount,
+            amount: String(format: "%.2f", totalAmount),
+            oddsValidationType: oddsValidationType ?? "ACCEPT_ANY",
             terminalType: "SSBT",
-            lang: "en"
+            ubsWalletId: ubsWalletId,
+            freeBet: nil
         )
     }
     
@@ -308,16 +344,64 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         )
     }
     
+    func calculateUnifiedBettingOptions(
+        betType: BetGroupingType,
+        selections: [BettingOptionsCalculateSelection],
+        stakeAmount: Double?
+    ) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
+
+        let language = "en" // TODO: Make configurable from configuration
+
+        // Convert BetSelection (domain) → BetSelectionInfo (EveryMatrix)
+        let emSelections = selections.compactMap { selection -> EveryMatrix.BettingOptionsCalculateSelection in
+            return EveryMatrix.BettingOptionsCalculateSelection(
+                bettingOfferId: selection.bettingOfferId,
+                priceValue: selection.oddFormat.decimalOdd
+            )
+        }
+
+        // Validate selections
+        guard !emSelections.isEmpty else {
+            print("❌ BettingProvider: No valid selections for betting options calculation")
+            return Fail(error: ServiceProviderError.errorDetailedMessage(
+                key: "invalid_selections",
+                message: "No valid selections provided"
+            )).eraseToAnyPublisher()
+        }
+
+        // Create router with parameters
+        let router = WAMPRouter.getBettingOptionsV2(
+            type: betType,
+            selections: emSelections,
+            stakeAmount: stakeAmount,
+            language: language
+        )
+
+        print("🎯 BettingProvider: Calculating betting options for \(emSelections.count) selections, betType: \(betType)")
+
+        // Make RPC call via socketConnector
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.BettingOptionsV2Response, ServiceProviderError> =
+            socketConnector.request(router)
+
+        // Map response to domain model
+        return rpcResponsePublisher
+            .map { response in
+                print("✅ BettingProvider: Received betting options - success: \(response.success ?? false), minStake: \(response.minStake ?? 0), maxStake: \(response.maxStake?.description ?? "nil"), odds: \(response.priceValueFactor ?? 0)")
+                return EveryMatrixModelMapper.unifiedBettingOptions(from: response)
+            }
+            .eraseToAnyPublisher()
+    }
+
     // MARK: - Helper Methods
-    
+
     private func defaultPlacedBeforeDate() -> String {
         let calendar = Calendar.current
         let sixMonthsFromNow = calendar.date(byAdding: .month, value: 6, to: Date()) ?? Date()
-        
+
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         formatter.timeZone = TimeZone(secondsFromGMT: 0) // Use UTC
-        
+
         return formatter.string(from: sixMonthsFromNow)
     }
 }

@@ -142,37 +142,5 @@ public final class SessionCoordinator {
     }
 }
 
-// MARK: - Convenience Extensions
-
-extension SessionCoordinator {
-    /// Observes multiple token types simultaneously
-    /// - Parameter types: Array of token types to observe
-    /// - Returns: A publisher that emits when any of the specified tokens change
-    public func observeTokens(_ types: [SessionToken]) -> AnyPublisher<[String: String?], Never> {
-        let publishers = types.map { type in
-            tokenPublisher(for: type)
-                .map { (type.key, $0) }
-        }
-        
-        return Publishers.MergeMany(publishers)
-            .scan([:]) { dict, tuple in
-                var newDict = dict
-                newDict[tuple.0] = tuple.1
-                return newDict
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    /// Checks if all specified tokens are valid (non-nil)
-    /// - Parameter types: Array of token types to check
-    /// - Returns: A publisher that emits true if all tokens are valid
-    public func areTokensValid(_ types: [SessionToken]) -> AnyPublisher<Bool, Never> {
-        observeTokens(types)
-            .map { dict in
-                dict.values.allSatisfy { $0 != nil }
-            }
-            .eraseToAnyPublisher()
-    }
-}
 
 

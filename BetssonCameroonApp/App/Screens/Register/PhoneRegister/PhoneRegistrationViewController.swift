@@ -35,6 +35,15 @@ class PhoneRegistrationViewController: UIViewController {
         return button
     }()
     
+    private let logoImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "betsson_logo")?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = StyleProvider.Color.highlightPrimary
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     private let headerView: PromotionalHeaderView
     private let highlightedTextView: HighlightedTextView
     
@@ -56,9 +65,15 @@ class PhoneRegistrationViewController: UIViewController {
     private var phonePrefixField: BorderedTextFieldView?
     private var phoneField: BorderedTextFieldView?
     private var passwordField: BorderedTextFieldView?
+    private var firstNameField: BorderedTextFieldView?
+    private var lastNameField: BorderedTextFieldView?
+    private var birthDateField: BorderedTextFieldView?
     private var termsView: TermsAcceptanceView?
     private let createAccountButton: ButtonView
-    
+
+    // Date picker for birth date input
+    private var birthDatePicker: UIDatePicker?
+
     private let loadingView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -115,6 +130,8 @@ class PhoneRegistrationViewController: UIViewController {
         navigationView.addSubview(navigationTitleLabel)
         navigationView.addSubview(closeButton)
         
+        view.addSubview(logoImageView)
+        
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
         highlightedTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -140,9 +157,14 @@ class PhoneRegistrationViewController: UIViewController {
             closeButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
             closeButton.heightAnchor.constraint(equalToConstant: 40),
             
+            logoImageView.topAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: 18),
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 100),
+            logoImageView.heightAnchor.constraint(equalToConstant: 20),
+            
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            headerView.topAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: 18),
+            headerView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 18),
             
             highlightedTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             highlightedTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -182,12 +204,75 @@ class PhoneRegistrationViewController: UIViewController {
             componentsStackView.addArrangedSubview(passwordField)
         }
 
+        if let firstNameFieldViewModel = viewModel.firstNameFieldViewModel {
+            let firstNameField = BorderedTextFieldView(viewModel: firstNameFieldViewModel)
+            self.firstNameField = firstNameField
+            componentsStackView.addArrangedSubview(firstNameField)
+        }
+
+        if let lastNameFieldViewModel = viewModel.lastNameFieldViewModel {
+            let lastNameField = BorderedTextFieldView(viewModel: lastNameFieldViewModel)
+            self.lastNameField = lastNameField
+            componentsStackView.addArrangedSubview(lastNameField)
+        }
+
+        if let birthDateFieldViewModel = viewModel.birthDateFieldViewModel {
+            let birthDateField = BorderedTextFieldView(viewModel: birthDateFieldViewModel)
+            self.birthDateField = birthDateField
+
+            // Setup date picker immediately (before field is added to view)
+            let datePicker = UIDatePicker()
+            datePicker.datePickerMode = .date
+            datePicker.preferredDatePickerStyle = .wheels
+            datePicker.maximumDate = Date() // Can't be in the future
+
+            // Set min/max dates from registration config
+            if let birthDateMinMax = viewModel.birthDateMinMax {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+
+                if let minDate = formatter.date(from: birthDateMinMax.min) {
+                    datePicker.minimumDate = minDate
+                }
+                if let maxDate = formatter.date(from: birthDateMinMax.max) {
+                    datePicker.maximumDate = maxDate
+                    // Set initial date to max date (youngest allowed age)
+                    datePicker.date = maxDate
+                }
+            }
+
+            // Add value changed handler
+            datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+
+            // Create toolbar with Done button
+            let toolbar = UIToolbar()
+            toolbar.sizeToFit()
+            toolbar.barStyle = .default
+            toolbar.isTranslucent = true
+
+            let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDone))
+            toolbar.items = [flexSpace, doneButton]
+
+            // Set custom input view BEFORE field is added to view hierarchy
+            birthDateField.setCustomInputView(datePicker, accessoryView: toolbar)
+            self.birthDatePicker = datePicker
+
+            // Simplified closure - just show the picker (inputView already set)
+            birthDateField.onRequestCustomInput = { [weak self] in
+                self?.birthDateField?.becomeFirstResponder()
+            }
+
+            componentsStackView.addArrangedSubview(birthDateField)
+        }
+
         if let termsViewModel = viewModel.termsViewModel {
             let termsView = TermsAcceptanceView(viewModel: termsViewModel)
             self.termsView = termsView
             termsView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(termsView)
-            
+
             NSLayoutConstraint.activate([
                 termsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
                 termsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -318,7 +403,24 @@ class PhoneRegistrationViewController: UIViewController {
             UIApplication.shared.open(url)
         }
     }
-    
+
+    // MARK: - Date Picker Handlers
+
+    @objc private func datePickerValueChanged(_ picker: UIDatePicker) {
+        // Update text field as user scrolls through dates
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+
+        let dateString = formatter.string(from: picker.date)
+        viewModel.birthDateFieldViewModel?.updateText(dateString)
+    }
+
+    @objc private func datePickerDone() {
+        // Dismiss date picker
+        birthDateField?.resignFirstResponder()
+    }
+
     // MARK: Actions
     @objc private func didTapCloseButton() {
         self.dismiss(animated: true)

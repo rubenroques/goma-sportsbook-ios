@@ -392,38 +392,86 @@ public final class BetslipTicketView: UIView {
 
 @available(iOS 17.0, *)
 #Preview("Typical") {
-    PreviewUIView {
-        BetslipTicketView(viewModel: MockBetslipTicketViewModel.typicalMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.typicalMock())
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(ticketView)
+
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            ticketView.heightAnchor.constraint(equalToConstant: 120)
+        ])
+
+        return vc
     }
-    .frame(height: 120)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Increased Odds") {
-    PreviewUIView {
-        BetslipTicketView(viewModel: MockBetslipTicketViewModel.increasedOddsMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.increasedOddsMock())
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(ticketView)
+
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            ticketView.heightAnchor.constraint(equalToConstant: 120)
+        ])
+
+        return vc
     }
-    .frame(height: 120)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Decreased Odds") {
-    PreviewUIView {
-        BetslipTicketView(viewModel: MockBetslipTicketViewModel.decreasedOddsMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.decreasedOddsMock())
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(ticketView)
+
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            ticketView.heightAnchor.constraint(equalToConstant: 120)
+        ])
+
+        return vc
     }
-    .frame(height: 120)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Disabled") {
-    PreviewUIView {
-        BetslipTicketView(viewModel: MockBetslipTicketViewModel.disabledMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let ticketView = BetslipTicketView(viewModel: MockBetslipTicketViewModel.disabledMock())
+        ticketView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(ticketView)
+
+        NSLayoutConstraint.activate([
+            ticketView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            ticketView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            ticketView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            ticketView.heightAnchor.constraint(equalToConstant: 120)
+        ])
+
+        return vc
     }
-    .frame(height: 120)
-    .padding()
 }
 
 #endif 

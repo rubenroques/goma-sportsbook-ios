@@ -254,7 +254,7 @@ private class RecentlyPlayedGameCollectionViewCell: UICollectionViewCell {
 #Preview("Recently Played Games - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let recentlyPlayedView = RecentlyPlayedGamesView() // No viewModel - placeholder state
         recentlyPlayedView.translatesAutoresizingMaskIntoConstraints = false

@@ -26,17 +26,27 @@ class BetSuccessViewController: UIViewController {
         return button
     }()
 
-    private let statusNotificationView: StatusNotificationView
+    private let betPlacedRow: ActionRowView = ActionRowView()
+    private let openDetailsRow: ActionRowView = ActionRowView()
+    private let shareRow: ActionRowView = ActionRowView()
+
+    private let shareLoadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
 
     private let viewModel: BetSuccessViewModelProtocol
-    
+
     // MARK: - Navigation Closures
     // Called when success flow completes - handled by coordinator
     var onContinueRequested: (() -> Void)?
+    var onOpenDetails: (() -> Void)?
+    var onShareBetslip: (() -> Void)?
 
     init(viewModel: BetSuccessViewModelProtocol) {
         self.viewModel = viewModel
-        self.statusNotificationView = StatusNotificationView(viewModel: viewModel.statusNotificationViewModel)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .overFullScreen
         modalTransitionStyle = .crossDissolve
@@ -49,22 +59,65 @@ class BetSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        setupActionRows()
         setupLayout()
         closeButton.addTarget(self, action: #selector(didTapClose), for: .touchUpInside)
+    }
+
+    private func setupActionRows() {
+        // 1. Green "Bet Placed" row - non-tappable
+        let betPlacedItem = ActionRowItem(
+            icon: "checkmark.circle.fill",
+            title: "Bet Placed", // TODO: Localization
+            type: .action,
+            action: .custom,
+            isTappable: false
+        )
+        betPlacedRow.customBackgroundColor = StyleProvider.Color.alertSuccess
+        betPlacedRow.configure(with: betPlacedItem) { _ in }
+        betPlacedRow.translatesAutoresizingMaskIntoConstraints = false
+
+        // 2. "Open Betslip Details" row - tappable with chevron
+        let openDetailsItem = ActionRowItem(
+            icon: "",
+            title: "Open Betslip Details", // TODO: Localization
+            type: .navigation,
+            action: .custom,
+            trailingIcon: "chevron.right"
+        )
+        openDetailsRow.configure(with: openDetailsItem) { [weak self] _ in
+            self?.onOpenDetails?()
+        }
+        openDetailsRow.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3. "Share your Betslip" row - tappable with share icon
+        let shareItem = ActionRowItem(
+            icon: "",
+            title: "Share your Betslip", // TODO: Localization
+            type: .action,
+            action: .custom,
+            trailingIcon: "share_icon"
+        )
+        shareRow.configure(with: shareItem) { [weak self] _ in
+            self?.onShareBetslip?()
+        }
+        shareRow.translatesAutoresizingMaskIntoConstraints = false
     }
 
     private func setupLayout() {
         view.addSubview(containerView)
         containerView.addSubview(closeButton)
-        containerView.addSubview(statusNotificationView)
 
-        let infoStack = UIStackView(arrangedSubviews: [statusNotificationView])
+        let infoStack = UIStackView(arrangedSubviews: [betPlacedRow, openDetailsRow, shareRow])
         infoStack.axis = .vertical
         infoStack.spacing = 10
         infoStack.alignment = .fill
         infoStack.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(infoStack)
-        
+
+        // Add loading indicator to share row
+        shareRow.addSubview(shareLoadingIndicator)
+
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -79,9 +132,29 @@ class BetSuccessViewController: UIViewController {
             infoStack.topAnchor.constraint(equalTo: closeButton.bottomAnchor, constant: 12),
             infoStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             infoStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            infoStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20)
+            infoStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20),
+
+            // Position loading indicator on the right side of share row
+            shareLoadingIndicator.trailingAnchor.constraint(equalTo: shareRow.trailingAnchor, constant: -16),
+            shareLoadingIndicator.centerYAnchor.constraint(equalTo: shareRow.centerYAnchor)
         ])
     }
+
+    // MARK: - Public Methods
+
+    /// Shows or hides loading state on the share row
+    public func setShareLoading(_ isLoading: Bool) {
+        shareRow.isUserInteractionEnabled = !isLoading
+        shareRow.alpha = isLoading ? 0.6 : 1.0
+
+        if isLoading {
+            shareLoadingIndicator.startAnimating()
+        } else {
+            shareLoadingIndicator.stopAnimating()
+        }
+    }
+
+    // MARK: - Private Methods
 
     @objc private func didTapClose() {
         onContinueRequested?()

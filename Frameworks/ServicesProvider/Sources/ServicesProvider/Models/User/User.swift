@@ -342,12 +342,18 @@ public struct PhoneSignUpForm {
     public var phonePrefix: String
     public var password: String
     public var registrationId: String
+    public var firstName: String?
+    public var lastName: String?
+    public var birthDate: String?
 
-    public init(phone: String, phonePrefix: String, password: String, registrationId: String) {
+    public init(phone: String, phonePrefix: String, password: String, registrationId: String, firstName: String? = nil, lastName: String? = nil, birthDate: String? = nil) {
         self.phone = phone
         self.phonePrefix = phonePrefix
         self.password = password
         self.registrationId = registrationId
+        self.firstName = firstName
+        self.lastName = lastName
+        self.birthDate = birthDate
     }
 
 }

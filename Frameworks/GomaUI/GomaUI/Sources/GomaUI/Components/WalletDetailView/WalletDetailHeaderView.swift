@@ -145,7 +145,7 @@ extension WalletDetailHeaderView {
 #Preview("Wallet Detail Header") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.highlightPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let headerView = WalletDetailHeaderView()
         headerView.configure(walletTitle: "Wallet", phoneNumber: "+234 737 456789")

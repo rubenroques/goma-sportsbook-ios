@@ -31,6 +31,7 @@ final public class BorderedTextFieldView: UIView {
     // MARK: - Public Properties
     public var onTextChanged: ((String) -> Void) = { _ in }
     public var onFocusChanged: ((Bool) -> Void) = { _ in }
+    public var onRequestCustomInput: (() -> Void)?
 
     // MARK: - Constants
     private enum Constants {
@@ -92,8 +93,6 @@ final public class BorderedTextFieldView: UIView {
 
         // Floating label setup
         floatingLabel.translatesAutoresizingMaskIntoConstraints = false
-//        floatingLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-//        floatingLabel.textColor = StyleProvider.Color.highlightSecondary
         floatingLabel.backgroundColor = .clear
         containerView.addSubview(floatingLabel)
 
@@ -136,9 +135,8 @@ final public class BorderedTextFieldView: UIView {
         // Text field constraints (with padding for suffix button area)
         textFieldLeadingConstraint = textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding)
         textFieldLeadingConstraint.isActive = true
-        
+
         NSLayoutConstraint.activate([
-//            textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constants.horizontalPadding),
             textField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             textField.heightAnchor.constraint(equalToConstant: 24),
             textField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -(Constants.horizontalPadding + Constants.suffixButtonSize + 8))
@@ -205,8 +203,7 @@ final public class BorderedTextFieldView: UIView {
         viewModel.placeholderPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] placeholder in
-//                self?.floatingLabel.text = placeholder
-                self?.updatePlaceholderWithHighlightedAsterisk(placeholder)
+                self?.updatePlaceholder(placeholder)
 
                 // Remove textField placeholder since floatingLabel handles both states
                 self?.textField.placeholder = nil
@@ -279,7 +276,14 @@ final public class BorderedTextFieldView: UIView {
     @objc private func containerTapped() {
         // Only become first responder if the field is enabled
         guard currentVisualState != .disabled else { return }
-        textField.becomeFirstResponder()
+
+        if viewModel.usesCustomInput {
+            // Delegate custom input handling to the view controller
+            onRequestCustomInput?()
+        } else {
+            // Standard keyboard input
+            textField.becomeFirstResponder()
+        }
     }
 
     // MARK: - Visual State Management
@@ -296,8 +300,6 @@ final public class BorderedTextFieldView: UIView {
         case .disabled:
             updateForDisabledState()
         }
-
-        updateAccessibilityForCurrentState()
     }
 
     private func updateForIdleState() {
@@ -311,7 +313,6 @@ final public class BorderedTextFieldView: UIView {
         textField.isEnabled = true
         alpha = 1.0
         isUserInteractionEnabled = true
-        
     }
 
     private func updateForFocusedState() {
@@ -367,20 +368,22 @@ final public class BorderedTextFieldView: UIView {
         }
     }
     
-    private func updatePlaceholderWithHighlightedAsterisk(_ placeholder: String) {
-        let attributedString = NSMutableAttributedString(string: placeholder)
-        
+    private func updatePlaceholder(_ placeholder: String) {
+        // Build display text: append " *" if field is required
+        let displayText = viewModel.isRequired ? "\(placeholder) *" : placeholder
+        let attributedString = NSMutableAttributedString(string: displayText)
+
         // Set base styling
-        let fullRange = NSRange(location: 0, length: placeholder.count)
+        let fullRange = NSRange(location: 0, length: displayText.count)
         attributedString.addAttribute(.font, value: StyleProvider.fontWith(type: .regular, size: 16), range: fullRange)
         attributedString.addAttribute(.foregroundColor, value: StyleProvider.Color.inputTextTitle, range: fullRange)
-        
-        // Find the asterisk and style it
-        if let asteriskRange = placeholder.range(of: "*") {
-            let nsRange = NSRange(asteriskRange, in: placeholder)
-            attributedString.addAttribute(.foregroundColor, value: StyleProvider.Color.highlightPrimary, range: nsRange)
+
+        // Highlight the asterisk if field is required
+        if viewModel.isRequired {
+            let asteriskRange = NSRange(location: displayText.count - 1, length: 1)
+            attributedString.addAttribute(.foregroundColor, value: StyleProvider.Color.highlightPrimary, range: asteriskRange)
         }
-        
+
         floatingLabel.attributedText = attributedString
     }
 
@@ -513,25 +516,6 @@ final public class BorderedTextFieldView: UIView {
         }
     }
 
-
-
-    private func updateAccessibilityForCurrentState() {
-        containerView.isAccessibilityElement = true
-        containerView.accessibilityLabel = floatingLabel.text
-
-        switch currentVisualState {
-        case .idle:
-            containerView.accessibilityTraits = [.none]
-        case .focused:
-            containerView.accessibilityTraits = [.selected]
-        case .error(let message):
-            containerView.accessibilityTraits = [.none]
-            containerView.accessibilityValue = "Error: \(message)"
-        case .disabled:
-            containerView.accessibilityTraits = [.notEnabled]
-        }
-    }
-
     // MARK: - Layout
     public override func layoutSubviews() {
         super.layoutSubviews()
@@ -549,6 +533,15 @@ final public class BorderedTextFieldView: UIView {
     public override func resignFirstResponder() -> Bool {
         return textField.resignFirstResponder()
     }
+
+    /// Sets a custom input view (e.g., UIDatePicker) instead of the standard keyboard
+    /// - Parameters:
+    ///   - inputView: The custom input view to display (e.g., UIDatePicker, UIPickerView)
+    ///   - accessoryView: Optional toolbar or accessory view to display above the input view
+    public func setCustomInputView(_ inputView: UIView?, accessoryView: UIView? = nil) {
+        textField.inputView = inputView
+        textField.inputAccessoryView = accessoryView
+    }
 }
 
 // MARK: - String Extension
@@ -564,46 +557,87 @@ private extension Optional where Wrapped == String {
     }
 }
 
-// MARK: - Preview Provider
+// MARK: - SwiftUI Preview
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Phone Number Field") {
-    PreviewUIView {
-        let mockViewModel = MockBorderedTextFieldViewModel(
-            textFieldData: BorderedTextFieldData(
-                id: "phone",
-                text: "712345678",
-                placeholder: "Phone number",
-                prefix: "+237",
-                visualState: .idle,
-                keyboardType: .phonePad,
-                textContentType: .telephoneNumber
-            )
-        )
-        return BorderedTextFieldView(viewModel: mockViewModel)
-    }
-    .frame(height: 80)
-    .padding()
-}
+#Preview("BorderedTextFieldView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
 
-@available(iOS 17.0, *)
-#Preview("Password Field") {
-    PreviewUIView {
-        let mockViewModel = MockBorderedTextFieldViewModel(
-            textFieldData: BorderedTextFieldData(
-                id: "password",
-                text: "secret123",
-                placeholder: "Password",
-                isSecure: true,
-                visualState: .focused,
-                textContentType: .password
-            )
-        )
-        return BorderedTextFieldView(viewModel: mockViewModel)
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "BorderedTextFieldView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Phone Number Field
+        let phoneView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.phoneNumberField)
+        phoneView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Password Field
+        let passwordView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.passwordField)
+        passwordView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Email Field
+        let emailView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.emailField)
+        emailView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Name Field
+        let nameView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.nameField)
+        nameView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Error Field
+        let errorView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.errorField)
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled Field
+        let disabledView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.disabledField)
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Focused Field
+        let focusedView = BorderedTextFieldView(viewModel: MockBorderedTextFieldViewModel.focusedField)
+        focusedView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(phoneView)
+        stackView.addArrangedSubview(passwordView)
+        stackView.addArrangedSubview(emailView)
+        stackView.addArrangedSubview(nameView)
+        stackView.addArrangedSubview(errorView)
+        stackView.addArrangedSubview(disabledView)
+        stackView.addArrangedSubview(focusedView)
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
+        ])
+
+        return vc
     }
-    .frame(height: 80)
-    .padding()
 }
 
 #endif

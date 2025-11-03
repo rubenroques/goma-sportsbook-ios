@@ -48,6 +48,10 @@ public struct Bet: Codable, Equatable, Hashable {
     // Note: This property was only present in Multibet implementation
     public var shareId: String?
 
+    // MARK: - EveryMatrix specific properties
+    // Ticket code for customer reference
+    public var ticketCode: String?
+
     public init(
         identifier: String,
         type: String,
@@ -68,7 +72,8 @@ public struct Bet: Codable, Equatable, Hashable {
         freebetReturn: Double? = nil,
         potentialCashbackReturn: Double? = nil,
         potentialFreebetReturn: Double? = nil,
-        shareId: String? = nil
+        shareId: String? = nil,
+        ticketCode: String? = nil
     ) {
         self.identifier = identifier
         self.type = type
@@ -90,6 +95,7 @@ public struct Bet: Codable, Equatable, Hashable {
         self.potentialCashbackReturn = potentialCashbackReturn
         self.potentialFreebetReturn = potentialFreebetReturn
         self.shareId = shareId
+        self.ticketCode = ticketCode
     }
 }
 
@@ -266,41 +272,6 @@ public struct BetTicket: Codable {
     }
 }
 
-public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable {
-    case none
-    // case any
-    case higher
-}
-
-public enum OddFormat: Codable, Equatable, Hashable {
-    case fraction(numerator: Int, denominator: Int)
-    case decimal(odd: Double)
-
-    var fractionOdd: (numerator: Int, denominator: Int)? {
-        switch self {
-        case .fraction(let numerator, let denominator):
-            return (numerator: numerator, denominator: denominator)
-        case .decimal:
-            return nil
-        }
-    }
-
-    var decimalOdd: Double {
-        switch self {
-        case .fraction(let numerator, let denominator):
-            let decimal = (Double(numerator)/Double(denominator)) + 1.0
-            if decimal.isNaN {
-                return decimal
-            }
-            else {
-                return decimal
-            }
-        case .decimal(let odd):
-            return odd
-        }
-    }
-}
-
 public struct BetTicketSelection: Codable, Equatable, Hashable {
 
     public var identifier: String
@@ -344,6 +315,15 @@ public struct BetTicketSelection: Codable, Equatable, Hashable {
         self.outcomeId = outcomeId
     }
 
+}
+
+
+//
+//
+public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable {
+    case none
+    // case any
+    case higher
 }
 
 public struct PlacedBetsResponse: Codable, Equatable, Hashable {
@@ -439,4 +419,134 @@ public struct BetslipSettings: Codable {
         self.oddChangeRunningOrPreMatch = oddChangeRunningOrPreMatch
     }
 
+}
+
+// MARK: - Unified Betting Options (aka calculate)
+
+/// Unified betting options returned from bet validation
+/// Contains constraints, odds calculations, and available promotions
+public struct UnifiedBettingOptions: Codable, Equatable {
+    public let isValid: Bool
+    public let minStake: Double?
+    public let maxStake: Double?
+    public let totalOdds: Double?
+    public let maxWinning: Double?
+
+    // Bonus/Promotion Info
+    public let availableFreeBets: [FreeBetInfo]
+    public let availableOddsBoosts: [OddsBoostInfo]
+    public let availableStakeBacks: [StakeBackInfo]
+
+    // Constraints
+    public let manualBetRequestAllowed: Bool
+    public let taxEnabled: Bool
+
+    public init(
+        isValid: Bool,
+        minStake: Double? = nil,
+        maxStake: Double? = nil,
+        totalOdds: Double? = nil,
+        maxWinning: Double? = nil,
+        availableFreeBets: [FreeBetInfo] = [],
+        availableOddsBoosts: [OddsBoostInfo] = [],
+        availableStakeBacks: [StakeBackInfo] = [],
+        manualBetRequestAllowed: Bool = true,
+        taxEnabled: Bool = false
+    ) {
+        self.isValid = isValid
+        self.minStake = minStake
+        self.maxStake = maxStake
+        self.totalOdds = totalOdds
+        self.maxWinning = maxWinning
+        self.availableFreeBets = availableFreeBets
+        self.availableOddsBoosts = availableOddsBoosts
+        self.availableStakeBacks = availableStakeBacks
+        self.manualBetRequestAllowed = manualBetRequestAllowed
+        self.taxEnabled = taxEnabled
+    }
+}
+
+/// Free bet information
+public struct FreeBetInfo: Codable, Equatable {
+    public let id: String?
+    public let amount: Double?
+    public let minOdds: Double?
+    public let maxOdds: Double?
+    public let currency: String?
+    public let expiryDate: String?
+
+    public init(
+        id: String? = nil,
+        amount: Double? = nil,
+        minOdds: Double? = nil,
+        maxOdds: Double? = nil,
+        currency: String? = nil,
+        expiryDate: String? = nil
+    ) {
+        self.id = id
+        self.amount = amount
+        self.minOdds = minOdds
+        self.maxOdds = maxOdds
+        self.currency = currency
+        self.expiryDate = expiryDate
+    }
+}
+
+/// Odds boost information
+public struct OddsBoostInfo: Codable, Equatable {
+    public let walletId: String?
+    public let percentage: Double?
+    public let capAmount: Double?
+    public let minSelections: Int?
+    public let maxSelections: Int?
+    public let minOddsPerSelection: Double?
+
+    public init(
+        walletId: String? = nil,
+        percentage: Double? = nil,
+        capAmount: Double? = nil,
+        minSelections: Int? = nil,
+        maxSelections: Int? = nil,
+        minOddsPerSelection: Double? = nil
+    ) {
+        self.walletId = walletId
+        self.percentage = percentage
+        self.capAmount = capAmount
+        self.minSelections = minSelections
+        self.maxSelections = maxSelections
+        self.minOddsPerSelection = minOddsPerSelection
+    }
+}
+
+/// Stake back information
+public struct StakeBackInfo: Codable, Equatable {
+    public let percentage: Double?
+    public let amount: Double?
+    public let currency: String?
+    public let minStake: Double?
+    public let maxStake: Double?
+
+    public init(
+        percentage: Double? = nil,
+        amount: Double? = nil,
+        currency: String? = nil,
+        minStake: Double? = nil,
+        maxStake: Double? = nil
+    ) {
+        self.percentage = percentage
+        self.amount = amount
+        self.currency = currency
+        self.minStake = minStake
+        self.maxStake = maxStake
+    }
+}
+
+public struct BettingOptionsCalculateSelection: Codable {
+    public let bettingOfferId: String
+    public let oddFormat: OddFormat
+
+    public init(bettingOfferId: String, oddFormat: OddFormat) {
+        self.bettingOfferId = bettingOfferId
+        self.oddFormat = oddFormat
+    }
 }

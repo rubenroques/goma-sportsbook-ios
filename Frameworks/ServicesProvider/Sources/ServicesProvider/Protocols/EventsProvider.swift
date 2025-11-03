@@ -97,6 +97,47 @@ protocol EventsProvider: Connector {
 
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError>
 
+    /// Resolves a betting outcome ID to its current betting offer IDs and parent event.
+    ///
+    /// This is primarily used for the **rebet feature** to reconstruct betting tickets.
+    /// Historical bets store outcome IDs, but placing new bets requires betting offer IDs.
+    ///
+    /// **Use Case**: When a user taps "Rebet" on a historical bet, we need to convert the
+    /// stored outcome IDs into current betting offer IDs to place a fresh bet.
+    ///
+    /// - Parameter outcomeId: The outcome identifier from a historical bet selection
+    /// - Returns: Reference containing event ID and betting offer IDs, or error if outcome not found
+    func getBettingOfferReference(forOutcomeId outcomeId: String) -> AnyPublisher<OutcomeBettingOfferReference, ServiceProviderError>
+
+    /// Fetches Event with single outcome for a betting offer (one-time RPC request)
+    ///
+    /// Returns Event containing:
+    /// - Full event details (teams, scores, status)
+    /// - Single market in markets array
+    /// - Single outcome in that market
+    ///
+    /// **Use Case**: Quick betslip validation or initial odds check without subscription overhead
+    ///
+    /// - Parameter bettingOfferId: The betting offer identifier
+    /// - Returns: Publisher emitting Event with single outcome, or error if not found
+    func getEventWithSingleOutcome(bettingOfferId: String) -> AnyPublisher<Event, ServiceProviderError>
+
+    /// Load full Events from a booking code for betslip population.
+    ///
+    /// Converts a booking code to its betting offer IDs, then fetches full Event data
+    /// for each offer so selections can be added to the betslip.
+    ///
+    /// **Use Case**: User receives shared booking code and wants to load bets into betslip
+    ///
+    /// **Implementation Strategy**:
+    /// 1. Retrieve betting offer IDs from booking code via PrivilegedAccessManager
+    /// 2. Fetch Event for each betting offer ID (provider-specific)
+    /// 3. Return array of Events ready for betslip
+    ///
+    /// - Parameter bookingCode: The booking code to load (e.g., "7YRLO2UQ")
+    /// - Returns: Publisher emitting array of Events or error
+    func loadEventsFromBookingCode(bookingCode: String) -> AnyPublisher<[Event], ServiceProviderError>
+
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>
 
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>
@@ -168,4 +209,6 @@ protocol EventsProvider: Connector {
     
     // Recommendations
     func getRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError>
+    
+    func getComboRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError>
 }

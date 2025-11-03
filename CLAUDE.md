@@ -230,6 +230,8 @@ xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination
    - Never directly integrate with APIs - use provider abstractions
    - Leverage provider switching capabilities for multi-client support
 
+*For testing strategies, mock patterns, and best practices, refer to [Documentation/TESTING_GUIDE.md](Documentation/TESTING_GUIDE.md).*
+
 ### Code Organization Patterns
 
 #### **Modern Screen Architecture** (BetssonCameroonApp style):

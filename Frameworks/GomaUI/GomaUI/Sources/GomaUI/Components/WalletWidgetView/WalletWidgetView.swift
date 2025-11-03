@@ -151,16 +151,77 @@ final public class WalletWidgetView: UIView {
     }
 }
 
-// MARK: - Preview Provider
+// MARK: - SwiftUI Preview
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Wallet Widget") {
-    PreviewUIView {
-        let viewModel = MockWalletWidgetViewModel.defaultMock
-        return WalletWidgetView(viewModel: viewModel)
+#Preview("WalletWidgetView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "WalletWidgetView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default balance
+        let defaultViewModel = MockWalletWidgetViewModel(
+            walletData: WalletWidgetData(
+                id: "wallet_1",
+                balance: "2,000.00",
+                depositButtonTitle: "DEPOSIT"
+            )
+        )
+        let defaultView = WalletWidgetView(viewModel: defaultViewModel)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // High balance
+        let highBalanceViewModel = MockWalletWidgetViewModel(
+            walletData: WalletWidgetData(
+                id: "wallet_2",
+                balance: "50,250.75",
+                depositButtonTitle: "DEPOSIT"
+            )
+        )
+        let highBalanceView = WalletWidgetView(viewModel: highBalanceViewModel)
+        highBalanceView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Low balance
+        let lowBalanceViewModel = MockWalletWidgetViewModel(
+            walletData: WalletWidgetData(
+                id: "wallet_3",
+                balance: "0.00",
+                depositButtonTitle: "DEPOSIT"
+            )
+        )
+        let lowBalanceView = WalletWidgetView(viewModel: lowBalanceViewModel)
+        lowBalanceView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(highBalanceView)
+        stackView.addArrangedSubview(lowBalanceView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(width: 180, height: 50)
 }
 
 #endif

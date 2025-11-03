@@ -33,9 +33,10 @@ class MockPhonePasswordCodeResetViewModel: PhonePasswordCodeResetViewModelProtoc
                                                                                           highlights: []))
         
         phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
-                                                                                                  placeholder: "Phone number *",
+                                                                                                  placeholder: "Phone number",
                                                                                                   prefix: "+237",
                                                                                                   isSecure: false,
+                                                                                                  isRequired: true,
                                                                                                   visualState: .idle,
                                                                                                   keyboardType: .phonePad,
                                                                                                   textContentType: .telephoneNumber))

@@ -7,7 +7,7 @@ import SwiftUI
 public final class ButtonIconView: UIView {
     
     // MARK: - Properties
-    private let viewModel: ButtonIconViewModelProtocol
+    private var viewModel: ButtonIconViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
@@ -47,8 +47,6 @@ public final class ButtonIconView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = StyleProvider.Color.highlightPrimary
-        imageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         return imageView
     }()
     
@@ -104,7 +102,10 @@ public final class ButtonIconView: UIView {
             contentStackView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             contentStackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             contentStackView.leadingAnchor.constraint(greaterThanOrEqualTo: containerView.leadingAnchor, constant: 8),
-            contentStackView.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -8)
+            contentStackView.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -8),
+            
+            iconImageView.widthAnchor.constraint(equalToConstant: 16),
+            iconImageView.heightAnchor.constraint(equalToConstant: 16)
         ])
     }
     
@@ -127,11 +128,16 @@ public final class ButtonIconView: UIView {
         titleLabel.text = data.title
         
         // Update icon
-        if let customImage = UIImage(named: data.icon ?? "") {
+        if let customImage = UIImage(named: data.icon ?? "")?.withRenderingMode(.alwaysTemplate) {
             iconImageView.image = customImage
         }
         else if let systemImage = UIImage(systemName: data.icon ?? "") {
             iconImageView.image = systemImage
+        }
+        if let tint = data.iconColor {
+            iconImageView.tintColor = tint
+        } else {
+            iconImageView.tintColor = StyleProvider.Color.highlightPrimary
         }
         
         // Update layout
@@ -141,6 +147,20 @@ public final class ButtonIconView: UIView {
         alpha = data.isEnabled ? 1.0 : 0.5
         isUserInteractionEnabled = data.isEnabled
         button.isEnabled = data.isEnabled
+
+        // Apply styling customizations if provided
+        if let backgroundColor = data.backgroundColor {
+            containerView.backgroundColor = backgroundColor
+        } else {
+            containerView.backgroundColor = .clear
+        }
+        if let radius = data.cornerRadius {
+            containerView.layer.cornerRadius = radius
+            containerView.layer.masksToBounds = true
+        } else {
+            containerView.layer.cornerRadius = 0
+            containerView.layer.masksToBounds = false
+        }
     }
     
     private func updateLayout(for layoutType: ButtonIconLayoutType) {
@@ -160,6 +180,22 @@ public final class ButtonIconView: UIView {
         }
     }
     
+    // MARK: - Configuration
+    /// Configures the view with a new view model for efficient reuse
+    public func configure(with newViewModel: ButtonIconViewModelProtocol) {
+        // Clear previous bindings
+        cancellables.removeAll()
+        
+        // Update view model reference
+        self.viewModel = newViewModel
+        
+        // Render current state immediately
+        render(data: newViewModel.currentData)
+        
+        // Setup new bindings
+        setupBindings()
+    }
+    
     // MARK: - Actions
     @objc private func handleButtonTapped() {
         viewModel.onButtonTapped?()
@@ -170,30 +206,65 @@ public final class ButtonIconView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Icon Left") {
-    PreviewUIView {
-        ButtonIconView(viewModel: MockButtonIconViewModel.bookingCodeMock())
-    }
-    .frame(height: 44)
-    .padding()
-}
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
 
-@available(iOS 17.0, *)
-#Preview("Icon Right") {
-    PreviewUIView {
-        ButtonIconView(viewModel: MockButtonIconViewModel.clearBetslipMock())
-    }
-    .frame(height: 44)
-    .padding()
-}
+        // 1. TITLE LABEL
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "ButtonIconView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
 
-@available(iOS 17.0, *)
-#Preview("Disabled") {
-    PreviewUIView {
-        ButtonIconView(viewModel: MockButtonIconViewModel.disabledMock())
+        // 2. VERTICAL STACK with ALL states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3. ADD ALL COMPONENT INSTANCES
+        // Icon Left state
+        let iconLeftView = ButtonIconView(viewModel: MockButtonIconViewModel.bookingCodeMock())
+        iconLeftView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Icon Right state
+        let iconRightView = ButtonIconView(viewModel: MockButtonIconViewModel.clearBetslipMock())
+        iconRightView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled state
+        let disabledView = ButtonIconView(viewModel: MockButtonIconViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add all states to stack
+        stackView.addArrangedSubview(iconLeftView)
+        stackView.addArrangedSubview(iconRightView)
+        stackView.addArrangedSubview(disabledView)
+
+        // 4. ADD TO VIEW HIERARCHY
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // 5. CONSTRAINTS
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            iconLeftView.heightAnchor.constraint(equalToConstant: 44),
+            iconRightView.heightAnchor.constraint(equalToConstant: 44),
+            disabledView.heightAnchor.constraint(equalToConstant: 44)
+        ])
+
+        return vc
     }
-    .frame(height: 44)
-    .padding()
 }
 
 #endif 

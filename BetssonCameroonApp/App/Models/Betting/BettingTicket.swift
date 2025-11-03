@@ -10,7 +10,7 @@ import Foundation
 
 public struct BettingTicket: Codable, Hashable {
 
-    var id: String
+    var id: String // Based on the bettinf offer id
 
     var bettingId: String {
         return id

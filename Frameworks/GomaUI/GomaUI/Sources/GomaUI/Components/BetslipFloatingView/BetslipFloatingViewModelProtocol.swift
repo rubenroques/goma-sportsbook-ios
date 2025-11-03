@@ -7,7 +7,7 @@ import Combine
 /// Represents the state of the betslip floating view
 public enum BetslipFloatingState: Equatable {
     case noTickets
-    case withTickets(selectionCount: Int, odds: String, winBoostPercentage: String?, totalEligibleCount: Int)
+    case withTickets(selectionCount: Int, odds: String, winBoostPercentage: String?, totalEligibleCount: Int, nextTierPercentage: String?)
 }
 
 /// Data model for the betslip floating view

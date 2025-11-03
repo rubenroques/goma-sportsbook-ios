@@ -12,7 +12,7 @@ public final class ProfileMenuListView: UIView {
     // MARK: - Properties
     private let viewModel: ProfileMenuListViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
-    private var menuItemViews: [ProfileMenuItemView] = []
+    private var menuItemViews: [ActionRowView] = []
     private var currentLanguage: String = "English"
     
     // MARK: - Lifetime and Cycle
@@ -62,22 +62,22 @@ public final class ProfileMenuListView: UIView {
             .store(in: &cancellables)
     }
     
-    private func updateMenuItems(_ menuItems: [ProfileMenuItem]) {
+    private func updateMenuItems(_ menuItems: [ActionRowItem]) {
         // Cache menu items
         cachedMenuItems = menuItems
-        
+
         // Clear existing views
         clearMenuItemViews()
-        
+
         // Create new views
         menuItemViews = menuItems.map { menuItem in
-            let itemView = ProfileMenuItemView()
-            
+            let itemView = ActionRowView()
+
             // Create updated item with current language if needed
             var updatedItem = menuItem
             if menuItem.action == .changeLanguage {
                 // Use actual current language from viewModel binding
-                updatedItem = ProfileMenuItem(
+                updatedItem = ActionRowItem(
                     id: menuItem.id,
                     icon: menuItem.icon,
                     title: menuItem.title,
@@ -86,14 +86,14 @@ public final class ProfileMenuListView: UIView {
                     action: menuItem.action
                 )
             }
-            
+
             itemView.configure(with: updatedItem) { [weak self] selectedItem in
                 self?.viewModel.didSelectItem(selectedItem)
             }
-            
+
             return itemView
         }
-        
+
         // Add views to stack
         menuItemViews.forEach { itemView in
             stackView.addArrangedSubview(itemView)
@@ -105,7 +105,7 @@ public final class ProfileMenuListView: UIView {
         for (index, itemView) in menuItemViews.enumerated() {
             let menuItem = cachedMenuItems[index]
             if menuItem.action == .changeLanguage {
-                let updatedItem = ProfileMenuItem(
+                let updatedItem = ActionRowItem(
                     id: menuItem.id,
                     icon: menuItem.icon,
                     title: menuItem.title,
@@ -113,7 +113,7 @@ public final class ProfileMenuListView: UIView {
                     type: menuItem.type,
                     action: menuItem.action
                 )
-                
+
                 itemView.configure(with: updatedItem) { [weak self] selectedItem in
                     self?.viewModel.didSelectItem(selectedItem)
                 }
@@ -121,10 +121,10 @@ public final class ProfileMenuListView: UIView {
             }
         }
     }
-    
-    private var cachedMenuItems: [ProfileMenuItem] = []
-    
-    private func getCurrentMenuItems() -> [ProfileMenuItem] {
+
+    private var cachedMenuItems: [ActionRowItem] = []
+
+    private func getCurrentMenuItems() -> [ActionRowItem] {
         return cachedMenuItems
     }
     

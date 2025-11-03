@@ -2,7 +2,7 @@
 //  PromotionCardViewController.swift
 //  GomaUIDemo
 //
-//  Created by Claude on 29/08/2025.
+//  Created on 29/08/2025.
 //
 
 import UIKit

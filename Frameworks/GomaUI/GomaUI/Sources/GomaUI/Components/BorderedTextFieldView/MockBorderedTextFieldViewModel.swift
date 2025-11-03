@@ -49,10 +49,12 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
     public var isPasswordVisiblePublisher: AnyPublisher<Bool, Never> {
         return isPasswordVisibleSubject.eraseToAnyPublisher()
     }
-    
-    public var prefixText: String?
 
-        // MARK: - Initialization
+    public var prefixText: String?
+    public var isRequired: Bool
+    public var usesCustomInput: Bool
+
+    // MARK: - Initialization
     public init(textFieldData: BorderedTextFieldData) {
         self.textSubject = CurrentValueSubject(textFieldData.text)
         self.placeholderSubject = CurrentValueSubject(textFieldData.placeholder)
@@ -63,8 +65,10 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
 
         // Password visibility initialization
         self.isPasswordVisibleSubject = CurrentValueSubject(false)
-        
+
         self.prefixText = textFieldData.prefix
+        self.isRequired = textFieldData.isRequired
+        self.usesCustomInput = textFieldData.usesCustomInput
     }
 
     // MARK: - BorderedTextFieldViewModelProtocol

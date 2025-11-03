@@ -178,7 +178,7 @@ extension WalletDetailView {
 #Preview("1. Default State - Normal Case") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let mockViewModel = MockWalletDetailViewModel.defaultMock
         let walletDetailView = WalletDetailView(viewModel: mockViewModel)
@@ -202,7 +202,7 @@ extension WalletDetailView {
 #Preview("2. Empty Wallet - Edge Case") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        vc.view.backgroundColor = .backgroundTestColor
         
         // Create overlay effect
         let overlayView = UIView()
@@ -250,7 +250,7 @@ extension WalletDetailView {
 #Preview("3. High Balance - Stress Test") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let mockViewModel = MockWalletDetailViewModel.highBalanceMock
         let walletDetailView = WalletDetailView(viewModel: mockViewModel)
@@ -337,7 +337,7 @@ extension WalletDetailView {
 #Preview("5. All States Grid") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         // Create a scroll view for multiple components
         let scrollView = UIScrollView()

@@ -122,29 +122,55 @@ public final class StepInstructionView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-struct StepInstructionView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            PreviewUIView {
-                StepInstructionView(viewModel: MockStepInstructionViewModel.defaultMock)
-            }
-            .previewDisplayName("Mobile Money Step")
-            .frame(height: 48)
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text  = "StepInstructionView"
+        titleLabel.textAlignment = .center
+        
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default mock - Mobile Money Step
+        let defaultView = StepInstructionView(viewModel: MockStepInstructionViewModel.defaultMock)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Custom color mock - Second Step
+        let customColorView = StepInstructionView(viewModel: MockStepInstructionViewModel.customColorMock)
+        customColorView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Multiple highlights mock
+        let multipleHighlightsView = StepInstructionView(viewModel: MockStepInstructionViewModel.multipleHighlightsMock)
+        multipleHighlightsView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(customColorView)
+        stackView.addArrangedSubview(multipleHighlightsView)
+
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: stackView.centerXAnchor),
             
-            PreviewUIView {
-                StepInstructionView(viewModel: MockStepInstructionViewModel.customColorMock)
-            }
-            .previewDisplayName("Second Step")
-            .frame(height: 48)
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -40),
+            
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
 
-            PreviewUIView {
-                StepInstructionView(viewModel: MockStepInstructionViewModel.multipleHighlightsMock)
-            }
-            .previewDisplayName("Custom Color")
-            .frame(height: 48)
-
-        }
-        .padding()
+        return vc
     }
 }
 #endif

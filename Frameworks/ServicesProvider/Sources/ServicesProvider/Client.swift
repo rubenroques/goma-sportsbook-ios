@@ -77,38 +77,54 @@ public class Client {
             // Session Coordinator
             let sessionCoordinator = EveryMatrixSessionCoordinator()
             
-            // This will trigger the connection to the EM WAMP socket
+            // Create both connectors
+            // socket
             let wampConnectionManaget = WAMPManager()
-            let everyMatrixConnector = EveryMatrixConnector(wampManager: wampConnectionManaget)
+            let everyMatrixSocketConnector = EveryMatrixSocketConnector(wampManager: wampConnectionManaget)
                         
-            everyMatrixConnector.connectionStatePublisher
+            // rest (shared by player api, recsys, ...)
+            let everyMatrixRESTConnector = EveryMatrixRESTConnector(sessionCoordinator: sessionCoordinator)
+
+            // sse (for cashout streaming)
+            let everyMatrixSSEConnector = EveryMatrixSSEConnector(sessionCoordinator: sessionCoordinator)
+
+            //
+            everyMatrixSocketConnector.connectionStatePublisher
                 .sink(receiveCompletion: { completion in
 
                 }, receiveValue: { [weak self] connectorState in
                     self?.eventsConnectionStateSubject.send(connectorState)
                 }).store(in: &self.cancellables)
             
-            
-            let everyMatrixEventsProvider = EveryMatrixEventsProvider(connector: everyMatrixConnector, sessionCoordinator: sessionCoordinator)
-            self.eventsProvider = everyMatrixEventsProvider
-            
-            // Player API for privilegedAccessManager
-            let everyMatrixPlayerAPIConnector = EveryMatrixPlayerAPIConnector(sessionCoordinator: sessionCoordinator)
-            
-            let everyMatrixPrivilegedAccessManager = EveryMatrixPrivilegedAccessManager(
-                connector: everyMatrixPlayerAPIConnector,
+            //
+            let everyMatrixPrivilegedAccessManager = EveryMatrixPAMProvider(
+                restConnector: everyMatrixRESTConnector,
                 sessionCoordinator: sessionCoordinator
             )
-
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager
             
+            //
+            // Events Provider (uses wamp socket)
+            let everyMatrixEventsProvider = EveryMatrixEventsProvider(
+                socketConnector: everyMatrixSocketConnector,
+                restConnector: everyMatrixRESTConnector,
+                sessionCoordinator: sessionCoordinator,
+                privilegedAccessManager: everyMatrixPrivilegedAccessManager)
+            self.eventsProvider = everyMatrixEventsProvider
+            
+            //
             // Casino API
             let everyMatrixCasinoConnector = EveryMatrixCasinoConnector(sessionCoordinator: sessionCoordinator)
             let everyMatrixCasinoProvider = EveryMatrixCasinoProvider(connector: everyMatrixCasinoConnector)
             self.casinoProvider = everyMatrixCasinoProvider
             
             // Betting API
-            let everyMatrixBettingProvider = EveryMatrixBettingProvider(sessionCoordinator: sessionCoordinator)
+            let everyMatrixBettingProvider = EveryMatrixBettingProvider(
+                socketConnector: everyMatrixSocketConnector,
+                sessionCoordinator: sessionCoordinator,
+                restConnector: everyMatrixRESTConnector,
+                sseConnector: everyMatrixSSEConnector
+            )
             self.bettingProvider = everyMatrixBettingProvider
 
             // CMS/HomeContent Provider - uses Goma CMS
@@ -734,6 +750,16 @@ extension Client {
         return eventsProvider.getRecommendedMatch(userId: userId, isLive: isLive, limit: limit)
     }
     
+    public func getComboRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return eventsProvider.getComboRecommendedMatch(userId: userId, isLive: isLive, limit: limit)
+    }
+    
     //
     //
     public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
@@ -895,6 +921,26 @@ extension Client {
         return eventsProvider.subscribeToEventWithSingleOutcome(eventId: eventId, outcomeId: outcomeId)
     }
 
+    public func getEventWithSingleOutcome(bettingOfferId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getEventWithSingleOutcome(bettingOfferId: bettingOfferId)
+    }
+
+    public func loadEventsFromBookingCode(bookingCode: String) -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.loadEventsFromBookingCode(bookingCode: bookingCode)
+    }
+
     public func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -924,6 +970,21 @@ extension Client {
         
         return eventsProvider.getHighlightedLiveEvents(eventCount: eventCount, userId: userId)
     }
+    
+    //
+    //
+    public func getBettingOfferReference(forOutcomeId outcomeId: String) -> AnyPublisher<OutcomeBettingOfferReference, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        
+        return eventsProvider.getBettingOfferReference(forOutcomeId: outcomeId)
+    }
+    
+    
+    
 }
 
 extension Client {
@@ -1275,14 +1336,25 @@ extension Client {
         }
         return bettingProvider.calculatePotentialReturn(forBetTicket: betTicket)
     }
-
-    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String? = nil, userId: String? = nil, oddsValidationType: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    
+    public func calculateUnifiedBettingOptions(betType: BetGroupingType, selections: [BettingOptionsCalculateSelection], stakeAmount: Double?)
+    -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
-        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType)
+        return bettingProvider.calculateUnifiedBettingOptions(betType: betType, selections: selections, stakeAmount: stakeAmount)
+    }
+    
+
+    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String? = nil, userId: String? = nil, oddsValidationType: String? = nil, ubsWalletId: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
     }
 
     public func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
@@ -1446,6 +1518,51 @@ extension Client {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
         return bettingProvider.updateTicket(betId: betId, betTicket: betTicket)
+    }
+    
+    public func createBookingCode(bettingOfferIds: [String], originalSelectionsLength:Int) -> AnyPublisher<BookingCodeResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.createBookingCode(bettingOfferIds: bettingOfferIds, originalSelectionsLength: originalSelectionsLength)
+    }
+
+    public func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getBettingOfferIds(bookingCode: bookingCode)
+    }
+    
+    public func getResetPasswordTokenId(mobileNumber: String, mobilePrefix: String) -> AnyPublisher<ResetPasswordTokenResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getResetPasswordTokenId(mobileNumber: mobileNumber, mobilePrefix: mobilePrefix)
+    }
+    
+    public func validateResetPasswordCode(tokenId: String, validationCode: String) -> AnyPublisher<ValidateResetPasswordCodeResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.validateResetPasswordCode(tokenId: tokenId, validationCode: validationCode)
+    }
+    
+    public func resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool) -> AnyPublisher<ResetPasswordByHashKeyResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.resetPasswordWithHashKey(hashKey: hashKey, plainTextPassword: plainTextPassword, isUserHash: isUserHash)
     }
 
 }
@@ -1684,7 +1801,23 @@ extension Client {
 
         return privilegedAccessManager.optOutBonus(partyId: partyId, code: code)
     }
-
+    
+    // Stairs bonus for odds boost
+    public func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
+    -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getOddsBoostStairs(currency: currency, stakeAmount: stakeAmount, selections: selections)
+    }
+    
+    
+    //
+    // Legacy cashout without SSEvents
+    //
     public func calculateCashout(betId: String, stakeValue: String? = nil) -> AnyPublisher<Cashout, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
@@ -2049,7 +2182,7 @@ extension Client {
 
         return homeContentProvider.getTopCompetitions()
     }
-
+    
 }
 
 // Social endpoints
@@ -2376,12 +2509,12 @@ extension Client {
         return casinoProvider.getRecommendedGames(language: language, platform: platform)
     }
     
-    public func buildCasinoGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, sessionId: String? = nil, language: String? = nil) -> String? {
+    public func buildCasinoGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, language: String? = nil) -> String? {
         guard let casinoProvider = self.casinoProvider else {
             return nil
         }
         
-        return casinoProvider.buildGameLaunchUrl(for: game, mode: mode, sessionId: sessionId, language: language)
+        return casinoProvider.buildGameLaunchUrl(for: game, mode: mode, language: language)
     }
 
 }

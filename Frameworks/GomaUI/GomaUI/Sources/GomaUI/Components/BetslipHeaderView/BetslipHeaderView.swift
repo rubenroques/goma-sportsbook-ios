@@ -309,18 +309,44 @@ public final class BetslipHeaderView: UIView {
 
 @available(iOS 17.0, *)
 #Preview("Not Logged In") {
-    PreviewUIView {
-        BetslipHeaderView(viewModel: MockBetslipHeaderViewModel.notLoggedInMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = UIColor.gray
+
+        let headerView = BetslipHeaderView(viewModel: MockBetslipHeaderViewModel.notLoggedInMock())
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(headerView)
+
+        NSLayoutConstraint.activate([
+            headerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            headerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            headerView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+
+        return vc
     }
-    .frame(height: 60)
 }
 
 @available(iOS 17.0, *)
 #Preview("Logged In") {
-    PreviewUIView {
-        BetslipHeaderView(viewModel: MockBetslipHeaderViewModel.loggedInMock())
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = UIColor.gray
+
+        let headerView = BetslipHeaderView(viewModel: MockBetslipHeaderViewModel.loggedInMock())
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(headerView)
+
+        NSLayoutConstraint.activate([
+            headerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            headerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20),
+            headerView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+
+        return vc
     }
-    .frame(height: 60)
 }
 
 #endif 

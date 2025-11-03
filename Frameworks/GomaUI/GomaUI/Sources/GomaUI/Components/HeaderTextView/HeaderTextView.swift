@@ -108,34 +108,49 @@ extension HeaderTextView {
 import SwiftUI
 
 @available(iOS 17.0, *)
-#Preview("HeaderTextView Examples") {
+#Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = UIColor.systemBackground
-        
+        vc.view.backgroundColor = .backgroundTestColor
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "HeaderTextView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+
+        // Vertical stack with all states
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 20
+        stackView.spacing = 16
         stackView.alignment = .fill
-        stackView.distribution = .fillEqually
-        
-        // Default style
+        stackView.distribution = .equalSpacing
+
+        // Default state
         let defaultViewModel = MockHeaderTextViewModel()
         defaultViewModel.updateTitle("Suggested Events")
         let defaultView = HeaderTextView(viewModel: defaultViewModel)
-        defaultView.configure()
-        
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
         stackView.addArrangedSubview(defaultView)
-        
+
+        // Add to view hierarchy
+        vc.view.addSubview(titleLabel)
         vc.view.addSubview(stackView)
-        
+
+        // Constraints
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            stackView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20)
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
         ])
-        
+
         return vc
     }
 }

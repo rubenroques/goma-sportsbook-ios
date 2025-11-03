@@ -14,8 +14,8 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     
     // MARK: - Child ViewModels
     
-    let rebetButtonViewModel: ButtonIconViewModelProtocol
-    let cashoutButtonViewModel: ButtonIconViewModelProtocol
+    var rebetButtonViewModel: ButtonIconViewModelProtocol
+    var cashoutButtonViewModel: ButtonIconViewModelProtocol
     
     // MARK: - Publishers
     
@@ -43,16 +43,15 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         let initialBetInfo = Self.createTicketBetInfoData(from: myBet)
         self.betInfoSubject = CurrentValueSubject(initialBetInfo)
         
-        // Create button view models
         self.rebetButtonViewModel = ButtonIconViewModel.rebetButton(
-            isEnabled: false // TODO
+            isEnabled: false
         )
         
         self.cashoutButtonViewModel = ButtonIconViewModel.cashoutButton(
-            isEnabled: false // TODO
+            isEnabled: false
         )
         
-        setupButtonActions()
+        setupButtonsActions(bet: myBet)
     }
     
     // MARK: - Protocol Methods
@@ -87,26 +86,26 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     }
     
     // MARK: - Private Methods
-    
-    private func setupButtonActions() {
-        // Setup rebet button action
-        if let rebetVM = rebetButtonViewModel as? ButtonIconViewModel {
-            rebetVM.onButtonTapped = { [weak self] in
-                self?.handleRebetTap()
-            }
+    private func setupButtonsActions(bet: MyBet) {
+        
+        // Create button view models
+        rebetButtonViewModel.setEnabled(canRebet(bet))
+        
+        rebetButtonViewModel.onButtonTapped = { [weak self] in
+            self?.handleRebetTap()
+        }
+                
+        cashoutButtonViewModel.setEnabled(canCashout(bet))
+        
+        cashoutButtonViewModel.onButtonTapped = { [weak self] in
+            self?.handleCashoutTap()
         }
         
-        // Setup cashout button action
-        if let cashoutVM = cashoutButtonViewModel as? ButtonIconViewModel {
-            cashoutVM.onButtonTapped = { [weak self] in
-                self?.handleCashoutTap()
-            }
-        }
     }
     
     private func canRebet(_ bet: MyBet) -> Bool {
-        // Can rebet if bet is settled (won, lost, or cashed out)
-        return bet.isSettled
+        // Can rebet if bet open
+        return !bet.isSettled
     }
     
     private func canCashout(_ bet: MyBet) -> Bool {
@@ -230,7 +229,7 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     }
     
     private static func formatBetDetails(_ myBet: MyBet) -> String {
-        return "Bet ID: \(myBet.identifier)"
+        return "Ticket: \(myBet.displayTicketReference)"
     }
     
     private static func formatOdds(_ oddFormat: OddFormat) -> String {

@@ -28,11 +28,12 @@ struct MyBet: Codable, Equatable, Hashable {
     let date: Date
     
     // MARK: - Additional Properties
-    
+
     let freebet: Bool
     let partialCashoutReturn: Double?
     let partialCashoutStake: Double?
-    
+    let ticketCode: String?
+
     // MARK: - Initialization
     
     init(
@@ -50,7 +51,8 @@ struct MyBet: Codable, Equatable, Hashable {
         date: Date,
         freebet: Bool = false,
         partialCashoutReturn: Double? = nil,
-        partialCashoutStake: Double? = nil
+        partialCashoutStake: Double? = nil,
+        ticketCode: String? = nil
     ) {
         self.identifier = identifier
         self.type = type
@@ -67,10 +69,16 @@ struct MyBet: Codable, Equatable, Hashable {
         self.freebet = freebet
         self.partialCashoutReturn = partialCashoutReturn
         self.partialCashoutStake = partialCashoutStake
+        self.ticketCode = ticketCode
     }
-    
+
     // MARK: - Convenience Properties
-    
+
+    /// Returns the ticket reference for display (ticketCode if available, otherwise identifier)
+    var displayTicketReference: String {
+        return ticketCode ?? identifier
+    }
+
     /// Returns true if this is a single bet (1 selection)
     var isSingle: Bool {
         return selections.count == 1

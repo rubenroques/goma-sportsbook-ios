@@ -85,39 +85,57 @@ public final class BetSummaryRowView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Potential Winnings") {
-    PreviewUIView {
-        BetSummaryRowView(viewModel: MockBetSummaryRowViewModel.potentialWinningsMock())
-    }
-    .frame(height: 30)
-    .padding()
-}
+#Preview("BetSummaryRowView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
 
-@available(iOS 17.0, *)
-#Preview("Win Bonus") {
-    PreviewUIView {
-        BetSummaryRowView(viewModel: MockBetSummaryRowViewModel.winBonusMock())
-    }
-    .frame(height: 30)
-    .padding()
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Payout") {
-    PreviewUIView {
-        BetSummaryRowView(viewModel: MockBetSummaryRowViewModel.payoutMock())
-    }
-    .frame(height: 30)
-    .padding()
-}
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "BetSummaryRowView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Disabled") {
-    PreviewUIView {
-        BetSummaryRowView(viewModel: MockBetSummaryRowViewModel.disabledMock())
+        // Potential Winnings
+        let potentialWinningsView = BetSummaryRowView(viewModel: MockBetSummaryRowViewModel.potentialWinningsMock())
+        potentialWinningsView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Win Bonus
+        let winBonusView = BetSummaryRowView(viewModel: MockBetSummaryRowViewModel.winBonusMock())
+        winBonusView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Payout
+        let payoutView = BetSummaryRowView(viewModel: MockBetSummaryRowViewModel.payoutMock())
+        payoutView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled
+        let disabledView = BetSummaryRowView(viewModel: MockBetSummaryRowViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(potentialWinningsView)
+        stackView.addArrangedSubview(winBonusView)
+        stackView.addArrangedSubview(payoutView)
+        stackView.addArrangedSubview(disabledView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(height: 30)
-    .padding()
 }
 
 #endif 

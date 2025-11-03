@@ -26,12 +26,18 @@ public final class BetInfoSubmissionView: UIView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 16
+        stackView.spacing = 20
         stackView.distribution = .equalSpacing
         return stackView
     }()
     
     // Bet summary rows using new components
+    private lazy var oddsRow: BetSummaryRowView = {
+        let betSummaryRowView = BetSummaryRowView(viewModel: viewModel.oddsRowViewModel)
+        betSummaryRowView.translatesAutoresizingMaskIntoConstraints = false
+        return betSummaryRowView
+    }()
+    
     private lazy var potentialWinningsRow: BetSummaryRowView = {
         let betSummaryRowView = BetSummaryRowView(viewModel: viewModel.potentialWinningsRowViewModel)
         betSummaryRowView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,6 +119,7 @@ public final class BetInfoSubmissionView: UIView {
         
         // Add bet summary section directly to container
         containerView.addSubview(betSummaryStackView)
+        betSummaryStackView.addArrangedSubview(oddsRow)
         betSummaryStackView.addArrangedSubview(potentialWinningsRow)
         betSummaryStackView.addArrangedSubview(winBonusRow)
         betSummaryStackView.addArrangedSubview(payoutRow)
@@ -188,38 +195,65 @@ public final class BetInfoSubmissionView: UIView {
 
 @available(iOS 17.0, *)
 #Preview("Default") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.defaultMock(currency: "XAF"))
-        }
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+        
+        let view = BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.defaultMock(currency: "XAF"))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(view)
+        
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            view.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            view.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20)
+        ])
+        
+        return vc
     }
-    .frame(height: 200)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Sample Data") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.withAmountsMock(currency: "XAF"))
-        }
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+        
+        let view = BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.withAmountsMock(currency: "XAF"))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(view)
+        
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            view.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            view.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20)
+        ])
+        
+        return vc
     }
-    .frame(height: 200)
-    .padding()
 }
 
 @available(iOS 17.0, *)
 #Preview("Disabled") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.disabledMock(currency: "XAF"))
-        }
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+        
+        let view = BetInfoSubmissionView(viewModel: MockBetInfoSubmissionViewModel.disabledMock(currency: "XAF"))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(view)
+        
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            view.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            view.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20)
+        ])
+        
+        return vc
     }
-    .frame(height: 200)
-    .padding()
 }
 
-#endif 
+#endif
+
+
+ 

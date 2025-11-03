@@ -322,44 +322,18 @@ extension LanguageItemView {
             print("Selected: \(language.displayName)")
         }
         itemView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         vc.view.addSubview(itemView)
-        
+
         NSLayoutConstraint.activate([
             itemView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
             itemView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
             itemView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
         ])
-        
+
         return vc
     }
-}
-
-@available(iOS 17.0, *)
-#Preview("Language Items - Multiple") {
-    VStack(spacing: 0) {
-        PreviewUIView {
-            let selectedLanguage = LanguageModel.english.withSelection(true)
-            let itemView = LanguageItemView()
-            itemView.configure(with: selectedLanguage, isLastItem: false) { language in
-                print("Selected: \(language.displayName)")
-            }
-            return itemView
-        }
-        .frame(height: 56)
-        
-        PreviewUIView {
-            let unselectedLanguage = LanguageModel.french.withSelection(false)
-            let itemView = LanguageItemView()
-            itemView.configure(with: unselectedLanguage, isLastItem: true) { language in
-                print("Selected: \(language.displayName)")
-            }
-            return itemView
-        }
-        .frame(height: 56)
-    }
-    .padding()
 }
 
 #endif

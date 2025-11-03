@@ -41,6 +41,7 @@ public struct LiveScoreData: Equatable, Hashable {
 
 // MARK: - Display State
 public struct TallOddsMatchCardDisplayState: Equatable {
+    
     public let matchId: String
     public let homeParticipantName: String
     public let awayParticipantName: String
@@ -61,6 +62,7 @@ public struct TallOddsMatchCardDisplayState: Equatable {
 
 // MARK: - View Model Protocol
 public protocol TallOddsMatchCardViewModelProtocol {
+    
     // MARK: - Current Values (Synchronous Access for TableView)
     // These provide immediate data access for UITableView sizing
     var currentDisplayState: TallOddsMatchCardDisplayState { get }

@@ -11,20 +11,27 @@ import OrderedCollections
 import ServicesProvider
 
 class BetslipManager: NSObject {
-    
-    var allowedBetTypesPublisher = CurrentValueSubject< LoadableContent<[ServicesProvider.BetType]>, Never>.init( .idle )
-    
-    var allBetTypes = [ServicesProvider.BetType]()
+
     var newBetsPlacedPublisher = PassthroughSubject<Void, Never>.init()
     var bettingTicketsPublisher: CurrentValueSubject<[BettingTicket], Never>
-    
+
     private var bettingTicketsDictionaryPublisher: CurrentValueSubject<OrderedDictionary<String, BettingTicket>, Never>
     private var bettingTicketPublisher: [String: CurrentValueSubject<BettingTicket, Never>]
-    
+    private var oddsBoostStairsSubject = CurrentValueSubject<OddsBoostStairsState?, Never>(nil)
+    private var bettingOptionsSubject = CurrentValueSubject<LoadableContent<UnifiedBettingOptions>, Never>(.idle)
+
     private var serviceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
     private var bettingTicketsCancellables: [String: AnyCancellable] = [:]
-    
+
     private var cancellables: Set<AnyCancellable> = []
+
+    var oddsBoostStairsPublisher: AnyPublisher<OddsBoostStairsState?, Never> {
+        return oddsBoostStairsSubject.eraseToAnyPublisher()
+    }
+
+    var bettingOptionsPublisher: AnyPublisher<LoadableContent<UnifiedBettingOptions>, Never> {
+        return bettingOptionsSubject.eraseToAnyPublisher()
+    }
     
     override init() {
         self.bettingTicketsPublisher = .init([])
@@ -76,6 +83,75 @@ class BetslipManager: NSObject {
                 self?.requestAllowedBetTypes(withBettingTickets: bettingTickets)
             })
             .store(in: &self.cancellables)
+        
+        self.bettingTicketsPublisher
+            .removeDuplicates(by: { left, right in
+                left.map(\.id) == right.map(\.id)
+            })
+            .sink(receiveValue: { [weak self] bettingTickets in
+                self?.fetchOddsBoostStairs()
+            })
+            .store(in: &self.cancellables)
+
+        // Track user login state changes for odds boost
+        Env.userSessionStore.userProfileStatusPublisher
+            .removeDuplicates()
+            .sink(receiveValue: { [weak self] status in
+                switch status {
+                case .logged:
+                    // User just logged in, fetch odds boost if there are tickets
+                    print("[ODDS_BOOST] 🔐 User logged in, fetching odds boost stairs")
+                    self?.fetchOddsBoostStairs()
+                case .anonymous:
+                    // User logged out, clear odds boost
+                    print("[ODDS_BOOST] 👋 User logged out, clearing odds boost stairs")
+                    self?.oddsBoostStairsSubject.send(nil)
+                }
+            })
+            .store(in: &self.cancellables)
+
+        // Track wallet changes to handle auto-login race condition
+        // When user auto-logs in (FaceID), profile loads first but wallet loads slightly later
+        // This subscription ensures we fetch odds boost once wallet becomes available
+        Env.userSessionStore.userWalletPublisher
+            .removeDuplicates()
+            .sink(receiveValue: { [weak self] wallet in
+                guard let self = self else { return }
+
+                // Only fetch when all conditions are met:
+                // 1. Wallet just became available (currency is present)
+                // 2. User has tickets in betslip
+                // 3. User is logged in
+                guard wallet?.currency != nil,
+                      !self.bettingTicketsPublisher.value.isEmpty,
+                      Env.userSessionStore.userProfilePublisher.value != nil else {
+                    return
+                }
+
+                print("[ODDS_BOOST] 💳 Wallet loaded, fetching odds boost for auto-login scenario")
+                self.fetchOddsBoostStairs()
+            })
+            .store(in: &self.cancellables)
+
+        // Auto-validate betting options when tickets change
+        self.bettingTicketsPublisher
+            .removeDuplicates(by: { left, right in
+                left.map(\.id) == right.map(\.id)
+            })
+            .sink(receiveValue: { [weak self] _ in
+                self?.validateBettingOptions()
+            })
+            .store(in: &self.cancellables)
+
+        // Re-validate when user logs in (affects bonus eligibility)
+        Env.userSessionStore.userProfileStatusPublisher
+            .removeDuplicates()
+            .filter { $0 == .logged }
+            .sink(receiveValue: { [weak self] _ in
+                print("[BETTING_OPTIONS] 🔐 User logged in, re-validating betting options")
+                self?.validateBettingOptions()
+            })
+            .store(in: &self.cancellables)
 
     }
     
@@ -107,6 +183,7 @@ class BetslipManager: NSObject {
             self.unsubscribeBettingTicketPublisher(withId: bettingTicket.id)
         }
         self.bettingTicketsDictionaryPublisher.send([:])
+        self.oddsBoostStairsSubject.send(nil)
     }
     
     private func reconnectBettingTicketsUpdates() {
@@ -253,9 +330,145 @@ extension BetslipManager {
     }
     
     func requestAllowedBetTypes(withBettingTickets bettingTickets: [BettingTicket]) {
-       
+
     }
-    
+
+    private func fetchOddsBoostStairs() {
+        // Early return if no tickets
+        guard !bettingTicketsPublisher.value.isEmpty else {
+            print("[ODDS_BOOST] ⚠️ No tickets, skipping odds boost fetch")
+            oddsBoostStairsSubject.send(nil)
+            return
+        }
+
+        // Get currency from user wallet
+        guard let currency = Env.userSessionStore.userWalletPublisher.value?.currency else {
+            print("[ODDS_BOOST] ⚠️ No user currency, skipping odds boost fetch")
+            oddsBoostStairsSubject.send(nil)
+            return
+        }
+
+        // Map tickets to OddsBoostStairsSelections
+        let oddsBoostSelections = bettingTicketsPublisher.value.map { ticket in
+            return ServicesProvider.OddsBoostStairsSelection(
+                outcomeId: ticket.id,
+                eventId: ticket.matchId
+            )
+        }
+
+        print("[ODDS_BOOST] Fetching odds boost for \(oddsBoostSelections.count) selections, currency: \(currency)")
+
+        // Call SP method (stake is optional, passing nil)
+        Env.servicesProvider.getOddsBoostStairs(
+            currency: currency,
+            stakeAmount: nil,
+            selections: oddsBoostSelections
+        )
+        .receive(on: DispatchQueue.main)
+        .sink(receiveCompletion: { completion in
+            if case .failure(let error) = completion {
+                print("[ODDS_BOOST]  Failed: \(error)")
+            }
+        }, receiveValue: { [weak self] spResponse in
+            guard let spResponse = spResponse else {
+                print("[ODDS_BOOST]  No bonus available")
+                self?.oddsBoostStairsSubject.send(nil)
+                return
+            }
+
+            // Map SP model to App model
+            let appState = ServiceProviderModelMapper.oddsBoostStairsState(
+                fromServiceProviderResponse: spResponse
+            )
+
+            let currentPercentage = appState.currentTier?.percentage ?? 0
+            let nextPercentage = appState.nextTier?.percentage ?? 0
+            print("[ODDS_BOOST] Current: \(currentPercentage * 100)% | Next: \(nextPercentage * 100)%")
+            print("[ODDS_BOOST] UBS Wallet ID: \(appState.ubsWalletId)")
+
+            if let nextTier = appState.nextTier {
+                let selectionsNeeded = max(0, nextTier.minSelections - oddsBoostSelections.count)
+                if selectionsNeeded > 0 {
+                    let qualifier = selectionsNeeded == 1 ? "event" : "events"
+                    print("[ODDS_BOOST] Add \(selectionsNeeded) more qualifying \(qualifier) to get a \(Int(nextPercentage * 100))% win boost")
+                }
+            } else if appState.currentTier != nil {
+                print("[ODDS_BOOST] Maximum boost reached!")
+            }
+
+            self?.oddsBoostStairsSubject.send(appState)
+        })
+        .store(in: &cancellables)
+    }
+
+    // MARK: - Betting Options Validation
+
+    private func validateBettingOptions(stakeAmount: Double? = nil) {
+        // Early return if no tickets
+        guard !bettingTicketsPublisher.value.isEmpty else {
+            print("[BETTING_OPTIONS] No tickets, clearing betting options")
+            bettingOptionsSubject.send(.idle)
+            return
+        }
+
+        // Determine bet type (same logic as placeBet method)
+        let tickets = bettingTicketsPublisher.value
+        let betGroupingType: BetGroupingType = tickets.count == 1
+            ? .single(identifier: tickets[0].id)
+            : .multiple(identifier: "M")
+
+        // Convert BettingTicket → BetSelection (same pattern as placeBet)
+        let betSelections = tickets.map { ticket -> ServicesProvider.BettingOptionsCalculateSelection in
+            let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: ticket.odd)
+            return ServicesProvider.BettingOptionsCalculateSelection(bettingOfferId: ticket.id, oddFormat: odd)
+        }
+
+        print("[BETTING_OPTIONS] Validating \(betSelections.count) selections, betType: \(betGroupingType)")
+
+        // Set loading state
+        bettingOptionsSubject.send(.loading)
+
+        // Call betting provider
+        Env.servicesProvider.calculateUnifiedBettingOptions(
+            betType: betGroupingType,
+            selections: betSelections,
+            stakeAmount: stakeAmount
+        )
+        .receive(on: DispatchQueue.main)
+        .sink(receiveCompletion: { [weak self] completion in
+            if case .failure(let error) = completion {
+                print("[BETTING_OPTIONS] Failed: \(error)")
+                self?.bettingOptionsSubject.send(.failed)
+            }
+        }, receiveValue: { [weak self] options in
+            print("[BETTING_OPTIONS] Valid: \(options.isValid), minStake: \(options.minStake ?? 0), maxStake: \(options.maxStake?.description ?? "nil"), odds: \(options.totalOdds ?? 0)")
+
+            // Show available bonuses
+            if !options.availableFreeBets.isEmpty {
+                print("[BETTING_OPTIONS] Free bets available: \(options.availableFreeBets.count)")
+            }
+            if !options.availableOddsBoosts.isEmpty {
+                print("[BETTING_OPTIONS] Odds boosts available: \(options.availableOddsBoosts.count)")
+            }
+            if !options.availableStakeBacks.isEmpty {
+                print("[BETTING_OPTIONS] Stake backs available: \(options.availableStakeBacks.count)")
+            }
+
+            self?.bettingOptionsSubject.send(.loaded(options))
+        })
+        .store(in: &cancellables)
+    }
+
+    /// Public method to validate betting options with specific stake amount
+    func validateBettingOptions(withStake stake: Double) {
+        validateBettingOptions(stakeAmount: stake)
+    }
+
+    /// Refresh betting options validation
+    func refreshBettingOptions() {
+        validateBettingOptions()
+    }
+
     func placeBet(withStake stake: Double, useFreebetBalance: Bool, oddsValidationType: String?) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         
         guard
@@ -286,12 +499,15 @@ extension BetslipManager {
         }
         
         let betTicket = BetTicket.init(tickets: betTicketSelections, stake: stake, betGroupingType: betGroupingType)
-        
+
         let userCurrency = Env.userSessionStore.userProfilePublisher.value?.currency
         let username = Env.userSessionStore.userProfilePublisher.value?.username
         let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
-        
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType)
+
+        // Extract ubsWalletId from odds boost state for bonus application
+        let ubsWalletId: String? = oddsBoostStairsSubject.value?.ubsWalletId
+
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
             .mapError({ error in
                 switch error {
                 case .forbidden:

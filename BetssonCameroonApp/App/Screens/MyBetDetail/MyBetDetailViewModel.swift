@@ -39,6 +39,10 @@ final class MyBetDetailViewModel: ObservableObject {
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Callbacks
+    var onShareBookingCodeRequested: ((String) -> Void)?
+    var onShareBookingCodeFailed: ((String) -> Void)?
+    
     // MARK: - Initialization
     
     init(bet: MyBet, servicesProvider: ServicesProvider.Client, userSessionStore: UserSessionStore) {
@@ -67,15 +71,74 @@ final class MyBetDetailViewModel: ObservableObject {
         print("🔙 MyBetDetailViewModel: Back button tapped")
         onNavigateBack()
     }
+    
+    func handleShareTap() {
+        // Build publishers for each selection that has an outcomeId
+        let publishers: [AnyPublisher<(Int, MyBetSelection, OutcomeBettingOfferReference)?, Never>] = bet.selections.enumerated().compactMap { index, selection in
+            guard let outcomeId = selection.outcomeId else {
+                print("⚠️ MyBetDetailViewModel: Selection \(index + 1) has no outcomeId, skipping")
+                return nil
+            }
+            return servicesProvider.getBettingOfferReference(forOutcomeId: outcomeId)
+                .map { reference -> (Int, MyBetSelection, OutcomeBettingOfferReference)? in
+                    print("✅ MyBetDetailViewModel: Retrieved betting offer reference for selection \(index + 1)")
+                    return (index, selection, reference)
+                }
+                .catch { error -> Just<(Int, MyBetSelection, OutcomeBettingOfferReference)?> in
+                    print("❌ MyBetDetailViewModel: Failed to get reference for selection \(index + 1): \(error.localizedDescription)")
+                    return Just(nil)
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        guard !publishers.isEmpty else {
+            print("⚠️ MyBetDetailViewModel: No selections with outcomeId found for sharing")
+            return
+        }
+        
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] results in
+                guard let self = self else { return }
+                let successful: [(selectionIndex: Int, selection: MyBetSelection, reference: OutcomeBettingOfferReference)] = results.compactMap { $0 }
+                
+                // Next step: create booking code from the betting offer IDs
+                let bettingOfferIds = Array(Set(successful.flatMap { $0.reference.bettingOfferIds }))
+                let originalSelectionsLength = self.bet.selections.count
+                guard !bettingOfferIds.isEmpty else {
+                    self.onShareBookingCodeFailed?("No selections are available to share for this bet.")
+                    return
+                }
+                
+                self.servicesProvider.createBookingCode(
+                    bettingOfferIds: bettingOfferIds,
+                    originalSelectionsLength: originalSelectionsLength
+                )
+                .receive(on: DispatchQueue.main)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        if case .failure(let error) = completion {
+                            self?.onShareBookingCodeFailed?(error.localizedDescription)
+                        }
+                    },
+                    receiveValue: { [weak self] response in
+                        self?.onShareBookingCodeRequested?(response.code)
+                    }
+                )
+                .store(in: &self.cancellables)
+            }
+            .store(in: &cancellables)
+    }
 }
 
 // MARK: - Computed Properties for UI Display
 
 extension MyBetDetailViewModel {
     
-    /// Returns a formatted bet identifier for display
+    /// Returns a formatted ticket reference for display
     var displayBetId: String {
-        return "Bet #\(bet.identifier)"
+        return "Ticket #\(bet.displayTicketReference)"
     }
     
     /// Returns a formatted bet type description

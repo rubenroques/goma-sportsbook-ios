@@ -24,6 +24,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     public var oddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol
     public var codeInputViewModel: CodeInputViewModelProtocol
     public var loginButtonViewModel: ButtonViewModelProtocol
+    public var betslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProtocol
     
     // MARK: - Publishers
     public var ticketsPublisher: AnyPublisher<[BettingTicket], Never> {
@@ -35,10 +36,22 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     }
     
     public var isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
-    
+
     public var betslipLoggedState: ((BetslipLoggedState) -> Void)?
     public var showPlacedBetState: ((BetPlacedState) -> Void)?
     public var showLoginScreen: (() -> Void)?
+    public var showToastMessage: ((String) -> Void)?
+    
+    // MARK: - Recommended Matches
+    public var suggestedBetsViewModel: SuggestedBetsExpandedViewModelProtocol
+    public let toasterViewModel: ToasterViewModelProtocol
+
+    // MARK: - Odds Boost Header Visibility
+    private let oddsBoostHeaderVisibilitySubject = CurrentValueSubject<Bool, Never>(false)
+
+    public var oddsBoostHeaderVisibilityPublisher: AnyPublisher<Bool, Never> {
+        return oddsBoostHeaderVisibilitySubject.eraseToAnyPublisher()
+    }
     
     // MARK: - Initialization
     init(environment: Environment) {
@@ -69,8 +82,114 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                                                             ButtonData(id: "login", title: "Login", style: .solidBackground)
         )
         
+        // Initialize suggested bets view model
+        self.suggestedBetsViewModel = MockSuggestedBetsExpandedViewModel(
+            title: "Explore more bets",
+            isExpanded: false,
+            matchCardViewModels: []
+        )
+        
+        // Initialize Toaster view model
+        self.toasterViewModel = AppToasterViewModel()
+        
+
+        // Initialize odds boost header view model
+        self.betslipOddsBoostHeaderViewModel = BetslipOddsBoostHeaderViewModel()
+
         // Setup real data subscription
         setupPublishers()
+        getRecommendedMatches()
+
+        // Wire CodeInputView submission to screen-level logic
+        self.codeInputViewModel.onSubmitRequested = { [weak self] code in
+            self?.getBettingTicketsFromCode(code: code)
+        }
+    }
+    
+    private func getRecommendedMatches() {
+                
+        let userId = environment.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
+        
+        environment.servicesProvider.getRecommendedMatch(userId: userId, isLive: false, limit: 5)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    print("RECOMMENDED ERROR: \(error)")
+//                    self?.isLoadingSubject.send(false)
+                }
+            }, receiveValue: { [weak self] events in
+                guard let self = self else { return }
+                let matches = ServiceProviderModelMapper.matches(fromEvents: events)
+                
+                let items: [TallOddsMatchCardViewModelProtocol] = matches.map { match in
+                    let tallOddsMatchCardViewModel = TallOddsMatchCardViewModel.create(from: match, relevantMarkets: match.markets, marketTypeId: match.markets.first?.typeId ?? "", matchCardContext: .search)
+                    return tallOddsMatchCardViewModel
+                }
+                
+                // Update suggested bets view model with matches
+                if let mockViewModel = self.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
+                    mockViewModel.updateMatches(items)
+                }
+                                
+                self.isLoadingSubject.send(false)
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Booking code loading
+    private func getBettingTicketsFromCode(code: String) {
+        // Trigger loading state in the component
+        codeInputViewModel.setLoading(true)
+
+        let trimmed = code.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            codeInputViewModel.setLoading(false)
+            codeInputViewModel.setError("Booking Code can't be found. It either doesn't exist or expired.")
+            return
+        }
+
+        // Call loadEventsFromBookingCode to get full Events with markets and outcomes
+        environment.servicesProvider.loadEventsFromBookingCode(bookingCode: trimmed)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    guard let self = self else { return }
+                    self.codeInputViewModel.setLoading(false)
+                    if case .failure(let error) = completion {
+                        self.codeInputViewModel.setError("Booking Code can't be found. It either doesn't exist or expired.")
+                        print("[BOOKING_CODE] Error loading events: \(error.localizedDescription)")
+                    }
+                },
+                receiveValue: { [weak self] events in
+                    guard let self = self else { return }
+                    self.codeInputViewModel.clearError()
+                    print("[BOOKING_CODE] Retrieved \(events.count) events for code: \(trimmed)")
+
+                    // Convert Events to Matches using ServiceProviderModelMapper
+                    let matches = ServiceProviderModelMapper.matches(fromEvents: events)
+                    print("[BOOKING_CODE] Converted to \(matches.count) matches")
+
+                    // Create BettingTickets from each match's first market's first outcome
+                    var addedTicketsCount = 0
+                    for match in matches {
+                        // Each Event should have one market with one outcome (single betting offer)
+                        guard let market = match.markets.first,
+                              let outcome = market.outcomes.first else {
+                            print("[BOOKING_CODE] Warning: Match \(match.id) has no market/outcome")
+                            continue
+                        }
+
+                        let ticket = BettingTicket(match: match, market: market, outcome: outcome)
+                        self.environment.betslipManager.addBettingTicket(ticket)
+                        addedTicketsCount += 1
+                        print("[BOOKING_CODE] Added ticket: \(match.homeParticipant.name) vs \(match.awayParticipant.name) - \(outcome.translatedName) @ \(outcome.bettingOffer.decimalOdd)")
+                    }
+
+                    self.codeInputViewModel.updateCode("")
+                    self.showToastMessage?("Booking Code Loaded (\(addedTicketsCount) selections)")
+                }
+            )
+            .store(in: &cancellables)
     }
     
     // MARK: - Public Methods
@@ -89,8 +208,16 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
                 self?.ticketsSubject.send(tickets)
+                // Recalculate odds
+                self?.calculateOdds()
                 // Recalculate potential winnings when tickets change
                 self?.calculatePotentialWinnings()
+
+                // Forward selected outcomes to suggested bets VM (for cell selection state)
+                if let mockSuggested = self?.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
+                    let selectedOutcomeIds = Set(tickets.map { String($0.outcomeId) })
+                    mockSuggested.updateSelectedOutcomeIds(selectedOutcomeIds)
+                }
             }
             .store(in: &cancellables)
         
@@ -108,7 +235,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         Publishers.CombineLatest(environment.betslipManager.bettingTicketsPublisher, environment.userSessionStore.userProfilePublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] tickets, userProfile in
-                
+
                 if userProfile == nil {
                     if tickets.isEmpty {
                         self?.betslipLoggedState?(.noTicketsLoggedOut)
@@ -125,9 +252,27 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                         self?.betslipLoggedState?(.ticketsLoggedIn)
                     }
                 }
-                
+
             })
             .store(in: &cancellables)
+
+        // Subscribe to odds boost header visibility requirements
+        Publishers.CombineLatest3(
+            environment.betslipManager.bettingTicketsPublisher,
+            environment.userSessionStore.userProfilePublisher,
+            environment.betslipManager.oddsBoostStairsPublisher
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] tickets, userProfile, oddsBoostState in
+            let hasTickets = !tickets.isEmpty
+            let isLoggedIn = userProfile != nil
+            let hasOddsBoost = oddsBoostState != nil
+
+            // Show header when: has tickets + logged in + odds boost available
+            let shouldShow = hasTickets && isLoggedIn && hasOddsBoost
+            self?.oddsBoostHeaderVisibilitySubject.send(shouldShow)
+        }
+        .store(in: &cancellables)
         
         betInfoSubmissionViewModel.onPlaceBetTapped = { [weak self] in
             self?.placeBet()
@@ -144,32 +289,59 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     }
     
     private func placeBet() {
-        
+
         let stake = convertToDouble(betInfoSubmissionViewModel.currentData.amount)
-        
+
         let oddsValidationType = oddsAcceptanceViewModel.currentData.state == .accepted ? "ACCEPT_ANY" : "ACCEPT_HIGHER"
-        
+
+        // Capture current tickets before clearing
+        let placedTickets = currentTickets
+        print("[BET_PLACEMENT] 📋 Placing bet with \(placedTickets.count) tickets")
+        placedTickets.enumerated().forEach { index, ticket in
+            print("[BET_PLACEMENT]   [\(index+1)] \(ticket.matchDescription) - \(ticket.outcomeDescription) @ \(ticket.decimalOdd)")
+        }
+
         // Show loading state
         self.isLoadingSubject.send(true)
-        
+
         environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 // Hide loading state
                 switch completion {
                 case .finished:
-                    print("PLACE BET DONE!")
+                    print("[BET_PLACEMENT] ✅ Placement request completed")
                 case .failure(let error):
-                    print("PLACE BET ERROR: \(error)")
+                    print("[BET_PLACEMENT] ❌ Placement failed: \(error)")
                     self?.showPlacedBetState?(.error(message: "Bet couldn't be placed. Please try again later!"))
                 }
-                
+
                 self?.isLoadingSubject.send(false)
-                
+
             }, receiveValue: { [weak self] betPlacedDetails in
-                
-                print("PLACE BET SUCCESS: \(betPlacedDetails)")
-                self?.showPlacedBetState?(.success)
+                print("[BET_PLACEMENT] 🎉 Received response with \(betPlacedDetails.count) items")
+
+                // Debug full response
+                betPlacedDetails.enumerated().forEach { index, detail in
+                    let response = detail.response
+                    print("[BET_PLACEMENT]   Response[\(index)]:")
+                    print("[BET_PLACEMENT]     betId: \(response.betId ?? "nil")")
+                    print("[BET_PLACEMENT]     betslipId: \(response.betslipId ?? "nil")")
+                    print("[BET_PLACEMENT]     betSucceed: \(response.betSucceed?.description ?? "nil")")
+                    print("[BET_PLACEMENT]     selections count: \(response.selections?.count ?? 0)")
+                }
+
+                let firstResponse = betPlacedDetails.first?.response
+                let betId = firstResponse?.betId
+                let betslipId = firstResponse?.betslipId
+
+                print("[BET_PLACEMENT] 🏷️ Extracted IDs - betId: \(betId ?? "nil"), betslipId: \(betslipId ?? "nil")")
+
+                self?.showPlacedBetState?(.success(
+                    betId: betId,
+                    betslipId: betslipId,
+                    bettingTickets: placedTickets
+                ))
 
             })
             .store(in: &cancellables)
@@ -206,6 +378,20 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
     }
     
+    private func calculateOdds() {
+        
+        // Calculate total odds by multiplying each odd value sequentially
+        var totalOdds = 1.0
+        for ticket in currentTickets {
+            totalOdds *= ticket.decimalOdd
+        }
+        
+        let formattedOdds = String(format: "%.2f", totalOdds)
+
+        betInfoSubmissionViewModel.updateOdds(formattedOdds)
+        
+    }
+    
     func convertToDouble(_ string: String) -> Double {
         // Remove any whitespace
         let trimmed = string.trimmingCharacters(in: .whitespaces)
@@ -226,6 +412,6 @@ public enum BetslipLoggedState {
 }
 
 public enum BetPlacedState {
-    case success
+    case success(betId: String?, betslipId: String?, bettingTickets: [BettingTicket])
     case error(message: String)
 }

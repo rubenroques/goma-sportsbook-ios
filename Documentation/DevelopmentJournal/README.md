@@ -16,7 +16,7 @@ DevelopmentJournal/
 
 ````
 
-*Keep everything flat—no sub-folders. Git history already gives you all the structure you’ll need.*
+*Keep everything flat—no sub-folders*
 
 ---
 

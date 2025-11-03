@@ -37,6 +37,15 @@ class PhoneLoginViewController: UIViewController {
         return button
     }()
     
+    private let logoImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "betsson_logo")?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = StyleProvider.Color.highlightPrimary
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     private let headerView: PromotionalHeaderView
     private let highlightedTextView: HighlightedTextView
     private let phoneField: BorderedTextFieldView
@@ -116,6 +125,8 @@ class PhoneLoginViewController: UIViewController {
         navigationView.addSubview(navigationTitleLabel)
         navigationView.addSubview(closeButton)
 
+        view.addSubview(logoImageView)
+
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
         highlightedTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -152,9 +163,14 @@ class PhoneLoginViewController: UIViewController {
             closeButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
             closeButton.heightAnchor.constraint(equalToConstant: 40),
 
+            logoImageView.topAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: 18),
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 100),
+            logoImageView.heightAnchor.constraint(equalToConstant: 20),
+            
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            headerView.topAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: 18),
+            headerView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 18),
 
             highlightedTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             highlightedTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -225,7 +241,9 @@ class PhoneLoginViewController: UIViewController {
     }
 
     @objc private func didTapForgotPassword() {
-        let phonePasswordRecoverViewController = PhonePasswordCodeResetViewController()
+        let phonePasswordRecoverViewModel = PhonePasswordCodeResetViewModel()
+        
+        let phonePasswordRecoverViewController = PhonePasswordCodeResetViewController(viewModel: phonePasswordRecoverViewModel)
         
         self.navigationController?.pushViewController(phonePasswordRecoverViewController, animated: true)
     }
@@ -284,22 +302,22 @@ class PhoneLoginViewController: UIViewController {
             .sink { phone in
                 if phone.isEmpty {
                     // First tap: Fill with the provided credentials
-                    phoneToSet = "+237666999005"
-                    passwordToSet = "4050"
+                    phoneToSet = "699198921"
+                    passwordToSet = "1234"
                 }
-                else if phone == "+237666999005" {
+                else if phone == "666999005" {
                     // Second tap: Alternative test account
-                    phoneToSet = "+237123456789"
+                    phoneToSet = "123456789"
                     passwordToSet = "test123"
                 }
-                else if phone == "+237123456789" {
+                else if phone == "123456789" {
                     // Third tap: Another test account
                     phoneToSet = "+237987654321"
                     passwordToSet = "debug123"
                 }
                 else {
                     // Reset to first credentials
-                    phoneToSet = "+237666999005"
+                    phoneToSet = "666999005"
                     passwordToSet = "4050"
                 }
                 

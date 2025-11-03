@@ -274,27 +274,82 @@ final public class CustomSliderView: UIView {
     }
 }
 
-// MARK: - Preview Provider
+// MARK: - SwiftUI Preview
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Custom Slider - Default") {
-    PreviewUIView {
-        CustomSliderView(viewModel: MockCustomSliderViewModel.defaultMock)
-    }
-    .frame(height: 60)
-    .padding()
-    .background(Color(UIColor.systemGray6))
-}
+#Preview("CustomSliderView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
 
-@available(iOS 17.0, *)
-#Preview("Custom Slider - Mid Position") {
-    PreviewUIView {
-        CustomSliderView(viewModel: MockCustomSliderViewModel.midPositionMock)
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "CustomSliderView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default (start position)
+        let defaultView = CustomSliderView(viewModel: MockCustomSliderViewModel.defaultMock)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Mid position
+        let midPositionView = CustomSliderView(viewModel: MockCustomSliderViewModel.midPositionMock)
+        midPositionView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Time filter
+        let timeFilterView = CustomSliderView(viewModel: MockCustomSliderViewModel.timeFilterMock)
+        timeFilterView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled state
+        let disabledView = CustomSliderView(viewModel: MockCustomSliderViewModel.disabledMock)
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Custom image and color
+        let customImageView = CustomSliderView(viewModel: MockCustomSliderViewModel.customImageMock)
+        customImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Volume slider
+        let volumeSliderView = CustomSliderView(viewModel: MockCustomSliderViewModel.volumeSliderMock)
+        volumeSliderView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(midPositionView)
+        stackView.addArrangedSubview(timeFilterView)
+        stackView.addArrangedSubview(disabledView)
+        stackView.addArrangedSubview(customImageView)
+        stackView.addArrangedSubview(volumeSliderView)
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
+        ])
+
+        return vc
     }
-    .frame(height: 60)
-    .padding()
-    .background(Color(UIColor.systemGray6))
 }
 
 #endif

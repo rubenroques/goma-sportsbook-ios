@@ -133,22 +133,51 @@ final public class PromotionalHeaderView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Multiple Header Examples") {
-    VStack(spacing: 16) {
-        PreviewUIView {
-            let view = PromotionalHeaderView(viewModel: MockPromotionalHeaderViewModel.defaultMock)
-            
-            view.setCustomBackgroundColor(StyleProvider.Color.backgroundPrimary)
-            
-            return view
-        }
-        .frame(height: 60)
-        
-        
-        PreviewUIView {
-            PromotionalHeaderView(viewModel: MockPromotionalHeaderViewModel.noSubtitleMock)
-        }
-        .frame(height: 60)
+#Preview("PromotionalHeaderView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "PromotionalHeaderView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default header (with subtitle)
+        let defaultHeader = PromotionalHeaderView(viewModel: MockPromotionalHeaderViewModel.defaultMock)
+        defaultHeader.setCustomBackgroundColor(StyleProvider.Color.backgroundPrimary)
+        defaultHeader.translatesAutoresizingMaskIntoConstraints = false
+
+        // Header without subtitle
+        let noSubtitleHeader = PromotionalHeaderView(viewModel: MockPromotionalHeaderViewModel.noSubtitleMock)
+        noSubtitleHeader.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultHeader)
+        stackView.addArrangedSubview(noSubtitleHeader)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+
+            // Fixed heights for headers
+            defaultHeader.heightAnchor.constraint(equalToConstant: 60),
+            noSubtitleHeader.heightAnchor.constraint(equalToConstant: 60)
+        ])
+
+        return vc
     }
 }
 

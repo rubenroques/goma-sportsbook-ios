@@ -50,13 +50,15 @@ public extension MockBetslipFloatingViewModel {
         selectionCount: Int = 2,
         odds: String = "2.50",
         winBoostPercentage: String? = "10%",
-        totalEligibleCount: Int = 6
+        totalEligibleCount: Int = 6,
+        nextTierPercentage: String? = "15%"
     ) -> MockBetslipFloatingViewModel {
         let state = BetslipFloatingState.withTickets(
             selectionCount: selectionCount,
             odds: odds,
             winBoostPercentage: winBoostPercentage,
-            totalEligibleCount: totalEligibleCount
+            totalEligibleCount: totalEligibleCount,
+            nextTierPercentage: nextTierPercentage
         )
         return MockBetslipFloatingViewModel(state: state)
     }

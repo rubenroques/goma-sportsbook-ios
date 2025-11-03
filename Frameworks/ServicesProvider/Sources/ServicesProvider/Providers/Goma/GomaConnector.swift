@@ -91,6 +91,7 @@ class GomaConnector: Connector {
     func getPushNotificationToken() -> String? {
         return self.authenticator.pushNotificationsToken
     }
+    
     func updatePushNotificationToken(newToken: String?) {
         self.authenticator.updatePushNotificationToken(newToken: newToken)
     }

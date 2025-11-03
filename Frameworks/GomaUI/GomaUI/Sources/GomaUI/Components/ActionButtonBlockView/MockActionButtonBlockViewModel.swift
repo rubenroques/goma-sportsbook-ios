@@ -11,16 +11,22 @@ public class MockActionButtonBlockViewModel: ActionButtonBlockViewModelProtocol 
     
     public let title: String
     public let actionName: String
+    public let actionURL: String?
     public let isEnabled: Bool
     
-    public init(title: String, actionName: String, isEnabled: Bool = true) {
+    // Callback for when button is tapped
+    public var onActionTapped: ((String?) -> Void)?
+    
+    public init(title: String, actionName: String, actionURL: String? = nil, isEnabled: Bool = true) {
         self.title = title
         self.actionName = actionName
+        self.actionURL = actionURL
         self.isEnabled = isEnabled
     }
     
     public func didTapActionButton() {
         print("Action button tapped with action: \(actionName)")
+        onActionTapped?(actionURL)
     }
 }
 
@@ -30,7 +36,8 @@ extension MockActionButtonBlockViewModel {
     public static var defaultMock: MockActionButtonBlockViewModel {
         return MockActionButtonBlockViewModel(
             title: "Claim Bonus",
-            actionName: "claim_bonus"
+            actionName: "claim_bonus",
+            actionURL: "https://www.google.com"
         )
     }
     
@@ -38,6 +45,7 @@ extension MockActionButtonBlockViewModel {
         return MockActionButtonBlockViewModel(
             title: "Claim Bonus",
             actionName: "claim_bonus",
+            actionURL: "https://www.google.com",
             isEnabled: false
         )
     }
@@ -45,7 +53,8 @@ extension MockActionButtonBlockViewModel {
     public static var longTextMock: MockActionButtonBlockViewModel {
         return MockActionButtonBlockViewModel(
             title: "Get Your Welcome Bonus Now",
-            actionName: "welcome_bonus"
+            actionName: "welcome_bonus",
+            actionURL: "https://www.google.com"
         )
     }
 }

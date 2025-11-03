@@ -49,10 +49,10 @@ final class BetDetailValuesSummaryViewModel: BetDetailValuesSummaryViewModelProt
         // Create content rows from MyBet data (no calculations)
         var contentRows: [BetDetailRowData] = []
         
-        // Bet ID (first row)
+        // Ticket (first row)
         contentRows.append(BetDetailRowData(
-            label: "Bet ID",
-            value: "#\(myBet.identifier)",
+            label: "Ticket",
+            value: "#\(myBet.displayTicketReference)",
             style: .standard
         ))
         

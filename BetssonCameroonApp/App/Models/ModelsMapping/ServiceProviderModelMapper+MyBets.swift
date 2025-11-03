@@ -48,7 +48,8 @@ extension ServiceProviderModelMapper {
             date: servicesProviderBet.date,
             freebet: servicesProviderBet.freebet,
             partialCashoutReturn: servicesProviderBet.partialCashoutReturn,
-            partialCashoutStake: servicesProviderBet.partialCashoutStake
+            partialCashoutStake: servicesProviderBet.partialCashoutStake,
+            ticketCode: servicesProviderBet.ticketCode
         )
     }
     

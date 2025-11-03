@@ -9,6 +9,7 @@ import UIKit
 import ServicesProvider
 import GomaUI
 import XPush
+import Combine
 
 // Removed ProfileWalletCoordinatorDelegate - using closure-based pattern for consistency with other coordinators
 
@@ -32,6 +33,8 @@ final class ProfileWalletCoordinator: Coordinator {
     var onProfileDismiss: (() -> Void)?
     var onDepositRequested: (() -> Void)?
     var onWithdrawRequested: (() -> Void)?
+    
+    var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     
@@ -107,13 +110,17 @@ final class ProfileWalletCoordinator: Coordinator {
         }
         
         // Menu item selection callback
-        viewModel.onMenuItemSelected = { [weak self] menuItem in
+        viewModel.onMenuItemSelected = { [weak self] menuItem, actionResponse in
             guard let self = self else { return }
-            self.handleMenuItemSelection(menuItem)
+            self.handleMenuItemSelection(menuItem, actionResponse)
+        }
+        
+        viewModel.showErrorAlert = { [weak self] error in
+            self?.showChangePasswordErrorAlert(error: error)
         }
     }
     
-    private func handleMenuItemSelection(_ menuItem: ProfileMenuItem) {
+    private func handleMenuItemSelection(_ menuItem: ActionRowItem, _ actionResponse: String? = nil) {
         switch menuItem.action {
         case .logout:
             // Handle logout with confirmation
@@ -123,10 +130,10 @@ final class ProfileWalletCoordinator: Coordinator {
 //            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
 //                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
 //            }
-            
+
             // Open Extreme push inbox screen
             XPush.forceOpenInbox()
-            
+
         case .transactionHistory:
             // Navigate to transaction history
             showTransactionHistory()
@@ -140,10 +147,13 @@ final class ProfileWalletCoordinator: Coordinator {
             // TODO: Navigate to help center
             showPlaceholderAlert(title: "Help Center", message: "Feature coming soon")
         case .changePassword:
-            // TODO: Navigate to change password
-            showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
+//            showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
+            self.showChangePasswordScreen(tokenId: actionResponse ?? "")
         case .promotions:
             showPromotions()
+        case .custom:
+            // Custom actions are not used in profile menu context
+            print("⚠️ ProfileWalletCoordinator: Custom action not handled in profile menu")
         }
     }
     
@@ -231,49 +241,48 @@ final class ProfileWalletCoordinator: Coordinator {
             print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
             return
         }
-
-        // Create PromotionsViewModel
-        let promotionsViewModel = PromotionsViewModel(servicesProvider: servicesProvider)
-
-        // Create PromotionsViewController
-        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
-
-        // Setup ViewModel callbacks
-        promotionsViewModel.onNavigateBack = { [weak profileNavigationController] in
-            profileNavigationController?.popViewController(animated: true)
-        }
-
-        // Create TopBar ViewModel (handles all business logic)
-        let topBarViewModel = TopBarContainerViewModel(
-            userSessionStore: userSessionStore
+        
+        // Create and start PromotionsCoordinator
+        let promotionsCoordinator = PromotionsCoordinator(
+            navigationController: profileNavigationController,
+            environment: Env
         )
-
-        // Wrap in TopBarContainerController
-        let container = TopBarContainerController(
-            contentViewController: promotionsViewController,
-            viewModel: topBarViewModel
-        )
-
-        // Setup navigation callbacks on container
-        container.onLoginRequested = { // [weak self] in
-            // Profile wallet cannot be present if the user isn't logged in'
-            // self?.showLogin()
+        
+        // Setup TopBar container callbacks to delegate to ProfileWalletCoordinator
+        promotionsCoordinator.onLoginRequested = { [weak self] in
+            // Handle login request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Login requested from promotions")
         }
-
-        container.onRegistrationRequested = { // [weak self] in
-            // Profile wallet cannot be present if the user isn't logged in'
-            // self?.showRegistration()
+        
+        promotionsCoordinator.onRegistrationRequested = { [weak self] in
+            // Handle registration request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Registration requested from promotions")
         }
-
-        container.onProfileRequested = { // [weak self] in
-            // Already in profile flow, just pop to root
-            profileNavigationController.popToRootViewController(animated: true)
+        
+        promotionsCoordinator.onProfileRequested = { [weak self] in
+            // Handle profile request - could delegate to parent or handle locally
+            print("🚀 ProfileWalletCoordinator: Profile requested from promotions")
         }
-
-        // Push the container
-        profileNavigationController.pushViewController(container, animated: true)
-
-        print("🚀 ProfileWalletCoordinator: Presented promotions screen")
+        
+        promotionsCoordinator.onDepositRequested = { [weak self] in
+            // Delegate to parent coordinator
+            self?.onDepositRequested?()
+            self?.presentDepositFlow()
+        }
+        
+        promotionsCoordinator.onWithdrawRequested = { [weak self] in
+            // Delegate to parent coordinator
+            self?.onWithdrawRequested?()
+            self?.presentWithdrawFlow()
+        }
+        
+        // Add as child coordinator for proper lifecycle management
+        addChildCoordinator(promotionsCoordinator)
+        
+        // Start the coordinator (which will handle the entire promotions flow)
+        promotionsCoordinator.start()
+        
+        print("🚀 ProfileWalletCoordinator: Started PromotionsCoordinator")
     }
     
     private func showPlaceholderAlert(title: String, message: String) {
@@ -391,5 +400,28 @@ final class ProfileWalletCoordinator: Coordinator {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         
         presentingViewController.present(alert, animated: true)
+    }
+    
+    private func showChangePasswordErrorAlert(error: String) {
+        guard let presentingViewController = profileNavigationController else { return }
+        
+        let alert = UIAlertController(
+            title: "Change Password Error",
+            message: error,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        
+        presentingViewController.present(alert, animated: true)
+    }
+    
+    private func showChangePasswordScreen(tokenId: String) {
+        let phoneNumber = userSessionStore.userProfilePublisher.value?.username ?? ""
+        
+        let passwordCodeVerificationViewModel = PhonePasswordCodeVerificationViewModel(tokenId: tokenId, phoneNumber: phoneNumber, resetPasswordType: .change)
+        
+        let passwordCodeVerificationViewController = PhonePasswordCodeVerificationViewController(viewModel: passwordCodeVerificationViewModel)
+        
+        self.profileNavigationController?.pushViewController(passwordCodeVerificationViewController, animated: true)
     }
 }

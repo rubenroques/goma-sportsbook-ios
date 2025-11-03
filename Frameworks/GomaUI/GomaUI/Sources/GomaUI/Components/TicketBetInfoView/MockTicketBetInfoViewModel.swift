@@ -15,29 +15,9 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     }
     
     // MARK: - Button View Models
-    public lazy var rebetButtonViewModel: ButtonIconViewModelProtocol = {
-        let viewModel = MockButtonIconViewModel(
-            title: "Rebet",
-            icon: "arrow.clockwise",
-            layoutType: .iconLeft
-        )
-        viewModel.onButtonTapped = { [weak self] in
-            self?.handleRebetTap()
-        }
-        return viewModel
-    }()
+    public var rebetButtonViewModel: ButtonIconViewModelProtocol
     
-    public lazy var cashoutButtonViewModel: ButtonIconViewModelProtocol = {
-        let viewModel = MockButtonIconViewModel(
-            title: "Cashout",
-            icon: "dollarsign.circle",
-            layoutType: .iconLeft
-        )
-        viewModel.onButtonTapped = { [weak self] in
-            self?.handleCashoutTap()
-        }
-        return viewModel
-    }()
+    public var cashoutButtonViewModel: ButtonIconViewModelProtocol
     
     // MARK: - Callbacks
     public var onNavigationTap: (() -> Void)?
@@ -45,7 +25,35 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     public var onCashoutTap: (() -> Void)?
     
     // MARK: - Initialization
-    public init() {}
+    public init() {
+        
+        let rebetButtonViewModel = MockButtonIconViewModel(
+            title: "Rebet",
+            icon: "arrow.clockwise",
+            layoutType: .iconLeft
+        )
+        self.rebetButtonViewModel = rebetButtonViewModel
+        
+        let cashoutButtonViewModel = MockButtonIconViewModel(
+            title: "Cashout",
+            icon: "dollarsign.circle",
+            layoutType: .iconLeft
+        )
+        self.cashoutButtonViewModel = cashoutButtonViewModel
+        
+        self.setupBindings()
+    }
+    
+    private func setupBindings() {
+        
+        rebetButtonViewModel.onButtonTapped = { [weak self] in
+            self?.handleRebetTap()
+        }
+        
+        cashoutButtonViewModel.onButtonTapped = { [weak self] in
+            self?.handleCashoutTap()
+        }
+    }
     
     // MARK: - Public Methods
     public func handleNavigationTap() {

@@ -235,16 +235,4 @@ private extension WalletBalanceLineView {
     }
 }
 
-@available(iOS 17.0, *)
-#Preview("Balance Line Without Icon") {
-    PreviewUIView {
-        let lineView = WalletBalanceLineView(title: "Current Balance", value: "1,000.00")
-        lineView.backgroundColor = StyleProvider.Color.backgroundTertiary
-        lineView.layer.cornerRadius = 4
-        return lineView
-    }
-    .frame(height: 40)
-    .padding()
-}
-
 #endif

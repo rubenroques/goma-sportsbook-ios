@@ -54,6 +54,7 @@ class BetslipViewController: UIViewController {
     }()
     
     private var currentIndex: Int = 0
+    private var shouldShowTypeSelector: Bool?
     
     // MARK: - Initialization
     init(viewModel: BetslipViewModelProtocol) {
@@ -116,6 +117,14 @@ class BetslipViewController: UIViewController {
     }
     
     private func setupBindings() {
+        // Subscribe to betslip data to get configuration
+        viewModel.dataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                self?.updateTypeSelectorVisibility(shouldShow: data.shouldShowTypeSelector)
+            }
+            .store(in: &cancellables)
+        
         // Subscribe to type selection events
         viewModel.betslipTypeSelectorViewModel.selectionEventPublisher
             .receive(on: DispatchQueue.main)
@@ -134,6 +143,43 @@ class BetslipViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    private func updateTypeSelectorVisibility(shouldShow: Bool) {
+        // Only update if value has changed or this is the first time
+        guard shouldShowTypeSelector != shouldShow else { return }
+        
+        shouldShowTypeSelector = shouldShow
+        typeSelectorView.isHidden = !shouldShow
+        
+        // Update constraints to account for visibility
+        updateConstraints()
+    }
+    
+    private func updateConstraints() {
+        // Remove all existing constraints on pageViewController.view
+        NSLayoutConstraint.deactivate(
+            view.constraints.filter {
+                $0.firstItem === pageViewController.view || $0.secondItem === pageViewController.view
+            }
+        )
+        
+        // Add new constraints based on type selector visibility
+        if shouldShowTypeSelector == true {
+            NSLayoutConstraint.activate([
+                pageViewController.view.topAnchor.constraint(equalTo: typeSelectorView.bottomAnchor),
+                pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                pageViewController.view.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+                pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            ])
+        }
+    }
+    
     private func handleTypeSelection(_ event: BetslipTypeSelectionEvent) {
         let targetIndex: Int
         let targetViewController: UIViewController
@@ -162,6 +208,9 @@ class BetslipViewController: UIViewController {
 // MARK: - UIPageViewControllerDataSource
 extension BetslipViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        // Only allow swiping if type selector is visible (virtual betslip is enabled)
+        guard shouldShowTypeSelector == true else { return nil }
+        
         if viewController === virtualBetslipViewController {
             return sportsBetslipViewController
         }
@@ -169,6 +218,9 @@ extension BetslipViewController: UIPageViewControllerDataSource {
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        // Only allow swiping if type selector is visible (virtual betslip is enabled)
+        guard shouldShowTypeSelector == true else { return nil }
+        
         if viewController === sportsBetslipViewController {
             return virtualBetslipViewController
         }
@@ -191,4 +243,4 @@ extension BetslipViewController: UIPageViewControllerDelegate {
             }
         }
     }
-} 
+}

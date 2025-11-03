@@ -200,18 +200,52 @@ public final class PinDigitEntryView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-struct PinDigitEntryView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            PreviewUIView {
-                PinDigitEntryView(viewModel: MockPinDigitEntryViewModel.defaultMock)
-            }
-            .frame(height: 60)
-            .previewDisplayName("Empty PIN")
-            
-        }
-        .padding()
-        .frame(maxHeight: 250)
+#Preview("PinDigitEntryView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Component name label
+        let titleLabel = UILabel()
+        titleLabel.text = "PinDigitEntryView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // 4-digit PIN (empty)
+        let fourDigitView = PinDigitEntryView(viewModel: MockPinDigitEntryViewModel.defaultMock)
+        fourDigitView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 6-digit PIN (partially filled with "123")
+        let sixDigitView = PinDigitEntryView(viewModel: MockPinDigitEntryViewModel.sixDigitMock)
+        sixDigitView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 8-digit PIN (empty)
+        let eightDigitView = PinDigitEntryView(viewModel: MockPinDigitEntryViewModel.eightDigitMock)
+        eightDigitView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(fourDigitView)
+        stackView.addArrangedSubview(sixDigitView)
+        stackView.addArrangedSubview(eightDigitView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -20)
+        ])
+
+        return vc
     }
 }
 #endif

@@ -230,9 +230,30 @@ final public class PillItemView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Football Pill - Selected") {
-    PreviewUIView {
-        let mockViewModel = MockPillItemViewModel(
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        // 1. TITLE LABEL
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "PillItemView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+
+        // 2. VERTICAL STACK with ALL states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3. ADD ALL COMPONENT INSTANCES
+        // Selected with icon and expand icon
+        let selectedViewModel = MockPillItemViewModel(
             pillData: PillData(
                 id: "football",
                 title: "Football",
@@ -241,17 +262,11 @@ final public class PillItemView: UIView {
                 isSelected: true
             )
         )
-        return PillItemView(viewModel: mockViewModel)
-    }
-    .frame(height: 40)
-    .padding()
-    .background(Color(StyleProvider.Color.navPills))
-}
+        let selectedPill = PillItemView(viewModel: selectedViewModel)
+        selectedPill.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Popular Pill - Unselected") {
-    PreviewUIView {
-        let mockViewModel = MockPillItemViewModel(
+        // Unselected with icon, no expand icon
+        let unselectedViewModel = MockPillItemViewModel(
             pillData: PillData(
                 id: "popular",
                 title: "Popular",
@@ -260,11 +275,29 @@ final public class PillItemView: UIView {
                 isSelected: false
             )
         )
-        return PillItemView(viewModel: mockViewModel)
+        let unselectedPill = PillItemView(viewModel: unselectedViewModel)
+        unselectedPill.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add all states to stack
+        stackView.addArrangedSubview(selectedPill)
+        stackView.addArrangedSubview(unselectedPill)
+
+        // 4. ADD TO VIEW HIERARCHY
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // 5. CONSTRAINTS
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(height: 40)
-    .padding()
-    .background(Color(StyleProvider.Color.navPills))
 }
 
 #endif

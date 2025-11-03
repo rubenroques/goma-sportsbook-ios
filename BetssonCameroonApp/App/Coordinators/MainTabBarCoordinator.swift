@@ -51,6 +51,8 @@ class MainTabBarCoordinator: Coordinator {
 
     private var betslipCoordinator: BetslipCoordinator?
     
+    private var cancellables = Set<AnyCancellable>()
+    
     //
     // MARK: - Initialization
     
@@ -111,6 +113,13 @@ class MainTabBarCoordinator: Coordinator {
         self.mainTabBarViewController = mainTabBarViewController
         navigationController.setViewControllers([container], animated: false)
         
+        environment.userSessionStore.passwordChanged
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.presentAuthenticationDirectly(isLogin: true)
+            })
+            .store(in: &cancellables)
+        
         // Show default screen on startup (NextUpEvents)
         self.showNextUpEventsScreen()
     }
@@ -163,7 +172,7 @@ class MainTabBarCoordinator: Coordinator {
     
     // MARK: - Lazy Screen Loading
     
-    private func showNextUpEventsScreen() {
+    private func showNextUpEventsScreen(withContextChange: Bool = false) {
         // Lazy loading: only create coordinator when needed
         if nextUpEventsCoordinator == nil {
             let coordinator = NextUpEventsCoordinator(
@@ -202,14 +211,14 @@ class MainTabBarCoordinator: Coordinator {
         
         // Show the screen through MainTabBarViewController
         if let viewController = nextUpEventsCoordinator?.viewController {
-            mainTabBarViewController?.showNextUpEventsScreen(with: viewController)
+            mainTabBarViewController?.showNextUpEventsScreen(with: viewController, withContextChange: withContextChange)
         }
         
         // Refresh if needed
         nextUpEventsCoordinator?.refresh()
     }
     
-    private func showInPlayEventsScreen() {
+    private func showInPlayEventsScreen(withContextChange: Bool = false) {
         // Lazy loading: only create coordinator when needed
         if inPlayEventsCoordinator == nil {
             let coordinator = InPlayEventsCoordinator(
@@ -234,6 +243,10 @@ class MainTabBarCoordinator: Coordinator {
                 self?.navigateToCasinoFromQuickLink(quickLinkType)
             }
             
+            coordinator.onShowCasinoTab = { [weak self] quickLinkType in
+                self?.navigateToCasinoFromQuickLink(quickLinkType)
+            }
+            
             inPlayEventsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -244,7 +257,7 @@ class MainTabBarCoordinator: Coordinator {
         
         // Show the screen through MainTabBarViewController
         if let viewController = inPlayEventsCoordinator?.viewController {
-            mainTabBarViewController?.showInPlayEventsScreen(with: viewController)
+            mainTabBarViewController?.showInPlayEventsScreen(with: viewController, withContextChange: withContextChange)
         }
         
         // Refresh if needed
@@ -475,7 +488,7 @@ class MainTabBarCoordinator: Coordinator {
         profileCoordinator.start()
     }
     
-    private func showBetslip() {
+    private func showBetslip(rebetSuccessCount: Int? = nil, rebetFailCount: Int? = nil) {
         if betslipCoordinator == nil {
             let coordinator = BetslipCoordinator(
                 navigationController: self.navigationController,
@@ -509,10 +522,34 @@ class MainTabBarCoordinator: Coordinator {
         }
         
         if let viewController = betslipCoordinator?.betslipViewController {
-            navigationController.present(viewController, animated: true)
+            navigationController.present(viewController, animated: true) { [weak self] in
+                // Show alert after betslip is presented if there were rebet failures
+                if let successCount = rebetSuccessCount, let failCount = rebetFailCount {
+                    self?.showRebetPartialFailureAlert(
+                        successCount: successCount,
+                        failCount: failCount,
+                        on: viewController
+                    )
+                }
+            }
         }
         
         print("🚀 MainCoordinator: Presented betslip modal")
+    }
+    
+    private func showRebetPartialFailureAlert(successCount: Int, failCount: Int, on viewController: UIViewController) {
+        let message = localized("partial_rebet_description")
+        
+        let alert = UIAlertController(
+            title: localized("partial_rebet"),
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(title: localized("ok"), style: .default)
+        alert.addAction(okAction)
+        
+        viewController.present(alert, animated: true)
     }
     
     // MARK: - Temporary Authentication Implementation
@@ -656,6 +693,10 @@ class MainTabBarCoordinator: Coordinator {
                 self?.showBetDetail(for: bet)
             }
             
+            coordinator.onNavigateToBetslip = { [weak self] successCount, failCount in
+                self?.showBetslip(rebetSuccessCount: successCount, rebetFailCount: failCount)
+            }
+            
             myBetsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -706,53 +747,40 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     private func showPromotionsScreen() {
-        // Create PromotionsViewModel
-        let promotionsViewModel = PromotionsViewModel(servicesProvider: environment.servicesProvider)
-        
-        // Create PromotionsViewController
-        let promotionsViewController = PromotionsViewController(viewModel: promotionsViewModel)
-        
-        // Setup ViewModel callbacks
-        promotionsViewModel.onNavigateBack = { [weak self] in
-            self?.navigationController.popViewController(animated: true)
-        }
-        
-        // Create TopBar ViewModel (handles all business logic)
-        let topBarViewModel = TopBarContainerViewModel(
-            userSessionStore: environment.userSessionStore
+        // Create and start PromotionsCoordinator
+        let promotionsCoordinator = PromotionsCoordinator(
+            navigationController: navigationController,
+            environment: environment
         )
-
-        // Wrap in TopBarContainerController
-        let container = TopBarContainerController(
-            contentViewController: promotionsViewController,
-            viewModel: topBarViewModel
-        )
-
-        // Setup navigation callbacks on container
-        container.onLoginRequested = { [weak self] in
+        
+        // Setup TopBar container callbacks to delegate to MainTabBarCoordinator
+        promotionsCoordinator.onLoginRequested = { [weak self] in
             self?.showLogin()
         }
-
-        container.onRegistrationRequested = { [weak self] in
+        
+        promotionsCoordinator.onRegistrationRequested = { [weak self] in
             self?.showRegistration()
         }
-
-        container.onProfileRequested = { [weak self] in
+        
+        promotionsCoordinator.onProfileRequested = { [weak self] in
             self?.showProfile()
         }
-
-        container.onDepositRequested = { [weak self] in
+        
+        promotionsCoordinator.onDepositRequested = { [weak self] in
             self?.presentDepositFlow()
         }
-
-        container.onWithdrawRequested = { [weak self] in
+        
+        promotionsCoordinator.onWithdrawRequested = { [weak self] in
             self?.presentWithdrawFlow()
         }
         
-        // Push the container using navigation stack
-        navigationController.pushViewController(container, animated: true)
+        // Add as child coordinator for proper lifecycle management
+        addChildCoordinator(promotionsCoordinator)
         
-        print("🚀 MainTabBarCoordinator: Presented promotions screen")
+        // Start the coordinator (which will handle the entire promotions flow)
+        promotionsCoordinator.start()
+        
+        print("🚀 MainTabBarCoordinator: Started PromotionsCoordinator")
     }
     
     private func showCasinoHomeScreen() {
@@ -768,6 +796,14 @@ class MainTabBarCoordinator: Coordinator {
             coordinator.onShowGamePlay = { [weak self] gameId in
                 print(" Casino: Game play started for game: \(gameId)")
                 // Additional game play handling if needed
+            }
+
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
             }
 
             traditionalCasinoCoordinator = coordinator
@@ -799,6 +835,14 @@ class MainTabBarCoordinator: Coordinator {
                 // Additional game play handling if needed
             }
 
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
+            }
+
             virtualSportsCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -815,8 +859,44 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     private func showCasinoAviatorGameScreen() {
-        let dummyViewController = DummyViewController(displayText: "Aviator")
-        mainTabBarViewController?.showCasinoAviatorGameScreen(with: dummyViewController)
+
+        if traditionalCasinoCoordinator == nil {
+            let coordinator = CasinoCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment,
+                lobbyType: .casino
+            )
+
+            // Set up navigation closures
+            coordinator.onShowGamePlay = { [weak self] gameId in
+                print(" Casino: Game play started for game: \(gameId)")
+                // Additional game play handling if needed
+            }
+
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
+            }
+
+            traditionalCasinoCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+            coordinator.showAviatorGame()
+        }
+        else {
+            traditionalCasinoCoordinator?.showAviatorGame()
+        }
+
+        // Show the screen through MainTabBarViewController
+        if let viewController = traditionalCasinoCoordinator?.viewController {
+            mainTabBarViewController?.showCasinoAviatorGameScreen(with: viewController)
+        }
+
+        // Refresh if needed
+        traditionalCasinoCoordinator?.refresh()
     }
     
     private func showCasinoSearchScreen() {
@@ -836,6 +916,90 @@ class MainTabBarCoordinator: Coordinator {
         }
         
         casinoSearchCoordinator?.refresh()
+    }
+    
+    private func showCasinoSlotsGamesScreen() {
+
+        if traditionalCasinoCoordinator == nil {
+            let coordinator = CasinoCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment,
+                lobbyType: .casino
+            )
+
+            // Set up navigation closures
+            coordinator.onShowGamePlay = { [weak self] gameId in
+                print(" Casino: Game play started for game: \(gameId)")
+                // Additional game play handling if needed
+            }
+
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
+            }
+
+            traditionalCasinoCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+//            coordinator.showCategoryGamesList(categoryId: "Lobby1$videoslots", categoryTitle: "videoslots")
+            coordinator.showSlotsGames()
+        }
+        else {
+            traditionalCasinoCoordinator?.showSlotsGames()
+        }
+
+        // Show the screen through MainTabBarViewController
+        if let viewController = traditionalCasinoCoordinator?.viewController {
+            mainTabBarViewController?.showCasinoSlotsGamesScreen(with: viewController)
+        }
+
+        // Refresh if needed
+        traditionalCasinoCoordinator?.refresh()
+    }
+    
+    private func showCasinoCrashGamesScreen() {
+
+        if traditionalCasinoCoordinator == nil {
+            let coordinator = CasinoCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment,
+                lobbyType: .casino
+            )
+
+            // Set up navigation closures
+            coordinator.onShowGamePlay = { [weak self] gameId in
+                print(" Casino: Game play started for game: \(gameId)")
+                // Additional game play handling if needed
+            }
+
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
+            }
+
+            traditionalCasinoCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+//            coordinator.showCategoryGamesList(categoryId: "Lobby1$crashgames", categoryTitle: "CRASHGAMES")
+            coordinator.showCrashGames()
+        }
+        else {
+            traditionalCasinoCoordinator?.showCrashGames()
+        }
+
+        // Show the screen through MainTabBarViewController
+        if let viewController = traditionalCasinoCoordinator?.viewController {
+            mainTabBarViewController?.showCasinoCrashGamesScreen(with: viewController)
+        }
+
+        // Refresh if needed
+        traditionalCasinoCoordinator?.refresh()
     }
     
     // MARK: - Banking Flow Methods
@@ -885,19 +1049,53 @@ class MainTabBarCoordinator: Coordinator {
     private func navigateToCasinoFromQuickLink(_ quickLinkType: QuickLinkType) {
         print("🎰 RootTabBarCoordinator: Navigating to casino from QuickLink - \(quickLinkType.rawValue)")
         
-        // First, ensure casino coordinator is loaded
-        
-        
         switch quickLinkType {
         case .aviator:
             self.showCasinoAviatorGameScreen()
         case .virtual:
             self.showCasinoVirtualSportsScreen()
         case .slots:
-            self.showCasinoHomeScreen()
+            self.showCasinoSlotsGamesScreen()
         case .crash:
-            self.showCasinoHomeScreen()
+            self.showCasinoCrashGamesScreen()
         case .promos:
+            self.showPromotionsScreen()
+        default:
+            break
+        }
+    }
+    
+    private func navigateToSportsFromQuickLinkType(quickLinkType: QuickLinkType) {
+        
+        switch quickLinkType {
+        case .sports:
+            if let viewController = self.nextUpEventsCoordinator?.viewController {
+                mainTabBarViewController?.showNextUpEventsScreen(with: viewController, withContextChange: true)
+            }
+            else {
+                self.showNextUpEventsScreen(withContextChange: true)
+            }
+        case .live:
+            if let viewController = self.inPlayEventsCoordinator?.viewController {
+                mainTabBarViewController?.showInPlayEventsScreen(with: viewController, withContextChange: true)
+            }
+            else {
+                self.showInPlayEventsScreen(withContextChange: true)
+            }
+        case .favourites:
+            // TODO: Show favourites when available
+            break
+        case .lite:
+            // TODO: Show lite(?) when available
+            break
+        case .promos:
+            if let viewController = self.nextUpEventsCoordinator?.viewController {
+                mainTabBarViewController?.showNextUpEventsScreen(with: viewController, withContextChange: true)
+            }
+            else {
+                self.showNextUpEventsScreen(withContextChange: true)
+            }
+            
             self.showPromotionsScreen()
         default:
             break

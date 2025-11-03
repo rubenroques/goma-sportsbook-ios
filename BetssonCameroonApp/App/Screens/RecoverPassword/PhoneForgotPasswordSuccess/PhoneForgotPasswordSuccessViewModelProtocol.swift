@@ -9,6 +9,7 @@ import Foundation
 import GomaUI
 
 protocol PhoneForgotPasswordSuccessViewModelProtocol {
+    var resetPasswordType: ResetPasswordType { get }
     var statusInfoViewModel: StatusInfoViewModelProtocol { get }
     var buttonViewModel: ButtonViewModelProtocol { get }
 }

@@ -18,16 +18,16 @@ protocol SportsbookClient {
 
 }
 
-protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
+protocol SportsbookTarget: SportsbookClient {
 
     static var environmentType: EnvironmentType { get }
     
     static var firebaseDatabaseURL: String { get }
-
+    
+    static var appStoreURL: String { get }
+    
     static var supportedThemes: [AppearanceMode] { get }
-    
-    static var links: URLEndpoint.Links { get }
-    
+        
     static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool
     static var features: [SportsbookTargetFeatures] { get }
     static var userRequiredFeatures: [SportsbookTargetFeatures] { get }

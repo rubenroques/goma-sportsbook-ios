@@ -13,34 +13,34 @@ import GomaUI
 final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
     
     // MARK: - Publishers
-    @Published private var menuItems: [ProfileMenuItem] = []
+    @Published private var menuItems: [ActionRowItem] = []
     @Published private var currentLanguage: String = "English"
-    
-    public var menuItemsPublisher: AnyPublisher<[ProfileMenuItem], Never> {
+
+    public var menuItemsPublisher: AnyPublisher<[ActionRowItem], Never> {
         $menuItems.eraseToAnyPublisher()
     }
-    
+
     public var currentLanguagePublisher: AnyPublisher<String, Never> {
         $currentLanguage.eraseToAnyPublisher()
     }
-    
+
     // MARK: - Properties
-    private var onItemSelectedCallback: ((ProfileMenuItem) -> Void)?
-    
+    private var onItemSelectedCallback: ((ActionRowItem) -> Void)?
+
     /// Set the callback for item selection after initialization
-    public var onItemSelected: ((ProfileMenuItem) -> Void)? {
+    public var onItemSelected: ((ActionRowItem) -> Void)? {
         get { onItemSelectedCallback }
         set { onItemSelectedCallback = newValue }
     }
-    
+
     // MARK: - Initialization
-    public init(onItemSelected: ((ProfileMenuItem) -> Void)? = nil) {
+    public init(onItemSelected: ((ActionRowItem) -> Void)? = nil) {
         self.onItemSelectedCallback = onItemSelected
         loadMenuConfiguration()
     }
-    
+
     // MARK: - ProfileMenuListViewModelProtocol
-    public func didSelectItem(_ item: ProfileMenuItem) {
+    public func didSelectItem(_ item: ActionRowItem) {
         print("📱 ProfileMenuListViewModel: Selected menu item: \(item.title) (Action: \(item.action))")
         
         // Handle specific actions locally if needed
@@ -75,7 +75,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
     
     private func loadMenuConfiguration() {
         menuItems = [
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "promotions",
                 icon: "promotion_icon",
                 title: "Promotions and Bonuses",
@@ -83,7 +83,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 type: .navigation,
                 action: .promotions
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "notifications",
                 icon: "bell",
                 title: "Notifications",
@@ -91,7 +91,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 type: .navigation,
                 action: .notifications
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "transaction_history",
                 icon: "clock",
                 title: "Transaction History",
@@ -99,7 +99,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 type: .navigation,
                 action: .transactionHistory
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "change_language",
                 icon: "globe",
                 title: "Change Language",
@@ -107,7 +107,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 type: .navigation,
                 action: .changeLanguage
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "responsible_gaming",
                 icon: "shield.checkered",
                 title: "Responsible Gaming",
@@ -115,7 +115,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 type: .navigation,
                 action: .responsibleGaming
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "help_center",
                 icon: "questionmark.circle",
                 title: "Help Center",
@@ -123,7 +123,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 type: .navigation,
                 action: .helpCenter
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "change_password",
                 icon: "lock",
                 title: "Change Password",
@@ -131,7 +131,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 type: .navigation,
                 action: .changePassword
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "logout",
                 icon: "rectangle.portrait.and.arrow.right",
                 title: "Logout",

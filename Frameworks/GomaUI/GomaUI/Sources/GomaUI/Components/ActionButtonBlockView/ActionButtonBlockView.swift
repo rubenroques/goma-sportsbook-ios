@@ -80,3 +80,50 @@ extension ActionButtonBlockView {
         ])
     }
 }
+
+// MARK: - SwiftUI Preview
+#if DEBUG
+import SwiftUI
+
+@available(iOS 17.0, *)
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default enabled button
+        let defaultView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.defaultMock)
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled button
+        let disabledView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.disabledMock)
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Long text button
+        let longTextView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.longTextMock)
+        longTextView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(disabledView)
+        stackView.addArrangedSubview(longTextView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
+    }
+}
+
+#endif

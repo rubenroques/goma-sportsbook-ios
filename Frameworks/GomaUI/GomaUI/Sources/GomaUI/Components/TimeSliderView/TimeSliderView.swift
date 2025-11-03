@@ -194,36 +194,61 @@ public class TimeSliderView: UIView {
 import SwiftUI
 
 @available(iOS 17.0, *)
-struct TimeSliderView_Preview: PreviewProvider {
-    static var previews: some View {
-        PreviewUIView {
-            let containerView = UIView()
-            containerView.backgroundColor = .systemGray6
-            
-            let timeOptions = [
-                TimeOption(title: "All", value: 0),
-                TimeOption(title: "1h", value: 1),
-                TimeOption(title: "8h", value: 2),
-                TimeOption(title: "Today", value: 3),
-                TimeOption(title: "48h", value: 4),
-            ]
-            
-            let viewModel = MockTimeSliderViewModel(title: "Filter by Time", timeOptions: timeOptions)
-            let sliderView = TimeSliderView(viewModel: viewModel)
-            
-            containerView.addSubview(sliderView)
-            sliderView.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([
-                sliderView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-                sliderView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                sliderView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16)
-            ])
-            
-            return containerView
-        }
-        .frame(height: 160) // Reduced height to match the more compact design
-        .background(Color(uiColor: .systemGray6))
+#Preview("TimeSliderView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Component name label
+        let titleLabel = UILabel()
+        titleLabel.text = "TimeSliderView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // 5 time options (default position)
+        let standardTimeOptions = [
+            TimeOption(title: "All", value: 0),
+            TimeOption(title: "1h", value: 1),
+            TimeOption(title: "8h", value: 2),
+            TimeOption(title: "Today", value: 3),
+            TimeOption(title: "48h", value: 4)
+        ]
+        let standardViewModel = MockTimeSliderViewModel(title: "Filter by Time", timeOptions: standardTimeOptions, selectedValue: 0)
+        let standardSlider = TimeSliderView(viewModel: standardViewModel)
+        standardSlider.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3 time options (middle selection)
+        let shortTimeOptions = [
+            TimeOption(title: "Now", value: 0),
+            TimeOption(title: "Soon", value: 1),
+            TimeOption(title: "Later", value: 2)
+        ]
+        let shortViewModel = MockTimeSliderViewModel(title: "Match Time", timeOptions: shortTimeOptions, selectedValue: 1)
+        let shortSlider = TimeSliderView(viewModel: shortViewModel)
+        shortSlider.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(standardSlider)
+        stackView.addArrangedSubview(shortSlider)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
 }
 #endif

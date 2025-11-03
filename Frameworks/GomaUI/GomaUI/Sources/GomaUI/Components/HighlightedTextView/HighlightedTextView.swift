@@ -127,40 +127,61 @@ public extension HighlightedTextView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-struct HighlightedTextView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            PreviewUIView {
-                HighlightedTextView(viewModel: MockHighlightedTextViewModel.defaultMock())
-            }
-            .frame(height: 60)
-            .previewDisplayName("Default")
-            
-            PreviewUIView {
-                HighlightedTextView(viewModel: MockHighlightedTextViewModel.centeredMock())
-            }
-            .frame(height: 60)
-            .previewDisplayName("Center Aligned")
-            
-            PreviewUIView {
-                HighlightedTextView(viewModel: MockHighlightedTextViewModel.rightAlignedMock())
-            }
-            .frame(height: 60)
-            .previewDisplayName("Right Aligned")
-            
-            PreviewUIView {
-                HighlightedTextView(viewModel: MockHighlightedTextViewModel.multipleHighlightsMock())
-            }
-            .frame(height: 60)
-            .previewDisplayName("Multiple Highlights")
-            
-            PreviewUIView {
-                HighlightedTextView(viewModel: MockHighlightedTextViewModel.linkMock())
-            }
-            .frame(height: 60)
-            .previewDisplayName("Link Highlights")
-        }
-        .padding()
+#Preview("HighlightedTextView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "HighlightedTextView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default (left-aligned)
+        let defaultView = HighlightedTextView(viewModel: MockHighlightedTextViewModel.defaultMock())
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Center aligned
+        let centeredView = HighlightedTextView(viewModel: MockHighlightedTextViewModel.centeredMock())
+        centeredView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Right aligned
+        let rightAlignedView = HighlightedTextView(viewModel: MockHighlightedTextViewModel.rightAlignedMock())
+        rightAlignedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Multiple highlights
+        let multipleHighlightsView = HighlightedTextView(viewModel: MockHighlightedTextViewModel.multipleHighlightsMock())
+        multipleHighlightsView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Link highlights (underlined)
+        let linkView = HighlightedTextView(viewModel: MockHighlightedTextViewModel.linkMock())
+        linkView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(centeredView)
+        stackView.addArrangedSubview(rightAlignedView)
+        stackView.addArrangedSubview(multipleHighlightsView)
+        stackView.addArrangedSubview(linkView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
 }
 #endif

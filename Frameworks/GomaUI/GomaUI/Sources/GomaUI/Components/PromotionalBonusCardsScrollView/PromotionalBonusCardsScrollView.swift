@@ -117,11 +117,52 @@ final public class PromotionalBonusCardsScrollView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Promotional Bonus Cards Scroll") {
-    PreviewUIView {
-        PromotionalBonusCardsScrollView(viewModel: MockPromotionalBonusCardsScrollViewModel.defaultMock)
+#Preview("PromotionalBonusCardsScrollView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 32
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Component name label
+        let titleLabel = UILabel()
+        titleLabel.text = "PromotionalBonusCardsScrollView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default mock - 4 cards
+        let defaultCardsView = PromotionalBonusCardsScrollView(viewModel: MockPromotionalBonusCardsScrollViewModel.defaultMock)
+        defaultCardsView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Short list mock - 2 cards
+        let shortListCardsView = PromotionalBonusCardsScrollView(viewModel: MockPromotionalBonusCardsScrollViewModel.shortListMock)
+        shortListCardsView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultCardsView)
+        stackView.addArrangedSubview(shortListCardsView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+
+            // Fixed heights for horizontal scroll views
+            defaultCardsView.heightAnchor.constraint(equalToConstant: 200),
+            shortListCardsView.heightAnchor.constraint(equalToConstant: 200)
+        ])
+
+        return vc
     }
-    .frame(height: 400)
 }
 
 #endif

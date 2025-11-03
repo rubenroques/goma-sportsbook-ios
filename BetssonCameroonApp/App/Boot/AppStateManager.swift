@@ -73,7 +73,7 @@ class AppStateManager {
     // MARK: - Public Methods
     
     func initialize() {
-        print("🚀 AppStateManager: Starting initialization")
+        print("AppStateManager: Starting initialization")
         currentStateSubject.send(.splashLoading)
         setupNetworkMonitoring()
     }
@@ -110,7 +110,7 @@ class AppStateManager {
         
         reachability.whenReachable = { [weak self] _ in
             DispatchQueue.main.async {
-                print("🌐 AppStateManager: Network is available, proceeding with setup")
+                print("AppStateManager: Network is available, proceeding with setup")
                 // Network is available, proceed with maintenance mode monitoring
                 self?.setupMaintenanceModeMonitoring()
             }
@@ -118,7 +118,7 @@ class AppStateManager {
         
         reachability.whenUnreachable = { [weak self] _ in
             DispatchQueue.main.async {
-                print("❌ AppStateManager: Network unavailable")
+                print("AppStateManager: Network unavailable")
                 self?.currentStateSubject.send(.networkUnavailable)
             }
         }
@@ -147,7 +147,7 @@ class AppStateManager {
                 case .enabled(let message):
                     self?.currentStateSubject.send(.maintenanceMode(message: message))
                 case .disabled:
-                    print("✅ AppStateManager: Maintenance mode disabled, starting services")
+                    print("AppStateManager: Maintenance mode disabled, starting services")
                     self?.bootTriggerCancellable?.cancel()
                     self?.bootTriggerCancellable = nil
                     
@@ -227,28 +227,28 @@ class AppStateManager {
     }
     
     private func loadServicesInParallel() {
-        print("🔄 AppStateManager: Starting parallel service loading")
+        print("AppStateManager: Starting parallel service loading")
         self.currentStateSubject.send(.servicesConnecting)
         
         // Start theme loading (from SplashInformativeViewController:79)
-        print("🎨 AppStateManager: Starting theme loading")
+        print("AppStateManager: Starting theme loading")
         ThemeService.shared.fetchThemeFromServer()
         
         
         // Start configuration loading (from SplashInformativeViewController:82)
-        print("⚙️ AppStateManager: Starting configuration loading")
+        print("AppStateManager: Starting configuration loading")
         environment.presentationConfigurationStore.loadConfiguration()
         
         // Wait for events connection, then perform health check before sports data
-        print("📡 AppStateManager: Monitoring events connection state")
+        print("AppStateManager: Monitoring events connection state")
         environment.servicesProvider.eventsConnectionStatePublisher
             .removeDuplicates()
             .filter { connectorState in
-                print("📡 AppStateManager: Events connection state: \(connectorState)")
+                print("AppStateManager: Events connection state: \(connectorState)")
                 return connectorState == .connected
             }
             .sink { [weak self] _ in
-                print("🏥 AppStateManager: Events connected, performing health check")
+                print("AppStateManager: Events connected, performing health check")
                 // self?.performHealthCheckAndLoadSports()
                 self?.environment.sportsStore.requestInitialSportsData()
 
@@ -256,21 +256,21 @@ class AppStateManager {
             .store(in: &cancellables)
 
         // Monitor sports data loading (from SplashInformativeViewController:84-99)
-        print("📊 AppStateManager: Monitoring sports data loading")
+        print("AppStateManager: Monitoring sports data loading")
         self.sportsDataCancellable = environment.sportsStore.activeSportsPublisher
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("📊 AppStateManager: activeSportsPublisher completion \(completion)")
+                print("AppStateManager: activeSportsPublisher completion \(completion)")
             } receiveValue: { [weak self] sportsLoadingState in
                 switch sportsLoadingState {
                 case .idle:
-                    print("📊 AppStateManager: Sports data idle")
+                    print("AppStateManager: Sports data idle")
                     break
                 case .loading:
-                    print("📊 AppStateManager: Sports data loading...")
+                    print("AppStateManager: Sports data loading...")
                     break
                 case .loaded(let sportsData):
-                    print("✅ AppStateManager: Sports data loaded successfully (\(sportsData.count) sports)")
+                    print("AppStateManager: Sports data loaded successfully (\(sportsData.count) sports)")
                     // We just need to have a valid list of sports, we can than ingore the updates
                     // and cancel the subscription
                     self?.sportsDataCancellable?.cancel()
@@ -278,7 +278,7 @@ class AppStateManager {
                     
                     self?.transitionToReady(sports: sportsData)
                 case .failed:
-                    print("❌ AppStateManager: Sports data loading failed")
+                    print("AppStateManager: Sports data loading failed")
                     self?.currentStateSubject.send(.error(.sportsLoadingFailed))
                 }
             }
@@ -297,9 +297,9 @@ class AppStateManager {
             .store(in: &cancellables)
         
         // Connect service provider (from Bootstrap:85-98)
-        print("🔌 AppStateManager: Connecting services provider")
+        print("AppStateManager: Connecting services provider")
         environment.servicesProvider.connect()
-        print("🎯 AppStateManager: Starting betslip manager")
+        print("AppStateManager: Starting betslip manager")
         environment.betslipManager.start()
     }
     
@@ -311,7 +311,7 @@ class AppStateManager {
                 case .finished:
                     break
                 case .failure(let error):
-                    print("❌ AppStateManager: Health check failed: \(error)")
+                    print("AppStateManager: Health check failed: \(error)")
                     if case .maintenanceMode(let message) = error {
                         self?.currentStateSubject.send(.maintenanceMode(message: message))
                     } else {
@@ -320,10 +320,10 @@ class AppStateManager {
                 }
             }, receiveValue: { [weak self] isHealthy in
                 if isHealthy {
-                    print("✅ AppStateManager: Health check passed, requesting sports data")
+                    print("AppStateManager: Health check passed, requesting sports data")
                     self?.environment.sportsStore.requestInitialSportsData()
                 } else {
-                    print("❌ AppStateManager: Health check failed")
+                    print("AppStateManager: Health check failed")
                     self?.currentStateSubject.send(.error(.serviceConnectionFailed))
                 }
             })
@@ -331,7 +331,7 @@ class AppStateManager {
     }
     
     private func transitionToReady(sports: [Sport]) {
-        print("🎉 AppStateManager: Transitioning to ready state with \(sports.count) sports")
+        print("AppStateManager: Transitioning to ready state with \(sports.count) sports")
         // TODO: Check for app updates here using Firebase Remote Config
         // For now, we'll just transition to ready state
         self.currentStateSubject.send(.ready)

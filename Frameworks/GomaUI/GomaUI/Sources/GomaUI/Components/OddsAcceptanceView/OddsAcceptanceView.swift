@@ -244,30 +244,52 @@ public final class OddsAcceptanceView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Accepted") {
-    PreviewUIView {
-        OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel.acceptedMock())
-    }
-    .frame(height: 40)
-    .padding()
-}
+#Preview("OddsAcceptanceView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
 
-@available(iOS 17.0, *)
-#Preview("Not Accepted") {
-    PreviewUIView {
-        OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel.notAcceptedMock())
-    }
-    .frame(height: 40)
-    .padding()
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Disabled") {
-    PreviewUIView {
-        OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel.disabledMock())
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "OddsAcceptanceView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Accepted state
+        let acceptedView = OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel.acceptedMock())
+        acceptedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Not Accepted state
+        let notAcceptedView = OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel.notAcceptedMock())
+        notAcceptedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Disabled state
+        let disabledView = OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel.disabledMock())
+        disabledView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(acceptedView)
+        stackView.addArrangedSubview(notAcceptedView)
+        stackView.addArrangedSubview(disabledView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
-    .frame(height: 40)
-    .padding()
 }
 
 #endif 

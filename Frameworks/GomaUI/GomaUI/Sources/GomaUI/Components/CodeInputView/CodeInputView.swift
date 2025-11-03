@@ -216,51 +216,68 @@ public final class CodeInputView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Default State") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            CodeInputView(viewModel: MockCodeInputViewModel.defaultMock())
-        }
-    }
-    .frame(height: 160)
-    .padding()
-}
+#Preview("CodeInputView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
 
-@available(iOS 17.0, *)
-#Preview("Loading State") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            CodeInputView(viewModel: MockCodeInputViewModel.loadingMock())
-        }
-    }
-    .frame(height: 160)
-    .padding()
-}
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("Error State") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            CodeInputView(viewModel: MockCodeInputViewModel.errorMock())
-        }
-    }
-    .frame(height: 220)
-    .padding()
-}
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-@available(iOS 17.0, *)
-#Preview("With Code") {
-    ZStack {
-        Color.gray.opacity(0.1)
-        PreviewUIView {
-            CodeInputView(viewModel: MockCodeInputViewModel.withCodeMock())
-        }
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = "CodeInputView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Default state
+        let defaultView = CodeInputView(viewModel: MockCodeInputViewModel.defaultMock())
+        defaultView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Loading state
+        let loadingView = CodeInputView(viewModel: MockCodeInputViewModel.loadingMock())
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Error state
+        let errorView = CodeInputView(viewModel: MockCodeInputViewModel.errorMock())
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+
+        // With code state
+        let withCodeView = CodeInputView(viewModel: MockCodeInputViewModel.withCodeMock())
+        withCodeView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(defaultView)
+        stackView.addArrangedSubview(loadingView)
+        stackView.addArrangedSubview(errorView)
+        stackView.addArrangedSubview(withCodeView)
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
+        ])
+
+        return vc
     }
-    .frame(height: 160)
-    .padding()
 }
 
 #endif 

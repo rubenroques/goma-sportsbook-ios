@@ -38,16 +38,18 @@ class PhoneLoginViewModel {
                                                                                           highlights: []))
         
         phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
-                                                                                                  placeholder: "Phone number *",
+                                                                                                  placeholder: "Phone number",
                                                                                                   prefix: "+237",
                                                                                                   isSecure: false,
+                                                                                                  isRequired: true,
                                                                                                   visualState: .idle,
                                                                                                   keyboardType: .phonePad,
                                                                                                   textContentType: .telephoneNumber))
-        
+
         passwordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "password",
-                                                                                                     placeholder: "Password *",
+                                                                                                     placeholder: "Password",
                                                                                                      isSecure: true,
+                                                                                                     isRequired: true,
                                                                                                      visualState: .idle,
                                                                                                      keyboardType: .default,
                                                                                                      textContentType: .password))

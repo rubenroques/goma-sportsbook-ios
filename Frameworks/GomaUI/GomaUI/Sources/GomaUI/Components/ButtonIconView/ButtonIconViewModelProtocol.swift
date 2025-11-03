@@ -14,12 +14,18 @@ public struct ButtonIconData: Equatable {
     public let icon: String?
     public let layoutType: ButtonIconLayoutType
     public let isEnabled: Bool
+    public let backgroundColor: UIColor?
+    public let cornerRadius: CGFloat?
+    public let iconColor: UIColor?
     
-    public init(title: String, icon: String? = nil, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true) {
+    public init(title: String, icon: String? = nil, layoutType: ButtonIconLayoutType = .iconLeft, isEnabled: Bool = true, backgroundColor: UIColor? = nil, cornerRadius: CGFloat? = nil, iconColor: UIColor? = nil) {
         self.title = title
         self.icon = icon
         self.layoutType = layoutType
         self.isEnabled = isEnabled
+        self.backgroundColor = backgroundColor
+        self.cornerRadius = cornerRadius
+        self.iconColor = iconColor
     }
 }
 
@@ -42,6 +48,15 @@ public protocol ButtonIconViewModelProtocol {
     
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
+    
+    /// Update background color
+    func updateBackgroundColor(_ color: UIColor?)
+    
+    /// Update corner radius
+    func updateCornerRadius(_ radius: CGFloat?)
+    
+    /// Update icon tint color
+    func updateIconColor(_ color: UIColor?)
     
     /// Callback for button tap
     var onButtonTapped: (() -> Void)? { get set }

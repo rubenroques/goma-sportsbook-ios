@@ -24,36 +24,71 @@ public final class EveryMatrixUnifiedConfiguration {
     }
     
     // MARK: - Player API Configuration
-    
+
     /// Base URL for Player API
     public var playerAPIBaseURL: String {
         switch environment {
         case .production:
-            return ""
+            return "https://betsson.nwacdn.com"  // Updated from betsson-api.norway.everymatrix.com
         case .staging, .development:
             return "https://betsson-api.stage.norway.everymatrix.com"
         }
     }
-    
+
     // MARK: - OddsMatrix API Configuration
-    
+
     /// Base URL for OddsMatrix API (Sports/Betting)
     public var oddsMatrixBaseURL: String {
         switch environment {
         case .production:
-            return ""
+            return "https://sports-api.everymatrix.com"
         case .staging, .development:
             return "https://sports-api-stage.everymatrix.com"
         }
     }
+
+    /// WebSocket URL for OddsMatrix WAMP protocol
+    public var oddsMatrixWebSocketURL: String {
+        switch environment {
+        case .production:
+            return "wss://sportsapi.betssonem.com"  // New production WebSocket URL
+        case .staging, .development:
+            return "wss://sportsapi-betsson-stage.everymatrix.com"
+        }
+    }
+    
+    /// WebSocket Version for OddsMatrix WAMP protocol
+    public var oddsMatrixWebSocketVersion: String {
+        switch environment {
+        case .production:
+            return "v2"  // New production WebSocket URL
+        case .staging, .development:
+            return "v2"
+        }
+    }
+
+    /// WebSocket realm (same for all environments)
+    public var oddsMatrixWebSocketRealm: String {
+        return "www.betsson.cm"
+    }
+
+    /// WebSocket origin for connection headers
+    public var oddsMatrixWebSocketOrigin: String {
+        switch environment {
+        case .production:
+            return "https://www.betssonem.com/"  // Production origin
+        case .staging, .development:
+            return "https://sportsbook-stage.gomagaming.com"
+        }
+    }
     
     // MARK: - Casino API Configuration
-    
-    /// Base URL for Casino API
+
+    /// Base URL for Casino API (uses same backend as PlayerAPI)
     public var casinoAPIBaseURL: String {
         switch environment {
         case .production:
-            return "https://betsson-api.norway.everymatrix.com"
+            return "https://betsson.nwacdn.com"  // Updated from betsson-api.norway.everymatrix.com
         case .staging, .development:
             return "https://betsson-api.stage.norway.everymatrix.com"
         }
@@ -89,11 +124,25 @@ public final class EveryMatrixUnifiedConfiguration {
         }
     }
     
+    public var recsysComboAPIBaseURL: String {
+        switch environment {
+        case .production:
+            return "https://recsys-combo-api-gateway-test-bshwjrve.nw.gateway.dev"
+        case .staging, .development:
+            return "https://recsys-combo-api-gateway-test-bshwjrve.nw.gateway.dev"
+        }
+    }
+    
     public var recsysAPIKey: String {
         return "AIzaSyBE-HDs6eqAkiNXtfN1sZGHRaGppjLfCho"
 
     }
     
+    public var recsysComboAPIKey: String {
+        return "AIzaSyAQog-N-vXGDNWldHPfM9qzR5vOMeJDspE"
+
+    }
+
     // Virtual lobby (used in casino request to get virtual games)
     public var virtualsDataSource: String {
         switch environment {
@@ -106,11 +155,11 @@ public final class EveryMatrixUnifiedConfiguration {
     
     // MARK: - Shared Configuration
     
-    /// Domain ID for all APIs
-    public var domainId: String {
+    /// Operator ID ( some apis call it Domain ID) for all APIs
+    public var operatorId: String {
         switch environment {
         case .production:
-            return "4093" // TODO: Verify production domain ID
+            return "4374"
         case .staging, .development:
             return "4093"
         }

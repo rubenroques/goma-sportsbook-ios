@@ -216,37 +216,59 @@ public class SportGamesFilterView: UIView {
 import SwiftUI
 
 @available(iOS 17.0, *)
-struct GamesView_Preview: PreviewProvider {
-    static var previews: some View {
-        PreviewUIView {
-            // Create container view with gray background
-            let containerView = UIView()
-            containerView.backgroundColor = .systemGray5 // or your preferred gray color
-            
-            let sportFilters = [
-                SportFilter(id: "1", title: "Football", icon: "sportscourt.fill"),
-                SportFilter(id: "2", title: "Basketball", icon: "basketball.fill"),
-                SportFilter(id: "3", title: "Tennis", icon: "tennis.racket"),
-                SportFilter(id: "4",title: "Cricket", icon: "figure.cricket")
-            ]
-            
-            let viewModel = MockSportGamesFilterViewModel(title: "Games", sportFilters: sportFilters, selectedId: "1")
-            let gamesView = SportGamesFilterView(viewModel: viewModel)
-            
-            // Add gamesView to container with constraints
-            containerView.addSubview(gamesView)
-            gamesView.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([
-                gamesView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-                gamesView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                gamesView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16)
-            ])
-            
-            return containerView
-        }
-        .frame(height: 300)
-        .background(Color(uiColor: .systemGray5)) // Also set background for the SwiftUI container
+#Preview("SportGamesFilterView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Component name label
+        let titleLabel = UILabel()
+        titleLabel.text = "SportGamesFilterView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // 2 sports (odd number)
+        let twoSportsFilters = [
+            SportFilter(id: "1", title: "Football", icon: "sportscourt.fill"),
+            SportFilter(id: "2", title: "Basketball", icon: "basketball.fill")
+        ]
+        let twoSportsViewModel = MockSportGamesFilterViewModel(title: "Top Sports", sportFilters: twoSportsFilters, selectedId: "1")
+        let twoSportsView = SportGamesFilterView(viewModel: twoSportsViewModel)
+        twoSportsView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 4 sports (standard grid)
+        let fourSportsFilters = [
+            SportFilter(id: "1", title: "Football", icon: "sportscourt.fill"),
+            SportFilter(id: "2", title: "Basketball", icon: "basketball.fill"),
+            SportFilter(id: "3", title: "Tennis", icon: "tennis.racket"),
+            SportFilter(id: "4", title: "Cricket", icon: "figure.cricket")
+        ]
+        let fourSportsViewModel = MockSportGamesFilterViewModel(title: "Games", sportFilters: fourSportsFilters, selectedId: "2")
+        let fourSportsView = SportGamesFilterView(viewModel: fourSportsViewModel)
+        fourSportsView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(twoSportsView)
+        stackView.addArrangedSubview(fourSportsView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
     }
 }
 #endif

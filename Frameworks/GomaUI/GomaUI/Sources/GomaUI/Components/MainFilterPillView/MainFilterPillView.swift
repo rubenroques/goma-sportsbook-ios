@@ -187,32 +187,66 @@ final public class MainFilterPillView: UIView {
 import SwiftUI
 
 @available(iOS 17.0, *)
-#Preview("Main Filter View") {
-    PreviewUIView {
-        let containerView = UIView()
-        containerView.backgroundColor = StyleProvider.Color.highlightPrimary
-        
-        let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter")
-        
-        let viewModel = MockMainFilterPillViewModel(mainFilter: mainFilter)
-        
-        let filterView = MainFilterPillView(viewModel: viewModel)
-        
-        filterView.onFilterTapped = { mainFilterType in
-            print("Filter tapped: \(mainFilterType)")
-        }
-        
-        containerView.addSubview(filterView)
-        
-        // Position the filter view on the right side
-        filterView.translatesAutoresizingMaskIntoConstraints = false
+#Preview("All States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        // 1. TITLE LABEL
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "MainFilterPillView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+
+        // 2. VERTICAL STACK with ALL states
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 3. ADD ALL COMPONENT INSTANCES
+        // Not selected state
+        let mainFilterNotSelected = MainFilterItem(type: .mainFilter, title: "Filter")
+        let notSelectedViewModel = MockMainFilterPillViewModel(mainFilter: mainFilterNotSelected, initialState: .notSelected)
+        let notSelectedView = MainFilterPillView(viewModel: notSelectedViewModel)
+        notSelectedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Selected state with 3 filters
+        let mainFilterSelected = MainFilterItem(type: .mainFilter, title: "Filter")
+        let selectedViewModel = MockMainFilterPillViewModel(mainFilter: mainFilterSelected, initialState: .selected(selections: "3"))
+        let selectedView = MainFilterPillView(viewModel: selectedViewModel)
+        selectedView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Selected state with 10+ filters
+        let mainFilterMultiple = MainFilterItem(type: .mainFilter, title: "Filter")
+        let multipleViewModel = MockMainFilterPillViewModel(mainFilter: mainFilterMultiple, initialState: .selected(selections: "12"))
+        let multipleView = MainFilterPillView(viewModel: multipleViewModel)
+        multipleView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add all states to stack
+        stackView.addArrangedSubview(notSelectedView)
+        stackView.addArrangedSubview(selectedView)
+        stackView.addArrangedSubview(multipleView)
+
+        // 4. ADD TO VIEW HIERARCHY
+        vc.view.addSubview(titleLabel)
+        vc.view.addSubview(stackView)
+
+        // 5. CONSTRAINTS
         NSLayoutConstraint.activate([
-            filterView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-            filterView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16)
+            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
+
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
         ])
-        
-        return containerView
+
+        return vc
     }
-    .frame(height: 80)
 }
 #endif

@@ -53,6 +53,16 @@ struct ComponentRegistry {
             }
         ),
         UIComponent(
+            title: "Suggested Bets Expanded",
+            description: "Expandable section with horizontal match cards and page indicators",
+            viewController: SuggestedBetsExpandedViewController.self,
+            previewFactory: {
+                let viewModel = MockSuggestedBetsExpandedViewModel.demo
+                let view = SuggestedBetsExpandedView(viewModel: viewModel)
+                return view
+            }
+        ),
+        UIComponent(
             title: "Market Outcomes Line",
             description: "Flexible betting market outcomes display with selection states, odds changes, and multiple display modes",
             viewController: MarketOutcomesLineViewController.self,
@@ -153,6 +163,20 @@ struct ComponentRegistry {
                 ticketBetInfoView.backgroundColor = StyleProvider.Color.backgroundSecondary
                 ticketBetInfoView.layer.cornerRadius = 8
                 return ticketBetInfoView
+            }
+        ),
+        UIComponent(
+            title: "Betslip Odds Boost Header",
+            description: "Header view displaying odds boost promotion with progress tracking - designed for betslip header positioning",
+            viewController: BetslipOddsBoostHeaderViewController.self,
+            previewFactory: {
+                let viewModel = MockBetslipOddsBoostHeaderViewModel.activeMock(
+                    selectionCount: 1,
+                    totalEligibleCount: 3,
+                    nextTierPercentage: "3%"
+                )
+                let headerView = BetslipOddsBoostHeaderView(viewModel: viewModel)
+                return headerView
             }
         )
     ]

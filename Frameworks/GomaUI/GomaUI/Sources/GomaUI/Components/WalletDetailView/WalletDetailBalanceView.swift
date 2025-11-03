@@ -235,7 +235,7 @@ extension WalletDetailBalanceView {
 #Preview("Wallet Detail Balance View") {
     PreviewUIViewController {
         let vc = UIViewController()
-        vc.view.backgroundColor = StyleProvider.Color.highlightPrimary
+        vc.view.backgroundColor = .backgroundTestColor
         
         let balanceView = WalletDetailBalanceView()
         balanceView.translatesAutoresizingMaskIntoConstraints = false

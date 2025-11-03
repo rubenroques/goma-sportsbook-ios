@@ -3,36 +3,36 @@ import Combine
 
 /// Mock implementation of ProfileMenuListViewModelProtocol for testing and previews
 public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
-    
+
     // MARK: - Publishers
-    @Published private var menuItems: [ProfileMenuItem] = []
+    @Published private var menuItems: [ActionRowItem] = []
     @Published private var currentLanguage: String = "English"
-    
-    public var menuItemsPublisher: AnyPublisher<[ProfileMenuItem], Never> {
+
+    public var menuItemsPublisher: AnyPublisher<[ActionRowItem], Never> {
         $menuItems.eraseToAnyPublisher()
     }
-    
+
     public var currentLanguagePublisher: AnyPublisher<String, Never> {
         $currentLanguage.eraseToAnyPublisher()
     }
-    
+
     // MARK: - Properties
-    private var onItemSelectedCallback: ((ProfileMenuItem) -> Void)?
-    
+    private var onItemSelectedCallback: ((ActionRowItem) -> Void)?
+
     /// Callback for menu item selection - can be set after initialization
-    public var onItemSelected: ((ProfileMenuItem) -> Void)? {
+    public var onItemSelected: ((ActionRowItem) -> Void)? {
         get { onItemSelectedCallback }
         set { onItemSelectedCallback = newValue }
     }
-    
+
     // MARK: - Initialization
-    public init(onItemSelected: ((ProfileMenuItem) -> Void)? = nil) {
+    public init(onItemSelected: ((ActionRowItem) -> Void)? = nil) {
         self.onItemSelectedCallback = onItemSelected
         loadDefaultConfiguration()
     }
-    
+
     // MARK: - ProfileMenuListViewModelProtocol
-    public func didSelectItem(_ item: ProfileMenuItem) {
+    public func didSelectItem(_ item: ActionRowItem) {
         print("📱 Mock: Selected menu item: \(item.title) (Action: \(item.action))")
         
         // Handle specific actions
@@ -71,49 +71,49 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
     // MARK: - Private Methods
     private func loadDefaultConfiguration() {
         menuItems = [
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "notifications",
                 icon: "bell",
                 title: "Notifications",
                 type: .navigation,
                 action: .notifications
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "transaction_history",
                 icon: "clock",
                 title: "Transaction History",
                 type: .navigation,
                 action: .transactionHistory
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "change_language",
                 icon: "globe",
                 title: "Change Language",
                 type: .navigation,
                 action: .changeLanguage
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "responsible_gaming",
                 icon: "shield.checkered",
                 title: "Responsible Gaming",
                 type: .navigation,
                 action: .responsibleGaming
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "help_center",
                 icon: "questionmark.circle",
                 title: "Help Center",
                 type: .navigation,
                 action: .helpCenter
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "change_password",
                 icon: "lock",
                 title: "Change Password",
                 type: .navigation,
                 action: .changePassword
             ),
-            ProfileMenuItem(
+            ActionRowItem(
                 id: "logout",
                 icon: "rectangle.portrait.and.arrow.right",
                 title: "Logout",
@@ -174,7 +174,7 @@ extension MockProfileMenuListViewModel {
     }
     
     /// Mock instance with custom callback
-    public static func customCallbackMock(onItemSelected: @escaping (ProfileMenuItem) -> Void) -> MockProfileMenuListViewModel {
+    public static func customCallbackMock(onItemSelected: @escaping (ActionRowItem) -> Void) -> MockProfileMenuListViewModel {
         MockProfileMenuListViewModel(onItemSelected: onItemSelected)
     }
     
@@ -201,7 +201,8 @@ extension MockProfileMenuListViewModel {
                 print("🚪 Would show logout confirmation")
             case .promotions:
                 print("🚪 Would open promotions screen")
-
+            case .custom:
+                print("⚡ Custom action triggered")
             }
         }
     }
