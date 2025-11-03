@@ -214,13 +214,13 @@ extension GomaModelMapper {
     
     static func promotionInfo(fromInternalPromotionInfo promotionInfo: GomaModels.PromotionInfo) -> PromotionInfo {
         
-        let staticPage = self.staticPage(fromInternalStaticPage: promotionInfo.staticPage ?? nil)
+        let staticPage = Self.staticPage(fromInternalStaticPage: promotionInfo.staticPage ?? nil)
         
         let startDate = GomaProvider.parseGomaDateString(promotionInfo.startDate ?? "")
         
         let endDate = GomaProvider.parseGomaDateString(promotionInfo.endDate ?? "")
         
-        let categories = promotionInfo.categories?.map { self.promotionCategory(fromInternalPromotionCategory: $0) }
+        let categories = promotionInfo.categories?.map { Self.promotionCategory(fromInternalPromotionCategory: $0) }
         
         return PromotionInfo(
             id: promotionInfo.id,

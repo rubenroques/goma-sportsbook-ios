@@ -1,5 +1,5 @@
 //
-//  SportTopBannerSliderViewModel.swift
+//  TopBannerSliderViewModel.swift
 //  BetssonCameroonApp
 //
 //  Created on 22/09/2025.
@@ -11,7 +11,7 @@ import ServicesProvider
 import GomaUI
 
 /// Production ViewModel for TopBannerSliderView that displays sport carousel banners
-final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
+final class TopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
 
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<TopBannerSliderDisplayState, Never>
@@ -19,7 +19,6 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
 
     // Internal state
-    private var matchBannerViewModels: [MatchBannerViewModel] = []
     private var currentPageIndex: Int = 0
 
     // MARK: - Callbacks
@@ -66,63 +65,107 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     }
 
     func bannerTapped(at index: Int) {
-        guard index < matchBannerViewModels.count else { return }
-        let matchBannerViewModel = matchBannerViewModels[index]
-        matchBannerViewModel.userDidTapBanner()
+        let currentBanners = displayStateSubject.value.sliderData.banners
+        guard index < currentBanners.count else { return }
+
+        let bannerType = currentBanners[index]
+
+        // Handle tap based on banner type
+        switch bannerType {
+        case .match(let matchViewModel):
+            matchViewModel.userDidTapBanner()
+        case .info, .casino:
+            // Info and casino banners handle taps through their button callbacks
+            break
+        }
     }
 
     // MARK: - Private Methods
     private func loadSportBanners() {
-        // Get carousel events and create banners directly
-        servicesProvider.getCarouselEvents()
+        print("[BANNER-DEBUG] 📡 Calling getSportRichBanners() API...")
+
+        // Get sport rich banners (supports info, casino, and sport event types)
+        servicesProvider.getSportRichBanners()
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
                     switch completion {
                     case .finished:
-                        break
+                        print("[BANNER-DEBUG] ✅ getSportRichBanners() completed successfully")
                     case .failure(let error):
+                        print("[BANNER-DEBUG] ❌ getSportRichBanners() failed with error: \(error)")
                         self?.handleAPIError(error)
                     }
                 },
-                receiveValue: { [weak self] imageHighlightedEvents in
-                    self?.processCarouselEvents(imageHighlightedEvents)
+                receiveValue: { [weak self] richBanners in
+                    print("[BANNER-DEBUG] 📥 Received \(richBanners.count) rich banners from API")
+                    for (index, banner) in richBanners.enumerated() {
+                        switch banner {
+                        case .info(let infoBanner):
+                            print("[BANNER-DEBUG]   [\(index)] Info banner: \(infoBanner.id)")
+                        case .casinoGame(let casinoBanner):
+                            print("[BANNER-DEBUG]   [\(index)] Casino banner: \(casinoBanner.bannerMetadata.bannerId)")
+                        case .sportEvent(let sportBanner):
+                            print("[BANNER-DEBUG]   [\(index)] Sport event banner: \(sportBanner.eventContent.content.name ?? "")")
+                        }
+                    }
+                    self?.processRichBanners(richBanners)
                 }
             )
             .store(in: &cancellables)
     }
 
-    private func processCarouselEvents(_ imageHighlightedEvents: ImageHighlightedContents<Event>) {
-        // Convert ImageHighlightedContent<Event> directly to MatchBannerViewModel
-        matchBannerViewModels = imageHighlightedEvents.compactMap { highlightedEvent in
-            return self.createMatchBannerViewModel(from: highlightedEvent)
-        }
+    private func processRichBanners(_ richBanners: RichBanners) {
+        print("[BANNER-DEBUG] 🔄 Processing \(richBanners.count) rich banners through mapper...")
 
-        // Set up callbacks for each view model
-        matchBannerViewModels.forEach { [weak self] viewModel in
-            viewModel.onMatchTap = { [weak self] eventId in
-                self?.onMatchTap(eventId)
-            }
+        // Use mapper to convert RichBanners to BannerType array
+        let bannerTypes = ServiceProviderModelMapper.bannerTypes(fromRichBanners: richBanners)
 
-            // Add outcome selection callbacks
-            viewModel.onOutcomeSelected = { [weak self] outcomeId in
-                self?.onOutcomeSelected(outcomeId)
-            }
-
-            viewModel.onOutcomeDeselected = { [weak self] outcomeId in
-                self?.onOutcomeDeselected(outcomeId)
+        print("[BANNER-DEBUG] 📦 Mapper produced \(bannerTypes.count) BannerType items")
+        for (index, bannerType) in bannerTypes.enumerated() {
+            switch bannerType {
+            case .info:
+                print("[BANNER-DEBUG]   [\(index)] BannerType.info")
+            case .casino:
+                print("[BANNER-DEBUG]   [\(index)] BannerType.casino")
+            case .match:
+                print("[BANNER-DEBUG]   [\(index)] BannerType.match")
             }
         }
 
-        // Convert to BannerType array
-        let bannerTypes = matchBannerViewModels.map { BannerType.matchBanner($0) }
+        // Set up callbacks for match banners
+        // Since MatchBannerViewModel is a class, we can modify properties directly through the protocol
+        for (index, bannerType) in bannerTypes.enumerated() {
+            if case .match(var matchViewModel) = bannerType {
+                print("[BANNER-DEBUG] 🔗 Setting up callbacks for match banner at index \(index)")
+
+                // Directly modify the class instance through the protocol reference
+                matchViewModel.onMatchTap = { [weak self] eventId in
+                    print("[BANNER-DEBUG] 👆 Match banner tapped: \(eventId)")
+                    self?.onMatchTap(eventId)
+                }
+
+                matchViewModel.onOutcomeSelected = { [weak self] outcomeId in
+                    print("[BANNER-DEBUG] ✅ Outcome selected: \(outcomeId)")
+                    self?.onOutcomeSelected(outcomeId)
+                }
+
+                matchViewModel.onOutcomeDeselected = { [weak self] outcomeId in
+                    print("[BANNER-DEBUG] ❌ Outcome deselected: \(outcomeId)")
+                    self?.onOutcomeDeselected(outcomeId)
+                }
+            }
+        }
 
         // Update slider data
         updateSliderDataWithBanners(bannerTypes)
     }
 
     private func updateSliderDataWithBanners(_ bannerTypes: [BannerType]) {
+        print("[BANNER-DEBUG] 🎨 Updating slider with \(bannerTypes.count) banners")
+
         let showPageIndicators = bannerTypes.count > 1
+        let isVisible = !bannerTypes.isEmpty
 
         let sliderData = TopBannerSliderData(
             banners: bannerTypes,
@@ -132,10 +175,11 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
 
         let newState = TopBannerSliderDisplayState(
             sliderData: sliderData,
-            isVisible: true,
+            isVisible: isVisible,
             isUserInteractionEnabled: true
         )
 
+        print("[BANNER-DEBUG] 📊 Final state: isVisible=\(isVisible), bannerCount=\(bannerTypes.count), showPageIndicators=\(showPageIndicators)")
         displayStateSubject.send(newState)
     }
 
@@ -157,6 +201,7 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     }
 
     private func handleAPIError(_ error: ServiceProviderError) {
+        print("[BANNER-DEBUG] ⚠️ Handling API error, hiding banner slider")
 
         // Show empty state on error
         let emptySliderData = TopBannerSliderData(
@@ -180,18 +225,4 @@ final class SportTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
         loadSportBanners()
     }
 
-    // MARK: - Private Helper Methods
-
-    /// Convert ImageHighlightedContent<Event> directly to MatchBannerViewModel
-    private func createMatchBannerViewModel(from highlighted: ImageHighlightedContent<Event>) -> MatchBannerViewModel? {
-        let event = highlighted.content
-
-        // Map ServicesProvider.Event to app's Match model first
-        guard let match = ServiceProviderModelMapper.match(fromEvent: event) else {
-            return nil // Skip if event can't be mapped to match
-        }
-
-        // Create MatchBannerViewModel with the match and CMS image URL
-        return MatchBannerViewModel(match: match, imageURL: highlighted.imageURL)
-    }
 }

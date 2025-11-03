@@ -207,12 +207,17 @@ extension TopBannerSliderView: UICollectionViewDataSource {
         let banner = banners[indexPath.item]
 
         switch banner {
-        case .singleButton(let viewModel):
+        case .info(let viewModel):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SingleButtonBannerCell", for: indexPath) as! SingleButtonBannerViewCell
             cell.configure(with: viewModel)
             return cell
-
-        case .matchBanner(let viewModel):
+            
+        case .casino(let viewModel):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SingleButtonBannerCell", for: indexPath) as! SingleButtonBannerViewCell
+            cell.configure(with: viewModel)
+            return cell
+            
+        case .match(let viewModel):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MatchBannerCell", for: indexPath) as! MatchBannerViewCell
             cell.configure(with: viewModel)
             return cell

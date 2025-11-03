@@ -61,7 +61,7 @@ class NextUpEventsViewModel {
 
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
-    let topBannerSliderViewModel: SportTopBannerSliderViewModel
+    let topBannerSliderViewModel: TopBannerSliderViewModel
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
     var generalFiltersBarViewModel: GeneralFilterBarViewModelProtocol
@@ -124,7 +124,7 @@ class NextUpEventsViewModel {
         self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forSportsScreens()
 
         // Create TopBannerSlider ViewModel for sports banners
-        self.topBannerSliderViewModel = SportTopBannerSliderViewModel(servicesProvider: servicesProvider)
+        self.topBannerSliderViewModel = TopBannerSliderViewModel(servicesProvider: servicesProvider)
 
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()

@@ -83,7 +83,7 @@ extension ServiceProviderModelMapper {
         return banners.compactMap { bannerData in
             let singleButtonData = singleButtonBannerData(fromCasinoBannerData: bannerData)
             let viewModel = CasinoBannerViewModel(bannerData: bannerData, displayData: singleButtonData)
-            return .singleButton(viewModel)
+            return BannerType.info(viewModel)
         }
     }
 }

@@ -170,6 +170,7 @@ class TopBarContainerController: UIViewController {
     private func embedContentViewController() {
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
 
+        
         addChild(contentViewController)
         contentContainerView.addSubview(contentViewController.view)
 

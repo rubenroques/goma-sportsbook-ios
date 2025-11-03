@@ -109,7 +109,7 @@ final class CasinoTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
 
     private func setupBannerCallbacks(_ bannerTypes: [BannerType]) {
         for bannerType in bannerTypes {
-            if case .singleButton(let viewModel) = bannerType,
+            if case .info(let viewModel) = bannerType,
                let casinoBannerViewModel = viewModel as? CasinoBannerViewModel {
                 casinoBannerViewModel.onBannerAction = { [weak self] action in
                     self?.onBannerAction(action)

@@ -60,8 +60,8 @@ class InPlayEventsViewModel {
     }
 
     // MARK: - Child ViewModels
-    let quickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol
-    let topBannerSliderViewModel: TopBannerSliderViewModelProtocol
+    let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
+    let topBannerSliderViewModel: TopBannerSliderViewModel
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
 
@@ -121,7 +121,7 @@ class InPlayEventsViewModel {
         self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forSportsScreens()
 
         // Create TopBannerSlider ViewModel for sports banners
-        self.topBannerSliderViewModel = SportTopBannerSliderViewModel(servicesProvider: servicesProvider)
+        self.topBannerSliderViewModel = TopBannerSliderViewModel(servicesProvider: servicesProvider)
 
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
@@ -222,18 +222,16 @@ class InPlayEventsViewModel {
     // MARK: - Setup
     private func setupBindings() {
         // Setup QuickLinks navigation callback
-        if let quickLinksViewModel = quickLinksTabBarViewModel as? QuickLinksTabBarViewModel {
-            quickLinksViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
-                self?.onCasinoQuickLinkSelected?(quickLinkType)
-            }
+        quickLinksTabBarViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
+            self?.onCasinoQuickLinkSelected?(quickLinkType)
         }
+    
 
         // Setup TopBannerSlider navigation callback
-        if let sportBannerViewModel = topBannerSliderViewModel as? SportTopBannerSliderViewModel {
-            sportBannerViewModel.onMatchTap = { [weak self] eventId in
-                self?.onMatchTap?(eventId)
-            }
+        topBannerSliderViewModel.onMatchTap = { [weak self] eventId in
+            self?.onMatchTap?(eventId)
         }
+        
         
         // Listen to market group selection changes from selector ViewModel
         marketGroupSelectorViewModel.selectionEventPublisher

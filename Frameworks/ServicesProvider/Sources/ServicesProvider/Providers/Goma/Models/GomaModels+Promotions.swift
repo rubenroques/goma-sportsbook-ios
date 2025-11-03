@@ -402,7 +402,7 @@ extension GomaModels {
             case name = "name"
         }
     }
-
+    
     struct StaticPage: Codable {
         let title: String
         let slug: String

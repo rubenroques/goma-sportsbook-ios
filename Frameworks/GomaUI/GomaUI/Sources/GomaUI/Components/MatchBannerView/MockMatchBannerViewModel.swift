@@ -30,6 +30,11 @@ public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
         return mockScoreViewModel
     }
 
+    // MARK: - Callbacks (protocol requirements)
+    public var onMatchTap: ((String) -> Void)?
+    public var onOutcomeSelected: ((String) -> Void)?
+    public var onOutcomeDeselected: ((String) -> Void)?
+
     // MARK: - Private Properties
     private let mockMarketOutcomesViewModel: MockMarketOutcomesLineViewModel
     private let mockScoreViewModel: MockScoreViewModel
@@ -57,6 +62,7 @@ public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
     public func userDidTapBanner() {
         print("🏟️ Mock: Banner tapped for match: \(matchData.homeTeam) vs \(matchData.awayTeam)")
         onBannerTappedCallback?()
+        onMatchTap?(matchData.id)
     }
 
     public func userDidTapOutcome(outcomeId: String, isSelected: Bool) {
@@ -169,11 +175,13 @@ public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
     }
     
     public func onOutcomeSelected(outcomeId: String) {
-        print("Mock: onOutcomeSelected")
+        print("Mock: onOutcomeSelected - \(outcomeId)")
+        self.onOutcomeSelected?(outcomeId)
     }
-    
+
     public func onOutcomeDeselected(outcomeId: String) {
-        print("Mock: onOutcomeDeselected")
+        print("Mock: onOutcomeDeselected - \(outcomeId)")
+        self.onOutcomeDeselected?(outcomeId)
     }
 }
 

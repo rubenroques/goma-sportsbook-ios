@@ -12,6 +12,17 @@ public protocol MatchBannerViewModelProtocol {
     /// View model for market outcomes line
     var marketOutcomesViewModel: MarketOutcomesLineViewModelProtocol { get }
 
+    // MARK: - Callbacks (set by parent ViewModels)
+
+    /// Called when user taps the match banner - passes match/event ID
+    var onMatchTap: ((String) -> Void)? { get set }
+
+    /// Called when user selects an outcome - passes outcome ID
+    var onOutcomeSelected: ((String) -> Void)? { get set }
+
+    /// Called when user deselects an outcome - passes outcome ID
+    var onOutcomeDeselected: ((String) -> Void)? { get set }
+
     // MARK: - User Interactions
 
     /// Called when user taps on the banner

@@ -14,9 +14,9 @@ extension MockTopBannerSliderViewModel {
     /// Casino-themed mock banners for testing and preview
     public static var casinoGameMock: MockTopBannerSliderViewModel {
         let banners: [BannerType] = [
-            .singleButton(createCasinoGameBanner()),
-            .singleButton(createPromotionBanner()),
-            .singleButton(createWelcomeBonusBanner())
+            .info(createCasinoGameBanner()),
+            .info(createPromotionBanner()),
+            .info(createWelcomeBonusBanner())
         ]
 
         let sliderData = TopBannerSliderData(
@@ -31,7 +31,7 @@ extension MockTopBannerSliderViewModel {
     /// Single casino banner for minimal testing
     public static var singleCasinoBannerMock: MockTopBannerSliderViewModel {
         let banners: [BannerType] = [
-            .singleButton(createCasinoGameBanner())
+            .info(createCasinoGameBanner())
         ]
 
         let sliderData = TopBannerSliderData(
