@@ -29,6 +29,10 @@ import Foundation
 // See body and headers properties for login case - temporary workaround for server bug
 private let omegaLoginBoundary = "iOSFormBoundary7MA4YWxkTrZu0gW"
 
+// Hardcoded boundary for multipart/form-data requests (used for signUp endpoint)
+// See body and headers properties for signUp case - temporary workaround for server bug
+private let omegaSignUpBoundary = "iOSFormBoundary8NB5ZXylUsH1vX"
+
 enum OmegaAPIClient {
     case login(username: String, password: String)
     case openSession
@@ -373,38 +377,18 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "mobile", value: phoneNumber)
             ]
             
-        case .signUp(let email,
-                     let username,
-                     let password,
-                     let birthDate,
-                     let mobilePrefix,
-                     let mobileNumber,
-                     let nationalityIso2Code,
-                     let currencyCode,
-                     let firstName,
-                     let lastName,
-                     let middleName,
-                     let gender,
-                     let address,
-                     let city,
-                     let postalCode,
-                     let countryIso2Code,
-                     let bonusCode,
-                     let receiveMarketingEmails,
-                     let avatarName,
-                     let godfatherCode,
-                     let birthDepartment,
-                     let birthCity,
-                     let birthCountry,
-                     let streetNumber,
-                     let consentedIds,
-                     let unconsentedIds,
-                     let mobileVerificationRequestId):
-            
+        case .signUp:
+            // TODO: TEMPORARY WORKAROUND - All parameters moved to multipart body
+            // The Omega server fails to properly decode percent-encoded special characters
+            // in query parameters. Using multipart/form-data which works correctly.
+            // REVERT TO QUERY PARAMETERS when server decoding is fixed (see commented code below).
+            return nil
+
+            /* ORIGINAL QUERY PARAMETER CODE
             let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
-            
+
             var query: [URLQueryItem] = []
-            
+
             query.append(URLQueryItem(name: "username", value: username))
             query.append(URLQueryItem(name: "password", value: password))
             query.append(URLQueryItem(name: "email", value: email))
@@ -413,38 +397,38 @@ extension OmegaAPIClient: Endpoint {
             query.append(URLQueryItem(name: "mobile", value: phoneNumber))
             query.append(URLQueryItem(name: "city", value: city))
             query.append(URLQueryItem(name: "country", value: countryIso2Code))
-            
+
             query.append(URLQueryItem(name: "firstName", value: firstName))
             query.append(URLQueryItem(name: "lastName", value: lastName))
-            
+
             if let middleName = middleName {
                 query.append(URLQueryItem(name: "middleName", value: middleName))
             }
-            
+
             query.append(URLQueryItem(name: "gender", value: gender))
             query.append(URLQueryItem(name: "address", value: address))
-            
+
             query.append(URLQueryItem(name: "postalCode", value: postalCode))
             query.append(URLQueryItem(name: "streetNumber", value: streetNumber))
             query.append(URLQueryItem(name: "birthDepartment", value: birthDepartment))
             query.append(URLQueryItem(name: "birthCity", value: birthCity))
             query.append(URLQueryItem(name: "birthCountry", value: birthCountry))
-            
+
             let dateFromatter = DateFormatter()
             dateFromatter.dateFormat = "yyyy-MM-dd"
             let birthDateString = dateFromatter.string(from: birthDate)
             query.append(URLQueryItem(name: "birthDate", value: birthDateString))
-            
-            
+
+
             if let bonusCode = bonusCode { query.append(URLQueryItem(name: "bonusCode", value: bonusCode)) }
             if let receiveMarketingEmails = receiveMarketingEmails {
                 query.append(URLQueryItem(name: "receiveEmail", value: receiveMarketingEmails ? "true" : "false"))
             }
-            
+
             if let mobileVerificationRequestIdValue = mobileVerificationRequestId {
                 query.append(URLQueryItem(name: "verificationRequestId", value: mobileVerificationRequestIdValue))
             }
-            
+
             let extraInfo = """
                             {
                             "avatar":"\(avatarName ?? "")",
@@ -452,23 +436,24 @@ extension OmegaAPIClient: Endpoint {
                             "godfatherCode":"\(godfatherCode ?? "")"
                             }
                             """
-            
+
             query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
-            
+
             if let godfatherCode {
                 query.append(URLQueryItem(name: "referralCode", value: "\(godfatherCode)"))
             }
-            
+
             for consentedId in consentedIds {
                 query.append(URLQueryItem(name: "consentedVersions[]", value: consentedId))
             }
-            
+
             for unconsentedId in unconsentedIds {
                 query.append(URLQueryItem(name: "unConsentedversions[]", value: unconsentedId))
             }
-            
-            
+
+
             return query
+            */
             
         case .updateExtraInfo(let placeOfBirth, let address2):
             var query: [URLQueryItem] = []
@@ -908,7 +893,7 @@ extension OmegaAPIClient: Endpoint {
         case .checkCredentialEmail: return .get
         case .checkUsername: return .get
         case .quickSignup: return .get
-        case .signUp: return .get
+        case .signUp: return .post
         case .resendVerificationCode: return .get
         case .signupConfirmation: return .get
         case .getCountries: return .get
@@ -1059,6 +1044,202 @@ extension OmegaAPIClient: Endpoint {
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
 
         case .getSumsubAccessToken( _, _, let body, _):
+            return body
+
+        case .signUp(let email,
+                     let username,
+                     let password,
+                     let birthDate,
+                     let mobilePrefix,
+                     let mobileNumber,
+                     _,
+                     let currencyCode,
+                     let firstName,
+                     let lastName,
+                     let middleName,
+                     let gender,
+                     let address,
+                     let city,
+                     let postalCode,
+                     let countryIso2Code,
+                     let bonusCode,
+                     let receiveMarketingEmails,
+                     let avatarName,
+                     let godfatherCode,
+                     let birthDepartment,
+                     let birthCity,
+                     let birthCountry,
+                     let streetNumber,
+                     let consentedIds,
+                     let unconsentedIds,
+                     let mobileVerificationRequestId):
+
+            // TODO: TEMPORARY WORKAROUND - Server Bug with URL-encoded parameters
+            // The Omega server fails to properly decode percent-encoded special characters
+            // (e.g., & becomes %26, @ becomes %40) in query parameters.
+            // Using multipart/form-data which works correctly.
+            // REVERT TO QUERY PARAMETERS when server decoding is fixed.
+
+            var body = Data()
+
+            // Format phone number
+            let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
+
+            // Format birthDate
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let birthDateString = dateFormatter.string(from: birthDate)
+
+            // Username field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"username\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(username)\r\n".data(using: .utf8)!)
+
+            // Password field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"password\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(password)\r\n".data(using: .utf8)!)
+
+            // Email field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"email\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(email)\r\n".data(using: .utf8)!)
+
+            // Currency field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"currency\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(currencyCode)\r\n".data(using: .utf8)!)
+
+            // Mobile field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"mobile\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(phoneNumber)\r\n".data(using: .utf8)!)
+
+            // City field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"city\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(city)\r\n".data(using: .utf8)!)
+
+            // Country field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"country\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(countryIso2Code)\r\n".data(using: .utf8)!)
+
+            // FirstName field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"firstName\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(firstName)\r\n".data(using: .utf8)!)
+
+            // LastName field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"lastName\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(lastName)\r\n".data(using: .utf8)!)
+
+            // MiddleName field (optional)
+            if let middleName = middleName {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"middleName\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(middleName)\r\n".data(using: .utf8)!)
+            }
+
+            // Gender field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"gender\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(gender)\r\n".data(using: .utf8)!)
+
+            // Address field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"address\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(address)\r\n".data(using: .utf8)!)
+
+            // PostalCode field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"postalCode\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(postalCode)\r\n".data(using: .utf8)!)
+
+            // StreetNumber field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"streetNumber\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(streetNumber)\r\n".data(using: .utf8)!)
+
+            // BirthDepartment field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"birthDepartment\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(birthDepartment)\r\n".data(using: .utf8)!)
+
+            // BirthCity field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"birthCity\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(birthCity)\r\n".data(using: .utf8)!)
+
+            // BirthCountry field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"birthCountry\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(birthCountry)\r\n".data(using: .utf8)!)
+
+            // BirthDate field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"birthDate\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(birthDateString)\r\n".data(using: .utf8)!)
+
+            // BonusCode field (optional)
+            if let bonusCode = bonusCode {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"bonusCode\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(bonusCode)\r\n".data(using: .utf8)!)
+            }
+
+            // ReceiveEmail field (optional)
+            if let receiveMarketingEmails = receiveMarketingEmails {
+                let receiveEmailValue = receiveMarketingEmails ? "true" : "false"
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"receiveEmail\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(receiveEmailValue)\r\n".data(using: .utf8)!)
+            }
+
+            // VerificationRequestId field (optional)
+            if let mobileVerificationRequestIdValue = mobileVerificationRequestId {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"verificationRequestId\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(mobileVerificationRequestIdValue)\r\n".data(using: .utf8)!)
+            }
+
+            // ExtraInfo field (JSON)
+            let extraInfo = """
+            {
+            "avatar":"\(avatarName ?? "")",
+            "device_os": "iOS",
+            "godfatherCode":"\(godfatherCode ?? "")"
+            }
+            """
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"extraInfo\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(extraInfo)\r\n".data(using: .utf8)!)
+
+            // ReferralCode field (optional)
+            if let godfatherCode = godfatherCode {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"referralCode\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(godfatherCode)\r\n".data(using: .utf8)!)
+            }
+
+            // ConsentedVersions array (multiple fields with bracket notation)
+            for consentedId in consentedIds {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"consentedVersions[]\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(consentedId)\r\n".data(using: .utf8)!)
+            }
+
+            // UnConsentedversions array (multiple fields with bracket notation)
+            for unconsentedId in unconsentedIds {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"unConsentedversions[]\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(unconsentedId)\r\n".data(using: .utf8)!)
+            }
+
+            // Closing boundary
+            body.append("--\(omegaSignUpBoundary)--\r\n".data(using: .utf8)!)
+
             return body
 
         default:
@@ -1218,6 +1399,18 @@ extension OmegaAPIClient: Endpoint {
                 "Accept-Encoding": "gzip, deflate",
                 "Content-Type": "application/json; charset=UTF-8",
                 "Accept": "application/json",
+                "app-origin": "ios",
+            ]
+            return headers
+
+        case .signUp:
+            // TODO: TEMPORARY WORKAROUND - See body property for full explanation
+            // Using multipart/form-data due to server bug with URL-encoded parameter decoding
+            // REVERT TO DEFAULT HEADERS when server is fixed
+            let headers = [
+                "Accept-Encoding": "gzip, deflate",
+                "Content-Type": "multipart/form-data; boundary=\(omegaSignUpBoundary)",
+                "Accept": "*/*",
                 "app-origin": "ios",
             ]
             return headers
