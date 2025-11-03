@@ -343,6 +343,24 @@ class SportsBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
         
+        // Subscribe to tickets invalid state updates (forbidden/invalid)
+        viewModel.ticketsInvalidStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                // Reload table to update isEnabled state of all ticket cells
+                self?.ticketsTableView.reloadData()
+            }
+            .store(in: &cancellables)
+        
+        // Subscribe to betBuilder selections updates
+        viewModel.betBuilderSelectionsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                // Reload table to update isEnabled state based on betBuilder matches
+                self?.ticketsTableView.reloadData()
+            }
+            .store(in: &cancellables)
+        
         // Setup button callbacks
         viewModel.clearBetslipButtonViewModel.onButtonTapped = { [weak self] in
             self?.handleClearBetslipTapped()
@@ -521,6 +539,32 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
         
         let ticket = viewModel.currentTickets[indexPath.row]
         
+        // Determine if ticket should be enabled and disabled message
+        let isEnabled: Bool
+        let disabledMessage: String?
+        let betBuilderSelections = viewModel.betBuilderSelections
+        
+        if !betBuilderSelections.isEmpty {
+            // If betBuilder selections exist, only enable tickets that match
+            isEnabled = betBuilderSelections.contains(ticket.id)
+            // For betBuilder, don't show message (keep showing date)
+            disabledMessage = nil
+        }
+        else {
+            // Otherwise, check the invalid state
+            switch viewModel.ticketsInvalidState {
+            case .none:
+                isEnabled = true
+                disabledMessage = nil
+            case .invalid:
+                isEnabled = false
+                disabledMessage = localized("expired")
+            case .forbidden:
+                isEnabled = false
+                disabledMessage = localized("not_combinable")
+            }
+        }
+        
         // Create a proper mock view model with the actual ticket data
         let ticketViewModel = MockBetslipTicketViewModel(
             leagueName: ticket.competition ?? "Unknown League",
@@ -529,7 +573,10 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
             awayTeam: ticket.awayParticipantName ?? "Away Team",
             selectedTeam: ticket.outcomeDescription,
             oddsValue: String(format: "%.2f", ticket.decimalOdd),
-            oddsChangeState: .none
+            oddsChangeState: .none,
+            isEnabled: isEnabled,
+            bettingOfferId: ticket.id,
+            disabledMessage: disabledMessage
         )
         
         cell.configure(with: ticketViewModel)

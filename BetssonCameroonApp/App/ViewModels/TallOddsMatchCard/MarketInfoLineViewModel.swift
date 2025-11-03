@@ -17,7 +17,7 @@ final class MarketInfoLineViewModel: MarketInfoLineViewModelProtocol {
         return marketNamePillViewModelSubject.eraseToAnyPublisher()
     }
     
-    private let marketInfoData: MarketInfoData
+    public let marketInfoData: MarketInfoData
     
     // MARK: - Initialization
     init(marketInfoData: MarketInfoData) {
@@ -91,11 +91,15 @@ extension MarketInfoLineViewModel {
         
         let marketName = markets.first?.marketTypeName ?? markets.first?.name ?? "Markets"
         let icons = self.determineMarketIcons(from: markets, totalMarketCount: totalMarketCount)
-        
+        let marketId = markets.first?.id ?? ""
+        let marketTypeId = markets.first?.marketTypeId ?? ""
+
         return MarketInfoData(
             marketName: marketName,
             marketCount: totalMarketCount,
-            icons: icons
+            icons: icons,
+            marketId: marketId,
+            marketTypeId: marketTypeId
         )
     }
     

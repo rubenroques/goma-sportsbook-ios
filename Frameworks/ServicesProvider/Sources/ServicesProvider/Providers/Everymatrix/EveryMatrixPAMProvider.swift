@@ -674,7 +674,7 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
             stakeAmount: stakeAmount,
             includeVendorConfiguration: true,
             includePotentialOddsBoostWallet: true,
-            terminalType: "mobile",
+            terminalType: "MOBILE",
             combination: [combination]
         )
 

@@ -11,6 +11,7 @@ import Combine
 class EveryMatrixBettingProvider: BettingProvider, Connector {
 
     var sessionCoordinator: EveryMatrixSessionCoordinator
+    private var socketConnector: EveryMatrixSocketConnector
     private var restConnector: EveryMatrixRESTConnector
     private let sseConnector: EveryMatrixSSEConnector
     private var cancellables: Set<AnyCancellable> = []
@@ -20,9 +21,11 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     }
     private var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
 
-    init(sessionCoordinator: EveryMatrixSessionCoordinator,
+    init(socketConnector: EveryMatrixSocketConnector,
+         sessionCoordinator: EveryMatrixSessionCoordinator,
          restConnector: EveryMatrixRESTConnector,
          sseConnector: EveryMatrixSSEConnector) {
+        self.socketConnector = socketConnector
         self.sessionCoordinator = sessionCoordinator
         self.restConnector = restConnector
         self.sseConnector = sseConnector
@@ -341,8 +344,56 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         )
     }
     
+    func calculateUnifiedBettingOptions(
+        betType: BetGroupingType,
+        selections: [BettingOptionsCalculateSelection],
+        stakeAmount: Double?
+    ) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
+
+        let language = "en" // TODO: Make configurable from configuration
+
+        // Convert BetSelection (domain) → BetSelectionInfo (EveryMatrix)
+        let emSelections = selections.compactMap { selection -> EveryMatrix.BettingOptionsCalculateSelection in
+            return EveryMatrix.BettingOptionsCalculateSelection(
+                bettingOfferId: selection.bettingOfferId,
+                priceValue: selection.oddFormat.decimalOdd
+            )
+        }
+
+        // Validate selections
+        guard !emSelections.isEmpty else {
+            print("❌ BettingProvider: No valid selections for betting options calculation")
+            return Fail(error: ServiceProviderError.errorDetailedMessage(
+                key: "invalid_selections",
+                message: "No valid selections provided"
+            )).eraseToAnyPublisher()
+        }
+
+        // Create router with parameters
+        let router = WAMPRouter.getBettingOptionsV2(
+            type: betType,
+            selections: emSelections,
+            stakeAmount: stakeAmount,
+            language: language
+        )
+
+        print("🎯 BettingProvider: Calculating betting options for \(emSelections.count) selections, betType: \(betType)")
+
+        // Make RPC call via socketConnector
+        let rpcResponsePublisher: AnyPublisher<EveryMatrix.BettingOptionsV2Response, ServiceProviderError> =
+            socketConnector.request(router)
+
+        // Map response to domain model
+        return rpcResponsePublisher
+            .map { response in
+                print("✅ BettingProvider: Received betting options - success: \(response.success ?? false), minStake: \(response.minStake ?? 0), maxStake: \(response.maxStake?.description ?? "nil"), odds: \(response.priceValueFactor ?? 0)")
+                return EveryMatrixModelMapper.unifiedBettingOptions(from: response)
+            }
+            .eraseToAnyPublisher()
+    }
+
     // MARK: - Helper Methods
-    
+
     private func defaultPlacedBeforeDate() -> String {
         let calendar = Calendar.current
         let sixMonthsFromNow = calendar.date(byAdding: .month, value: 6, to: Date()) ?? Date()

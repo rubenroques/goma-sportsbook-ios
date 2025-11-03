@@ -16,6 +16,24 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     private var environment: Environment
     
+    // Track tickets invalid state
+    private let ticketsInvalidStateSubject = CurrentValueSubject<TicketsInvalidState, Never>(.none)
+    public var ticketsInvalidStatePublisher: AnyPublisher<TicketsInvalidState, Never> {
+        return ticketsInvalidStateSubject.eraseToAnyPublisher()
+    }
+    public var ticketsInvalidState: TicketsInvalidState {
+        return ticketsInvalidStateSubject.value
+    }
+    
+    // Track betBuilder selections (betting offer IDs that should be enabled)
+    private let betBuilderSelectionsSubject = CurrentValueSubject<Set<String>, Never>(Set())
+    public var betBuilderSelectionsPublisher: AnyPublisher<Set<String>, Never> {
+        return betBuilderSelectionsSubject.eraseToAnyPublisher()
+    }
+    public var betBuilderSelections: Set<String> {
+        return betBuilderSelectionsSubject.value
+    }
+    
     // MARK: - Child View Models
     public var bookingCodeButtonViewModel: ButtonIconViewModelProtocol
     public var clearBetslipButtonViewModel: ButtonIconViewModelProtocol
@@ -208,10 +226,6 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
                 self?.ticketsSubject.send(tickets)
-                // Recalculate odds
-                self?.calculateOdds()
-                // Recalculate potential winnings when tickets change
-                self?.calculatePotentialWinnings()
 
                 // Forward selected outcomes to suggested bets VM (for cell selection state)
                 if let mockSuggested = self?.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
@@ -219,6 +233,77 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                     mockSuggested.updateSelectedOutcomeIds(selectedOutcomeIds)
                 }
             }
+            .store(in: &cancellables)
+        
+        environment.betslipManager.bettingOptionsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingOptions in
+                guard let self = self else { return }
+                
+                // Extract odds from LoadableContent
+                if case .loaded(let options) = bettingOptions {
+                    // Determine tickets invalid state
+                    let invalidState: TicketsInvalidState
+                    
+                    if !options.forbiddenCombinations.isEmpty {
+                        invalidState = .forbidden
+                        print("⚠️ FORBIDDEN COMBINATIONS DETECTED - All tickets are forbidden")
+                    } else if options.totalOdds == nil || options.totalOdds == 0.0 {
+                        invalidState = .invalid
+                        print("⚠️ INVALID SELECTION DETECTED - totalOdds is nil or 0")
+                    } else {
+                        invalidState = .none
+                    }
+                    
+                    self.ticketsInvalidStateSubject.send(invalidState)
+                    
+                    var betBuilderOdds: Double? = nil
+                    
+                    // Extract betBuilder selections (betting offer IDs that should be enabled)
+                    var betBuilderOfferIds = Set<String>()
+                    for betBuilder in options.betBuilders {
+                        
+                        // Set first set of betBuilder odds only
+                        if betBuilderOdds == nil {
+                            betBuilderOdds = betBuilder.betBuilderOdds
+                        }
+                        
+                        for selection in betBuilder.selections {
+                            if let bettingOfferId = selection.bettingOfferId {
+                                betBuilderOfferIds.insert(bettingOfferId)
+                            }
+                        }
+                    }
+                    self.betBuilderSelectionsSubject.send(betBuilderOfferIds)
+                    
+                    if !betBuilderOfferIds.isEmpty {
+                        print("✅ BET BUILDER DETECTED with \(betBuilderOfferIds.count) valid selections")
+                    }
+                    
+                    // Update odds and calculate potential winnings with priority order
+                    let stake = self.betInfoSubmissionViewModel.currentData.amount
+                    
+                    if let betBuilderOdds {
+                        // Priority 1: Use betBuilder odds if present
+                        self.updateOdds(totalOdds: betBuilderOdds)
+                        self.calculatePotentialWinnings(totalOdds: betBuilderOdds, stake: stake)
+                    } else if invalidState != .none {
+                        // Priority 2: Set to 0 if invalid or forbidden
+                        self.updateOdds(totalOdds: 0.0)
+                        self.calculatePotentialWinnings(totalOdds: 0.0, stake: stake)
+                    } else if let totalOdds = options.totalOdds {
+                        // Priority 3: Use regular totalOdds
+                        self.updateOdds(totalOdds: totalOdds)
+                        self.calculatePotentialWinnings(totalOdds: totalOdds, stake: stake)
+                    } else {
+                        // Priority 4: Default to 0 if all else fails
+                        self.updateOdds(totalOdds: 0.0)
+                        self.calculatePotentialWinnings(totalOdds: 0.0, stake: stake)
+                    }
+                }
+                
+                print("Betting Options fetched")
+            })
             .store(in: &cancellables)
         
         environment.userSessionStore.userProfilePublisher
@@ -279,7 +364,12 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         }
         
         betInfoSubmissionViewModel.amountChanged = { [weak self] in
-            self?.calculatePotentialWinnings()
+            if let amountDouble = Double(self?.betInfoSubmissionViewModel.currentData.amount ?? "") {
+                self?.environment.betslipManager.validateBettingOptions(withStake: amountDouble)
+            }
+            else {
+                self?.calculatePotentialWinnings(totalOdds: 0.0, stake: "0")
+            }
         }
         
         
@@ -347,20 +437,13 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             .store(in: &cancellables)
     }
     
-    private func calculatePotentialWinnings() {
-        // Get the current amount from the bet info submission view model
-        let amountString = betInfoSubmissionViewModel.currentData.amount
-        guard let amount = Double(amountString), amount > 0 else {
+    private func calculatePotentialWinnings(totalOdds: Double, stake: String) {
+
+        guard let amount = Double(stake), amount > 0 else {
             // If no amount or invalid amount, set potential winnings to 0
             let currency = betInfoSubmissionViewModel.currentData.currency
             betInfoSubmissionViewModel.updatePotentialWinnings("\(currency) 0")
             return
-        }
-        
-        // Calculate total odds by multiplying each odd value sequentially
-        var totalOdds = 1.0
-        for ticket in currentTickets {
-            totalOdds *= ticket.decimalOdd
         }
         
         // Calculate potential winnings: amount * total odds
@@ -378,13 +461,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
     }
     
-    private func calculateOdds() {
-        
-        // Calculate total odds by multiplying each odd value sequentially
-        var totalOdds = 1.0
-        for ticket in currentTickets {
-            totalOdds *= ticket.decimalOdd
-        }
+    private func updateOdds(totalOdds: Double) {
         
         let formattedOdds = String(format: "%.2f", totalOdds)
 
@@ -402,6 +479,12 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         
         return Double(normalizedString) ?? 0.0
     }
+}
+
+public enum TicketsInvalidState: Equatable {
+    case none
+    case invalid
+    case forbidden
 }
 
 public enum BetslipLoggedState {

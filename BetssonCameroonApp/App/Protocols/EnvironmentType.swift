@@ -9,5 +9,6 @@ import Foundation
 
 enum EnvironmentType {
     case prod
+    case staging
     case dev
 }

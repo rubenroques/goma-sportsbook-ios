@@ -55,10 +55,14 @@ final class WAMPManager {
         print("WAMPManager: URL: \(wsEndPoint)")
         print("WAMPManager: Origin: \(WAMPSocketParams.origin)")
         
+        guard let websocketHostnameServerURL = URL(string: wsEndPoint) else {
+            fatalError("Invalid Webocket URL")
+        }
+        
         let swampSession = SSWampSession(
             realm: WAMPSocketParams.realm,
             transport: WebSocketSSWampTransport(
-                wsEndpoint: URL(string: wsEndPoint)!,
+                wsEndpoint: websocketHostnameServerURL,
                 userAgent: self.buildUserAgent(),
                 origin: WAMPSocketParams.origin
             )

@@ -286,8 +286,12 @@ public final class BetslipTicketView: UIView {
     // MARK: - Rendering
     private func render(data: BetslipTicketData) {
         
-        // Update league and date info
-        leagueDateLabel.text = "\(data.leagueName) • \(data.startDate)"
+        // Update league and date info - show disabled message if present, otherwise show date
+        if let disabledMessage = data.disabledMessage {
+            leagueDateLabel.text = "\(data.leagueName) • \(disabledMessage)"
+        } else {
+            leagueDateLabel.text = "\(data.leagueName) • \(data.startDate)"
+        }
         leagueDateLabel.isHidden = false
         
         // Update teams

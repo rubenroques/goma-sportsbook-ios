@@ -129,7 +129,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
             }
             return nil
         }.first
-        
+                
         let oddDouble = Double(outcome?.value ?? "")
         
         // Parse the date string to a Date object
@@ -137,8 +137,9 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         
         let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId,
                                           outcomeId: outcomeId,
-                                          marketId: matchData.marketInfo.marketName,
-                                          matchId: matchData.matchId, 
+                                          marketId: matchData.marketInfo.marketId,
+                                          matchId: matchData.matchId,
+                                          marketTypeId: matchData.marketInfo.marketTypeId,
                                           decimalOdd: oddDouble ?? 0.0,
                                           isAvailable: true,
                                           matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)",
@@ -354,7 +355,9 @@ extension TallOddsMatchCardViewModel {
         let marketInfoData = MarketInfoData(
             marketName: firstMarket?.marketTypeName ?? firstMarket?.name ?? "Markets",
             marketCount: match.numberTotalOfMarkets,
-            icons: createMarketIcons(from: relevantMarkets, match: match)
+            icons: createMarketIcons(from: relevantMarkets, match: match),
+            marketId: firstMarket?.id ?? "",
+            marketTypeId: firstMarket?.marketTypeId
         )
         
         let outcomesViewModel = createMarketOutcomesViewModel(from: relevantMarkets, marketTypeId: marketTypeId, with: matchCardContext)

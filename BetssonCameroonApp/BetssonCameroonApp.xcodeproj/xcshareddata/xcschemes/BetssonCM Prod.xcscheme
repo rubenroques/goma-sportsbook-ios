@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CE74A14B2E2E8D9400DDE78D"
-               BuildableName = "BetssonCameroonApp.app"
+               BuildableName = "Betsson CM Stg.app"
                BlueprintName = "BetssonCameroonApp"
                ReferencedContainer = "container:BetssonCameroonApp.xcodeproj">
             </BuildableReference>
@@ -24,7 +24,7 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Debug-Production"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
@@ -55,7 +55,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Debug-Staging"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -69,14 +69,14 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE74A14B2E2E8D9400DDE78D"
-            BuildableName = "BetssonCameroonApp.app"
+            BuildableName = "Betsson CM Stg.app"
             BlueprintName = "BetssonCameroonApp"
             ReferencedContainer = "container:BetssonCameroonApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Release-Production"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -86,17 +86,17 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE74A14B2E2E8D9400DDE78D"
-            BuildableName = "BetssonCameroonApp.app"
+            BuildableName = "Betsson CM Stg.app"
             BlueprintName = "BetssonCameroonApp"
             ReferencedContainer = "container:BetssonCameroonApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Debug">
+      buildConfiguration = "Release-Production">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Release-Production"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

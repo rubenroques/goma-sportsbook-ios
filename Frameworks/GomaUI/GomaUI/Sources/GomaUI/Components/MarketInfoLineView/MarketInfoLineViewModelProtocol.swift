@@ -30,12 +30,16 @@ public struct MarketInfoIcon: Equatable, Hashable {
 public struct MarketInfoData: Equatable, Hashable {
     public let marketName: String
     public let marketCount: Int
+    public let marketId: String
+    public let marketTypeId: String?
     public let icons: [MarketInfoIcon]
     
-    public init(marketName: String, marketCount: Int, icons: [MarketInfoIcon]) {
+    public init(marketName: String, marketCount: Int, icons: [MarketInfoIcon], marketId: String, marketTypeId: String?) {
         self.marketName = marketName
         self.marketCount = marketCount
         self.icons = icons
+        self.marketId = marketId
+        self.marketTypeId = marketTypeId
     }
 }
 
@@ -58,4 +62,6 @@ public struct MarketInfoLineDisplayState: Equatable {
 public protocol MarketInfoLineViewModelProtocol {
     var displayStatePublisher: AnyPublisher<MarketInfoLineDisplayState, Never> { get }
     var marketNamePillViewModelPublisher: AnyPublisher<MarketNamePillLabelViewModelProtocol, Never> { get }
+    var marketInfoData: MarketInfoData { get }
+
 }

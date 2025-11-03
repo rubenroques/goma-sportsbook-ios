@@ -454,4 +454,14 @@ extension SportRadarBettingProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
+    // MARK: - Unified Betting Options - Not Supported
+
+    func calculateUnifiedBettingOptions(
+        betType: BetGroupingType,
+        selections: [BettingOptionsCalculateSelection],
+        stakeAmount: Double?
+    ) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
 }

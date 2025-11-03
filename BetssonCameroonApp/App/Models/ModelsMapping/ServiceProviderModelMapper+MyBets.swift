@@ -99,6 +99,7 @@ extension ServiceProviderModelMapper {
             outcomeName: servicesProviderSelection.outcomeName,
             odd: mappedOdd,
             marketId: servicesProviderSelection.marketId,
+            marketTypeId: servicesProviderSelection.marketName,
             outcomeId: servicesProviderSelection.outcomeId,
             homeResult: servicesProviderSelection.homeResult,
             awayResult: servicesProviderSelection.awayResult,

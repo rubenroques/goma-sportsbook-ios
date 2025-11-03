@@ -21,6 +21,23 @@ protocol BettingProvider: Connector {
 
     func calculatePotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError>
 
+    /// Validates bet selections and returns unified betting options including:
+    /// - Min/max stake constraints
+    /// - Total odds calculation
+    /// - Available bonuses (free bets, odds boosts, stake backs)
+    /// - Tax information
+    ///
+    /// - Parameters:
+    ///   - betType: Type of bet (single, multiple, or system)
+    ///   - selections: Array of bet selections to validate
+    ///   - stakeAmount: Optional stake amount for calculating potential winnings
+    /// - Returns: Publisher emitting unified betting options or error, including betbuilder validity state
+    func calculateUnifiedBettingOptions(
+        betType: BetGroupingType,
+        selections: [BettingOptionsCalculateSelection],
+        stakeAmount: Double?
+    ) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError>
+
     func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
 
     // BetBuilder

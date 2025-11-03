@@ -200,7 +200,7 @@ class EveryMatrixRESTConnector: Connector {
             print("[EveryMatrix-REST api] 📋 Request headers: \(headers)")
         }
 
-        print("============ \n [EveryMatrix-REST api] cURL Command:")
+        print("\n============ \n [EveryMatrix-REST api] cURL Command:")
         print(request.cURL(pretty: true))
         print("============\n")
         
@@ -211,11 +211,11 @@ class EveryMatrixRESTConnector: Connector {
                     throw ServiceProviderError.invalidResponse
                 }
 
-                print("[EveryMatrix-REST api] Response status code: \(httpResponse.statusCode)")
+                // print("[EveryMatrix-REST api] Response status code: \(httpResponse.statusCode)")
 
                 // Log response body for debugging
                 if let responseString = String(data: result.data, encoding: .utf8) {
-                    print("[EveryMatrix-REST api] 📥 Response body: \(responseString)")
+                    // print("[EveryMatrix-REST api] 📥 Response body: \(responseString)")
                 }
 
                 switch httpResponse.statusCode {

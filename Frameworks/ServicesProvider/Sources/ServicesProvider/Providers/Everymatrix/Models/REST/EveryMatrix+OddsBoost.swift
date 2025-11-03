@@ -63,7 +63,7 @@ extension EveryMatrix {
         let incompleteBets: Double
 
         // Only present when combination parameter is provided
-        let odds: [String: [String: String]]?
+        let odds: EventOddsRangeCollection?
         let oddsBoost: OddsBoostInfo?
 
         let bonusExtension: BonusWalletExtension
@@ -74,6 +74,48 @@ extension EveryMatrix {
             case odds, oddsBoost
             case bonusExtension = "extension"
         }
+    }
+
+    // MARK: - Event Odds Range Collection
+
+    /// Maps event IDs to their respective odds range requirements for the bonus
+    struct EventOddsRangeCollection: Codable {
+        /// Dictionary mapping event ID to odds range constraints
+        /// Example: { "284443475567742976": { min: 1.1, max: 9999 } }
+        private let ranges: [String: OddsRange]
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            self.ranges = try container.decode([String: OddsRange].self)
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            try container.encode(ranges)
+        }
+
+        /// Get odds range for a specific event ID
+        func oddsRange(forEventId eventId: String) -> OddsRange? {
+            return ranges[eventId]
+        }
+
+        /// All event IDs that have odds range constraints
+        var eventIds: [String] {
+            return Array(ranges.keys)
+        }
+
+        /// Check if event ID has odds constraints
+        func hasConstraints(forEventId eventId: String) -> Bool {
+            return ranges[eventId] != nil
+        }
+    }
+
+    // MARK: - Odds Range
+
+    /// Represents min/max odds constraints for an event in the bonus
+    struct OddsRange: Codable {
+        let min: Double?
+        let max: Double?
     }
 
     // MARK: - Odds Boost Info (returned when selections provided)

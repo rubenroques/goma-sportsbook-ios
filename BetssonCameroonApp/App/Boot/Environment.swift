@@ -24,8 +24,10 @@ class Environment {
         switch TargetVariables.serviceProviderEnvironment {
         case .prod:
             serviceProviderEnvironment = .production
-        case .dev:
+        case .staging:
             serviceProviderEnvironment = .staging
+        case .dev:
+            serviceProviderEnvironment = .development
         }
         
         var cmsBusinessUnit: ServicesProvider.Configuration.ClientBusinessUnit
@@ -98,13 +100,6 @@ class Environment {
 
     let urlSchemaManager: URLSchemaManager = URLSchemaManager()
 
-    /// URL provider for accessing dynamic URLs
-    lazy var linksProvider: LinksProviderProtocol = {
-        return LinksProviderFactory.createURLProvider(
-            initialLinks: TargetVariables.links,
-            servicesProvider: self.servicesProvider
-        )
-    }()
     
     init() {
 
