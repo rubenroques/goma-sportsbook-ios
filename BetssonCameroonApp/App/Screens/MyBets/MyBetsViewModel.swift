@@ -60,31 +60,33 @@ final class MyBetsViewModel {
     
     lazy var myBetsTabBarViewModel: MyBetsTabBarViewModel = {
         let tabViewModel = MyBetsTabBarViewModel(selectedTabType: selectedTabType)
-        
+
         // Handle tab selection
         tabViewModel.selectionEventPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
                 if let tabType = MyBetsTabType(rawValue: event.selectedId) {
                     self?.selectTab(tabType)
                 }
             }
             .store(in: &cancellables)
-        
+
         return tabViewModel
     }()
     
     lazy var myBetsStatusBarViewModel: MyBetsStatusBarViewModel = {
         let statusViewModel = MyBetsStatusBarViewModel(selectedStatusType: selectedStatusType)
-        
+
         // Handle pill selection
         statusViewModel.selectionEventPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
                 if let statusType = MyBetStatusType(rawValue: event.selectedId) {
                     self?.selectStatus(statusType)
                 }
             }
             .store(in: &cancellables)
-        
+
         return statusViewModel
     }()
     
@@ -131,6 +133,7 @@ final class MyBetsViewModel {
         selectedTabTypePublisher
             .dropFirst()  // Skip the initial value
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] tabType in
                 print("📡 MyBetsViewModel: Tab publisher fired with: \(tabType.title)")
                 self?.onTabOrStatusChanged()
@@ -141,6 +144,7 @@ final class MyBetsViewModel {
         selectedStatusTypePublisher
             .dropFirst()  // Skip the initial value
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] statusType in
                 print("📡 MyBetsViewModel: Status publisher fired with: \(statusType.title)")
                 self?.onTabOrStatusChanged()

@@ -46,6 +46,10 @@ class NextUpEventsViewController: UIViewController {
     private let viewModel: NextUpEventsViewModel
     private var marketGroupControllers: [String: MarketGroupCardsViewController] = [:]
     private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - MVVM-C Navigation Closures (Coordinator handles navigation)
+    var onURLOpenRequested: ((URL) -> Void)?
+    var onEmailRequested: ((String) -> Void)?
     
     // MARK: - ComplexScroll Properties
     private var calculatedHeaderHeight: CGFloat = 0
@@ -365,6 +369,15 @@ class NextUpEventsViewController: UIViewController {
                     self?.viewModel.loadNextPage()
                 }
 
+                // Wire up footer ViewModel callbacks (MVVM-C pattern)
+                marketGroupCardsViewModel.onURLOpenRequested = { [weak self] url in
+                    self?.openURL(url)
+                }
+
+                marketGroupCardsViewModel.onEmailComposeRequested = { [weak self] email in
+                    self?.openEmailCompose(email: email)
+                }
+
                 marketGroupControllers[marketGroup.id] = controller
                 print("[SetupMarketGroups] Created new UI controller for market type: \(marketGroup.id)")
             }
@@ -582,5 +595,17 @@ extension NextUpEventsViewController: ScrollSyncDelegate {
         }
 
         isSyncing = false
+    }
+
+    // MARK: - Footer Navigation Delegation (MVVM-C Pattern)
+
+    /// Delegates URL opening to coordinator - ViewController doesn't decide how to open
+    private func openURL(_ url: URL) {
+        onURLOpenRequested?(url)
+    }
+
+    /// Delegates email opening to coordinator - ViewController doesn't decide how to open
+    private func openEmailCompose(email: String) {
+        onEmailRequested?(email)
     }
 }

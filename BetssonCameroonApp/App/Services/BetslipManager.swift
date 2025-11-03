@@ -62,6 +62,7 @@ class BetslipManager: NSObject {
             .map({ dictionary -> [BettingTicket] in
                 return Array.init(dictionary.values)
             })
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
                 self?.bettingTicketsPublisher.send(tickets)
             }
@@ -69,6 +70,7 @@ class BetslipManager: NSObject {
         
         self.bettingTicketsPublisher
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { tickets in
                 UserDefaults.standard.cachedBetslipTickets = tickets
             }
@@ -79,6 +81,7 @@ class BetslipManager: NSObject {
                 left.map(\.id) == right.map(\.id)
             })
             .filter({ return !$0.isEmpty })
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingTickets in
                 self?.requestAllowedBetTypes(withBettingTickets: bettingTickets)
             })
@@ -88,6 +91,7 @@ class BetslipManager: NSObject {
             .removeDuplicates(by: { left, right in
                 left.map(\.id) == right.map(\.id)
             })
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingTickets in
                 self?.fetchOddsBoostStairs()
             })
@@ -96,6 +100,7 @@ class BetslipManager: NSObject {
         // Track user login state changes for odds boost
         Env.userSessionStore.userProfileStatusPublisher
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] status in
                 switch status {
                 case .logged:
@@ -115,6 +120,7 @@ class BetslipManager: NSObject {
         // This subscription ensures we fetch odds boost once wallet becomes available
         Env.userSessionStore.userWalletPublisher
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] wallet in
                 guard let self = self else { return }
 
@@ -138,6 +144,7 @@ class BetslipManager: NSObject {
             .removeDuplicates(by: { left, right in
                 left.map(\.id) == right.map(\.id)
             })
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.validateBettingOptions()
             })
@@ -147,6 +154,7 @@ class BetslipManager: NSObject {
         Env.userSessionStore.userProfileStatusPublisher
             .removeDuplicates()
             .filter { $0 == .logged }
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 print("[BETTING_OPTIONS] 🔐 User logged in, re-validating betting options")
                 self?.validateBettingOptions()

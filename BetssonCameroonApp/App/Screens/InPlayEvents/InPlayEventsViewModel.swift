@@ -237,6 +237,7 @@ class InPlayEventsViewModel {
         
         // Listen to market group selection changes from selector ViewModel
         marketGroupSelectorViewModel.selectionEventPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] selectionEvent in
                 self?.selectedMarketGroupId = selectionEvent.selectedId
             }
@@ -244,6 +245,7 @@ class InPlayEventsViewModel {
 
         // Listen to market groups updates from selector ViewModel
         marketGroupSelectorViewModel.marketGroupsPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] marketGroups in
                 self?.updateMarketGroupViewModels(marketGroups: marketGroups)
             }

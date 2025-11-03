@@ -189,10 +189,18 @@ public final class BetslipFloatingThinView: UIView {
     
     // MARK: - Constraint Properties (for external access)
     private var circularButtonLeadingConstraint: NSLayoutConstraint?
+    
     private var detailedContainerLeadingConstraint: NSLayoutConstraint?
+    private var detailedContainerTraillingConstraint: NSLayoutConstraint?
+    
     private var circularButtonTopConstraint: NSLayoutConstraint?
     private var circularButtonBottomConstraint: NSLayoutConstraint?
+    
     private var topBarStackViewBottomConstraint: NSLayoutConstraint?
+    
+    static let circularButtonSize = CGFloat(56)
+    static let verticalPaddingCircularMode = CGFloat(16)
+    static let verticalPaddingDetailMode = CGFloat(10)
     
     // MARK: - Initialization
     public init(viewModel: BetslipFloatingViewModelProtocol) {
@@ -213,8 +221,11 @@ public final class BetslipFloatingThinView: UIView {
         // Create and apply width constraints when added to superview
         if let superview = superview {
             // Create leading constraints
-            circularButtonLeadingConstraint = leadingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -72) // 56 + 16 padding
-            detailedContainerLeadingConstraint = leadingAnchor.constraint(equalTo: superview.leadingAnchor)
+            let padding = Self.circularButtonSize + Self.verticalPaddingCircularMode
+            circularButtonLeadingConstraint = self.leadingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -padding)
+            
+            detailedContainerLeadingConstraint = self.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: Self.verticalPaddingDetailMode)
+            detailedContainerTraillingConstraint = self.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -Self.verticalPaddingDetailMode)
             
             // Create height constraints for circular button
             circularButtonTopConstraint = circularButton.topAnchor.constraint(equalTo: topAnchor)
@@ -266,8 +277,8 @@ public final class BetslipFloatingThinView: UIView {
         NSLayoutConstraint.activate([
             circularButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             
-            circularButton.widthAnchor.constraint(equalToConstant: 56),
-            circularButton.heightAnchor.constraint(equalToConstant: 56),
+            circularButton.widthAnchor.constraint(equalToConstant: Self.circularButtonSize),
+            circularButton.heightAnchor.constraint(equalToConstant: Self.circularButtonSize),
             
             betslipIconImageView.centerXAnchor.constraint(equalTo: circularButton.centerXAnchor),
             betslipIconImageView.centerYAnchor.constraint(equalTo: circularButton.centerYAnchor, constant: -8),
@@ -448,6 +459,8 @@ public final class BetslipFloatingThinView: UIView {
         switch state {
         case .noTickets:
             detailedContainerLeadingConstraint?.isActive = false
+            detailedContainerTraillingConstraint?.isActive = false
+            
             circularButtonLeadingConstraint?.isActive = true
             circularButtonTopConstraint?.isActive = true
             circularButtonBottomConstraint?.isActive = true
@@ -456,7 +469,9 @@ public final class BetslipFloatingThinView: UIView {
             circularButtonLeadingConstraint?.isActive = false
             circularButtonTopConstraint?.isActive = false
             circularButtonBottomConstraint?.isActive = false
+            
             detailedContainerLeadingConstraint?.isActive = true
+            detailedContainerTraillingConstraint?.isActive = true
         }
     }
     
@@ -485,8 +500,7 @@ public final class BetslipFloatingThinView: UIView {
 
         NSLayoutConstraint.activate([
             betslipView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
-            betslipView.bottomAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            betslipView.heightAnchor.constraint(equalToConstant: 56)
+            betslipView.bottomAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
 
         return vc

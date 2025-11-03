@@ -13,6 +13,8 @@ class MarketGroupCardsViewController: UIViewController {
 
     // MARK: - Footer Properties (BetssonFrance pattern)
     private let footerInnerView = UIView(frame: .zero)
+    private var footerView: ExtendedListFooterView?
+    private var enableStickyFooter: Bool = false  // Toggle for sticky behavior (default: off)
 
     // MARK: - Scroll Tracking
     weak var scrollDelegate: MarketGroupCardsScrollDelegate?
@@ -32,7 +34,6 @@ class MarketGroupCardsViewController: UIViewController {
         case loadMoreButton = 1
         // Footer moved to tableFooterView (BetssonFrance pattern)
     }
-
 
     // MARK: - Initialization
     init(viewModel: MarketGroupCardsViewModel) {
@@ -110,36 +111,50 @@ class MarketGroupCardsViewController: UIViewController {
         footerInnerView.translatesAutoresizingMaskIntoConstraints = false
         footerInnerView.backgroundColor = .clear
 
-        // Create table footer view with arbitrary height
-        let tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 80))
+        // Create table footer view with arbitrary height (will be adjusted by Auto Layout)
+        let tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 800))
         tableFooterView.backgroundColor = .clear
 
         // Set as table footer
         tableView.tableFooterView = tableFooterView
         tableFooterView.addSubview(footerInnerView)
 
-        // Create actual footer content
-        let footerCell = FooterTableViewCell()
-        footerCell.translatesAutoresizingMaskIntoConstraints = false
-        footerInnerView.addSubview(footerCell.contentView)
+        // Get footer ViewModel from parent ViewModel (MVVM-C pattern)
+        guard let footerViewModel = viewModel.footerViewModel else {
+            print("⚠️ [MarketGroupCardsVC] No footer ViewModel available")
+            return
+        }
 
-        NSLayoutConstraint.activate([
+        // Create actual footer content (ExtendedListFooterView directly, not cell wrapper)
+        let extendedFooterView = ExtendedListFooterView(viewModel: footerViewModel)
+        extendedFooterView.translatesAutoresizingMaskIntoConstraints = false
+        self.footerView = extendedFooterView
+        footerInnerView.addSubview(extendedFooterView)
+
+        // Build constraints list
+        var constraints: [NSLayoutConstraint] = [
             // Pin footerInnerView to tableFooterView edges
             footerInnerView.rightAnchor.constraint(equalTo: tableFooterView.rightAnchor),
             footerInnerView.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor),
             footerInnerView.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor),
 
-            // THE MAGIC CONSTRAINT: Pin to tableView's superview bottom
-            // This makes footer stick to bottom when content is short
-            footerInnerView.bottomAnchor.constraint(greaterThanOrEqualTo: tableView.superview!.bottomAnchor),
+            // Footer content constraints - ExtendedListFooterView with proper intrinsic height
+            extendedFooterView.leadingAnchor.constraint(equalTo: footerInnerView.leadingAnchor),
+            extendedFooterView.trailingAnchor.constraint(equalTo: footerInnerView.trailingAnchor),
+            extendedFooterView.topAnchor.constraint(equalTo: footerInnerView.topAnchor),
+            extendedFooterView.bottomAnchor.constraint(equalTo: footerInnerView.bottomAnchor)
+        ]
 
-            // Footer content constraints
-            footerCell.contentView.leadingAnchor.constraint(equalTo: footerInnerView.leadingAnchor),
-            footerCell.contentView.trailingAnchor.constraint(equalTo: footerInnerView.trailingAnchor),
-            footerCell.contentView.topAnchor.constraint(equalTo: footerInnerView.topAnchor),
-            footerCell.contentView.bottomAnchor.constraint(equalTo: footerInnerView.bottomAnchor),
-            footerCell.contentView.heightAnchor.constraint(equalToConstant: 80)
-        ])
+        // Pin to tableView's superview bottom
+        // This makes footer stick to bottom when content is short
+        // Only add if sticky footer is enabled
+        if enableStickyFooter {
+            constraints.append(
+                footerInnerView.bottomAnchor.constraint(greaterThanOrEqualTo: tableView.superview!.bottomAnchor)
+            )
+        }
+
+        NSLayoutConstraint.activate(constraints)
     }
 
     private func configureDataSource() {
@@ -355,33 +370,5 @@ extension MarketGroupCardsViewController: UITableViewDelegate {
         footerView.backgroundColor = .clear
         return footerView
     }
-
-    /*
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let section = Section(rawValue: indexPath.section)
-
-        if section == .matchCards {
-            let totalRows = tableView.numberOfRows(inSection: indexPath.section)
-
-            if indexPath.row < totalRows - 1 {
-                let separatorView = UIView()
-                separatorView.backgroundColor = UIColor.App.backgroundPrimary
-                separatorView.translatesAutoresizingMaskIntoConstraints = false
-                separatorView.tag = 9999
-
-                cell.contentView.subviews.first(where: { $0.tag == 9999 })?.removeFromSuperview()
-
-                cell.contentView.addSubview(separatorView)
-
-                NSLayoutConstraint.activate([
-                    separatorView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 8),
-                    separatorView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -8),
-                    separatorView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
-                    separatorView.heightAnchor.constraint(equalToConstant: 1.5)
-                ])
-            }
-        }
-    }
-    */
     
 }
