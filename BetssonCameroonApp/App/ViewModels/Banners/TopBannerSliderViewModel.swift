@@ -25,6 +25,8 @@ final class TopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     var onMatchTap: ((String) -> Void) = { _ in }
     var onOutcomeSelected: ((String) -> Void) = { _ in }
     var onOutcomeDeselected: ((String) -> Void) = { _ in }
+    var onInfoBannerAction: ((InfoBannerAction) -> Void) = { _ in }
+    var onCasinoBannerAction: ((CasinoBannerAction) -> Void) = { _ in }
 
     // MARK: - TopBannerSliderViewModelProtocol
     var currentDisplayState: TopBannerSliderDisplayState {
@@ -82,33 +84,16 @@ final class TopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
 
     // MARK: - Private Methods
     private func loadSportBanners() {
-        print("[BANNER-DEBUG] 📡 Calling getSportRichBanners() API...")
-
         // Get sport rich banners (supports info, casino, and sport event types)
         servicesProvider.getSportRichBanners()
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        print("[BANNER-DEBUG] ✅ getSportRichBanners() completed successfully")
-                    case .failure(let error):
-                        print("[BANNER-DEBUG] ❌ getSportRichBanners() failed with error: \(error)")
+                    if case .failure(let error) = completion {
                         self?.handleAPIError(error)
                     }
                 },
                 receiveValue: { [weak self] richBanners in
-                    print("[BANNER-DEBUG] 📥 Received \(richBanners.count) rich banners from API")
-                    for (index, banner) in richBanners.enumerated() {
-                        switch banner {
-                        case .info(let infoBanner):
-                            print("[BANNER-DEBUG]   [\(index)] Info banner: \(infoBanner.id)")
-                        case .casinoGame(let casinoBanner):
-                            print("[BANNER-DEBUG]   [\(index)] Casino banner: \(casinoBanner.bannerMetadata.bannerId)")
-                        case .sportEvent(let sportBanner):
-                            print("[BANNER-DEBUG]   [\(index)] Sport event banner: \(sportBanner.eventContent.content.name ?? "")")
-                        }
-                    }
                     self?.processRichBanners(richBanners)
                 }
             )
@@ -116,43 +101,40 @@ final class TopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     }
 
     private func processRichBanners(_ richBanners: RichBanners) {
-        print("[BANNER-DEBUG] 🔄 Processing \(richBanners.count) rich banners through mapper...")
-
         // Use mapper to convert RichBanners to BannerType array
         let bannerTypes = ServiceProviderModelMapper.bannerTypes(fromRichBanners: richBanners)
 
-        print("[BANNER-DEBUG] 📦 Mapper produced \(bannerTypes.count) BannerType items")
-        for (index, bannerType) in bannerTypes.enumerated() {
+        // Set up callbacks for all banner types
+        // Since all ViewModels are classes, we can modify properties directly through the protocol
+        for bannerType in bannerTypes {
             switch bannerType {
-            case .info:
-                print("[BANNER-DEBUG]   [\(index)] BannerType.info")
-            case .casino:
-                print("[BANNER-DEBUG]   [\(index)] BannerType.casino")
-            case .match:
-                print("[BANNER-DEBUG]   [\(index)] BannerType.match")
-            }
-        }
-
-        // Set up callbacks for match banners
-        // Since MatchBannerViewModel is a class, we can modify properties directly through the protocol
-        for (index, bannerType) in bannerTypes.enumerated() {
-            if case .match(var matchViewModel) = bannerType {
-                print("[BANNER-DEBUG] 🔗 Setting up callbacks for match banner at index \(index)")
-
-                // Directly modify the class instance through the protocol reference
-                matchViewModel.onMatchTap = { [weak self] eventId in
-                    print("[BANNER-DEBUG] 👆 Match banner tapped: \(eventId)")
-                    self?.onMatchTap(eventId)
+            case .match(let viewModel):
+                if let matchViewModel = viewModel as? MatchBannerViewModel {
+                    matchViewModel.onMatchTap = { [weak self] eventId in
+                        self?.onMatchTap(eventId)
+                    }
+                    
+                    matchViewModel.onOutcomeSelected = { [weak self] outcomeId in
+                        self?.onOutcomeSelected(outcomeId)
+                    }
+                    
+                    matchViewModel.onOutcomeDeselected = { [weak self] outcomeId in
+                        self?.onOutcomeDeselected(outcomeId)
+                    }
+                }
+            case .info(let viewModel):
+                // Type check to determine action handler
+                if let infoVM = viewModel as? InfoBannerViewModel {
+                    infoVM.onButtonAction = { [weak self] action in
+                        self?.onInfoBannerAction(action)
+                    }
                 }
 
-                matchViewModel.onOutcomeSelected = { [weak self] outcomeId in
-                    print("[BANNER-DEBUG] ✅ Outcome selected: \(outcomeId)")
-                    self?.onOutcomeSelected(outcomeId)
-                }
-
-                matchViewModel.onOutcomeDeselected = { [weak self] outcomeId in
-                    print("[BANNER-DEBUG] ❌ Outcome deselected: \(outcomeId)")
-                    self?.onOutcomeDeselected(outcomeId)
+            case .casino(let viewModel):
+                if let casinoVM = viewModel as? CasinoBannerViewModel {
+                    casinoVM.onButtonAction = { [weak self] action in
+                        self?.onCasinoBannerAction(action)
+                    }
                 }
             }
         }
@@ -162,8 +144,6 @@ final class TopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     }
 
     private func updateSliderDataWithBanners(_ bannerTypes: [BannerType]) {
-        print("[BANNER-DEBUG] 🎨 Updating slider with \(bannerTypes.count) banners")
-
         let showPageIndicators = bannerTypes.count > 1
         let isVisible = !bannerTypes.isEmpty
 
@@ -179,7 +159,6 @@ final class TopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
             isUserInteractionEnabled: true
         )
 
-        print("[BANNER-DEBUG] 📊 Final state: isVisible=\(isVisible), bannerCount=\(bannerTypes.count), showPageIndicators=\(showPageIndicators)")
         displayStateSubject.send(newState)
     }
 
@@ -201,8 +180,6 @@ final class TopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     }
 
     private func handleAPIError(_ error: ServiceProviderError) {
-        print("[BANNER-DEBUG] ⚠️ Handling API error, hiding banner slider")
-
         // Show empty state on error
         let emptySliderData = TopBannerSliderData(
             banners: [],

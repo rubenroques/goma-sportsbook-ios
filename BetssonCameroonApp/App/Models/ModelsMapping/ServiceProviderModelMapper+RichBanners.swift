@@ -17,29 +17,21 @@ extension ServiceProviderModelMapper {
     /// Convert ServicesProvider RichBanners to GomaUI BannerType array
     /// This is the main entry point for converting rich banners from the network layer to UI layer
     static func bannerTypes(fromRichBanners richBanners: RichBanners) -> [BannerType] {
-        print("[BANNER-DEBUG] 🗺️ Mapper: Converting \(richBanners.count) RichBanners to BannerTypes...")
-
-        let bannerTypes = richBanners.compactMap { richBanner in
+        return richBanners.compactMap { richBanner in
             return bannerType(fromRichBanner: richBanner)
         }
-
-        print("[BANNER-DEBUG] 🗺️ Mapper: Produced \(bannerTypes.count) BannerTypes (filtered from \(richBanners.count) input)")
-        return bannerTypes
     }
 
     /// Convert a single RichBanner to BannerType
     private static func bannerType(fromRichBanner richBanner: RichBanner) -> BannerType? {
         switch richBanner {
         case .info(let infoBanner):
-            print("[BANNER-DEBUG] 🗺️ Mapper: Converting .info banner (id: \(infoBanner.id))")
             return infoBannerType(fromInfoBanner: infoBanner)
 
         case .casinoGame(let casinoGameBanner):
-            print("[BANNER-DEBUG] 🗺️ Mapper: Converting .casinoGame banner (id: \(casinoGameBanner.bannerMetadata.bannerId))")
             return casinoBannerType(fromCasinoGameBanner: casinoGameBanner)
 
         case .sportEvent(let sportEventBanner):
-            print("[BANNER-DEBUG] 🗺️ Mapper: Converting .sportEvent banner (id: \(sportEventBanner.eventContent.content.name ?? ""))")
             return matchBannerType(fromSportEventBanner: sportEventBanner)
         }
     }
@@ -66,7 +58,6 @@ extension ServiceProviderModelMapper {
         // Create ViewModel
         let viewModel = InfoBannerViewModel(bannerData: infoBannerData, displayData: singleButtonData)
 
-        print("[BANNER-DEBUG] 🗺️ Mapper: ✅ Successfully created BannerType.info")
         return .info(viewModel)
     }
 
@@ -145,7 +136,6 @@ extension ServiceProviderModelMapper {
         // Create ViewModel
         let viewModel = CasinoBannerViewModel(bannerData: casinoBannerData, displayData: singleButtonData)
 
-        print("[BANNER-DEBUG] 🗺️ Mapper: ✅ Successfully created BannerType.casino")
         return .casino(viewModel)
     }
 
@@ -159,14 +149,12 @@ extension ServiceProviderModelMapper {
 
         // Map ServicesProvider.Event to app's Match model
         guard let match = ServiceProviderModelMapper.match(fromEvent: event) else {
-            print("[BANNER-DEBUG] 🗺️ Mapper: ❌ Failed to convert Event to Match (event id: \(event.id))")
             return nil // Skip if event can't be mapped to match
         }
 
         // Create MatchBannerViewModel with the match and CMS image URL
         let viewModel = MatchBannerViewModel(match: match, imageURL: imageHighlightedEvent.imageURL)
 
-        print("[BANNER-DEBUG] 🗺️ Mapper: ✅ Successfully created BannerType.match (match id: \(match.id))")
         return .match(viewModel)
     }
 }

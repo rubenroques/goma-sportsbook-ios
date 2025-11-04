@@ -191,12 +191,224 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
+    func getCasinoRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+        // Proxy to Goma CMS for pointers
+        return gomaHomeContentProvider.getCasinoRichBannerPointers()
+    }
+
+    func getSportRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+        // Proxy to Goma CMS for pointers
+        return gomaHomeContentProvider.getSportRichBannerPointers()
+    }
+
     func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        // Get pointers from Goma CMS, then enrich with EveryMatrix casino data
+        return gomaHomeContentProvider.getCasinoRichBannerPointers()
+            .flatMap { (pointers: RichBannerPointers) -> AnyPublisher<RichBanners, ServiceProviderError> in
+
+                // Extract casino game IDs from pointers
+                let casinoGameIds = pointers.compactMap { pointer -> String? in
+                    if case .casinoGame(let data) = pointer {
+                        return data.casinoGameId
+                    }
+                    return nil
+                }
+
+                // If no casino games, just map info banners
+                guard !casinoGameIds.isEmpty else {
+                    let richBanners: RichBanners = pointers.compactMap { pointer in
+                        if case .info(let infoBannerPointer) = pointer {
+                            let infoBanner = InfoBanner(
+                                id: infoBannerPointer.id,
+                                title: infoBannerPointer.title,
+                                subtitle: infoBannerPointer.subtitle,
+                                ctaText: infoBannerPointer.ctaText,
+                                ctaUrl: infoBannerPointer.ctaUrl,
+                                ctaTarget: infoBannerPointer.ctaTarget,
+                                imageUrl: infoBannerPointer.imageUrl
+                            )
+                            return .info(infoBanner)
+                        }
+                        return nil
+                    }
+                    return Just(richBanners)
+                        .setFailureType(to: ServiceProviderError.self)
+                        .eraseToAnyPublisher()
+                }
+
+                // Fetch casino games from EveryMatrix in parallel
+                let publishers: [AnyPublisher<CasinoGame?, Never>] = casinoGameIds.map { gameId in
+                    self.casinoProvider.getGameDetails(gameId: gameId, language: nil, platform: nil)
+                        .map { Optional.some($0) }
+                        .catch { _ in Just(nil) }
+                        .eraseToAnyPublisher()
+                }
+
+                // Collect and map pointers + games → RichBanners
+                return Publishers.MergeMany(publishers)
+                    .collect()
+                    .map { (games: [CasinoGame?]) -> RichBanners in
+                        let casinoGames = games.compactMap { $0 }
+
+                        // Create dictionary for efficient game lookup
+                        var gameDict: [String: CasinoGame] = [:]
+                        casinoGames.forEach { game in
+                            gameDict[game.id] = game
+                        }
+
+                        // Map pointers to RichBanners, preserving order
+                        let richBanners: RichBanners = pointers.compactMap { pointer in
+                            switch pointer {
+                            case .info(let infoBannerPointer):
+                                let infoBanner = InfoBanner(
+                                    id: infoBannerPointer.id,
+                                    title: infoBannerPointer.title,
+                                    subtitle: infoBannerPointer.subtitle,
+                                    ctaText: infoBannerPointer.ctaText,
+                                    ctaUrl: infoBannerPointer.ctaUrl,
+                                    ctaTarget: infoBannerPointer.ctaTarget,
+                                    imageUrl: infoBannerPointer.imageUrl
+                                )
+                                return .info(infoBanner)
+
+                            case .casinoGame(let casinoGamePointer):
+                                guard let casinoGame = gameDict[casinoGamePointer.casinoGameId] else {
+                                    return nil  // Skip if game data not found
+                                }
+
+                                let bannerMetadata = CasinoGameBanner.BannerMetadata(
+                                    bannerId: casinoGamePointer.id,
+                                    type: "game",
+                                    title: casinoGamePointer.title,
+                                    subtitle: casinoGamePointer.subtitle,
+                                    ctaText: casinoGamePointer.ctaText,
+                                    ctaUrl: casinoGamePointer.ctaUrl,
+                                    ctaTarget: casinoGamePointer.ctaTarget,
+                                    customImageUrl: casinoGamePointer.imageUrl
+                                )
+
+                                let casinoGameBanner = CasinoGameBanner(
+                                    casinoGame: casinoGame,
+                                    bannerMetadata: bannerMetadata
+                                )
+                                return .casinoGame(casinoGameBanner)
+
+                            case .sportEvent:
+                                return nil  // Sport events shouldn't be in casino banners
+                            }
+                        }
+
+                        return richBanners
+                    }
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
 
     func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        // Get pointers from Goma CMS, then enrich with EveryMatrix events data
+        return gomaHomeContentProvider.getSportRichBannerPointers()
+            .flatMap { (pointers: RichBannerPointers) -> AnyPublisher<RichBanners, ServiceProviderError> in
+
+                // Extract event IDs from pointers
+                let eventIds = pointers.compactMap { pointer -> String? in
+                    if case .sportEvent(let data) = pointer {
+                        return data.sportEventId
+                    }
+                    return nil
+                }
+
+                // If no events, just map info banners
+                guard !eventIds.isEmpty else {
+                    let richBanners: RichBanners = pointers.compactMap { pointer in
+                        if case .info(let infoBannerPointer) = pointer {
+                            let infoBanner = InfoBanner(
+                                id: infoBannerPointer.id,
+                                title: infoBannerPointer.title,
+                                subtitle: infoBannerPointer.subtitle,
+                                ctaText: infoBannerPointer.ctaText,
+                                ctaUrl: infoBannerPointer.ctaUrl,
+                                ctaTarget: infoBannerPointer.ctaTarget,
+                                imageUrl: infoBannerPointer.imageUrl
+                            )
+                            return .info(infoBanner)
+                        }
+                        return nil
+                    }
+                    return Just(richBanners)
+                        .setFailureType(to: ServiceProviderError.self)
+                        .eraseToAnyPublisher()
+                }
+
+                // Fetch events from EveryMatrix in parallel
+                let publishers: [AnyPublisher<Event?, Never>] = eventIds.map { eventId in
+                    self.eventsProvider.getEventDetails(eventId: eventId)
+                        .map { Optional.some($0) }
+                        .catch { error -> AnyPublisher<Event?, Never> in
+                            print("Failed to fetch event details for \(eventId): \(error)")
+                            return Just(nil).eraseToAnyPublisher()
+                        }
+                        .eraseToAnyPublisher()
+                }
+
+                // Collect and map pointers + events → RichBanners
+                return Publishers.MergeMany(publishers)
+                    .collect()
+                    .map { (events: [Event?]) -> RichBanners in
+                        let validEvents = events.compactMap { $0 }
+
+                        // Create dictionary for efficient event lookup
+                        var eventDict: [String: Event] = [:]
+                        validEvents.forEach { event in
+                            eventDict[event.id] = event
+                        }
+
+                        // Map pointers to RichBanners, preserving order
+                        let richBanners: RichBanners = pointers.compactMap { pointer in
+                            switch pointer {
+                            case .info(let infoBannerPointer):
+                                let infoBanner = InfoBanner(
+                                    id: infoBannerPointer.id,
+                                    title: infoBannerPointer.title,
+                                    subtitle: infoBannerPointer.subtitle,
+                                    ctaText: infoBannerPointer.ctaText,
+                                    ctaUrl: infoBannerPointer.ctaUrl,
+                                    ctaTarget: infoBannerPointer.ctaTarget,
+                                    imageUrl: infoBannerPointer.imageUrl
+                                )
+                                return .info(infoBanner)
+
+                            case .sportEvent(let sportEventPointer):
+                                guard let event = eventDict[sportEventPointer.sportEventId] else {
+                                    return nil  // Skip if event data not found
+                                }
+
+                                let eventContent = ImageHighlightedContent(
+                                    content: event,
+                                    promotedChildCount: 1,
+                                    imageURL: sportEventPointer.imageUrl
+                                )
+
+                                let sportEventBanner = SportEventBanner(
+                                    id: sportEventPointer.id,
+                                    eventContent: eventContent,
+                                    marketBettingTypeId: sportEventPointer.marketBettingTypeId,
+                                    marketEventPartId: sportEventPointer.marketEventPartId
+                                )
+                                return .sportEvent(sportEventBanner)
+
+                            case .casinoGame:
+                                return nil  // Casino games shouldn't be in sport banners
+                            }
+                        }
+
+                        return richBanners
+                    }
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
 
     func getBoostedOddsPointers() -> AnyPublisher<BoostedOddsPointers, ServiceProviderError> {

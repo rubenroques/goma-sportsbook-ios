@@ -12,12 +12,12 @@ import GomaUI
 /// Production ViewModel for casino banner that implements SingleButtonBannerViewModelProtocol
 final class CasinoBannerViewModel: SingleButtonBannerViewModelProtocol {
 
+    // MARK: - Associated Type
+    typealias ActionType = CasinoBannerAction
+
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<SingleButtonBannerDisplayState, Never>
     private let bannerData: CasinoBannerData
-
-    // MARK: - Callbacks
-    var onBannerAction: ((CasinoBannerAction) -> Void) = { _ in }
 
     // MARK: - SingleButtonBannerViewModelProtocol
     var currentDisplayState: SingleButtonBannerDisplayState {
@@ -27,6 +27,8 @@ final class CasinoBannerViewModel: SingleButtonBannerViewModelProtocol {
     var displayStatePublisher: AnyPublisher<SingleButtonBannerDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
     }
+
+    var onButtonAction: ((CasinoBannerAction) -> Void)?
 
     // MARK: - Initialization
     init(bannerData: CasinoBannerData, displayData: SingleButtonBannerData) {
@@ -42,7 +44,7 @@ final class CasinoBannerViewModel: SingleButtonBannerViewModelProtocol {
     // MARK: - Protocol Methods
     func buttonTapped() {
         let action = bannerData.primaryAction
-        onBannerAction(action)
+        onButtonAction?(action)
     }
 
     // MARK: - Helper Methods

@@ -356,6 +356,53 @@ extension GomaModelMapper {
         )
     }
     
+    // MARK: - Rich Banner Pointers
+
+    /// Maps internal rich banners to public rich banner pointers (no enrichment)
+    /// - Parameter internalBanners: Internal GomaModels.RichBanner array from API
+    /// - Returns: Array of public RichBannerPointers containing only IDs and metadata
+    static func richBannerPointers(fromInternalRichBanners internalBanners: GomaModels.RichBanners) -> RichBannerPointers {
+        return internalBanners.map { internalBanner in
+            switch internalBanner {
+            case .info(let data):
+                let pointer = InfoBannerPointer(
+                    id: String(data.id),
+                    title: data.title,
+                    subtitle: data.subtitle,
+                    ctaText: data.ctaText,
+                    ctaUrl: data.ctaUrl,
+                    ctaTarget: data.ctaTarget,
+                    imageUrl: data.imageUrl
+                )
+                return .info(pointer)
+
+            case .casinoGame(let data):
+                let pointer = CasinoGameBannerPointer(
+                    id: String(data.id),
+                    casinoGameId: data.casinoGameId,
+                    title: data.title,
+                    subtitle: data.subtitle,
+                    ctaText: data.ctaText,
+                    ctaUrl: data.ctaUrl,
+                    ctaTarget: data.ctaTarget,
+                    imageUrl: data.imageUrl
+                )
+                return .casinoGame(pointer)
+
+            case .sportEvent(let data):
+                let pointer = SportEventBannerPointer(
+                    id: String(data.id),
+                    sportEventId: data.sportEventId,
+                    sportEventMarketId: data.sportEventMarketId,
+                    imageUrl: data.imageUrl,
+                    marketBettingTypeId: data.marketBettingTypeId,
+                    marketEventPartId: data.marketEventPartId
+                )
+                return .sportEvent(pointer)
+            }
+        }
+    }
+
     // MARK: - Rich Banners
 
     /// Maps an array of internal rich banners to public rich banners with enrichment

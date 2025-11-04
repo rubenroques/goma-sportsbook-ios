@@ -12,12 +12,12 @@ import GomaUI
 /// Production ViewModel for info banner that implements SingleButtonBannerViewModelProtocol
 final class InfoBannerViewModel: SingleButtonBannerViewModelProtocol {
 
+    // MARK: - Associated Type
+    typealias ActionType = InfoBannerAction
+
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<SingleButtonBannerDisplayState, Never>
     private let bannerData: InfoBannerData
-
-    // MARK: - Callbacks
-    var onBannerAction: ((InfoBannerAction) -> Void) = { _ in }
 
     // MARK: - SingleButtonBannerViewModelProtocol
     var currentDisplayState: SingleButtonBannerDisplayState {
@@ -27,6 +27,8 @@ final class InfoBannerViewModel: SingleButtonBannerViewModelProtocol {
     var displayStatePublisher: AnyPublisher<SingleButtonBannerDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
     }
+
+    var onButtonAction: ((InfoBannerAction) -> Void)?
 
     // MARK: - Initialization
     init(bannerData: InfoBannerData, displayData: SingleButtonBannerData) {
@@ -42,7 +44,7 @@ final class InfoBannerViewModel: SingleButtonBannerViewModelProtocol {
     // MARK: - Protocol Methods
     func buttonTapped() {
         let action = bannerData.primaryAction
-        onBannerAction(action)
+        onButtonAction?(action)
     }
 
     // MARK: - Helper Methods

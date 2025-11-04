@@ -200,7 +200,11 @@ class MainTabBarCoordinator: Coordinator {
             coordinator.onShowCasinoTab = { [weak self] quickLinkType in
                 self?.navigateToCasinoFromQuickLink(quickLinkType)
             }
-            
+
+            coordinator.onShowBannerURL = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
             nextUpEventsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -246,7 +250,11 @@ class MainTabBarCoordinator: Coordinator {
             coordinator.onShowCasinoTab = { [weak self] quickLinkType in
                 self?.navigateToCasinoFromQuickLink(quickLinkType)
             }
-            
+
+            coordinator.onShowBannerURL = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
             inPlayEventsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -551,7 +559,105 @@ class MainTabBarCoordinator: Coordinator {
         
         viewController.present(alert, animated: true)
     }
-    
+
+    // MARK: - Banner URL Handling
+
+    private func openBannerURL(_ urlString: String, target: String?) {
+        // Check if it's an internal deep link
+        if let route = parseURLToRoute(urlString) {
+            handleRoute(route)
+            return
+        }
+
+        // Otherwise, treat as external URL
+        openExternalURL(urlString)
+    }
+
+    private func parseURLToRoute(_ urlString: String) -> Route? {
+        // Handle relative paths or app scheme URLs as internal deep links
+        guard let url = URL(string: urlString) else { return nil }
+
+        // Check for app-specific schemes
+        if url.scheme == "betssoncm" || url.scheme == "app" {
+            return parseDeepLinkPath(url.path)
+        }
+
+        // Check for relative paths (starting with /)
+        if urlString.hasPrefix("/") {
+            return parseDeepLinkPath(urlString)
+        }
+
+        // Not an internal deep link
+        return nil
+    }
+
+    private func parseDeepLinkPath(_ path: String) -> Route? {
+        let components = path.components(separatedBy: "/").filter { !$0.isEmpty }
+
+        guard !components.isEmpty else { return nil }
+
+        switch components[0].lowercased() {
+        case "deposit":
+            return .deposit
+        case "promotions":
+            return .promotions
+        case "bonus":
+            return .bonus
+        case "event", "match":
+            if components.count > 1 {
+                return .event(id: components[1])
+            }
+        case "competition":
+            if components.count > 1 {
+                return .competition(id: components[1])
+            }
+        default:
+            break
+        }
+
+        return nil
+    }
+
+    private func handleRoute(_ route: Route) {
+        switch route {
+        case .deposit:
+            presentDepositFlow()
+        case .promotions:
+            showPromotionsScreen()
+        case .bonus:
+            showPromotionsScreen()
+        case .event(let matchId):
+            navigateToMatchDetail(withId: matchId)
+        case .competition:
+            break
+        default:
+            break
+        }
+    }
+
+    private func navigateToMatchDetail(withId matchId: String) {
+        // Try to find the match in active coordinators
+        if let match = inPlayEventsCoordinator?.findMatch(withId: matchId) {
+            showMatchDetail(match: match)
+        } else if let match = nextUpEventsCoordinator?.findMatch(withId: matchId) {
+            showMatchDetail(match: match)
+        } else {
+            print("MainTabBarCoordinator: Match not found for deep link: \(matchId)")
+        }
+    }
+
+    private func openExternalURL(_ urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url) { success in
+                if !success {
+                    print("MainTabBarCoordinator: Failed to open URL: \(urlString)")
+                }
+            }
+        }
+    }
+
     // MARK: - Temporary Authentication Implementation
     // TODO: Remove this once parent coordinator implements authentication closures
     private func presentAuthenticationDirectly(isLogin: Bool) {

@@ -20,7 +20,8 @@ class InPlayEventsCoordinator: Coordinator {
     var onShowSportsSelector: (() -> Void) = { }
     var onShowFilters: (() -> Void) = { }
     var onShowCasinoTab: ((QuickLinkType) -> Void) = { _ in }
-    
+    var onShowBannerURL: ((String, String?) -> Void) = { _, _ in }
+
     // MARK: - Properties
     private let environment: Environment
     private var inPlayEventsViewModel: InPlayEventsViewModel?
@@ -81,7 +82,11 @@ class InPlayEventsCoordinator: Coordinator {
         viewModel.onCasinoQuickLinkSelected = { [weak self] quickLinkType in
             self?.showCasinoTab(for: quickLinkType)
         }
-        
+
+        viewModel.onBannerURLRequested = { [weak self] url, target in
+            self?.onShowBannerURL(url, target)
+        }
+
         // Create view controller
         let viewController = InPlayEventsViewController(viewModel: viewModel)
         self.inPlayEventsViewController = viewController

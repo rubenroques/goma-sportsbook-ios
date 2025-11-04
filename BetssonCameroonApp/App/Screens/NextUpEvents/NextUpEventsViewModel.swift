@@ -85,6 +85,9 @@ class NextUpEventsViewModel {
     // Sport banner navigation closure
     var onMatchTap: ((String) -> Void)?
 
+    // Banner URL navigation closure
+    var onBannerURLRequested: ((String, String?) -> Void)?
+
     // MARK: - Private Properties
     var sport: Sport
     private let servicesProvider: ServicesProvider.Client
@@ -192,8 +195,31 @@ class NextUpEventsViewModel {
         topBannerSliderViewModel.onMatchTap = { [weak self] eventId in
             self?.onMatchTap?(eventId)
         }
-        
-        
+
+        // Setup Info Banner action callback
+        topBannerSliderViewModel.onInfoBannerAction = { [weak self] action in
+            switch action {
+            case .openURL(let url, let target):
+                self?.onBannerURLRequested?(url, target)
+            case .none:
+                break
+            }
+        }
+
+        // Setup Casino Banner action callback
+        topBannerSliderViewModel.onCasinoBannerAction = { [weak self] action in
+            switch action {
+            case .openURL(let url):
+                self?.onBannerURLRequested?(url, nil)
+            case .launchGame:
+                // Casino game launch is handled separately - could forward to casino coordinator
+                break
+            case .none:
+                break
+            }
+        }
+
+
         // Listen to market group selection changes from selector ViewModel
         marketGroupSelectorViewModel.selectionEventPublisher
             .sink { [weak self] selectionEvent in

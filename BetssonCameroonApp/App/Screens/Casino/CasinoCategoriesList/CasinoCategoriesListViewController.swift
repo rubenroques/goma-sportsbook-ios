@@ -232,12 +232,6 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
         // Configure with banner viewModel (guaranteed non-nil when this method is called)
         cell.configure(with: viewModel.topBannerSliderViewModel!)
 
-        // Setup callbacks
-        cell.onBannerTapped = { bannerIndex in
-            print("Banner tapped at index: \(bannerIndex)")
-            // TODO: Handle banner tap navigation
-        }
-
         return cell
     }
 
