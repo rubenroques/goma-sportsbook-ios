@@ -1,0 +1,5 @@
+Device ID	Device Name
+# Add your devices in the format:
+# UDID	Device Name
+# Example:
+# 00008030-001234567890001E	iPhone 15 Pro - John Doe

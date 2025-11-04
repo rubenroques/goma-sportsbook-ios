@@ -60,6 +60,37 @@ class NextUpEventsCoordinator: Coordinator {
     private func showCasinoTab(for quickLinkType: QuickLinkType) {
         onShowCasinoTab(quickLinkType)
     }
+
+    // MARK: - Footer Navigation (External Links)
+
+    /// Opens URL in external Safari browser
+    private func openExternalURL(_ url: URL) {
+        print("🚀 [NextUpEventsCoordinator] Opening external URL: \(url)")
+        UIApplication.shared.open(url, options: [:]) { success in
+            if success {
+                print("✅ [NextUpEventsCoordinator] Successfully opened URL")
+            } else {
+                print("❌ [NextUpEventsCoordinator] Failed to open URL")
+            }
+        }
+    }
+
+    /// Opens email in user's default email client via mailto: URL
+    private func openEmailClient(email: String) {
+        guard let mailtoURL = URL(string: "mailto:\(email)") else {
+            print("❌ [NextUpEventsCoordinator] Invalid email address: \(email)")
+            return
+        }
+
+        print("📧 [NextUpEventsCoordinator] Opening email client for: \(email)")
+        UIApplication.shared.open(mailtoURL, options: [:]) { success in
+            if success {
+                print("✅ [NextUpEventsCoordinator] Successfully opened email client")
+            } else {
+                print("❌ [NextUpEventsCoordinator] Failed to open email client")
+            }
+        }
+    }
     
     // MARK: - Coordinator Protocol
     
@@ -99,7 +130,16 @@ class NextUpEventsCoordinator: Coordinator {
         // Create view controller
         let viewController = NextUpEventsViewController(viewModel: viewModel)
         self.nextUpEventsViewController = viewController
-        
+
+        // Setup footer navigation closures - Coordinator decides how to open URLs
+        viewController.onURLOpenRequested = { [weak self] url in
+            self?.openExternalURL(url)
+        }
+
+        viewController.onEmailRequested = { [weak self] email in
+            self?.openEmailClient(email: email)
+        }
+
         // MainTabBarCoordinator will handle embedding
     }
     

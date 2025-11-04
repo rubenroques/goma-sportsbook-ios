@@ -1155,6 +1155,17 @@ struct ComponentRegistry {
                 viewModel.startCountdown()
                 return countdownView
             }
+        ),
+        UIComponent(
+            title: "Extended List Footer",
+            description: "Comprehensive footer component with 8 sections: partnership logos, navigation links, payment providers, social media, responsible gambling, copyright, and license information. Uses image resolver pattern with interactive link callbacks.",
+            viewController: ExtendedListFooterViewController.self,
+            previewFactory: {
+                let viewModel = MockExtendedListFooterViewModel.cameroonFooter
+                let footerView = ExtendedListFooterView(viewModel: viewModel)
+                footerView.backgroundColor = StyleProvider.Color.backgroundSecondary
+                return footerView
+            }
         )
     ]
 }
