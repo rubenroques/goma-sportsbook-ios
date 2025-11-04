@@ -177,7 +177,28 @@ final class ProfileWalletCoordinator: Coordinator {
     }
     
     private func showLanguageSelection() {
-        // TODO:
+        let title = "Set Your App Language"
+        let message = "Continue to Settings to choose your preferred language for Betsson."
+
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        let openAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+            DispatchQueue.main.async {
+                guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
+                      UIApplication.shared.canOpenURL(settingsURL) else {
+                    return
+                }
+                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+            }
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+        alertController.addAction(openAction)
+        alertController.addAction(cancelAction)
+
+        // Present from profile navigation controller (modal context)
+        profileNavigationController?.present(alertController, animated: true)
     }
 
     private func showTransactionHistory() {
