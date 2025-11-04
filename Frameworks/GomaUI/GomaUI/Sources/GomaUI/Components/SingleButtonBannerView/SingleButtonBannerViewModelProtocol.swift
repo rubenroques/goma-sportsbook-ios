@@ -79,12 +79,21 @@ public struct SingleButtonBannerDisplayState: Equatable {
 
 // MARK: - View Model Protocol
 public protocol SingleButtonBannerViewModelProtocol {
+    /// Associated type for button action data
+    /// Implementations define their own action type (e.g., InfoBannerAction, CasinoBannerAction)
+    associatedtype ActionType
+
     /// Current display state for immediate access
     var currentDisplayState: SingleButtonBannerDisplayState { get }
 
     /// Publisher for reactive updates
     var displayStatePublisher: AnyPublisher<SingleButtonBannerDisplayState, Never> { get }
 
+    /// Callback closure for button actions - set by parent ViewModels
+    /// Called when buttonTapped() is invoked with the appropriate action
+    var onButtonAction: ((ActionType) -> Void)? { get set }
+
     /// Called when the button is tapped
+    /// Implementations should determine the action and call onButtonAction
     func buttonTapped()
 } 

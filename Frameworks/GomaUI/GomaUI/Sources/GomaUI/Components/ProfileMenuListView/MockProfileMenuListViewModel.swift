@@ -186,23 +186,25 @@ extension MockProfileMenuListViewModel {
             // Additional interactive behaviors can be added here
             switch item.action {
             case .notifications:
-                print("🔔 Would open notifications screen")
+                print("Would open notifications screen")
             case .transactionHistory:
-                print("📋 Would open transaction history")
+                print("Would open transaction history")
             case .changeLanguage:
-                print("🌐 Language selection triggered")
+                print("Language selection triggered")
             case .responsibleGaming:
-                print("🛡️ Would open responsible gaming settings")
+                print("Would open responsible gaming settings")
             case .helpCenter:
-                print("❓ Would open help center")
+                print("Would open help center")
             case .changePassword:
-                print("🔒 Would open change password screen")
+                print("Would open change password screen")
             case .logout:
-                print("🚪 Would show logout confirmation")
+                print("Would show logout confirmation")
             case .promotions:
-                print("🚪 Would open promotions screen")
+                print("Would open promotions screen")
             case .custom:
-                print("⚡ Custom action triggered")
+                print("Custom action triggered")
+            case .notificationSettings:
+                print("Notification Settings")
             }
         }
     }
