@@ -471,7 +471,7 @@ extension BetslipManager {
         validateBettingOptions()
     }
 
-    func placeBet(withStake stake: Double, useFreebetBalance: Bool, oddsValidationType: String?) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+    func placeBet(withStake stake: Double, useFreebetBalance: Bool, oddsValidationType: String?, betBuilderOdds: Double? = nil) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         
         guard
             self.bettingTicketsPublisher.value.isNotEmpty
@@ -490,7 +490,10 @@ extension BetslipManager {
                                                                          odd: odd,
                                                                          stake: stake,
                                                                          sportIdCode: bettingTicket.sportIdCode,
-                                                                         outcomeId: bettingTicket.id)
+                                                                         eventId: bettingTicket.matchId,
+                                                                         marketId: bettingTicket.marketId,
+                                                                         outcomeId: bettingTicket.id,
+                                                                         marketTypeId: bettingTicket.marketTypeId)
             return betTicketSelection
         }
         
@@ -509,7 +512,7 @@ extension BetslipManager {
         // Extract ubsWalletId from odds boost state for bonus application
         let ubsWalletId: String? = oddsBoostStairsSubject.value?.ubsWalletId
 
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId, betBuilderOdds: betBuilderOdds)
             .mapError({ error in
                 switch error {
                 case .forbidden:

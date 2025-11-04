@@ -287,6 +287,7 @@ public struct BetTicketSelection: Codable, Equatable, Hashable {
     public var eventId: String?
     public var marketId: String?
     public var outcomeId: String?
+    public var marketTypeId: String?
 
     public init(identifier: String,
                 eventName: String,
@@ -299,7 +300,8 @@ public struct BetTicketSelection: Codable, Equatable, Hashable {
                 sportIdCode: String?,
                 eventId: String? = nil,
                 marketId: String? = nil,
-                outcomeId: String? = nil) {
+                outcomeId: String? = nil,
+                marketTypeId: String? = nil) {
 
         self.identifier = identifier
         self.eventName = eventName
@@ -313,6 +315,7 @@ public struct BetTicketSelection: Codable, Equatable, Hashable {
         self.eventId = eventId
         self.marketId = marketId
         self.outcomeId = outcomeId
+        self.marketTypeId = marketTypeId
     }
 
 }

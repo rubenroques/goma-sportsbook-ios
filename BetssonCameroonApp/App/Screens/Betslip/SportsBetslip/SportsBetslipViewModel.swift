@@ -25,13 +25,13 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         return ticketsInvalidStateSubject.value
     }
     
-    // Track betBuilder selections (betting offer IDs that should be enabled)
-    private let betBuilderSelectionsSubject = CurrentValueSubject<Set<String>, Never>(Set())
-    public var betBuilderSelectionsPublisher: AnyPublisher<Set<String>, Never> {
-        return betBuilderSelectionsSubject.eraseToAnyPublisher()
+    // Track betBuilder data (total odds and betting offer IDs)
+    private let betBuilderDataSubject = CurrentValueSubject<BetBuilderData?, Never>(nil)
+    public var betBuilderDataPublisher: AnyPublisher<BetBuilderData?, Never> {
+        return betBuilderDataSubject.eraseToAnyPublisher()
     }
-    public var betBuilderSelections: Set<String> {
-        return betBuilderSelectionsSubject.value
+    public var betBuilderData: BetBuilderData? {
+        return betBuilderDataSubject.value
     }
     
     // MARK: - Child View Models
@@ -232,6 +232,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                     let selectedOutcomeIds = Set(tickets.map { String($0.outcomeId) })
                     mockSuggested.updateSelectedOutcomeIds(selectedOutcomeIds)
                 }
+                
             }
             .store(in: &cancellables)
         
@@ -274,10 +275,18 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                             }
                         }
                     }
-                    self.betBuilderSelectionsSubject.send(betBuilderOfferIds)
                     
-                    if !betBuilderOfferIds.isEmpty {
-                        print("✅ BET BUILDER DETECTED with \(betBuilderOfferIds.count) valid selections")
+                    // Create and store BetBuilderData if we have betBuilder data
+                    if let betBuilderOdds = betBuilderOdds, !betBuilderOfferIds.isEmpty {
+                        let betBuilderData = BetBuilderData(
+                            totalOdds: betBuilderOdds,
+                            bettingOfferIds: Array(betBuilderOfferIds)
+                        )
+                        self.betBuilderDataSubject.send(betBuilderData)
+                        print("✅ BET BUILDER DETECTED with \(betBuilderOfferIds.count) valid selections @ \(betBuilderOdds)")
+                    } else {
+                        // Clear betBuilder data if none found
+                        self.betBuilderDataSubject.send(nil)
                     }
                     
                     // Update odds and calculate potential winnings with priority order
@@ -300,6 +309,9 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                         self.updateOdds(totalOdds: 0.0)
                         self.calculatePotentialWinnings(totalOdds: 0.0, stake: stake)
                     }
+                    
+                    // Update valid tickets state after processing betting options
+                    self.updateValidTicketsState()
                 }
                 
                 print("Betting Options fetched")
@@ -383,6 +395,8 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         let stake = convertToDouble(betInfoSubmissionViewModel.currentData.amount)
 
         let oddsValidationType = oddsAcceptanceViewModel.currentData.state == .accepted ? "ACCEPT_ANY" : "ACCEPT_HIGHER"
+        
+        let betBuilderOdds = self.betBuilderDataSubject.value?.totalOdds
 
         // Capture current tickets before clearing
         let placedTickets = currentTickets
@@ -394,7 +408,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         // Show loading state
         self.isLoadingSubject.send(true)
 
-        environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType)
+        environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType, betBuilderOdds: betBuilderOdds)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 // Hide loading state
@@ -478,6 +492,32 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         let normalizedString = trimmed.replacingOccurrences(of: ",", with: ".")
         
         return Double(normalizedString) ?? 0.0
+    }
+    
+    /// Evaluates if all tickets are valid/enabled and updates the bet info submission view model
+    private func updateValidTicketsState() {
+        let tickets = currentTickets
+        
+        // If no tickets, consider it as valid (allow button to be controlled by amount only)
+        guard !tickets.isEmpty else {
+            betInfoSubmissionViewModel.updateHasValidTickets(true)
+            return
+        }
+        
+        let betBuilderData = self.betBuilderData
+        
+        // Check if all tickets are enabled
+        let allTicketsValid = tickets.allSatisfy { ticket in
+            if let betBuilderData = betBuilderData, !betBuilderData.bettingOfferIds.isEmpty {
+                // For betBuilder, ticket is valid if it's in the betBuilder offer IDs
+                return betBuilderData.bettingOfferIds.contains(ticket.id)
+            } else {
+                // For regular bets, ticket is valid if there's no invalid state
+                return ticketsInvalidState == .none
+            }
+        }
+        
+        betInfoSubmissionViewModel.updateHasValidTickets(allTicketsValid)
     }
 }
 

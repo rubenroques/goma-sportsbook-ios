@@ -23,11 +23,11 @@ public protocol SportsBetslipViewModelProtocol {
     /// Current tickets invalid state (for immediate access)
     var ticketsInvalidState: TicketsInvalidState { get }
     
-    /// Publisher for betBuilder selections (betting offer IDs)
-    var betBuilderSelectionsPublisher: AnyPublisher<Set<String>, Never> { get }
+    /// Publisher for betBuilder data (total odds and betting offer IDs)
+    var betBuilderDataPublisher: AnyPublisher<BetBuilderData?, Never> { get }
     
-    /// Current betBuilder selections (for immediate access)
-    var betBuilderSelections: Set<String> { get }
+    /// Current betBuilder data (for immediate access)
+    var betBuilderData: BetBuilderData? { get }
     
     // MARK: - Child View Models
     var bookingCodeButtonViewModel: ButtonIconViewModelProtocol { get set}

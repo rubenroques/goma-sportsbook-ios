@@ -38,7 +38,7 @@ protocol BettingProvider: Connector {
         stakeAmount: Double?
     ) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError>
 
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?, betBuilderOdds: Double?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
 
     // BetBuilder
     func calculateBetBuilderPotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetBuilderPotentialReturn, ServiceProviderError>

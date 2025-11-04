@@ -45,10 +45,49 @@ extension EveryMatrix {
     struct BetSelectionInfo: Codable {
         let bettingOfferId: String
         let priceValue: Double
+        let eventId: String
+        let marketId: String
+        let bettingTypeId: String
+        let outcomeId: String
+        let betBuilderPriceValue: Double?
 
-        init(bettingOfferId: String, priceValue: Double) {
+        init(bettingOfferId: String,
+             priceValue: Double,
+             eventId: String,
+             marketId: String,
+             bettingTypeId: String,
+             outcomeId: String,
+             betBuilderPriceValue: Double?) {
             self.bettingOfferId = bettingOfferId
             self.priceValue = priceValue
+            self.eventId = eventId
+            self.marketId = marketId
+            self.bettingTypeId = bettingTypeId
+            self.outcomeId = outcomeId
+            self.betBuilderPriceValue = betBuilderPriceValue
+        }
+        
+        // Custom encoding to skip betBuilderPriceValue when nil
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(bettingOfferId, forKey: .bettingOfferId)
+            try container.encode(priceValue, forKey: .priceValue)
+            try container.encode(eventId, forKey: .eventId)
+            try container.encode(marketId, forKey: .marketId)
+            try container.encode(bettingTypeId, forKey: .bettingTypeId)
+            try container.encode(outcomeId, forKey: .outcomeId)
+            // Only encode betBuilderPriceValue if it's not nil
+            try container.encodeIfPresent(betBuilderPriceValue, forKey: .betBuilderPriceValue)
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case bettingOfferId
+            case priceValue
+            case eventId
+            case marketId
+            case bettingTypeId
+            case outcomeId
+            case betBuilderPriceValue
         }
     }
 

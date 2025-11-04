@@ -187,20 +187,22 @@ class MatchDetailsTextualViewModel: ObservableObject {
         
         guard let match = currentMatch else { return }
         
-        let outcome = marketGroup.marketGroup.marketLines.compactMap { marketLine in
-            if marketLine.leftOutcome?.id == outcomeId {
-                return marketLine.leftOutcome
-            } else if marketLine.middleOutcome?.id == outcomeId {
-                return marketLine.middleOutcome
-            } else if marketLine.rightOutcome?.id == outcomeId {
-                return marketLine.rightOutcome
+        let result = marketGroup.marketGroup.marketLines.compactMap { marketLine -> (outcome: MarketOutcomeData, marketId: String)? in
+            if let leftOutcome = marketLine.leftOutcome, leftOutcome.id == outcomeId {
+                return (leftOutcome, marketLine.id)
+            } else if let middleOutcome = marketLine.middleOutcome, middleOutcome.id == outcomeId {
+                return (middleOutcome, marketLine.id)
+            } else if let rightOutcome = marketLine.rightOutcome, rightOutcome.id == outcomeId {
+                return (rightOutcome, marketLine.id)
             }
             return nil
         }.first
         
+        let outcome = result?.outcome
+        let marketId = result?.marketId ?? marketGroup.marketGroup.id
         let oddDouble = Double(outcome?.value ?? "")
-        
-        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: marketGroup.marketGroup.id, matchId: match.id, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(match.homeParticipant.name) - \(match.awayParticipant.name)", marketDescription: marketGroup.groupName, outcomeDescription: outcome?.title ?? "", homeParticipantName: match.homeParticipant.name, awayParticipantName: match.awayParticipant.name, sportIdCode: match.sportIdCode, competition: match.competitionName, date: match.date)
+                
+        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: marketId, matchId: match.id, marketTypeId: marketGroup.marketGroup.id, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(match.homeParticipant.name) - \(match.awayParticipant.name)", marketDescription: marketGroup.groupName, outcomeDescription: outcome?.title ?? "", homeParticipantName: match.homeParticipant.name, awayParticipantName: match.awayParticipant.name, sportIdCode: match.sportIdCode, competition: match.competitionName, date: match.date)
         
         if isSelected {
             Env.betslipManager.addBettingTicket(bettingTicket)

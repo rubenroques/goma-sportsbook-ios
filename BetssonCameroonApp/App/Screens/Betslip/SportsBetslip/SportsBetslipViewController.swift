@@ -352,8 +352,8 @@ class SportsBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // Subscribe to betBuilder selections updates
-        viewModel.betBuilderSelectionsPublisher
+        // Subscribe to betBuilder data updates
+        viewModel.betBuilderDataPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 // Reload table to update isEnabled state based on betBuilder matches
@@ -542,11 +542,11 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
         // Determine if ticket should be enabled and disabled message
         let isEnabled: Bool
         let disabledMessage: String?
-        let betBuilderSelections = viewModel.betBuilderSelections
+        let betBuilderData = viewModel.betBuilderData
         
-        if !betBuilderSelections.isEmpty {
-            // If betBuilder selections exist, only enable tickets that match
-            isEnabled = betBuilderSelections.contains(ticket.id)
+        if let betBuilderData = betBuilderData, !betBuilderData.bettingOfferIds.isEmpty {
+            // If betBuilder data exists, only enable tickets that match
+            isEnabled = betBuilderData.bettingOfferIds.contains(ticket.id)
             // For betBuilder, don't show message (keep showing date)
             disabledMessage = nil
         }
