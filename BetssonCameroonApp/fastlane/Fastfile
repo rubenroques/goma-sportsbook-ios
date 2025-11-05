@@ -47,6 +47,10 @@ FIREBASE_DISTRIBUTION_TESTERS = "ruben@gomadevelopment.pt"  # Optional: comma-se
 ##
 ################
 
+# Debug: Print working directory at the start of every lane
+before_each do |lane, options|
+  UI.message "PathDebug > #{lane}:#{Dir.pwd}"
+end
 
 after_all do |lane|
   notification(subtitle: "Fastlane", message: "#{lane} completed successfully! 🎉")
@@ -411,7 +415,7 @@ platform :ios do
 
     # Step 1: Check local devices.csv file
     # Note: Fastlane runs from BetssonCameroonApp/ directory
-    devices_file = "./fastlane/devices.csv"
+    devices_file = "./devices.csv"
 
     unless File.exist?(devices_file)
       UI.error "❌ No devices.csv file found at #{devices_file}"
