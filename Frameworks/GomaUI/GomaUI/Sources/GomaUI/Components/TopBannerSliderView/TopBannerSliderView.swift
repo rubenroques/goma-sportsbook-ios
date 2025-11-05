@@ -53,6 +53,7 @@ final public class TopBannerSliderView: UIView {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.dataSource = self
+        
         // Register both cell types
         collectionView.register(SingleButtonBannerViewCell.self, forCellWithReuseIdentifier: "SingleButtonBannerCell")
         collectionView.register(MatchBannerViewCell.self, forCellWithReuseIdentifier: "MatchBannerCell")

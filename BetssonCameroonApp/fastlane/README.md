@@ -15,6 +15,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
+### ios setup_api_key
+
+```sh
+[bundle exec] fastlane ios setup_api_key
+```
+
+
+
 ### ios test
 
 ```sh
@@ -22,14 +30,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 ```
 
 Print environment variables and arguments
-
-### ios sync_version
-
-```sh
-[bundle exec] fastlane ios sync_version
-```
-
-Update build number to match Betsson France
 
 ### ios version_bump
 
@@ -47,45 +47,69 @@ Update build number
 
 Update marketing version
 
-### ios certificates
+### ios distribute_staging
 
 ```sh
-[bundle exec] fastlane ios certificates
+[bundle exec] fastlane ios distribute_staging
 ```
 
-Setup certificates and provisioning profiles
+Distribute to Staging (increments build, registers devices, distributes)
 
-### ios distribute_to_firebase
+### ios distribute_production
 
 ```sh
-[bundle exec] fastlane ios distribute_to_firebase
+[bundle exec] fastlane ios distribute_production
 ```
 
-Build and distribute to Firebase
+Distribute to Production (increments build, registers devices, distributes)
 
-### ios staging
+### ios distribute_all
 
 ```sh
-[bundle exec] fastlane ios staging
+[bundle exec] fastlane ios distribute_all
 ```
 
-Deploy to Staging environment
+Distribute to both Staging and Production (increments build once)
 
-### ios production
+### ios fetch_firebase_devices
 
 ```sh
-[bundle exec] fastlane ios production
+[bundle exec] fastlane ios fetch_firebase_devices
 ```
 
-Deploy to Production environment
+Fetch device UDIDs from Firebase App Distribution
 
-### ios deploy_all
+### ios register_new_devices
 
 ```sh
-[bundle exec] fastlane ios deploy_all
+[bundle exec] fastlane ios register_new_devices
 ```
 
-Deploy to both Staging and Production
+Register new devices from local devices.csv and update provisioning profiles
+
+### ios keep_version_distribute_staging
+
+```sh
+[bundle exec] fastlane ios keep_version_distribute_staging
+```
+
+Keep version and distribute to Staging (SAME build, registers devices, distributes)
+
+### ios keep_version_distribute_production
+
+```sh
+[bundle exec] fastlane ios keep_version_distribute_production
+```
+
+Keep version and distribute to Production (SAME build, registers devices, distributes)
+
+### ios keep_version_distribute_all
+
+```sh
+[bundle exec] fastlane ios keep_version_distribute_all
+```
+
+Keep version and distribute to both Staging and Production (SAME build)
 
 ----
 

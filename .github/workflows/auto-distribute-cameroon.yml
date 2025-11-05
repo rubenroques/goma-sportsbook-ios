@@ -1,0 +1,151 @@
+name: Auto-Distribute Betsson Cameroon
+
+# Triggers:
+# 1. Manual workflow_dispatch (can select environment)
+# 2. Push to devices.txt (triggers staging build)
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      release_notes:
+        description: 'Release notes (optional)'
+        required: false
+        type: string
+
+  push:
+    paths:
+      - 'BetssonCameroonApp/fastlane/devices.csv'
+    branches:
+      - main
+      - betsson-cm  # Adjust to your main branch
+
+jobs:
+  auto-distribute:
+    name: Register Devices & Distribute
+    runs-on: macos-14  # macOS runner with Xcode
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: BetssonCameroonApp
+
+      - name: Install Fastlane dependencies
+        working-directory: BetssonCameroonApp
+        run: |
+          bundle install
+
+      - name: Setup App Store Connect API Key
+        working-directory: BetssonCameroonApp/fastlane
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+        run: |
+          # Write the .p8 file from secret
+          echo "$APP_STORE_CONNECT_API_KEY_CONTENT" > AuthKey_7NC93JSN42.p8
+          chmod 600 AuthKey_7NC93JSN42.p8
+
+      - name: Setup environment variables
+        working-directory: BetssonCameroonApp/fastlane
+        env:
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+          FIREBASE_PROJECT_NUMBER: ${{ secrets.FIREBASE_PROJECT_NUMBER }}
+          GOMA_TEAM_ID: ${{ secrets.GOMA_TEAM_ID }}
+          BETSSONCM_STG_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_STG_FIREBASE_APP_ID }}
+          BETSSONCM_PROD_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_PROD_FIREBASE_APP_ID }}
+        run: |
+          # Create .env file from secrets
+          # Note: FIREBASE_DISTRIBUTION_GROUPS and TESTERS are defined in Fastfile as constants
+          cat > .env << EOF
+          MATCH_GIT_URL=$MATCH_GIT_URL
+          MATCH_PASSWORD=$MATCH_PASSWORD
+          APP_STORE_CONNECT_API_KEY_ID=$APP_STORE_CONNECT_API_KEY_ID
+          APP_STORE_CONNECT_API_ISSUER_ID=$APP_STORE_CONNECT_API_ISSUER_ID
+          APP_STORE_CONNECT_API_KEY_FILEPATH=./fastlane/AuthKey_7NC93JSN42.p8
+          FIREBASE_CLI_TOKEN=$FIREBASE_CLI_TOKEN
+          FIREBASE_PROJECT_NUMBER=$FIREBASE_PROJECT_NUMBER
+          GOMA_TEAM_ID=$GOMA_TEAM_ID
+          BETSSONCM_STG_FIREBASE_APP_ID=$BETSSONCM_STG_FIREBASE_APP_ID
+          BETSSONCM_PROD_FIREBASE_APP_ID=$BETSSONCM_PROD_FIREBASE_APP_ID
+          EOF
+
+      - name: Setup SSH for Match
+        env:
+          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/match_deploy_key
+          chmod 600 ~/.ssh/match_deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+          # Configure git to use the SSH key
+          cat > ~/.ssh/config << EOF
+          Host github.com
+            HostName github.com
+            IdentityFile ~/.ssh/match_deploy_key
+            IdentitiesOnly yes
+          EOF
+
+      - name: Determine environment
+        id: determine-env
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+            echo "release_notes=${{ github.event.inputs.release_notes }}" >> $GITHUB_OUTPUT
+          else
+            # Push to devices.csv triggers staging
+            echo "environment=staging" >> $GITHUB_OUTPUT
+            echo "release_notes=Automated build with updated device list" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Keep version and distribute (Staging)
+        if: steps.determine-env.outputs.environment == 'staging'
+        working-directory: BetssonCameroonApp
+        run: |
+          if [ -n "${{ steps.determine-env.outputs.release_notes }}" ]; then
+            bundle exec fastlane keep_version_distribute_staging release_notes:"${{ steps.determine-env.outputs.release_notes }}"
+          else
+            bundle exec fastlane keep_version_distribute_staging
+          fi
+
+      - name: Keep version and distribute (Production)
+        if: steps.determine-env.outputs.environment == 'production'
+        working-directory: BetssonCameroonApp
+        run: |
+          if [ -n "${{ steps.determine-env.outputs.release_notes }}" ]; then
+            bundle exec fastlane keep_version_distribute_production release_notes:"${{ steps.determine-env.outputs.release_notes }}"
+          else
+            bundle exec fastlane keep_version_distribute_production
+          fi
+
+      - name: Upload build artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fastlane-logs
+          path: |
+            BetssonCameroonApp/fastlane/logs/
+            BetssonCameroonApp/fastlane/report.xml
+          retention-days: 7
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f ~/.ssh/match_deploy_key
+          rm -f BetssonCameroonApp/fastlane/.env
+          rm -f BetssonCameroonApp/fastlane/AuthKey_7NC93JSN42.p8

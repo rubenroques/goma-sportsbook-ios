@@ -12,10 +12,12 @@ public final class MatchHeaderCompactView: UIView {
     private let homeTeamLabel = UILabel()
     private let awayTeamLabel = UILabel()
     private let breadcrumbLabel = UILabel()
+    
     private let statisticsButton = UIButton(type: .system)
     private let statisticsStackView = UIStackView()
     private let statisticsLabel = UILabel()
     private let statisticsIconImageView = UIImageView()
+    
     private let bottomBorderView = UIView()
     
     // MARK: - Properties

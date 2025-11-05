@@ -1,0 +1,83 @@
+Device ID	Device Name	Device Platform
+00008030-001925de2238802e	rubenroques.nhk@gmail.com - iPhone 11 Pro Max	ios
+00008020-000c2de10e05002e	ivo.lrs@gmail.com - iPhone XS	ios
+f9951c6d88dba04684ae8ed16eb365c510b1c430	tavisualartist@gmail.com - iPhone X	ios
+00008030-001e25210e45802e	joaoccmatos@gmail.com - iPhone 11	ios
+00008030-0019111c0cd0802e	pedrogomesslb@gmail.com - iPhone 11	ios
+00008020-001d70a80a45002e	mail@miguelmarques.com - iPhone XR	ios
+00008110-001a00e10a04801e	daniela@gomadevelopment.pt - iPhone 13	ios
+00008030-000c359411f0802e	ricardo@webaround.pt - iPhone 11 Pro	ios
+00008101-0006511e2140001e	ferreirapablo@gmail.com - iPhone 12 Pro	ios
+3ede23eee1fb11e91166c05333265068b95ff59d	joanaduarted@gmail.com - iPhone 7	ios
+00008020-00114d1e0e03802e	joanaduarted@gmail.com - iPad Air (3rd generation)	ios
+018a727371a4dd6eda0c5f6c0d4d34e277247b33	teresa@gomadevelopment.pt - iPhone X	ios
+00008101-000c45e41188001e	stian.hornsletten@everymatrix.com - iPhone 12 Pro	ios
+00008110-00014dcc222b801e	ricardo@webaround.pt - iPhone 13 Pro Max	ios
+41afd8b2c01c5796fdf07d237bafcd7487a3151d	diogolascas33@gmail.com - iPhone 8	ios
+00008110-001819a4228b801e	pedrogomesslb@gmail.com - iPhone 13 Pro	ios
+00008030-001e095a2ec3402e	gugas.gomes@icloud.com - iPhone 11	ios
+00008110-000a6c9c3a6a801e	tmikeladze@hotmail.com - iPhone 13 Pro	ios
+00008101-00064cc0366a001e	lochnah@gmail.com - iPhone 12 Pro Max	ios
+00008110-001868e42e92801e	j.curciel@sportradar.com - iPhone 13 Pro Max	ios
+f33a92e7cec500f2fb885ff17eb8feb7be4c6e94	dsandlerm@gmail.com - iPhone 7	ios
+00008110-000428d40c69801e	cla.menezes@gmail.com - iPhone 13 Pro Max	ios
+00008110-000a6c461ec0401e	joanaduarted@gmail.com - iPhone 13	ios
+00008110-000a7ce90c69801e	e.dzombic@sportradar.com - iPhone 13 Pro	ios
+00008101-001d494e1151003a	thomas@priglinger.com - iPhone 12 Mini	ios
+00008110-001a49962144801e	elliott.lloyd.banks@gmail.com - iPhone 13	ios
+00008101-001934c42600001e	ana_lucia1789@hotmail.com - iPhone 12 Mini	ios
+00008110-0006794102a2801e	sluneau@gmail.com - iPhone 13 Pro	ios
+00008020-00092d902633002e	d.small@sportradar.com - iPhone XR	ios
+00008030-0019384c3608802e	i.dimitrov@sportradar.com - iPhone 11 Pro Max	ios
+00008101-001e20e12e40001e	sluneau@gmail.com - iPhone 12 Pro Max	ios
+00008030-001574692668802e	mcareu@gmail.com - iPhone 11 Pro	ios
+8e615b96a6a69f3b344d7843bf66a8ca5bc6ca16	maurice@omegasys.eu - iPhone X	ios
+00008030-00050de61a83802e	m.aounallah@betssonfrance.fr - iPhone SE (2nd gene	ios
+00008101-0010044121c2001e	m.guily@betssonfrance.fr - iPhone 12	ios
+00008030-000c08402e83802e	bneves@pari-consult.fr - iPhone 11 Pro	ios
+00008110-001c392c3e41801e	laura.dinin@betssonfrance.fr - iPhone 13 Mini	ios
+4494c10a0e9dedf8e68a80522b7663f03c338590	acamus@betssonfrance.fr - iPhone X	ios
+00008110-001471d93a63801e	thomas.girard@mazars.fr - iPhone SE (3rd generatio	ios
+00008120-001e148a1e9b401e	desduffy@ballysbrazil.com - iPhone 14 Pro	ios
+00008030-00152dea1186802e	c.coridon@betssonfrance.fr - iPhone 11	ios
+00008110-001241ec1aba801e	norbert.teufelberger@gmail.com - iPhone 13 Pro	ios
+00008030-000318391ad0402e	c.veyron@betssonfrance.fr - iPhone SE (2nd generat	ios
+d78d0b4c68b8b77c62d48ff2258acb50645393c9	pablo.gutierrez@ballys.com - iPhone 8	ios
+00008030-000c64d61e60402e	kjell.maier@ballys.com - iPhone SE (2nd generation	ios
+00008120-000978680244201e	stekaya@betssonfrance.fr - iPhone 14 Pro	ios
+00008020-001928383c05002e	alascas@gomadevelopment.pt - iPhone XR	ios
+00008120-000818e12e07c01e	c.veyron@betssonfrance.fr - iPhone 14 Pro	ios
+00008030-00166c1e2211402e	c.storti@betssonfrance.fr - iPhone 11	ios
+00008020-0002155c3e8a002e	n.biluta@betssonfrance.fr - iPhone XR	ios
+00008130-001e21de1821401c	joaoccmatos@gmail.com - iPhone 15 Pro	ios
+00008130-0002752a3c2a001c	ivo.lrs@gmail.com - iPhone 15 Pro	ios
+00008030-000c35ee1444202e	m.canevet@betssonfrance.fr - iPhone 11	ios
+00008030-0010393c11c0c02e	ludivineandre.adn@gmail.com - iPhone 11	ios
+405c8cabe41d9d3c74a26854679f3fbaa5f01f80	alexandre.lac@mazars.fr - iPhone SE	ios
+00008110-000c4ce63c61801e	mazarsmob@gmail.com - iPhone 13	ios
+00008110-00066d48366a401e	letiangelo86@hotmail.com - iPhone 13	ios
+00008101-001949463ce9003a	andrewbrown671167@gmail.com - iPhone 12	ios
+00008120-001038aa2269a01e	andrewbrown671167@gmail.com - iPhone 15	ios
+00008110-000c69910afa201e	firat@adcropper.com - iPhone 14	ios
+00008120-001e44583423a01e	aletizia4@hotmail.it - iPhone 15	ios
+00008140-001e21591863c01c	pedrogomesslb@gmail.com - iPhone 16 Pro	ios
+00008130-000249a80821401c	sluneau@gmail.com - iPhone 15 Pro	ios
+00008140-001068592e68801c	ricardo@webaround.pt - iPhone 16 Pro Max	ios
+00008120-000a5d46342a601e	joanaduarted@gmail.com - iPhone 15 Plus	ios
+00008120-000c20c61e2a601e	maxime.canevet@gmail.com - iPhone 15	ios
+00008120-000a42de020bc01e	joshua.tasker@betssongroup.com - iPhone 14 Pro Max	ios
+00008140-0014741102fb001c	raja.sarkar@betssongroup.com - iPhone 16 Pro	ios
+00008130-001a591134ea001c	john.doddy@betssongroup.com - iPhone 15 Pro	ios
+00008140-001e19c00e9b001c	s.elmansar@betssonfrance.fr - iPhone 16 Pro Max	ios
+00008101-001425603480801e	emilis.pakenas@betssongroup.com - iPhone 12	ios
+00008120-001203990140201e	edwin.tarus@betssongroup.com - iPhone 14 Pro Max	ios
+00008030-001a459c3a7b802e	juanlucamposp@gmail.com - iPhone 11	ios
+00008101-000639593cc2001e	k.tsitsaras@gmail.com - iPhone 12 Mini	ios
+00008140-000e19190a44801c	sluneau@gmail.com - iPhone 16 Pro	ios
+00008140-000a4c501e07801c	juanlucamposp@gmail.com - iPhone 16 Pro	ios
+00008120-0004685c3e80c01e	george.saliba@betssongroup.com - iPhone 14 Pro Max	ios
+00008120-00162d892e87c01e	sabrina.rabini@betssongroup.com - iPhone 14 Pro Ma	ios
+00008110-0001552c0ef0a01e	loic.debauche@betssongroup.com - iPhone 13	ios
+00008150-000929093ec0401c	sluneau@gmail.com - iPhone 17 Pro Max	ios
+00008140-00080d613c86801c	matei.coman@everymatrix.com - iPhone 16 Pro	ios
+00008140-000830200e29801c	matei.tamas@everymatrix.com - iPhone 16 Pro	ios
