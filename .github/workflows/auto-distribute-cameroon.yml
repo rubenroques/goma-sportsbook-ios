@@ -94,9 +94,51 @@ jobs:
           MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
         run: |
           echo "🔑 Setting up SSH for Match certificates repo..."
+
+          # TEMPORARY DEBUG - REMOVE AFTER FIXING
+          echo "🐛 DEBUG: Checking SSH key secret..."
+          if [ -z "$MATCH_GIT_PRIVATE_KEY" ]; then
+            echo "❌ ERROR: MATCH_GIT_PRIVATE_KEY is empty!"
+            exit 1
+          fi
+
+          echo "✅ Secret is not empty"
+          echo "📏 Secret length: ${#MATCH_GIT_PRIVATE_KEY} characters"
+
+          # Show first and last lines (headers/footers) - safe to show
+          echo "🔍 First line of key:"
+          echo "$MATCH_GIT_PRIVATE_KEY" | head -n 1
+          echo "🔍 Last line of key:"
+          echo "$MATCH_GIT_PRIVATE_KEY" | tail -n 1
+          echo "🔍 Total lines in key:"
+          echo "$MATCH_GIT_PRIVATE_KEY" | wc -l
+
+          # Create SSH directory
           mkdir -p ~/.ssh
+
+          # Write key to file
           echo "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/match_deploy_key
           chmod 600 ~/.ssh/match_deploy_key
+
+          # Verify file was created
+          echo "📁 SSH key file info:"
+          ls -lh ~/.ssh/match_deploy_key
+          echo "📄 File size: $(wc -c < ~/.ssh/match_deploy_key) bytes"
+          echo "📄 File lines: $(wc -l < ~/.ssh/match_deploy_key)"
+
+          # Try to validate the key format
+          echo "🔐 Validating SSH key format..."
+          if ssh-keygen -l -f ~/.ssh/match_deploy_key 2>&1; then
+            echo "✅ SSH key format is valid!"
+          else
+            echo "❌ SSH key format validation failed!"
+            echo "🐛 DEBUG: Showing first 5 lines of key file (TEMPORARY - WILL REMOVE):"
+            head -n 5 ~/.ssh/match_deploy_key
+            echo "🐛 DEBUG: Showing last 5 lines of key file:"
+            tail -n 5 ~/.ssh/match_deploy_key
+            exit 1
+          fi
+
           echo "✅ SSH key installed"
 
           echo "📡 Adding github.com to known hosts..."
@@ -110,6 +152,14 @@ jobs:
             IdentityFile ~/.ssh/match_deploy_key
             IdentitiesOnly yes
           EOF
+
+          echo "📋 SSH config contents:"
+          cat ~/.ssh/config
+
+          # Test SSH connection
+          echo "🧪 Testing SSH connection to github.com..."
+          ssh -T -i ~/.ssh/match_deploy_key git@github.com 2>&1 || echo "⚠️  SSH test completed (exit code expected for test)"
+
           echo "✅ SSH configuration complete"
 
       - name: Determine environment
