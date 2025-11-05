@@ -141,6 +141,21 @@ jobs:
           echo "📦 Build will keep current version number"
           echo "📱 Devices will be registered from devices.csv"
 
+          # Debug: Show working directory and file structure
+          echo "📂 Current working directory: $(pwd)"
+          echo "📋 Files in current directory:"
+          ls -la
+          echo "📋 Files in fastlane directory:"
+          ls -la fastlane/ || echo "❌ fastlane directory not found"
+          echo "🔍 Checking for devices.csv:"
+          if [ -f "fastlane/devices.csv" ]; then
+            echo "✅ devices.csv exists!"
+            echo "📄 Content:"
+            cat fastlane/devices.csv
+          else
+            echo "❌ devices.csv NOT found at fastlane/devices.csv"
+          fi
+
           if [ -n "${{ steps.determine-env.outputs.release_notes }}" ]; then
             echo "📝 Using custom release notes"
             bundle exec fastlane keep_version_distribute_staging release_notes:"${{ steps.determine-env.outputs.release_notes }}"
@@ -158,6 +173,18 @@ jobs:
           echo "🚀 Starting distribution to PRODUCTION environment..."
           echo "📦 Build will keep current version number"
           echo "📱 Devices will be registered from devices.csv"
+
+          # Debug: Show working directory and file structure
+          echo "📂 Current working directory: $(pwd)"
+          echo "📋 Files in fastlane directory:"
+          ls -la fastlane/ || echo "❌ fastlane directory not found"
+          echo "🔍 Checking for devices.csv:"
+          if [ -f "fastlane/devices.csv" ]; then
+            echo "✅ devices.csv exists!"
+            cat fastlane/devices.csv
+          else
+            echo "❌ devices.csv NOT found"
+          fi
 
           if [ -n "${{ steps.determine-env.outputs.release_notes }}" ]; then
             echo "📝 Using custom release notes"
