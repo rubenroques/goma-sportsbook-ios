@@ -17,16 +17,16 @@ public protocol SportsBetslipViewModelProtocol {
     /// Current tickets data (for immediate access)
     var currentTickets: [BettingTicket] { get }
     
-    /// Publisher for tickets invalid state (tracks forbidden combinations and invalid selections)
-    var ticketsInvalidStatePublisher: AnyPublisher<TicketsInvalidState, Never> { get }
+    /// Publisher for combined tickets state (invalid state + bet builder data)
+    var ticketsStatePublisher: AnyPublisher<BetslipTicketsState, Never> { get }
     
-    /// Current tickets invalid state (for immediate access)
+    /// Current tickets state (for immediate access)
+    var ticketsState: BetslipTicketsState { get }
+    
+    /// Convenience accessor for tickets invalid state
     var ticketsInvalidState: TicketsInvalidState { get }
     
-    /// Publisher for betBuilder data (total odds and betting offer IDs)
-    var betBuilderDataPublisher: AnyPublisher<BetBuilderData?, Never> { get }
-    
-    /// Current betBuilder data (for immediate access)
+    /// Convenience accessor for betBuilder data
     var betBuilderData: BetBuilderData? { get }
     
     // MARK: - Child View Models
@@ -58,4 +58,12 @@ public protocol SportsBetslipViewModelProtocol {
     
     /// Clear all tickets from the betslip
     func clearAllTickets()
+    
+    /// Gets or creates a ticket view model, tracking odds changes
+    func getTicketViewModel(
+        for ticket: BettingTicket,
+        isEnabled: Bool,
+        disabledMessage: String?,
+        formattedDate: String?
+    ) -> MockBetslipTicketViewModel
 } 

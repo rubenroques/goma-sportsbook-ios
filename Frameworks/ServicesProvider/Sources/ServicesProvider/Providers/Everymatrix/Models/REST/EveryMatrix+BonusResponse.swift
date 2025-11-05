@@ -54,7 +54,7 @@ extension EveryMatrix {
         public let endTime: String
         public let timeZone: TimeZone
         public let totalGrantCountLimit: Double
-        public let player: [String: AnyCodable]
+        public let player: [String: AnyCodable]?
         public let method: Method
         
         enum CodingKeys: String, CodingKey {

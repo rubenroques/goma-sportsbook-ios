@@ -7,9 +7,14 @@ public final class MockBetslipTicketViewModel: BetslipTicketViewModelProtocol {
     
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<BetslipTicketData, Never>
+    private let oddsChangeStateSubject: CurrentValueSubject<OddsChangeState, Never>
     
     public var dataPublisher: AnyPublisher<BetslipTicketData, Never> {
         dataSubject.eraseToAnyPublisher()
+    }
+    
+    public var oddsChangeStatePublisher: AnyPublisher<OddsChangeState, Never> {
+        oddsChangeStateSubject.eraseToAnyPublisher()
     }
     
     public var currentData: BetslipTicketData {
@@ -20,6 +25,7 @@ public final class MockBetslipTicketViewModel: BetslipTicketViewModelProtocol {
     public init(leagueName: String = "Premier League", startDate: String = "17 June, 11:00", homeTeam: String = "Manchester United", awayTeam: String = "Glasgow Rangers", selectedTeam: String = "Manchester United", oddsValue: String = "6.50", oddsChangeState: OddsChangeState = .none, isEnabled: Bool = true, bettingOfferId: String? = nil, disabledMessage: String? = nil) {
         let initialData = BetslipTicketData(leagueName: leagueName, startDate: startDate, homeTeam: homeTeam, awayTeam: awayTeam, selectedTeam: selectedTeam, oddsValue: oddsValue, oddsChangeState: oddsChangeState, isEnabled: isEnabled, bettingOfferId: bettingOfferId, disabledMessage: disabledMessage)
         self.dataSubject = CurrentValueSubject(initialData)
+        self.oddsChangeStateSubject = CurrentValueSubject(oddsChangeState)
     }
     
     // MARK: - Protocol Methods
@@ -67,6 +73,7 @@ public final class MockBetslipTicketViewModel: BetslipTicketViewModelProtocol {
             disabledMessage: currentData.disabledMessage
         )
         dataSubject.send(newData)
+        oddsChangeStateSubject.send(state)
     }
     
     public func setEnabled(_ isEnabled: Bool) {

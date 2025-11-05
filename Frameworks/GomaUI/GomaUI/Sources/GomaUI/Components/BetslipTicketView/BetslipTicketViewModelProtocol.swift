@@ -41,6 +41,9 @@ public protocol BetslipTicketViewModelProtocol: AnyObject {
     /// Publisher for the betslip ticket data
     var dataPublisher: AnyPublisher<BetslipTicketData, Never> { get }
     
+    /// Publisher specifically for odds change state (for animations)
+    var oddsChangeStatePublisher: AnyPublisher<OddsChangeState, Never> { get }
+    
     /// Current data (for immediate access)
     var currentData: BetslipTicketData { get }
     

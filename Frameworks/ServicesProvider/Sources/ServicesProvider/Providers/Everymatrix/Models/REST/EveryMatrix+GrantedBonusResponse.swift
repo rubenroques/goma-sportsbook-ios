@@ -44,7 +44,7 @@ extension EveryMatrix {
         public let vendor: String
         public let products: [String]
         public let currency: String
-        public let amount: Double
+        public let amount: Double?
         public let remainingAmount: Double
         public let initialWagerRequirementCurrency: String
         public let initialWagerRequirementAmount: Double

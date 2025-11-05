@@ -16,6 +16,7 @@ public final class BetslipTicketView: UIView {
     }
     private var cancellables = Set<AnyCancellable>()
     private var oddsChangeTimer: Timer?
+    private var previousOddsChangeState: OddsChangeState = .none
     
     // MARK: - UI Components
     
@@ -281,6 +282,19 @@ public final class BetslipTicketView: UIView {
                 self?.render(data: data)
             }
             .store(in: &cancellables)
+        
+        // Subscribe separately to odds change state for animations
+        viewModel.oddsChangeStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                // Only animate if state actually changed
+                if state != self.previousOddsChangeState {
+                    self.previousOddsChangeState = state
+                    self.updateOddsChangeIndicator(state, animated: true)
+                }
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Rendering
@@ -308,9 +322,6 @@ public final class BetslipTicketView: UIView {
         oddsValueLabel.text = data.oddsValue
         oddsValueLabel.isHidden = false
         
-        // Update odds change state
-        updateOddsChangeIndicator(data.oddsChangeState)
-        
         // Update enabled state - show/hide disabled overlay
 //        disabledView.isHidden = data.isEnabled
         containerView.alpha = data.isEnabled ? 1.0 : 0.5
@@ -321,79 +332,101 @@ public final class BetslipTicketView: UIView {
         
     }
     
-    private func updateOddsChangeIndicator(_ state: OddsChangeState) {
-        // Cancel existing timer
-        oddsChangeTimer?.invalidate()
-        oddsChangeTimer = nil
+    private func updateOddsChangeIndicator(_ state: OddsChangeState, animated: Bool) {
+        if animated {
+            // Cancel existing timer
+            oddsChangeTimer?.invalidate()
+            oddsChangeTimer = nil
+        }
         
         switch state {
         case .none:
-            // Hide both arrows with fade animation
-            if !upArrowImageView.isHidden {
-                UIView.animate(withDuration: 0.3) {
-                    self.upArrowImageView.alpha = 0
-                } completion: { _ in
-                    self.upArrowImageView.isHidden = true
-                    self.upArrowImageView.alpha = 1
+            if animated {
+                // Hide both arrows with fade animation
+                if !upArrowImageView.isHidden {
+                    UIView.animate(withDuration: 0.3) {
+                        self.upArrowImageView.alpha = 0
+                    } completion: { _ in
+                        self.upArrowImageView.isHidden = true
+                        self.upArrowImageView.alpha = 1
+                    }
                 }
-            }
-            if !downArrowImageView.isHidden {
-                UIView.animate(withDuration: 0.3) {
-                    self.downArrowImageView.alpha = 0
-                } completion: { _ in
-                    self.downArrowImageView.isHidden = true
-                    self.downArrowImageView.alpha = 1
+                if !downArrowImageView.isHidden {
+                    UIView.animate(withDuration: 0.3) {
+                        self.downArrowImageView.alpha = 0
+                    } completion: { _ in
+                        self.downArrowImageView.isHidden = true
+                        self.downArrowImageView.alpha = 1
+                    }
                 }
+            } else {
+                // Just hide without animation
+                upArrowImageView.isHidden = true
+                downArrowImageView.isHidden = true
             }
             
         case .increased:
-            // Hide down arrow if visible
-            if !downArrowImageView.isHidden {
-                UIView.animate(withDuration: 0.3) {
-                    self.downArrowImageView.alpha = 0
-                } completion: { _ in
-                    self.downArrowImageView.isHidden = true
-                    self.downArrowImageView.alpha = 1
+            if animated {
+                // Hide down arrow if visible
+                if !downArrowImageView.isHidden {
+                    UIView.animate(withDuration: 1) {
+                        self.downArrowImageView.alpha = 0
+                    } completion: { _ in
+                        self.downArrowImageView.isHidden = true
+                        self.downArrowImageView.alpha = 1
+                    }
                 }
-            }
-            
-            // Show up arrow with fade animation
-            upArrowImageView.isHidden = false
-            upArrowImageView.alpha = 0
-            UIView.animate(withDuration: 0.3) {
-                self.upArrowImageView.alpha = 1
-            }
-            
-            // Hide after 4 seconds
-            oddsChangeTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
-                DispatchQueue.main.async {
-                    self?.hideUpArrow()
+                
+                // Show up arrow with fade animation
+                upArrowImageView.isHidden = false
+                upArrowImageView.alpha = 0
+                UIView.animate(withDuration: 1) {
+                    self.upArrowImageView.alpha = 1
                 }
+                
+                // Hide after 4 seconds
+                oddsChangeTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
+                    DispatchQueue.main.async {
+                        self?.hideUpArrow()
+                    }
+                }
+            } else {
+                // Just show without animation
+                upArrowImageView.isHidden = false
+                upArrowImageView.alpha = 1
+                downArrowImageView.isHidden = true
             }
             
         case .decreased:
-            // Hide up arrow if visible
-            if !upArrowImageView.isHidden {
+            if animated {
+                // Hide up arrow if visible
+                if !upArrowImageView.isHidden {
+                    UIView.animate(withDuration: 0.3) {
+                        self.upArrowImageView.alpha = 0
+                    } completion: { _ in
+                        self.upArrowImageView.isHidden = true
+                        self.upArrowImageView.alpha = 1
+                    }
+                }
+                
+                // Show down arrow with fade animation
+                downArrowImageView.isHidden = false
+                downArrowImageView.alpha = 0
                 UIView.animate(withDuration: 0.3) {
-                    self.upArrowImageView.alpha = 0
-                } completion: { _ in
-                    self.upArrowImageView.isHidden = true
-                    self.upArrowImageView.alpha = 1
+                    self.downArrowImageView.alpha = 1
                 }
-            }
-            
-            // Show down arrow with fade animation
-            downArrowImageView.isHidden = false
-            downArrowImageView.alpha = 0
-            UIView.animate(withDuration: 0.3) {
-                self.downArrowImageView.alpha = 1
-            }
-            
-            // Hide after 4 seconds
-            oddsChangeTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
-                DispatchQueue.main.async {
-                    self?.hideDownArrow()
+                
+                // Hide after 4 seconds
+                oddsChangeTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
+                    DispatchQueue.main.async {
+                        self?.hideDownArrow()
+                    }
                 }
+            } else {
+                // Just show without animation
+                downArrowImageView.isHidden = false
+                downArrowImageView.alpha = 1
+                upArrowImageView.isHidden = true
             }
         }
     }

@@ -144,7 +144,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                                           isAvailable: true,
                                           matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)",
                                           marketDescription: matchData.marketInfo.marketName,
-                                          outcomeDescription: outcome?.title ?? "",
+                                          outcomeDescription: outcome?.completeName ?? "",
                                           homeParticipantName: matchData.homeParticipantName,
                                           awayParticipantName: matchData.awayParticipantName,
                                           sportIdCode: nil,
@@ -174,7 +174,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         // Parse the date string to a Date object
         let matchDate = parseMatchDateString(matchData.leagueInfo.matchTime)
         
-        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.title ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil, competition: matchData.leagueInfo.competitionName, date: matchDate)
+        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: matchData.marketInfo.marketName, matchId: matchData.matchId, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(matchData.homeParticipantName) - \(matchData.awayParticipantName)", marketDescription: matchData.marketInfo.marketName, outcomeDescription: outcome?.completeName ?? "", homeParticipantName: matchData.homeParticipantName, awayParticipantName: matchData.awayParticipantName, sportIdCode: nil, competition: matchData.leagueInfo.competitionName, date: matchDate)
         
         Env.betslipManager.removeBettingTicket(bettingTicket)
     }

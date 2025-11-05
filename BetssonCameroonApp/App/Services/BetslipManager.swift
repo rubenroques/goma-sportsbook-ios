@@ -244,6 +244,7 @@ class BetslipManager: NSObject {
                         return
                     }
                     let internalMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: market)
+                    print("Updating market: \(market)")
                     self?.updateBettingTickets(ofMarket: internalMarket)
                 case .disconnected:
                     print("Single outcome subscription disconnected")
@@ -283,9 +284,11 @@ class BetslipManager: NSObject {
     private func updateBettingTickets(ofMarket market: Market) {
         
         for outcome in market.outcomes {
-            if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.id] {
+            if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.bettingOffer.id] {
                 let newAvailablity = market.isAvailable
                 let newOdd = outcome.bettingOffer.odd
+                let outcomeDescription = outcome.codeName != outcome.typeName ? "\(outcome.codeName) (\(outcome.typeName))" : outcome.codeName
+                
                 let newBettingTicket = BettingTicket(id: bettingTicket.id,
                                                      outcomeId: bettingTicket.outcomeId,
                                                      marketId: bettingTicket.marketId,
@@ -294,7 +297,7 @@ class BetslipManager: NSObject {
                                                      isAvailable: newAvailablity,
                                                      matchDescription: market.eventName ?? bettingTicket.matchDescription,
                                                      marketDescription: outcome.marketName ?? bettingTicket.marketDescription,
-                                                     outcomeDescription: outcome.translatedName,
+                                                     outcomeDescription: outcomeDescription,
                                                      homeParticipantName: market.homeParticipant ?? bettingTicket.homeParticipantName,
                                                      awayParticipantName: market.awayParticipant ?? bettingTicket.awayParticipantName,
                                                      sport: market.sport ?? bettingTicket.sport,
@@ -307,6 +310,7 @@ class BetslipManager: NSObject {
 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
                 self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+                self.validateBettingOptions()
             }
         }
     }

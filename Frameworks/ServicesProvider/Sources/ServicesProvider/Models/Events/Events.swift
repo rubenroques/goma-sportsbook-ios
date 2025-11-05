@@ -542,6 +542,8 @@ public class Outcome: Codable, Equatable, Hashable {
 
     public var id: String
     public var name: String
+    public var shortName: String?
+    public var typeName: String?
     public var odd: OddFormat
     public var marketId: String?
     public var bettingOfferId: String?
@@ -568,6 +570,8 @@ public class Outcome: Codable, Equatable, Hashable {
 
     public init(id: String,
                 name: String,
+                shortName: String? = nil,
+                typeName: String? = nil,
                 odd: OddFormat,
                 marketId: String? = nil,
                 bettingOfferId: String? = nil,
@@ -579,6 +583,8 @@ public class Outcome: Codable, Equatable, Hashable {
 
         self.id = id
         self.name = name
+        self.shortName = shortName
+        self.typeName = typeName
         self.odd = odd
         self.marketId = marketId
         self.bettingOfferId = bettingOfferId

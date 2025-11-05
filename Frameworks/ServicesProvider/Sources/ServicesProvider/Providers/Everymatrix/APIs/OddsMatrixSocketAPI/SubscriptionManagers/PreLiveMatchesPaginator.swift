@@ -669,6 +669,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             id: outcome.id,
             name: outcome.name,
             shortName: outcome.shortName,
+            typeName: outcome.typeName,
             code: outcome.code,
             bettingOffers: [modifiedOffer], // Use only the modified offer
             headerName: outcome.headerName,

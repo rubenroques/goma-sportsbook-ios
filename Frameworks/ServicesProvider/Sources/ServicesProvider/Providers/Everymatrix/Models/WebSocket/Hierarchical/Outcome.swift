@@ -12,6 +12,7 @@ extension EveryMatrix {
         let id: String
         let name: String
         let shortName: String?
+        let typeName: String?
         let code: String
         let bettingOffers: [BettingOffer]
         let headerName: String?

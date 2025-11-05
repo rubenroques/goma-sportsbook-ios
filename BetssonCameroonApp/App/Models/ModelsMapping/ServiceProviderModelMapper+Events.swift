@@ -316,8 +316,8 @@ extension ServiceProviderModelMapper {
         
         let mappedOutcome = Outcome(id: outcome.id,
                                     codeName: outcome.name,
-                                    typeName: outcome.name,
-                                    translatedName: outcome.name,
+                                    typeName: outcome.typeName ?? "",
+                                    translatedName: outcome.shortName ?? outcome.name,
                                     marketName: marketName,
                                     marketId: outcome.marketId,
                                     bettingOffer: bettingOffer,

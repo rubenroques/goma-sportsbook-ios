@@ -138,10 +138,13 @@ extension EveryMatrixModelMapper {
         let bestOffer = internalOutcome.bettingOffers.first { $0.isAvailable }
         let odds = bestOffer?.odds ?? 0.0
         let isTradable = bestOffer?.isAvailable ?? false
-
+        let completeName = internalOutcome.name != internalOutcome.typeName ? "\(internalOutcome.name) (\(internalOutcome.typeName ?? ""))" : internalOutcome.name
+        
         return Outcome(
             id: internalOutcome.id,
-            name: internalOutcome.shortName ?? internalOutcome.name,
+            name: internalOutcome.name,
+            shortName: internalOutcome.shortName,
+            typeName: internalOutcome.typeName,
             odd: OddFormat.decimal(odd: odds),
             marketId: nil, // Not available at outcome level
             bettingOfferId: bestOffer?.id,

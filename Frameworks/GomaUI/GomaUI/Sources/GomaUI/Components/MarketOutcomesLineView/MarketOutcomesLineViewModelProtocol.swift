@@ -6,6 +6,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
     public let id: String
     public let bettingOfferId: String?
     public let title: String
+    public let completeName: String?
     public let value: String
     public let oddsChangeDirection: OddsChangeDirection
     public let isSelected: Bool
@@ -18,6 +19,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
     public init(id: String,
                 bettingOfferId: String?,
                 title: String,
+                completeName: String? = nil,
                 value: String,
                 oddsChangeDirection: OddsChangeDirection = .none,
                 isSelected: Bool = false,
@@ -27,6 +29,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
         self.id = id
         self.bettingOfferId = bettingOfferId
         self.title = title
+        self.completeName = completeName
         self.value = value
         self.oddsChangeDirection = oddsChangeDirection
         self.isSelected = isSelected
@@ -42,6 +45,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
             id: self.id,
             bettingOfferId: self.bettingOfferId,
             title: self.title,
+            completeName: self.completeName,
             value: newValue,
             oddsChangeDirection: direction,
             isSelected: self.isSelected,
@@ -57,6 +61,7 @@ public struct MarketOutcomeData: Equatable, Hashable {
             id: self.id,
             bettingOfferId: self.bettingOfferId,
             title: self.title,
+            completeName: self.completeName,
             value: self.value,
             oddsChangeDirection: .none,
             isSelected: self.isSelected,
