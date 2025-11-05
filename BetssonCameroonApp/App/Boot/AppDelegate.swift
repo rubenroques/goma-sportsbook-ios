@@ -96,6 +96,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initialize XtremePush
         XPush.applicationDidFinishLaunching(options: launchOptions)
 
+        XPush.startInappPoll()
+        
         UNUserNotificationCenter.current().delegate = self
 
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]

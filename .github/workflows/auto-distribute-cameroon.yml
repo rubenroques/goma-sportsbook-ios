@@ -39,22 +39,20 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
+          bundler-cache: true  # Automatically runs bundle install and caches gems
           working-directory: BetssonCameroonApp
-
-      - name: Install Fastlane dependencies
-        working-directory: BetssonCameroonApp
-        run: |
-          bundle install
 
       - name: Setup App Store Connect API Key
         working-directory: BetssonCameroonApp/fastlane
         env:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
         run: |
+          echo "📝 Setting up App Store Connect API Key..."
           # Write the .p8 file from secret
           echo "$APP_STORE_CONNECT_API_KEY_CONTENT" > AuthKey_7NC93JSN42.p8
           chmod 600 AuthKey_7NC93JSN42.p8
+          echo "✅ API Key file created: AuthKey_7NC93JSN42.p8"
+          ls -lh AuthKey_7NC93JSN42.p8
 
       - name: Setup environment variables
         working-directory: BetssonCameroonApp/fastlane
@@ -69,6 +67,7 @@ jobs:
           BETSSONCM_STG_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_STG_FIREBASE_APP_ID }}
           BETSSONCM_PROD_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_PROD_FIREBASE_APP_ID }}
         run: |
+          echo "📝 Creating .env file from GitHub secrets..."
           # Create .env file from secrets
           # Note: FIREBASE_DISTRIBUTION_GROUPS and TESTERS are defined in Fastfile as constants
           cat > .env << EOF
@@ -83,16 +82,27 @@ jobs:
           BETSSONCM_STG_FIREBASE_APP_ID=$BETSSONCM_STG_FIREBASE_APP_ID
           BETSSONCM_PROD_FIREBASE_APP_ID=$BETSSONCM_PROD_FIREBASE_APP_ID
           EOF
+          echo "✅ .env file created"
+          echo "📋 Environment variables (secrets masked):"
+          echo "   - MATCH_GIT_URL: ${MATCH_GIT_URL:0:30}..."
+          echo "   - GOMA_TEAM_ID: $GOMA_TEAM_ID"
+          echo "   - APP_STORE_CONNECT_API_KEY_ID: $APP_STORE_CONNECT_API_KEY_ID"
+          echo "   - FIREBASE_PROJECT_NUMBER: $FIREBASE_PROJECT_NUMBER"
 
       - name: Setup SSH for Match
         env:
           MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
         run: |
+          echo "🔑 Setting up SSH for Match certificates repo..."
           mkdir -p ~/.ssh
           echo "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/match_deploy_key
           chmod 600 ~/.ssh/match_deploy_key
+          echo "✅ SSH key installed"
+
+          echo "📡 Adding github.com to known hosts..."
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+          echo "⚙️  Configuring SSH to use deploy key..."
           # Configure git to use the SSH key
           cat > ~/.ssh/config << EOF
           Host github.com
@@ -100,38 +110,64 @@ jobs:
             IdentityFile ~/.ssh/match_deploy_key
             IdentitiesOnly yes
           EOF
+          echo "✅ SSH configuration complete"
 
       - name: Determine environment
         id: determine-env
         run: |
+          echo "🎯 Determining deployment environment..."
+          echo "📌 Trigger: ${{ github.event_name }}"
+
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-            echo "release_notes=${{ github.event.inputs.release_notes }}" >> $GITHUB_OUTPUT
+            ENV="${{ github.event.inputs.environment }}"
+            NOTES="${{ github.event.inputs.release_notes }}"
+            echo "✅ Manual trigger - Environment: $ENV"
+            echo "environment=$ENV" >> $GITHUB_OUTPUT
+            echo "release_notes=$NOTES" >> $GITHUB_OUTPUT
           else
             # Push to devices.csv triggers staging
+            echo "✅ Automatic trigger (devices.csv changed) - Environment: staging"
             echo "environment=staging" >> $GITHUB_OUTPUT
             echo "release_notes=Automated build with updated device list" >> $GITHUB_OUTPUT
           fi
+
+          echo "📝 Release notes: $(cat $GITHUB_OUTPUT | grep release_notes | cut -d'=' -f2-)"
 
       - name: Keep version and distribute (Staging)
         if: steps.determine-env.outputs.environment == 'staging'
         working-directory: BetssonCameroonApp
         run: |
+          echo "🚀 Starting distribution to STAGING environment..."
+          echo "📦 Build will keep current version number"
+          echo "📱 Devices will be registered from devices.csv"
+
           if [ -n "${{ steps.determine-env.outputs.release_notes }}" ]; then
+            echo "📝 Using custom release notes"
             bundle exec fastlane keep_version_distribute_staging release_notes:"${{ steps.determine-env.outputs.release_notes }}"
           else
+            echo "📝 Using default release notes"
             bundle exec fastlane keep_version_distribute_staging
           fi
+
+          echo "✅ Distribution to staging complete!"
 
       - name: Keep version and distribute (Production)
         if: steps.determine-env.outputs.environment == 'production'
         working-directory: BetssonCameroonApp
         run: |
+          echo "🚀 Starting distribution to PRODUCTION environment..."
+          echo "📦 Build will keep current version number"
+          echo "📱 Devices will be registered from devices.csv"
+
           if [ -n "${{ steps.determine-env.outputs.release_notes }}" ]; then
+            echo "📝 Using custom release notes"
             bundle exec fastlane keep_version_distribute_production release_notes:"${{ steps.determine-env.outputs.release_notes }}"
           else
+            echo "📝 Using default release notes"
             bundle exec fastlane keep_version_distribute_production
           fi
+
+          echo "✅ Distribution to production complete!"
 
       - name: Upload build artifacts (on failure)
         if: failure()
@@ -146,6 +182,8 @@ jobs:
       - name: Cleanup
         if: always()
         run: |
-          rm -f ~/.ssh/match_deploy_key
-          rm -f BetssonCameroonApp/fastlane/.env
-          rm -f BetssonCameroonApp/fastlane/AuthKey_7NC93JSN42.p8
+          echo "🧹 Cleaning up sensitive files..."
+          rm -f ~/.ssh/match_deploy_key && echo "   ✅ Removed SSH key"
+          rm -f BetssonCameroonApp/fastlane/.env && echo "   ✅ Removed .env file"
+          rm -f BetssonCameroonApp/fastlane/AuthKey_7NC93JSN42.p8 && echo "   ✅ Removed API key"
+          echo "✅ Cleanup complete"
