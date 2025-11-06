@@ -21,3 +21,4 @@ public struct BetslipTicketsState: Equatable {
     public static let `default` = BetslipTicketsState(invalidState: .none, betBuilderData: nil)
 }
 
+

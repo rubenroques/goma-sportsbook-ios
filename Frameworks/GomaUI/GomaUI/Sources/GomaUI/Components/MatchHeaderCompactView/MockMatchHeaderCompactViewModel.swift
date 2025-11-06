@@ -20,6 +20,21 @@ public final class MockMatchHeaderCompactViewModel: MatchHeaderCompactViewModelP
     
     // MARK: - Methods
     public func handleStatisticsTap() {
+        // Toggle the collapsed state
+        let currentData = headerData
+        headerData = MatchHeaderCompactData(
+            homeTeamName: currentData.homeTeamName,
+            awayTeamName: currentData.awayTeamName,
+            sport: currentData.sport,
+            competition: currentData.competition,
+            league: currentData.league,
+            hasStatistics: currentData.hasStatistics,
+            isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
+            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle
+        )
+        
+        // Also call the callback
         onStatisticsTapped?()
     }
 }

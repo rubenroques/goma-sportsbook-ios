@@ -9,6 +9,9 @@ public struct MatchHeaderCompactData: Equatable {
     public let competition: String
     public let league: String
     public let hasStatistics: Bool
+    public let isStatisticsCollapsed: Bool
+    public let statisticsCollapsedTitle: String
+    public let statisticsExpandedTitle: String
     
     public init(
         homeTeamName: String,
@@ -16,7 +19,10 @@ public struct MatchHeaderCompactData: Equatable {
         sport: String,
         competition: String,
         league: String,
-        hasStatistics: Bool = true
+        hasStatistics: Bool = true,
+        isStatisticsCollapsed: Bool = true,
+        statisticsCollapsedTitle: String = "View Statistics",
+        statisticsExpandedTitle: String = "Close Statistics"
     ) {
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
@@ -24,6 +30,9 @@ public struct MatchHeaderCompactData: Equatable {
         self.competition = competition
         self.league = league
         self.hasStatistics = hasStatistics
+        self.isStatisticsCollapsed = isStatisticsCollapsed
+        self.statisticsCollapsedTitle = statisticsCollapsedTitle
+        self.statisticsExpandedTitle = statisticsExpandedTitle
     }
 }
 

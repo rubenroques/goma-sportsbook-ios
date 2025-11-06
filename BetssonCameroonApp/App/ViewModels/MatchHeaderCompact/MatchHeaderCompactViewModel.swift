@@ -43,6 +43,22 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
     // MARK: - MatchHeaderCompactViewModelProtocol
     
     func handleStatisticsTap() {
+        // Toggle the collapsed state
+        let currentData = headerDataSubject.value
+        let updatedData = MatchHeaderCompactData(
+            homeTeamName: currentData.homeTeamName,
+            awayTeamName: currentData.awayTeamName,
+            sport: currentData.sport,
+            competition: currentData.competition,
+            league: currentData.league,
+            hasStatistics: currentData.hasStatistics,
+            isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
+            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle
+        )
+        headerDataSubject.send(updatedData)
+        
+        // Also call the callback
         onStatisticsTapped?()
     }
     
@@ -71,7 +87,10 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
             sport: sportName,
             competition: competitionName,
             league: leagueName,
-            hasStatistics: true // Always show statistics button for now
+            hasStatistics: false,
+            isStatisticsCollapsed: true,
+            statisticsCollapsedTitle: localized("view_statistics"),
+            statisticsExpandedTitle: localized("close_statistics")
         )
     }
 }
@@ -90,7 +109,10 @@ extension MatchHeaderCompactViewModel {
             sport: currentData.sport,
             competition: currentData.competition,
             league: currentData.league,
-            hasStatistics: currentData.hasStatistics
+            hasStatistics: currentData.hasStatistics,
+            isStatisticsCollapsed: currentData.isStatisticsCollapsed,
+            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle
         )
         
         headerDataSubject.send(updatedData)
@@ -106,7 +128,10 @@ extension MatchHeaderCompactViewModel {
             sport: currentData.sport,
             competition: currentData.competition,
             league: currentData.league,
-            hasStatistics: hasStatistics
+            hasStatistics: hasStatistics,
+            isStatisticsCollapsed: currentData.isStatisticsCollapsed,
+            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle
         )
         
         headerDataSubject.send(updatedData)
