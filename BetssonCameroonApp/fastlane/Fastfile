@@ -197,7 +197,7 @@ platform :ios do
       force_for_new_devices: true,  # Always force to pick up newly registered devices
       readonly: false,
       force: false,
-      verbose: options[:verbose] || false,
+      verbose: true,
       git_url: ENV["MATCH_GIT_URL"],
       team_id: ENV["GOMA_TEAM_ID"],
       app_identifier: BUNDLE_ID_MAPPING[internal_id].values
@@ -209,8 +209,6 @@ platform :ios do
 
   desc "Internal: Build and distribute to Firebase"
   private_lane :build_and_distribute_to_firebase do |options|
-    is_verbose = options[:verbose] == true
-
     UI.message "🚀 Starting distribution process for Betsson Cameroon..."
 
     app_scheme = options[:app_scheme]
@@ -233,7 +231,7 @@ platform :ios do
       UI.user_error!("Invalid scheme: #{app_scheme}. Must be one of: #{SCHEME_MAPPING.keys.join(', ')}")
     end
 
-    UI.message "🔍 Using internal ID: #{internal_id}" if is_verbose
+    UI.message "🔍 Using internal ID: #{internal_id}"
 
     # Validate environment variables
     unless ENV["#{internal_id}_FIREBASE_APP_ID"]
@@ -258,24 +256,22 @@ platform :ios do
     setup_api_key
 
     # Update certificates
-    UI.message "🔐 Updating certificates..." if is_verbose
-    certificates(app_scheme: app_scheme, verbose: is_verbose)
+    UI.message "🔐 Updating certificates..."
+    certificates(app_scheme: app_scheme, verbose: true)
 
     # Print Xcode version
-    if is_verbose
-      UI.message "🛠 Xcode Version:"
-      sh("xcodebuild -version")
-    end
+    UI.message "🛠 Xcode Version:"
+    sh("xcodebuild -version")
 
-    UI.message "🏗 Starting build process..." if is_verbose
+    UI.message "🏗 Starting build process..."
 
     # Build app with detailed output
     build_ios_app(
       scheme: app_scheme,
       workspace: "../Sportsbook.xcworkspace",
       clean: true,
-      silent: !is_verbose,
-      suppress_xcode_output: !is_verbose,
+      silent: false,
+      suppress_xcode_output: false,
       skip_profile_detection: true,
       export_method: "ad-hoc",
       export_options: {
@@ -285,13 +281,13 @@ platform :ios do
         manageAppVersionAndBuildNumber: false,
         provisioningProfiles: PROVISIONING_PROFILE_MAPPING[internal_id]
       },
-      xcargs: is_verbose ? "-verbose" : nil,
+      xcargs: "-verbose",
       buildlog_path: "fastlane/logs",
       output_directory: "fastlane/builds",
-      analyze_build_time: is_verbose,
+      analyze_build_time: true,
       include_symbols: true,
       include_bitcode: false,
-      export_xcargs: is_verbose ? "-verbose" : nil,
+      export_xcargs: "-verbose",
       xcodebuild_formatter: nil
     )
 
@@ -302,7 +298,7 @@ platform :ios do
       app: ENV["#{internal_id}_FIREBASE_APP_ID"],
       firebase_cli_token: firebase_cli_token,
       release_notes: release_notes,
-      debug: is_verbose
+      debug: true
     }
 
     # Add groups if specified
@@ -324,8 +320,7 @@ platform :ios do
 
     # Step 2: Register devices and distribute
     keep_version_distribute_staging(
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
+      release_notes: options[:release_notes]
     )
   end
 
@@ -336,8 +331,7 @@ platform :ios do
 
     # Step 2: Register devices and distribute
     keep_version_distribute_production(
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
+      release_notes: options[:release_notes]
     )
   end
 
@@ -348,13 +342,11 @@ platform :ios do
 
     # Step 2: Distribute to both environments
     keep_version_distribute_staging(
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
+      release_notes: options[:release_notes]
     )
 
     keep_version_distribute_production(
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
+      release_notes: options[:release_notes]
     )
   end
 
@@ -458,7 +450,7 @@ platform :ios do
       force_for_new_devices: true,  # Force regeneration with new devices
       readonly: false,
       force: false,
-      verbose: options[:verbose] || false,
+      verbose: true,
       git_url: ENV["MATCH_GIT_URL"],
       team_id: ENV["GOMA_TEAM_ID"],
       app_identifier: BUNDLE_ID_MAPPING[internal_id].values
@@ -475,7 +467,7 @@ platform :ios do
   desc "Keep version and distribute to Staging (SAME build, registers devices, distributes)"
   lane :keep_version_distribute_staging do |options|
     # Step 1: Register devices from devices.csv
-    register_new_devices(app_scheme: "BetssonCM Staging", verbose: options[:verbose])
+    register_new_devices(app_scheme: "BetssonCM Staging")
 
     # Step 2: Build and distribute with updated profile
     release_notes = options[:release_notes]
@@ -489,8 +481,7 @@ platform :ios do
 
     build_and_distribute_to_firebase(
       app_scheme: "BetssonCM Staging",
-      release_notes: release_notes,
-      verbose: options[:verbose]
+      release_notes: release_notes
     )
 
     UI.success "🎉 Distribution completed (same build number)!"
@@ -499,7 +490,7 @@ platform :ios do
   desc "Keep version and distribute to Production (SAME build, registers devices, distributes)"
   lane :keep_version_distribute_production do |options|
     # Step 1: Register devices from devices.csv
-    register_new_devices(app_scheme: "BetssonCM Prod", verbose: options[:verbose])
+    register_new_devices(app_scheme: "BetssonCM Prod")
 
     # Step 2: Build and distribute with updated profile
     release_notes = options[:release_notes]
@@ -513,8 +504,7 @@ platform :ios do
 
     build_and_distribute_to_firebase(
       app_scheme: "BetssonCM Prod",
-      release_notes: release_notes,
-      verbose: options[:verbose]
+      release_notes: release_notes
     )
 
     UI.success "🎉 Distribution completed (same build number)!"
@@ -523,13 +513,11 @@ platform :ios do
   desc "Keep version and distribute to both Staging and Production (SAME build)"
   lane :keep_version_distribute_all do |options|
     keep_version_distribute_staging(
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
+      release_notes: options[:release_notes]
     )
 
     keep_version_distribute_production(
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
+      release_notes: options[:release_notes]
     )
   end
 
