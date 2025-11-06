@@ -122,6 +122,40 @@ jobs:
           EOF
           echo "✅ SSH configuration complete"
 
+      - name: Setup Keychain for Code Signing
+        run: |
+          echo "🔐 Setting up temporary keychain for CI..."
+
+          # Keychain configuration
+          KEYCHAIN_NAME="ci-build.keychain-db"
+          KEYCHAIN_PASSWORD="ci-temporary-password"
+          KEYCHAIN_PATH="$HOME/Library/Keychains/$KEYCHAIN_NAME"
+
+          # Create temporary keychain
+          echo "📝 Creating temporary keychain: $KEYCHAIN_NAME"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          # Set the keychain as default
+          echo "🔧 Setting keychain as default..."
+          security default-keychain -s "$KEYCHAIN_PATH"
+
+          # Unlock the keychain (timeout set to 1 hour = 3600 seconds)
+          echo "🔓 Unlocking keychain..."
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
+
+          # Add to keychain search list
+          echo "🔍 Adding keychain to search list..."
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
+
+          # Store keychain info for fastlane
+          echo "KEYCHAIN_NAME=$KEYCHAIN_NAME" >> $GITHUB_ENV
+          echo "KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> $GITHUB_ENV
+
+          echo "✅ Keychain setup complete"
+          echo "📋 Current keychains:"
+          security list-keychains -d user
+
       - name: Determine environment
         id: determine-env
         run: |
@@ -220,6 +254,17 @@ jobs:
         if: always()
         run: |
           echo "🧹 Cleaning up sensitive files..."
+
+          # Remove temporary keychain if it exists
+          if [ -n "$KEYCHAIN_NAME" ]; then
+            KEYCHAIN_PATH="$HOME/Library/Keychains/$KEYCHAIN_NAME"
+            if [ -f "$KEYCHAIN_PATH" ]; then
+              echo "🔐 Removing temporary keychain: $KEYCHAIN_NAME"
+              security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
+              echo "   ✅ Removed temporary keychain"
+            fi
+          fi
+
           rm -f ~/.ssh/match_deploy_key && echo "   ✅ Removed SSH key"
           rm -f BetssonCameroonApp/fastlane/.env && echo "   ✅ Removed .env file"
           rm -f BetssonCameroonApp/fastlane/AuthKey_7NC93JSN42.p8 && echo "   ✅ Removed API key"

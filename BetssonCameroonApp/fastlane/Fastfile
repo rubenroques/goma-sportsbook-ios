@@ -203,6 +203,13 @@ platform :ios do
       app_identifier: BUNDLE_ID_MAPPING[internal_id].values
     }
 
+    # Add keychain configuration if running in CI
+    if ENV["KEYCHAIN_NAME"] && ENV["KEYCHAIN_PASSWORD"]
+      UI.message "🔐 Using CI keychain: #{ENV['KEYCHAIN_NAME']}"
+      match_params[:keychain_name] = ENV["KEYCHAIN_NAME"]
+      match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
+    end
+
     # Fetch certificates and profiles
     match(match_params)
   end
@@ -456,6 +463,13 @@ platform :ios do
       app_identifier: BUNDLE_ID_MAPPING[internal_id].values
       # Note: API Key authentication is automatic via lane context
     }
+
+    # Add keychain configuration if running in CI
+    if ENV["KEYCHAIN_NAME"] && ENV["KEYCHAIN_PASSWORD"]
+      UI.message "🔐 Using CI keychain: #{ENV['KEYCHAIN_NAME']}"
+      match_params[:keychain_name] = ENV["KEYCHAIN_NAME"]
+      match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
+    end
 
     match(match_params)
 
