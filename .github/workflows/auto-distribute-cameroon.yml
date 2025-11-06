@@ -98,6 +98,9 @@ jobs:
           echo "   - GOMA_TEAM_ID: $GOMA_TEAM_ID"
           echo "   - APP_STORE_CONNECT_API_KEY_ID: $APP_STORE_CONNECT_API_KEY_ID"
           echo "   - FIREBASE_PROJECT_NUMBER: $FIREBASE_PROJECT_NUMBER"
+          echo "   - FIREBASE_CLI_TOKEN: ${FIREBASE_CLI_TOKEN:+SET (${#FIREBASE_CLI_TOKEN} chars)}"
+          echo "   - BETSSONCM_STG_FIREBASE_APP_ID: ${BETSSONCM_STG_FIREBASE_APP_ID:+SET}"
+          echo "   - BETSSONCM_PROD_FIREBASE_APP_ID: ${BETSSONCM_PROD_FIREBASE_APP_ID:+SET}"
 
       - name: Setup SSH for Match
         env:

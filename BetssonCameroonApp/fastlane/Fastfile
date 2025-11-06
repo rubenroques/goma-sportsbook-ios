@@ -250,6 +250,11 @@ platform :ios do
       UI.user_error!("Missing FIREBASE_CLI_TOKEN in .env file")
     end
 
+    # Debug: Verify token is present (mask actual value for security)
+    UI.message "🔍 Firebase CLI token present: #{firebase_cli_token ? 'YES' : 'NO'}"
+    UI.message "🔍 Firebase CLI token length: #{firebase_cli_token ? firebase_cli_token.length : 0} characters"
+    UI.message "🔍 Firebase App ID: #{ENV["#{internal_id}_FIREBASE_APP_ID"]}"
+
     # Use distribution groups/testers from constants (defined at top of Fastfile)
     firebase_groups = FIREBASE_DISTRIBUTION_GROUPS
     firebase_testers = FIREBASE_DISTRIBUTION_TESTERS
@@ -276,7 +281,7 @@ platform :ios do
     build_ios_app(
       scheme: app_scheme,
       workspace: "../Sportsbook.xcworkspace",
-      clean: true,
+      clean: false,
       silent: false,
       suppress_xcode_output: false,
       skip_profile_detection: true,
