@@ -210,7 +210,7 @@ class AppStateManager {
     }
     
     private func setupGomaUIComponents() {
-        // Setup GomaUI components StyleProviderColors (from Bootstrap.swift:66-72)
+        // Setup GomaUI components StyleProviderColors
         themeCancellable = ThemeService.shared.themePublisher
             .removeDuplicates()
             .map(StyleProviderColors.create(fromTheme:))
@@ -219,7 +219,7 @@ class AppStateManager {
                 GomaUI.StyleProvider.customize(colors: styleProviderColors)
             }
 
-        // Setup GomaUI components Fonts (from Bootstrap.swift:75-78)
+        // Setup GomaUI components Fonts
         GomaUI.StyleProvider.setFontProvider({ (type: StyleProvider.FontType, size: CGFloat) -> UIFont in
             let appFont = AppFont.AppFontType.fontTypeFrom(styleProviderFontType: type)
             return AppFont.with(type: appFont, size: size)
