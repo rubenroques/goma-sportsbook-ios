@@ -28,7 +28,7 @@ on:
 jobs:
   auto-distribute:
     name: Register Devices & Distribute
-    runs-on: macos-14  # macOS runner with Xcode
+    runs-on: macos-26  # macOS runner with Xcode
     timeout-minutes: 60
 
     steps:
