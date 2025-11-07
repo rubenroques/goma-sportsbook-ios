@@ -8,6 +8,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     // MARK: - Properties
     private let dataSubject: CurrentValueSubject<BetInfoSubmissionData, Never>
     private let currency: String
+    private var hasValidTickets: Bool = true
     
     // Child view models
     public var oddsRowViewModel: BetSummaryRowViewModelProtocol
@@ -210,7 +211,10 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         placeBetButtonViewModel.setEnabled(isEnabled)
     }
     
-
+    public func updateHasValidTickets(_ hasValidTickets: Bool) {
+        self.hasValidTickets = hasValidTickets
+        updatePlaceBetButtonState()
+    }
     
     public func onQuickAddTapped(_ amount: Int) {
         // Get the current amount and add the new amount
@@ -277,7 +281,8 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     }
     
     private func updatePlaceBetButtonState() {
-        let isEnabled = !currentData.amount.isEmpty
+        // Button is only enabled if we have an amount AND all tickets are valid
+        let isEnabled = !currentData.amount.isEmpty && hasValidTickets
         placeBetButtonViewModel.setEnabled(isEnabled)
     }
 }

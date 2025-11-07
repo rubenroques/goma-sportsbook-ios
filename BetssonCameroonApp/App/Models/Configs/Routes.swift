@@ -8,22 +8,16 @@
 import Foundation
 
 enum Route {
-    case openBet(id: String)
-    case resolvedBet(id: String)
-    case event(id: String)
-    case ticket(id: String)
-    case chatMessage(id: String)
-    case chatNotifications
-    case contactSettings
-    case betSwipe
-    case competition(id: String)
+    case register
+    case login
+    case sportsHome
+    case liveGames
+    case myBets
+    case sportsSearch
+    case casinoHome
+    case casinoVirtuals
+    case casinoGame(gameId: String)
+    case casinoSearch
     case deposit
-    case bonus
-    case documents
-    case customerSupport
-    case favorites
-    case promotions
-    case referral(code: String)
-    case responsibleForm
     case none
 }

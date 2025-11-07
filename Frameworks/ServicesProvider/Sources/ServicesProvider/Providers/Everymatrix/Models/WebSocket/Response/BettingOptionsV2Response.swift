@@ -14,6 +14,8 @@ extension EveryMatrix {
         let freeBets: [FreeBet]?
         let oddsBoosts: [OddsBoost]?
         let stakeBacks: [StakeBack]?
+        let betBuilder: [BetBuilder]?
+        let forbiddenCombinations: [ForbiddenCombination]?
         let availableForManualBetRequest: Bool?
         let maxWinningAndTaxes: MaxWinningAndTaxes?
 
@@ -44,6 +46,35 @@ extension EveryMatrix {
             let currency: String?
             let minStake: Double?
             let maxStake: Double?
+        }
+
+        /// Bet builder information
+        struct BetBuilder: Codable {
+            let selections: [BetBuilderSelection]?
+            let betBuilderOdds: Double?
+        }
+
+        /// Bet builder selection information
+        struct BetBuilderSelection: Codable {
+            let bettingOfferId: String?
+            let outcomeId: String?
+            let bettingTypeId: String?
+            let priceValue: Double?
+            let banker: Bool?
+        }
+
+        /// Forbidden combination information
+        struct ForbiddenCombination: Codable {
+            let selections: [ForbiddenCombinationSelection]?
+        }
+
+        /// Forbidden combination selection information
+        struct ForbiddenCombinationSelection: Codable {
+            let bettingOfferId: String?
+            let outcomeId: String?
+            let bettingTypeId: String?
+            let priceValue: Double?
+            let banker: Bool?
         }
 
         /// Tax and maximum winning information

@@ -16,6 +16,27 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     private var environment: Environment
     
+    // Store ticket view models to track odds changes
+    private var ticketViewModels: [String: MockBetslipTicketViewModel] = [:]
+    
+    // Track combined tickets state (invalid state + bet builder data)
+    private let ticketsStateSubject = CurrentValueSubject<BetslipTicketsState, Never>(.default)
+    public var ticketsStatePublisher: AnyPublisher<BetslipTicketsState, Never> {
+        return ticketsStateSubject.eraseToAnyPublisher()
+    }
+    public var ticketsState: BetslipTicketsState {
+        return ticketsStateSubject.value
+    }
+    
+    // Convenience accessors for backward compatibility
+    public var ticketsInvalidState: TicketsInvalidState {
+        return ticketsStateSubject.value.invalidState
+    }
+    
+    public var betBuilderData: BetBuilderData? {
+        return ticketsStateSubject.value.betBuilderData
+    }
+    
     // MARK: - Child View Models
     public var bookingCodeButtonViewModel: ButtonIconViewModelProtocol
     public var clearBetslipButtonViewModel: ButtonIconViewModelProtocol
@@ -195,10 +216,78 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
     // MARK: - Public Methods
     public func removeTicket(_ ticket: BettingTicket) {
         environment.betslipManager.removeBettingTicket(ticket)
+        // Clean up the view model when ticket is removed
+        ticketViewModels.removeValue(forKey: ticket.id)
     }
     
     public func clearAllTickets() {
         environment.betslipManager.clearAllBettingTickets()
+        // Clean up all view models when clearing betslip
+        ticketViewModels.removeAll()
+    }
+    
+    /// Gets or creates a ticket view model, tracking odds changes
+    public func getTicketViewModel(
+        for ticket: BettingTicket,
+        isEnabled: Bool,
+        disabledMessage: String?,
+        formattedDate: String?
+    ) -> MockBetslipTicketViewModel {
+        let ticketId = ticket.id
+        let newOddsValue = String(format: "%.2f", ticket.decimalOdd)
+        
+        // Check if we already have a view model for this ticket
+        if let existingViewModel = ticketViewModels[ticketId] {
+            // Compare old odds with new odds to determine change state
+            let oldOddsValue = existingViewModel.currentData.oddsValue
+            let oldOdds = Double(oldOddsValue) ?? 0.0
+            let newOdds = ticket.decimalOdd
+            
+            let oddsChangeState: OddsChangeState
+            if abs(newOdds - oldOdds) < 0.01 {
+                // No significant change
+                oddsChangeState = .none
+            } else if newOdds > oldOdds {
+                // Odds increased
+                oddsChangeState = .increased
+            } else {
+                // Odds decreased
+                oddsChangeState = .decreased
+            }
+            
+            // Update the existing view model in place
+            existingViewModel.updateOddsValue(newOddsValue)
+            print("Updating VM Odds...")
+            existingViewModel.updateOddsChangeState(oddsChangeState)
+            
+            existingViewModel.setEnabled(isEnabled)
+            
+            // Update other fields that might have changed
+            if let date = formattedDate {
+                existingViewModel.updateStartDate(date)
+            }
+            
+            return existingViewModel
+        } else {
+            // Create new view model
+            let viewModel = MockBetslipTicketViewModel(
+                leagueName: ticket.competition ?? "Unknown League",
+                startDate: formattedDate ?? "Unknown Date",
+                homeTeam: ticket.homeParticipantName ?? "Home Team",
+                awayTeam: ticket.awayParticipantName ?? "Away Team",
+                selectedTeam: ticket.outcomeDescription,
+                oddsValue: newOddsValue,
+                oddsChangeState: .none,
+                isEnabled: isEnabled,
+                bettingOfferId: ticket.id,
+                disabledMessage: disabledMessage
+            )
+            
+            // Store it for future updates
+            ticketViewModels[ticketId] = viewModel
+            
+            return viewModel
+        }
     }
     
     // MARK: - Private Methods
@@ -207,18 +296,114 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         environment.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
-                self?.ticketsSubject.send(tickets)
-                // Recalculate odds
-                self?.calculateOdds()
-                // Recalculate potential winnings when tickets change
-                self?.calculatePotentialWinnings()
+                guard let self = self else { return }
+                
+                self.ticketsSubject.send(tickets)
 
                 // Forward selected outcomes to suggested bets VM (for cell selection state)
-                if let mockSuggested = self?.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
+                if let mockSuggested = self.suggestedBetsViewModel as? MockSuggestedBetsExpandedViewModel {
                     let selectedOutcomeIds = Set(tickets.map { String($0.outcomeId) })
                     mockSuggested.updateSelectedOutcomeIds(selectedOutcomeIds)
                 }
+                
+                // Clean up view models for tickets that no longer exist
+                let currentTicketIds = Set(tickets.map { $0.id })
+                let storedTicketIds = Set(self.ticketViewModels.keys)
+                let removedTicketIds = storedTicketIds.subtracting(currentTicketIds)
+                
+                for removedId in removedTicketIds {
+                    self.ticketViewModels.removeValue(forKey: removedId)
+                }
+                
+                // Update valid tickets state
+                self.updateValidTicketsState()
             }
+            .store(in: &cancellables)
+        
+        environment.betslipManager.bettingOptionsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingOptions in
+                guard let self = self else { return }
+                
+                // Extract odds from LoadableContent
+                if case .loaded(let options) = bettingOptions {
+                    // Determine tickets invalid state
+                    let invalidState: TicketsInvalidState
+                    
+                    if !options.forbiddenCombinations.isEmpty {
+                        invalidState = .forbidden
+                        print("⚠️ FORBIDDEN COMBINATIONS DETECTED - All tickets are forbidden")
+                    } else if options.totalOdds == nil || options.totalOdds == 0.0 {
+                        invalidState = .invalid
+                        print("⚠️ INVALID SELECTION DETECTED - totalOdds is nil or 0")
+                    } else {
+                        invalidState = .none
+                    }
+                    
+                    var betBuilderOdds: Double? = nil
+                    
+                    // Extract betBuilder selections (betting offer IDs that should be enabled)
+                    var betBuilderOfferIds = Set<String>()
+                    for betBuilder in options.betBuilders {
+                        
+                        // Set first set of betBuilder odds only
+                        if betBuilderOdds == nil {
+                            betBuilderOdds = betBuilder.betBuilderOdds
+                        }
+                        
+                        for selection in betBuilder.selections {
+                            if let bettingOfferId = selection.bettingOfferId {
+                                betBuilderOfferIds.insert(bettingOfferId)
+                            }
+                        }
+                    }
+                    
+                    // Create BetBuilderData if we have betBuilder data
+                    let betBuilderData: BetBuilderData?
+                    if let betBuilderOdds = betBuilderOdds, !betBuilderOfferIds.isEmpty {
+                        betBuilderData = BetBuilderData(
+                            totalOdds: betBuilderOdds,
+                            bettingOfferIds: Array(betBuilderOfferIds)
+                        )
+                        print("✅ BET BUILDER DETECTED with \(betBuilderOfferIds.count) valid selections @ \(betBuilderOdds)")
+                    } else {
+                        betBuilderData = nil
+                    }
+                    
+                    // Send combined state in a single update
+                    let ticketsState = BetslipTicketsState(
+                        invalidState: invalidState,
+                        betBuilderData: betBuilderData
+                    )
+                    self.ticketsStateSubject.send(ticketsState)
+                    
+                    // Update odds and calculate potential winnings with priority order
+                    let stake = self.betInfoSubmissionViewModel.currentData.amount
+                    
+                    if let betBuilderOdds {
+                        // Priority 1: Use betBuilder odds if present
+                        self.updateOdds(totalOdds: betBuilderOdds)
+                        self.calculatePotentialWinnings(totalOdds: betBuilderOdds, stake: stake)
+                    } else if invalidState != .none {
+                        // Priority 2: Set to 0 if invalid or forbidden
+                        self.updateOdds(totalOdds: 0.0)
+                        self.calculatePotentialWinnings(totalOdds: 0.0, stake: stake)
+                    } else if let totalOdds = options.totalOdds {
+                        // Priority 3: Use regular totalOdds
+                        self.updateOdds(totalOdds: totalOdds)
+                        self.calculatePotentialWinnings(totalOdds: totalOdds, stake: stake)
+                    } else {
+                        // Priority 4: Default to 0 if all else fails
+                        self.updateOdds(totalOdds: 0.0)
+                        self.calculatePotentialWinnings(totalOdds: 0.0, stake: stake)
+                    }
+                    
+                    // Update valid tickets state after processing betting options
+                    self.updateValidTicketsState()
+                }
+                
+                print("Betting Options fetched")
+            })
             .store(in: &cancellables)
         
         environment.userSessionStore.userProfilePublisher
@@ -279,7 +464,12 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         }
         
         betInfoSubmissionViewModel.amountChanged = { [weak self] in
-            self?.calculatePotentialWinnings()
+            if let amountDouble = Double(self?.betInfoSubmissionViewModel.currentData.amount ?? "") {
+                self?.environment.betslipManager.validateBettingOptions(withStake: amountDouble)
+            }
+            else {
+                self?.calculatePotentialWinnings(totalOdds: 0.0, stake: "0")
+            }
         }
         
         
@@ -293,6 +483,8 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         let stake = convertToDouble(betInfoSubmissionViewModel.currentData.amount)
 
         let oddsValidationType = oddsAcceptanceViewModel.currentData.state == .accepted ? "ACCEPT_ANY" : "ACCEPT_HIGHER"
+        
+        let betBuilderOdds = self.ticketsStateSubject.value.betBuilderData?.totalOdds
 
         // Capture current tickets before clearing
         let placedTickets = currentTickets
@@ -304,7 +496,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         // Show loading state
         self.isLoadingSubject.send(true)
 
-        environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType)
+        environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType, betBuilderOdds: betBuilderOdds)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 // Hide loading state
@@ -347,20 +539,13 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             .store(in: &cancellables)
     }
     
-    private func calculatePotentialWinnings() {
-        // Get the current amount from the bet info submission view model
-        let amountString = betInfoSubmissionViewModel.currentData.amount
-        guard let amount = Double(amountString), amount > 0 else {
+    private func calculatePotentialWinnings(totalOdds: Double, stake: String) {
+
+        guard let amount = Double(stake), amount > 0 else {
             // If no amount or invalid amount, set potential winnings to 0
             let currency = betInfoSubmissionViewModel.currentData.currency
             betInfoSubmissionViewModel.updatePotentialWinnings("\(currency) 0")
             return
-        }
-        
-        // Calculate total odds by multiplying each odd value sequentially
-        var totalOdds = 1.0
-        for ticket in currentTickets {
-            totalOdds *= ticket.decimalOdd
         }
         
         // Calculate potential winnings: amount * total odds
@@ -378,13 +563,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
     }
     
-    private func calculateOdds() {
-        
-        // Calculate total odds by multiplying each odd value sequentially
-        var totalOdds = 1.0
-        for ticket in currentTickets {
-            totalOdds *= ticket.decimalOdd
-        }
+    private func updateOdds(totalOdds: Double) {
         
         let formattedOdds = String(format: "%.2f", totalOdds)
 
@@ -402,6 +581,38 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         
         return Double(normalizedString) ?? 0.0
     }
+    
+    /// Evaluates if all tickets are valid/enabled and updates the bet info submission view model
+    private func updateValidTicketsState() {
+        let tickets = currentTickets
+        
+        // If no tickets, consider it as valid (allow button to be controlled by amount only)
+        guard !tickets.isEmpty else {
+            betInfoSubmissionViewModel.updateHasValidTickets(true)
+            return
+        }
+        
+        let betBuilderData = self.betBuilderData
+        
+        // Check if all tickets are enabled
+        let allTicketsValid = tickets.allSatisfy { ticket in
+            if let betBuilderData = betBuilderData, !betBuilderData.bettingOfferIds.isEmpty {
+                // For betBuilder, ticket is valid if it's in the betBuilder offer IDs
+                return betBuilderData.bettingOfferIds.contains(ticket.id)
+            } else {
+                // For regular bets, ticket is valid if there's no invalid state
+                return ticketsInvalidState == .none
+            }
+        }
+        
+        betInfoSubmissionViewModel.updateHasValidTickets(allTicketsValid)
+    }
+}
+
+public enum TicketsInvalidState: Equatable {
+    case none
+    case invalid
+    case forbidden
 }
 
 public enum BetslipLoggedState {

@@ -146,56 +146,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let urlSections = url.pathComponents
             let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
 
-            if (urlSections.contains("competitions") || urlSections.contains("live")) && urlSections.count > 6 {
-                if let gameDetailId = urlSections.last {
-                    self.openSharedRoute(Route.event(id: gameDetailId), onApplication: application)
-                }
+            if urlSections.contains("register") {
+                self.openSharedRoute(Route.register, onApplication: application)
             }
-            else if urlSections.contains("competitions") && urlSections.count <= 6 {
-                if let competitionDetailId = urlSections.last {
-                    self.openSharedRoute(Route.competition(id: competitionDetailId), onApplication: application)
-                }
+            else if urlSections.contains("login") {
+                self.openSharedRoute(Route.login, onApplication: application)
             }
-            else if urlSections.contains("bet") {
-                if let ticketId = urlSections.last {
-                    self.openSharedRoute(Route.ticket(id: ticketId), onApplication: application)
-                }
+            else if urlSections.contains("live") {
+                self.openSharedRoute(Route.liveGames, onApplication: application)
             }
-            else if urlSections.contains("contact-settings") {
-                self.openSharedRoute(Route.contactSettings, onApplication: application)
+            else if urlSections.contains("mybets") {
+                self.openSharedRoute(Route.myBets, onApplication: application)
             }
-            else if urlSections.contains("bonus") {
-                self.openSharedRoute(Route.bonus, onApplication: application)
+            else if urlSections.contains("search") && urlSections.contains("sports") {
+                self.openSharedRoute(Route.sportsSearch, onApplication: application)
             }
-            else if urlSections.contains("documents") {
-                self.openSharedRoute(Route.documents, onApplication: application)
+            else if urlSections.contains("virtuals") && urlSections.contains("casino") {
+                self.openSharedRoute(Route.casinoVirtuals, onApplication: application)
             }
-            else if urlSections.contains("support") {
-                self.openSharedRoute(Route.customerSupport, onApplication: application)
+            else if urlSections.contains("game") && urlSections.contains("casino"),
+                        let gameId = urlSections.last {
+                self.openSharedRoute(Route.casinoGame(gameId: gameId), onApplication: application)
             }
-            else if urlSections.contains("favoris") {
-                self.openSharedRoute(Route.favorites, onApplication: application)
+            else if urlSections.contains("search") && urlSections.contains("casino") {
+                self.openSharedRoute(Route.casinoSearch, onApplication: application)
             }
-            else if urlSections.contains("promotions") {
-                self.openSharedRoute(Route.promotions, onApplication: application)
+            else if urlSections.contains("sports") {
+                self.openSharedRoute(Route.sportsHome, onApplication: application)
+            }
+            else if urlSections.contains("casino") {
+                self.openSharedRoute(Route.casinoHome, onApplication: application)
             }
             // Deposit does not exists in an url section
-            else if url.absoluteString.contains("deposit") {
+            else if urlSections.contains("deposit") {
                 self.openSharedRoute(Route.deposit, onApplication: application)
             }
-            else if url.absoluteString.contains("register") {
-                let queryItems = urlComponents?.queryItems
-                if let code = urlComponents?.queryItems?.first(where: {
-                    $0.name == "referralCode"
-                })?.value {
-                    self.openSharedRoute(Route.referral(code: code), onApplication: application)
-                }
-            }
-            else if url.absoluteString.contains("betting-questionnaire") {
-                if TargetVariables.features.contains(.responsibleGamingForm) {
-                    self.openSharedRoute(Route.responsibleForm, onApplication: application)
-                }
-            }
+            
         }
         return true
     }
@@ -283,18 +269,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
         switch (routeLabel, routeType) {
         case ("pending", "bet"):
-            route = .openBet(id: routeId)
-        case ("resolved", "bet"):
-            route = .resolvedBet(id: routeId)
-        case (_, "event"):
-            route = .event(id: routeId)
-        case (_, "chat"):
-            if !routeId.isEmpty {
-                route = .chatMessage(id: routeId)
-            }
-            else {
-                route = .chatNotifications
-            }
+            route = .casinoGame(gameId: routeLabel)
         default:
             ()
         }
@@ -324,13 +299,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
     private func openSharedRoute(_ route: Route, onApplication application: UIApplication) {
-        // // This should be sent to AppCoordinator
-        // self.bootstrap.router.openPushNotificationRoute(route)
+        self.bootstrap.appCoordinator?.openSharedRoute(route)
     }
 
     private func openPushNotificationRoute(_ route: Route) {
-        // This should be sent to AppCoordinator
         // self.bootstrap.router.openPushNotificationRoute(route)
+        self.bootstrap.appCoordinator?.openSharedRoute(route)
     }
 
 }

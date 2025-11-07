@@ -728,8 +728,10 @@ extension CombinedFiltersViewModel {
         }
         
         return MockSportGamesFilterViewModel(
-            title: widget.label, sportFilters: sportFilters,
-            selectedId: appliedFilters.sportId
+            title: widget.label,
+            sportFilters: sportFilters,
+            selectedId: appliedFilters.sportId,
+            sportFilterState: .collapsed
         )
     }
     

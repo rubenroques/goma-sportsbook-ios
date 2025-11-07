@@ -252,6 +252,7 @@ class BetslipManager: NSObject {
                         return
                     }
                     let internalMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: market)
+                    print("Updating market: \(market)")
                     self?.updateBettingTickets(ofMarket: internalMarket)
                 case .disconnected:
                     print("Single outcome subscription disconnected")
@@ -264,23 +265,24 @@ class BetslipManager: NSObject {
     private func disableBettingTicket(_ bettingTicket: BettingTicket) {
         if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] {
             let newAvailablity = false
-            let newBettingTicket = BettingTicket.init(id: bettingTicket.id,
-                                                      outcomeId: bettingTicket.outcomeId,
-                                                      marketId: bettingTicket.marketId,
-                                                      matchId: bettingTicket.matchId,
-                                                      isAvailable: newAvailablity,
-                                                      matchDescription: bettingTicket.matchDescription,
-                                                      marketDescription: bettingTicket.marketDescription,
-                                                      outcomeDescription: bettingTicket.outcomeDescription,
-                                                      homeParticipantName: bettingTicket.homeParticipantName,
-                                                      awayParticipantName: bettingTicket.awayParticipantName,
-                                                      sport: bettingTicket.sport,
-                                                      sportIdCode: bettingTicket.sportIdCode,
-                                                      venue: bettingTicket.venue,
-                                                      competition: bettingTicket.competition,
-                                                      date: bettingTicket.date,
-                                                      odd: bettingTicket.odd,
-                                                      isFromBetBuilderMarket: bettingTicket.isFromBetBuilderMarket)
+            let newBettingTicket = BettingTicket(id: bettingTicket.id,
+                                                 outcomeId: bettingTicket.outcomeId,
+                                                 marketId: bettingTicket.marketId,
+                                                 matchId: bettingTicket.matchId,
+                                                 marketTypeId: bettingTicket.marketTypeId,
+                                                 isAvailable: newAvailablity,
+                                                 matchDescription: bettingTicket.matchDescription,
+                                                 marketDescription: bettingTicket.marketDescription,
+                                                 outcomeDescription: bettingTicket.outcomeDescription,
+                                                 homeParticipantName: bettingTicket.homeParticipantName,
+                                                 awayParticipantName: bettingTicket.awayParticipantName,
+                                                 sport: bettingTicket.sport,
+                                                 sportIdCode: bettingTicket.sportIdCode,
+                                                 venue: bettingTicket.venue,
+                                                 competition: bettingTicket.competition,
+                                                 date: bettingTicket.date,
+                                                 odd: bettingTicket.odd,
+                                                 isFromBetBuilderMarket: bettingTicket.isFromBetBuilderMarket)
             
             self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
             self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
@@ -290,29 +292,33 @@ class BetslipManager: NSObject {
     private func updateBettingTickets(ofMarket market: Market) {
         
         for outcome in market.outcomes {
-            if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.id] {
+            if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.bettingOffer.id] {
                 let newAvailablity = market.isAvailable
                 let newOdd = outcome.bettingOffer.odd
-                let newBettingTicket = BettingTicket.init(id: bettingTicket.id,
-                                                          outcomeId: bettingTicket.outcomeId,
-                                                          marketId: bettingTicket.marketId,
-                                                          matchId: bettingTicket.matchId,
-                                                          isAvailable: newAvailablity,
-                                                          matchDescription: market.eventName ?? bettingTicket.matchDescription,
-                                                          marketDescription: outcome.marketName ?? bettingTicket.marketDescription,
-                                                          outcomeDescription: outcome.translatedName,
-                                                          homeParticipantName: market.homeParticipant ?? bettingTicket.homeParticipantName,
-                                                          awayParticipantName: market.awayParticipant ?? bettingTicket.awayParticipantName,
-                                                          sport: market.sport ?? bettingTicket.sport,
-                                                          sportIdCode: market.sportIdCode ?? bettingTicket.sportIdCode,
-                                                          venue: bettingTicket.venue,
-                                                          competition: bettingTicket.competition,
-                                                          date: market.startDate ?? bettingTicket.date,
-                                                          odd: newOdd,
-                                                          isFromBetBuilderMarket: bettingTicket.isFromBetBuilderMarket)
+                let outcomeDescription = outcome.codeName != outcome.typeName ? "\(outcome.codeName) (\(outcome.typeName))" : outcome.codeName
+                
+                let newBettingTicket = BettingTicket(id: bettingTicket.id,
+                                                     outcomeId: bettingTicket.outcomeId,
+                                                     marketId: bettingTicket.marketId,
+                                                     matchId: bettingTicket.matchId,
+                                                     marketTypeId: bettingTicket.marketTypeId,
+                                                     isAvailable: newAvailablity,
+                                                     matchDescription: market.eventName ?? bettingTicket.matchDescription,
+                                                     marketDescription: outcome.marketName ?? bettingTicket.marketDescription,
+                                                     outcomeDescription: outcomeDescription,
+                                                     homeParticipantName: market.homeParticipant ?? bettingTicket.homeParticipantName,
+                                                     awayParticipantName: market.awayParticipant ?? bettingTicket.awayParticipantName,
+                                                     sport: market.sport ?? bettingTicket.sport,
+                                                     sportIdCode: market.sportIdCode ?? bettingTicket.sportIdCode,
+                                                     venue: bettingTicket.venue,
+                                                     competition: bettingTicket.competition,
+                                                     date: market.startDate ?? bettingTicket.date,
+                                                     odd: newOdd,
+                                                     isFromBetBuilderMarket: bettingTicket.isFromBetBuilderMarket)
 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
                 self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+                self.validateBettingOptions()
             }
         }
     }
@@ -477,7 +483,7 @@ extension BetslipManager {
         validateBettingOptions()
     }
 
-    func placeBet(withStake stake: Double, useFreebetBalance: Bool, oddsValidationType: String?) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+    func placeBet(withStake stake: Double, useFreebetBalance: Bool, oddsValidationType: String?, betBuilderOdds: Double? = nil) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         
         guard
             self.bettingTicketsPublisher.value.isNotEmpty
@@ -496,7 +502,10 @@ extension BetslipManager {
                                                                          odd: odd,
                                                                          stake: stake,
                                                                          sportIdCode: bettingTicket.sportIdCode,
-                                                                         outcomeId: bettingTicket.id)
+                                                                         eventId: bettingTicket.matchId,
+                                                                         marketId: bettingTicket.marketId,
+                                                                         outcomeId: bettingTicket.id,
+                                                                         marketTypeId: bettingTicket.marketTypeId)
             return betTicketSelection
         }
         
@@ -515,7 +524,7 @@ extension BetslipManager {
         // Extract ubsWalletId from odds boost state for bonus application
         let ubsWalletId: String? = oddsBoostStairsSubject.value?.ubsWalletId
 
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId, betBuilderOdds: betBuilderOdds)
             .mapError({ error in
                 switch error {
                 case .forbidden:

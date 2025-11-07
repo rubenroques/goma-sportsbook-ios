@@ -6,18 +6,13 @@ public final class MatchHeaderCompactView: UIView {
     
     // MARK: - UI Components
     private let containerView = UIView()
-    private let contentStackView = UIStackView()
+    private let gradientView = GradientView()
     private let leftContentView = UIView()
     private let teamsStackView = UIStackView()
     private let homeTeamLabel = UILabel()
     private let awayTeamLabel = UILabel()
     private let breadcrumbLabel = UILabel()
-    
-    private let statisticsButton = UIButton(type: .system)
-    private let statisticsStackView = UIStackView()
-    private let statisticsLabel = UILabel()
-    private let statisticsIconImageView = UIImageView()
-    
+    private let statisticsButton = UIButton()
     private let bottomBorderView = UIView()
     
     // MARK: - Properties
@@ -39,22 +34,26 @@ public final class MatchHeaderCompactView: UIView {
     
     // MARK: - Setup
     private func setupView() {
-        backgroundColor = StyleProvider.Color.backgroundCards
+        backgroundColor = StyleProvider.Color.gameHeader
         
-        // Container setup
+        // Gradient background setup - anchored to component view
+        addSubview(gradientView)
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
+        gradientView.colors = [
+            (color: StyleProvider.Color.gameHeader, location: 0.0),
+            (color: StyleProvider.Color.backgroundGradient2, location: 1.0)
+        ]
+        gradientView.setHorizontalGradient() // Left to right
+        
+        // Container setup - on top of gradient with padding
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Content stack setup (horizontal)
-        containerView.addSubview(contentStackView)
-        contentStackView.translatesAutoresizingMaskIntoConstraints = false
-        contentStackView.axis = .horizontal
-        contentStackView.alignment = .center
-        contentStackView.distribution = .fill
-        contentStackView.spacing = 8
+        containerView.backgroundColor = .clear
         
         // Left content setup
-        contentStackView.addArrangedSubview(leftContentView)
+        containerView.addSubview(leftContentView)
+        leftContentView.translatesAutoresizingMaskIntoConstraints = false
+        leftContentView.backgroundColor = .clear
         
         // Teams stack setup (vertical)
         leftContentView.addSubview(teamsStackView)
@@ -81,38 +80,29 @@ public final class MatchHeaderCompactView: UIView {
         leftContentView.addSubview(breadcrumbLabel)
         breadcrumbLabel.translatesAutoresizingMaskIntoConstraints = false
         breadcrumbLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
-        breadcrumbLabel.textColor = StyleProvider.Color.textSecondary
-        breadcrumbLabel.numberOfLines = 1
+        breadcrumbLabel.textColor = StyleProvider.Color.gameHeaderTextSecondary
+        breadcrumbLabel.numberOfLines = 0
         breadcrumbLabel.lineBreakMode = .byTruncatingTail
         
         // Statistics button setup
-        contentStackView.addArrangedSubview(statisticsButton)
+        containerView.addSubview(statisticsButton)
+        statisticsButton.translatesAutoresizingMaskIntoConstraints = false
+        statisticsButton.backgroundColor = .clear
         statisticsButton.addTarget(self, action: #selector(statisticsButtonTapped), for: .touchUpInside)
         
-        // Statistics stack setup (horizontal)
-        statisticsButton.addSubview(statisticsStackView)
-        statisticsStackView.translatesAutoresizingMaskIntoConstraints = false
-        statisticsStackView.axis = .horizontal
-        statisticsStackView.spacing = 4
-        statisticsStackView.alignment = .center
-        statisticsStackView.isUserInteractionEnabled = false
+        // Configure button appearance
+        statisticsButton.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 12)
+        statisticsButton.backgroundColor = .clear
+        statisticsButton.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
+        statisticsButton.tintColor = StyleProvider.Color.highlightPrimary
+        statisticsButton.semanticContentAttribute = .forceRightToLeft // Image on right, text on left
+        statisticsButton.contentHorizontalAlignment = .center
         
-        // Statistics label setup
-        statisticsLabel.text = "Statistics"
-        statisticsLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
-        statisticsLabel.textColor = StyleProvider.Color.highlightTertiary
-        
-        // Statistics icon setup
-        statisticsIconImageView.contentMode = .scaleAspectFit
-        statisticsIconImageView.tintColor = StyleProvider.Color.highlightTertiary
-        
-        // Create bar chart icon
-        let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .regular)
-        let barChartImage = UIImage(systemName: "chart.bar.fill", withConfiguration: config)
-        statisticsIconImageView.image = barChartImage
-        
-        statisticsStackView.addArrangedSubview(statisticsLabel)
-        statisticsStackView.addArrangedSubview(statisticsIconImageView)
+        // Add spacing between text and icon
+        let spacing: CGFloat = 2
+        statisticsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: -spacing)
+        statisticsButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -spacing, bottom: 0, right: spacing)
+        statisticsButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
         
         // Bottom border setup
         addSubview(bottomBorderView)
@@ -122,17 +112,27 @@ public final class MatchHeaderCompactView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Container constraints
+            // Gradient background constraints - fills entire component
+            gradientView.topAnchor.constraint(equalTo: topAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            // Container constraints - with 12px padding from edges
             containerView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
             
-            // Content stack constraints
-            contentStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            contentStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            contentStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            contentStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            // Left content constraints - anchored to left side, trailing to center
+            leftContentView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            leftContentView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            leftContentView.trailingAnchor.constraint(equalTo: statisticsButton.leadingAnchor, constant: -8),
+            leftContentView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            // Statistics button constraints - anchored to right side of container
+            statisticsButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            statisticsButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
             // Teams stack constraints
             teamsStackView.topAnchor.constraint(equalTo: leftContentView.topAnchor),
@@ -145,18 +145,8 @@ public final class MatchHeaderCompactView: UIView {
             breadcrumbLabel.trailingAnchor.constraint(equalTo: leftContentView.trailingAnchor),
             breadcrumbLabel.bottomAnchor.constraint(equalTo: leftContentView.bottomAnchor),
             
-            // Statistics stack constraints
-            statisticsStackView.topAnchor.constraint(equalTo: statisticsButton.topAnchor),
-            statisticsStackView.leadingAnchor.constraint(equalTo: statisticsButton.leadingAnchor),
-            statisticsStackView.trailingAnchor.constraint(equalTo: statisticsButton.trailingAnchor),
-            statisticsStackView.bottomAnchor.constraint(equalTo: statisticsButton.bottomAnchor),
-            
-            // Statistics icon size
-            statisticsIconImageView.widthAnchor.constraint(equalToConstant: 16),
-            statisticsIconImageView.heightAnchor.constraint(equalToConstant: 16),
-            
-            // Statistics button minimum width to ensure visibility
-            statisticsButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
+            // Statistics button size constraints
+            statisticsButton.heightAnchor.constraint(equalToConstant: 30),
             
             // Bottom border constraints
             bottomBorderView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -171,10 +161,6 @@ public final class MatchHeaderCompactView: UIView {
         
         statisticsButton.setContentHuggingPriority(.required, for: .horizontal)
         statisticsButton.setContentCompressionResistancePriority(.required, for: .horizontal)
-        
-        // Ensure statistics stack also has high priority
-        statisticsStackView.setContentHuggingPriority(.required, for: .horizontal)
-        statisticsStackView.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
     private func bindViewModel() {
@@ -217,6 +203,42 @@ public final class MatchHeaderCompactView: UIView {
         
         // Show/hide statistics button
         statisticsButton.isHidden = !data.hasStatistics
+        
+        // Update statistics button based on collapsed state
+        updateStatisticsButton(
+            isCollapsed: data.isStatisticsCollapsed,
+            collapsedTitle: data.statisticsCollapsedTitle,
+            expandedTitle: data.statisticsExpandedTitle
+        )
+    }
+    
+    private func updateStatisticsButton(isCollapsed: Bool, collapsedTitle: String, expandedTitle: String) {
+        // Update button title
+        let title = isCollapsed ? collapsedTitle : expandedTitle
+        statisticsButton.setTitle(title, for: .normal)
+        
+        // Update icon based on collapsed state
+        let iconSize: CGFloat = 14
+        let config = UIImage.SymbolConfiguration(pointSize: iconSize, weight: .regular)
+        var buttonImage: UIImage?
+        
+        if isCollapsed {
+            // Try custom icon first, fallback to system icon
+            if let customImage = UIImage(named: "chevron_down_icon") {
+                buttonImage = customImage.withRenderingMode(.alwaysTemplate)
+            } else {
+                buttonImage = UIImage(systemName: "chevron.down", withConfiguration: config)
+            }
+        } else {
+            // Try custom icon first, fallback to system icon
+            if let customImage = UIImage(named: "chevron_up_icon") {
+                buttonImage = customImage.withRenderingMode(.alwaysTemplate)
+            } else {
+                buttonImage = UIImage(systemName: "chevron.up", withConfiguration: config)
+            }
+        }
+        
+        statisticsButton.setImage(buttonImage, for: .normal)
     }
     
     // MARK: - Actions
@@ -246,10 +268,10 @@ public final class MatchHeaderCompactView: UIView {
 }
 
 @available(iOS 17.0, *)
-#Preview("Match Header - Without Statistics") {
+#Preview("Match Header - Long Content") {
     PreviewUIViewController {
         let vc = UIViewController()
-        let headerView = MatchHeaderCompactView(viewModel: MockMatchHeaderCompactViewModel.withoutStatistics)
+        let headerView = MatchHeaderCompactView(viewModel: MockMatchHeaderCompactViewModel.longContent)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(headerView)
         
@@ -265,10 +287,22 @@ public final class MatchHeaderCompactView: UIView {
 }
 
 @available(iOS 17.0, *)
-#Preview("Match Header - Long Content") {
+#Preview("Match Header - Expanded Statistics") {
     PreviewUIViewController {
         let vc = UIViewController()
-        let headerView = MatchHeaderCompactView(viewModel: MockMatchHeaderCompactViewModel.longContent)
+        
+        let mockData = MatchHeaderCompactData(
+            homeTeamName: "Manchester United",
+            awayTeamName: "Glasgow Rangers",
+            sport: "Football",
+            competition: "International",
+            league: "UEFA Europa League",
+            hasStatistics: true,
+            isStatisticsCollapsed: false
+        )
+        
+        let viewModel = MockMatchHeaderCompactViewModel(headerData: mockData)
+        let headerView = MatchHeaderCompactView(viewModel: viewModel)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(headerView)
         

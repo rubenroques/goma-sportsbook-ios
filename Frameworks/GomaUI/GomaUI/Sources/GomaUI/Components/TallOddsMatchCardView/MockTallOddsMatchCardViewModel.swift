@@ -130,7 +130,9 @@ extension MockTallOddsMatchCardViewModel {
         let marketInfoData = MarketInfoData(
             marketName: "1X2 TR",
             marketCount: 1235,
-            icons: marketIcons
+            icons: marketIcons,
+            marketId: "123",
+            marketTypeId: nil
         )
         
         // Create minimal match data - will use factory view models
@@ -163,7 +165,9 @@ extension MockTallOddsMatchCardViewModel {
         let marketInfoData = MarketInfoData(
             marketName: "1X2 TR",
             marketCount: 1235,
-            icons: marketIcons
+            icons: marketIcons,
+            marketId: "123",
+            marketTypeId: nil
         )
         let matchData = TallOddsMatchData(
             matchId: "liverpool_arsenal_premier_league",
@@ -190,7 +194,9 @@ extension MockTallOddsMatchCardViewModel {
             marketCount: 456,
             icons: [
                 MarketInfoIcon(type: .mostPopular, isVisible: true)
-            ]
+            ],
+            marketId: "123",
+            marketTypeId: nil
         )
         
         let matchData = TallOddsMatchData(
@@ -211,7 +217,9 @@ extension MockTallOddsMatchCardViewModel {
             marketCount: 456,
             icons: [
                 MarketInfoIcon(type: .mostPopular, isVisible: true)
-            ]
+            ],
+            marketId: "123",
+            marketTypeId: nil
         )
         let matchData = TallOddsMatchData(
             matchId: "barcelona_madrid_la_liga",
@@ -235,7 +243,9 @@ extension MockTallOddsMatchCardViewModel {
         let marketInfoData = MarketInfoData(
             marketName: "Both Teams Score",
             marketCount: 2847,
-            icons: marketIcons
+            icons: marketIcons,
+            marketId: "123",
+            marketTypeId: nil
         )
         
         let matchData = TallOddsMatchData(
@@ -260,7 +270,9 @@ extension MockTallOddsMatchCardViewModel {
         let marketInfoData = MarketInfoData(
             marketName: "Both Teams Score",
             marketCount: 2847,
-            icons: marketIcons
+            icons: marketIcons,
+            marketId: "123",
+            marketTypeId: nil
         )
         let matchData = TallOddsMatchData(
             matchId: "bayern_dortmund_bundesliga",
@@ -282,7 +294,9 @@ extension MockTallOddsMatchCardViewModel {
         let marketInfoData = MarketInfoData(
             marketName: "1X2",
             marketCount: 987,
-            icons: marketIcons
+            icons: marketIcons,
+            marketId: "123",
+            marketTypeId: nil
         )
         
         // Create live score data for football
@@ -321,7 +335,9 @@ extension MockTallOddsMatchCardViewModel {
         let marketInfoData = MarketInfoData(
             marketName: "1X2",
             marketCount: 987,
-            icons: marketIcons
+            icons: marketIcons,
+            marketId: "123",
+            marketTypeId: nil
         )
         let liveScoreData = LiveScoreData(
             scoreCells: [

@@ -195,10 +195,13 @@ class MarketsTabSimpleViewModel {
             guard !market.outcomes.isEmpty else { return nil }
             
             let outcomes = market.outcomes.map { outcome in
-                MarketOutcomeData(
+                let completeName = outcome.codeName != outcome.typeName ? "\(outcome.codeName) (\(outcome.typeName))" : outcome.codeName
+
+                return MarketOutcomeData(
                     id: outcome.id,
                     bettingOfferId: outcome.bettingOffer.id,
                     title: outcome.translatedName,
+                    completeName: completeName,
                     value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
                     oddsChangeDirection: .none,
                     isSelected: false,

@@ -14,6 +14,7 @@ class SportsBetslipViewController: UIViewController {
     // MARK: - Properties
     private var viewModel: SportsBetslipViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
+    private var previousTicketCount: Int = 0
     
     // MARK: - UI Components
 
@@ -339,7 +340,25 @@ class SportsBetslipViewController: UIViewController {
         viewModel.ticketsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tickets in
-                self?.updateUI()
+                guard let self = self else { return }
+                
+                let currentTicketCount = tickets.count
+                let ticketCountChanged = currentTicketCount != self.previousTicketCount
+                
+                // Only reload table if tickets were added or removed
+                if ticketCountChanged {
+                    self.previousTicketCount = currentTicketCount
+                    self.updateUI()
+                } 
+            }
+            .store(in: &cancellables)
+        
+        // Subscribe to combined tickets state updates (invalid state + bet builder data)
+        viewModel.ticketsStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                
+                self?.ticketsTableView.reloadData()
             }
             .store(in: &cancellables)
         
@@ -521,15 +540,38 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
         
         let ticket = viewModel.currentTickets[indexPath.row]
         
-        // Create a proper mock view model with the actual ticket data
-        let ticketViewModel = MockBetslipTicketViewModel(
-            leagueName: ticket.competition ?? "Unknown League",
-            startDate: formatTicketDate(ticket.date) ?? "Unknown Date",
-            homeTeam: ticket.homeParticipantName ?? "Home Team",
-            awayTeam: ticket.awayParticipantName ?? "Away Team",
-            selectedTeam: ticket.outcomeDescription,
-            oddsValue: String(format: "%.2f", ticket.decimalOdd),
-            oddsChangeState: .none
+        // Determine if ticket should be enabled and disabled message
+        let isEnabled: Bool
+        let disabledMessage: String?
+        let betBuilderData = viewModel.betBuilderData
+        
+        if let betBuilderData = betBuilderData, !betBuilderData.bettingOfferIds.isEmpty {
+            // If betBuilder data exists, only enable tickets that match
+            isEnabled = betBuilderData.bettingOfferIds.contains(ticket.id)
+            // For betBuilder, don't show message (keep showing date)
+            disabledMessage = nil
+        }
+        else {
+            // Otherwise, check the invalid state
+            switch viewModel.ticketsInvalidState {
+            case .none:
+                isEnabled = true
+                disabledMessage = nil
+            case .invalid:
+                isEnabled = false
+                disabledMessage = localized("expired")
+            case .forbidden:
+                isEnabled = false
+                disabledMessage = localized("not_combinable")
+            }
+        }
+        
+        // Get or create ticket view model (this will track odds changes)
+        let ticketViewModel = viewModel.getTicketViewModel(
+            for: ticket,
+            isEnabled: isEnabled,
+            disabledMessage: disabledMessage,
+            formattedDate: formatTicketDate(ticket.date)
         )
         
         cell.configure(with: ticketViewModel)
@@ -552,6 +594,7 @@ extension SportsBetslipViewController {
         
         return formatter.string(from: date)
     }
+    
 }
 
 // MARK: - Toast Handling

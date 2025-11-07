@@ -13,7 +13,7 @@ final public class MockMarketInfoLineViewModel: MarketInfoLineViewModelProtocol 
         return marketNamePillViewModelSubject.eraseToAnyPublisher()
     }
     
-    private var marketInfoData: MarketInfoData
+    public var marketInfoData: MarketInfoData
     
     // MARK: - Initialization
     public init(marketInfoData: MarketInfoData) {
@@ -47,7 +47,9 @@ extension MockMarketInfoLineViewModel {
         let marketInfo = MarketInfoData(
             marketName: "1X2 TR",
             marketCount: 1235,
-            icons: icons
+            icons: icons,
+            marketId: "123",
+            marketTypeId: nil
         )
         
         return MockMarketInfoLineViewModel(marketInfoData: marketInfo)
@@ -64,7 +66,9 @@ extension MockMarketInfoLineViewModel {
         let marketInfo = MarketInfoData(
             marketName: "Both Teams To Score",
             marketCount: 2340,
-            icons: icons
+            icons: icons,
+            marketId: "123",
+            marketTypeId: nil
         )
         
         return MockMarketInfoLineViewModel(marketInfoData: marketInfo)
@@ -74,7 +78,9 @@ extension MockMarketInfoLineViewModel {
         let marketInfo = MarketInfoData(
             marketName: "Over/Under Goals",
             marketCount: 567,
-            icons: []
+            icons: [],
+            marketId: "123",
+            marketTypeId: nil
         )
         
         return MockMarketInfoLineViewModel(marketInfoData: marketInfo)
@@ -88,7 +94,9 @@ extension MockMarketInfoLineViewModel {
         let marketInfo = MarketInfoData(
             marketName: "Match Winner",
             marketCount: 0,
-            icons: icons
+            icons: icons,
+            marketId: "123",
+            marketTypeId: nil
         )
         
         return MockMarketInfoLineViewModel(marketInfoData: marketInfo)
@@ -105,7 +113,9 @@ extension MockMarketInfoLineViewModel {
         let marketInfo = MarketInfoData(
             marketName: "Very Long Market Name That Should Be Truncated To Test Layout",
             marketCount: 1235,
-            icons: icons
+            icons: icons,
+            marketId: "123",
+            marketTypeId: nil
         )
         
         return MockMarketInfoLineViewModel(marketInfoData: marketInfo)

@@ -231,10 +231,13 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     }
     
     private func createOutcomeData(from outcome: Outcome) -> MarketOutcomeData {
+        let completeName = outcome.codeName != outcome.typeName ? "\(outcome.codeName) (\(outcome.typeName))" : outcome.codeName
+
         return MarketOutcomeData(
             id: outcome.id,
             bettingOfferId: outcome.bettingOffer.id,
             title: outcome.translatedName,
+            completeName: completeName,
             value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
             oddsChangeDirection: .none,
             isSelected: false,
@@ -388,10 +391,13 @@ extension MarketOutcomesLineViewModel {
     }
     
     private static func createOutcomeData(from outcome: Outcome) -> MarketOutcomeData {
+        let completeName = outcome.translatedName != outcome.typeName ? "\(outcome.translatedName) (\(outcome.typeName)" : outcome.translatedName
+
         return MarketOutcomeData(
             id: outcome.id,
             bettingOfferId: outcome.bettingOffer.id,
             title: outcome.translatedName,
+            completeName: completeName,
             value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
             oddsChangeDirection: .none,
             isSelected: false,

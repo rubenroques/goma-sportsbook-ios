@@ -218,10 +218,13 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         // Check if this outcome is already in the betslip
         let isSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
+        let completeName = outcome.codeName != outcome.typeName ? "\(outcome.codeName) (\(outcome.typeName))" : outcome.codeName
+
         return MarketOutcomeData(
             id: outcome.id,
             bettingOfferId: outcome.bettingOffer.id,
             title: outcome.translatedName,
+            completeName: completeName,
             value: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd),
             oddsChangeDirection: .none,
             isSelected: isSelected, // Set correct initial selection state

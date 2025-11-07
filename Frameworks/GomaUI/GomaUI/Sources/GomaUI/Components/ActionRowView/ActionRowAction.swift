@@ -10,5 +10,6 @@ public enum ActionRowAction: String, Codable {
     case changePassword
     case logout
     case promotions
+    case bonus
     case custom
 }

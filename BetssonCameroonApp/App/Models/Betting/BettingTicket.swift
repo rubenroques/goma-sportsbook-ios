@@ -18,7 +18,8 @@ public struct BettingTicket: Codable, Hashable {
     var outcomeId: String
     var marketId: String
     var matchId: String
-
+    var marketTypeId: String?
+    
     var isAvailable: Bool
 
     var matchDescription: String
@@ -68,13 +69,15 @@ public struct BettingTicket: Codable, Hashable {
             lhs.marketId == rhs.marketId &&
             lhs.matchId == rhs.matchId &&
             lhs.homeParticipantName == rhs.homeParticipantName &&
-            lhs.awayParticipantName == rhs.awayParticipantName 
+            lhs.awayParticipantName == rhs.awayParticipantName &&
+            lhs.marketTypeId == rhs.marketTypeId
     }
 
     init(id: String,
          outcomeId: String,
          marketId: String,
          matchId: String,
+         marketTypeId: String?,
          isAvailable: Bool,
          matchDescription: String,
          marketDescription: String,
@@ -93,6 +96,7 @@ public struct BettingTicket: Codable, Hashable {
         self.outcomeId = outcomeId
         self.marketId = marketId
         self.matchId = matchId
+        self.marketTypeId = marketTypeId
         self.isAvailable = isAvailable
         self.matchDescription = matchDescription
         self.marketDescription = marketDescription
@@ -112,6 +116,7 @@ public struct BettingTicket: Codable, Hashable {
          outcomeId: String,
          marketId: String,
          matchId: String,
+         marketTypeId: String? = nil,
          decimalOdd: Double,
          isAvailable: Bool,
          matchDescription: String,
@@ -129,6 +134,7 @@ public struct BettingTicket: Codable, Hashable {
         self.outcomeId = outcomeId
         self.marketId = marketId
         self.matchId = matchId
+        self.marketTypeId = marketTypeId
         self.isAvailable = isAvailable
         self.matchDescription = matchDescription
         self.marketDescription = marketDescription
@@ -163,6 +169,7 @@ extension BettingTicket {
                   outcomeId: outcome.id,
                   marketId: market.id,
                   matchId: match.id,
+                  marketTypeId: market.marketTypeId,
                   isAvailable: outcome.bettingOffer.isAvailable,
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
@@ -188,6 +195,7 @@ extension BettingTicket {
                   outcomeId: outcome.id,
                   marketId: marketId,
                   matchId: match.id,
+                  marketTypeId: nil,
                   isAvailable: outcome.bettingOffer.isAvailable,
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,

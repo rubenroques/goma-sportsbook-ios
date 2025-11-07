@@ -16,6 +16,7 @@ public final class BetslipTicketView: UIView {
     }
     private var cancellables = Set<AnyCancellable>()
     private var oddsChangeTimer: Timer?
+    private var previousOddsChangeState: OddsChangeState = .none
     
     // MARK: - UI Components
     
@@ -143,6 +144,29 @@ public final class BetslipTicketView: UIView {
         return imageView
     }()
     
+    // Disabled overlay view
+    private lazy var disabledView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = StyleProvider.Color.backgroundSecondary.withAlphaComponent(0.7)
+        view.isHidden = true
+        return view
+    }()
+    
+    // Disabled label
+    private lazy var disabledLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .semibold, size: 14)
+        label.textColor = StyleProvider.Color.textPrimary
+        label.text = "Invalid selection"
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.isHidden = true
+        return label
+    }()
+
+    
     // MARK: - Initialization
     public init(viewModel: BetslipTicketViewModelProtocol) {
         self.viewModel = viewModel
@@ -173,6 +197,10 @@ public final class BetslipTicketView: UIView {
         containerView.addSubview(oddsValueLabel)
         containerView.addSubview(upArrowImageView)
         containerView.addSubview(downArrowImageView)
+        
+        // Add disabled overlay
+        containerView.addSubview(disabledView)
+        disabledView.addSubview(disabledLabel)
     }
     
     private func setupConstraints() {
@@ -233,7 +261,17 @@ public final class BetslipTicketView: UIView {
             downArrowImageView.trailingAnchor.constraint(equalTo: oddsValueLabel.leadingAnchor, constant: -4),
             downArrowImageView.centerYAnchor.constraint(equalTo: oddsValueLabel.centerYAnchor),
             downArrowImageView.widthAnchor.constraint(equalToConstant: 12),
-            downArrowImageView.heightAnchor.constraint(equalToConstant: 12)
+            downArrowImageView.heightAnchor.constraint(equalToConstant: 12),
+            
+            // Disabled overlay
+            disabledView.leadingAnchor.constraint(equalTo: leftStripView.trailingAnchor),
+            disabledView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            disabledView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            disabledView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            // Disabled label
+            disabledLabel.centerXAnchor.constraint(equalTo: disabledView.centerXAnchor),
+            disabledLabel.centerYAnchor.constraint(equalTo: disabledView.centerYAnchor)
         ])
     }
     
@@ -244,13 +282,30 @@ public final class BetslipTicketView: UIView {
                 self?.render(data: data)
             }
             .store(in: &cancellables)
+        
+        // Subscribe separately to odds change state for animations
+        viewModel.oddsChangeStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                // Only animate if state actually changed
+                if state != self.previousOddsChangeState {
+                    self.previousOddsChangeState = state
+                    self.updateOddsChangeIndicator(state, animated: true)
+                }
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Rendering
     private func render(data: BetslipTicketData) {
         
-        // Update league and date info
-        leagueDateLabel.text = "\(data.leagueName) • \(data.startDate)"
+        // Update league and date info - show disabled message if present, otherwise show date
+        if let disabledMessage = data.disabledMessage {
+            leagueDateLabel.text = "\(data.leagueName) • \(disabledMessage)"
+        } else {
+            leagueDateLabel.text = "\(data.leagueName) • \(data.startDate)"
+        }
         leagueDateLabel.isHidden = false
         
         // Update teams
@@ -267,13 +322,9 @@ public final class BetslipTicketView: UIView {
         oddsValueLabel.text = data.oddsValue
         oddsValueLabel.isHidden = false
         
-        // Update odds change state
-        updateOddsChangeIndicator(data.oddsChangeState)
-        
-        // Update enabled state
-        alpha = data.isEnabled ? 1.0 : 0.5
-        isUserInteractionEnabled = data.isEnabled
-        closeButton.isEnabled = data.isEnabled
+        // Update enabled state - show/hide disabled overlay
+//        disabledView.isHidden = data.isEnabled
+        containerView.alpha = data.isEnabled ? 1.0 : 0.5
         
         // Force layout update to ensure proper sizing
         setNeedsLayout()
@@ -281,79 +332,101 @@ public final class BetslipTicketView: UIView {
         
     }
     
-    private func updateOddsChangeIndicator(_ state: OddsChangeState) {
-        // Cancel existing timer
-        oddsChangeTimer?.invalidate()
-        oddsChangeTimer = nil
+    private func updateOddsChangeIndicator(_ state: OddsChangeState, animated: Bool) {
+        if animated {
+            // Cancel existing timer
+            oddsChangeTimer?.invalidate()
+            oddsChangeTimer = nil
+        }
         
         switch state {
         case .none:
-            // Hide both arrows with fade animation
-            if !upArrowImageView.isHidden {
-                UIView.animate(withDuration: 0.3) {
-                    self.upArrowImageView.alpha = 0
-                } completion: { _ in
-                    self.upArrowImageView.isHidden = true
-                    self.upArrowImageView.alpha = 1
+            if animated {
+                // Hide both arrows with fade animation
+                if !upArrowImageView.isHidden {
+                    UIView.animate(withDuration: 0.3) {
+                        self.upArrowImageView.alpha = 0
+                    } completion: { _ in
+                        self.upArrowImageView.isHidden = true
+                        self.upArrowImageView.alpha = 1
+                    }
                 }
-            }
-            if !downArrowImageView.isHidden {
-                UIView.animate(withDuration: 0.3) {
-                    self.downArrowImageView.alpha = 0
-                } completion: { _ in
-                    self.downArrowImageView.isHidden = true
-                    self.downArrowImageView.alpha = 1
+                if !downArrowImageView.isHidden {
+                    UIView.animate(withDuration: 0.3) {
+                        self.downArrowImageView.alpha = 0
+                    } completion: { _ in
+                        self.downArrowImageView.isHidden = true
+                        self.downArrowImageView.alpha = 1
+                    }
                 }
+            } else {
+                // Just hide without animation
+                upArrowImageView.isHidden = true
+                downArrowImageView.isHidden = true
             }
             
         case .increased:
-            // Hide down arrow if visible
-            if !downArrowImageView.isHidden {
-                UIView.animate(withDuration: 0.3) {
-                    self.downArrowImageView.alpha = 0
-                } completion: { _ in
-                    self.downArrowImageView.isHidden = true
-                    self.downArrowImageView.alpha = 1
+            if animated {
+                // Hide down arrow if visible
+                if !downArrowImageView.isHidden {
+                    UIView.animate(withDuration: 1) {
+                        self.downArrowImageView.alpha = 0
+                    } completion: { _ in
+                        self.downArrowImageView.isHidden = true
+                        self.downArrowImageView.alpha = 1
+                    }
                 }
-            }
-            
-            // Show up arrow with fade animation
-            upArrowImageView.isHidden = false
-            upArrowImageView.alpha = 0
-            UIView.animate(withDuration: 0.3) {
-                self.upArrowImageView.alpha = 1
-            }
-            
-            // Hide after 4 seconds
-            oddsChangeTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
-                DispatchQueue.main.async {
-                    self?.hideUpArrow()
+                
+                // Show up arrow with fade animation
+                upArrowImageView.isHidden = false
+                upArrowImageView.alpha = 0
+                UIView.animate(withDuration: 1) {
+                    self.upArrowImageView.alpha = 1
                 }
+                
+                // Hide after 4 seconds
+                oddsChangeTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
+                    DispatchQueue.main.async {
+                        self?.hideUpArrow()
+                    }
+                }
+            } else {
+                // Just show without animation
+                upArrowImageView.isHidden = false
+                upArrowImageView.alpha = 1
+                downArrowImageView.isHidden = true
             }
             
         case .decreased:
-            // Hide up arrow if visible
-            if !upArrowImageView.isHidden {
+            if animated {
+                // Hide up arrow if visible
+                if !upArrowImageView.isHidden {
+                    UIView.animate(withDuration: 0.3) {
+                        self.upArrowImageView.alpha = 0
+                    } completion: { _ in
+                        self.upArrowImageView.isHidden = true
+                        self.upArrowImageView.alpha = 1
+                    }
+                }
+                
+                // Show down arrow with fade animation
+                downArrowImageView.isHidden = false
+                downArrowImageView.alpha = 0
                 UIView.animate(withDuration: 0.3) {
-                    self.upArrowImageView.alpha = 0
-                } completion: { _ in
-                    self.upArrowImageView.isHidden = true
-                    self.upArrowImageView.alpha = 1
+                    self.downArrowImageView.alpha = 1
                 }
-            }
-            
-            // Show down arrow with fade animation
-            downArrowImageView.isHidden = false
-            downArrowImageView.alpha = 0
-            UIView.animate(withDuration: 0.3) {
-                self.downArrowImageView.alpha = 1
-            }
-            
-            // Hide after 4 seconds
-            oddsChangeTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
-                DispatchQueue.main.async {
-                    self?.hideDownArrow()
+                
+                // Hide after 4 seconds
+                oddsChangeTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
+                    DispatchQueue.main.async {
+                        self?.hideDownArrow()
+                    }
                 }
+            } else {
+                // Just show without animation
+                downArrowImageView.isHidden = false
+                downArrowImageView.alpha = 1
+                upArrowImageView.isHidden = true
             }
         }
     }
@@ -378,6 +451,7 @@ public final class BetslipTicketView: UIView {
     
     // MARK: - Actions
     @objc private func handleCloseTapped() {
+        print("Close tapped!")
         viewModel.onCloseTapped?()
     }
     

@@ -35,6 +35,9 @@ enum EveryMatrixPlayerAPI {
     case validateResetPasswordCode(tokenId: String, validationCode: String)
     case resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool)
     
+    // Bonus
+    case getAvailableBonus
+    case getGrantedBonus
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -83,6 +86,10 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/resetPasswordByMobilePhone/validate"
         case .resetPasswordWithHashKey:
             return "/v1/player/ResetPasswordByHashKey"
+        case .getAvailableBonus:
+            return "/v1/bonus/applicable"
+        case .getGrantedBonus:
+            return "/v1/bonus/granted"
         }
     }
     
@@ -139,6 +146,14 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return [
                 URLQueryItem(name: "tokenId", value: tokenId),
                 URLQueryItem(name: "validationCode", value: validationCode)
+            ]
+        case .getAvailableBonus:
+            return [
+                URLQueryItem(name: "language", value: "en")
+            ]
+        case .getGrantedBonus:
+            return [
+                URLQueryItem(name: "language", value: "en")
             ]
         default:
             return nil
@@ -216,6 +231,10 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return .post
         case .resetPasswordWithHashKey:
             return .post
+        case .getAvailableBonus:
+            return .get
+        case .getGrantedBonus:
+            return .get
         }
     }
     
@@ -310,6 +329,10 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getRecentlyPlayedGames:
             return true
         case .getSportsBonusWallets:
+            return true
+        case .getAvailableBonus:
+            return true
+        case .getGrantedBonus:
             return true
         default:
             return false

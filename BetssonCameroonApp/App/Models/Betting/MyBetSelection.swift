@@ -25,6 +25,7 @@ struct MyBetSelection: Codable, Equatable, Hashable {
     let outcomeName: String
     let odd: OddFormat
     let marketId: String?
+    let marketTypeId: String?
     let outcomeId: String?
     
     // MARK: - Score Information
@@ -54,6 +55,7 @@ struct MyBetSelection: Codable, Equatable, Hashable {
         outcomeName: String,
         odd: OddFormat,
         marketId: String?,
+        marketTypeId: String?,
         outcomeId: String?,
         homeResult: String?,
         awayResult: String?,
@@ -74,6 +76,7 @@ struct MyBetSelection: Codable, Equatable, Hashable {
         self.outcomeName = outcomeName
         self.odd = odd
         self.marketId = marketId
+        self.marketTypeId = marketTypeId
         self.outcomeId = outcomeId
         self.homeResult = homeResult
         self.awayResult = awayResult

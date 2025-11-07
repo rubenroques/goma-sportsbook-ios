@@ -78,13 +78,21 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "promotions",
                 icon: "promotion_icon",
-                title: "Promotions and Bonuses",
+                title: "Promotions",
                 subtitle: nil,
                 type: .navigation,
                 action: .promotions
             ),
             ActionRowItem(
-                id: "view_notifications",
+                id: "promotions",
+                icon: "promotion_icon",
+                title: "Bonuses",
+                subtitle: nil,
+                type: .navigation,
+                action: .bonus
+            ),
+            ActionRowItem(
+                id: "notifications",
                 icon: "bell",
                 title: "View Notifications",
                 subtitle: nil,
@@ -94,7 +102,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "notification_settings",
                 icon: "bell.badge",
-                title: "Notification Settings",
+                title: "Notifications Settings",
                 subtitle: nil,
                 type: .navigation,
                 action: .notificationSettings

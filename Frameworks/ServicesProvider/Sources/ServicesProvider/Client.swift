@@ -1348,13 +1348,13 @@ extension Client {
     }
     
 
-    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String? = nil, userId: String? = nil, oddsValidationType: String? = nil, ubsWalletId: String? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String? = nil, userId: String? = nil, oddsValidationType: String? = nil, ubsWalletId: String? = nil, betBuilderOdds: Double? = nil) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
-        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
+        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId, betBuilderOdds: betBuilderOdds)
     }
 
     public func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {

@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import GomaUI
+import ServicesProvider
 
 /// Production implementation of BetslipFloatingViewModelProtocol
 final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
@@ -45,27 +46,62 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
     
     // MARK: - Private Methods
     private func setupBindings() {
-        // Combine both publishers to automatically sync tickets and odds boost data
-        Publishers.CombineLatest(
+        // Combine all three publishers for synchronized state updates
+        Publishers.CombineLatest3(
             Env.betslipManager.bettingTicketsPublisher,
-            Env.betslipManager.oddsBoostStairsPublisher
+            Env.betslipManager.oddsBoostStairsPublisher,
+            Env.betslipManager.bettingOptionsPublisher
         )
         .receive(on: DispatchQueue.main)
-        .sink { [weak self] (tickets, oddsBoostState) in
-            self?.oddsBoostState = oddsBoostState
-            self?.updateBetslipState(with: tickets)
+        .sink { [weak self] (tickets, oddsBoostState, bettingOptions) in
+            guard let self = self else { return }
+            self.oddsBoostState = oddsBoostState
+            self.updateBetslipState(with: tickets, bettingOptions: bettingOptions)
         }
         .store(in: &cancellables)
     }
     
-    private func updateBetslipState(with tickets: [BettingTicket]) {
+    private func updateBetslipState(with tickets: [BettingTicket], bettingOptions: LoadableContent<UnifiedBettingOptions>) {
         if tickets.isEmpty {
             updateState(.noTickets)
         } else {
             // CRITICAL: Use API's eligibleEventIds.count for selection count
             // This correctly handles duplicate events (multiple selections from same event)
             let eligibleEventsCount = oddsBoostState?.eligibleEventIds.count ?? tickets.count
-            let totalOdds = calculateTotalOdds(from: tickets)
+            
+            // Get current displayed odds to avoid flickering to 0 while loading
+            let currentDisplayedOdds: Double = {
+                if case .withTickets(_, let oddsString, _, _, _) = currentData.state {
+                    return Double(oddsString) ?? 0.0
+                }
+                return 0.0
+            }()
+            
+            // Calculate odds: use API odds with priority order (matching SportsBetslipViewModel)
+            let totalOdds: Double
+            if case .loaded(let options) = bettingOptions {
+                // Determine invalid state
+                let isInvalid = !options.forbiddenCombinations.isEmpty || options.totalOdds == nil || options.totalOdds == 0.0
+                
+                if let firstBetbuilder = options.betBuilders.first, let betBuilderOdds = firstBetbuilder.betBuilderOdds {
+                    // Priority 1: Use betBuilder odds if present
+                    totalOdds = betBuilderOdds
+                } else if isInvalid {
+                    // Priority 2: Set to 0 if invalid or forbidden
+                    totalOdds = 0.0
+                } else if let apiOdds = options.totalOdds {
+                    // Priority 3: Use regular totalOdds
+                    totalOdds = apiOdds
+                } else {
+                    // Priority 4: Fallback to 0
+                    totalOdds = 0.0
+                }
+            } else if case .failed = bettingOptions {
+                totalOdds = 0.0
+            } else {
+                // While loading or idle, preserve current odds to avoid flickering
+                totalOdds = currentDisplayedOdds
+            }
 
             // Extract real odds boost data from API response
             let (winBoostPercentage, totalEligibleCount, nextTierPercentage) = extractOddsBoostData()
@@ -79,12 +115,6 @@ final class BetslipFloatingViewModel: BetslipFloatingViewModelProtocol {
             )
 
             updateState(state)
-        }
-    }
-    
-    private func calculateTotalOdds(from tickets: [BettingTicket]) -> Double {
-        return tickets.reduce(1.0) { total, ticket in
-            total * ticket.decimalOdd
         }
     }
     

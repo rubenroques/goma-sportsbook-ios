@@ -1455,7 +1455,7 @@ extension GomaProvider: BettingProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?, betBuilderOdds: Double?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Note: ubsWalletId is not supported by Goma provider (ignored)
 
         let publishers = betTickets.map { betTicket in

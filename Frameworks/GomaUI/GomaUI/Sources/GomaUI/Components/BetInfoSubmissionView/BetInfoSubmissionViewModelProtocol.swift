@@ -74,6 +74,9 @@ public protocol BetInfoSubmissionViewModelProtocol {
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     
+    /// Update whether all tickets are valid/enabled
+    func updateHasValidTickets(_ hasValidTickets: Bool)
+    
     /// Handle quick add button tap
     func onQuickAddTapped(_ amount: Int)
     

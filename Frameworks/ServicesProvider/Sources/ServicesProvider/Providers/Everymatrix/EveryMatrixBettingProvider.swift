@@ -109,9 +109,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Place Bets Implementation
     
-    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String? = nil, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?, betBuilderOdds: Double?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         // Convert BetTickets to PlaceBetRequest
-        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId)
+        let placeBetRequest = convertBetTicketsToPlaceBetRequest(betTickets, currency: currency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId, betBuilderOdds: betBuilderOdds)
 
         // Create the API endpoint
         let endpoint = EveryMatrixOddsMatrixWebAPI.placeBet(betData: placeBetRequest)
@@ -291,12 +291,17 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     // MARK: - Private Helper Methods
     
-    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?) -> EveryMatrix.PlaceBetRequest {
+    private func convertBetTicketsToPlaceBetRequest(_ betTickets: [BetTicket], currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?, betBuilderOdds: Double?) -> EveryMatrix.PlaceBetRequest {
         let selections = betTickets.flatMap { betTicket in
             betTicket.tickets.map { selection in
                 EveryMatrix.BetSelectionInfo(
-                    bettingOfferId: selection.outcomeId ?? "",
-                    priceValue: selection.odd.decimalOdd
+                    bettingOfferId: selection.identifier,
+                    priceValue: selection.odd.decimalOdd,
+                    eventId: selection.eventId ?? "",
+                    marketId: selection.marketId ?? "",
+                    bettingTypeId: selection.marketTypeId ?? "",
+                    outcomeId: selection.outcomeId ?? "",
+                    betBuilderPriceValue: betBuilderOdds
                 )
             }
         }
@@ -317,7 +322,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             selections: selections,
             amount: String(format: "%.2f", totalAmount),
             oddsValidationType: oddsValidationType ?? "ACCEPT_ANY",
-            terminalType: "SSBT",
+            terminalType: "DESKTOP",
             ubsWalletId: ubsWalletId,
             freeBet: nil
         )

@@ -26,6 +26,7 @@ extension EveryMatrix {
                 id: outcome.id,
                 name: outcome.translatedName,
                 shortName: outcome.shortTranslatedName,
+                typeName: outcome.typeName,
                 code: outcome.code,
                 bettingOffers: hierarchicalBettingOffers,
                 headerName: outcome.headerName,

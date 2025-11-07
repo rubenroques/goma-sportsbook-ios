@@ -49,6 +49,37 @@ extension EveryMatrixModelMapper {
             )
         }
 
+        // Map bet builders
+        let betBuilders = (response.betBuilder ?? []).map { bb in
+            let selections = (bb.selections ?? []).map { sel in
+                BetBuilderSelectionInfo(
+                    bettingOfferId: sel.bettingOfferId,
+                    outcomeId: sel.outcomeId,
+                    bettingTypeId: sel.bettingTypeId,
+                    priceValue: sel.priceValue,
+                    banker: sel.banker
+                )
+            }
+            return BetBuilderInfo(
+                selections: selections,
+                betBuilderOdds: bb.betBuilderOdds
+            )
+        }
+
+        // Map forbidden combinations
+        let forbiddenCombinations = (response.forbiddenCombinations ?? []).map { fc in
+            let selections = (fc.selections ?? []).map { sel in
+                ForbiddenCombinationSelectionInfo(
+                    bettingOfferId: sel.bettingOfferId,
+                    outcomeId: sel.outcomeId,
+                    bettingTypeId: sel.bettingTypeId,
+                    priceValue: sel.priceValue,
+                    banker: sel.banker
+                )
+            }
+            return ForbiddenCombinationInfo(selections: selections)
+        }
+
         return UnifiedBettingOptions(
             isValid: response.success ?? false,
             minStake: response.minStake,
@@ -58,6 +89,8 @@ extension EveryMatrixModelMapper {
             availableFreeBets: freeBets,
             availableOddsBoosts: oddsBoosts,
             availableStakeBacks: stakeBacks,
+            betBuilders: betBuilders,
+            forbiddenCombinations: forbiddenCombinations,
             manualBetRequestAllowed: response.availableForManualBetRequest ?? true,
             taxEnabled: response.maxWinningAndTaxes?.taxEnabled ?? false
         )

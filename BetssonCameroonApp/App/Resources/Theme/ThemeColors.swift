@@ -254,7 +254,7 @@ extension ThemeColors {
         backgroundBetslip: "#eeeeee",
         addBetslip: "#ffffff",
         gameHeaderTextPrimary: "#03061b",
-        gameHeaderTextSecondary: "#898e9e",
+        gameHeaderTextSecondary: "#53545f",
         gameHeader: "#ffffff",
         cardBorderLineGradient1: "#ffffff",
         cardBorderLineGradient2: "#ffffff",

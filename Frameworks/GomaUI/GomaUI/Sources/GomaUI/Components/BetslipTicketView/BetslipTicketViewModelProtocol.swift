@@ -19,8 +19,10 @@ public struct BetslipTicketData: Equatable {
     public let oddsValue: String
     public let oddsChangeState: OddsChangeState
     public let isEnabled: Bool
+    public let bettingOfferId: String?
+    public let disabledMessage: String?
     
-    public init(leagueName: String, startDate: String, homeTeam: String, awayTeam: String, selectedTeam: String, oddsValue: String, oddsChangeState: OddsChangeState = .none, isEnabled: Bool = true) {
+    public init(leagueName: String, startDate: String, homeTeam: String, awayTeam: String, selectedTeam: String, oddsValue: String, oddsChangeState: OddsChangeState = .none, isEnabled: Bool = true, bettingOfferId: String? = nil, disabledMessage: String? = nil) {
         self.leagueName = leagueName
         self.startDate = startDate
         self.homeTeam = homeTeam
@@ -29,6 +31,8 @@ public struct BetslipTicketData: Equatable {
         self.oddsValue = oddsValue
         self.oddsChangeState = oddsChangeState
         self.isEnabled = isEnabled
+        self.bettingOfferId = bettingOfferId
+        self.disabledMessage = disabledMessage
     }
 }
 
@@ -36,6 +40,9 @@ public struct BetslipTicketData: Equatable {
 public protocol BetslipTicketViewModelProtocol: AnyObject {
     /// Publisher for the betslip ticket data
     var dataPublisher: AnyPublisher<BetslipTicketData, Never> { get }
+    
+    /// Publisher specifically for odds change state (for animations)
+    var oddsChangeStatePublisher: AnyPublisher<OddsChangeState, Never> { get }
     
     /// Current data (for immediate access)
     var currentData: BetslipTicketData { get }

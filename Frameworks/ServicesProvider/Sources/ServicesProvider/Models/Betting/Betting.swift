@@ -287,6 +287,7 @@ public struct BetTicketSelection: Codable, Equatable, Hashable {
     public var eventId: String?
     public var marketId: String?
     public var outcomeId: String?
+    public var marketTypeId: String?
 
     public init(identifier: String,
                 eventName: String,
@@ -299,7 +300,8 @@ public struct BetTicketSelection: Codable, Equatable, Hashable {
                 sportIdCode: String?,
                 eventId: String? = nil,
                 marketId: String? = nil,
-                outcomeId: String? = nil) {
+                outcomeId: String? = nil,
+                marketTypeId: String? = nil) {
 
         self.identifier = identifier
         self.eventName = eventName
@@ -313,6 +315,7 @@ public struct BetTicketSelection: Codable, Equatable, Hashable {
         self.eventId = eventId
         self.marketId = marketId
         self.outcomeId = outcomeId
+        self.marketTypeId = marketTypeId
     }
 
 }
@@ -436,6 +439,8 @@ public struct UnifiedBettingOptions: Codable, Equatable {
     public let availableFreeBets: [FreeBetInfo]
     public let availableOddsBoosts: [OddsBoostInfo]
     public let availableStakeBacks: [StakeBackInfo]
+    public let betBuilders: [BetBuilderInfo]
+    public let forbiddenCombinations: [ForbiddenCombinationInfo]
 
     // Constraints
     public let manualBetRequestAllowed: Bool
@@ -450,6 +455,8 @@ public struct UnifiedBettingOptions: Codable, Equatable {
         availableFreeBets: [FreeBetInfo] = [],
         availableOddsBoosts: [OddsBoostInfo] = [],
         availableStakeBacks: [StakeBackInfo] = [],
+        betBuilders: [BetBuilderInfo] = [],
+        forbiddenCombinations: [ForbiddenCombinationInfo] = [],
         manualBetRequestAllowed: Bool = true,
         taxEnabled: Bool = false
     ) {
@@ -461,6 +468,8 @@ public struct UnifiedBettingOptions: Codable, Equatable {
         self.availableFreeBets = availableFreeBets
         self.availableOddsBoosts = availableOddsBoosts
         self.availableStakeBacks = availableStakeBacks
+        self.betBuilders = betBuilders
+        self.forbiddenCombinations = forbiddenCombinations
         self.manualBetRequestAllowed = manualBetRequestAllowed
         self.taxEnabled = taxEnabled
     }
@@ -538,6 +547,75 @@ public struct StakeBackInfo: Codable, Equatable {
         self.currency = currency
         self.minStake = minStake
         self.maxStake = maxStake
+    }
+}
+
+/// Bet builder information
+public struct BetBuilderInfo: Codable, Equatable {
+    public let selections: [BetBuilderSelectionInfo]
+    public let betBuilderOdds: Double?
+
+    public init(
+        selections: [BetBuilderSelectionInfo],
+        betBuilderOdds: Double? = nil
+    ) {
+        self.selections = selections
+        self.betBuilderOdds = betBuilderOdds
+    }
+}
+
+/// Bet builder selection information
+public struct BetBuilderSelectionInfo: Codable, Equatable {
+    public let bettingOfferId: String?
+    public let outcomeId: String?
+    public let bettingTypeId: String?
+    public let priceValue: Double?
+    public let banker: Bool?
+
+    public init(
+        bettingOfferId: String? = nil,
+        outcomeId: String? = nil,
+        bettingTypeId: String? = nil,
+        priceValue: Double? = nil,
+        banker: Bool? = nil
+    ) {
+        self.bettingOfferId = bettingOfferId
+        self.outcomeId = outcomeId
+        self.bettingTypeId = bettingTypeId
+        self.priceValue = priceValue
+        self.banker = banker
+    }
+}
+
+/// Forbidden combination information
+public struct ForbiddenCombinationInfo: Codable, Equatable {
+    public let selections: [ForbiddenCombinationSelectionInfo]
+
+    public init(selections: [ForbiddenCombinationSelectionInfo]) {
+        self.selections = selections
+    }
+}
+
+/// Forbidden combination selection information
+public struct ForbiddenCombinationSelectionInfo: Codable, Equatable {
+    public let bettingOfferId: String?
+    public let outcomeId: String?
+    public let bettingTypeId: String?
+    public let priceValue: Double?
+    public let banker: Bool?
+
+    public init(
+        bettingOfferId: String? = nil,
+        outcomeId: String? = nil,
+        bettingTypeId: String? = nil,
+        priceValue: Double? = nil,
+        banker: Bool? = nil
+    ) {
+        self.bettingOfferId = bettingOfferId
+        self.outcomeId = outcomeId
+        self.bettingTypeId = bettingTypeId
+        self.priceValue = priceValue
+        self.banker = banker
     }
 }
 
