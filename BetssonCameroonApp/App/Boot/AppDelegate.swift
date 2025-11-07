@@ -24,7 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         print("App Started")
 
-        
+        // Register Settings.bundle defaults (makes iOS Settings app recognize our settings)
+        SettingsBundleHelper.registerDefaultsFromSettingsBundle()
+        SettingsBundleHelper.updateSettingsBundleValues()
+
         // External Localization tool
         #if DEBUG
         let phraseConfiguration = PhraseConfiguration()
