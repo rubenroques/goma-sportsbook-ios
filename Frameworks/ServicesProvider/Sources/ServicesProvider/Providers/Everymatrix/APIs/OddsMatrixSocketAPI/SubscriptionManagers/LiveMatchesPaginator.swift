@@ -9,7 +9,6 @@ import Foundation
 import Combine
 import SharedModels
 
-
 /// Manages subscription to pre-live matches list structure changes and individual entity updates
 /// 
 /// This class provides two types of subscriptions:
@@ -105,7 +104,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
         eventInfoStore.clear()
 
         // Build router with current event limit
-        let router = buildRouter()
+        let router = buildTopic()
 
         // Subscribe to WAMP and forward all events to contentSubject
         internalSubscriptionCancellable = connector.subscribe(router)
@@ -136,7 +135,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
     }
 
     /// Build WAMP router with current configuration
-    private func buildRouter() -> WAMPRouter {
+    private func buildTopic() -> WAMPRouter {
         
         let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
         

@@ -13,8 +13,6 @@ let Env = Environment() // swiftlint:disable:this identifier_name
 
 class Environment {
 
-    let appSession: AppSession = AppSession()
-
     /// Centralized store for presentation configuration
     let presentationConfigurationStore: PresentationConfigurationStore = PresentationConfigurationStore()
 

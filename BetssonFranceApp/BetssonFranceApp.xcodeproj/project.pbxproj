@@ -6283,9 +6283,6 @@
 		A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewController.swift; sourceTree = "<group>"; };
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
 		CE04D31C2E16E1B400C6424A /* MainMarket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarket.swift; sourceTree = "<group>"; };
-		CE05AAD02DFB85E800D20357 /* AppDelegate+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+BetssonCM.swift"; sourceTree = "<group>"; };
-		CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bootstrap+BetssonCM.swift"; sourceTree = "<group>"; };
-		CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Router+BetssonCM.swift"; sourceTree = "<group>"; };
 		CE0AEAA92D8A41EE007CCFC3 /* MatchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchHeaderView.swift; sourceTree = "<group>"; };
 		CE0C6C712D54746500EAD26B /* CompetitionsFiltersViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsFiltersViewSwiftUI.swift; sourceTree = "<group>"; };
 		CE0C6C7B2D5483DA00EAD26B /* CompetitionFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterCell.swift; sourceTree = "<group>"; };
@@ -6460,40 +6457,6 @@
 		CEB2360C2DAD07F800260B5B /* SupportPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportPageViewController.swift; sourceTree = "<group>"; };
 		CEB2360D2DAD07F800260B5B /* SupportPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportPageViewModel.swift; sourceTree = "<group>"; };
 		CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleAspectFitImageView.swift; sourceTree = "<group>"; };
-		CEB39FDF2DD379510024043B /* avatar1-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-dark.json"; sourceTree = "<group>"; };
-		CEB39FE02DD379510024043B /* avatar1-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-light.json"; sourceTree = "<group>"; };
-		CEB39FE12DD379510024043B /* avatar2-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar2-dark.json"; sourceTree = "<group>"; };
-		CEB39FE22DD379510024043B /* avatar2-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar2-light.json"; sourceTree = "<group>"; };
-		CEB39FE32DD379510024043B /* avatar3-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar3-dark.json"; sourceTree = "<group>"; };
-		CEB39FE42DD379510024043B /* avatar3-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar3-light.json"; sourceTree = "<group>"; };
-		CEB39FE52DD379510024043B /* avatar4-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar4-dark.json"; sourceTree = "<group>"; };
-		CEB39FE62DD379510024043B /* avatar4-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar4-light.json"; sourceTree = "<group>"; };
-		CEB39FE72DD379510024043B /* avatar5-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar5-dark.json"; sourceTree = "<group>"; };
-		CEB39FE82DD379510024043B /* avatar5-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar5-light.json"; sourceTree = "<group>"; };
-		CEB39FE92DD379510024043B /* avatar6-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-dark.json"; sourceTree = "<group>"; };
-		CEB39FEA2DD379510024043B /* avatar6-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-light.json"; sourceTree = "<group>"; };
-		CEB39FEB2DD379510024043B /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
-		CEB39FED2DD379510024043B /* BetssonCM-Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "BetssonCM-Assets.xcassets"; sourceTree = "<group>"; };
-		CEB39FEE2DD379510024043B /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
-		CEB39FEF2DD379510024043B /* Gradients.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Gradients.xcassets; sourceTree = "<group>"; };
-		CEB39FF02DD379510024043B /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
-		CEB39FF22DD379510024043B /* LaunchScreen-BetssonCM.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "LaunchScreen-BetssonCM.storyboard"; sourceTree = "<group>"; };
-		CEB39FF42DD379510024043B /* BetssonCM-DEV-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BetssonCM-DEV-Info.plist"; sourceTree = "<group>"; };
-		CEB39FF52DD379510024043B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		CEB39FF72DD379510024043B /* BetssonCM-PROD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BetssonCM-PROD-Info.plist"; sourceTree = "<group>"; };
-		CEB39FF82DD379510024043B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		CEB39FFA2DD379510024043B /* BetssonCM-STG-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BetssonCM-STG-Info.plist"; sourceTree = "<group>"; };
-		CEB39FFB2DD379510024043B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		CEB39FFD2DD379510024043B /* ColorExtension+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ColorExtension+Colors.swift"; sourceTree = "<group>"; };
-		CEB39FFE2DD379510024043B /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
-		CEB3A0002DD379510024043B /* BetssonCM-DEV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "BetssonCM-DEV.entitlements"; sourceTree = "<group>"; };
-		CEB3A0012DD379510024043B /* BetssonCM-PROD.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "BetssonCM-PROD.entitlements"; sourceTree = "<group>"; };
-		CEB3A0022DD379510024043B /* BetssonCM-STG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "BetssonCM-STG.entitlements"; sourceTree = "<group>"; };
-		CEB3A0032DD379510024043B /* ClientVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientVariables.swift; sourceTree = "<group>"; };
-		CEB3A0042DD379510024043B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		CEB3A0052DD379510024043B /* TargetVariables-DEV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TargetVariables-DEV.swift"; sourceTree = "<group>"; };
-		CEB3A0062DD379510024043B /* TargetVariables-PROD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TargetVariables-PROD.swift"; sourceTree = "<group>"; };
-		CEB3A0072DD379510024043B /* TargetVariables-STG.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TargetVariables-STG.swift"; sourceTree = "<group>"; };
 		CEB739D02D754A86009C4E0F /* CMSManagedHomeViewTemplateDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMSManagedHomeViewTemplateDataSource.swift; sourceTree = "<group>"; };
 		CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewModelsHelper.swift; sourceTree = "<group>"; };
 		CEB739F22D767AED009C4E0F /* LiveEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveEventsViewController.swift; sourceTree = "<group>"; };
@@ -7237,7 +7200,6 @@
 		455A0C9226BD906700EC572D /* Clients */ = {
 			isa = PBXGroup;
 			children = (
-				CEB3A0082DD379510024043B /* BetssonCM */,
 				CEF197AB2DA8350400C81F12 /* Demo */,
 				45A33350298976E3008181E9 /* BetssonFR */,
 				450B7B2628F58625009229E3 /* SportRadar */,
@@ -9854,16 +9816,6 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		CE05AACF2DFB857F00D20357 /* Boot */ = {
-			isa = PBXGroup;
-			children = (
-				CE05AAD02DFB85E800D20357 /* AppDelegate+BetssonCM.swift */,
-				CE05AAD12DFB85E800D20357 /* Bootstrap+BetssonCM.swift */,
-				CE05AAD22DFB85E800D20357 /* Router+BetssonCM.swift */,
-			);
-			path = Boot;
-			sourceTree = "<group>";
-		};
 		CE0C6C912D56327E00EAD26B /* SmallToolTipView */ = {
 			isa = PBXGroup;
 			children = (
@@ -10496,104 +10448,6 @@
 				CEA667462D84A76100C74895 /* URLPath.swift */,
 			);
 			path = URLs;
-			sourceTree = "<group>";
-		};
-		CEB39FEC2DD379510024043B /* Animations */ = {
-			isa = PBXGroup;
-			children = (
-				CEB39FDF2DD379510024043B /* avatar1-dark.json */,
-				CEB39FE02DD379510024043B /* avatar1-light.json */,
-				CEB39FE12DD379510024043B /* avatar2-dark.json */,
-				CEB39FE22DD379510024043B /* avatar2-light.json */,
-				CEB39FE32DD379510024043B /* avatar3-dark.json */,
-				CEB39FE42DD379510024043B /* avatar3-light.json */,
-				CEB39FE52DD379510024043B /* avatar4-dark.json */,
-				CEB39FE62DD379510024043B /* avatar4-light.json */,
-				CEB39FE72DD379510024043B /* avatar5-dark.json */,
-				CEB39FE82DD379510024043B /* avatar5-light.json */,
-				CEB39FE92DD379510024043B /* avatar6-dark.json */,
-				CEB39FEA2DD379510024043B /* avatar6-light.json */,
-				CEB39FEB2DD379510024043B /* replay_sucess.json */,
-			);
-			path = Animations;
-			sourceTree = "<group>";
-		};
-		CEB39FF12DD379510024043B /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				CEB39FEC2DD379510024043B /* Animations */,
-				CEB39FED2DD379510024043B /* BetssonCM-Assets.xcassets */,
-				CEB39FEE2DD379510024043B /* Colors.xcassets */,
-				CEB39FEF2DD379510024043B /* Gradients.xcassets */,
-				CEB39FF02DD379510024043B /* Media.xcassets */,
-			);
-			path = Assets;
-			sourceTree = "<group>";
-		};
-		CEB39FF32DD379510024043B /* LaunchScreen */ = {
-			isa = PBXGroup;
-			children = (
-				CEB39FF22DD379510024043B /* LaunchScreen-BetssonCM.storyboard */,
-			);
-			path = LaunchScreen;
-			sourceTree = "<group>";
-		};
-		CEB39FF62DD379510024043B /* Misc-DEV */ = {
-			isa = PBXGroup;
-			children = (
-				CEB39FF42DD379510024043B /* BetssonCM-DEV-Info.plist */,
-				CEB39FF52DD379510024043B /* GoogleService-Info.plist */,
-			);
-			path = "Misc-DEV";
-			sourceTree = "<group>";
-		};
-		CEB39FF92DD379510024043B /* Misc-PROD */ = {
-			isa = PBXGroup;
-			children = (
-				CEB39FF72DD379510024043B /* BetssonCM-PROD-Info.plist */,
-				CEB39FF82DD379510024043B /* GoogleService-Info.plist */,
-			);
-			path = "Misc-PROD";
-			sourceTree = "<group>";
-		};
-		CEB39FFC2DD379510024043B /* Misc-STG */ = {
-			isa = PBXGroup;
-			children = (
-				CEB39FFA2DD379510024043B /* BetssonCM-STG-Info.plist */,
-				CEB39FFB2DD379510024043B /* GoogleService-Info.plist */,
-			);
-			path = "Misc-STG";
-			sourceTree = "<group>";
-		};
-		CEB39FFF2DD379510024043B /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-				CEB39FFD2DD379510024043B /* ColorExtension+Colors.swift */,
-				CEB39FFE2DD379510024043B /* ThemeColors.swift */,
-			);
-			path = Theme;
-			sourceTree = "<group>";
-		};
-		CEB3A0082DD379510024043B /* BetssonCM */ = {
-			isa = PBXGroup;
-			children = (
-				CE05AACF2DFB857F00D20357 /* Boot */,
-				CEB39FF12DD379510024043B /* Assets */,
-				CEB39FF32DD379510024043B /* LaunchScreen */,
-				CEB39FF62DD379510024043B /* Misc-DEV */,
-				CEB39FF92DD379510024043B /* Misc-PROD */,
-				CEB39FFC2DD379510024043B /* Misc-STG */,
-				CEB39FFF2DD379510024043B /* Theme */,
-				CEB3A0002DD379510024043B /* BetssonCM-DEV.entitlements */,
-				CEB3A0012DD379510024043B /* BetssonCM-PROD.entitlements */,
-				CEB3A0022DD379510024043B /* BetssonCM-STG.entitlements */,
-				CEB3A0032DD379510024043B /* ClientVariables.swift */,
-				CEB3A0042DD379510024043B /* PrivacyInfo.xcprivacy */,
-				CEB3A0052DD379510024043B /* TargetVariables-DEV.swift */,
-				CEB3A0062DD379510024043B /* TargetVariables-PROD.swift */,
-				CEB3A0072DD379510024043B /* TargetVariables-STG.swift */,
-			);
-			path = BetssonCM;
 			sourceTree = "<group>";
 		};
 		CEB739DD2D762BB3009C4E0F /* PreviewsHelper */ = {

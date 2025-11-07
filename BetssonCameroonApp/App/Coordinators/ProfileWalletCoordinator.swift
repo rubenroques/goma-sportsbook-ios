@@ -71,7 +71,7 @@ final class ProfileWalletCoordinator: Coordinator {
         setupViewModelCallbacks(viewModel)
         
         // Create dedicated NavigationController with hidden navigation bar (following Router pattern)
-        let profileNavigationController = Router.navigationController(with: profileViewController)
+        let profileNavigationController = AppCoordinator.navigationController(with: profileViewController)
         
         // Configure modal presentation on the NavigationController
         profileNavigationController.modalPresentationStyle = .pageSheet

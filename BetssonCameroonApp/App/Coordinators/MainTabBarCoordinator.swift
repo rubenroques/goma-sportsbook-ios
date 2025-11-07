@@ -664,7 +664,7 @@ class MainTabBarCoordinator: Coordinator {
         if isLogin {
             var phoneLoginViewModel = PhoneLoginViewModel()
             let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
-            let authNavigationController = Router.navigationController(with: phoneLoginViewController)
+            let authNavigationController = AppCoordinator.navigationController(with: phoneLoginViewController)
             navigationController.present(authNavigationController, animated: true)
         } else {
             presentRegistrationWithFirstDepositFlow()
@@ -682,7 +682,7 @@ class MainTabBarCoordinator: Coordinator {
         }
         
         let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
-        let authNavigationController = Router.navigationController(with: phoneRegistrationViewController)
+        let authNavigationController = AppCoordinator.navigationController(with: phoneRegistrationViewController)
         navigationController.present(authNavigationController, animated: true)
         
         print("🚀 RootTabBarCoordinator: Presented registration with first deposit integration")

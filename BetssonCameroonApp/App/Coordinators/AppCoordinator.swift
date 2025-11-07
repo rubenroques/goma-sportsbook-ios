@@ -231,3 +231,14 @@ class AppCoordinator: Coordinator {
         mainTabBarCoordinator = nil
     }
 }
+
+extension AppCoordinator {
+    static func navigationController(with viewController: UIViewController) -> UINavigationController {
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.navigationBar.isTranslucent = false
+        navigationController.interactivePopGestureRecognizer?.delegate = nil
+        navigationController.interactivePopGestureRecognizer?.isEnabled = true
+        return navigationController
+    }
+}

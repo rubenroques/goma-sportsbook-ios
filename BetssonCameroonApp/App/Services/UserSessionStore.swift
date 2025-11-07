@@ -10,6 +10,7 @@ import Combine
 import AppTrackingTransparency
 import AdSupport
 import ServicesProvider
+import XPush
 
 enum UserProfileStatus {
     case anonymous
@@ -156,6 +157,27 @@ class UserSessionStore {
         self.userSessionPublisher.send(nil)
         self.userWalletPublisher.send(nil)
         self.userCashbackBalance.send(nil)
+
+        // ⚠️ CRITICAL SECURITY & PRIVACY ISSUE - COMMENTED OUT PER CLIENT REQUEST
+        // XtremePush team instructed NOT to unregister users on logout.
+        //
+        // THIS IS A BAD IDEA FOR MULTIPLE REASONS:
+        // 1. PRIVACY VIOLATION: Logged-out users will continue receiving push notifications
+        //    for account activities, bets, deposits, etc. that may contain sensitive info
+        // 2. WRONG USER NOTIFICATIONS: If another user logs in on the same device,
+        //    they will receive notifications intended for the previous user
+        // 3. USER EXPERIENCE: Confusing/annoying to receive notifications after logout
+        // 4. SECURITY: Push notifications may leak sensitive betting/financial information
+        //    to unauthorized users of the device
+        //
+        // PROPER BEHAVIOR: Should call clearXtremePushUser() here to unlink device from user account
+        //
+        // TODO: Revisit this decision with XtremePush and client - this WILL cause issues
+        // Date commented: 2025-11-06
+        // Requested by: XtremePush team (via client)
+        //
+        // self.clearXtremePushUser()
+        //
     }
 
     func login(withUsername username: String, password: String) -> AnyPublisher<Void, UserSessionError> {
@@ -192,15 +214,17 @@ class UserSessionStore {
                 return (session, userProfile)
             }
             .handleEvents(receiveOutput: { [weak self] session, profile in
-                print("[AUTH_DEBUG] ✅ UserSessionStore: Login successful!")
-                print("[AUTH_DEBUG] 📝 UserSessionStore: Session userId: \(session.userId)")
-                print("[AUTH_DEBUG] 👤 UserSessionStore: Profile username: \(profile.username)")
-                
+                print("[AUTH_DEBUG] UserSessionStore: Login successful!")
+                print("[AUTH_DEBUG] UserSessionStore: Session userId: \(session.userId)")
+                print("[AUTH_DEBUG] UserSessionStore: Profile username: \(profile.username)")
+
                 self?.shouldAuthenticateUser = false
-                
+
                 self?.userSessionPublisher.send(session)
                 self?.userProfilePublisher.send(profile)
-                
+
+                // Set XtremePush user with phone number
+                self?.setXtremePushUser(from: profile)
             })
             .map({ _ in
                 return ()
@@ -441,7 +465,69 @@ extension UserSessionStore {
 
     func shouldRequestBiometrics() -> Bool {
         let hasStoredUserSession = self.storedUserSession != nil
-        return hasStoredUserSession && UserDefaults.standard.biometricAuthenticationEnabled 
+        return hasStoredUserSession && UserDefaults.standard.biometricAuthenticationEnabled
+    }
+
+}
+
+// MARK: - XtremePush Integration
+
+extension UserSessionStore {
+
+    /// Sets the XtremePush user identifier using phone number (or userIdentifier as fallback)
+    private func setXtremePushUser(from profile: UserProfile) {
+        let phoneNumber = extractPhoneNumber(from: profile)
+        let userIdentifier = phoneNumber.isEmpty ? profile.userIdentifier : phoneNumber
+
+        print("[XTREMEPUSH] 📞 Setting user identifier: \(userIdentifier)")
+        print("[XTREMEPUSH] 📊 Username: \(profile.username)")
+        print("[XTREMEPUSH] 📊 PhoneNumber field: \(profile.phoneNumber ?? "nil")")
+        print("[XTREMEPUSH] 📊 MobileCountryCode: \(profile.mobileCountryCode ?? "nil")")
+        print("[XTREMEPUSH] 📊 MobilePhone: \(profile.mobilePhone ?? "nil")")
+        print("[XTREMEPUSH] 📊 Extracted: \(phoneNumber)")
+
+        XPush.setUser(userIdentifier)
+    }
+
+    /// Clears the XtremePush user identifier on logout
+    private func clearXtremePushUser() {
+        print("[XTREMEPUSH] 🗑️ Clearing user identifier")
+        XPush.setUser(nil)
+    }
+
+    /// Extracts phone number from user profile with fallback chain
+    /// Priority: username (if starts with +) → mobileCountryCode+mobilePhone → phoneNumber → empty
+    private func extractPhoneNumber(from profile: UserProfile) -> String {
+        // Priority 1: username (contains full phone number)
+        // Example: "+237699198921"
+        if profile.username.hasPrefix("+") {
+            return profile.username
+        }
+
+        // Priority 2: Construct from mobileCountryCode + mobilePhone
+        // Example: "+237" + "699198921" = "+237699198921"
+        if let countryCode = profile.mobileCountryCode,
+           let localNumber = profile.mobilePhone,
+           !countryCode.isEmpty, !localNumber.isEmpty {
+            return "\(countryCode)\(localNumber)"
+        }
+
+        // Priority 3: phoneNumber field (if populated)
+        if let phoneNumber = profile.phoneNumber,
+           !phoneNumber.isEmpty,
+           phoneNumber != "" {
+            return phoneNumber
+        }
+
+        // Priority 4: mobileCountryCode + mobileLocalNumber
+        if let countryCode = profile.mobileCountryCode,
+           let localNumber = profile.mobileLocalNumber,
+           !countryCode.isEmpty, !localNumber.isEmpty {
+            return "\(countryCode)\(localNumber)"
+        }
+
+        // No phone number available
+        return ""
     }
 
 }
