@@ -17,7 +17,11 @@ public protocol ExtendedListFooterImageResolver {
 
 public struct DefaultExtendedListFooterImageResolver: ExtendedListFooterImageResolver {
 
-    public init() {}
+    private let languageCode: String
+
+    public init(languageCode: String = "en") {
+        self.languageCode = languageCode
+    }
 
     public func image(for imageType: FooterImageType) -> UIImage? {
         switch imageType {
@@ -42,13 +46,13 @@ public struct DefaultExtendedListFooterImageResolver: ExtendedListFooterImageRes
 
         switch club {
         case .interMiami:
-            imageName = "inter_partner_footer_icon"
+            imageName = "inter_partner_footer_icon_\(languageCode.lowercased())"
         case .bocaJuniors:
-            imageName = "boca_partner_footer_icon"
+            imageName = "boca_partner_footer_icon_\(languageCode.lowercased())"
         case .racingClub:
-            imageName = "racing_partner_footer_icon"
+            imageName = "racing_partner_footer_icon_\(languageCode.lowercased())"
         case .atleticoNacional:
-            imageName = "atletico_colombia_partner_footer_icon"
+            imageName = "atletico_colombia_partner_footer_icon_\(languageCode.lowercased())"
         }
 
         return UIImage(named: imageName, in: .module, compatibleWith: nil) ?? fallbackSFSymbol(for: club)

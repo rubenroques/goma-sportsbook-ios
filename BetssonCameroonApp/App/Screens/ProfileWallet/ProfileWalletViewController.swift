@@ -82,6 +82,9 @@ final class ProfileWalletViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
+
+        // Refresh language display in case user changed language in Settings
+        viewModel.refreshLanguageDisplay()
     }
     
     // MARK: - Status Bar

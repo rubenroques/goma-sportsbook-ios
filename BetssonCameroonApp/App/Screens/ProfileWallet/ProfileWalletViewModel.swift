@@ -89,7 +89,13 @@ final class ProfileWalletViewModel: ObservableObject {
     func refreshData() {
         loadData()
     }
-    
+
+    func refreshLanguageDisplay() {
+        let currentLanguageCode = localized("current_language_code")
+        let displayName = ProfileMenuListViewModel.displayNameForLanguageCode(currentLanguageCode)
+        profileMenuListViewModel.updateCurrentLanguage(displayName)
+    }
+
     func didTapClose() {
         onDismiss?()
     }

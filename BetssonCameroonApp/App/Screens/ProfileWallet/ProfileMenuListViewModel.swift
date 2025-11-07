@@ -36,6 +36,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
     // MARK: - Initialization
     public init(onItemSelected: ((ActionRowItem) -> Void)? = nil) {
         self.onItemSelectedCallback = onItemSelected
+        self.currentLanguage = Self.displayNameForLanguageCode(localized("current_language_code"))
         loadMenuConfiguration()
     }
 
@@ -68,6 +69,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
     
     public func updateCurrentLanguage(_ language: String) {
         currentLanguage = language
+        loadMenuConfiguration() // Reload menu to update language subtitle
         print("🌐 ProfileMenuListViewModel: Language updated to \(language)")
     }
     
@@ -156,5 +158,17 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 action: .logout
             )
         ]
+    }
+
+    /// Maps language code to display name
+    static func displayNameForLanguageCode(_ code: String) -> String {
+        switch code.lowercased() {
+        case "en":
+            return "English"
+        case "fr":
+            return "Français"
+        default:
+            return "English" // Fallback to English
+        }
     }
 }

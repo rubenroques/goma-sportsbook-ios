@@ -33,17 +33,18 @@ struct AppExtendedListFooterImageResolver: ExtendedListFooterImageResolver {
     // MARK: - Private Image Resolution Methods
 
     private func partnerLogoImage(for club: PartnerClub) -> UIImage? {
+        let languageCode = localized("current_language_code").lowercased()
         let imageName: String
 
         switch club {
         case .interMiami:
-            imageName = "inter_partner_footer_icon"
+            imageName = "inter_partner_footer_icon_\(languageCode)"
         case .bocaJuniors:
-            imageName = "boca_partner_footer_icon"
+            imageName = "boca_partner_footer_icon_\(languageCode)"
         case .racingClub:
-            imageName = "racing_partner_footer_icon"
+            imageName = "racing_partner_footer_icon_\(languageCode)"
         case .atleticoNacional:
-            imageName = "atletico_colombia_partner_footer_icon"
+            imageName = "atletico_colombia_partner_footer_icon_\(languageCode)"
         }
 
         return UIImage(named: imageName) ?? fallbackPartnerLogo(for: club)
