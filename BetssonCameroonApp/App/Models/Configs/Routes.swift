@@ -19,5 +19,9 @@ enum Route {
     case casinoGame(gameId: String)
     case casinoSearch
     case deposit
+    case promotions
+    case bonus
+    case event(id: String)
+    case competition(id: String)
     case none
 }

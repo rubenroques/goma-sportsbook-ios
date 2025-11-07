@@ -24,32 +24,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         print("App Started")
 
-        /*
+        
         // External Localization tool
         #if DEBUG
         let phraseConfiguration = PhraseConfiguration()
         phraseConfiguration.debugMode = false
-        phraseConfiguration.localeOverride = "en-US"
         Phrase.shared.configuration = phraseConfiguration
-        Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "GuBCndN-seQgps-CuyMlx6AXkzsiyGuJMIFicqpvMoc")
+        Phrase.shared.setup(distributionID: "6d295e019be829c18ca3c20fa1acddf1", environmentSecret: "uO7ZSRelqmnwrbB1sjl6SrAMHKSwGhtKDD-xcGWnmxY")
         #else
         let phraseConfiguration = PhraseConfiguration()
-        phraseConfiguration.localeOverride = "fr-FR"
         Phrase.shared.configuration = phraseConfiguration
-        Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "UmPDmeEDM8dGvFdKu9-x_bJxI0-8eaJX5CDeq88Eepk")
+        Phrase.shared.setup(distributionID: "6d295e019be829c18ca3c20fa1acddf1", environmentSecret: "rExUgxvoqyX6AQJ9UBiK2DN9t02tsF_P-i0HEXvc-yg")
         #endif
 
-        do {
-            try Phrase.shared.updateTranslation { _ in
-                print("PhraseSDK updateTranslation")
-                let translation = localized("phrase.test")
-                print("PhraseSDK NSLocalizedString via bundle proxy: ", translation)
+        Task {
+            do {
+                let updated = try await Phrase.shared.updateTranslation()
+                if updated {
+                    print("PhraseSDK - Translations changed")
+                    Phrase.shared.applyPendingUpdates()
+
+                    print("PhraseSDK - updateTranslation")
+                    let translation = localized("phrase.test")
+                    print("PhraseSDK - NSLocalizedString via bundle proxy: ", translation)
+                } else {
+                    print("PhraseSDK - Translations remain unchanged")
+                }
+            } catch {
+                print("PhraseSDK - An error occurred: \(error)")
             }
         }
-        catch {
-            print("PhraseSDK updateTranslation crashed error \(error)")
-        }
-        */
 
         //
         //

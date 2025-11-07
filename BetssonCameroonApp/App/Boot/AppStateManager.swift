@@ -65,9 +65,9 @@ class AppStateManager {
     
     init(environment: Environment) {
         self.environment = environment
-        
+
         setupEnvironment()
-        setupSupportedLanguages()
+        // setupSupportedLanguages()  // Commented out to allow iOS automatic language picker
     }
     
     // MARK: - Public Methods
@@ -130,12 +130,13 @@ class AppStateManager {
         }
     }
     
-    private func setupSupportedLanguages() {
-        // Force the target supported languages
-        let targetSupportedLanguages = TargetVariables.supportedLanguages.map(\.languageCode)
-        UserDefaults.standard.set(targetSupportedLanguages, forKey: "AppleLanguages")
-        UserDefaults.standard.synchronize()
-    }
+    // COMMENTED OUT: Allowing iOS automatic language picker to work
+    // private func setupSupportedLanguages() {
+    //     // Force the target supported languages
+    //     let targetSupportedLanguages = TargetVariables.supportedLanguages.map(\.languageCode)
+    //     UserDefaults.standard.set(targetSupportedLanguages, forKey: "AppleLanguages")
+    //     UserDefaults.standard.synchronize()
+    // }
     
     private func setupMaintenanceModeMonitoring() {
         // Boot-time maintenance check only (from Bootstrap.swift:40-53)
