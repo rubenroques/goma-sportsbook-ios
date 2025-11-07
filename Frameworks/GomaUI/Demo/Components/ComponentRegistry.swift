@@ -1167,6 +1167,25 @@ struct ComponentRegistry {
                 viewModel.startCountdown()
                 return countdownView
             }
+        ),
+        UIComponent(
+            title: "Expandable Section View",
+            description: "Expandable section with header, toggle button, and content container that can hold any views - perfect for FAQ sections and collapsible content",
+            viewController: ExpandableSectionViewController.self,
+            previewFactory: {
+                let viewModel = MockExpandableSectionViewModel.defaultMock
+                let sectionView = ExpandableSectionView(viewModel: viewModel)
+                
+                // Add sample content
+                let label = UILabel()
+                label.text = "This is expandable content that appears when the section is opened."
+                label.numberOfLines = 0
+                label.font = StyleProvider.fontWith(type: .regular, size: 14)
+                label.textColor = StyleProvider.Color.textSecondary
+                sectionView.contentContainer.addArrangedSubview(label)
+                
+                return sectionView
+            }
         )
     ]
 }

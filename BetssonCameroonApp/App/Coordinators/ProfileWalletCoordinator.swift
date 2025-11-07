@@ -141,8 +141,7 @@ final class ProfileWalletCoordinator: Coordinator {
             // Show language selection
             showLanguageSelection()
         case .responsibleGaming:
-            // TODO: Navigate to responsible gaming
-            showPlaceholderAlert(title: "Responsible Gaming", message: "Feature coming soon")
+            self.showResponsibleGaming()
         case .helpCenter:
             // TODO: Navigate to help center
             showPlaceholderAlert(title: "Help Center", message: "Feature coming soon")
@@ -333,6 +332,27 @@ final class ProfileWalletCoordinator: Coordinator {
         bonusCoordinator.start()
         
         print("🎁 ProfileWalletCoordinator: Started BonusCoordinator")
+    }
+    
+    private func showResponsibleGaming() {
+        guard let profileNavigationController = profileNavigationController else {
+            print("❌ ProfileWalletCoordinator: Profile navigation controller not available")
+            return
+        }
+        
+        let responsibleGamingCoordinator = ResponsibleGamingCoordinator(
+            navigationController: profileNavigationController,
+            servicesProvider: servicesProvider
+        )
+        
+        responsibleGamingCoordinator.onDismiss = { [weak self] in
+            self?.removeChildCoordinator(responsibleGamingCoordinator)
+        }
+        
+        addChildCoordinator(responsibleGamingCoordinator)
+        responsibleGamingCoordinator.start()
+        
+        print("🎯 ProfileWalletCoordinator: Started ResponsibleGamingCoordinator")
     }
     
     private func showPlaceholderAlert(title: String, message: String) {
